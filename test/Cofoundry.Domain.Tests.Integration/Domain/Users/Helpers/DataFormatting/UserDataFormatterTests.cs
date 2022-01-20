@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Helpers
             using var app = _appFactory.Create(s => s.AddSingleton(uniquifierMock.Object));
             var formatter = app.Services.GetRequiredService<IUserDataFormatter>();
 
-            var cofoundryAdminResult = formatter.UniquifyUsername(CofoundryAdminUserArea.AreaCode, "George Sanderson");
+            var cofoundryAdminResult = formatter.UniquifyUsername(CofoundryAdminUserArea.Code, "George Sanderson");
             var defaultResult = formatter.UniquifyUsername(TestUserArea1.Code, "Roz");
 
             cofoundryAdminResult.Should().Be(OUTPUT);

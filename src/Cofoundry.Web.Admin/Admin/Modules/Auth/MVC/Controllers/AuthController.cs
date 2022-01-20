@@ -122,8 +122,7 @@ namespace Cofoundry.Web.Admin
         [HttpPost]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            var resetUrl = _adminRouteLibrary.Auth.ResetPasswordBase();
-            await _authenticationControllerHelper.SendPasswordResetNotificationAsync(this, command, resetUrl);
+            await _authenticationControllerHelper.SendAccountRecoveryNotificationAsync(this, command);
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
             return View(viewPath, command);
@@ -135,7 +134,7 @@ namespace Cofoundry.Web.Admin
             var user = await _userContextService.GetCurrentContextAsync();
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidatePasswordResetRequestAsync(this);
+            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidateAccountRecoveryRequestAsync(this);
 
             if (!requestValidationResult.IsValid)
             {
@@ -143,7 +142,7 @@ namespace Cofoundry.Web.Admin
                 return View(invalidViewPath, requestValidationResult);
             }
 
-            var vm = new CompletePasswordResetViewModel(requestValidationResult);
+            var vm = new CompleteAccountRecoveryViewModel(requestValidationResult);
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword));
 
             return View(viewPath, vm);
@@ -151,12 +150,12 @@ namespace Cofoundry.Web.Admin
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> ResetPassword(CompletePasswordResetViewModel vm)
+        public async Task<ActionResult> ResetPassword(CompleteAccountRecoveryViewModel vm)
         {
             var user = await _userContextService.GetCurrentContextAsync();
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            await _authenticationControllerHelper.CompletePasswordResetAsync(this, vm);
+            await _authenticationControllerHelper.CompleteAccountRecoveryAsync(this, vm);
 
             if (ModelState.IsValid)
             {

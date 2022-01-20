@@ -90,7 +90,7 @@ namespace Cofoundry.Web.Admin.Internal
         private async Task<IUserContext> GetCofoundryUserAsync()
         {
             // The ambient auth scheme may not be for CofoundryAdmin so make sure we get 
-            var userContext = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.AreaCode);
+            var userContext = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.Code);
 
             if (userContext.IsCofoundryUser())
             {

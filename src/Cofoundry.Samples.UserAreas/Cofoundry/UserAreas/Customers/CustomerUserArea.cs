@@ -61,5 +61,17 @@ namespace Cofoundry.Samples.UserAreas
         /// schema which means the HttpContext.User property will be set to this identity.
         /// </summary>
         public bool IsDefaultAuthScheme => true;
+
+        /// <summary>
+        /// Implement this method to change any additional options from
+        /// their defaults.
+        /// </summary>
+        /// <param name="options">
+        /// The current configuration with any defaults applied.
+        /// </param>
+        public void ConfigureOptions(UserAreaOptions options)
+        {
+            options.AccountRecovery.RecoveryUrlBase = "/partners/auth/account-recovery";
+        }
     }
 }

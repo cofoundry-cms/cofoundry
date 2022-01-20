@@ -169,46 +169,40 @@ namespace Cofoundry.Samples.UserAreas
         [HttpPost("forgot-password")]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            // We need to pass in the url to our custom password reset action, which 
-            // will then get included in the email notification
-            await _authenticationControllerHelper.SendPasswordResetNotificationAsync(
-                this, 
-                command, 
-                "/partners/auth/password-reset"
-                );
+            await _authenticationControllerHelper.SendAccountRecoveryNotificationAsync(this, command);
 
             return View(command);
         }
 
-        [Route("password-reset")]
-        public async Task<ActionResult> PasswordReset()
+        [Route("account-recovery")]
+        public async Task<ActionResult> AccountRecovery()
         {
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
-            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidatePasswordResetRequestAsync(this);
+            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidateAccountRecoveryRequestAsync(this);
 
             if (!requestValidationResult.IsValid)
             {
-                return View(nameof(PasswordReset) + "RequestInvalid", requestValidationResult);
+                return View(nameof(AccountRecovery) + "RequestInvalid", requestValidationResult);
             }
 
-            var vm = new CompletePasswordResetViewModel(requestValidationResult);
+            var vm = new CompleteAccountRecoveryViewModel(requestValidationResult);
 
             return View(vm);
         }
 
-        [HttpPost("password-reset")]
-        public async Task<ActionResult> PasswordReset(CompletePasswordResetViewModel vm)
+        [HttpPost("account-recovery")]
+        public async Task<ActionResult> AccountRecovery(CompleteAccountRecoveryViewModel vm)
         {
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
-            await _authenticationControllerHelper.CompletePasswordResetAsync(this, vm);
+            await _authenticationControllerHelper.CompleteAccountRecoveryAsync(this, vm);
 
             if (ModelState.IsValid)
             {
-                return View(nameof(PasswordReset) + "Complete");
+                return View(nameof(AccountRecovery) + "Complete");
             }
 
             return View(vm);
@@ -241,29 +235,29 @@ namespace Cofoundry.Samples.UserAreas
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
-            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidatePasswordResetRequestAsync(this);
+            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidateAccountRecoveryRequestAsync(this);
 
             if (!requestValidationResult.IsValid)
             {
-                return View(nameof(PasswordReset) + "RequestInvalid", requestValidationResult);
+                return View(nameof(VerifyEmail) + "RequestInvalid", requestValidationResult);
             }
 
-            var vm = new CompletePasswordResetViewModel(requestValidationResult);
+            var vm = new CompleteAccountRecoveryViewModel(requestValidationResult);
 
             return View(vm);
         }
 
         [HttpPost("verify-email")]
-        public async Task<ActionResult> VerifyEmail(CompletePasswordResetViewModel vm)
+        public async Task<ActionResult> VerifyEmail(CompleteAccountRecoveryViewModel vm)
         {
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
 
-            await _authenticationControllerHelper.CompletePasswordResetAsync(this, vm);
+            await _authenticationControllerHelper.CompleteAccountRecoveryAsync(this, vm);
 
             if (ModelState.IsValid)
             {
-                return View(nameof(PasswordReset) + "Complete");
+                return View(nameof(VerifyEmail) + "Complete");
             }
 
             return View(vm);

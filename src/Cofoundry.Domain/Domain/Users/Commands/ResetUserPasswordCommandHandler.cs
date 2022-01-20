@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.Internal
     /// will need to be changed at first login (if the user area supports 
     /// it). This is designed to be used from an admin screen rather than 
     /// a self-service reset which can be done via 
-    /// InitiatePasswordResetRequestCommand.
+    /// <see cref="InitiateUserAccountRecoveryCommand"/>.
     /// </summary>
     public class ResetUserPasswordCommandHandler
         : ICommandHandler<ResetUserPasswordCommand>
@@ -133,7 +133,7 @@ namespace Cofoundry.Domain.Internal
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserAreaCode);
 
             var context = await CreateMailTemplateContextAsync(user, temporaryPassword, executionContext);
-            var mailTemplate = await mailTemplateBuilder.BuildPasswordResetByAdminTemplateAsync(context);
+            var mailTemplate = await mailTemplateBuilder.BuildPasswordResetTemplateAsync(context);
 
             // Null template means don't send a notification
             if (mailTemplate == null) return;
@@ -141,7 +141,7 @@ namespace Cofoundry.Domain.Internal
             await _mailService.SendAsync(user.Email, mailTemplate);
         }
 
-        private async Task<PasswordResetByAdminTemplateBuilderContext> CreateMailTemplateContextAsync(
+        private async Task<PasswordResetTemplateBuilderContext> CreateMailTemplateContextAsync(
             User user,
             string temporaryPassword,
             IExecutionContext executionContext
@@ -153,7 +153,7 @@ namespace Cofoundry.Domain.Internal
                 .ExecuteQueryAsync(query);
             EntityNotFoundException.ThrowIfNull(userSummary, user.UserId);
 
-            var context = new PasswordResetByAdminTemplateBuilderContext()
+            var context = new PasswordResetTemplateBuilderContext()
             {
                 User = userSummary,
                 TemporaryPassword = new HtmlString(temporaryPassword)

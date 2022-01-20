@@ -1,9 +1,6 @@
 ﻿using Cofoundry.Core.Mail;
-using Cofoundry.Domain;
+using Cofoundry.Core.Web;
 using Cofoundry.Domain.MailTemplates;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
@@ -19,11 +16,13 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
     /// </summary>
     public class PartnerMailTemplateBuilder : IUserMailTemplateBuilder<PartnerUserArea>
     {
-        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
+        private readonly ISiteUrlResolver _siteUrlResolver;
 
-        public PartnerMailTemplateBuilder(IPasswordResetUrlHelper passwordResetUrlHelper)
+        public PartnerMailTemplateBuilder(
+            ISiteUrlResolver siteUrlResolver
+            )
         {
-            _passwordResetUrlHelper = passwordResetUrlHelper;
+            _siteUrlResolver = siteUrlResolver;
         }
 
         public Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
@@ -31,33 +30,31 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             var template = new NewUserWithTemporaryPasswordMailTemplate()
             {
                 Username = context.User.Username,
-                LoginPath = UrlLibrary.PartnerLogin(),
+                LoginUrl = GetLoginUrl(),
                 TemporaryPassword = context.TemporaryPassword
             };
 
             return Task.FromResult<IMailTemplate>(template);
         }
 
-        public Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
+        public Task<IMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context)
         {
-            var template = new PasswordResetByAdminMailTemplate()
+            var template = new PasswordResetMailTemplate()
             {
                 Username = context.User.Username,
-                LoginPath = UrlLibrary.PartnerLogin(),
+                LoginUrl = GetLoginUrl(),
                 TemporaryPassword = context.TemporaryPassword
             };
 
             return Task.FromResult<IMailTemplate>(template);
         }
 
-        public Task<IMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
+        public Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context)
         {
-            var resetUrl = _passwordResetUrlHelper.MakeUrl(context);
-
-            var template = new PasswordResetRequestedByUserMailTemplate()
+            var template = new AccountRecoveryMailTemplate()
             {
                 Username = context.User.Username,
-                ResetUrl = resetUrl
+                RecoveryUrl = _siteUrlResolver.MakeAbsolute(context.RecoveryUrlPath)
             };
 
             return Task.FromResult<IMailTemplate>(template);
@@ -68,10 +65,15 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             var template = new PasswordChangedMailTemplate()
             {
                 Username = context.User.Username,
-                LoginPath = UrlLibrary.PartnerLogin()
+                LoginUrl = GetLoginUrl()
             };
 
             return Task.FromResult<IMailTemplate>(template);
+        }
+
+        private string GetLoginUrl()
+        {
+            return _siteUrlResolver.MakeAbsolute(UrlLibrary.PartnerLogin());
         }
     }
 }

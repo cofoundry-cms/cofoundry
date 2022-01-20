@@ -14,6 +14,6 @@ namespace Cofoundry.Domain
 
         public string RoleCode { get { return TestRoleCode; } }
 
-        public string UserAreaCode { get { return CofoundryAdminUserArea.AreaCode; } }
+        public string UserAreaCode { get { return CofoundryAdminUserArea.Code; } }
     }
 }

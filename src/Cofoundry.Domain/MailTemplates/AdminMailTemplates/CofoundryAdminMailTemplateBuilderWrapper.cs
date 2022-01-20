@@ -1,7 +1,4 @@
 ﻿using Cofoundry.Core.Mail;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
@@ -13,7 +10,7 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
     /// the mail templates simpler.
     /// </summary>
     public class CofoundryAdminMailTemplateBuilderWrapper : IUserMailTemplateBuilder
-    { 
+    {
         private readonly ICofoundryAdminMailTemplateBuilder _cofoundryAdminMailTemplateBuilder;
 
         public CofoundryAdminMailTemplateBuilderWrapper(
@@ -28,14 +25,14 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
             return await _cofoundryAdminMailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
         }
 
-        public async Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context)
         {
-            return await _cofoundryAdminMailTemplateBuilder.BuildPasswordResetByAdminTemplateAsync(context);
+            return await _cofoundryAdminMailTemplateBuilder.BuildPasswordResetTemplateAsync(context);
         }
 
-        public async Task<IMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context)
         {
-            return await _cofoundryAdminMailTemplateBuilder.BuildPasswordResetRequestedByUserTemplateAsync(context);
+            return await _cofoundryAdminMailTemplateBuilder.BuildAccountRecoveryTemplateAsync(context);
         }
 
         public async Task<IMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)

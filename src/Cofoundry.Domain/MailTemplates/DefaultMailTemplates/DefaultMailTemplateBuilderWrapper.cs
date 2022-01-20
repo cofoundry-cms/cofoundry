@@ -1,7 +1,4 @@
 ﻿using Cofoundry.Core.Mail;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
@@ -14,16 +11,13 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
     /// </summary>
     public class DefaultMailTemplateBuilderWrapper<T> : IUserMailTemplateBuilder
         where T : IUserAreaDefinition
-    { 
-        private readonly IUserAreaDefinition _userAreaDefinition;
+    {
         private readonly IDefaultMailTemplateBuilder<T> _defaultMailTemplateBuilder;
 
         public DefaultMailTemplateBuilderWrapper(
-            IUserAreaDefinition userAreaDefinition,
             IDefaultMailTemplateBuilder<T> defaultMailTemplateBuilder
             )
         {
-            _userAreaDefinition = userAreaDefinition;
             _defaultMailTemplateBuilder = defaultMailTemplateBuilder;
         }
 
@@ -32,14 +26,14 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
             return await _defaultMailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
         }
 
-        public async Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context)
         {
-            return await _defaultMailTemplateBuilder.BuildPasswordResetByAdminTemplateAsync(context);
+            return await _defaultMailTemplateBuilder.BuildPasswordResetTemplateAsync(context);
         }
 
-        public async Task<IMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context)
         {
-            return await _defaultMailTemplateBuilder.BuildPasswordResetRequestedByUserTemplateAsync(context);
+            return await _defaultMailTemplateBuilder.BuildAccountRecoveryTemplateAsync(context);
         }
 
         public async Task<IMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)

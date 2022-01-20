@@ -1,0 +1,10 @@
+﻿@model DefaultAccountRecoveryMailTemplate
+@using Cofoundry.Domain.MailTemplates.DefaultMailTemplates
+@{
+    Layout = DefaultMailTemplatePath.TextTemplateLayoutPath;
+}
+Hello customer!
+
+We have received a request to reset the password for your customer account on the UserAreas sample site. You can reset your password by visiting @Model.RecoveryUrl and following the instructions.
+
+This message was automatically generated.

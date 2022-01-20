@@ -60,10 +60,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     Email = uniqueData + "@example.com",
                     Password = "DELETED!!!",
                     RoleCode = SuperAdminRole.SuperAdminRoleCode,
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode
+                    UserAreaCode = CofoundryAdminUserArea.Code
                 });
 
-            var roleId = await app.TestData.Roles().AddAsync(uniqueData, CofoundryAdminUserArea.AreaCode);
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, CofoundryAdminUserArea.Code);
             var currentUserId = await contentRepository
                 .WithElevatedPermissions()
                 .Users()
@@ -72,11 +72,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     Email = uniqueData + ".current@example.com",
                     Password = "DELETED!!!",
                     RoleId = roleId,
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode
+                    UserAreaCode = CofoundryAdminUserArea.Code
                 });
 
             var loginService = app.Services.GetService<ILoginService>();
-            await loginService.LogAuthenticatedUserInAsync(CofoundryAdminUserArea.AreaCode, currentUserId, false);
+            await loginService.LogAuthenticatedUserInAsync(CofoundryAdminUserArea.Code, currentUserId, false);
 
             await contentRepository
                 .Awaiting(r => r.Users().DeleteAsync(userToDeleteId))

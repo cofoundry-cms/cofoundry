@@ -12,7 +12,6 @@ namespace Cofoundry.Domain.Registration
             container
                 .Register<ICofoundryMailTemplateHelper, CofoundryMailTemplateHelper>()
                 .Register<IUserMailTemplateBuilderFactory, UserMailTemplateBuilderFactory>()
-                .Register<AdminMailTemplateUrlLibrary>()
                 .Register<ICofoundryAdminMailTemplateBuilder, CofoundryAdminMailTemplateBuilder>()
                 .RegisterGeneric(typeof(IDefaultMailTemplateBuilder<>), typeof(DefaultMailTemplateBuilder<>))
                 .RegisterAllGenericImplementations(typeof(IUserMailTemplateBuilder<>))

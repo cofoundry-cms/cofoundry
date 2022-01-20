@@ -62,7 +62,7 @@ namespace Cofoundry.Domain.Internal
         {
             if (user == null) return;
 
-            if (user.UserArea.UserAreaCode == CofoundryAdminUserArea.AreaCode)
+            if (user.UserArea.UserAreaCode == CofoundryAdminUserArea.Code)
             {
                 _permissionValidationService.EnforceCurrentUserOrHasPermission<CofoundryUserReadPermission>(query.UserId, executionContext.UserContext);
             }

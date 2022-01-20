@@ -20,7 +20,7 @@ namespace Cofoundry.Domain.Registration
                 .Register<IUserMicroSummaryMapper, UserMicroSummaryMapper>()
                 .Register<IUserSummaryMapper, UserSummaryMapper>()
                 .Register<IUserDetailsMapper, UserDetailsMapper>()
-                .Register<IPasswordResetUrlHelper, PasswordResetUrlHelper>()
+                .Register<IUserAccountRecoveryUrlHelper, UserAccountRecoveryUrlHelper>()
                 .Register<IUserContextCache, UserContextCache>(RegistrationOptions.Scoped())
                 .Register<IUserDataFormatter, UserDataFormatter>()
                 .Register<IUserUpdateCommandHelper, UserUpdateCommandHelper>()
@@ -29,6 +29,7 @@ namespace Cofoundry.Domain.Registration
                 .Register<IUsernameValidator, UsernameValidator>()
                 .Register<ISecurityStampGenerator, SecurityStampGenerator>()
                 .Register<IUserSecurityStampUpdateHelper, UserSecurityStampUpdateHelper>()
+                .Register<IUserAccountRecoveryTokenFormatter, UserAccountRecoveryTokenFormatter>()
                 ;
         }
     }

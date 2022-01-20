@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Core.Validation;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Specialized;
@@ -103,6 +104,38 @@ namespace Cofoundry.Domain.Tests.Shared.Assertions
             where TEntity : class
         {
             return (await task).WithId(id);
+        }
+
+        /// <summary>
+        /// Asserts that a <see cref="ValidationErrorException"/> has the specified <paramref name="errorCode"/>.
+        /// </summary>
+        /// <param name="errorCode">The expected error code contained in the exception.</param>
+        /// <returns>
+        /// The modified assertion for continued chaining.
+        /// </returns>
+        public static ExceptionAssertions<TException> WithErrorCode<TException>(this ExceptionAssertions<TException> parent, string errorCode)
+            where TException : ValidationErrorException
+        {
+            var exception = parent.Which;
+
+            Execute.Assertion
+                .ForCondition(errorCode.Equals(exception.ErrorCode))
+                .FailWith("Expected exception with ErrorCode {0}{reason}, but found {1}.", errorCode, exception.ErrorCode);
+
+            return parent;
+        }
+
+        /// <summary>
+        /// Asserts that a <see cref="ValidationErrorException"/> has the specified <paramref name="errorCode"/>.
+        /// </summary>
+        /// <param name="errorCode">The expected error code contained in the exception.</param>
+        /// <returns>
+        /// The modified assertion for continued chaining.
+        /// </returns>
+        public static async Task<ExceptionAssertions<TException>> WithErrorCode<TException>(this Task<ExceptionAssertions<TException>> task, string errorCode)
+            where TException : ValidationErrorException
+        {
+            return (await task).WithErrorCode(errorCode);
         }
     }
 }

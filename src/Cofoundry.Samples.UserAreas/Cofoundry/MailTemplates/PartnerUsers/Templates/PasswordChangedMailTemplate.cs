@@ -1,7 +1,4 @@
 ﻿using Cofoundry.Core.Mail;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
 {
@@ -17,7 +14,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
         /// added. E.g. "~/Cofoundry/MailTemplates/MyMailTemplate".
         /// </summary>
         public string ViewFile { get; } = PartnerMailTemplatePath.TemplateView(nameof(PasswordChangedMailTemplate));
-        
+
         /// <summary>
         /// String to use as the subject to the email.
         /// </summary>
@@ -29,8 +26,8 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
         public string Username { get; set; }
 
         /// <summary>
-        /// The path that the user can use to log in.
+        /// The absolute login page url e.g. "https://www.example.com/members/login".
         /// </summary>
-        public string LoginPath { get; set; }
+        public string LoginUrl { get; set; }
     }
 }

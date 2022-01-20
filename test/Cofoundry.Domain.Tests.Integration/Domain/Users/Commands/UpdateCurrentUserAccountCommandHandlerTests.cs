@@ -59,7 +59,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
 
-            var updateCommand = new UpdateCurrentUserAccountCommand()
+            var updateCommand = new UpdateCurrentUserCommand()
             {
                 Email = addCommand.Email,
                 FirstName = "Elton",
@@ -119,7 +119,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             var newEmailDomain = $"{UNIQUE_PREFIX}2.example.com";
             var newEmailLocal = "TAFKAP@";
-            var updateCommand = new UpdateCurrentUserAccountCommand()
+            var updateCommand = new UpdateCurrentUserCommand()
             {
                 Email = newEmailLocal + newEmailDomain,
             };
@@ -187,7 +187,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await loginService.LogAuthenticatedUserInAsync(userAreaCode, userId, true);
 
-            var updateCommand = new UpdateCurrentUserAccountCommand()
+            var updateCommand = new UpdateCurrentUserCommand()
             {
                 Email = addCommand.Email,
                 Username = "TBone"
@@ -245,7 +245,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             await contentRepository
                 .Users()
                 .Current()
-                .UpdateAsync(new UpdateCurrentUserAccountCommand()
+                .UpdateAsync(new UpdateCurrentUserCommand()
                 {
                     Username = addCommand.Username
                 });
@@ -299,7 +299,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     UserAreaCode = userArea.UserAreaCode
                 });
 
-            var updateCommand = new UpdateCurrentUserAccountCommand()
+            var updateCommand = new UpdateCurrentUserCommand()
             {
                 Email = $"djones" + EMAIL_DOMAIN,
             };
@@ -346,7 +346,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     UserAreaCode = userArea.UserAreaCode
                 });
 
-            var updateCommand = new UpdateCurrentUserAccountCommand()
+            var updateCommand = new UpdateCurrentUserCommand()
             {
                 Email = uniqueData + EMAIL_DOMAIN,
             };
@@ -368,7 +368,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var contentRepository = app.Services.GetContentRepository();
 
             await contentRepository
-                .Awaiting(r => r.WithElevatedPermissions().Users().Current().UpdateAsync(new UpdateCurrentUserAccountCommand()))
+                .Awaiting(r => r.WithElevatedPermissions().Users().Current().UpdateAsync(new UpdateCurrentUserCommand()))
                 .Should()
                 .ThrowAsync<EntityNotFoundException>();
         }
@@ -390,7 +390,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await loginService.LogAuthenticatedUserInAsync(addCommand.UserAreaCode, userId, true);
 
-            var updateCommand = new UpdateCurrentUserAccountCommand()
+            var updateCommand = new UpdateCurrentUserCommand()
             {
                 Email = addCommand.Email,
                 FirstName = addCommand.FirstName + "_X",
@@ -439,7 +439,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await loginService.LogAuthenticatedUserInAsync(addCommand.UserAreaCode, userId, true);
 
-            var updateCommand = new UpdateCurrentUserAccountCommand()
+            var updateCommand = new UpdateCurrentUserCommand()
             {
                 Email = "x." + addCommand.Email,
                 FirstName = addCommand.FirstName,
@@ -495,7 +495,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             await loginService.LogAuthenticatedUserInAsync(addCommand.UserAreaCode, userId, true);
 
-            var updateCommand = new UpdateCurrentUserAccountCommand()
+            var updateCommand = new UpdateCurrentUserCommand()
             {
                 Username = addCommand.Username + "_X",
                 FirstName = addCommand.FirstName,

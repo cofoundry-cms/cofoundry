@@ -36,6 +36,11 @@ namespace Cofoundry.Domain
         public CookieOptions Cookies { get; set; } = new CookieOptions();
 
         /// <summary>
+        /// Options to control the behavior of the self-service account recovery feature.
+        /// </summary>
+        public AccountRecoveryOptions AccountRecovery { get; set; } = new AccountRecoveryOptions();
+
+        /// <summary>
         /// Create a new <see cref="UserAreaOptions"/>, copying data from 
         /// the specified <paramref name="settings"/>.
         /// </summary>
@@ -49,13 +54,15 @@ namespace Cofoundry.Domain
             EntityInvalidOperationException.ThrowIfNull(settings, s => s.Password);
             EntityInvalidOperationException.ThrowIfNull(settings, s => s.Username);
             EntityInvalidOperationException.ThrowIfNull(settings, s => s.Cookies);
+            EntityInvalidOperationException.ThrowIfNull(settings, s => s.AccountRecovery);
 
             var options = new UserAreaOptions()
             {
                 EmailAddress = settings.EmailAddress.Clone(),
                 Password = settings.Password.Clone(),
                 Username = settings.Username.Clone(),
-                Cookies = settings.Cookies.Clone()
+                Cookies = settings.Cookies.Clone(),
+                AccountRecovery = settings.AccountRecovery.Clone()
             };
 
             return options;

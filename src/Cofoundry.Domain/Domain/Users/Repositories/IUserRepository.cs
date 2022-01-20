@@ -150,7 +150,7 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="command">Command to execute.</param>
         /// <param name="executionContext">Optional execution context to use when executing the command. Useful if you need to temporarily elevate your permission level.</param>
-        Task UpdateCurrentUserAccountAsync(UpdateCurrentUserAccountCommand command, IExecutionContext executionContext = null);
+        Task UpdateCurrentUserAccountAsync(UpdateCurrentUserCommand command, IExecutionContext executionContext = null);
 
         /// <summary>
         /// Updates the password of the currently logged in user, using the

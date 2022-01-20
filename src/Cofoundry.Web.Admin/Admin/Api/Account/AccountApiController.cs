@@ -33,7 +33,7 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(results);
         }
         
-        public async Task<JsonResult> Patch([FromBody] IDelta<UpdateCurrentUserAccountCommand> delta)
+        public async Task<JsonResult> Patch([FromBody] IDelta<UpdateCurrentUserCommand> delta)
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
             var userId = userContext.UserId.Value;

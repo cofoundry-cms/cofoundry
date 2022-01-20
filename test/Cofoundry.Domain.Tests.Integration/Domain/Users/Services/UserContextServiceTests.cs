@@ -111,7 +111,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
                 systemUserContext.RoleCode.Should().Be(SuperAdminRole.SuperAdminRoleCode);
                 systemUserContext.RoleId.Should().Be(dbSystemUser.RoleId);
                 systemUserContext.UserArea.Should().NotBeNull();
-                systemUserContext.UserArea.UserAreaCode.Should().Be(CofoundryAdminUserArea.AreaCode);
+                systemUserContext.UserArea.UserAreaCode.Should().Be(CofoundryAdminUserArea.Code);
                 systemUserContext.IsPasswordChangeRequired.Should().BeFalse();
                 systemUserContext.IsCofoundryUser().Should().BeTrue();
             }

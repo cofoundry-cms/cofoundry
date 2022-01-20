@@ -65,7 +65,7 @@ namespace Cofoundry.Domain.Internal
             var dbUser = await _dbContext
                 .Users
                 .Include(u => u.Role)
-                .FilterByUserArea(CofoundryAdminUserArea.AreaCode)
+                .FilterByUserArea(CofoundryAdminUserArea.Code)
                 .FilterActive()
                 .Where(u => u.IsSystemAccount)
                 .FirstOrDefaultAsync();

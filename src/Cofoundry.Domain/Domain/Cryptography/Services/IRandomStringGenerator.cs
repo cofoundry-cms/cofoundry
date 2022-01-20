@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
     /// Used to generate strings of random characters with a customizable
@@ -32,7 +26,7 @@ namespace Cofoundry.Domain
         /// <param name="length">The length of the string to generate.</param>
         /// <param name="allowedCharacters">
         /// The set of characters to use when generating the characters in the string.
-        /// Duplicate characters are allows, which will simply increase the likelyhood 
+        /// Duplicate characters are allowed, which will simply increase the likelyhood 
         /// of selecting those characters.
         /// </param>
         string Generate(int length, string allowedCharacters);
@@ -49,7 +43,7 @@ namespace Cofoundry.Domain
         /// <param name="allowedCharacters">
         /// The set of characters to use when generating the characters in the string.
         /// This default to mixed-case alpha numeric characters. Duplicate characters
-        /// are allows, which will simply increase the likelyhood of selecting those 
+        /// are allowed, which will simply increase the likelyhood of selecting those 
         /// characters.
         /// </param>
         /// <param name="untrustworthyCharacters">

@@ -22,6 +22,6 @@ namespace Cofoundry.Domain
 
         public string RoleCode { get { return SuperAdminRoleCode; } }
 
-        public string UserAreaCode { get { return CofoundryAdminUserArea.AreaCode; } }
+        public string UserAreaCode { get { return CofoundryAdminUserArea.Code; } }
     }
 }

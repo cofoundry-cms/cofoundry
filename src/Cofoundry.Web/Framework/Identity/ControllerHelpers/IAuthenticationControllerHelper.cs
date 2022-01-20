@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -79,25 +76,20 @@ namespace Cofoundry.Web.Identity
 
         /// <summary>
         /// Checks the ModelState is valid and then initiates
-        /// a password reset request.
+        /// an account recovery (AKA "forgot password") request.
         /// </summary>
         /// <param name="controller">
         /// This method is intended to be called from an MVC controller and this
         /// should be the controller instance.
         /// </param>
         /// <param name="vm">The view-model data posted to the action.</param>
-        /// <param name="resetUrlBase">
-        /// The relative base path used to construct the reset url 
-        /// e.g. new Uri("/auth/forgot-password", UriKind.Relative).
-        /// </param>
-        Task SendPasswordResetNotificationAsync(
+        Task SendAccountRecoveryNotificationAsync(
             Controller controller,
-            IForgotPasswordViewModel vm,
-            string resetUrlBase
+            IForgotPasswordViewModel vm
             );
 
         /// <summary>
-        /// Parses the password reset authentication parameters out of the request
+        /// Parses the account recovery authentication parameters out of the request
         /// url and validates them against the database before returning the result.
         /// </summary>
         /// <param name="controller">
@@ -108,12 +100,12 @@ namespace Cofoundry.Web.Identity
         /// An object containing the validation result, details of any errors
         /// and the parsed authentication data.
         /// </returns>
-        Task<PasswordResetRequestValidationResult> ParseAndValidatePasswordResetRequestAsync(
+        Task<AccountRecoveryRequestValidationResult> ParseAndValidateAccountRecoveryRequestAsync(
             Controller controller
             );
 
         /// <summary>
-        /// Completes a password reset, validating the ModelState and
+        /// Completes an account recovery request, validating the ModelState and
         /// view-model data before updating the database and sending
         /// a confirmation notification.
         /// </summary>
@@ -122,9 +114,9 @@ namespace Cofoundry.Web.Identity
         /// should be the controller instance.
         /// </param>
         /// <param name="vm">The view-model data posted to the action.</param>
-        Task CompletePasswordResetAsync(
+        Task CompleteAccountRecoveryAsync(
             Controller controller,
-            ICompletePasswordResetViewModel vm
+            ICompleteAccountRecoveryViewModel vm
             );
     }
 }

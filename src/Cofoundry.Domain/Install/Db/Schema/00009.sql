@@ -315,8 +315,8 @@ from Cofoundry.[User] u
 where u.Email is not null
 
 update Cofoundry.[User] 
-set UniqueUsername = Lower([Username]), 
-	UniqueEmail = Lower([Email]),
+set UniqueUsername = lower([Username]), 
+	UniqueEmail = lower([Email]),
 	EmailDomainId = (select EmailDomainId from Cofoundry.EmailDomain where [Name] = lower(right(Email, len(Email) - charindex('@', Email))))
 
 go
@@ -335,3 +335,23 @@ go
 update Cofoundry.[User] set SecurityStamp = convert(nvarchar(max), CRYPT_GEN_RANDOM(16), 2)
 go
 alter table Cofoundry.[User] alter column SecurityStamp nvarchar(max) not null
+go
+
+/*
+	#479: Self-service Password Reset: Rename to "Account Recovery" and audit/tidy
+*/
+go
+exec sp_rename 'Cofoundry.UserPasswordResetRequest', 'UserAccountRecoveryRequest'
+go
+exec sp_rename 'Cofoundry.UserAccountRecoveryRequest.UserPasswordResetRequestId' , 'UserAccountRecoveryRequestId', 'column'
+exec sp_rename 'Cofoundry.UserAccountRecoveryRequest.Token' , 'AuthorizationCode', 'column'
+exec sp_rename 'Cofoundry.PK_UserPasswordResetRequest', 'PK_UserAccountRecoveryRequest', 'object'
+exec sp_rename 'Cofoundry.FK_UserPasswordResetRequest_User', 'FK_UserAccountRecoveryRequest_User', 'object'
+go
+alter table Cofoundry.UserAccountRecoveryRequest add InvalidatedDate datetime2(7) null
+alter table Cofoundry.UserAccountRecoveryRequest add CompletedDate datetime2(7) null
+go
+update Cofoundry.UserAccountRecoveryRequest set CompletedDate = GETUTCDATE() where IsComplete = 1
+go
+alter table Cofoundry.UserAccountRecoveryRequest drop column IsComplete
+go

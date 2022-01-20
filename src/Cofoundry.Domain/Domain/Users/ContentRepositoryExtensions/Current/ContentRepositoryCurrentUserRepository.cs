@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task UpdateAsync(UpdateCurrentUserAccountCommand command)
+        public Task UpdateAsync(UpdateCurrentUserCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }

@@ -1,68 +1,72 @@
-﻿using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core.Web;
+using Cofoundry.Domain.CQS;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
 {
+    /// <inheritdoc/>
     public class CofoundryAdminMailTemplateBuilder : ICofoundryAdminMailTemplateBuilder
     {
         private readonly IQueryExecutor _queryExecutor;
-        private readonly AdminMailTemplateUrlLibrary _adminMailTemplateUrlLibrary;
-        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
+        private readonly AdminSettings _adminSettings;
+        private readonly ISiteUrlResolver _siteUrlResolver;
 
         public CofoundryAdminMailTemplateBuilder(
             IQueryExecutor queryExecutor,
-            AdminMailTemplateUrlLibrary adminMailTemplateUrlLibrary,
-            IPasswordResetUrlHelper passwordResetUrlHelper
+            AdminSettings adminSettings,
+            ISiteUrlResolver siteUrlResolver
             )
         {
             _queryExecutor = queryExecutor;
-            _adminMailTemplateUrlLibrary = adminMailTemplateUrlLibrary;
-            _passwordResetUrlHelper = passwordResetUrlHelper;
+            _adminSettings = adminSettings;
+            _siteUrlResolver = siteUrlResolver;
         }
 
         public virtual async Task<AdminNewUserWithTemporaryPasswordMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
-            var loginPath = _adminMailTemplateUrlLibrary.Login();
+            var loginUrl = GetLoginUrl();
 
             return new AdminNewUserWithTemporaryPasswordMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginPath = loginPath,
+                LoginUrl = loginUrl,
                 TemporaryPassword = context.TemporaryPassword,
                 LayoutFile = AdminMailTemplatePath.LayoutPath
             };
         }
 
-        public virtual async Task<AdminPasswordResetByAdminMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
+        public virtual async Task<AdminPasswordResetMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
-            var loginPath = _adminMailTemplateUrlLibrary.Login();
+            var loginUrl = GetLoginUrl();
 
-            return new AdminPasswordResetByAdminMailTemplate()
+            return new AdminPasswordResetMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginPath = loginPath,
+                LoginUrl = loginUrl,
                 TemporaryPassword = context.TemporaryPassword,
                 LayoutFile = AdminMailTemplatePath.LayoutPath
             };
         }
 
-        public virtual async Task<AdminPasswordResetRequestedByUserMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
+        public virtual async Task<AdminAccountRecoveryMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
-            var resetUrl = _passwordResetUrlHelper.MakeUrl(context);
 
-            return new AdminPasswordResetRequestedByUserMailTemplate()
+            if (context.RecoveryUrlPath == null || !Uri.IsWellFormedUriString(context.RecoveryUrlPath, UriKind.Relative))
+            {
+                throw new InvalidOperationException($"{nameof(AccountRecoveryTemplateBuilderContext)}.{nameof(context.RecoveryUrlPath)} should be a valid relative uri.");
+            }
+
+            return new AdminAccountRecoveryMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                ResetUrl = resetUrl,
+                RecoveryUrl = _siteUrlResolver.MakeAbsolute(context.RecoveryUrlPath),
                 LayoutFile = AdminMailTemplatePath.LayoutPath
             };
         }
@@ -70,15 +74,20 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
         public virtual async Task<AdminPasswordChangedMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
-            var loginPath = _adminMailTemplateUrlLibrary.Login();
+            var loginUrl = GetLoginUrl();
 
             return new AdminPasswordChangedMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginPath = loginPath,
+                LoginUrl = loginUrl,
                 LayoutFile = AdminMailTemplatePath.LayoutPath
             };
+        }
+
+        private string GetLoginUrl()
+        {
+            return _siteUrlResolver.MakeAbsolute("/" + _adminSettings.DirectoryName);
         }
 
         private async Task<string> GetApplicationNameAsync()

@@ -30,7 +30,7 @@
         /// is <see langword="false"/> the password field will be <see langword="null"/> 
         /// and login will typically be via SSO or some other method. If this is 
         /// <see langword="true"/> then the email field is required, because it is
-        /// needed for password resets.
+        /// needed for account recovery.
         /// </summary>
         bool AllowPasswordLogin { get; }
 
@@ -59,11 +59,10 @@
         bool IsDefaultAuthScheme { get; }
 
         /// <summary>
-        /// Implement this method to change any additional options from
-        /// their defaults.
+        /// Optionally implement this method to configure any additional settings.
         /// </summary>
         /// <param name="options">
-        /// The current configuration with any defaults applied.
+        /// The current configuration with any values from configuration providers (e.g. appsettings.json) applied.
         /// </param>
         void ConfigureOptions(UserAreaOptions options)
         {

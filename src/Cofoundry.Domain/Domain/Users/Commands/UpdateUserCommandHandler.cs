@@ -1,41 +1,48 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.Data;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// A generic user update command for use with Cofoundry users and
+    /// other non-Cofoundry users.
+    /// </summary>
     public class UpdateUserCommandHandler
         : ICommandHandler<UpdateUserCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
+        private readonly IUserStoredProcedures _userStoredProcedures;
+        private readonly IDomainRepository _domainRepository;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPermissionValidationService _permissionValidationService;
-        private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IUserContextCache _userContextCache;
         private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
         private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
 
         public UpdateUserCommandHandler(
             CofoundryDbContext dbContext,
+            IUserStoredProcedures userStoredProcedures,
+            IDomainRepository domainRepository,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
             IUserAreaDefinitionRepository userAreaRepository,
             IPermissionValidationService permissionValidationService,
-            ITransactionScopeManager transactionScopeManager,
             IUserContextCache userContextCache,
             IUserUpdateCommandHelper userUpdateCommandHelper,
             IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper
             )
         {
             _dbContext = dbContext;
+            _userStoredProcedures = userStoredProcedures;
+            _domainRepository = domainRepository;
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _userAreaRepository = userAreaRepository;
             _permissionValidationService = permissionValidationService;
-            _transactionScopeManager = transactionScopeManager;
             _userContextCache = userContextCache;
             _userUpdateCommandHelper = userUpdateCommandHelper;
             _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
@@ -58,20 +65,30 @@ namespace Cofoundry.Domain.Internal
 
             UpdateProperties(command, user);
 
-            if (updateResult.HasEmailChanged || updateResult.HasUsernameChanged)
+            if (updateResult.HasUpdate())
             {
                 _userSecurityStampUpdateHelper.Update(user);
             }
 
-            await _dbContext.SaveChangesAsync();
-            await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(user, updateResult));
+            using (var scope = _domainRepository.Transactions().CreateScope())
+            {
+                await _dbContext.SaveChangesAsync();
+                if (updateResult.HasEmailChanged)
+                {
+                    // The only reason to invalidate would be if the contact email that a request was sent to was changed
+                    await _userStoredProcedures.InvalidateUserAccountRecoveryRequests(user.UserId, executionContext.ExecutionDate);
+                }
+
+                scope.QueueCompletionTask(() => OnTransactionComplete(user, updateResult));
+                await scope.CompleteAsync();
+            }
         }
 
         private async Task OnTransactionComplete(User user, UserUpdateCommandHelper.UpdateEmailAndUsernameResult updateResult)
         {
             _userContextCache.Clear(user.UserId);
 
-            if (updateResult.HasEmailChanged || updateResult.HasUsernameChanged)
+            if (updateResult.HasUpdate())
             {
                 await _userSecurityStampUpdateHelper.OnTransactionCompleteAsync(user);
             }

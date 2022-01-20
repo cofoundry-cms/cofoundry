@@ -27,12 +27,12 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
             var loginService = app.Services.GetRequiredService<ILoginService>();
             var user = app.SeededEntities.AdminUser;
 
-            await loginService.LogAuthenticatedUserInAsync(CofoundryAdminUserArea.AreaCode, user.UserId, true);
+            await loginService.LogAuthenticatedUserInAsync(CofoundryAdminUserArea.Code, user.UserId, true);
 
             app.Mocks
                 .CountMessagesPublished<UserLoggedInMessage>(m =>
                 {
-                    return m.UserId == user.UserId && m.UserAreaCode == CofoundryAdminUserArea.AreaCode;
+                    return m.UserId == user.UserId && m.UserAreaCode == CofoundryAdminUserArea.Code;
                 })
                 .Should().Be(1);
         }
@@ -44,13 +44,13 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
             var loginService = app.Services.GetRequiredService<ILoginService>();
             var user = app.SeededEntities.AdminUser;
 
-            await loginService.LogAuthenticatedUserInAsync(CofoundryAdminUserArea.AreaCode, user.UserId, true);
-            await loginService.SignOutAsync(CofoundryAdminUserArea.AreaCode);
+            await loginService.LogAuthenticatedUserInAsync(CofoundryAdminUserArea.Code, user.UserId, true);
+            await loginService.SignOutAsync(CofoundryAdminUserArea.Code);
 
             app.Mocks
                 .CountMessagesPublished<UserLoggedOutMessage>(m =>
                 {
-                    return m.UserId == user.UserId && m.UserAreaCode == CofoundryAdminUserArea.AreaCode;
+                    return m.UserId == user.UserId && m.UserAreaCode == CofoundryAdminUserArea.Code;
                 })
                 .Should().Be(1);
         }
@@ -62,7 +62,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
             var loginService = app.Services.GetRequiredService<ILoginService>();
             var user = app.SeededEntities.AdminUser;
 
-            await loginService.SignOutAsync(CofoundryAdminUserArea.AreaCode);
+            await loginService.SignOutAsync(CofoundryAdminUserArea.Code);
 
             app.Mocks
                 .CountMessagesPublished<UserLoggedOutMessage>()
@@ -78,14 +78,14 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
             var loginService = app.Services.GetRequiredService<ILoginService>();
             var cofoundryUser = app.SeededEntities.AdminUser;
             var testUserArea1UserId = await app.TestData.Users().AddAsync(uniqueData);
-            await loginService.LogAuthenticatedUserInAsync(CofoundryAdminUserArea.AreaCode, cofoundryUser.UserId, true);
+            await loginService.LogAuthenticatedUserInAsync(CofoundryAdminUserArea.Code, cofoundryUser.UserId, true);
             await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, testUserArea1UserId, true);
             await loginService.SignOutAllUserAreasAsync();
 
             app.Mocks
                 .CountMessagesPublished<UserLoggedOutMessage>(m =>
                 {
-                    return m.UserId == cofoundryUser.UserId && m.UserAreaCode == CofoundryAdminUserArea.AreaCode;
+                    return m.UserId == cofoundryUser.UserId && m.UserAreaCode == CofoundryAdminUserArea.Code;
                 })
                 .Should().Be(1);
             app.Mocks

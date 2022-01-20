@@ -9,19 +9,19 @@
   <ItemGroup>
     <Content Remove="Cofoundry\Admin\MailTemplates\Layouts\_ExampleAdminMailLayout_html.cshtml" />
     <Content Remove="Cofoundry\Admin\MailTemplates\Layouts\_ExampleAdminMailLayout_text.cshtml" />
-    <Content Remove="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetByAdminMailTemplate_html.cshtml" />
-    <Content Remove="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetByAdminMailTemplate_text.cshtml" />
-    <Content Remove="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetRequestedByUserMailTemplate_html.cshtml" />
-    <Content Remove="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetRequestedByUserMailTemplate_text.cshtml" />
+    <Content Remove="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminAccountRecoveryMailTemplate_html.cshtml" />
+    <Content Remove="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminAccountRecoveryMailTemplate_text.cshtml" />
+    <Content Remove="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetMailTemplate_html.cshtml" />
+    <Content Remove="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetMailTemplate_text.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Cofoundry\Admin\MailTemplates\Layouts\_ExampleAdminMailLayout_html.cshtml" />
     <EmbeddedResource Include="Cofoundry\Admin\MailTemplates\Layouts\_ExampleAdminMailLayout_text.cshtml" />
-    <EmbeddedResource Include="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetByAdminMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetByAdminMailTemplate_text.cshtml" />
-    <EmbeddedResource Include="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetRequestedByUserMailTemplate_html.cshtml" />
-    <EmbeddedResource Include="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetRequestedByUserMailTemplate_text.cshtml" />
+    <EmbeddedResource Include="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetMailTemplate_html.cshtml" />
+    <EmbeddedResource Include="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminPasswordResetMailTemplate_text.cshtml" />
+    <EmbeddedResource Include="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminAccountRecoveryMailTemplate_html.cshtml" />
+    <EmbeddedResource Include="Cofoundry\Admin\MailTemplates\Templates\ExampleAdminAccountRecoveryMailTemplate_text.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,9 @@
+﻿@model DefaultAccountRecoveryMailTemplate
+@{
+    Layout = Model.GetLayoutFilePathForTextTemplate();
+}
+Hello,
+
+We have received a request to reset the password for your account on the @Model.ApplicationName site. 
+
+You can reset your password by visiting @Model.RecoveryUrl and following the instructions.

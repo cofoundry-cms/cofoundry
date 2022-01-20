@@ -1,0 +1,16 @@
+﻿@model ValidationQueryResult
+
+<h1 class="mt-3">Invalid account recovery request</h1>
+
+<div class="row mt-4 mb-5">
+    <div class="col col-4">
+        <p class="message warning perm">
+            @Model.Errors.First().Message
+        </p>
+        <div class="actions">
+            <p>
+                <a href="@UrlLibrary.PartnerForgotPassword()">Try again</a>
+            </p>
+        </div>
+    </div>
+</div>

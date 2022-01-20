@@ -85,17 +85,17 @@ namespace Cofoundry.Domain
         /// will need to be changed at first login (if the user area supports 
         /// it). This is designed to be used from an admin screen rather than 
         /// a self-service reset which can be done via 
-        /// <see cref="InitiatePasswordResetRequest"/>.
+        /// <see cref="InitiateUserAccountRecoveryCommand"/>.
         /// </summary>
         /// <param name="userId">Required. The database id of the user to reset the password to.</param>
         Task ResetPasswordAsync(int userId);
 
         /// <summary>
-        /// Users can initiate self-service password reset requests that
-        /// are verified by sending a message with a unique link, typically 
+        /// Users can initiate self-service account recovery (AKA "forgot password") 
+        /// requests that are verified by sending a message with a unique link, typically 
         /// via email.
         /// </summary>
-        IAdvancedContentRepositoryUserPasswordResetRequestsRepository PasswordResetRequests();
+        IAdvancedContentRepositoryUserAccountRecoveryRepository AccountRecovery();
 
         /// <summary>
         /// Queries and commands relating to the currently logged in user.

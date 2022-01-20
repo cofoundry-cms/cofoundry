@@ -57,7 +57,7 @@ namespace Cofoundry.Domain.Internal
                 LastName = command.LastName,
                 Password = command.Password,
                 RequirePasswordChange = command.RequirePasswordChange,
-                UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                UserAreaCode = CofoundryAdminUserArea.Code,
                 RoleCode = SuperAdminRole.SuperAdminRoleCode
             };
 

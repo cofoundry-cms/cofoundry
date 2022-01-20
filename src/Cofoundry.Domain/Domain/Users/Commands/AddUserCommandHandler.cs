@@ -164,7 +164,7 @@ namespace Cofoundry.Domain.Internal
 
         public IEnumerable<IPermissionApplication> GetPermissions(AddUserCommand command)
         {
-            if (command.UserAreaCode == CofoundryAdminUserArea.AreaCode)
+            if (command.UserAreaCode == CofoundryAdminUserArea.Code)
             {
                 yield return new CofoundryUserCreatePermission();
             }

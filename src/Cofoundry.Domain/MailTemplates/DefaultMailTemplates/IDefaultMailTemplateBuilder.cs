@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 {
@@ -14,9 +11,9 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
         where T : IUserAreaDefinition
     {
         /// <summary>
-        /// Creates a mail template that is used when a new user is
-        /// created with a templorary password. This is typically
-        /// when a user is created in the admin panel.
+        /// Creates a mail template that is used when a new user is created with a 
+        /// temporary password. This is typically used when a user is not available 
+        /// to provide their own password e.g. when a user is created in the admin panel.
         /// </summary>
         /// <param name="context">
         /// Key data that can be used in the template such as user data
@@ -34,20 +31,20 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
         /// Key data that can be used in the template such as user data
         /// and the temporary password.
         /// </param>
-        Task<DefaultPasswordResetByAdminMailTemplate> BuildPasswordResetByAdminTemplateAsync(
-            PasswordResetByAdminTemplateBuilderContext context
+        Task<DefaultPasswordResetMailTemplate> BuildPasswordResetTemplateAsync(
+            PasswordResetTemplateBuilderContext context
             );
 
         /// <summary>
-        /// Creates a mail template that is used when a user requests to
-        /// reset their password e.g. via a forgot password page.
+        /// Creates a mail template that is used when a user initiates an account
+        /// recovery flow e.g. via a forgot password page.
         /// </summary>
         /// <param name="context">
         /// Key data that can be used in the template such as user data
-        /// and the auth data to construct the reset url.
+        /// and the recovery url.
         /// </param>
-        Task<DefaultPasswordResetRequestedByUserMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(
-            PasswordResetRequestedByUserTemplateBuilderContext context
+        Task<DefaultAccountRecoveryMailTemplate> BuildAccountRecoveryTemplateAsync(
+            AccountRecoveryTemplateBuilderContext context
             );
 
         /// <summary>

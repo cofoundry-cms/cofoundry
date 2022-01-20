@@ -57,7 +57,7 @@ namespace Cofoundry.Domain.Internal
 
 
             // Cofoundry Admin Users can assign any roles, otherwise the user has to be in the same user area
-            if (newUserRole.UserAreaCode != userAreaCode && executorRole.UserArea.UserAreaCode != CofoundryAdminUserArea.AreaCode)
+            if (newUserRole.UserAreaCode != userAreaCode && executorRole.UserArea.UserAreaCode != CofoundryAdminUserArea.Code)
             {
                 throw new NotPermittedException("You are not permitted to assign this role.");
             }

@@ -34,7 +34,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .Users()
                 .ValidateUsername(new ValidateUsernameQuery()
                 {
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                    UserAreaCode = CofoundryAdminUserArea.Code,
                     Username = uniqueData
                 })
                 .ExecuteAsync();
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .Users()
                 .ValidateEmailAddress(new ValidateUserEmailAddressQuery()
                 {
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                    UserAreaCode = CofoundryAdminUserArea.Code,
                     Email = uniqueData
                 })
                 .ExecuteAsync();
@@ -84,7 +84,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .Users()
                 .ValidateEmailAddress(new ValidateUserEmailAddressQuery()
                 {
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                    UserAreaCode = CofoundryAdminUserArea.Code,
                     Email = uniqueData
                 })
                 .ExecuteAsync();
@@ -109,7 +109,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .Users()
                 .ValidateEmailAddress(new ValidateUserEmailAddressQuery()
                 {
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                    UserAreaCode = CofoundryAdminUserArea.Code,
                     Email = uniqueData
                 })
                 .ExecuteAsync();
@@ -135,7 +135,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .Users()
                 .ValidateEmailAddress(new ValidateUserEmailAddressQuery()
                 {
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                    UserAreaCode = CofoundryAdminUserArea.Code,
                     Email = uniqueData
                 })
                 .ExecuteAsync();
@@ -153,7 +153,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .Users()
                 .ValidateEmailAddress(new ValidateUserEmailAddressQuery()
                 {
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                    UserAreaCode = CofoundryAdminUserArea.Code,
                     Email = app.SeededEntities.AdminUser.Username.ToUpperInvariant()
                 })
                 .ExecuteAsync();

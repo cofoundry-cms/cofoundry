@@ -34,7 +34,7 @@ namespace Cofoundry.Web
             }
             else
             {
-                cofoundryUserContext = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.AreaCode);
+                cofoundryUserContext = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.Code);
             }
 
             if (cofoundryUserContext.IsCofoundryUser())

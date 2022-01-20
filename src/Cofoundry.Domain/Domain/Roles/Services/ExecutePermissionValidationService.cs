@@ -99,7 +99,7 @@ namespace Cofoundry.Domain.Internal
 
             if (_commandHandler is ICofoundryUserPermissionCheckHandler)
             {
-                _permissionValidationService.EnforceHasPermissionToUserArea(CofoundryAdminUserArea.AreaCode, executionContext.UserContext);
+                _permissionValidationService.EnforceHasPermissionToUserArea(CofoundryAdminUserArea.Code, executionContext.UserContext);
             }
         }
 

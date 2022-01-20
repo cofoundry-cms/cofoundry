@@ -9,53 +9,31 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Identity
 {
-    /// <summary>
-    /// A helper class with shared functionality between controllers
-    /// that manage user login.
-    /// </summary>
+    /// <inheritdoc/>
     public class AuthenticationControllerHelper<TUserArea> : IAuthenticationControllerHelper<TUserArea>
         where TUserArea : IUserAreaDefinition
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly ILoginService _loginService;
         private readonly IControllerResponseHelper _controllerResponseHelper;
-        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
+        private readonly IUserAccountRecoveryUrlHelper _userAccountRecoveryUrlHelper;
         private readonly TUserArea _userAreaDefinition;
 
         public AuthenticationControllerHelper(
             IQueryExecutor queryExecutor,
-            ICommandExecutor commandExecutor,
             ILoginService loginService,
             IControllerResponseHelper controllerResponseHelper,
-            IUserContextService userContextService,
-            IPasswordResetUrlHelper passwordResetUrlHelper,
+            IUserAccountRecoveryUrlHelper userAccountRecoveryUrlHelper,
             TUserArea userAreaDefinition
             )
         {
             _queryExecutor = queryExecutor;
             _loginService = loginService;
             _controllerResponseHelper = controllerResponseHelper;
-            _passwordResetUrlHelper = passwordResetUrlHelper;
+            _userAccountRecoveryUrlHelper = userAccountRecoveryUrlHelper;
             _userAreaDefinition = userAreaDefinition;
         }
 
-        /// <summary>
-        /// <para>
-        /// Attempts to authenticate the login request, returning the result. This
-        /// does not log the user in and can be used instead of LogUserInAsync when 
-        /// you want more control over the login workflow.
-        /// </para>
-        /// <para>
-        /// ModelState is first checked to be valid before checking the auth data against 
-        /// the database. An auth errors are added to the ModelState.
-        /// </para>
-        /// </summary>
-        /// <param name="controller">
-        /// This method is intended to be called from an MVC controller and this
-        /// should be the controller instance.
-        /// </param>
-        /// <param name="viewModel">The view-model data posted to the action.</param>
-        /// <returns>The result of the authentication check, this should never be null.</returns>
         public async Task<UserLoginInfoAuthenticationResult> AuthenticateAsync(Controller controller, ILoginViewModel viewModel)
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
@@ -83,20 +61,6 @@ namespace Cofoundry.Web.Identity
             return result;
         }
 
-        /// <summary>
-        /// Logs in a user that has already been authenticated, typically
-        /// by the AuthenticateAsync method.
-        /// </summary>
-        /// <param name="controller">
-        /// This method is intended to be called from an MVC controller and this
-        /// should be the controller instance.
-        /// </param>
-        /// <param name="user">A UserLoginInfo object that has been returned from a sucessful authentication request.</param>
-        /// <param name="rememberUser">
-        /// True if the user should stay logged in perminantely; false
-        /// if the user should only stay logged in for the duration of
-        /// the browser session.
-        /// </param>
         public Task LogUserInAsync(
             Controller controller,
             UserLoginInfo user,
@@ -167,15 +131,6 @@ namespace Cofoundry.Web.Identity
         //    return LoginResult.Failed;
         //}
 
-        /// <summary>
-        /// Retreives the ASP.NET MVC standard "ReturnUrl" query parameter and
-        /// validates it to be a local url before returning it.
-        /// </summary>
-        /// <param name="controller">
-        /// This method is intended to be called from an MVC controller and this
-        /// should be the controller instance.
-        /// </param>
-        /// <returns>The return url if it is a valid local url; otherwise null.</returns>
         public string GetAndValidateReturnUrl(Controller controller)
         {
             var returnUrl = controller.Request.Query["ReturnUrl"].FirstOrDefault();
@@ -191,15 +146,6 @@ namespace Cofoundry.Web.Identity
             return null;
         }
 
-        /// <summary>
-        /// Used to change a users password when it is required before login. Once
-        /// completed the user should be redirected back to login to re-authenticate.
-        /// </summary>
-        /// <param name="controller">
-        /// This method is intended to be called from an MVC controller and this
-        /// should be the controller instance.
-        /// </param>
-        /// <param name="vm">The view-model containing the data entered by the user.</param>
         public async Task ChangePasswordAsync(
             Controller controller,
             IChangePasswordViewModel vm
@@ -222,131 +168,84 @@ namespace Cofoundry.Web.Identity
             }
         }
 
-        /// <summary>
-        /// Signs the user out of the user area.
-        /// </summary>
         public Task LogoutAsync()
         {
             return _loginService.SignOutAsync(_userAreaDefinition.UserAreaCode);
         }
 
-        /// <summary>
-        /// Checks the ModelState is valid and then initiates
-        /// a password reset request.
-        /// </summary>
-        /// <param name="controller">
-        /// This method is intended to be called from an MVC controller and this
-        /// should be the controller instance.
-        /// </param>
-        /// <param name="vm">The view-model data posted to the action.</param>
-        /// <param name="resetUrlBase">
-        /// The relative base path used to construct the reset url 
-        /// e.g. new Uri("/auth/forgot-password").
-        /// </param>
-        public Task SendPasswordResetNotificationAsync(
+        public Task SendAccountRecoveryNotificationAsync(
             Controller controller,
-            IForgotPasswordViewModel vm,
-            string resetUrlBase
+            IForgotPasswordViewModel vm
             )
         {
             if (!controller.ModelState.IsValid) return Task.CompletedTask;
 
-            var command = new InitiateUserPasswordResetRequestCommand()
+            var command = new InitiateUserAccountRecoveryCommand()
             {
                 Username = vm.Username,
-                UserAreaCode = _userAreaDefinition.UserAreaCode,
-                ResetUrlBase = resetUrlBase
-            };
-
-            return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
-        }
-
-        /// <summary>
-        /// Parses the password reset authentication parameters out of the request
-        /// url and validates them against the database before returning the result.
-        /// </summary>
-        /// <param name="controller">
-        /// This method is intended to be called from an MVC controller and this
-        /// should be the controller instance.
-        /// </param>
-        /// <returns>
-        /// An object containing the validation result, details of any errors
-        /// and the parsed authentication data.
-        /// </returns>
-        public async Task<PasswordResetRequestValidationResult> ParseAndValidatePasswordResetRequestAsync(
-            Controller controller
-            )
-        {
-            if (controller == null) throw new ArgumentNullException(nameof(controller));
-
-            var result = new PasswordResetRequestValidationResult();
-            result.Error = PasswordResetRequestAuthenticationError.InvalidRequest;
-
-            if (!controller.ModelState.IsValid) return result;
-
-            // Parse the auth tokens from the request
-            var urlParameters = _passwordResetUrlHelper.ParseFromQuery(controller.Request.Query);
-            result.UserPasswordResetRequestId = urlParameters.UserPasswordResetRequestId;
-            result.Token = urlParameters.Token;
-
-            // Check for missing parameters
-            if (urlParameters.UserPasswordResetRequestId == Guid.Empty || string.IsNullOrWhiteSpace(urlParameters.Token))
-            {
-                AddPasswordRequestInvalidError(controller);
-                return result;
-            }
-
-            // Validate the request against the db
-            var query = new ValidatePasswordResetRequestQuery();
-            query.UserPasswordResetRequestId = urlParameters.UserPasswordResetRequestId;
-            query.Token = urlParameters.Token;
-            query.UserAreaCode = _userAreaDefinition.UserAreaCode;
-
-            var validationResult = await _queryExecutor.ExecuteAsync(query);
-
-            result.IsValid = validationResult.IsValid;
-            result.Error = validationResult.Error;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Completes a password reset, validating the ModelState and
-        /// view-model data before updating the database and sending
-        /// a confirmation notification.
-        /// </summary>
-        /// <param name="controller">
-        /// This method is intended to be called from an MVC controller and this
-        /// should be the controller instance.
-        /// </param>
-        /// <param name="vm">The view-model data posted to the action.</param>
-        public Task CompletePasswordResetAsync(
-            Controller controller,
-            ICompletePasswordResetViewModel vm
-            )
-        {
-            if (!controller.ModelState.IsValid) return Task.CompletedTask;
-
-            if (vm.UserPasswordResetRequestId == Guid.Empty)
-            {
-                AddPasswordRequestInvalidError(controller);
-                return Task.CompletedTask;
-            }
-
-            var command = new CompleteUserPasswordResetRequestCommand()
-            {
-                NewPassword = vm.NewPassword,
-                Token = vm.Token,
-                UserPasswordResetRequestId = vm.UserPasswordResetRequestId,
                 UserAreaCode = _userAreaDefinition.UserAreaCode
             };
 
             return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
         }
 
-        private static void AddPasswordRequestInvalidError(Controller controller)
+        public async Task<AccountRecoveryRequestValidationResult> ParseAndValidateAccountRecoveryRequestAsync(
+            Controller controller
+            )
         {
-            controller.ModelState.AddModelError(string.Empty, PasswordResetRequestAuthenticationError.InvalidRequest.ToDisplayText());
+            if (controller == null) throw new ArgumentNullException(nameof(controller));
+
+            var query = new ValidateUserAccountRecoveryRequestQuery()
+            {
+                UserAreaCode = _userAreaDefinition.UserAreaCode
+            };
+
+            if (!controller.ModelState.IsValid)
+            {
+                return await ValidateAndMapAsync(query);
+            }
+
+            // Parse the auth tokens from the request
+            query.Token = _userAccountRecoveryUrlHelper.ParseTokenFromQuery(controller.Request.Query);
+
+            var result = await ValidateAndMapAsync(query);
+
+            if (result.Errors.Any())
+            {
+                var error = result.Errors.First();
+                controller.ModelState.AddModelError(string.Empty, error.Message);
+            }
+
+            return result;
+        }
+
+        private async Task<AccountRecoveryRequestValidationResult> ValidateAndMapAsync(ValidateUserAccountRecoveryRequestQuery query)
+        {
+            var validationResult = await _queryExecutor.ExecuteAsync(query);
+
+            var result = new AccountRecoveryRequestValidationResult();
+            result.Token = query.Token;
+            result.IsValid = validationResult.IsValid;
+            result.Errors = validationResult.Errors;
+
+            return result;
+        }
+
+        public Task CompleteAccountRecoveryAsync(
+            Controller controller,
+            ICompleteAccountRecoveryViewModel vm
+            )
+        {
+            if (!controller.ModelState.IsValid) return Task.CompletedTask;
+
+            var command = new CompleteUserAccountRecoveryCommand()
+            {
+                NewPassword = vm.NewPassword,
+                Token = vm.Token,
+                UserAreaCode = _userAreaDefinition.UserAreaCode
+            };
+
+            return _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
         }
     }
 }

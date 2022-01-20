@@ -16,7 +16,7 @@ namespace Cofoundry.Domain.Tests.Domain.AccessRules
             command.PageId = 1;
             command.AccessRules
                 .AddNew("TST")
-                .AddNew(CofoundryAdminUserArea.AreaCode);
+                .AddNew(CofoundryAdminUserArea.Code);
 
             var validationService = new ModelValidationService();
             var errors = validationService.GetErrors(command);
@@ -36,10 +36,10 @@ namespace Cofoundry.Domain.Tests.Domain.AccessRules
         {
             var command = new UpdatePageAccessRuleSetCommand();
             command.PageId = 1;
-            command.UserAreaCodeForLoginRedirect = CofoundryAdminUserArea.AreaCode;
+            command.UserAreaCodeForLoginRedirect = CofoundryAdminUserArea.Code;
             command.AccessRules
                 .AddNew("TST")
-                .AddNew(CofoundryAdminUserArea.AreaCode);
+                .AddNew(CofoundryAdminUserArea.Code);
 
             var validationService = new ModelValidationService();
             var errors = validationService.GetErrors(command);

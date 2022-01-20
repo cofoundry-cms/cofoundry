@@ -1,23 +1,31 @@
-﻿namespace Cofoundry.Domain
+﻿using System;
+
+namespace Cofoundry.Domain
 {
     /// <summary>
     /// Defines the Cofoundry admin panel user area.
     /// </summary>
     public class CofoundryAdminUserArea : IUserAreaDefinition
     {
+        private readonly AdminSettings _adminSetting;
+
         public CofoundryAdminUserArea(
             AdminSettings adminSetting
             )
         {
             LoginPath = "/" + adminSetting.DirectoryName + "/auth/login";
+            _adminSetting = adminSetting;
         }
 
         /// <summary>
         /// Constant containing the Cofoundry admin area UserAreaCode.
         /// </summary>
-        public const string AreaCode = "COF";
+        public const string Code = "COF";
 
-        public string UserAreaCode { get; } = AreaCode;
+        [Obsolete("Renamed to 'Code' for consistency with other definitions.")]
+        public const string AreaCode = Code;
+
+        public string UserAreaCode { get; } = Code;
 
         public string Name { get; } = "Cofoundry";
 
@@ -31,5 +39,10 @@
         /// Although this is set to false, it is the fall-back schema if no default schema is set.
         /// </summary>
         public bool IsDefaultAuthScheme { get; } = false;
+
+        public void ConfigureOptions(UserAreaOptions options)
+        {
+            options.AccountRecovery.RecoveryUrlBase = "/" + _adminSetting.DirectoryName + "/auth/reset-password";
+        }
     }
 }

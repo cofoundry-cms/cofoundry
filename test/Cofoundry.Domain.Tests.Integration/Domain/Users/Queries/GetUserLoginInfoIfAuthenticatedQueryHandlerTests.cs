@@ -38,7 +38,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
 
             var query = new GetUserLoginInfoIfAuthenticatedQuery()
             {
-                UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                UserAreaCode = CofoundryAdminUserArea.Code,
                 Username = username,
                 Password = VALID_PASSWORD
             };
@@ -109,7 +109,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
 
             var query = new GetUserLoginInfoIfAuthenticatedQuery()
             {
-                UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                UserAreaCode = CofoundryAdminUserArea.Code,
                 Username = "System",
                 Password = VALID_PASSWORD
             };
@@ -147,7 +147,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
 
             var query = new GetUserLoginInfoIfAuthenticatedQuery()
             {
-                UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                UserAreaCode = CofoundryAdminUserArea.Code,
                 Username = username,
                 Password = VALID_PASSWORD
             };

@@ -252,6 +252,11 @@ namespace Cofoundry.Domain.Internal
             public bool HasEmailChanged { get; set; }
 
             public bool HasUsernameChanged { get; set; }
+
+            public bool HasUpdate()
+            {
+                return HasEmailChanged || HasUsernameChanged;
+            }
         }
     }
 }

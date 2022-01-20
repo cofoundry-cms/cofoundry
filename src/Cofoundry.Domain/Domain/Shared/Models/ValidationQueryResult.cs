@@ -12,6 +12,12 @@ namespace Cofoundry.Domain
     {
         public ValidationQueryResult() { }
 
+        public ValidationQueryResult(ValidationError error)
+            : this(new ValidationError[] { error })
+        {
+            if (error == null) throw new ArgumentNullException(nameof(error));
+        }
+
         public ValidationQueryResult(IEnumerable<ValidationError> errors)
             : this(errors.ToArray())
         {
@@ -35,5 +41,14 @@ namespace Cofoundry.Domain
         /// the query. If no errors are found then this collection will be empty.
         /// </summary>
         public ICollection<ValidationError> Errors { get; set; }
+
+        /// <summary>
+        /// Returns a valid new <see cref="ValidationQueryResult"/> instance
+        /// without any errors.
+        /// </summary>
+        public static ValidationQueryResult ValidResult()
+        {
+            return new ValidationQueryResult(Array.Empty<ValidationError>());
+        }
     }
 }

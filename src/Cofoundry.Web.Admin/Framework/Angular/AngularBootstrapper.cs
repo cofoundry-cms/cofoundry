@@ -138,7 +138,7 @@ namespace Cofoundry.Web.Admin
             }
 
             // Might need to add more info at some point, but right now we just need roles.
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.AreaCode);
+            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.Code);
             var role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(user.RoleId));
             var currentUserInfo = new {
                 PermissionCodes = role

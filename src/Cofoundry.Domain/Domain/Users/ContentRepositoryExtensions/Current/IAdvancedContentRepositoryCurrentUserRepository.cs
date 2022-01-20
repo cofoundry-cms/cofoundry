@@ -11,11 +11,12 @@ namespace Cofoundry.Domain
         /// Updates the user account of the currently logged in user.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task UpdateAsync(UpdateCurrentUserAccountCommand command);
+        Task UpdateAsync(UpdateCurrentUserCommand command);
 
         /// <summary>
         /// Updates the password of the currently logged in user, using the
-        /// OldPassword field to authenticate the request.
+        /// <see cref="UpdateCurrentUserPasswordCommand.OldPassword"/> field 
+        /// to authenticate the request.
         /// </summary>
         /// <param name="command">Command parameters.</param>
         Task UpdatePasswordAsync(UpdateCurrentUserPasswordCommand command);

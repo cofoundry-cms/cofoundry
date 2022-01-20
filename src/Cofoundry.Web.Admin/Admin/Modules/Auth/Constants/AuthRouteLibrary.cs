@@ -1,32 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using Cofoundry.Core.Web;
+﻿using Cofoundry.Core.Web;
 using Cofoundry.Domain;
 
 namespace Cofoundry.Web.Admin
 {
     public class AuthRouteLibrary : ModuleRouteLibrary
     {
-        #region statics
-
         public const string RoutePrefix = "auth";
 
         public readonly string LoginLayoutPath = ViewPathFormatter.View("Auth", "_LoginLayout");
-
-        #endregion
-
-        #region constructor
 
         public AuthRouteLibrary(AdminSettings adminSettings)
             : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
         {
         }
-
-        #endregion
-
-        #region routes
 
         public string Login(string returnUrl = null)
         {
@@ -34,7 +20,7 @@ namespace Cofoundry.Web.Admin
 
             return MvcRoute("login", qs);
         }
-        
+
         public string ChangePassword(string returnUrl = null)
         {
             var qs = QueryStringBuilder.Create("ReturnUrl", returnUrl);
@@ -53,14 +39,12 @@ namespace Cofoundry.Web.Admin
         }
 
         /// <summary>
-        /// The base url for password reset requests i.e. without the
+        /// The base url for account recovery requests i.e. without the
         /// required query parameters.
         /// </summary>
         public string ResetPasswordBase()
         {
             return MvcRoute("reset-password");
         }
-
-        #endregion
     }
 }

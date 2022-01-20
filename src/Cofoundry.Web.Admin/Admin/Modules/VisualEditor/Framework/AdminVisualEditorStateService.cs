@@ -56,7 +56,7 @@ namespace Cofoundry.Web.Admin
 
             var requestParameters = GetRequestParameters();
 
-            var cofoundryUserContext = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.AreaCode);
+            var cofoundryUserContext = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.Code);
 
             // Work out whether to view the page in live/draft/edit mode.
             // We use live by default (for logged out users) or for authenticated

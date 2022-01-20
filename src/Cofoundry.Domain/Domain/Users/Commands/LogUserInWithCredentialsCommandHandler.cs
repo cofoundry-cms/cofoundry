@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Validation;
-using Microsoft.Extensions.Logging;
+using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -25,6 +23,7 @@ namespace Cofoundry.Domain.Internal
         private readonly ILogger<LogUserInWithCredentialsCommandHandler> _logger;
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IUserStoredProcedures _userStoredProcedures;
         private readonly ILoginService _loginService;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
 
@@ -32,6 +31,7 @@ namespace Cofoundry.Domain.Internal
             ILogger<LogUserInWithCredentialsCommandHandler> logger,
             CofoundryDbContext dbContext,
             IQueryExecutor queryExecutor,
+            IUserStoredProcedures userStoredProcedures,
             ILoginService loginService,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper
             )
@@ -39,6 +39,7 @@ namespace Cofoundry.Domain.Internal
             _logger = logger;
             _dbContext = dbContext;
             _queryExecutor = queryExecutor;
+            _userStoredProcedures = userStoredProcedures;
             _loginService = loginService;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
         }
@@ -63,13 +64,17 @@ namespace Cofoundry.Domain.Internal
             }
 
             ValidateLoginArea(command.UserAreaCode, authResult.User.UserAreaCode);
+
+            // Successful credentials auth invalidates any account recovery requests
+            await _userStoredProcedures.InvalidateUserAccountRecoveryRequests(authResult.User.UserId, executionContext.ExecutionDate);
+
             await _loginService.LogAuthenticatedUserInAsync(
-                command.UserAreaCode, 
-                authResult.User.UserId, 
+                command.UserAreaCode,
+                authResult.User.UserId,
                 command.RememberUser
                 );
         }
-        
+
         private static bool IsLoggedInAlready(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)
         {
             var currentContext = executionContext.UserContext;

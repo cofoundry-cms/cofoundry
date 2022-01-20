@@ -319,12 +319,11 @@ namespace Cofoundry.Domain.Data
         public DbSet<UserArea> UserAreas { get; set; }
 
         /// <summary>
-        /// Users can initiate self-service password reset requests that
-        /// are verified by sending a message with a unique link, typically 
-        /// via email. This table tracks those requests and logs when they are 
-        /// completed.
+        /// Users can initiate self-service account recovery (AKA "forgot password")  
+        /// requests that are verified by sending a message with a unique link, typically 
+        /// via email. This table tracks those requests and logs when they are completed.
         /// </summary>
-        public DbSet<UserPasswordResetRequest> UserPasswordResetRequests { get; set; }
+        public DbSet<UserAccountRecoveryRequest> UserAccountRecoveryRequests { get; set; }
 
         /// <summary>
         /// Contains a record of a relation between one entitiy and another

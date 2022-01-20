@@ -13,8 +13,8 @@ begin
 	from Cofoundry.UserLoginLog e
 	inner join deleted d on e.UserId = d.UserId
 
-    delete Cofoundry.UserPasswordResetRequest
-	from Cofoundry.UserPasswordResetRequest e
+    delete Cofoundry.UserAccountRecoveryRequest
+	from Cofoundry.UserAccountRecoveryRequest e
 	inner join deleted d on e.UserId = d.UserId
 
 	-- NB: related entity cascade constraints are enforced at the domain layer, so here we just need to clear everything

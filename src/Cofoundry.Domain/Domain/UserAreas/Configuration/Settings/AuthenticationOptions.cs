@@ -17,13 +17,8 @@ namespace Cofoundry.Domain
             MaxUsernameAttempts = 20;
             MaxIPAttemptsBoundaryInMinutes = 60;
             MaxUsernameAttemptsBoundaryInMinutes = 60;
-            NumHoursPasswordResetLinkValid = 16;
         }
 
-        /// <summary>
-        /// The number of hours a password reset link is valid for. Defaults to 16 hours.
-        /// </summary>
-        public int NumHoursPasswordResetLinkValid { get; set; }
 
         /// <summary>
         /// The maximum number of failed login attempts allowed per IP address 

@@ -1,8 +1,4 @@
-﻿using Cofoundry.Core.Mail;
-using Microsoft.AspNetCore.Html;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 {
@@ -32,8 +28,8 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
         public IHtmlContent TemporaryPassword { get; set; }
 
         /// <summary>
-        /// The path that the user can use to log in.
+        /// The absolute login page url e.g. "https://www.example.com/members/login".
         /// </summary>
-        public string LoginPath { get; set; }
+        public string LoginUrl { get; set; }
     }
 }

@@ -14,17 +14,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\PartnerAuth\AccountRecovery.cshtml" />
+    <Content Remove="Views\PartnerAuth\AccountRecoveryComplete.cshtml" />
+    <Content Remove="Views\PartnerAuth\AccountRecoveryRequestInvalid.cshtml" />
     <Content Remove="Views\PartnerAuth\ForgotPassword.cshtml" />
-    <Content Remove="Views\PartnerAuth\PasswordReset.cshtml" />
-    <Content Remove="Views\PartnerAuth\PasswordResetComplete.cshtml" />
-    <Content Remove="Views\PartnerAuth\PasswordResetRequestInvalid.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Views\PartnerAuth\ForgotPassword.cshtml" />
-    <EmbeddedResource Include="Views\PartnerAuth\PasswordReset.cshtml" />
-    <EmbeddedResource Include="Views\PartnerAuth\PasswordResetComplete.cshtml" />
-    <EmbeddedResource Include="Views\PartnerAuth\PasswordResetRequestInvalid.cshtml" />
+    <EmbeddedResource Include="Views\PartnerAuth\AccountRecovery.cshtml" />
+    <EmbeddedResource Include="Views\PartnerAuth\AccountRecoveryComplete.cshtml" />
+    <EmbeddedResource Include="Views\PartnerAuth\AccountRecoveryRequestInvalid.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

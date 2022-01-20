@@ -1,17 +1,15 @@
 ﻿using Cofoundry.Core.Mail;
+using Cofoundry.Core.Web;
 using Cofoundry.Domain;
 using Cofoundry.Domain.MailTemplates;
 using Cofoundry.Domain.MailTemplates.AdminMailTemplates;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.Mail.AdminMailTemplates
 {
     /// <summary>
     /// To override the built-in admin mail templates we need to
-    /// implement the IUserMailTemplateBuilder interface for the
+    /// implement the <see cref="IUserMailTemplateBuilder{T}"/> interface for the
     /// Cofoundry admin user area. DI will pick up your custom
     /// builder automatically.
     /// 
@@ -22,11 +20,11 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
     {
         const string LAYOUT_PATH = "~/Cofoundry/Admin/MailTemplates/Layouts/_ExampleAdminMailLayout";
         private readonly ICofoundryAdminMailTemplateBuilder _cofoundryAdminMailTemplateBuilder;
-        private readonly IPasswordResetUrlHelper _passwordResetUrlHelper;
+        private readonly ISiteUrlResolver _siteUrlResolver;
 
         public AdminMailTemplateBuilder(
             ICofoundryAdminMailTemplateBuilder cofoundryAdminMailTemplateBuilder,
-            IPasswordResetUrlHelper passwordResetUrlHelper
+            ISiteUrlResolver siteUrlResolver
             )
         {
             // Injecting ICofoundryAdminMailTemplateBuilder allows us to 
@@ -34,7 +32,7 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
             // properties we might want to customize rather than create
             // a new template from scratch
             _cofoundryAdminMailTemplateBuilder = cofoundryAdminMailTemplateBuilder;
-            _passwordResetUrlHelper = passwordResetUrlHelper;
+            _siteUrlResolver = siteUrlResolver;
         }
 
         /// <summary>
@@ -77,10 +75,10 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
         /// you want to change the wording of the email, but don't need any
         /// additional properties in the template model
         /// </summary>
-        public async Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context)
         {
             // build the default template
-            var template = await _cofoundryAdminMailTemplateBuilder.BuildPasswordResetByAdminTemplateAsync(context);
+            var template = await _cofoundryAdminMailTemplateBuilder.BuildPasswordResetTemplateAsync(context);
 
             // customize the layout file
             template.LayoutFile = LAYOUT_PATH;
@@ -89,7 +87,7 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
             template.SubjectFormat = "Your password has been reset!";
 
             // customize the view file
-            template.ViewFile = "~/Cofoundry/Admin/MailTemplates/Templates/ExampleAdminPasswordResetByAdminMailTemplate";
+            template.ViewFile = "~/Cofoundry/Admin/MailTemplates/Templates/ExampleAdminAccountRecoveryMailTemplate";
 
             return template;
         }
@@ -97,23 +95,20 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
         /// <summary>
         /// This example completely customizes the template model and the 
         /// view file, adding a "first name" property. The method only
-        /// requires that you return an IMailTemplate instance, so you
-        /// are free to customize the process as little or as much as you
+        /// requires that you return an <see cref="IMailTemplate"/> instance, 
+        /// so you are free to customize the process as little or as much as you
         /// like.
         /// </summary>
-        public Task<IMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
+        public Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context)
         {
-            // Build the standard admin reset url using the helper
-            var resetUrl = _passwordResetUrlHelper.MakeUrl(context);
-
             // build a custom template instance, adding in any custom data
-            var template = new ExampleAdminPasswordResetRequestedByUserMailTemplate()
+            var template = new ExampleAdminAccountRecoveryMailTemplate()
             {
                 FirstName = context.User.FirstName,
-                ResetUrl = resetUrl,
+                RecoveryUrl = _siteUrlResolver.MakeAbsolute(context.RecoveryUrlPath),
                 Username = context.User.Username
             };
-            
+
             return Task.FromResult<IMailTemplate>(template);
         }
     }

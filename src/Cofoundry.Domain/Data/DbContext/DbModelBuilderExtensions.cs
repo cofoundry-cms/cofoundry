@@ -82,7 +82,7 @@ namespace Cofoundry.Domain.Data
                 .ApplyConfiguration(new RoleMap())
                 .ApplyConfiguration(new PermissionMap())
                 .ApplyConfiguration(new RolePermissionMap())
-                .ApplyConfiguration(new UserPasswordResetRequestMap());
+                .ApplyConfiguration(new UserAccountRecoveryRequestMap());
 
             return modelBuilder;
         }

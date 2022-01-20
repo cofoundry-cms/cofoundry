@@ -1,10 +1,4 @@
-﻿using Cofoundry.Core.Mail;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-
-namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
+﻿namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
 {
     /// <summary>
     /// Template for the email sent to a user to notify them that their
@@ -25,8 +19,8 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
         public string Username { get; set; }
 
         /// <summary>
-        /// The path that the user can use to log in.
+        /// The absolute login page url e.g. "https://www.example.com/admin/".
         /// </summary>
-        public string LoginPath { get; set; }
+        public string LoginUrl { get; set; }
     }
 }

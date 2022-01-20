@@ -96,7 +96,7 @@ namespace Cofoundry.Domain.Internal
             {
                 throw new NotPermittedException("You cannot delete the system account.");
             }
-            if (user.UserAreaCode == CofoundryAdminUserArea.AreaCode)
+            if (user.UserAreaCode == CofoundryAdminUserArea.Code)
             {
                 _permissionValidationService.EnforcePermission(new CofoundryUserUpdatePermission(), executionContext.UserContext);
             }

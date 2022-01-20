@@ -44,7 +44,7 @@ namespace Cofoundry.Domain
             {
                 yield return new ValidationResult("You can only redirect to the login page for a user area that appears in the access rules.", new string[] { nameof(UserAreaCodeForLoginRedirect) });
             }
-            else if (UserAreaCodeForLoginRedirect == CofoundryAdminUserArea.AreaCode)
+            else if (UserAreaCodeForLoginRedirect == CofoundryAdminUserArea.Code)
             {
                 yield return new ValidationResult("You cannot redirect to the Cofoundry admin user area because access rules only apply to custom user areas.", new string[] { nameof(UserAreaCodeForLoginRedirect) });
             }

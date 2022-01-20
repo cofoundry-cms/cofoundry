@@ -49,7 +49,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .Users()
                 .IsUsernameUnique(new IsUsernameUniqueQuery()
                 {
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                    UserAreaCode = CofoundryAdminUserArea.Code,
                     Username = app.SeededEntities.AdminUser.Username
                 })
                 .ExecuteAsync();
@@ -88,7 +88,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .Users()
                 .IsUsernameUnique(new IsUsernameUniqueQuery()
                 {
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                    UserAreaCode = CofoundryAdminUserArea.Code,
                     Username = app.SeededEntities.AdminUser.Username,
                     UserId = app.SeededEntities.AdminUser.UserId
                 })
@@ -108,7 +108,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .Users()
                 .IsUsernameUnique(new IsUsernameUniqueQuery()
                 {
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                    UserAreaCode = CofoundryAdminUserArea.Code,
                     Username = uniqueData + "@example.com",
                     UserId = app.SeededEntities.AdminUser.UserId
                 })

@@ -78,7 +78,7 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(new DeleteUserCommand(userId));
         }
 
-        public Task UpdateCurrentUserAccountAsync(UpdateCurrentUserAccountCommand command)
+        public Task UpdateCurrentUserAccountAsync(UpdateCurrentUserCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
@@ -96,9 +96,9 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        public IAdvancedContentRepositoryUserPasswordResetRequestsRepository PasswordResetRequests()
+        public IAdvancedContentRepositoryUserAccountRecoveryRepository AccountRecovery()
         {
-            return new ContentRepositoryUserPasswordResetRequestsRepository(ExtendableContentRepository);
+            return new ContentRepositoryUserAccountRecoveryRepository(ExtendableContentRepository);
         }
 
         public IAdvancedContentRepositoryCurrentUserRepository Current()

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Core.Configuration;
+﻿using Cofoundry.Core.Configuration;
+using System;
 
 namespace Cofoundry.Domain
 {
@@ -17,13 +14,13 @@ namespace Cofoundry.Domain
             MaxUsernameAttempts = 20;
             MaxIPAttemptsBoundaryInMinutes = 60;
             MaxUsernameAttemptsBoundaryInMinutes = 60;
-            NumHoursPasswordResetLinkValid = 16;
         }
 
         /// <summary>
         /// The number of hours a password reset link is valid for. Defaults to 16 hours.
         /// </summary>
-        public int NumHoursPasswordResetLinkValid { get; set; }
+        [Obsolete("This is now set via User:AccountRecovery:ValidityPeriod")]
+        public int NumHoursPasswordResetLinkValid { get; set; } = 16;
 
         /// <summary>
         /// The maximum number of failed login attempts allowed per IP address 

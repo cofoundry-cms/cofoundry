@@ -50,7 +50,7 @@ namespace Cofoundry.Domain.Internal
 
         public IEnumerable<IPermissionApplication> GetPermissions(ValidateUsernameQuery query)
         {
-            if (query.UserAreaCode == CofoundryAdminUserArea.AreaCode)
+            if (query.UserAreaCode == CofoundryAdminUserArea.Code)
             {
                 yield return new CofoundryUserReadPermission();
             }

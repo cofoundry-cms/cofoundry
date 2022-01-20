@@ -34,7 +34,7 @@ namespace Cofoundry.Domain
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (UserAreaCode == CofoundryAdminUserArea.AreaCode)
+            if (UserAreaCode == CofoundryAdminUserArea.Code)
             {
                 yield return new ValidationResult("Access rules cannot be added for the Cofoundry admin user area because access rules do not apply to these users.", new string[] { nameof(UserAreaCode) });
             }

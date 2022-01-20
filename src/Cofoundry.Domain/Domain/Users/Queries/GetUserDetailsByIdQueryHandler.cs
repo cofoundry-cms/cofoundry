@@ -43,7 +43,7 @@ namespace Cofoundry.Domain.Internal
 
             var user = _userDetailsMapper.Map(dbUser);
 
-            if (user != null && user.UserArea.UserAreaCode == CofoundryAdminUserArea.AreaCode)
+            if (user != null && user.UserArea.UserAreaCode == CofoundryAdminUserArea.Code)
             {
                 _permissionValidationService.EnforceCurrentUserOrHasPermission<CofoundryUserReadPermission>(query.UserId, executionContext.UserContext);
             }

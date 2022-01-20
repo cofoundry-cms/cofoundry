@@ -44,5 +44,18 @@ namespace Cofoundry.Domain.Data.Internal
 
             return emailDomainId.Value;
         }
+
+        public async Task InvalidateUserAccountRecoveryRequests(
+            int userId,
+            DateTime dateNow
+            )
+        {
+            await _entityFrameworkSqlExecutor
+                .ExecuteCommandAsync(_dbContext,
+                    "Cofoundry.UserAccountRecoveryRequest_InvalidateByUserId",
+                     new SqlParameter("@userId", userId),
+                     new SqlParameter("@DateNow", dateNow)
+                 );
+        }
     }
 }

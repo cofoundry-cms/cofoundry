@@ -3,6 +3,7 @@ using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -12,15 +13,16 @@ namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the password of the currently logged in user, using the
-    /// OldPassword field to authenticate the request.
+    /// <see cref="UpdateCurrentUserPasswordCommand.OldPassword"/> field 
+    /// to authenticate the request.
     /// </summary>
     public class UpdateCurrentUserPasswordCommandHandler
         : ICommandHandler<UpdateCurrentUserPasswordCommand>
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserPasswordCommand>
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly IQueryExecutor _queryExecutor;
-        private readonly ICommandExecutor _commandExecutor;
+        private readonly IUserStoredProcedures _userStoredProcedures;
+        private readonly IDomainRepository _domainRepository;
         private readonly UserAuthenticationHelper _userAuthenticationHelper;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
@@ -33,8 +35,8 @@ namespace Cofoundry.Domain.Internal
 
         public UpdateCurrentUserPasswordCommandHandler(
             CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor,
-            ICommandExecutor commandExecutor,
+            IUserStoredProcedures userStoredProcedures,
+            IDomainRepository domainRepository,
             UserAuthenticationHelper userAuthenticationHelper,
             IPermissionValidationService permissionValidationService,
             IUserAreaDefinitionRepository userAreaRepository,
@@ -47,8 +49,8 @@ namespace Cofoundry.Domain.Internal
             )
         {
             _dbContext = dbContext;
-            _queryExecutor = queryExecutor;
-            _commandExecutor = commandExecutor;
+            _userStoredProcedures = userStoredProcedures;
+            _domainRepository = domainRepository;
             _userAuthenticationHelper = userAuthenticationHelper;
             _permissionValidationService = permissionValidationService;
             _userAreaRepository = userAreaRepository;
@@ -74,8 +76,14 @@ namespace Cofoundry.Domain.Internal
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
             _userSecurityStampUpdateHelper.Update(user);
 
-            await _dbContext.SaveChangesAsync();
-            await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(user));
+            using (var scope = _domainRepository.Transactions().CreateScope())
+            {
+                await _dbContext.SaveChangesAsync();
+                await _userStoredProcedures.InvalidateUserAccountRecoveryRequests(user.UserId, executionContext.ExecutionDate);
+
+                scope.QueueCompletionTask(() => OnTransactionComplete(user));
+                await scope.CompleteAsync();
+            }
         }
 
         private async Task OnTransactionComplete(User user)
@@ -107,7 +115,9 @@ namespace Cofoundry.Domain.Internal
                 Username = dbUser.Username
             };
 
-            var hasExceededMaxLoginAttempts = await _queryExecutor.ExecuteAsync(query, executionContext);
+            var hasExceededMaxLoginAttempts = await _domainRepository
+                .WithExecutionContext(executionContext)
+                .ExecuteQueryAsync(query);
 
             if (hasExceededMaxLoginAttempts)
             {
@@ -134,7 +144,7 @@ namespace Cofoundry.Domain.Internal
             if (_userAuthenticationHelper.VerifyPassword(user, command.OldPassword) == PasswordVerificationResult.Failed)
             {
                 var logFailedAttemptCommand = new LogFailedLoginAttemptCommand(user.UserAreaCode, user.Username);
-                await _commandExecutor.ExecuteAsync(logFailedAttemptCommand);
+                await _domainRepository.ExecuteCommandAsync(logFailedAttemptCommand);
 
                 throw new InvalidCredentialsAuthenticationException(nameof(command.OldPassword), "Incorrect password");
             }

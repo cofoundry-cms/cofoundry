@@ -1,8 +1,8 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -13,30 +13,33 @@ namespace Cofoundry.Domain.Internal
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
+        private readonly IUserStoredProcedures _userStoredProcedures;
+        private readonly IDomainRepository _domainRepository;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
         private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
-        private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IUserContextCache _userContextCache;
         private readonly IPasswordPolicyService _newPasswordValidationService;
         private readonly IMessageAggregator _messageAggregator;
 
         public UpdateUserPasswordByUserIdCommandHandler(
             CofoundryDbContext dbContext,
+            IUserStoredProcedures userStoredProcedures,
+            IDomainRepository domainRepository,
             IUserAreaDefinitionRepository userAreaRepository,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
             IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper,
-            ITransactionScopeManager transactionScopeManager,
             IUserContextCache userContextCache,
             IPasswordPolicyService newPasswordValidationService,
             IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
+            _userStoredProcedures = userStoredProcedures;
+            _domainRepository = domainRepository;
             _userAreaRepository = userAreaRepository;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
             _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
-            _transactionScopeManager = transactionScopeManager;
             _userContextCache = userContextCache;
             _newPasswordValidationService = newPasswordValidationService;
             _messageAggregator = messageAggregator;
@@ -51,8 +54,17 @@ namespace Cofoundry.Domain.Internal
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
             _userSecurityStampUpdateHelper.Update(user);
 
-            await _dbContext.SaveChangesAsync();
-            await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(user));
+            using (var scope = _domainRepository.Transactions().CreateScope())
+            {
+                await _dbContext.SaveChangesAsync();
+
+                // Typically we only invalidate when the current user changes their password, but we
+                // can't be certain of the origin of the request here, so invalidate them anyway.
+                await _userStoredProcedures.InvalidateUserAccountRecoveryRequests(user.UserId, executionContext.ExecutionDate);
+
+                scope.QueueCompletionTask(() => OnTransactionComplete(user));
+                await scope.CompleteAsync();
+            }
         }
 
         private async Task OnTransactionComplete(User user)
@@ -78,7 +90,7 @@ namespace Cofoundry.Domain.Internal
         }
 
         private async Task ValidatePasswordAsync(
-            UpdateUserPasswordByUserIdCommand command, 
+            UpdateUserPasswordByUserIdCommand command,
             User user,
             IExecutionContext executionContext
             )

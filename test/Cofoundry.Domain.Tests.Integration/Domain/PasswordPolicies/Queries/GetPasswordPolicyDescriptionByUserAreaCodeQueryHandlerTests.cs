@@ -25,7 +25,7 @@ namespace Cofoundry.Domain.Tests.Integration.UserAreas.Queries
             var policyDescription = await contentRepository
                 .UserAreas()
                 .PasswordPolicies()
-                .GetByCode(CofoundryAdminUserArea.AreaCode)
+                .GetByCode(CofoundryAdminUserArea.Code)
                 .AsDescription()
                 .ExecuteAsync();
 

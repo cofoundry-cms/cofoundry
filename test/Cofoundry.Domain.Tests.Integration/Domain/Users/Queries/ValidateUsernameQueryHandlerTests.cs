@@ -133,7 +133,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 .Users()
                 .ValidateUsername(new ValidateUsernameQuery()
                 {
-                    UserAreaCode = CofoundryAdminUserArea.AreaCode,
+                    UserAreaCode = CofoundryAdminUserArea.Code,
                     Username = app.SeededEntities.AdminUser.Username.ToUpperInvariant()
                 })
                 .ExecuteAsync();

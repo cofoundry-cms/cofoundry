@@ -1,9 +1,6 @@
 ﻿using Cofoundry.Core.Mail;
 using Cofoundry.Domain.MailTemplates;
 using Cofoundry.Domain.MailTemplates.DefaultMailTemplates;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas
@@ -19,7 +16,7 @@ namespace Cofoundry.Samples.UserAreas
 
         public CustomerMailTemplateBuilder(
             IDefaultMailTemplateBuilder<CustomerUserArea> defaultMailTemplateBuilder
-            ) 
+            )
         {
             _defaultMailTemplateBuilder = defaultMailTemplateBuilder;
         }
@@ -46,22 +43,22 @@ namespace Cofoundry.Samples.UserAreas
             return template;
         }
 
-        public async Task<IMailTemplate> BuildPasswordResetByAdminTemplateAsync(PasswordResetByAdminTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context)
         {
             // build the default template
-            var template = await _defaultMailTemplateBuilder.BuildPasswordResetByAdminTemplateAsync(context);
+            var template = await _defaultMailTemplateBuilder.BuildPasswordResetTemplateAsync(context);
 
             // return unmodified
             return template;
         }
 
-        public async Task<IMailTemplate> BuildPasswordResetRequestedByUserTemplateAsync(PasswordResetRequestedByUserTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context)
         {
             // build the default template
-            var template = await _defaultMailTemplateBuilder.BuildPasswordResetRequestedByUserTemplateAsync(context);
+            var template = await _defaultMailTemplateBuilder.BuildAccountRecoveryTemplateAsync(context);
 
             // customize the view file
-            template.ViewFile = "~/Cofoundry/MailTemplates/CustomerUsers/Templates/PasswordResetRequestedByUserMailTemplate";
+            template.ViewFile = "~/Cofoundry/MailTemplates/CustomerUsers/Templates/AccountRecoveryMailTemplate";
 
             return template;
         }
