@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core.DependencyInjection;
+﻿using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Registration
@@ -18,7 +13,6 @@ namespace Cofoundry.Domain.Registration
                 .Register<ICustomEntityDisplayModelMapper, CustomEntityDisplayModelMapper>()
                 .Register<ICustomEntityDataModelMapper, CustomEntityDataModelMapper>()
                 .Register<ICustomEntityCache, CustomEntityCache>()
-                .Register<ICustomEntityRepository, CustomEntityRepository>()
                 .RegisterAll<ICustomEntityRoutingRule>(singletonOptions)
                 .RegisterAll<ICustomEntityDefinition>(singletonOptions)
                 .RegisterAll<ICustomEntityDisplayModel>()
@@ -32,7 +26,6 @@ namespace Cofoundry.Domain.Registration
                 .Register<ICustomEntityRouteMapper, CustomEntityRouteMapper>()
                 .Register<ICustomEntityRouteDataBuilderFactory, CustomEntityRouteDataBuilderFactory>()
                 .RegisterAllGenericImplementations(typeof(ICustomEntityRouteDataBuilder<,>))
-
                 ;
         }
     }

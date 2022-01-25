@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Cofoundry.Domain.CQS.Internal
 {
@@ -25,9 +20,9 @@ namespace Cofoundry.Domain.CQS.Internal
         /// <summary>
         /// Creates a new IAsyncQueryHandler instance with the specified type signature.
         /// </summary>
-        public IAsyncQueryHandler<TQuery, TResult> CreateAsyncHandler<TQuery, TResult>() where TQuery : IQuery<TResult>
+        public IQueryHandler<TQuery, TResult> CreateAsyncHandler<TQuery, TResult>() where TQuery : IQuery<TResult>
         {
-            return _serviceProvider.GetRequiredService<IAsyncQueryHandler<TQuery, TResult>>();
+            return _serviceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
         }
     }
 }

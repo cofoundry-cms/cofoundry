@@ -12,17 +12,6 @@ namespace Cofoundry.Domain.Data
     public static class DbModelBuilderExtensions
     {
         /// <summary>
-        /// Use the suggested config for your DbContext, which currenly only 
-        /// makes "app" the default schema.
-        /// </summary>
-        /// <returns>DbModelBuilder for method chaining.</returns>
-        [Obsolete("Replaced with HasAppSchema() because no other configuration takes place here.")]
-        public static ModelBuilder UseDefaultConfig(this ModelBuilder modelBuilder)
-        {
-            return modelBuilder.HasAppSchema();
-        }
-
-        /// <summary>
         /// <para>
         /// Makes the "app" schema as the default. "app" is the recommended
         /// schema to use for any custom tables you add to the database, keeping

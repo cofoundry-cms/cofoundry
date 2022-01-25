@@ -14,7 +14,6 @@ namespace Cofoundry.Domain.Registration
                 .Register<IPermissionValidationService, PermissionValidationService>()
                 .Register<IExecutePermissionValidationService, ExecutePermissionValidationService>()
                 .Register<IRoleCache, RoleCache>()
-                .Register<IRoleRepository, RoleRepository>()
                 .Register<IInternalRoleRepository, InternalRoleRepository>()
                 .Register<IRoleDetailsMapper, RoleDetailsMapper>()
                 .Register<IRoleMicroSummaryMapper, RoleMicroSummaryMapper>()

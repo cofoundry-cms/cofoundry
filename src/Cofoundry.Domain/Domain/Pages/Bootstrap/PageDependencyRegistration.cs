@@ -14,7 +14,6 @@ namespace Cofoundry.Domain.Registration
                 .Register<IEntityVersionPageBlockMapper, EntityVersionPageBlockMapper>()
                 .Register<IPageBlockCommandHelper, PageBlockCommandHelper>()
                 .RegisterAll<ICustomEntityDataModel>()
-                .Register<IPageRepository, PageRepository>()
                 .Register<IPageRouteLibrary, PageRouteLibrary>()
                 .Register<IPageRenderDetailsMapper, PageRenderDetailsMapper>()
                 .Register<IPageGroupSummaryMapper, PageGroupSummaryMapper>()

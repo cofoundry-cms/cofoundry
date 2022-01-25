@@ -11,20 +11,17 @@ namespace Cofoundry.BasicTestSite
 {
     public class BlogPostListViewComponent : ViewComponent
     {
-        private readonly ICustomEntityRepository _customEntityRepository;
-        private readonly IImageAssetRepository _imageAssetRepository;
+        private readonly IContentRepository _contentRepository;
         private readonly IPageResponseDataCache _pageRenderDataCache;
         private readonly IVisualEditorStateService _visualEditorStateService;
 
         public BlogPostListViewComponent(
-            ICustomEntityRepository customEntityRepository,
-            IImageAssetRepository imageAssetRepository,
+            IContentRepository contentRepository,
             IPageResponseDataCache pageRenderDataCache,
             IVisualEditorStateService visualEditorStateService
             )
         {
-            _customEntityRepository = customEntityRepository;
-            _imageAssetRepository = imageAssetRepository;
+            _contentRepository = contentRepository;
             _pageRenderDataCache = pageRenderDataCache;
             _visualEditorStateService = visualEditorStateService;
         }
@@ -52,7 +49,11 @@ namespace Cofoundry.BasicTestSite
             // is possible to build your own search index using the message handling
             // framework or writing a custom query against the UnstructuredDataDependency table
 
-            var entities = await _customEntityRepository.SearchCustomEntityRenderSummariesAsync(query);
+            var entities = await _contentRepository
+                .CustomEntities()
+                .Search()
+                .AsRenderSummaries(query)
+                .ExecuteAsync();
             var viewModel = await MapBlogPostsAsync(entities);
 
             return View(viewModel);
@@ -68,7 +69,11 @@ namespace Cofoundry.BasicTestSite
                 .Select(m => m.ThumbnailImageAssetId)
                 .Distinct();
 
-            var images = await _imageAssetRepository.GetImageAssetRenderDetailsByIdRangeAsync(imageAssetIds);
+            var images = await _contentRepository
+                .ImageAssets()
+                .GetByIdRange(imageAssetIds)
+                .AsRenderDetails()
+                .ExecuteAsync();
 
             foreach (var customEntity in customEntityResult.Items)
             {

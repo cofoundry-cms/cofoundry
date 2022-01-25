@@ -2,7 +2,6 @@
 using Cofoundry.Domain;
 using Cofoundry.Web;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,18 +10,15 @@ namespace Cofoundry.BasicTestSite
 {
     public class HomepageBlogPostsViewComponent : ViewComponent
     {
-        private readonly ICustomEntityRepository _customEntityRepository;
-        private readonly IImageAssetRepository _imageAssetRepository;
+        private readonly IContentRepository _contentRepository;
         private readonly IVisualEditorStateService _visualEditorStateService;
 
         public HomepageBlogPostsViewComponent(
-            ICustomEntityRepository customEntityRepository,
-            IImageAssetRepository imageAssetRepository,
+            IContentRepository contentRepository,
             IVisualEditorStateService visualEditorStateService
             )
         {
-            _customEntityRepository = customEntityRepository;
-            _imageAssetRepository = imageAssetRepository;
+            _contentRepository = contentRepository;
             _visualEditorStateService = visualEditorStateService;
         }
 
@@ -35,7 +31,17 @@ namespace Cofoundry.BasicTestSite
             query.PublishStatus = visualEditorState.GetAmbientEntityPublishStatusQuery();
             query.PageSize = 3;
 
-            var entities = await _customEntityRepository.SearchCustomEntityRenderSummariesAsync(query);
+            var entities = await _contentRepository
+                .CustomEntities()
+                .Search()
+                .AsRenderSummaries(new SearchCustomEntityRenderSummariesQuery()
+                {
+                    CustomEntityDefinitionCode = BlogPostCustomEntityDefinition.DefinitionCode,
+                    PublishStatus = visualEditorState.GetAmbientEntityPublishStatusQuery(),
+                    PageSize = 3
+                })
+                .ExecuteAsync();
+
             var viewModel = await MapBlogPostsAsync(entities);
 
             return View(viewModel);
@@ -51,7 +57,11 @@ namespace Cofoundry.BasicTestSite
                 .Select(m => m.ThumbnailImageAssetId)
                 .Distinct();
 
-            var images = await _imageAssetRepository.GetImageAssetRenderDetailsByIdRangeAsync(imageAssetIds);
+            var images = await _contentRepository
+                .ImageAssets()
+                .GetByIdRange(imageAssetIds)
+                .AsRenderDetails()
+                .ExecuteAsync();
 
             foreach (var customEntity in customEntityResult.Items)
             {

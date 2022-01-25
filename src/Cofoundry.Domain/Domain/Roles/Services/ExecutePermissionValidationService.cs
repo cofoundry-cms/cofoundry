@@ -1,9 +1,5 @@
 ﻿using Cofoundry.Domain.CQS;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -12,8 +8,6 @@ namespace Cofoundry.Domain.Internal
     /// </summary>
     public class ExecutePermissionValidationService : IExecutePermissionValidationService
     {
-        #region constructor
-
         private readonly IPermissionValidationService _permissionValidationService;
 
         public ExecutePermissionValidationService(
@@ -23,9 +17,7 @@ namespace Cofoundry.Domain.Internal
             _permissionValidationService = permissionValidationService;
         }
 
-        #endregion
-
-        public virtual void Validate<TCommand>(TCommand command, IAsyncCommandHandler<TCommand> commandHandler, IExecutionContext executionContext) where TCommand : ICommand
+        public virtual void Validate<TCommand>(TCommand command, ICommandHandler<TCommand> commandHandler, IExecutionContext executionContext) where TCommand : ICommand
         {
             ValidateCommmandImplementation<TCommand>(commandHandler);
 
@@ -38,7 +30,7 @@ namespace Cofoundry.Domain.Internal
             CheckAdditionalPermissionHandlers(commandHandler, executionContext, _permissionValidationService);
         }
 
-        public virtual void Validate<TQuery, TResult>(TQuery query, IAsyncQueryHandler<TQuery, TResult> queryHandler, IExecutionContext executionContext) where TQuery : IQuery<TResult>
+        public virtual void Validate<TQuery, TResult>(TQuery query, IQueryHandler<TQuery, TResult> queryHandler, IExecutionContext executionContext) where TQuery : IQuery<TResult>
         {
             ValidateQueryImplementation<TQuery, TResult>(queryHandler);
 
@@ -50,8 +42,6 @@ namespace Cofoundry.Domain.Internal
 
             CheckAdditionalPermissionHandlers(queryHandler, executionContext, _permissionValidationService);
         }
-
-        #region private
 
         protected void ValidateCommmandImplementation<TCommand>(object handler)
             where TCommand : ICommand
@@ -119,7 +109,5 @@ namespace Cofoundry.Domain.Internal
                 throw new InvalidOperationException(msg);
             }
         }
-
-        #endregion
     }
 }

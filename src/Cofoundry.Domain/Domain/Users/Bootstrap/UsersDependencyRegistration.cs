@@ -11,7 +11,6 @@ namespace Cofoundry.Domain.Registration
             container
                 .RegisterAll<IUserAreaDefinition>()
                 .Register<IUserAreaDefinitionRepository, UserAreaDefinitionRepository>()
-                .Register<IUserRepository, UserRepository>()
                 .Register<UserContextMapper>()
                 .Register<IPasswordUpdateCommandHelper, PasswordUpdateCommandHelper>()
                 .Register<IUserContextService, UserContextService>()

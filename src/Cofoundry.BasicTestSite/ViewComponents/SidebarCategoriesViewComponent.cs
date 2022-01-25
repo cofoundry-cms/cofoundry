@@ -1,7 +1,5 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,13 +8,13 @@ namespace Cofoundry.BasicTestSite
 {
     public class SidebarCategoriesViewComponent : ViewComponent
     {
-        private readonly ICustomEntityRepository _customEntityRepository;
+        private readonly IContentRepository _contentRepository;
 
         public SidebarCategoriesViewComponent(
-            ICustomEntityRepository customEntityRepository
+            IContentRepository contentRepository
             )
         {
-            _customEntityRepository = customEntityRepository;
+            _contentRepository = contentRepository;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
@@ -27,7 +25,18 @@ namespace Cofoundry.BasicTestSite
             query.SortBy = CustomEntityQuerySortType.Title;
             query.PublishStatus = PublishStatusQuery.Published;
 
-            var entities = await _customEntityRepository.SearchCustomEntityRenderSummariesAsync(query);
+            var entities = await _contentRepository
+                .CustomEntities()
+                .Search()
+                .AsRenderSummaries(new SearchCustomEntityRenderSummariesQuery()
+                {
+                    CustomEntityDefinitionCode = CategoryCustomEntityDefinition.DefinitionCode,
+                    PageSize = 20,
+                    SortBy = CustomEntityQuerySortType.Title,
+                    PublishStatus = PublishStatusQuery.Published
+                })
+                .ExecuteAsync();
+
             var viewModel = MapCategories(entities);
 
             return View(viewModel);

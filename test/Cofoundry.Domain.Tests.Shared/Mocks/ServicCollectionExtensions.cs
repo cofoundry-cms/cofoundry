@@ -21,7 +21,7 @@ namespace Cofoundry.Domain.Tests.Shared.Mocks
         public static IServiceCollection MockHandler<TQuery, TResult>(this IServiceCollection serviceCollection, TResult result)
             where TQuery : IQuery<TResult>
         {
-            return serviceCollection.AddTransient<IAsyncQueryHandler<TQuery, TResult>>(s => new MockQueryHandler<TQuery, TResult>(result));
+            return serviceCollection.AddTransient<IQueryHandler<TQuery, TResult>>(s => new MockQueryHandler<TQuery, TResult>(result));
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Cofoundry.Domain.Tests.Shared.Mocks
         public static IServiceCollection MockHandler<TQuery, TResult>(this IServiceCollection serviceCollection, Func<TQuery, TResult> queryDelegate)
             where TQuery : IQuery<TResult>
         {
-            return serviceCollection.AddTransient<IAsyncQueryHandler<TQuery, TResult>>(s => new MockQueryHandler<TQuery, TResult>(queryDelegate));
+            return serviceCollection.AddTransient<IQueryHandler<TQuery, TResult>>(s => new MockQueryHandler<TQuery, TResult>(queryDelegate));
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Cofoundry.Domain.Tests.Shared.Mocks
         public static IServiceCollection MockHandler<TQuery, TResult>(this IServiceCollection serviceCollection, Func<TQuery, Task<TResult>> asyncQueryDelegate)
             where TQuery : IQuery<TResult>
         {
-            return serviceCollection.AddTransient<IAsyncQueryHandler<TQuery, TResult>>(s => new MockQueryHandler<TQuery, TResult>(asyncQueryDelegate));
+            return serviceCollection.AddTransient<IQueryHandler<TQuery, TResult>>(s => new MockQueryHandler<TQuery, TResult>(asyncQueryDelegate));
         }
 
         /// <summary>

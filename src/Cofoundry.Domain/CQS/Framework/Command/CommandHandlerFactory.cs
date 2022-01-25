@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Cofoundry.Domain.CQS.Internal
 {
@@ -24,9 +20,9 @@ namespace Cofoundry.Domain.CQS.Internal
         /// <summary>
         /// Creates a new IAsyncCommandHandler instance with the specified type signature.
         /// </summary>
-        public IAsyncCommandHandler<T> CreateAsyncHandler<T>() where T : ICommand
+        public ICommandHandler<T> CreateAsyncHandler<T>() where T : ICommand
         {
-            return _serviceProvider.GetRequiredService<IAsyncCommandHandler<T>>();
+            return _serviceProvider.GetRequiredService<ICommandHandler<T>>();
         }
     }
 }
