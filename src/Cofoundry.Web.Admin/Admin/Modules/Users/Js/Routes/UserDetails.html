@@ -15,6 +15,11 @@
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
+        <cms-button cms-text="Reset Password"
+                    ng-if="::vm.canResetPassword"
+                    ng-click="vm.resetPassword()"
+                    ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
+
         <cms-button cms-text="Delete"
                     ng-if="::vm.canDelete"
                     ng-click="vm.deleteUser()"

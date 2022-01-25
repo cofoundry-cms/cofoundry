@@ -39,6 +39,11 @@ function (
         return $http.patch(getIdRoute(command.userId), command);
     }
 
+    service.resetPassword = function (userId) {
+
+        return $http.put(getIdRoute(userId) + '/reset-password');
+    }
+
     service.remove = function (id) {
 
         return $http.delete(getIdRoute(id));

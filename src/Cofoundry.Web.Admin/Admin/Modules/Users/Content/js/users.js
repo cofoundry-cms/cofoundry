@@ -54,6 +54,11 @@ function (
         return $http.patch(getIdRoute(command.userId), command);
     }
 
+    service.resetPassword = function (userId) {
+
+        return $http.put(getIdRoute(userId) + '/reset-password');
+    }
+
     service.remove = function (id) {
 
         return $http.delete(getIdRoute(id));
@@ -160,8 +165,8 @@ angular.module('cms.users').controller('UserDetailsController', [
     'shared.modalDialogService',
     'shared.permissionValidationService',
     'shared.roleService',
+    'shared.currentUser',
     'users.userService',
-    'users.modulePath',
     'users.options',
 function (
     $routeParams,
@@ -171,12 +176,13 @@ function (
     modalDialogService,
     permissionValidationService,
     roleService,
+    currentUser,
     userService,
-    modulePath,
     options
     ) {
 
-    var vm = this;
+    var vm = this,
+        isCurrentUser = currentUser.userId == $routeParams.id;
 
     init();
     
@@ -188,6 +194,7 @@ function (
         vm.edit = edit;
         vm.save = save;
         vm.cancel = reset;
+        vm.resetPassword = resetPassword;
         vm.deleteUser = deleteUser;
 
         // Properties
@@ -200,7 +207,11 @@ function (
         var entityDefinitionCode = options.userAreaCode === 'COF' ? 'COFUSR' : 'COFUSN';
         vm.canUpdate = permissionValidationService.canUpdate(entityDefinitionCode);
         vm.canDelete = permissionValidationService.canDelete(entityDefinitionCode);
-
+        vm.canResetPassword = permissionValidationService.hasPermission(entityDefinitionCode + 'RSTPWD')
+            && options.allowPasswordLogin 
+            && options.useEmailAsUsername
+            && !isCurrentUser;
+            
         // Init
         $q.all([loadRoles(), loadUser()])
             .then(initForm)
@@ -226,6 +237,27 @@ function (
         vm.editMode = false;
         vm.command = mapUpdateCommand();
         vm.mainForm.formStatus.clear();
+    }
+
+    function resetPassword() {
+        var options = {
+            title: 'Reset Password',
+            xmsg: 'This will change a users password to a new temporary value. The  which will be sent to them in an email. ',
+            message: 'Resetting a password will log the user out of all sessions and email them a new temporary password that needs to be changed at first login.<br><br>Do you want to continue?',
+            okButtonTitle: 'Yes, reset it',
+            onOk: onOk
+        };
+
+        modalDialogService.confirm(options);
+
+        function onOk() {
+            setLoadingOn();
+
+            return userService
+                .resetPassword(vm.user.userId)
+                .then(onSuccess.bind(null, 'Password reset, notification sent.'))
+                .finally(setLoadingOff);
+        }
     }
 
     function deleteUser() {

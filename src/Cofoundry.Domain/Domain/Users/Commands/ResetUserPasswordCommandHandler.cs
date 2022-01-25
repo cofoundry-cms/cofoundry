@@ -109,6 +109,8 @@ namespace Cofoundry.Domain.Internal
                 .FilterCanLogIn()
                 .SingleOrDefaultAsync();
 
+            EntityNotFoundException.ThrowIfNull(user, userId);
+
             return user;
         }
 
@@ -164,14 +166,19 @@ namespace Cofoundry.Domain.Internal
 
         public void ValidatePermissions(User user, IExecutionContext executionContext)
         {
+            if (user.UserId == executionContext.UserContext.UserId)
+            {
+                throw new NotPermittedException("A user cannot reset the password on their own user account.");
+            }
+
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(user.UserAreaCode);
             if (userArea is CofoundryAdminUserArea)
             {
-                _permissionValidationService.EnforcePermission(new CofoundryUserUpdatePermission(), executionContext.UserContext);
+                _permissionValidationService.EnforcePermission(new CofoundryUserResetPasswordPermission(), executionContext.UserContext);
             }
             else
             {
-                _permissionValidationService.EnforcePermission(new NonCofoundryUserUpdatePermission(), executionContext.UserContext);
+                _permissionValidationService.EnforcePermission(new NonCofoundryUserResetPasswordPermission(), executionContext.UserContext);
             }
         }
     }

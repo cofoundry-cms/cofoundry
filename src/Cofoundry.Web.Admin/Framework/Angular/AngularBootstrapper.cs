@@ -1,19 +1,15 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain;
-using Microsoft.AspNetCore.Html;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Http;
 using Cofoundry.Domain.CQS;
-using System.IO;
-using Cofoundry.Core;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -87,12 +83,10 @@ namespace Cofoundry.Web.Admin
             return new HtmlString(script);
         }
 
-        #region private helpers
-
         private void AddScript(
-            List<string> scriptToAddTo, 
-            ModuleRouteLibrary moduleRouteLibrary, 
-            string fileName, 
+            List<string> scriptToAddTo,
+            ModuleRouteLibrary moduleRouteLibrary,
+            string fileName,
             bool checkIfResourceExists = false
             )
         {
@@ -134,13 +128,14 @@ namespace Cofoundry.Web.Admin
             if (_webHostEnvironment.IsDevelopment())
             {
                 // use strict DI when in debug mode to throw up errors
-                args = ", { strictDi: true }"; 
+                args = ", { strictDi: true }";
             }
 
-            // Might need to add more info at some point, but right now we just need roles.
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.Code);
             var role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(user.RoleId));
-            var currentUserInfo = new {
+            var currentUserInfo = new
+            {
+                UserId = user.UserId,
                 PermissionCodes = role
                     .Permissions
                     .Select(p => p.GetUniqueIdentifier())
@@ -155,8 +150,8 @@ namespace Cofoundry.Web.Admin
                                .constant('csrfToken', '" + tokens.RequestToken + @"')
                                .constant('csrfHeaderName', '" + tokens.HeaderName + @"')"
                                + GetConstant(_adminRouteLibrary.Shared, "showDevException", canShowDeveloperException)
-                               + GetConstant(_adminRouteLibrary.Shared, "serviceBase", "/" + _adminSettings.DirectoryName + "/api/") 
-                               + GetConstant(_adminRouteLibrary.Shared, "pluginServiceBase", "/" + _adminSettings.DirectoryName + "/api/plugins/") 
+                               + GetConstant(_adminRouteLibrary.Shared, "serviceBase", "/" + _adminSettings.DirectoryName + "/api/")
+                               + GetConstant(_adminRouteLibrary.Shared, "pluginServiceBase", "/" + _adminSettings.DirectoryName + "/api/plugins/")
                                + GetConstant(_adminRouteLibrary.Shared, "urlBaseBase", "/" + _adminSettings.DirectoryName + "/")
                                + GetConstant(_adminRouteLibrary.Shared, "internalContentPath", _adminRouteLibrary.Shared.GetStaticResourceUrlPath() + "/")
                                + GetConstant(_adminRouteLibrary.Shared, "pluginContentPath", _adminRouteLibrary.SharedPlugin.GetStaticResourceUrlPath() + "/")
@@ -182,7 +177,5 @@ namespace Cofoundry.Web.Admin
 
             return string.Empty;
         }
-
-        #endregion
     }
 }

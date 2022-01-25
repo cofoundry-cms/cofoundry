@@ -69,6 +69,12 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.RunCommandAsync(userId, delta);
         }
 
+        public Task<JsonResult> PutResetPassword(int userId)
+        {
+            var command = new ResetUserPasswordCommand() { UserId = userId };
+            return _apiResponseHelper.RunCommandAsync(command);
+        }
+
         public Task<JsonResult> Delete(int userId)
         {
             var command = new DeleteUserCommand();

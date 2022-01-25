@@ -305,6 +305,7 @@ namespace Cofoundry.Web.Admin
                 .MapGetById(userIdRoute)
                 .MapPost()
                 .MapPatch(userIdRoute)
+                .MapPut(userIdRoute + "/reset-password", "PutResetPassword")
                 .MapDelete(userIdRoute)
                 ;
         }
