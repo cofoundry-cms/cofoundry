@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Data
     /// single root directory.
     /// </summary>
     /// <inheritdoc/>
-    public partial class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>, ICreateAuditable
+    public class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>, ICreateAuditable
     {
         /// <summary>
         /// Database primary key.

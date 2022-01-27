@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Data
     /// to be reused for other purposes, but this isn't a common scenario and often there will only be the 
     /// Cofoundry user area.
     /// </summary>
-    public partial class User
+    public class User
     {
         /// <summary>
         /// Database id of the <see cref="User"/>.

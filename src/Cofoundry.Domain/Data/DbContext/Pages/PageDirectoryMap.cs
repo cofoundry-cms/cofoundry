@@ -8,10 +8,9 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<PageDirectory> builder)
         {
-            builder.ToTable("PageDirectory", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(PageDirectory), DbConstants.CofoundrySchema);
             builder.HasKey(s => s.PageDirectoryId);
 
-            // Properties
             builder.Property(s => s.Name)
                 .HasMaxLength(200);
 
@@ -19,7 +18,6 @@ namespace Cofoundry.Domain.Data
                 .IsRequired()
                 .HasMaxLength(200);
 
-            // Relationships
             builder.HasOne(s => s.ParentPageDirectory)
                 .WithMany(d => d.ChildPageDirectories)
                 .HasForeignKey(s => s.ParentPageDirectoryId);

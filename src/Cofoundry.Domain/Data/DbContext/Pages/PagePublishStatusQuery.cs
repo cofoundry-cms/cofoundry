@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Cofoundry.Domain.Data
 {
     /// <summary>
@@ -9,7 +6,7 @@ namespace Cofoundry.Domain.Data
     /// 'PreferPublished'. These records are generated when pages
     /// are published or unpublished.
     /// </summary>
-    public partial class PagePublishStatusQuery
+    public class PagePublishStatusQuery
     {
         /// <summary>
         /// Id of the page this record represents. Forms a key

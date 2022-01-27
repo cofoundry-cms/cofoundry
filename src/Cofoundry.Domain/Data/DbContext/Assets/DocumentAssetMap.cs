@@ -2,7 +2,6 @@ using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Cofoundry.Domain.Data
 {
@@ -10,9 +9,8 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<DocumentAsset> builder)
         {
-            builder.ToTable("DocumentAsset", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(DocumentAsset), DbConstants.CofoundrySchema);
 
-            // Properties
             builder.Property(s => s.FileName)
                 .IsRequired()
                 .HasMaxLength(130);
@@ -39,6 +37,8 @@ namespace Cofoundry.Domain.Data
 
             builder.Property(s => s.ContentType)
                 .HasMaxLength(100);
+
+            builder.Property(s => s.FileUpdateDate).IsUtc();
 
             UpdateAuditableMappingHelper.Map(builder);
         }

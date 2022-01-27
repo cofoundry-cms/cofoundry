@@ -10,14 +10,12 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<DocumentAssetGroup> builder)
         {
-            builder.ToTable("DocumentAssetGroup", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(DocumentAssetGroup), DbConstants.CofoundrySchema);
 
-            // Properties
             builder.Property(s => s.GroupName)
                 .IsRequired()
                 .HasMaxLength(64);
 
-            // Relationships
             builder.HasOne(s => s.ParentDocumentAssetGroup)
                 .WithMany(s => s.ChildDocumentAssetGroups)
                 .HasForeignKey(d => d.ParentDocumentAssetGroupId);

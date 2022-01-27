@@ -1,8 +1,7 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Cofoundry.Core;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.EntityFramework;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -10,9 +9,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<PageTemplate> builder)
         {
-            builder.ToTable("PageTemplate", DbConstants.CofoundrySchema);
-
-            // Properties
+            builder.ToTable(nameof(PageTemplate), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.FileName)
                 .HasMaxLength(100)
@@ -26,16 +23,13 @@ namespace Cofoundry.Domain.Data
                 .HasMaxLength(400)
                 .IsRequired();
 
-            builder.Property(s => s.CustomEntityDefinitionCode)
-                .HasMaxLength(6);
+            builder.Property(s => s.CustomEntityDefinitionCode).HasMaxLength(6);
+            builder.Property(s => s.CustomEntityModelType).HasMaxLength(400);
+            builder.Property(s => s.Description).IsNVarCharMaxType();
 
-            builder.Property(s => s.CustomEntityModelType)
-                .HasMaxLength(400);
+            builder.Property(s => s.CreateDate).IsUtc();
+            builder.Property(s => s.UpdateDate).IsUtc();
 
-            builder.Property(s => s.Description)
-                .IsNVarCharMaxType();
-
-            // Relationships
             builder.HasOne(s => s.CustomEntityDefinition)
                 .WithMany()
                 .HasForeignKey(d => d.CustomEntityDefinitionCode);

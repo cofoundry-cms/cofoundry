@@ -11,19 +11,13 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<ImageAssetGroupItem> builder)
         {
-            builder.ToTable("ImageAssetGroupItem", DbConstants.CofoundrySchema);
-
-            // Primary Key
+            builder.ToTable(nameof(ImageAssetGroupItem), DbConstants.CofoundrySchema);
             builder.HasKey(s =>new { s.ImageAssetId, s.ImageAssetGroupId });
 
-            // Properties
-            builder.Property(s => s.ImageAssetId)
-                .ValueGeneratedNever();
+            builder.Property(s => s.ImageAssetId).ValueGeneratedNever();
 
-            builder.Property(s => s.ImageAssetGroupId)
-                .ValueGeneratedNever();
+            builder.Property(s => s.ImageAssetGroupId).ValueGeneratedNever();
 
-            // Relationships
             builder.HasOne(s => s.ImageAssetGroup)
                 .WithMany(s => s.ImageAssetGroupItems)
                 .HasForeignKey(d => d.ImageAssetGroupId);

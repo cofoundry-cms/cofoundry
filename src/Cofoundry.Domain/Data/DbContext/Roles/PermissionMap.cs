@@ -2,7 +2,6 @@ using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Cofoundry.Domain.Data
 {
@@ -10,7 +9,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<Permission> builder)
         {
-            builder.ToTable("Permission", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(Permission), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.PermissionCode)
                 .IsRequired()

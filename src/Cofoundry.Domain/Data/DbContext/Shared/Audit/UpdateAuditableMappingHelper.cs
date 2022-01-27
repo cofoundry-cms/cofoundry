@@ -1,11 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Data
 {
@@ -15,11 +9,11 @@ namespace Cofoundry.Domain.Data
         {
             CreateAuditableMappingHelper.Map(builder);
 
-            // Relationships
-
             builder.HasOne(s => s.Updater)
                 .WithMany()
                 .HasForeignKey(d => d.UpdaterId);
+
+            builder.Property(s => s.UpdateDate).IsUtc();
         }
     }
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Cofoundry.Domain.Data
 {
     /// <summary>
@@ -9,7 +6,7 @@ namespace Cofoundry.Domain.Data
     /// 'PreferPublished'. These records are generated when custom entities
     /// are published or unpublished.
     /// </summary>
-    public partial class CustomEntityPublishStatusQuery
+    public class CustomEntityPublishStatusQuery
     {
         /// <summary>
         /// Id of the custom entity this record represents. Forms a key

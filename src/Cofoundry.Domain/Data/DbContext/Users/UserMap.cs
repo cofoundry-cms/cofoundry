@@ -9,7 +9,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("User", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(User), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.FirstName)
                 .HasMaxLength(32);
@@ -42,7 +42,10 @@ namespace Cofoundry.Domain.Data
                 .IsRequired()
                 .IsNVarCharMaxType();
 
-            // Relationships
+            builder.Property(s => s.LastLoginDate).IsUtc();
+            builder.Property(s => s.LastPasswordChangeDate).IsUtc();
+            builder.Property(s => s.PreviousLoginDate).IsUtc();
+            builder.Property(s => s.CreateDate).IsUtc();
 
             builder.HasOne(s => s.EmailDomain)
                 .WithMany(d => d.Users)

@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 
@@ -10,13 +9,8 @@ namespace Cofoundry.Domain.Data
     /// e.g. @Cofoundry.Template.Region("MyRegionName"). These regions represent
     /// areas where page blocks can be placed (i.e. insert content).
     /// </summary>
-    public partial class PageTemplateRegion
+    public class PageTemplateRegion
     {
-        public PageTemplateRegion()
-        {
-            PageVersionBlocks = new List<PageVersionBlock>();
-        }
-
         /// <summary>
         /// The database id of the region.
         /// </summary>
@@ -47,8 +41,6 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public virtual PageTemplate PageTemplate { get; set; }
 
-        #region Auditing
-
         /// <summary>
         /// The date the template was created
         /// </summary>
@@ -59,13 +51,11 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public DateTime UpdateDate { get; set; }
 
-        #endregion
-
         /// <summary>
         /// In each page implementation a region can have zero or more page 
         /// blocks, these contain the dynamic content that gets rendered into
         /// the template.
         /// </summary>
-        public virtual ICollection<PageVersionBlock> PageVersionBlocks { get; set; }
+        public virtual ICollection<PageVersionBlock> PageVersionBlocks { get; set; } = new List<PageVersionBlock>();
     }
 }

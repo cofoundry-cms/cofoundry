@@ -10,14 +10,8 @@ namespace Cofoundry.Domain.Data
     /// developer. Block types are typically created when the application
     /// starts up in the auto-update process.
     /// </summary>
-    public partial class PageBlockType
+    public class PageBlockType
     {
-        public PageBlockType()
-        {
-            PageBlockTemplates = new List<PageBlockTypeTemplate>();
-            PageVersionBlocks = new List<PageVersionBlock>();
-        }
-
         /// <summary>
         /// Database Id of this instance
         /// </summary>
@@ -56,8 +50,6 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public bool IsArchived { get; set; }
 
-        #region Auditing
-
         /// <summary>
         /// Date the block type was created.
         /// </summary>
@@ -68,19 +60,17 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public DateTime UpdateDate { get; set; }
 
-        #endregion
-
         /// <summary>
         /// A page block can optionally have one or more templates in addition to the 
         /// default template. This allows for a user to display content in multiple 
         /// ways.
         /// </summary>
-        public virtual ICollection<PageBlockTypeTemplate> PageBlockTemplates { get; set; }
-        
+        public virtual ICollection<PageBlockTypeTemplate> PageBlockTemplates { get; set; } = new List<PageBlockTypeTemplate>();
+
         /// <summary>
         /// The page blocks this type is used in.
         /// </summary>
-        public virtual ICollection<PageVersionBlock> PageVersionBlocks { get; set; }
+        public virtual ICollection<PageVersionBlock> PageVersionBlocks { get; set; } = new List<PageVersionBlock>();
 
         /// <summary>
         /// The custom entity blocks this type is used in.

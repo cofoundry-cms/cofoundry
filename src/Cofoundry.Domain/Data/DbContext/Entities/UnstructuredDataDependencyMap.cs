@@ -1,8 +1,6 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -10,11 +8,8 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<UnstructuredDataDependency> builder)
         {
-            builder.ToTable("UnstructuredDataDependency", DbConstants.CofoundrySchema);
-
+            builder.ToTable(nameof(UnstructuredDataDependency), DbConstants.CofoundrySchema);
             builder.HasKey(s => new { s.RootEntityDefinitionCode, s.RootEntityId, s.RelatedEntityDefinitionCode, s.RelatedEntityId });
-
-            // Properties
 
             builder.Property(s => s.RootEntityDefinitionCode)
                 .HasMaxLength(6)
@@ -24,13 +19,9 @@ namespace Cofoundry.Domain.Data
                 .HasMaxLength(6)
                 .IsRequired();
 
-            // Relations
-
             builder.HasOne(s => s.RootEntityDefinition)
                 .WithMany()
                 .HasForeignKey(d => d.RootEntityDefinitionCode);
-
-            // Relations
 
             builder.HasOne(s => s.RelatedEntityDefinition)
                 .WithMany()

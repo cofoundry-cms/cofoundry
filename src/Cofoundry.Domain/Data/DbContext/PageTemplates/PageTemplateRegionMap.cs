@@ -1,7 +1,7 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -9,14 +9,14 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<PageTemplateRegion> builder)
         {
-            builder.ToTable("PageTemplateRegion", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(PageTemplateRegion), DbConstants.CofoundrySchema);
 
-            // Properties
             builder.Property(s => s.Name)
                 .IsRequired()
                 .HasMaxLength(50);
 
-            // Relationships
+            builder.Property(s => s.CreateDate).IsUtc();
+            builder.Property(s => s.UpdateDate).IsUtc();
 
             builder.HasOne(s => s.PageTemplate)
                 .WithMany(s => s.PageTemplateRegions)

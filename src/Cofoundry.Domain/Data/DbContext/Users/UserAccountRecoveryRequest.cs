@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data
     /// requests that are verified by sending a message with a unique link, typically 
     /// via email. This table tracks those requests and logs when they are completed.
     /// </summary>
-    public partial class UserAccountRecoveryRequest
+    public class UserAccountRecoveryRequest
     {
         /// <summary>
         /// Primary key and unique identifier for the recovery request, which is combined

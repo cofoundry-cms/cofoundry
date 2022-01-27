@@ -1,4 +1,5 @@
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,9 +9,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<Page> builder)
         {
-            builder.ToTable("Page", DbConstants.CofoundrySchema);
-
-            // Properties
+            builder.ToTable(nameof(Page), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.UrlPath)
                 .IsRequired()
@@ -23,8 +22,6 @@ namespace Cofoundry.Domain.Data
             builder.Property(s => s.PublishStatusCode)
                 .HasMaxLength(1)
                 .IsUnicode(false);
-
-            // Relationships
 
             builder.HasOne(s => s.Locale)
                 .WithMany()
@@ -41,6 +38,9 @@ namespace Cofoundry.Domain.Data
             builder.HasOne(s => s.UserAreaForLoginRedirect)
                 .WithMany()
                 .HasForeignKey(s => s.UserAreaCodeForLoginRedirect);
+
+            builder.Property(s => s.PublishDate).IsUtc();
+            builder.Property(s => s.LastPublishDate).IsUtc();
 
             CreateAuditableMappingHelper.Map(builder);
         }

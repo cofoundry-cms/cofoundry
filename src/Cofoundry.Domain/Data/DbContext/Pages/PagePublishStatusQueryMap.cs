@@ -1,7 +1,6 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -9,11 +8,8 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<PagePublishStatusQuery> builder)
         {
-            builder.ToTable("PagePublishStatusQuery", DbConstants.CofoundrySchema);
-
+            builder.ToTable(nameof(PagePublishStatusQuery), DbConstants.CofoundrySchema);
             builder.HasKey(s => new { s.PageId, s.PublishStatusQueryId });
-
-            // Relationships
 
             builder.HasOne(s => s.Page)
                 .WithMany(s => s.PagePublishStatusQueries)

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
 {
@@ -8,7 +7,8 @@ namespace Cofoundry.Domain.Data
     /// in a template region. The data and rendering of each block is controlled 
     /// by the page block type assigned to it.
     /// </summary>
-    public partial class PageVersionBlock : ICreateAuditable, IEntityVersionPageBlock
+    /// <inheritdoc/>
+    public class PageVersionBlock : ICreateAuditable, IEntityVersionPageBlock
     {
         /// <summary>
         /// Auto-incrementing primary key of the record in the database.
@@ -80,13 +80,11 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public virtual PageBlockTypeTemplate PageBlockTypeTemplate { get; set; }
 
-        #region ICreateAuditable
-
         public System.DateTime CreateDate { get; set; }
-        public int CreatorId { get; set; }
-        public virtual User Creator { get; set; }
 
-        #endregion
+        public int CreatorId { get; set; }
+
+        public virtual User Creator { get; set; }
 
         /// <summary>
         /// Date that the block was last updated.

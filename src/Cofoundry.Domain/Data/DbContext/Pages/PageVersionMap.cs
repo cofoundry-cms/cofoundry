@@ -1,7 +1,6 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -9,9 +8,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<PageVersion> builder)
         {
-            builder.ToTable("PageVersion", DbConstants.CofoundrySchema);
-
-            // Properties
+            builder.ToTable(nameof(PageVersion), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.Title)
                 .IsRequired()
@@ -23,8 +20,6 @@ namespace Cofoundry.Domain.Data
 
             builder.Property(s => s.OpenGraphTitle)
                 .HasMaxLength(300);
-
-            // Relationships
 
             builder.HasOne(s => s.OpenGraphImageAsset)
                 .WithMany()

@@ -1,9 +1,6 @@
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -11,9 +8,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<CustomEntityVersion> builder)
         {
-            builder.ToTable("CustomEntityVersion", DbConstants.CofoundrySchema);
-
-            // Properties
+            builder.ToTable(nameof(CustomEntityVersion), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.SerializedData)
                 .IsRequired();
@@ -21,8 +16,6 @@ namespace Cofoundry.Domain.Data
             builder.Property(s => s.Title)
                 .HasMaxLength(200)
                 .IsRequired();
-
-            // Relationships
 
             builder.HasOne(s => s.CustomEntity)
                 .WithMany(s => s.CustomEntityVersions)

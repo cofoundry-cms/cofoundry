@@ -1,7 +1,6 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -9,21 +8,11 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<PageTag> builder)
         {
-            builder.ToTable("PageTag", DbConstants.CofoundrySchema);
-
-            // Primary Key
-
+            builder.ToTable(nameof(PageTag), DbConstants.CofoundrySchema);
             builder.HasKey(s => new { s.PageId, s.TagId });
 
-            // Properties
-
-            builder.Property(s => s.PageId)
-                .ValueGeneratedNever();
-
-            builder.Property(s => s.TagId)
-                .ValueGeneratedNever();
-
-            // Relationships
+            builder.Property(s => s.PageId).ValueGeneratedNever();
+            builder.Property(s => s.TagId).ValueGeneratedNever();
 
             builder.HasOne(s => s.Page)
                 .WithMany(s => s.PageTags)

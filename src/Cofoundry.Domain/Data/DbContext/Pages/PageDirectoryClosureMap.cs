@@ -8,13 +8,8 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<PageDirectoryClosure> builder)
         {
-            builder.ToTable("PageDirectoryClosure", DbConstants.CofoundrySchema);
-
-            // Primary Key
-
+            builder.ToTable(nameof(PageDirectoryClosure), DbConstants.CofoundrySchema);
             builder.HasKey(s => new { s.AncestorPageDirectoryId, s.DescendantPageDirectoryId });
-
-            // Relationships
 
             builder.HasOne(s => s.AncestorPageDirectory)
                 .WithMany(s => s.DescendantPageDirectories)

@@ -9,14 +9,9 @@ namespace Cofoundry.Domain.Data
     /// can have many published versions; the latest published version is
     /// the one that is rendered when the page is published. 
     /// </summary>
-    public partial class PageVersion : ICreateAuditable, IEntityVersion
+    /// <inheritdoc/>
+    public class PageVersion : ICreateAuditable, IEntityVersion
     {
-        public PageVersion()
-        {
-            PageVersionBlocks = new List<PageVersionBlock>();
-            PagePublishStatusQueries = new List<PagePublishStatusQuery>();
-        }
-
         /// <summary>
         /// Auto-incrementing primary key of the page version record 
         /// in the database.
@@ -99,7 +94,7 @@ namespace Cofoundry.Domain.Data
         /// <summary>
         /// Page content data to be rendered in the page template.
         /// </summary>
-        public ICollection<PageVersionBlock> PageVersionBlocks { get; set; }
+        public ICollection<PageVersionBlock> PageVersionBlocks { get; set; } = new List<PageVersionBlock>();
 
         /// <summary>
         /// The page this version is parented to.
@@ -111,25 +106,12 @@ namespace Cofoundry.Domain.Data
         /// specific publish status query e.g. 'Latest', 'Published', 
         /// 'PreferPublished'.
         /// </summary>
-        public ICollection<PagePublishStatusQuery> PagePublishStatusQueries { get; set; }
+        public ICollection<PagePublishStatusQuery> PagePublishStatusQueries { get; set; } = new List<PagePublishStatusQuery>();
 
-        #region ICreateAuditable
-
-        /// <summary>
-        /// The user that created the page version.
-        /// </summary>
         public User Creator { get; set; }
 
-        /// <summary>
-        /// The date the page version was created.
-        /// </summary>
         public DateTime CreateDate { get; set; }
 
-        /// <summary>
-        /// The database id of the user that created the page version.
-        /// </summary>
         public int CreatorId { get; set; }
-
-        #endregion
     }
 }

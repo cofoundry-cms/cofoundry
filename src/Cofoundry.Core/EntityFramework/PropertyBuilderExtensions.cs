@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections.Generic;
 
 namespace Cofoundry.Core.EntityFramework
 {
@@ -52,6 +51,24 @@ namespace Cofoundry.Core.EntityFramework
                 .IsUnicode(false);
 
             return builder;
+        }
+
+        /// <summary>
+        /// Indicates that the field is a UTC <see cref="DateTime"/>, ensuring it is specified as
+        /// <see cref="DateTimeKind.Utc"/> when it is mapped from the database.
+        /// </summary>
+        public static PropertyBuilder<DateTime> IsUtc(this PropertyBuilder<DateTime> propertyBuilder)
+        {
+            return propertyBuilder.HasConversion(i => i, o => DateTime.SpecifyKind(o, DateTimeKind.Utc));
+        }
+
+        /// <summary>
+        /// Indicates that the field is a UTC <see cref="DateTime"/>, ensuring it is specified as
+        /// <see cref="DateTimeKind.Utc"/> when it is mapped from the database.
+        /// </summary>
+        public static PropertyBuilder<DateTime?> IsUtc(this PropertyBuilder<DateTime?> propertyBuilder)
+        {
+            return propertyBuilder.HasConversion(i => i, o => o.HasValue ? DateTime.SpecifyKind(o.Value, DateTimeKind.Utc) : o);
         }
     }
 }

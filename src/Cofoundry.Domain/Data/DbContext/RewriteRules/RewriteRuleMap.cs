@@ -1,7 +1,6 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -9,9 +8,8 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<RewriteRule> builder)
         {
-            builder.ToTable("RewriteRule", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(RewriteRule), DbConstants.CofoundrySchema);
 
-            // Properties
             builder.Property(s => s.WriteFrom)
                 .IsRequired()
                 .HasMaxLength(2000);

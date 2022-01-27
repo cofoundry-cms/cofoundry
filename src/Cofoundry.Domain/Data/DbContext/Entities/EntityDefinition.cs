@@ -4,11 +4,6 @@ namespace Cofoundry.Domain.Data
 {
     public class EntityDefinition
     {
-        public EntityDefinition()
-        {
-            Permissions = new List<Permission>();
-        }
-
         /// <summary>
         /// Unique 6 character code representing the entity (use uppercase).
         /// </summary>
@@ -19,6 +14,6 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public string Name { get; set; }
 
-        public virtual ICollection<Permission> Permissions { get; set; }
+        public virtual ICollection<Permission> Permissions { get; set; } = new List<Permission>();
     }
 }

@@ -6,7 +6,7 @@ namespace Cofoundry.Domain.Data
     /// Roles are an assignable collection of permissions. Every user has to be assigned 
     /// to one role.
     /// </summary>
-    public partial class Role
+    public class Role
     {
         /// <summary>
         /// Database id of the role.

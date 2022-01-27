@@ -1,9 +1,6 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -11,20 +8,15 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<ImageAssetTag> builder)
         {
-            builder.ToTable("ImageAssetTag", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(ImageAssetTag), DbConstants.CofoundrySchema);
+            builder.HasKey(s => new { s.ImageAssetId, s.TagId });
 
-            // Primary Key
-            builder.HasKey(s =>new { s.ImageAssetId, s.TagId });
-
-            // Properties
             builder.Property(s => s.ImageAssetId)
                 .ValueGeneratedNever();
 
             builder.Property(s => s.TagId)
                 .ValueGeneratedNever();
 
-
-            // Relationships
             builder.HasOne(s => s.ImageAsset)
                 .WithMany(s => s.ImageAssetTags)
                 .HasForeignKey(d => d.ImageAssetId);

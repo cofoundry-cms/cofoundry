@@ -7,18 +7,8 @@ namespace Cofoundry.Domain.Data
     /// A Page Template represents a physical view template file and is used
     /// by a Page to render out content. 
     /// </summary>
-    public partial class PageTemplate
+    public class PageTemplate
     {
-        #region constructor
-
-        public PageTemplate()
-        {
-            PageTemplateRegions = new List<PageTemplateRegion>();
-            PageVersions = new List<PageVersion>();
-        }
-
-        #endregion
-
         /// <summary>
         /// The database id of the template
         /// </summary>
@@ -84,8 +74,6 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public bool IsArchived { get; set; }
 
-        #region Auditing
-
         /// <summary>
         /// The date the template was created
         /// </summary>
@@ -96,27 +84,19 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public DateTime UpdateDate { get; set; }
 
-        #endregion
-
-        #region collections
-
         /// <summary>
         /// Each template can have zero or more regions which are defined in the 
         /// template file using the CofoundryTemplate helper, 
         /// e.g. @Cofoundry.Template.Region("MyRegionName"). These regions represent
         /// areas where page blocks can be placed (i.e. insert content).
         /// </summary>
-        public virtual ICollection<PageTemplateRegion> PageTemplateRegions { get; set; }
+        public virtual ICollection<PageTemplateRegion> PageTemplateRegions { get; set; } = new List<PageTemplateRegion>();
 
         /// <summary>
         /// Each page template can be attached to a page via a page version. This is so that 
         /// the template can be changed without having to re-create the page.
         /// </summary>
-        public virtual ICollection<PageVersion> PageVersions { get; set; }
-
-        #endregion
-
-        #region helpers
+        public virtual ICollection<PageVersion> PageVersions { get; set; } = new List<PageVersion>();
 
         /// <summary>
         /// Indicates whether the template supports custom entities. At
@@ -129,9 +109,5 @@ namespace Cofoundry.Domain.Data
         {
             return !string.IsNullOrWhiteSpace(CustomEntityDefinitionCode);
         }
-
-        #endregion
-
-
     }
 }

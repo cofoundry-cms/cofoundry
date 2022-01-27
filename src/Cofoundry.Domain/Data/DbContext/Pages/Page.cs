@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Data
     /// is rendered when the page is published. 
     /// </summary>
     /// <inheritdoc/>
-    public partial class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable, IEntityPublishable
+    public class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable, IEntityPublishable
     {
         /// <summary>
         /// The auto-incrementing database id of the page.

@@ -1,8 +1,7 @@
-using System;
 using Cofoundry.Core;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core.EntityFramework;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -10,9 +9,8 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<ImageAsset> builder)
         {
-            builder.ToTable("ImageAsset", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(ImageAsset), DbConstants.CofoundrySchema);
 
-            // Properties
             builder.Property(s => s.FileName)
                 .IsRequired()
                 .HasMaxLength(130);
@@ -33,9 +31,9 @@ namespace Cofoundry.Domain.Data
                 .IsRequired()
                 .IsCharType(6);
 
-            // Table & Column Mappings
             builder.Property(s => s.DefaultAnchorLocation).HasColumnName("ImageCropAnchorLocationId");
 
+            builder.Property(s => s.FileUpdateDate).IsUtc();
 
             UpdateAuditableMappingHelper.Map(builder);
         }

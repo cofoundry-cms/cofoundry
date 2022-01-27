@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Data
     /// directory heirarchy and should be treated as read-only.
     /// </para>
     /// </summary>
-    public partial class PageDirectoryClosure
+    public class PageDirectoryClosure
     {
         /// <summary>
         /// The id of a page directory that is an ancestor of <see cref="DescendantPageDirectoryId"/>. 

@@ -1,8 +1,7 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -10,9 +9,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<Setting> builder)
         {
-            builder.ToTable("Setting", DbConstants.CofoundrySchema);
-
-            // Properties
+            builder.ToTable(nameof(Setting), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.SettingKey)
                 .IsRequired()
@@ -21,6 +18,9 @@ namespace Cofoundry.Domain.Data
             builder.Property(s => s.SettingValue)
                 .IsRequired()
                 .IsNVarCharMaxType();
+
+            builder.Property(s => s.CreateDate).IsUtc();
+            builder.Property(s => s.UpdateDate).IsUtc();
         }
     }
 }

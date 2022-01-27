@@ -5,7 +5,7 @@ namespace Cofoundry.Domain.Data
     /// heirachy. This table is automatically updated whenever changes are made to the page 
     /// directory heirarchy and should be treated as read-only.
     /// </summary>
-    public partial class PageDirectoryPath
+    public class PageDirectoryPath
     {
         /// <summary>
         /// Database primary key.

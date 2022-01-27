@@ -1,10 +1,7 @@
-using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -12,9 +9,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<CustomEntity> builder)
         {
-            builder.ToTable("CustomEntity", DbConstants.CofoundrySchema);
-
-            // Properties
+            builder.ToTable(nameof(CustomEntity), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.CustomEntityDefinitionCode)
                 .IsRequired()
@@ -28,8 +23,6 @@ namespace Cofoundry.Domain.Data
                 .HasMaxLength(1)
                 .IsUnicode(false);
 
-            // Relationships
-
             builder.HasOne(s => s.CustomEntityDefinition)
                 .WithMany()
                 .HasForeignKey(d => d.CustomEntityDefinitionCode);
@@ -37,6 +30,9 @@ namespace Cofoundry.Domain.Data
             builder.HasOne(s => s.Locale)
                 .WithMany()
                 .HasForeignKey(d => d.LocaleId);
+
+            builder.Property(s => s.PublishDate).IsUtc();
+            builder.Property(s => s.LastPublishDate).IsUtc();
 
             CreateAuditableMappingHelper.Map(builder);
         }

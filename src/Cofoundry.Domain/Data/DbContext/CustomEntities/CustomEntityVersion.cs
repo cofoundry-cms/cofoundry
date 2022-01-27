@@ -23,14 +23,9 @@ namespace Cofoundry.Domain.Data
     /// look up for an applicable version for various PublishStatusQuery
     /// states.
     /// </remarks>
+    /// <inheritdoc/>
     public class CustomEntityVersion : ICreateAuditable, IEntityVersion
     {
-        public CustomEntityVersion()
-        {
-            CustomEntityVersionPageBlocks = new List<CustomEntityVersionPageBlock>();
-            CustomEntityPublishStatusQueries = new List<CustomEntityPublishStatusQuery>();
-        }
-
         /// <summary>
         /// Auto-incrementing primary key of the custom entity version
         /// record in the database.
@@ -85,32 +80,19 @@ namespace Cofoundry.Domain.Data
         /// master-details arrangement). This property holds the block data
         /// for the page template regions on any of these pages.
         /// </summary>
-        public virtual ICollection<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; }
+        public virtual ICollection<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; } = new List<CustomEntityVersionPageBlock>();
 
         /// <summary>
         /// Lookup cache used for quickly finding the correct version for a
         /// specific publish status query e.g. 'Latest', 'Published', 
         /// 'PreferPublished'.
         /// </summary>
-        public virtual ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; internal set; }
+        public virtual ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; set; } = new List<CustomEntityPublishStatusQuery>();
 
-        #region ICreateAuditable
-
-        /// <summary>
-        /// The user that created the custom entity version.
-        /// </summary>
         public User Creator { get; set; }
 
-        /// <summary>
-        /// The date the custom entity version was created.
-        /// </summary>
         public DateTime CreateDate { get; set; }
 
-        /// <summary>
-        /// The database id of the user that created the custom entity version.
-        /// </summary>
         public int CreatorId { get; set; }
-
-        #endregion
     }
 }

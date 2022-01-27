@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Cofoundry.Domain.Data
 {
     [Obsolete("The image asset grouping system will be revised in an upcomming release.")]
-    public partial class ImageAssetGroup : ICreateAuditable
+    public class ImageAssetGroup : ICreateAuditable
     {
         public ImageAssetGroup()
         {
@@ -19,12 +19,8 @@ namespace Cofoundry.Domain.Data
         public virtual ICollection<ImageAssetGroup> ChildImageAssetGroups { get; set; }
         public virtual ImageAssetGroup ParentImageAssetGroup { get; set; }
 
-        #region ICreateAuditable
-
         public DateTime CreateDate { get; set; }
         public int CreatorId { get; set; }
         public virtual User Creator { get; set; }
-
-        #endregion
     }
 }

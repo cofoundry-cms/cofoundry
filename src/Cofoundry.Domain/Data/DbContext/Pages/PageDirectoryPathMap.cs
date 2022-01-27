@@ -9,12 +9,9 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<PageDirectoryPath> builder)
         {
-            builder.ToTable("PageDirectoryPath", DbConstants.CofoundrySchema);
-
-            // Primary Key
+            builder.ToTable(nameof(PageDirectoryPath), DbConstants.CofoundrySchema);
             builder.HasKey(s => s.PageDirectoryId);
 
-            // Properties
             builder.Property(s => s.FullUrlPath)
                 .IsRequired()
                 .IsNVarCharMaxType();

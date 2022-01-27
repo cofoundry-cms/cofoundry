@@ -1,9 +1,6 @@
 using Cofoundry.Core;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -11,19 +8,15 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<DocumentAssetTag> builder)
         {
-            builder.ToTable("DocumentAssetTag", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(DocumentAssetTag), DbConstants.CofoundrySchema);
+            builder.HasKey(s => new { s.DocumentAssetId, s.TagId });
 
-            // Primary Key
-            builder.HasKey(s =>new { s.DocumentAssetId, s.TagId });
-
-            // Properties
             builder.Property(s => s.DocumentAssetId)
                 .ValueGeneratedNever();
 
             builder.Property(s => s.TagId)
                 .ValueGeneratedNever();
 
-            // Relationships
             builder.HasOne(s => s.DocumentAsset)
                 .WithMany(s => s.DocumentAssetTags)
                 .HasForeignKey(d => d.DocumentAssetId);

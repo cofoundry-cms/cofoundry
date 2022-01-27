@@ -16,11 +16,6 @@ namespace Cofoundry.Domain.Data
                 .IsCharType(3);
 
             builder
-                .HasOne(s => s.Creator)
-                .WithMany()
-                .HasForeignKey(s => s.CreatorId);
-
-            builder
                 .HasOne(s => s.Page)
                 .WithMany(d => d.AccessRules)
                 .HasForeignKey(s => s.PageId);
@@ -34,6 +29,8 @@ namespace Cofoundry.Domain.Data
                 .HasOne(s => s.UserArea)
                 .WithMany(d => d.PageAccessRules)
                 .HasForeignKey(s => s.UserAreaCode);
+
+            CreateAuditableMappingHelper.Map(builder);
         }
     }
 }

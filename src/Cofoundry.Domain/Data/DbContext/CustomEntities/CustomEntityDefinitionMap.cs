@@ -1,8 +1,7 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -10,17 +9,12 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<CustomEntityDefinition> builder)
         {
-            builder.ToTable("CustomEntityDefinition", DbConstants.CofoundrySchema);
-
+            builder.ToTable(nameof(CustomEntityDefinition), DbConstants.CofoundrySchema);
             builder.HasKey(s => s.CustomEntityDefinitionCode);
-
-            // Properties
 
             builder.Property(s => s.CustomEntityDefinitionCode)
                 .IsRequired()
                 .IsCharType(6);
-
-            // Relations
 
             builder.HasOne(s => s.EntityDefinition)
                 .WithOne()

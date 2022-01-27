@@ -6,14 +6,8 @@ namespace Cofoundry.Domain.Data
     /// <summary>
     /// Represents an image that has been uploaded to the CMS.
     /// </summary>
-    public partial class ImageAsset : IUpdateAuditable
+    public class ImageAsset : IUpdateAuditable
     {
-        public ImageAsset()
-        {
-            ImageAssetGroupItems = new List<ImageAssetGroupItem>();
-            ImageAssetTags = new List<ImageAssetTag>();
-        }
-
         /// <summary>
         /// Database if of the image asset.
         /// </summary>
@@ -78,14 +72,12 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public DateTime FileUpdateDate { get; set; }
 
-        public virtual ICollection<ImageAssetGroupItem> ImageAssetGroupItems { get; set; }
+        public virtual ICollection<ImageAssetGroupItem> ImageAssetGroupItems { get; set; } = new List<ImageAssetGroupItem>();
 
         /// <summary>
         /// Tags can be used to categorize an entity.
         /// </summary>
-        public virtual ICollection<ImageAssetTag> ImageAssetTags { get; set; }
-
-        #region IUpdateAuditable
+        public virtual ICollection<ImageAssetTag> ImageAssetTags { get; set; } = new List<ImageAssetTag>();
 
         public DateTime CreateDate { get; set; }
         public int CreatorId { get; set; }
@@ -94,7 +86,5 @@ namespace Cofoundry.Domain.Data
         public DateTime UpdateDate { get; set; }
         public int UpdaterId { get; set; }
         public virtual User Updater { get; set; }
-
-        #endregion
     }
 }

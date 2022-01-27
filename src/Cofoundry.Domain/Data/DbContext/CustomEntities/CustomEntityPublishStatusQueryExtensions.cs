@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Data
 {
@@ -103,7 +100,7 @@ namespace Cofoundry.Domain.Data
         public static IOrderedQueryable<CustomEntityPublishStatusQuery> SortBy(
             this IQueryable<CustomEntityPublishStatusQuery> dbQuery,
             ICustomEntityDefinition customEntityDefinition,
-            CustomEntityQuerySortType sortType, 
+            CustomEntityQuerySortType sortType,
             SortDirection? optionalSortDirection = null
             )
         {
@@ -111,7 +108,7 @@ namespace Cofoundry.Domain.Data
 
             var sortDirection = optionalSortDirection ?? SortDirection.Default;
 
-            if (sortType == CustomEntityQuerySortType.Default 
+            if (sortType == CustomEntityQuerySortType.Default
                 && customEntityDefinition is ISortedCustomEntityDefinition sortedDefinition
                 && !(customEntityDefinition is IOrderableCustomEntityDefinition))
             {

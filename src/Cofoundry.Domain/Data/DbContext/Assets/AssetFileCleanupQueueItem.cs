@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cofoundry.Domain.Data
 {
@@ -13,7 +11,7 @@ namespace Cofoundry.Domain.Data
     /// to fail. It also enabled the file deletion to run in a 
     /// transaction.
     /// </summary>
-    public partial class AssetFileCleanupQueueItem
+    public class AssetFileCleanupQueueItem
     {
         /// <summary>
         /// Database id of the queue item.

@@ -2,7 +2,6 @@ using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Cofoundry.Domain.Data
 {
@@ -10,15 +9,11 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<PageVersionBlock> builder)
         {
-            builder.ToTable("PageVersionBlock", DbConstants.CofoundrySchema);
-
-            // Properties
+            builder.ToTable(nameof(PageVersionBlock), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.SerializedData)
                 .IsRequired()
                 .IsNVarCharMaxType();
-
-            // Relationships
 
             builder.HasOne(s => s.PageTemplateRegion)
                 .WithMany(s => s.PageVersionBlocks)

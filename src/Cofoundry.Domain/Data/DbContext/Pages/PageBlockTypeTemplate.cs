@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
 {
@@ -9,7 +8,7 @@ namespace Cofoundry.Domain.Data
     /// e.g. 'Wide', 'Headline', 'Large', 'Reversed'. If no template is set then 
     /// the default view is used for rendering.
     /// </summary>
-    public partial class PageBlockTypeTemplate
+    public class PageBlockTypeTemplate
     {
         /// <summary>
         /// Database id of the block type template record.
@@ -44,7 +43,7 @@ namespace Cofoundry.Domain.Data
         /// 0 or more templates.
         /// </summary>
         public virtual PageBlockType PageBlockType { get; set; }
-        
+
         /// <summary>
         /// Date the record was created.
         /// </summary>

@@ -1,8 +1,6 @@
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -11,17 +9,11 @@ namespace Cofoundry.Domain.Data
         public void Configure(EntityTypeBuilder<PageDirectoryLocale> builder)
         {
             builder.ToTable("PageDirectoryLocale", DbConstants.CofoundrySchema);
-
-            // Primary Key
-
             builder.HasKey(s => s.PageDirectoryLocaleId);
 
-            // Properties
             builder.Property(s => s.UrlPath)
                 .IsRequired()
                 .HasMaxLength(64);
-
-            // Relationships
 
             builder.HasOne(s => s.Locale)
                 .WithMany()

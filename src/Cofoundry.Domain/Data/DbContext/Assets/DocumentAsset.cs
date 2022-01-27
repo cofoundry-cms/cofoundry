@@ -9,14 +9,8 @@ namespace Cofoundry.Domain.Data
     /// images are supported, but at least it is less ambigous than the 
     /// term 'file'.
     /// </summary>
-    public partial class DocumentAsset : IUpdateAuditable
+    public class DocumentAsset : IUpdateAuditable
     {
-        public DocumentAsset()
-        {
-            DocumentAssetGroupItems = new List<DocumentAssetGroupItem>();
-            DocumentAssetTags = new List<DocumentAssetTag>();
-        }
-
         /// <summary>
         /// Database id of the document asset.
         /// </summary>
@@ -72,11 +66,9 @@ namespace Cofoundry.Domain.Data
 
         public string ContentType { get; set; }
 
-        public virtual ICollection<DocumentAssetGroupItem> DocumentAssetGroupItems { get; set; }
+        public virtual ICollection<DocumentAssetGroupItem> DocumentAssetGroupItems { get; set; } = new List<DocumentAssetGroupItem>();
 
-        public virtual ICollection<DocumentAssetTag> DocumentAssetTags { get; set; }
-
-        #region IUpdateAuditable
+        public virtual ICollection<DocumentAssetTag> DocumentAssetTags { get; set; } = new List<DocumentAssetTag>();
 
         public DateTime CreateDate { get; set; }
         public int CreatorId { get; set; }
@@ -85,7 +77,5 @@ namespace Cofoundry.Domain.Data
         public DateTime UpdateDate { get; set; }
         public int UpdaterId { get; set; }
         public virtual User Updater { get; set; }
-
-        #endregion
     }
 }

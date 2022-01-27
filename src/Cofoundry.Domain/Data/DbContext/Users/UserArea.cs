@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
@@ -8,7 +7,7 @@ namespace Cofoundry.Domain.Data
     /// to be reused for other purposes, but this isn't a common scenario and often there will only be the Cofoundry UserArea. UserAreas
     /// are defined in code by defining an <see cref="IUserAreaDefinition"/>.
     /// </summary>
-    public partial class UserArea
+    public class UserArea
     {
         /// <summary>
         /// 3 character code and primary key.

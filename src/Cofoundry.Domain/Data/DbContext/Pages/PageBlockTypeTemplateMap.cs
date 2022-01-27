@@ -1,10 +1,7 @@
-
-using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore;
 using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data
 {
@@ -12,9 +9,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<PageBlockTypeTemplate> builder)
         {
-            builder.ToTable("PageBlockTypeTemplate", DbConstants.CofoundrySchema);
-
-            // Properties
+            builder.ToTable(nameof(PageBlockTypeTemplate), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.Name)
                 .IsRequired()
@@ -27,11 +22,11 @@ namespace Cofoundry.Domain.Data
             builder.Property(s => s.Description)
                 .IsNVarCharMaxType();
 
-            // Relationships
-
             builder.HasOne(s => s.PageBlockType)
                 .WithMany(s => s.PageBlockTemplates)
                 .HasForeignKey(d => d.PageBlockTypeId);
+
+            builder.Property(s => s.CreateDate).IsUtc();
         }
     }
 }

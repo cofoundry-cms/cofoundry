@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Cofoundry.Domain.Data
+﻿namespace Cofoundry.Domain.Data
 {
     /// <summary>
     /// Page block data for a specific custom entity version on a custom entity

@@ -1,7 +1,6 @@
 using Cofoundry.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Cofoundry.Domain.Data
 {
@@ -9,19 +8,11 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<RolePermission> builder)
         {
-            builder.ToTable("RolePermission", DbConstants.CofoundrySchema);
-
-            // Primary Key
+            builder.ToTable(nameof(RolePermission), DbConstants.CofoundrySchema);
             builder.HasKey(s => new { s.RoleId, s.PermissionId });
 
-            // Properties
-            builder.Property(s => s.RoleId)
-                .ValueGeneratedNever();
-
-            builder.Property(s => s.PermissionId)
-                .ValueGeneratedNever();
-
-            // Relationships
+            builder.Property(s => s.RoleId).ValueGeneratedNever();
+            builder.Property(s => s.PermissionId).ValueGeneratedNever();
 
             builder.HasOne(s => s.Role)
                 .WithMany(d => d.RolePermissions)

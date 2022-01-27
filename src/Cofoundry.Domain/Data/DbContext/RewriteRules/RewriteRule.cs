@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
 {
@@ -7,7 +6,8 @@ namespace Cofoundry.Domain.Data
     /// Rewrite rules can be used to redirect users from one url to another.
     /// This functionality is incomplete and subject to change.
     /// </summary>
-    public partial class RewriteRule : ICreateAuditable
+    /// <inheritdoc/>
+    public class RewriteRule : ICreateAuditable
     {
         /// <summary>
         /// Identifier and database primary key.
@@ -25,23 +25,10 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public string WriteTo { get; set; }
 
-        #region ICreateAuditable
-
-        /// <summary>
-        /// The user that created the entity.
-        /// </summary>
         public virtual User Creator { get; set; }
 
-        /// <summary>
-        /// The date the entity was created.
-        /// </summary>
         public DateTime CreateDate { get; set; }
 
-        /// <summary>
-        /// The database id of the user that created the entity.
-        /// </summary>
         public int CreatorId { get; set; }
-
-        #endregion
     }
 }

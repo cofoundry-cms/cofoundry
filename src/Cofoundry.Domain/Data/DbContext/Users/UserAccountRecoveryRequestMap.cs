@@ -9,7 +9,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<UserAccountRecoveryRequest> builder)
         {
-            builder.ToTable("UserAccountRecoveryRequest", DbConstants.CofoundrySchema);
+            builder.ToTable(nameof(UserAccountRecoveryRequest), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.AuthorizationCode)
                 .IsVarCharMaxType();
@@ -18,11 +18,13 @@ namespace Cofoundry.Domain.Data
                 .IsUnicode(false)
                 .HasMaxLength(45);
 
-            // Relationships
-
             builder.HasOne(s => s.User)
                 .WithMany()
                 .HasForeignKey(d => d.UserId);
+
+            builder.Property(s => s.CreateDate).IsUtc();
+            builder.Property(s => s.InvalidatedDate).IsUtc();
+            builder.Property(s => s.CompletedDate).IsUtc();
         }
     }
 }

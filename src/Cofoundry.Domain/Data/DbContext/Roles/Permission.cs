@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Cofoundry.Domain.Data
@@ -11,13 +10,8 @@ namespace Cofoundry.Domain.Data
     /// combination of EntityDefinitionCode and PermissionCode
     /// must be unique
     /// </summary>
-    public partial class Permission
+    public class Permission
     {
-        public Permission()
-        {
-            RolePermissions = new List<RolePermission>();
-        }
-
         /// <summary>
         /// Database id of the permission
         /// </summary>
@@ -40,7 +34,7 @@ namespace Cofoundry.Domain.Data
         /// <summary>
         /// A permission can be assigned to many roles.
         /// </summary>
-        public virtual ICollection<RolePermission> RolePermissions { get; set; }
+        public virtual ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
 
         /// <summary>
         /// Optional entity definition this permission relates to.

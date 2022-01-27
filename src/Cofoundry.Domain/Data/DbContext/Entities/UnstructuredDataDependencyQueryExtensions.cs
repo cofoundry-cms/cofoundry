@@ -96,7 +96,7 @@ namespace Cofoundry.Domain.Data
         /// <param name="relatedEntityIds">Database ids of the related entities to filter on.</param>
         public static IEnumerable<UnstructuredDataDependency> FilterByRelatedEntity(this IEnumerable<UnstructuredDataDependency> dependencies, string relatedEntityEntityDefinitionCode, ICollection<int> relatedEntityIds)
         {
-            var filtered = dependencies.Where(d => d.RelatedEntityDefinitionCode == relatedEntityEntityDefinitionCode &&  relatedEntityIds.Contains(d.RelatedEntityId));
+            var filtered = dependencies.Where(d => d.RelatedEntityDefinitionCode == relatedEntityEntityDefinitionCode && relatedEntityIds.Contains(d.RelatedEntityId));
 
             return filtered;
         }

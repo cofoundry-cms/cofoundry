@@ -1,7 +1,7 @@
 using Cofoundry.Core;
+using Cofoundry.Core.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace Cofoundry.Domain.Data
 {
@@ -9,9 +9,7 @@ namespace Cofoundry.Domain.Data
     {
         public void Configure(EntityTypeBuilder<AssetFileCleanupQueueItem> builder)
         {
-            builder.ToTable("AssetFileCleanupQueueItem", DbConstants.CofoundrySchema);
-
-            // Properties
+            builder.ToTable(nameof(AssetFileCleanupQueueItem), DbConstants.CofoundrySchema);
 
             builder.Property(s => s.FileNameOnDisk)
                 .IsRequired()
@@ -21,6 +19,11 @@ namespace Cofoundry.Domain.Data
             builder.Property(s => s.FileExtension)
                 .IsRequired()
                 .HasMaxLength(5);
+
+            builder.Property(s => s.AttemptPermittedDate).IsUtc();
+            builder.Property(s => s.CompletedDate).IsUtc();
+            builder.Property(s => s.CreateDate).IsUtc();
+            builder.Property(s => s.LastAttemptDate).IsUtc();
         }
     }
 }
