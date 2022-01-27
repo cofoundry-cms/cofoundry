@@ -55,7 +55,7 @@ namespace Cofoundry.Domain.Internal
                 _logger.LogInformation("Authentication failed due to too many failed attempts {UserAreaCode}", query.UserAreaCode);
                 return new UserLoginInfoAuthenticationResult()
                 {
-                    Error = UserLoginInfoAuthenticationError.TooManyFailedAttempts
+                    Error = UserValidationErrors.Authentication.TooManyFailedAttempts.Create(query.PropertyToValidate)
                 };
             }
 
@@ -69,7 +69,7 @@ namespace Cofoundry.Domain.Internal
             var result = new UserLoginInfoAuthenticationResult();
             result.User = MapUser(query, dbUser);
 
-            await FinalizeResultAsync(result, query.UserAreaCode, uniqueUsername, executionContext);
+            await FinalizeResultAsync(result, query, uniqueUsername, executionContext);
 
             return result;
         }
@@ -79,12 +79,12 @@ namespace Cofoundry.Domain.Internal
             _logger.LogInformation("Authentication failed for unknown user in user area {UserAreaCode}", query.UserAreaCode);
 
             var result = new UserLoginInfoAuthenticationResult();
-            result.Error = UserLoginInfoAuthenticationError.InvalidCredentials;
+            result.Error = UserValidationErrors.Authentication.InvalidCredentials.Create(query.PropertyToValidate);
 
             return result;
         }
 
-        private Task<bool> HasExceededMaxLoginAttemptsAsync(string userAreaCode, string uniqueUsername,  IExecutionContext executionContext)
+        private Task<bool> HasExceededMaxLoginAttemptsAsync(string userAreaCode, string uniqueUsername, IExecutionContext executionContext)
         {
             var hasExceededMaxLoginAttemptsQuery = new HasExceededMaxLoginAttemptsQuery()
             {
@@ -159,23 +159,23 @@ namespace Cofoundry.Domain.Internal
         /// any side-effects
         /// </summary>
         private async Task FinalizeResultAsync(
-            UserLoginInfoAuthenticationResult result, 
-            string userAreaCode, 
-            string uniqueUsername, 
+            UserLoginInfoAuthenticationResult result,
+            GetUserLoginInfoIfAuthenticatedQuery query,
+            string uniqueUsername,
             IExecutionContext executionContext
             )
         {
             if (result.User == null)
             {
-                await LogFailedLogginAttemptAsync(userAreaCode, uniqueUsername, executionContext);
+                await LogFailedLogginAttemptAsync(query.UserAreaCode, uniqueUsername, executionContext);
 
-                result.Error = UserLoginInfoAuthenticationError.InvalidCredentials;
+                result.Error = UserValidationErrors.Authentication.InvalidCredentials.Create(query.PropertyToValidate);
             }
             else
             {
-                if (result.Error != UserLoginInfoAuthenticationError.None)
+                if (result.Error != null)
                 {
-                    throw new InvalidOperationException($"Unexpected {nameof(UserLoginInfoAuthenticationError)} state for a successful request: {result.Error}");
+                    throw new InvalidOperationException($"Unexpected error state for a successful request: {result.Error.ErrorCode}");
                 }
                 result.IsSuccess = true;
             }

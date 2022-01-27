@@ -120,12 +120,7 @@ namespace Cofoundry.Domain.Internal
             var result = await _domainRepository
                 .WithExecutionContext(executionContext)
                 .ExecuteQueryAsync(query);
-
-            if (!result.IsValid)
-            {
-                var error = result.Errors.First();
-                throw new ValidationErrorException(error);
-            }
+            result.ThrowIfNotSuccess();
 
             var parts = _userAccountRecoveryTokenFormatter.Parse(command.Token);
             if (parts == null)

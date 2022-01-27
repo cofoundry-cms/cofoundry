@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -44,7 +45,7 @@ namespace Cofoundry.Domain.Internal
             };
 
             var errors = await _emailAddressValidator.GetErrorsAsync(context);
-            var result = new ValidationQueryResult(errors);
+            var result = new ValidationQueryResult(errors.FirstOrDefault());
 
             return result;
         }

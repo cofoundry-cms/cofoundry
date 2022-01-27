@@ -42,8 +42,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.IsValid.Should().BeTrue();
-                result.Errors.Should().BeEmpty();
+                result.IsSuccess.Should().BeTrue();
+                result.Error.Should().BeNull();
             }
         }
 
@@ -196,7 +196,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 })
                 .ExecuteAsync();
 
-            result.IsValid.Should().BeTrue();
+            result.IsSuccess.Should().BeTrue();
         }
 
         private static void AssertErrorMessage(ValidationQueryResult result, string codeSuffix, string messagePattern)
@@ -204,11 +204,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.IsValid.Should().BeFalse();
-                result.Errors.Should().HaveCount(1);
-                var error = result.Errors.Single();
-                error.ErrorCode.Should().Be("cf-user-email-" + codeSuffix);
-                error.Message.Should().Match(messagePattern);
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().NotBeNull();
+                result.Error.ErrorCode.Should().Be("cf-user-email-" + codeSuffix);
+                result.Error.Message.Should().Match(messagePattern);
             }
         }
 

@@ -78,7 +78,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     .Awaiting(r => r.Users().AccountRecovery().InitiateAsync(command))
                     .Should()
                     .ThrowAsync<ValidationErrorException>()
-                    .WithErrorCode(AccountRecoveryErrorCodes.Initiation.MaxAttemptsExceeded);
+                    .WithErrorCode(UserValidationErrors.AccountRecovery.Initiation.MaxAttemptsExceeded.ErrorCode);
 
                 app.Mocks.MockDateTime(seedDate.AddHours(2));
                 await contentRepository

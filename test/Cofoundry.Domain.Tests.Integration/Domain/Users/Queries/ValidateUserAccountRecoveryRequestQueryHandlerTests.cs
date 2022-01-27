@@ -51,8 +51,8 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.IsValid.Should().BeTrue();
-                result.Errors.Should().BeEmpty();
+                result.IsSuccess.Should().BeTrue();
+                result.Error.Should().BeNull();
             }
         }
 
@@ -83,9 +83,9 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.IsValid.Should().BeFalse();
-                result.Errors.Should().HaveCount(1);
-                result.Errors.First().ErrorCode.Should().Be(AccountRecoveryErrorCodes.RequestValidation.Expired);
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().NotBeNull();
+                result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.Expired.ErrorCode);
             }
         }
 
@@ -125,9 +125,9 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.IsValid.Should().BeFalse();
-                result.Errors.Should().HaveCount(1);
-                result.Errors.First().ErrorCode.Should().Be(AccountRecoveryErrorCodes.RequestValidation.AlreadyComplete);
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().NotBeNull();
+                result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.AlreadyComplete.ErrorCode);
             }
         }
 
@@ -159,9 +159,9 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.IsValid.Should().BeFalse();
-                result.Errors.Should().HaveCount(1);
-                result.Errors.First().ErrorCode.Should().Be(AccountRecoveryErrorCodes.RequestValidation.Invalidated);
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().NotBeNull();
+                result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.Invalidated.ErrorCode);
             }
         }
 
@@ -191,9 +191,9 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.IsValid.Should().BeFalse();
-                result.Errors.Should().HaveCount(1);
-                result.Errors.First().ErrorCode.Should().Be(AccountRecoveryErrorCodes.RequestValidation.NotFound);
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().NotBeNull();
+                result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.NotFound.ErrorCode);
             }
         }
 

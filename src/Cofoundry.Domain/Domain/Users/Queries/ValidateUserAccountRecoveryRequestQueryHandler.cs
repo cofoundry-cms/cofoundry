@@ -85,29 +85,17 @@ namespace Cofoundry.Domain.Internal
 
             if (request.CompletedDate.HasValue)
             {
-                return new ValidationQueryResult(new ValidationError()
-                {
-                    ErrorCode = AccountRecoveryErrorCodes.RequestValidation.AlreadyComplete,
-                    Message = "The account recovery request has already been completed."
-                });
+                return new ValidationQueryResult(UserValidationErrors.AccountRecovery.RequestValidation.AlreadyComplete.Create());
             }
 
             if (request.InvalidatedDate.HasValue)
             {
-                return new ValidationQueryResult(new ValidationError()
-                {
-                    ErrorCode = AccountRecoveryErrorCodes.RequestValidation.Invalidated,
-                    Message = "The account recovery request is no longer valid."
-                });
+                return new ValidationQueryResult(UserValidationErrors.AccountRecovery.RequestValidation.Invalidated.Create());
             }
 
             if (!IsPasswordRecoveryDateValid(userArea, request.CreateDate, executionContext))
             {
-                return new ValidationQueryResult(new ValidationError()
-                {
-                    ErrorCode = AccountRecoveryErrorCodes.RequestValidation.Expired,
-                    Message = "The account recovery request has expired."
-                });
+                return new ValidationQueryResult(UserValidationErrors.AccountRecovery.RequestValidation.Expired.Create());
             }
 
             return ValidationQueryResult.ValidResult();
@@ -115,11 +103,7 @@ namespace Cofoundry.Domain.Internal
 
         private static ValidationQueryResult NotFoundResult()
         {
-            return new ValidationQueryResult(new ValidationError()
-            {
-                ErrorCode = AccountRecoveryErrorCodes.RequestValidation.NotFound,
-                Message = "The account recovery request is not valid."
-            });
+            return new ValidationQueryResult(UserValidationErrors.AccountRecovery.RequestValidation.NotFound.Create());
         }
 
         private bool ConstantEquals(string a, string b)

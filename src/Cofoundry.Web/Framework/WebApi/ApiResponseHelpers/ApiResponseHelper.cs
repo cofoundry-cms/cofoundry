@@ -21,8 +21,6 @@ namespace Cofoundry.Web
     /// </summary>
     public class ApiResponseHelper : IApiResponseHelper
     {
-        #region constructor
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
         private readonly IModelValidationService _commandValidationService;
@@ -40,10 +38,6 @@ namespace Cofoundry.Web
             _commandValidationService = commandValidationService;
             _jsonSerializerSettings = jsonSerializerSettings;
         }
-
-        #endregion
-
-        #region basic responses
 
         /// <summary>
         /// Formats the result of a query. Results are wrapped inside an object with a data property
@@ -133,10 +127,6 @@ namespace Cofoundry.Web
                 .ToArray();
 
         }
-
-        #endregion
-
-        #region command helpers
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
@@ -276,8 +266,6 @@ namespace Cofoundry.Web
             return SimpleCommandResponse(errors, result);
         }
 
-        #region private helpers
-
         private JsonResult GetCommandResponse<T>(T response) where T : SimpleCommandResponseData
         {
             var jsonResult = CreateJsonResult(response);
@@ -360,9 +348,5 @@ namespace Cofoundry.Web
 
             return jsonResponse;
         }
-
-        #endregion
-
-        #endregion
     }
 }

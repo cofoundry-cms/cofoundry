@@ -1,0 +1,262 @@
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Core.Validation.Internal;
+
+namespace Cofoundry.Domain
+{
+    /// <summary>
+    /// Library of validation errors relating to users.
+    /// </summary>
+    public static class UserValidationErrors
+    {
+        /// <summary>
+        /// Library of validation errors used in <see cref="GetUserLoginInfoIfAuthenticatedQuery"/> or other
+        /// functions that require authentication.
+        /// </summary>
+        public static class Authentication
+        {
+            /// <summary>
+            /// Either the username or password is invalid.
+            /// </summary>
+            public static readonly ValidationErrorTemplate InvalidCredentials = new ValidationErrorTemplate(
+                AddAuthenticationNamespace("invalid-credentials"),
+                "Invalid username or password.",
+                e => new InvalidCredentialsAuthenticationException(e)
+                );
+
+            /// <summary>
+            /// To be used when only authenticating the password for a logged in user 
+            /// and authentication fails e.g. when updating a password
+            /// </summary>
+            public static readonly ValidationErrorTemplate InvalidPassword = new ValidationErrorTemplate(
+                AddAuthenticationNamespace("invalid-password"),
+                "Incorrect password.",
+                e => new InvalidCredentialsAuthenticationException(e)
+                );
+
+            /// <summary>
+            /// Too many failed login attempts have occured either for the
+            /// username or IP address.
+            /// </summary>
+            public static readonly ValidationErrorTemplate TooManyFailedAttempts = new ValidationErrorTemplate(
+                AddAuthenticationNamespace("max-attempts-exceeded"),
+                "Too many failed login attempts have been detected, please try again later."
+                );
+
+            /// <summary>
+            /// The error was not specified. This can be used when an error
+            /// is picked up outside of the core login function occurs e.g.
+            /// in MVC if the ModelState is invalid and the result is returned
+            /// before authentication is attempted.
+            /// </summary>
+            public static readonly ValidationErrorTemplate NotSpecified = new ValidationErrorTemplate(
+                AddAuthenticationNamespace("not-specified"),
+                "The authentication attempt was unsuccessful."
+                );
+
+            private static string AddAuthenticationNamespace(string errorCode)
+            {
+                return AddNamespace("auth-" + errorCode);
+            }
+        }
+
+        /// <summary>
+        /// Library of validation errors relating to account recovery (AKA forgot password) 
+        /// functionality.
+        /// </summary>
+        public static class AccountRecovery
+        {
+            /// <summary>
+            /// Used to namespace Cofoundry error codes for errors returned
+            /// from <see cref="InitiateUserAccountRecoveryCommand"/>.
+            /// </summary>
+            public static class Initiation
+            {
+                /// <summary>
+                /// Invalid id and token combination. This can include
+                /// situations where the id or token are not correctly
+                /// formatted, or if the request cannot be located in the database.
+                /// </summary>
+                public static readonly ValidationErrorTemplate MaxAttemptsExceeded = new ValidationErrorTemplate(
+                    AddInitiationNamespace("max-attempts-exceeded"),
+                    "Maximum password reset attempts exceeded."
+                    );
+
+                private static string AddInitiationNamespace(string errorCode)
+                {
+                    return AddAccountRecoveryNamespace("initiation-" + errorCode);
+                }
+            }
+
+            /// <summary>
+            /// Used to namespace Cofoundry error codes for errors returned
+            /// from <see cref="ValidateUserAccountRecoveryRequestQuery"/>.
+            /// </summary>
+            public static class RequestValidation
+            {
+                /// <summary>
+                /// Invalid id and token combination. This can include
+                /// situations where the id or token are not correctly
+                /// formatted, or if the request cannot be located in the database.
+                /// </summary>
+                public static readonly ValidationErrorTemplate NotFound = new ValidationErrorTemplate(
+                    AddRequestValidationNamespace("not-found"),
+                    "The account recovery request is not valid."
+                    );
+
+                /// <summary>
+                /// The request has been invalidated, likely because the
+                /// password has already been updated, or a valid login
+                /// has occured.
+                /// </summary>
+                public static readonly ValidationErrorTemplate Invalidated = new ValidationErrorTemplate(
+                    AddRequestValidationNamespace("invalidated"),
+                    "The account recovery request is no longer valid."
+                    );
+
+                /// <summary>
+                /// The request exists but has already been completed.
+                /// </summary>
+                public static readonly ValidationErrorTemplate AlreadyComplete = new ValidationErrorTemplate(
+                    AddRequestValidationNamespace("already-complete"),
+                    "The account recovery request has already been completed."
+                    );
+
+                /// <summary>
+                /// The request exists but has expired.
+                /// </summary>
+                public static readonly ValidationErrorTemplate Expired = new ValidationErrorTemplate(
+                    AddRequestValidationNamespace("expired"),
+                    "The account recovery request has expired."
+                    );
+
+                private static string AddRequestValidationNamespace(string errorCode)
+                {
+                    return AddAccountRecoveryNamespace("request-" + errorCode);
+                }
+            }
+
+            private static string AddAccountRecoveryNamespace(string errorCode)
+            {
+                return AddNamespace("account-recovery-" + errorCode);
+            }
+        }
+
+        /// <summary>
+        /// Library of validation errors used in in email address validation e.g. in 
+        /// <see cref="IEmailAddressValidator"/>.
+        /// </summary>
+        public static class EmailAddress
+        {
+            /// <summary>
+            /// This error occurs if the email address received by the <see cref="IEmailAddressValidator"/>
+            /// is <see langword="null"/>, which typically indicaztes that the <see cref="IEmailAddressNormalizer{TUserArea}"/> 
+            /// could not parse the email address and did not return a result.
+            /// </summary>
+            public static readonly ValidationErrorTemplate InvalidFormat = new ValidationErrorTemplate(
+                AddEmailAddressNamespace("invalid-format"),
+                "Email is in an invalid format."
+                );
+
+            /// <summary>
+            /// The email is shorter then the limit defined in the 
+            /// <see cref="EmailAddressOptions"/> configuration settings.
+            /// </summary>
+            public static readonly ValidationErrorTemplate MinLengthNotMet = new ValidationErrorTemplate(
+                AddEmailAddressNamespace("min-length-not-met"),
+                "Email cannot be less than {0} characters."
+                );
+
+            /// <summary>
+            /// The email is longer then the limit defined in the 
+            /// <see cref="EmailAddressOptions"/> configuration settings.
+            /// </summary>
+            public static readonly ValidationErrorTemplate MaxLengthExceeded = new ValidationErrorTemplate(
+                AddEmailAddressNamespace("max-length-exceeded"),
+                "Email cannot be more than {0} characters."
+                );
+
+            /// <summary>
+            /// The email contains characters that are not permitted by the 
+            /// <see cref="EmailAddressOptions"/> configuration settings.
+            /// </summary>
+            public static readonly ValidationErrorTemplate InvalidCharacters = new ValidationErrorTemplate(
+                AddEmailAddressNamespace("invalid-characters"),
+                "Email cannot contain '{0}'."
+                );
+
+            /// <summary>
+            /// The email is already registered with another user.
+            /// </summary>
+            public static readonly ValidationErrorTemplate NotUnique = new ValidationErrorTemplate(
+                AddEmailAddressNamespace("not-unique"),
+                "This email is already registered."
+                );
+
+            private static string AddEmailAddressNamespace(string errorCode)
+            {
+                return AddNamespace("email-" + errorCode);
+            }
+        }
+
+        /// <summary>
+        /// Library of validation errors used in in username validation e.g. in <see cref="IUsernameValidator"/>.
+        /// </summary>
+        public static class Username
+        {
+            /// <summary>
+            /// This error occurs if the username received by the <see cref="IUsernameValidator"/>
+            /// is <see langword="null"/>. This should rarely happen, only if the username 
+            /// contains only characters stripped out through a custom <see cref="IUsernameNormalizer{TUserArea}"/>.
+            /// </summary>
+            public static readonly ValidationErrorTemplate InvalidFormat = new ValidationErrorTemplate(
+                AddEmailAddressNamespace("invalid-format"),
+                "Username is in an invalid format."
+                );
+
+            /// <summary>
+            /// The username is shorter then the limit defined in the 
+            /// <see cref="UsernameOptions"/> configuration settings.
+            /// </summary>
+            public static readonly ValidationErrorTemplate MinLengthNotMet = new ValidationErrorTemplate(
+                AddEmailAddressNamespace("min-length-not-met"),
+                "Username cannot be less than {0} characters."
+                );
+
+            /// <summary>
+            /// The username is longer then the limit defined in the 
+            /// <see cref="UsernameOptions"/> configuration settings.
+            /// </summary>
+            public static readonly ValidationErrorTemplate MaxLengthExceeded = new ValidationErrorTemplate(
+                AddEmailAddressNamespace("max-length-exceeded"),
+                "Username cannot be more than {0} characters."
+                );
+
+            /// <summary>
+            /// The username contains characters that are not permitted by the 
+            /// <see cref="UsernameOptions"/> configuration settings.
+            /// </summary>
+            public static readonly ValidationErrorTemplate InvalidCharacters = new ValidationErrorTemplate(
+                AddEmailAddressNamespace("invalid-characters"),
+                "Username cannot contain '{0}'."
+                );
+
+            /// <summary>
+            /// The username is already registered with another user.
+            /// </summary>
+            public static readonly ValidationErrorTemplate NotUnique = new ValidationErrorTemplate(
+                AddEmailAddressNamespace("not-unique"),
+                "This username is already registered."
+                );
+
+            private static string AddEmailAddressNamespace(string errorCode)
+            {
+                return AddNamespace("username-" + errorCode);
+            }
+        }
+
+        private static string AddNamespace(string errorCode)
+        {
+            return ValidationErrorCodes.AddNamespace(errorCode, "user");
+        }
+    }
+}

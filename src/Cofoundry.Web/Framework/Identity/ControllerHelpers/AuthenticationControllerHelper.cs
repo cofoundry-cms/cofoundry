@@ -55,7 +55,7 @@ namespace Cofoundry.Web.Identity
 
             if (!result.IsSuccess)
             {
-                controller.ModelState.AddModelError(string.Empty, result.Error.ToDisplayText());
+                controller.ModelState.AddModelError(string.Empty, result.Error.Message);
             }
 
             return result;
@@ -210,10 +210,9 @@ namespace Cofoundry.Web.Identity
 
             var result = await ValidateAndMapAsync(query);
 
-            if (result.Errors.Any())
+            if (result.Error != null)
             {
-                var error = result.Errors.First();
-                controller.ModelState.AddModelError(string.Empty, error.Message);
+                controller.ModelState.AddModelError(string.Empty, result.Error.Message);
             }
 
             return result;
@@ -225,8 +224,8 @@ namespace Cofoundry.Web.Identity
 
             var result = new AccountRecoveryRequestValidationResult();
             result.Token = query.Token;
-            result.IsValid = validationResult.IsValid;
-            result.Errors = validationResult.Errors;
+            result.IsSuccess = validationResult.IsSuccess;
+            result.Error = validationResult.Error;
 
             return result;
         }

@@ -42,8 +42,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.IsValid.Should().BeTrue();
-                result.Errors.Should().BeEmpty();
+                result.IsSuccess.Should().BeTrue();
+                result.Error.Should().BeNull();
             }
         }
 
@@ -146,11 +146,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.IsValid.Should().BeFalse();
-                result.Errors.Should().HaveCount(1);
-                var error = result.Errors.Single();
-                error.ErrorCode.Should().Be("cf-username-" + codeSuffix);
-                error.Message.Should().Match(messagePattern);
+                result.IsSuccess.Should().BeFalse();
+                result.Error.Should().NotBeNull();
+                result.Error.ErrorCode.Should().Be("cf-user-username-" + codeSuffix);
+                result.Error.Message.Should().Match(messagePattern);
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Core.Validation;
-using Cofoundry.Domain.Internal;
 using System;
 
 namespace Cofoundry.Domain
@@ -11,30 +10,18 @@ namespace Cofoundry.Domain
     /// <inheritdoc/>
     public class NotBePersonalDataNewPasswordValidator : INewPasswordValidator
     {
-        private static string ERROR_CODE = NewPasswordValidationErrorCodes.AddNamespace("not-personal-data");
-
         public string Criteria => $"Must not be your email or username.";
 
         public ValidationError Validate(INewPasswordValidationContext context)
         {
             if (Matches(context.Password, context.Email))
             {
-                return new ValidationError()
-                {
-                    ErrorCode = ERROR_CODE + "-email",
-                    Message = $"Password cannot be your email.",
-                    Properties = new string[] { context.PropertyName }
-                };
+                return PasswordPolicyValidationErrors.NotPersonalData.Email.Create(context.PropertyName);
             }
 
             if (Matches(context.Password, context.Username))
             {
-                return new ValidationError()
-                {
-                    ErrorCode = ERROR_CODE + "-username",
-                    Message = $"Password cannot be your username.",
-                    Properties = new string[] { context.PropertyName }
-                };
+                return PasswordPolicyValidationErrors.NotPersonalData.Username.Create(context.PropertyName);
             }
 
             return null;

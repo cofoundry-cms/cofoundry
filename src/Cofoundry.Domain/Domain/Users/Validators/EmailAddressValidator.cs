@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Core.Validation;
-using Cofoundry.Core.Validation.Internal;
 using Cofoundry.Domain.Internal;
 using System;
 using System.Collections.Generic;
@@ -65,12 +64,10 @@ namespace Cofoundry.Domain.Extendable
         {
             if (context.Email != null) return null;
 
-            return new ValidationError()
-            {
-                ErrorCode = FormatErrorCode("invalid-format"),
-                Message = "Email is in an invalid format.",
-                Properties = new string[] { context.PropertyName }
-            };
+            return UserValidationErrors
+                .EmailAddress
+                .InvalidFormat
+                .Create(context.PropertyName);
         }
 
         /// <summary>
@@ -82,12 +79,13 @@ namespace Cofoundry.Domain.Extendable
             var options = _userAreaDefinitionRepository.GetOptionsByCode(context.UserAreaCode).EmailAddress;
             if (context.Email.NormalizedEmailAddress.Length >= options.MinLength) return null;
 
-            return new ValidationError()
-            {
-                ErrorCode = FormatErrorCode("min-length-not-met"),
-                Message = $"Email cannot be less than {options.MinLength} characters.",
-                Properties = new string[] { context.PropertyName }
-            };
+            return UserValidationErrors
+                .EmailAddress
+                .MinLengthNotMet
+                .Customize()
+                .WithMessageFormatParameters(options.MinLength)
+                .WithProperties(context.PropertyName)
+                .Create();
         }
 
         /// <summary>
@@ -99,12 +97,13 @@ namespace Cofoundry.Domain.Extendable
             var options = _userAreaDefinitionRepository.GetOptionsByCode(context.UserAreaCode).EmailAddress;
             if (context.Email.NormalizedEmailAddress.Length <= options.MaxLength) return null;
 
-            return new ValidationError()
-            {
-                ErrorCode = FormatErrorCode("max-length-exceeded"),
-                Message = $"Email cannot be more than {options.MaxLength} characters.",
-                Properties = new string[] { context.PropertyName }
-            };
+            return UserValidationErrors
+                .EmailAddress
+                .MaxLengthExceeded
+                .Customize()
+                .WithMessageFormatParameters(options.MaxLength)
+                .WithProperties(context.PropertyName)
+                .Create();
         }
 
         /// <summary>
@@ -120,14 +119,13 @@ namespace Cofoundry.Domain.Extendable
 
             // Be careful here, because we're handling user input. Any message should be escaped when 
             // rendered, but to be safe we'll only include a single invalid character
-            var msg = $"Email cannot contain '{invalidCharacters.First()}'.";
-
-            return new ValidationError()
-            {
-                ErrorCode = FormatErrorCode("invalid-characters"),
-                Message = msg,
-                Properties = new string[] { context.PropertyName }
-            };
+            return UserValidationErrors
+                .EmailAddress
+                .InvalidCharacters
+                .Customize()
+                .WithMessageFormatParameters(invalidCharacters.First().ToString())
+                .WithProperties(context.PropertyName)
+                .Create();
         }
 
         /// <summary>
@@ -156,22 +154,15 @@ namespace Cofoundry.Domain.Extendable
 
             if (isUnique) return null;
 
-            return new ValidationError()
-            {
-                ErrorCode = FormatErrorCode("not-unique"),
-                Message = "This email is already registered.",
-                Properties = new string[] { context.PropertyName }
-            };
+            return UserValidationErrors
+                .EmailAddress
+                .NotUnique
+                .Create(context.PropertyName);
         }
 
         private ICollection<ValidationError> WrapError(ValidationError error)
         {
             return new List<ValidationError>() { error };
-        }
-
-        private static string FormatErrorCode(string errorCode)
-        {
-            return ValidationErrorCodes.AddNamespace(errorCode, "user-email");
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Cofoundry.Domain.Internal
             }
 
             var authResult = await GetUserLoginInfoAsync(command, executionContext);
-            authResult.ThrowIfUnsuccessful(nameof(command.OldPassword));
+            authResult.ThrowIfNotSuccess();
 
             var updatePasswordCommand = new UpdateUserPasswordByUserIdCommand()
             {
@@ -61,6 +61,7 @@ namespace Cofoundry.Domain.Internal
                 UserAreaCode = command.UserAreaCode,
                 Username = command.Username,
                 Password = command.OldPassword,
+                PropertyToValidate = nameof(command.OldPassword)
             };
 
             return _queryExecutor.ExecuteAsync(query, executionContext);

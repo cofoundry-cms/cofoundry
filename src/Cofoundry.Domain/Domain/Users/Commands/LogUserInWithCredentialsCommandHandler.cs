@@ -50,7 +50,7 @@ namespace Cofoundry.Domain.Internal
             if (IsLoggedInAlready(command, executionContext)) return;
 
             var authResult = await GetUserLoginInfoAsync(command, executionContext);
-            authResult.ThrowIfUnsuccessful(nameof(command.Password));
+            authResult.ThrowIfNotSuccess();
 
             if (authResult.User.RequirePasswordChange)
             {
@@ -90,6 +90,7 @@ namespace Cofoundry.Domain.Internal
                 UserAreaCode = command.UserAreaCode,
                 Username = command.Username,
                 Password = command.Password,
+                PropertyToValidate = nameof(command.Password)
             };
 
             return _queryExecutor.ExecuteAsync(query, executionContext);

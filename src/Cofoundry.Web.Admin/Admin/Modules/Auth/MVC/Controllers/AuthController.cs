@@ -136,7 +136,7 @@ namespace Cofoundry.Web.Admin
 
             var requestValidationResult = await _authenticationControllerHelper.ParseAndValidateAccountRecoveryRequestAsync(this);
 
-            if (!requestValidationResult.IsValid)
+            if (!requestValidationResult.IsSuccess)
             {
                 var invalidViewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword) + "RequestInvalid");
                 return View(invalidViewPath, requestValidationResult);

@@ -27,5 +27,10 @@ namespace Cofoundry.Domain
         /// The password to authenticate the user account with.
         /// </summary>
         public string Password { get; set; }
+
+        /// <summary>
+        /// Optional name of the property to return in any validation errors.
+        /// </summary>
+        public string PropertyToValidate { get; set; }
     }
 }

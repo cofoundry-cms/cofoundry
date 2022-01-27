@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Core.Validation;
-using Cofoundry.Domain.Internal;
 using System;
 using System.Linq;
 
@@ -14,8 +13,6 @@ namespace Cofoundry.Domain
         : INewPasswordValidator
         , INewPasswordValidatorWithConfig<int>
     {
-        private static string ERROR_CODE = NewPasswordValidationErrorCodes.AddNamespace("min-unique-characters-not-met");
-
         /// <summary>
         /// The inclusive minimum number of unique characters to allow e.g. if the minimum was 4 then
         /// "abcabcabcabc" would be an invalid password.
@@ -38,12 +35,12 @@ namespace Cofoundry.Domain
                 .Distinct()
                 .Count() < MinUniqueCharacters)
             {
-                return new ValidationError()
-                {
-                    ErrorCode = ERROR_CODE,
-                    Message = $"Password must have at least {MinUniqueCharacters} unique characters.",
-                    Properties = new string[] { context.PropertyName }
-                };
+                return PasswordPolicyValidationErrors
+                    .MinUniqueCharacters
+                    .Customize()
+                    .WithMessageFormatParameters(MinUniqueCharacters)
+                    .WithProperties(context.PropertyName)
+                    .Create();
             }
 
             return null;

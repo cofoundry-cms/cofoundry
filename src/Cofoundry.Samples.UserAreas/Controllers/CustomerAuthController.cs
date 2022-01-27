@@ -182,7 +182,7 @@ namespace Cofoundry.Samples.UserAreas
 
             var requestValidationResult = await _authenticationControllerHelper.ParseAndValidateAccountRecoveryRequestAsync(this);
 
-            if (!requestValidationResult.IsValid)
+            if (!requestValidationResult.IsSuccess)
             {
                 return View(nameof(AccountRecovery) + "RequestInvalid", requestValidationResult);
             }
@@ -237,7 +237,7 @@ namespace Cofoundry.Samples.UserAreas
 
             var requestValidationResult = await _authenticationControllerHelper.ParseAndValidateAccountRecoveryRequestAsync(this);
 
-            if (!requestValidationResult.IsValid)
+            if (!requestValidationResult.IsSuccess)
             {
                 return View(nameof(VerifyEmail) + "RequestInvalid", requestValidationResult);
             }

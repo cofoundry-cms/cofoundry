@@ -53,7 +53,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 result.Should().NotBeNull();
                 result.User.Should().BeNull();
                 result.IsSuccess.Should().BeFalse();
-                result.Error.Should().Be(UserLoginInfoAuthenticationError.InvalidCredentials);
+                result.Error.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
             }
         }
 
@@ -83,7 +83,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 result.Should().NotBeNull();
                 result.User.Should().BeNull();
                 result.IsSuccess.Should().BeFalse();
-                result.Error.Should().Be(UserLoginInfoAuthenticationError.InvalidCredentials);
+                result.Error.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
             }
         }
 
@@ -127,7 +127,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 result.Should().NotBeNull();
                 result.User.Should().BeNull();
                 result.IsSuccess.Should().BeFalse();
-                result.Error.Should().Be(UserLoginInfoAuthenticationError.InvalidCredentials);
+                result.Error.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
             }
         }
 
@@ -165,7 +165,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 result.Should().NotBeNull();
                 result.User.Should().BeNull();
                 result.IsSuccess.Should().BeFalse();
-                result.Error.Should().Be(UserLoginInfoAuthenticationError.InvalidCredentials);
+                result.Error.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
             }
         }
 
@@ -194,7 +194,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 result.Should().NotBeNull();
                 result.User.Should().BeNull();
                 result.IsSuccess.Should().BeFalse();
-                result.Error.Should().Be(UserLoginInfoAuthenticationError.InvalidCredentials);
+                result.Error.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
             }
         }
 
@@ -222,7 +222,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 result.User.UserId.Should().Be(userId);
                 result.User.UserAreaCode.Should().Be(TestUserArea1.Code);
                 result.IsSuccess.Should().BeTrue();
-                result.Error.Should().Be(UserLoginInfoAuthenticationError.None);
+                result.Error.Should().BeNull();
 
                 // Non-defaults for these props are covered in other tests
                 result.User.RequirePasswordChange.Should().BeFalse();
@@ -257,7 +257,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 result.User.Should().NotBeNull();
                 result.User.UserId.Should().Be(userId);
                 result.IsSuccess.Should().BeTrue();
-                result.Error.Should().Be(UserLoginInfoAuthenticationError.None);
+                result.Error.Should().BeNull();
                 result.User.RequirePasswordChange.Should().BeTrue();
             }
         }
@@ -302,7 +302,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 result.User.Should().NotBeNull();
                 result.User.UserId.Should().Be(userId);
                 result.IsSuccess.Should().BeTrue();
-                result.Error.Should().Be(UserLoginInfoAuthenticationError.None);
+                result.Error.Should().BeNull();
                 result.User.PasswordRehashNeeded.Should().BeTrue();
             }
         }

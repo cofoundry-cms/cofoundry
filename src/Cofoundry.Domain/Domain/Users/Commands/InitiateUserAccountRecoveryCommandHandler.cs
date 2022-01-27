@@ -1,7 +1,6 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Core.Mail;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.MailTemplates;
@@ -129,7 +128,7 @@ namespace Cofoundry.Domain
 
             if (numResetAttempts >= options.MaxAttempts)
             {
-                throw ValidationErrorException.CreateWithCode("Maximum password reset attempts exceeded.", AccountRecoveryErrorCodes.Initiation.MaxAttemptsExceeded);
+                UserValidationErrors.AccountRecovery.Initiation.MaxAttemptsExceeded.Throw();
             }
         }
 

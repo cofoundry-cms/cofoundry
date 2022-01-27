@@ -49,7 +49,7 @@ namespace Cofoundry.Domain.Tests.PasswordPolicies.Validators
             var result = validator.Validate(context);
 
             result.Should().NotBeNull();
-            result.ErrorCode.Should().Be("cf-new-password-not-personal-data-email");
+            result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotPersonalData.Email.ErrorCode);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Cofoundry.Domain.Tests.PasswordPolicies.Validators
             var result = validator.Validate(context);
 
             result.Should().NotBeNull();
-            result.ErrorCode.Should().Be("cf-new-password-not-personal-data-username");
+            result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotPersonalData.Username.ErrorCode);
         }
     }
 }

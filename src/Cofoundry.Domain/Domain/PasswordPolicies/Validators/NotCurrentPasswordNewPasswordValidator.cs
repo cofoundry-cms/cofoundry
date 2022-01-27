@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Core.Validation;
-using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain
 {
@@ -12,8 +11,6 @@ namespace Cofoundry.Domain
     /// <inheritdoc/>
     public class NotCurrentPasswordNewPasswordValidator : INewPasswordValidator
     {
-        private static string ERROR_CODE = NewPasswordValidationErrorCodes.AddNamespace("not-current-password");
-
         public string Criteria => "Must not be the same as your current password.";
 
         public ValidationError Validate(INewPasswordValidationContext context)
@@ -21,12 +18,7 @@ namespace Cofoundry.Domain
             if (!string.IsNullOrWhiteSpace(context.CurrentPassword)
                 && context.CurrentPassword == context.Password)
             {
-                return new ValidationError()
-                {
-                    ErrorCode = ERROR_CODE,
-                    Message = "Password must not be the same as your current password.",
-                    Properties = new string[] { context.PropertyName }
-                };
+                return PasswordPolicyValidationErrors.NotCurrentPassword.Create(context.PropertyName);
             }
 
             return null;

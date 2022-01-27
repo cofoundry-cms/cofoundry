@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Core.Validation;
-using Cofoundry.Domain.Internal;
 using System;
 
 namespace Cofoundry.Domain
@@ -14,8 +13,6 @@ namespace Cofoundry.Domain
         : INewPasswordValidator
         , INewPasswordValidatorWithConfig<int>
     {
-        private static string ERROR_CODE = NewPasswordValidationErrorCodes.AddNamespace("min-length-not-met");
-
         /// <summary>
         /// The inclusive minimum length that the password should be. Must be between 6 and 2048
         /// characters.
@@ -38,12 +35,12 @@ namespace Cofoundry.Domain
 
             if (context.Password.Length < MinLength)
             {
-                return new ValidationError()
-                {
-                    ErrorCode = ERROR_CODE,
-                    Message = $"Password must be at least {MinLength} characters.",
-                    Properties = new string[] { context.PropertyName }
-                };
+                return PasswordPolicyValidationErrors
+                    .MinLengthNotMet
+                    .Customize()
+                    .WithMessageFormatParameters(MinLength)
+                    .WithProperties(context.PropertyName)
+                    .Create();
             }
 
             return null;

@@ -38,7 +38,7 @@ namespace Cofoundry.Domain.Tests.PasswordPolicies.Validators
             var result = validator.Validate(context);
 
             result.Should().NotBeNull();
-            result.ErrorCode.Should().Be("cf-new-password-max-length-exceeded");
+            result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.MaxLengthExceeded.ErrorCode);
         }
     }
 }

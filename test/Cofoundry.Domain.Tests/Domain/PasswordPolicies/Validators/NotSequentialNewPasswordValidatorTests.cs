@@ -39,7 +39,7 @@ namespace Cofoundry.Domain.Tests.PasswordPolicies.Validators
             var result = validator.Validate(context);
 
             result.Should().NotBeNull();
-            result.ErrorCode.Should().Be("cf-new-password-not-sequential");
+            result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotSequential.ErrorCode);
         }
     }
 }

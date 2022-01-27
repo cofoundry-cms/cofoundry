@@ -34,7 +34,7 @@ namespace Cofoundry.Domain.Tests.PasswordPolicies.Validators
             var result = validator.Validate(context);
 
             result.Should().NotBeNull();
-            result.ErrorCode.Should().Be("cf-new-password-not-current-password");
+            result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotCurrentPassword.ErrorCode);
         }
     }
 }

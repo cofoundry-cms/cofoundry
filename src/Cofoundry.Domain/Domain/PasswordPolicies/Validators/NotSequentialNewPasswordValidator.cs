@@ -1,12 +1,16 @@
 ﻿using Cofoundry.Core.Validation;
-using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Validates that a password is not a sequence, or reverse sequence of characters
+    /// e.g. "abcde", "54321". This is implemented simply by comparing the numeric value
+    /// of unicode character codes to principally support latin characters, but other 
+    /// character sequences may also be detected.
+    /// </summary>
+    /// <inheritdoc/>
     public class NotSequentialNewPasswordValidator : INewPasswordValidator
     {
-        private static string ERROR_CODE = NewPasswordValidationErrorCodes.AddNamespace("not-sequential");
-
         public string Criteria => $"Must not be a sequence of numbers or characters.";
 
         public ValidationError Validate(INewPasswordValidationContext context)
@@ -17,12 +21,7 @@ namespace Cofoundry.Domain
 
             if (IsCodeSequence(lowerPassword))
             {
-                return new ValidationError()
-                {
-                    ErrorCode = ERROR_CODE,
-                    Message = $"Password must not be a sequence of numbers or characters.",
-                    Properties = new string[] { context.PropertyName }
-                };
+                return PasswordPolicyValidationErrors.NotSequential.Create(context.PropertyName);
             }
 
             return null;

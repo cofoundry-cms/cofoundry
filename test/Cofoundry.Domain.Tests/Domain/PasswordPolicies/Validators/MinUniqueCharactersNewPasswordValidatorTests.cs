@@ -42,7 +42,7 @@ namespace Cofoundry.Domain.Tests.UserAreas.Configuration.NewPasswordValidation.V
             var result = validator.Validate(context);
 
             result.Should().NotBeNull();
-            result.ErrorCode.Should().Be("cf-new-password-min-unique-characters-not-met");
+            result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.MinUniqueCharacters.ErrorCode);
         }
     }
 }
