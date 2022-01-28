@@ -1,7 +1,6 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
@@ -29,7 +28,6 @@ namespace Cofoundry.Domain.Internal
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
         private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
-        private readonly ITransactionScopeManager _transactionScopeManager;
         private readonly IUserContextCache _userContextCache;
         private readonly IPasswordPolicyService _newPasswordValidationService;
         private readonly IMessageAggregator _messageAggregator;
@@ -43,7 +41,6 @@ namespace Cofoundry.Domain.Internal
             IUserAreaDefinitionRepository userAreaRepository,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
             IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper,
-            ITransactionScopeManager transactionScopeManager,
             IUserContextCache userContextCache,
             IPasswordPolicyService newPasswordValidationService,
             IMessageAggregator messageAggregator
@@ -57,7 +54,6 @@ namespace Cofoundry.Domain.Internal
             _userAreaRepository = userAreaRepository;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
             _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
-            _transactionScopeManager = transactionScopeManager;
             _userContextCache = userContextCache;
             _newPasswordValidationService = newPasswordValidationService;
             _messageAggregator = messageAggregator;
@@ -117,7 +113,7 @@ namespace Cofoundry.Domain.Internal
             };
 
             var hasExceededMaxLoginAttempts = await _domainRepository
-                .WithExecutionContext(executionContext)
+                .WithContext(executionContext)
                 .ExecuteQueryAsync(query);
 
             if (hasExceededMaxLoginAttempts)

@@ -151,7 +151,7 @@ namespace Cofoundry.Domain.Internal
         {
             var query = new GetUserSummaryByIdQuery(user.UserId);
             var userSummary = await _domainRepository
-                .WithExecutionContext(executionContext)
+                .WithContext(executionContext)
                 .ExecuteQueryAsync(query);
             EntityNotFoundException.ThrowIfNull(userSummary, user.UserId);
 

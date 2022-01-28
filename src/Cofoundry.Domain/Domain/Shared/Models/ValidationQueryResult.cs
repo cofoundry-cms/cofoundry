@@ -1,6 +1,4 @@
 ﻿using Cofoundry.Core.Validation;
-using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Cofoundry.Domain
 {

@@ -1,16 +1,11 @@
 ﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Extendable;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// An IContentRepository that allows a specific
-    /// execution context to be set and used for any
-    /// chained queries or commands.
+    /// An <see cref="IContentRepository"/> that allows a specific
+    /// execution context to be set and used for any chained queries 
+    /// or commands.
     /// </summary>
     public interface IContentRepositoryWithCustomExecutionContext
         : IContentRepository

@@ -80,7 +80,7 @@ namespace Cofoundry.Domain.Internal
             foreach (var userArea in userAreas)
             {
                 await _domainRepository
-                    .WithExecutionContext(executionContext)
+                    .WithContext(executionContext)
                     .ExecuteCommandAsync(new EnsureUserAreaExistsCommand(userArea.Key));
             }
 

@@ -2,7 +2,6 @@
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 

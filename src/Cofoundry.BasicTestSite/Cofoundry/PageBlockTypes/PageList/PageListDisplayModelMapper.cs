@@ -41,7 +41,7 @@ namespace Cofoundry.BasicTestSite
             // If we needed more data we could use a different but slower query to get it.
             var query = new GetPageRenderSummariesByIdRangeQuery(allPageIds, context.PublishStatusQuery);
             var allPageRoutes = await _contentRepository
-                .WithExecutionContext(context.ExecutionContext)
+                .WithContext(context.ExecutionContext)
                 .Pages()
                 .GetByIdRange(allPageIds)
                 .AsRenderSummaries(context.PublishStatusQuery)

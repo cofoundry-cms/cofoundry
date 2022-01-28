@@ -26,7 +26,7 @@ namespace Cofoundry.BasicTestSite
         {
             var imageAssetIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.ImageAssetId);
             var imageAssets = await _contentRepository
-                .WithExecutionContext(context.ExecutionContext)
+                .WithContext(context.ExecutionContext)
                 .ImageAssets()
                 .GetByIdRange(imageAssetIds)
                 .AsRenderDetails()

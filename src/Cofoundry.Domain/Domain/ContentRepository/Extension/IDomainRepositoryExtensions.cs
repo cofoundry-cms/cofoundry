@@ -1,10 +1,7 @@
 ﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Extendable;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Cofoundry.Domain
 {
@@ -23,23 +20,41 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Sets the execution context for any queries or commands
-        /// chained of this instance. Typically used to impersonate
-        /// a user, elevate permissions or maintain context in nested
-        /// query or command execution.
+        /// Sets the execution context for any queries or commands chained off this 
+        /// instance. Typically used to impersonate a user, elevate permissions or 
+        /// maintain context in nested query or command execution.
         /// </summary>
         /// <param name="executionContext">
         /// The execution context instance to use.
         /// </param>
-        public static IDomainRepository WithExecutionContext(this IDomainRepository domainRepository, IExecutionContext executionContext)
+        public static IDomainRepository WithContext(this IDomainRepository repository, IExecutionContext executionContext)
         {
             if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
 
-            var extendedContentRepositry = domainRepository.AsExtendableContentRepository();
+            var extendedContentRepositry = repository.AsExtendableContentRepository();
             var newRepository = extendedContentRepositry.ServiceProvider.GetRequiredService<IContentRepositoryWithCustomExecutionContext>();
             newRepository.SetExecutionContext(executionContext);
 
             return newRepository;
+        }
+
+        /// <summary>
+        /// Uses the specified <paramref name="userContext"/> to build a new <see cref="IExecutionContext"/>
+        /// to run queries or commands under. Typically this is used to impersonate a user or 
+        /// elevate permissions.
+        /// </summary>
+        /// <param name="userContext">
+        /// The <see cref="IUserContext"/> to build into a new <see cref="IExecutionContext"/>.
+        /// </param>
+        public static IDomainRepository WithContext(this IDomainRepository repository, IUserContext userContext)
+        {
+            if (userContext == null) throw new ArgumentNullException(nameof(userContext));
+
+            var extendedContentRepositry = repository.AsExtendableContentRepository();
+            var executionContextFactory = extendedContentRepositry.ServiceProvider.GetRequiredService<IExecutionContextFactory>();
+            var executionContext = executionContextFactory.Create(userContext);
+
+            return repository.WithContext(executionContext);
         }
 
         /// <summary>

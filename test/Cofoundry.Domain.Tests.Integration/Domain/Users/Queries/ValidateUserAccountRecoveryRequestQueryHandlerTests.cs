@@ -1,11 +1,9 @@
 ﻿using Cofoundry.Domain.Data;
-using Cofoundry.Domain.Tests.Shared.SeedData;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 

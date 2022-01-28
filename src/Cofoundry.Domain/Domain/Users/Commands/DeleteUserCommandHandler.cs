@@ -53,7 +53,7 @@ namespace Cofoundry.Domain.Internal
             {
                 // Since we soft-delete, we have to validate/delete unstructured dependencies here rather than in the trigger
                 await _domainRepository
-                    .WithExecutionContext(executionContext)
+                    .WithContext(executionContext)
                     .ExecuteCommandAsync(new DeleteUnstructuredDataDependenciesCommand(UserEntityDefinition.DefinitionCode, user.UserId));
                 await _dbContext.SaveChangesAsync();
 

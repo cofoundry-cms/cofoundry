@@ -149,7 +149,7 @@ namespace Cofoundry.Domain.Extendable
             }
 
             var isUnique = await _domainRepository
-                .WithExecutionContext(context.ExecutionContext)
+                .WithContext(context.ExecutionContext)
                 .ExecuteQueryAsync(query);
 
             if (isUnique) return null;
