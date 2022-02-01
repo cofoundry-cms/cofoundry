@@ -38,5 +38,11 @@ namespace Cofoundry.Domain
         /// </summary>
         public AccountRecoveryOptions AccountRecovery { get; set; } = new AccountRecoveryOptions();
 
+        /// <summary>
+        /// Options to control the behavior of the account verification feature.
+        /// Note that the Cofoundry admin panel does not support an account 
+        /// verification flow and therefore these settings do not apply.
+        /// </summary>
+        public AccountVerificationOptions AccountVerification { get; set; } = new AccountVerificationOptions();
     }
 }

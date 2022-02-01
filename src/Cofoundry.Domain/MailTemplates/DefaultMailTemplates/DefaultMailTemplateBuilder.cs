@@ -90,6 +90,33 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
             };
         }
 
+        public virtual async Task<DefaultAccountVerificationMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context)
+        {
+            var applicationName = await GetApplicationNameAsync();
+
+            if (context.VerificationUrlPath == null || !Uri.IsWellFormedUriString(context.VerificationUrlPath, UriKind.Relative))
+            {
+                // The VerificationUrlPath setting isn't required in config because the feature may not be used, or may 
+                // be manually constructed in a custom IDefaultMailTemplateBuilder implementation. However it should be 
+                // supplied at this point for our default builder.
+                var options = _userAreaDefinitionRepository.GetOptionsByCode(_userAreaDefinition.UserAreaCode).AccountVerification;
+                if (string.IsNullOrEmpty(options.VerificationUrlBase))
+                {
+                    throw new InvalidOperationException($"To use the account verification feature you must configure the {nameof(AccountRecoveryOptions.RecoveryUrlBase)} setting by implementing {nameof(IUserAreaDefinition)}.{nameof(IUserAreaDefinition.ConfigureOptions)}.");
+                }
+
+                throw new InvalidOperationException($"{nameof(AccountRecoveryTemplateBuilderContext)}.{nameof(context.VerificationUrlPath)} should be a valid relative uri.");
+            }
+
+            return new DefaultAccountVerificationMailTemplate()
+            {
+                Username = context.User.Username,
+                ApplicationName = applicationName,
+                VerificationUrl = _siteUrlResolver.MakeAbsolute(context.VerificationUrlPath),
+                LayoutFile = DefaultMailTemplatePath.LayoutPath
+            };
+        }
+
         public virtual async Task<DefaultPasswordChangedMailTemplate> BuildPasswordChangedTemplateAsync(
             PasswordChangedTemplateBuilderContext context
             )

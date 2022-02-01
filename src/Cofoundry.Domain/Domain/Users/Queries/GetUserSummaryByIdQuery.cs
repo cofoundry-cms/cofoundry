@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Finds a user by it's database id, returning a UserSummary object if it 
-    /// is found, otherwise null.
+    /// Finds a user by a database id returning a <see cref="UserSummary"/> projection 
+    /// if it is found, otherwise <see langword="null"/>.
     /// </summary>
     public class GetUserSummaryByIdQuery : IQuery<UserSummary>
     {
@@ -28,7 +22,7 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
-        /// Database id of the user.
+        /// Database id of the user to find.
         /// </summary>
         public int UserId { get; set; }
     }

@@ -22,6 +22,14 @@ namespace Cofoundry.Domain.Tests.Integration
             _seededEntities = seededEntities;
             _permissionRepository = rootServiceProvider.GetRequiredService<IPermissionRepository>();
         }
+        
+        /// <summary>
+        /// Used to make it easier to create or reference authorized tasks in test fixtures.
+        /// </summary>
+        public AuthorizedTaskTestDataHelper AuthorizedTasks()
+        {
+            return new AuthorizedTaskTestDataHelper(_rootServiceProvider, _seededEntities);
+        }
 
         /// <summary>
         /// Used to make it easier to create or reference page 

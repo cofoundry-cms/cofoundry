@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
@@ -15,8 +15,6 @@ namespace Cofoundry.Web
     /// </summary>
     public interface IApiResponseHelper
     {
-        #region basic responses
-
         /// <summary>
         /// Formats the result of a query. Results are wrapped inside an object with a data property
         /// for consistency and prevent a vulnerability with return JSON arrays. If the result is
@@ -47,10 +45,6 @@ namespace Cofoundry.Web
         /// </summary>
         /// <param name="ex">The NotPermittedException to extract the message from</param>
         JsonResult NotPermittedResponse(NotPermittedException ex);
-
-        #endregion
-
-        #region command helpers
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
@@ -97,7 +91,5 @@ namespace Cofoundry.Web
         /// <typeparam name="TResult">Type of result returned from the function</typeparam>
         /// <param name="functionToExecute">The function to execute</param>
         Task<JsonResult> RunWithResultAsync<TResult>(Func<Task<TResult>> functionToExecute);
-
-        #endregion
     }
 }

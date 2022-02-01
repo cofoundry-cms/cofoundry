@@ -62,5 +62,19 @@ namespace Cofoundry.Samples.UserAreas
 
             return template;
         }
+
+        public async Task<IMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context)
+        {
+            // build the default template
+            var template = await _defaultMailTemplateBuilder.BuildAccountVerificationTemplateAsync(context);
+
+            // customize the subject, the {0} token is replaced with the application name
+            template.SubjectFormat = "Verify your account for {0}";
+
+            // customize the view file
+            template.ViewFile = "~/Cofoundry/MailTemplates/CustomerUsers/Templates/AccountVerificationMailTemplate";
+
+            return template;
+        }
     }
 }

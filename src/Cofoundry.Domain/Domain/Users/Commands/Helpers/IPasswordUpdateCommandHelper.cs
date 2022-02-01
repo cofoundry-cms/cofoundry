@@ -1,8 +1,5 @@
 ﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
@@ -51,10 +48,15 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Send a notification to the user to let them know their 
         /// password has been changed. The template is built using the
-        /// registered UserMailTemplateBuilderFactory for the users
+        /// registered <see cref="UserMailTemplateBuilderFactory"/> for the users
         /// user area.
         /// </summary>
-        /// <param name="user">The user to send the notification to.</param>
+        /// <param name="user">
+        /// The user to send the notification to. This should include
+        /// enough data to map to a <see cref="UserSummary"/> projection.
+        /// To ensure you have the data required you can use the <see cref="Data.UserQueryExtensions.IncludeForSummary"/>
+        /// extension method on the query.
+        /// </param>
         Task SendPasswordChangedNotification(User user);
     }
 }

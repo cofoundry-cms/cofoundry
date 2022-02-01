@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Domain;
-using Cofoundry.Core.Mail;
+﻿using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Identity
@@ -15,32 +11,14 @@ namespace Cofoundry.Web.Identity
     /// </summary>
     public class AccountManagementControllerHelper
     {
-        #region constructor
-
-        private readonly IQueryExecutor _queryExecutor;
-        private readonly ICommandExecutor _commandExecutor;
-        private readonly IUserContextService _userContextService;
-        private readonly IMailService _mailService;
         private readonly IControllerResponseHelper _controllerResponseHelper;
 
         public AccountManagementControllerHelper(
-            IQueryExecutor queryExecutor,
-            IMailService mailService,
-            ICommandExecutor commandExecutor,
-            IUserContextService userContextService,
             IControllerResponseHelper controllerResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
-            _commandExecutor = commandExecutor;
-            _userContextService = userContextService;
-            _mailService = mailService;
             _controllerResponseHelper = controllerResponseHelper;
         }
-
-        #endregion
-        
-        #region change password
 
         /// <summary>
         /// Changes a users password, sending them an email notification if the operation 
@@ -54,8 +32,8 @@ namespace Cofoundry.Web.Identity
         /// </param>
         /// <returns>The user id of the updated user if the action was successful; otheriwse null.</returns>
         public async Task ChangePasswordAsync(
-            Controller controller, 
-            IChangePasswordViewModel vm, 
+            Controller controller,
+            IChangePasswordViewModel vm,
             IUserAreaDefinition userArea
             )
         {
@@ -65,7 +43,7 @@ namespace Cofoundry.Web.Identity
 
             if (controller.ModelState.IsValid)
             {
-                var command = new UpdateUnauthenticatedUserPasswordCommand()
+                var command = new UpdateUserPasswordByCredentialsCommand()
                 {
                     UserAreaCode = userArea.UserAreaCode,
                     Username = vm.Username,
@@ -76,7 +54,5 @@ namespace Cofoundry.Web.Identity
                 await _controllerResponseHelper.ExecuteIfValidAsync(controller, command);
             }
         }
-
-        #endregion
     }
 }

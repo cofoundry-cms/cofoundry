@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     /// <summary>
     /// User information relating to a login request
@@ -29,10 +23,10 @@ namespace Cofoundry.Domain
         public bool RequirePasswordChange { get; set; }
 
         /// <summary>
-        /// A flag to indicate if the users email address has been confirmed via a 
-        /// sign-up notification.
-        /// </summary>
-        public bool IsEmailConfirmed { get; set; }
+        /// True if the account has been marked as as verified or activated.  One common way 
+        /// of verification is via an email sign-up notification.
+        /// </summary>>
+        public bool IsAccountVerified { get; set; }
 
         /// <summary>
         /// True if the password hash version is out of date. If this true then the password 

@@ -59,6 +59,14 @@ function (
         return $http.put(getIdRoute(userId) + '/reset-password');
     }
 
+    service.updateVerificationStatus = function (userId, isVerified) {
+
+        return $http.put(getIdRoute(userId) + '/verification-status', {
+            userId: userId,
+            isVerified: isVerified
+        });
+    }
+
     service.remove = function (id) {
 
         return $http.delete(getIdRoute(id));
@@ -211,7 +219,7 @@ function (
             && options.allowPasswordLogin 
             && options.useEmailAsUsername
             && !isCurrentUser;
-            
+        
         // Init
         $q.all([loadRoles(), loadUser()])
             .then(initForm)
@@ -242,7 +250,6 @@ function (
     function resetPassword() {
         var options = {
             title: 'Reset Password',
-            xmsg: 'This will change a users password to a new temporary value. The  which will be sent to them in an email. ',
             message: 'Resetting a password will log the user out of all sessions and email them a new temporary password that needs to be changed at first login.<br><br>Do you want to continue?',
             okButtonTitle: 'Yes, reset it',
             onOk: onOk
@@ -281,6 +288,7 @@ function (
     }
 
     /* PRIVATE FUNCS */
+
     function onSuccess(message) {
         return loadUser()
             .then(initForm)
@@ -331,6 +339,10 @@ function (
             'isEmailConfirmed'
             );
 
+        if (vm.user.accountVerifiedDate) {
+            command.isAccountVerified = true;
+        }
+        
         if (vm.user.role) {
             command.roleId = vm.user.role.roleId;
         }

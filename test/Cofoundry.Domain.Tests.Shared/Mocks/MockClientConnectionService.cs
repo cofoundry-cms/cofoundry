@@ -4,7 +4,10 @@ namespace Cofoundry.Domain.Tests.Shared.Mocks
 {
     public class MockClientConnectionService : IClientConnectionService
     {
-        public MockClientConnectionService() { }
+        public MockClientConnectionService() 
+        {
+            ClientConnectionInfo.IPAddress = TestIPAddresses.Localhost;
+        }
 
         public MockClientConnectionService(Action<ClientConnectionInfo> configure)
         {

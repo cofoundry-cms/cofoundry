@@ -1,7 +1,7 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -16,7 +16,6 @@ namespace Cofoundry.Domain.Internal
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly IUserStoredProcedures _userStoredProcedures;
         private readonly IDomainRepository _domainRepository;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
@@ -24,21 +23,21 @@ namespace Cofoundry.Domain.Internal
         private readonly IUserContextCache _userContextCache;
         private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
         private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
+        private readonly IMessageAggregator _messageAggregator;
 
         public UpdateUserCommandHandler(
             CofoundryDbContext dbContext,
-            IUserStoredProcedures userStoredProcedures,
             IDomainRepository domainRepository,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
             IUserAreaDefinitionRepository userAreaRepository,
             IPermissionValidationService permissionValidationService,
             IUserContextCache userContextCache,
             IUserUpdateCommandHelper userUpdateCommandHelper,
-            IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper
+            IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper,
+            IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
-            _userStoredProcedures = userStoredProcedures;
             _domainRepository = domainRepository;
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _userAreaRepository = userAreaRepository;
@@ -46,6 +45,7 @@ namespace Cofoundry.Domain.Internal
             _userContextCache = userContextCache;
             _userUpdateCommandHelper = userUpdateCommandHelper;
             _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
+            _messageAggregator = messageAggregator;
         }
 
         public async Task ExecuteAsync(UpdateUserCommand command, IExecutionContext executionContext)
@@ -61,11 +61,12 @@ namespace Cofoundry.Domain.Internal
             ValidatePermissions(userArea, executionContext);
 
             await UpdateRoleAsync(command, executionContext, user);
-            var updateResult = await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
+            var updateEmaiAndUsernameResult = await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
+            var hasVerificationStatusChanged = UpdateAccountVerifiedStatus(command, user, executionContext);
 
             UpdateProperties(command, user);
 
-            if (updateResult.HasUpdate())
+            if (updateEmaiAndUsernameResult.HasUpdate())
             {
                 _userSecurityStampUpdateHelper.Update(user);
             }
@@ -73,24 +74,39 @@ namespace Cofoundry.Domain.Internal
             using (var scope = _domainRepository.Transactions().CreateScope())
             {
                 await _dbContext.SaveChangesAsync();
-                if (updateResult.HasEmailChanged)
+                if (updateEmaiAndUsernameResult.HasEmailChanged)
                 {
                     // The only reason to invalidate would be if the contact email that a request was sent to was changed
-                    await _userStoredProcedures.InvalidateUserAccountRecoveryRequests(user.UserId, executionContext.ExecutionDate);
+                    await _domainRepository
+                        .WithContext(executionContext)
+                        .ExecuteCommandAsync(new InvalidateAuthorizedTaskBatchCommand(user.UserId, UserAccountRecoveryAuthorizedTaskType.Code));
                 }
 
-                scope.QueueCompletionTask(() => OnTransactionComplete(user, updateResult));
+                scope.QueueCompletionTask(() => OnTransactionComplete(user, updateEmaiAndUsernameResult, hasVerificationStatusChanged));
                 await scope.CompleteAsync();
             }
         }
 
-        private async Task OnTransactionComplete(User user, UserUpdateCommandHelper.UpdateEmailAndUsernameResult updateResult)
+        private async Task OnTransactionComplete(
+            User user, 
+            UserUpdateCommandHelper.UpdateEmailAndUsernameResult updateResult,
+            bool hasVerificationStatusChanged)
         {
             _userContextCache.Clear(user.UserId);
 
             if (updateResult.HasUpdate())
             {
                 await _userSecurityStampUpdateHelper.OnTransactionCompleteAsync(user);
+            }
+
+            if (hasVerificationStatusChanged)
+            {
+                await _messageAggregator.PublishAsync(new UserAccountVerificationStatusUpdatedMessage()
+                {
+                    UserAreaCode = user.UserAreaCode,
+                    UserId = user.UserId,
+                    IsVerified = user.AccountVerifiedDate.HasValue
+                });
             }
 
             await _userUpdateCommandHelper.PublishUpdateMessagesAsync(user, updateResult);
@@ -136,7 +152,23 @@ namespace Cofoundry.Domain.Internal
             user.FirstName = command.FirstName?.Trim();
             user.LastName = command.LastName?.Trim();
             user.RequirePasswordChange = command.RequirePasswordChange;
-            user.IsEmailConfirmed = user.Email != null ? command.IsEmailConfirmed : false;
+        }
+
+        private static bool UpdateAccountVerifiedStatus(UpdateUserCommand command, User user, IExecutionContext executionContext)
+        {
+            var hasChanged = user.AccountVerifiedDate.HasValue != command.IsAccountVerified;
+            if (!hasChanged) return hasChanged;
+
+            if (command.IsAccountVerified)
+            {
+                user.AccountVerifiedDate = executionContext.ExecutionDate;
+            }
+            else
+            {
+                user.AccountVerifiedDate = null;
+            }
+
+            return hasChanged;
         }
     }
 }

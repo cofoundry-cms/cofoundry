@@ -25,21 +25,9 @@ namespace Cofoundry.Domain.Data.Internal
         /// a new entity is created.
         /// </param>
         /// <returns>The Id of the existing or newly created record.</returns>
-        Task<int> AddEmailDomainIfNotExists(
+        Task<int> AddEmailDomainIfNotExistsAsync(
             string name, 
             string uniqueName,
-            DateTime dateNow
-            );
-
-        /// <summary>
-        /// Marks any non-complete account recovery requests as invalid. Use this
-        /// when a user updates their password, logs in, or when their contact 
-        /// email address is updated to ensure any out of date recovery requests cannot be used.
-        /// </summary>
-        /// <param name="userId">Id of the user to invalidate account recovery requests for.</param>
-        /// <param name="dateNow">The current date and time to set the InvalidatedDate to.</param>
-        Task InvalidateUserAccountRecoveryRequests(
-            int userId,
             DateTime dateNow
             );
     }

@@ -18,6 +18,8 @@ namespace Cofoundry.Domain.Data.Registration
                 .Register<IAssetStoredProcedures, AssetStoredProcedures>()
                 .Register<IPageDirectoryStoredProcedures, PageDirectoryStoredProcedures>()
                 .Register<IUserStoredProcedures, UserStoredProcedures>()
+                .Register<IAuthorizedTaskStoredProcedures, AuthorizedTaskStoredProcedures>()
+                .Register<IIPAddressStoredProcedures, IPAddressStoredProcedures>()
                 ;
         }
     }

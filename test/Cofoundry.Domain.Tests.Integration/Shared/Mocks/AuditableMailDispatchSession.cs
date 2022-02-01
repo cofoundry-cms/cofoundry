@@ -58,13 +58,13 @@ namespace Cofoundry.Domain.Tests.Integration.Mocks
             var matches = EnumerableHelper.Enumerate(textToMatch);
 
             if (!string.IsNullOrWhiteSpace(message.TextBody)
-                && matches.Any(m => message.TextBody.Contains(m, StringComparison.OrdinalIgnoreCase)))
+                && matches.All(m => message.TextBody.Contains(m, StringComparison.OrdinalIgnoreCase)))
             {
                 return true;
             }
 
             if (!string.IsNullOrWhiteSpace(message.HtmlBody)
-                && matches.Any(m => message.HtmlBody.Contains(m, StringComparison.OrdinalIgnoreCase)))
+                && matches.All(m => message.HtmlBody.Contains(m, StringComparison.OrdinalIgnoreCase)))
             {
                 return true;
             }

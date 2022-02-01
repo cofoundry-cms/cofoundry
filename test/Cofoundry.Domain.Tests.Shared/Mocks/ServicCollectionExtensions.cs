@@ -12,6 +12,30 @@ namespace Cofoundry.Domain.Tests.Shared.Mocks
     public static class ServicCollectionExtensions
     {
         /// <summary>
+        /// Overrides the registered command handler to run a mock handler instead.
+        /// </summary>
+        /// <typeparam name="TCommand">Command type parameter of the <see cref="ICommandHandler{TCommand}"/> to override e.g. AddPageCommand.</typeparam>
+        /// <param name="serviceCollection"><see cref="IServiceCollection"/> to alter.</param>
+        /// <param name="handlerDelegate">A delegate task to run to in place of the registered command handler.</param>
+        public static IServiceCollection MockHandler<TCommand>(this IServiceCollection serviceCollection, Action<TCommand> handlerDelegate)
+            where TCommand : ICommand
+        {
+            return serviceCollection.AddTransient<ICommandHandler<TCommand>>(s => new MockCommandHandler<TCommand>(handlerDelegate));
+        }
+
+        /// <summary>
+        /// Overrides the registered command handler to run a mock handler instead.
+        /// </summary>
+        /// <typeparam name="TCommand">Command type parameter of the <see cref="ICommandHandler{TCommand}"/> to override e.g. AddPageCommand.</typeparam>
+        /// <param name="serviceCollection"><see cref="IServiceCollection"/> to alter.</param>
+        /// <param name="asyncHandlerDelegate">A delegate task to run to in place of the registered command handler.</param>
+        public static IServiceCollection MockHandler<TCommand>(this IServiceCollection serviceCollection, Func<TCommand, Task> asyncHandlerDelegate)
+            where TCommand : ICommand
+        {
+            return serviceCollection.AddTransient<ICommandHandler<TCommand>>(s => new MockCommandHandler<TCommand>(asyncHandlerDelegate));
+        }
+
+        /// <summary>
         /// Overrides a query handler to return a mock result.
         /// </summary>
         /// <typeparam name="TQuery">Query type parameter of the <see cref="IQueryHandler{,}"/> to override e.g. GetPageDetailsByIdQuery.</typeparam>

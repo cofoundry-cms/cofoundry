@@ -48,6 +48,18 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
             );
 
         /// <summary>
+        /// Creates a mail template that is used when the account verification flow
+        /// is invoked for a user e.g. after user registration.
+        /// </summary>
+        /// <param name="context">
+        /// Key data that can be used in the template such as user data
+        /// and the verification url.
+        /// </param>
+        Task<DefaultAccountVerificationMailTemplate> BuildAccountVerificationTemplateAsync(
+            AccountVerificationTemplateBuilderContext context
+            );
+
+        /// <summary>
         /// Creates a mail template that is used to send a notification
         /// when a user's password has been changed.
         /// </summary>

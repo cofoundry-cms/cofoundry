@@ -62,10 +62,12 @@ namespace Cofoundry.Domain.Tests.Integration
                 delete from Cofoundry.RewriteRule
                 delete from Cofoundry.Tag
                 delete from Cofoundry.UserLoginLog
-                delete from Cofoundry.UserAccountRecoveryRequest
+                delete from Cofoundry.AuthorizedTask
                 delete Cofoundry.[User] where IsSystemAccount = 0 and [Username] <> 'admin@example.com'
                 delete from Cofoundry.[Role] where RoleCode is null
                 delete from Cofoundry.UnstructuredDataDependency
+                delete from Cofoundry.IPAddress
+                delete Cofoundry.EmailDomain from Cofoundry.EmailDomain where Name <> 'example.com'
             ");
         }
 

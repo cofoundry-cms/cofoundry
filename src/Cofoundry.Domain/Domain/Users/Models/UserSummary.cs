@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// The UserSummary is a reduced representation of a user. Building on 
-    /// the UserMicroSummary, the Usersummary contains additional audit 
-    /// and role data. Users are partitioned by user area so a user might be 
-    /// a Cofoundry admin user or could belong to a custom user area. Users 
-    /// cannot belong to more than one user area.
+    /// Building on the <see cref="UserMicroSummary"/>, the UserSummary projection 
+    /// contains additional audit and role data. Users are partitioned by user area 
+    /// so a user might be a Cofoundry admin user or could belong to a custom user 
+    /// area. Users cannot belong to more than one user area.
     /// </summary>
     public class UserSummary : UserMicroSummary, ICreateAudited
     {

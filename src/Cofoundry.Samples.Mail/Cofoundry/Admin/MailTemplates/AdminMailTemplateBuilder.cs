@@ -3,6 +3,7 @@ using Cofoundry.Core.Web;
 using Cofoundry.Domain;
 using Cofoundry.Domain.MailTemplates;
 using Cofoundry.Domain.MailTemplates.AdminMailTemplates;
+using System;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.Mail.AdminMailTemplates
@@ -90,6 +91,12 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
             template.ViewFile = "~/Cofoundry/Admin/MailTemplates/Templates/ExampleAdminAccountRecoveryMailTemplate";
 
             return template;
+        }
+
+        public Task<IMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context)
+        {
+            // Admin site does not use an account verification flow
+            throw new NotSupportedException();
         }
 
         /// <summary>

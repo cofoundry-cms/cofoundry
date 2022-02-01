@@ -1,4 +1,5 @@
-﻿CREATE FUNCTION Cofoundry.StringListToTbl (
+﻿-- Adapted from https://www.sommarskog.se/arrays-in-sql-2005.html copyright Erland Sommarskog
+CREATE FUNCTION Cofoundry.StringListToTbl (
 	@list nvarchar(max),
     @delimiter nchar(1) = N','
 	)

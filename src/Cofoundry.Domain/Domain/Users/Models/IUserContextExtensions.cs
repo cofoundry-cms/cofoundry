@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     public static class IUserContextExtensions
     {

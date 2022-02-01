@@ -55,8 +55,14 @@ namespace Cofoundry.Domain.Internal
                 await _domainRepository
                     .WithContext(executionContext)
                     .ExecuteCommandAsync(new DeleteUnstructuredDataDependenciesCommand(UserEntityDefinition.DefinitionCode, user.UserId));
-                await _dbContext.SaveChangesAsync();
 
+                await _domainRepository
+                    .ExecuteCommandAsync(new InvalidateAuthorizedTaskBatchCommand()
+                    {
+                        UserId = command.UserId
+                    });
+
+                await _dbContext.SaveChangesAsync();
                 scope.QueueCompletionTask(() => OnTransactionComplete(user));
 
                 await scope.CompleteAsync();

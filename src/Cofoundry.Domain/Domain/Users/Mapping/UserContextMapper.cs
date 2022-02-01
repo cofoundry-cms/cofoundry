@@ -30,6 +30,7 @@ namespace Cofoundry.Domain.Internal
             var cx = new UserContext();
 
             cx.IsPasswordChangeRequired = dbUser.RequirePasswordChange;
+            cx.IsAccountVerified = dbUser.AccountVerifiedDate.HasValue;
             cx.RoleId = dbUser.RoleId;
             cx.RoleCode = dbUser.Role.RoleCode;
             cx.UserId = dbUser.UserId;

@@ -20,6 +20,16 @@
                     ng-click="vm.resetPassword()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
 
+        <cms-button cms-text="Mark Verified"
+            ng-if="vm.canVerifyAccount && !vm.user.accountVerifiedDate"
+            ng-click="vm.updateVerificationStatus()"
+            ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
+    
+        <cms-button cms-text="Clear Verification"
+            ng-if="vm.canVerifyAccount && vm.user.accountVerifiedDate"
+            ng-click="vm.updateVerificationStatus()"
+            ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
+        
         <cms-button cms-text="Delete"
                     ng-if="::vm.canDelete"
                     ng-click="vm.deleteUser()"
@@ -50,41 +60,51 @@
         <!--MAIN-->
         <cms-form-section cms-title="Main">
             <cms-form-field-text cms-title="First Name"
-                                 cms-model="vm.command.firstName"
-                                 maxlength="32"></cms-form-field-text>
+                cms-model="vm.command.firstName"
+                maxlength="32"></cms-form-field-text>
 
             <cms-form-field-text cms-title="Last Name"
-                                 cms-model="vm.command.lastName"
-                                 maxlength="32"></cms-form-field-text>
+                cms-model="vm.command.lastName"
+                maxlength="32"></cms-form-field-text>
 
             <cms-form-field-text cms-title="Username"
-                                 cms-model="vm.command.username"
-                                 ng-if="::!vm.userArea.useEmailAsUsername"
-                                 ng-required="::!vm.userArea.useEmailAsUsername"
-                                 cms-description="The username that the user uses to log in with."
-                                 maxlength="150"></cms-form-field-text>
+                cms-model="vm.command.username"
+                ng-if="::!vm.userArea.useEmailAsUsername"
+                ng-required="::!vm.userArea.useEmailAsUsername"
+                cms-description="The username that the user uses to log in with."
+                maxlength="150"></cms-form-field-text>
 
             <cms-form-field-email-address cms-title="Email Address"
-                                          cms-model="vm.command.email"
-                                          maxlength="150"
-                                          ng-required="::vm.userArea.allowPasswordLogin || vm.userArea.useEmailAsUsername"></cms-form-field-email-address>
+                cms-model="vm.command.email"
+                maxlength="150"
+                ng-required="::vm.userArea.allowPasswordLogin || vm.userArea.useEmailAsUsername"></cms-form-field-email-address>
 
             <cms-form-field-dropdown cms-title="Role"
-                                     cms-options="vm.roles"
-                                     cms-option-name="title"
-                                     cms-option-value="roleId"
-                                     cms-model="vm.command.roleId"
-                                     cms-description="The role dictates which permissions a user has."
-                                     required></cms-form-field-dropdown>
+                cms-options="vm.roles"
+                cms-option-name="title"
+                cms-option-value="roleId"
+                cms-model="vm.command.roleId"
+                cms-description="The role dictates which permissions a user has."
+                required></cms-form-field-dropdown>
 
             <cms-form-field-checkbox cms-title="Require Password Change"
-                               cms-model="vm.command.requirePasswordChange"
-                               ng-if="::vm.userArea.allowPasswordLogin"
-                               cms-description="If selected, the user will be required to change their password the next time they log in."></cms-form-field-checkbox>
+                cms-model="vm.command.requirePasswordChange"
+                ng-if="::vm.userArea.allowPasswordLogin"
+                cms-description="If selected, the user will be required to change their password the next time they log in."></cms-form-field-checkbox>
 
-            <cms-form-field-checkbox cms-title="Is Email Confirmed"
-                                cms-model="vm.command.isEmailConfirmed"
-                                cms-description="Used to indicate that a users email has been verified as a valid working email."></cms-form-field-checkbox>
+            <cms-form-field-checkbox cms-title="Account Verified"
+                cms-model="vm.command.isAccountVerified"
+                ng-if="vm.editMode"
+                cms-description="If selected, the user will be marked as a verified account."></cms-form-field-checkbox>
+
+            <cms-form-field-container cms-title="Account Verified"
+                cms-description="The date that the user account has been verified."
+                ng-if="!vm.editMode">
+                <span ng-if="vm.user.accountVerifiedDate">
+                    Yes (<cms-time-ago cms-time="vm.user.accountVerifiedDate"></cms-time-ago>)
+                </span>
+                <span ng-if="!vm.user.accountVerifiedDate">No</span>
+            </cms-form-field-container>
 
         </cms-form-section>
 

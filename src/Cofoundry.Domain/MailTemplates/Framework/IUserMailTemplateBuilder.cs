@@ -39,9 +39,19 @@ namespace Cofoundry.Domain.MailTemplates
         /// </summary>
         /// <param name="context">
         /// Key data that can be used in the template such as user data
-        /// and the recovery url.
+        /// and the recovery URL.
         /// </param>
         Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context);
+
+        /// <summary>
+        /// Creates a mail template that is used when the account verification flow
+        /// is invoked for a user e.g. after user registration.
+        /// </summary>
+        /// <param name="context">
+        /// Key data that can be used in the template such as user data
+        /// and the verification URL.
+        /// </param>
+        Task<IMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context);
 
         /// <summary>
         /// Creates a mail template that is used to send a notification

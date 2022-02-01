@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Core.EntityFramework;
-using System;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -27,13 +26,12 @@ namespace Cofoundry.Domain.Data.Internal
         /// table.
         /// </summary>
         /// <param name="completedItemRetentionTimeInSeconds">
-        /// The amount of tiem in seconds to keep completed items in the queue.
+        /// The amount of time in seconds to keep completed items in the queue.
         /// </param>
         /// <param name="deadLetterRetentionTimeInSeconds">
         /// The amount of time in seconds to keep items that have failed too many 
         /// times andhave the "CanRetry" flag set to false.
         /// </param>
-        /// <returns></returns>
         public Task CleanupAssetFileCleanupQueueItemAsync(double completedItemRetentionTimeInSeconds, double deadLetterRetentionTimeInSeconds)
         {
             return _entityFrameworkSqlExecutor

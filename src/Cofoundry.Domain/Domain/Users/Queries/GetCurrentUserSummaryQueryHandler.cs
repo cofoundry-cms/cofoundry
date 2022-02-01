@@ -1,35 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Cofoundry.Domain.CQS;
 using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Gets a UserSummary object representing the currently logged in 
-    /// user. If the user is not logged in then null is returned.
+    /// Gets a <see cref="UserSummary"/> object representing the currently logged in  user. If 
+    /// the user is not logged in then <see langword="null"/> is returned. If  multiple user areas 
+    /// are implemented, then the returned user will depend on the "ambient" auth scheme, which 
+    /// is typically the default user area unless the ambient scheme has been changed during 
+    /// the flow of the request e.g. via an AuthorizeUserAreaAttribute.
     /// </summary>
     public class GetCurrentUserSummaryQueryHandler
         : IQueryHandler<GetCurrentUserSummaryQuery, UserSummary>
         , IIgnorePermissionCheckHandler
     {
-        private readonly IQueryExecutor _queryExecutor;
+        private readonly IDomainRepository _domainRepository;
+        private readonly IUserContextService _userContextService;
 
         public GetCurrentUserSummaryQueryHandler(
-            IQueryExecutor queryExecutor
+            IDomainRepository domainRepository,
+            IUserContextService userContextService
             )
         {
-            _queryExecutor = queryExecutor;
+            _domainRepository = domainRepository;
+            _userContextService = userContextService;
         }
 
-        public Task<UserSummary> ExecuteAsync(GetCurrentUserSummaryQuery query, IExecutionContext executionContext)
+        public async Task<UserSummary> ExecuteAsync(GetCurrentUserSummaryQuery query, IExecutionContext executionContext)
         {
-            if (!executionContext.UserContext.UserId.HasValue) return null;
+            var userId = executionContext.UserContext.UserId;
+            if (!userId.HasValue) return null;
 
-            var userQuery = new GetUserSummaryByIdQuery(executionContext.UserContext.UserId.Value);
+            var user =  await _domainRepository
+                .WithContext(executionContext)
+                .ExecuteQueryAsync(new GetUserSummaryByIdQuery(userId.Value));
 
-            return _queryExecutor.ExecuteAsync(userQuery, executionContext);
+            return user;
         }
     }
 }

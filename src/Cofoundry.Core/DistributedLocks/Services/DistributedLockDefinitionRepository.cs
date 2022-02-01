@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Cofoundry.Core.DistributedLocks.Internal
 {
@@ -13,8 +12,6 @@ namespace Cofoundry.Core.DistributedLocks.Internal
     /// </summary>
     public class DistributedLockDefinitionRepository : IDistributedLockDefinitionRepository
     {
-        #region constructor
-
         private readonly Dictionary<Type, IDistributedLockDefinition> _definitionLookup;
 
         public DistributedLockDefinitionRepository(
@@ -29,7 +26,7 @@ namespace Cofoundry.Core.DistributedLocks.Internal
         private void DetectInvalidDefinitions(IEnumerable<IDistributedLockDefinition> definitions)
         {
             var dulpicateIds = definitions
-                .GroupBy(e => e.DistributedLockId)
+                .GroupBy(e => e.DistributedLockId, StringComparer.OrdinalIgnoreCase)
                 .Where(g => g.Count() > 1)
                 .FirstOrDefault();
 
@@ -49,8 +46,6 @@ namespace Cofoundry.Core.DistributedLocks.Internal
                 throw new InvalidDistributedLockDefinitionException(message, notValidCode, definitions);
             }
         }
-
-        #endregion
 
         public IDistributedLockDefinition Get<TDefinition>()
             where TDefinition : IDistributedLockDefinition

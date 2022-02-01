@@ -80,7 +80,7 @@ namespace Cofoundry.Domain.Tests.Integration
             services.AddScoped<IMessageAggregator, AuditableMessageAggregator>();
             services.AddScoped<IMailDispatchSession, AuditableMailDispatchSession>();
             services.AddScoped<IPageTemplateViewFileLocator, TestPageTemplateViewFileLocator>();
-            services.AddSingleton<IClientConnectionService>(new MockClientConnectionService(c => c.IPAddress = TestIPAddresses.Localhost));
+            services.AddScoped<IClientConnectionService, MockClientConnectionService>();
             services.AddTransient<IViewFileReader, TestViewFileReader>();
 
             if (customServiceConfiguration != null)

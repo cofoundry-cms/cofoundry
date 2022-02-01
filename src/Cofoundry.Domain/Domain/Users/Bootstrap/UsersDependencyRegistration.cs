@@ -10,7 +10,7 @@ namespace Cofoundry.Domain.Registration
         {
             container
                 .RegisterAll<IUserAreaDefinition>()
-                .Register<IUserAreaDefinitionRepository, UserAreaDefinitionRepository>()
+                .RegisterSingleton<IUserAreaDefinitionRepository, UserAreaDefinitionRepository>()
                 .Register<UserContextMapper>()
                 .Register<IPasswordUpdateCommandHelper, PasswordUpdateCommandHelper>()
                 .Register<IUserContextService, UserContextService>()
@@ -19,7 +19,7 @@ namespace Cofoundry.Domain.Registration
                 .Register<IUserMicroSummaryMapper, UserMicroSummaryMapper>()
                 .Register<IUserSummaryMapper, UserSummaryMapper>()
                 .Register<IUserDetailsMapper, UserDetailsMapper>()
-                .Register<IUserAccountRecoveryUrlHelper, UserAccountRecoveryUrlHelper>()
+                .Register<IAuthorizedTaskTokenUrlHelper, AuthorizedTaskTokenUrlHelper>()
                 .Register<IUserContextCache, UserContextCache>(RegistrationOptions.Scoped())
                 .Register<IUserDataFormatter, UserDataFormatter>()
                 .Register<IUserUpdateCommandHelper, UserUpdateCommandHelper>()
@@ -28,7 +28,6 @@ namespace Cofoundry.Domain.Registration
                 .Register<IUsernameValidator, UsernameValidator>()
                 .Register<ISecurityStampGenerator, SecurityStampGenerator>()
                 .Register<IUserSecurityStampUpdateHelper, UserSecurityStampUpdateHelper>()
-                .Register<IUserAccountRecoveryTokenFormatter, UserAccountRecoveryTokenFormatter>()
                 ;
         }
     }

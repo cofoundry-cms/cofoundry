@@ -35,6 +35,13 @@
         bool IsPasswordChangeRequired { get; }
 
         /// <summary>
+        /// Indicates if the account has been marked as verified. Verified accounts are an
+        /// optional feature and this property can be ignored if you haven't implemented 
+        /// account verification.
+        /// </summary>
+        bool IsAccountVerified { get; }
+
+        /// <summary>
         /// The role that this user belongs to. If this is null then the anonymous role 
         /// should be used.
         /// </summary>

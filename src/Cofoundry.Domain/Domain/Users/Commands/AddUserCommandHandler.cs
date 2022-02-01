@@ -5,6 +5,7 @@ using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,6 +65,7 @@ namespace Cofoundry.Domain.Internal
                 LastName = command.LastName?.Trim(),
                 RequirePasswordChange = command.RequirePasswordChange,
                 LastPasswordChangeDate = executionContext.ExecutionDate,
+                AccountVerifiedDate = command.IsAccountVerified ? executionContext.ExecutionDate : (DateTime?)null,
                 CreateDate = executionContext.ExecutionDate,
                 Role = role,
                 UserArea = dbUserArea,

@@ -62,7 +62,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             updateCommand.Email = "E.john@" + alternateDomain;
             updateCommand.FirstName = "Elton";
             updateCommand.LastName = "John";
-            updateCommand.IsEmailConfirmed = true;
             updateCommand.RequirePasswordChange = true;
 
             await contentRepository
@@ -89,10 +88,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.UniqueEmail.Should().Be(lowerEmail);
                 user.Username.Should().Be(normalizedEmail);
                 user.UniqueUsername.Should().Be(lowerEmail);
-                user.IsEmailConfirmed.Should().BeTrue();
+                user.AccountVerifiedDate.Should().BeNull();
                 user.RequirePasswordChange.Should().BeTrue();
                 user.EmailDomain.Name.Should().Be(normalizedDomain);
                 user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
+                user.AccountVerifiedDate.Should().BeNull();
             }
         }
 
@@ -311,6 +311,81 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
+        public async Task CanVerifyAccount()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(CanVerifyAccount);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+
+            var addCommand = app.TestData.Users().CreateAddCommand(uniqueData);
+            var userId = await contentRepository
+                .Users()
+                .AddAsync(addCommand);
+
+            var updateCommand = MapUpdateCommand(addCommand);
+            updateCommand.IsAccountVerified = true;
+
+            await contentRepository
+                .Users()
+                .UpdateAsync(updateCommand);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.AccountVerifiedDate.Should().HaveValue();
+                app.Mocks
+                    .CountMessagesPublished<UserAccountVerificationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode && m.IsVerified)
+                    .Should().Be(1);
+            }
+        }
+
+        [Fact]
+        public async Task CanUnVerifyAccount()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(CanUnVerifyAccount);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+
+            var addCommand = app.TestData.Users().CreateAddCommand(uniqueData);
+            addCommand.IsAccountVerified = true;
+            var userId = await contentRepository
+                .Users()
+                .AddAsync(addCommand);
+
+            var updateCommand = MapUpdateCommand(addCommand);
+            updateCommand.IsAccountVerified = false;
+
+            await contentRepository
+                .Users()
+                .UpdateAsync(updateCommand);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.AccountVerifiedDate.Should().BeNull();
+                app.Mocks
+                    .CountMessagesPublished<UserAccountVerificationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode && !m.IsVerified)
+                    .Should().Be(1);
+            }
+        }
+
+        [Fact]
         public async Task WhenUsernameNotUnique_Throws()
         {
             using var app = _appFactory.Create();
@@ -410,6 +485,10 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 app.Mocks
                     .CountMessagesPublished<UserSecurityStampUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
                     .Should().Be(0);
+
+                app.Mocks
+                    .CountMessagesPublished<UserAccountVerificationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(0);
             }
         }
 
@@ -506,7 +585,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 {
                     Email = command.Email,
                     FirstName = command.FirstName,
-                    IsEmailConfirmed = false,
                     LastName = command.LastName,
                     RequirePasswordChange = command.RequirePasswordChange,
                     RoleId = command.RoleId,

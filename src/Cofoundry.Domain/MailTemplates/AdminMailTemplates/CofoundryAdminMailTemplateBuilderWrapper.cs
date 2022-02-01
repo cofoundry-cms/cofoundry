@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Mail;
+using System;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
@@ -38,6 +39,12 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
         public async Task<IMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)
         {
             return await _cofoundryAdminMailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
+        }
+
+        public Task<IMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context)
+        {
+            // admin does not support account verification
+            throw new NotImplementedException();
         }
     }
 }

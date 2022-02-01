@@ -50,7 +50,7 @@ namespace Cofoundry.Domain.Internal
                 LastLoginDate = DbDateTimeMapper.AsUtc(dbUser.LastLoginDate),
                 LastPasswordChangeDate = DbDateTimeMapper.AsUtc(dbUser.LastPasswordChangeDate),
                 RequirePasswordChange = dbUser.RequirePasswordChange,
-                IsEmailConfirmed = dbUser.IsEmailConfirmed
+                AccountVerifiedDate = dbUser.AccountVerifiedDate
             };
 
             user.AuditData = new CreateAuditData()

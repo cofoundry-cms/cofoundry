@@ -16,7 +16,7 @@ namespace Cofoundry.Domain.Tests.Users.Helpers
         [InlineData("/login/forgot-password/", "/login/forgot-password?t=" + SIMPLE_TOKEN)]
         public void MakeUrl_WhenUrlRelative_ReturnsCorrectUrl(string url, string expected)
         {
-            var userAccountRecoveryUrlHelper = new UserAccountRecoveryUrlHelper();
+            var userAccountRecoveryUrlHelper = new AuthorizedTaskTokenUrlHelper();
             var result = userAccountRecoveryUrlHelper.MakeUrl(url, SIMPLE_TOKEN);
 
             Assert.Equal(expected, result);
@@ -27,7 +27,7 @@ namespace Cofoundry.Domain.Tests.Users.Helpers
         {
             var expected = $"{ ABSOLUTE_BASE_URI }?t={ SIMPLE_TOKEN }";
 
-            var userAccountRecoveryUrlHelper = new UserAccountRecoveryUrlHelper();
+            var userAccountRecoveryUrlHelper = new AuthorizedTaskTokenUrlHelper();
             var result = userAccountRecoveryUrlHelper.MakeUrl(ABSOLUTE_BASE_URI, SIMPLE_TOKEN);
 
             Assert.Equal(expected, result);
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Tests.Users.Helpers
         [Fact]
         public void MakeUrl_WhenTokenContainsInvalidChars_EscapesToken()
         {
-            var userAccountRecoveryUrlHelper = new UserAccountRecoveryUrlHelper();
+            var userAccountRecoveryUrlHelper = new AuthorizedTaskTokenUrlHelper();
             var token = "notEscaped /?:=&\" <>#%{}|\\^[]`";
             var escaped = "notEscaped%20%2F%3F%3A%3D%26%22%20%3C%3E%23%25%7B%7D%7C%5C%5E%5B%5D%60";
             var expected = "/auth/forgot-password?t=" + escaped;
@@ -49,7 +49,7 @@ namespace Cofoundry.Domain.Tests.Users.Helpers
         [Fact]
         public void ParseFromQuery_EmptyQuery_ReturnsNull()
         {
-            var userAccountRecoveryUrlHelper = new UserAccountRecoveryUrlHelper();
+            var userAccountRecoveryUrlHelper = new AuthorizedTaskTokenUrlHelper();
 
             var queryCollection = new QueryCollection();
 
@@ -61,7 +61,7 @@ namespace Cofoundry.Domain.Tests.Users.Helpers
         [Fact]
         public void ParseFromQuery_WhenSimpleQuery_CanParseToken()
         {
-            var userAccountRecoveryUrlHelper = new UserAccountRecoveryUrlHelper();
+            var userAccountRecoveryUrlHelper = new AuthorizedTaskTokenUrlHelper();
 
             var url = userAccountRecoveryUrlHelper.MakeUrl(ABSOLUTE_BASE_URI, SIMPLE_TOKEN);
             var query = new Uri(url).Query;
@@ -76,7 +76,7 @@ namespace Cofoundry.Domain.Tests.Users.Helpers
         [Fact]
         public void ParseFromQuery_WhenTokenContainsInvalidChars_CanParseToken()
         {
-            var userAccountRecoveryUrlHelper = new UserAccountRecoveryUrlHelper();
+            var userAccountRecoveryUrlHelper = new AuthorizedTaskTokenUrlHelper();
 
             var token = "notEscaped /?:=&\" <>#%{}|\\^[]`";
             var url = userAccountRecoveryUrlHelper.MakeUrl(ABSOLUTE_BASE_URI, token);

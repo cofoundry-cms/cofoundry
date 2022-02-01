@@ -41,6 +41,13 @@ namespace Cofoundry.Domain
         public AccountRecoveryOptions AccountRecovery { get; set; } = new AccountRecoveryOptions();
 
         /// <summary>
+        /// Options to control the behavior of the account verification feature.
+        /// Note that the Cofoundry admin panel does not support an account 
+        /// verification flow and therefore these settings do not apply.
+        /// </summary>
+        public AccountVerificationOptions AccountVerification { get; set; } = new AccountVerificationOptions();
+
+        /// <summary>
         /// Create a new <see cref="UserAreaOptions"/>, copying data from 
         /// the specified <paramref name="settings"/>.
         /// </summary>
@@ -62,7 +69,8 @@ namespace Cofoundry.Domain
                 Password = settings.Password.Clone(),
                 Username = settings.Username.Clone(),
                 Cookies = settings.Cookies.Clone(),
-                AccountRecovery = settings.AccountRecovery.Clone()
+                AccountRecovery = settings.AccountRecovery.Clone(),
+                AccountVerification = settings.AccountVerification.Clone()
             };
 
             return options;

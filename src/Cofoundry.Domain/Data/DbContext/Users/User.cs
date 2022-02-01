@@ -168,10 +168,13 @@ namespace Cofoundry.Domain.Data
         public bool IsSystemAccount { get; set; }
 
         /// <summary>
-        /// A flag to indicate if the users email address has been confirmed via a 
-        /// sign-up notification.
+        /// A generic verification date that can be used to mark an account as verified
+        /// or activated. One common way of verification is via an email sign-up notification.
+        /// Given that account verification is not tied to any specified data, it is not automatically
+        /// cleared when for example an email address is updated. The management of this property
+        /// is left to the implementor.
         /// </summary>
-        public bool IsEmailConfirmed { get; set; }
+        public DateTime? AccountVerifiedDate { get; set; }
 
         /// <summary>
         /// The date and time the user was created

@@ -1,6 +1,7 @@
 ﻿using Cofoundry.Core.Mail;
 using Cofoundry.Core.Web;
 using Cofoundry.Domain.MailTemplates;
+using System;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
@@ -69,6 +70,12 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             };
 
             return Task.FromResult<IMailTemplate>(template);
+        }
+
+        public Task<IMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context)
+        {
+            // Partner accounts don't require verification
+            throw new NotSupportedException();
         }
 
         private string GetLoginUrl()

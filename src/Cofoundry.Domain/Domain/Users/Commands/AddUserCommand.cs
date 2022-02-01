@@ -57,9 +57,16 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Indicates whether the user will be prompted to change their password the
-        /// next time they log in.
+        /// next time they log in. Defaults to <see langword="false"/>.
         /// </summary>
         public bool RequirePasswordChange { get; set; }
+
+        /// <summary>
+        /// Indicates whether the user should be marked as verified. Account verification is
+        /// an optional process that usually happens as part of a two-step verification flow
+        /// via an out-of-band verificaton notification. Defaults to <see langword="false"/>.
+        /// </summary>
+        public bool IsAccountVerified { get; set; }
 
         /// <summary>
         /// The Cofoundry user system is partitioned into user areas a user

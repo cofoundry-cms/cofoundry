@@ -44,6 +44,14 @@ function (
         return $http.put(getIdRoute(userId) + '/reset-password');
     }
 
+    service.updateVerificationStatus = function (userId, isVerified) {
+
+        return $http.put(getIdRoute(userId) + '/verification-status', {
+            userId: userId,
+            isVerified: isVerified
+        });
+    }
+
     service.remove = function (id) {
 
         return $http.delete(getIdRoute(id));

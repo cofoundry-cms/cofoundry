@@ -4,7 +4,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// This message is published when a user successfully initiates the account
-    /// recovery process via <see cref="InitiateUserAccountRecoveryCommand"/>.
+    /// recovery process via <see cref="InitiateUserAccountRecoveryByEmailCommand"/>.
     /// </summary>
     public class UserAccountRecoveryInitiatedMessage
     {
@@ -20,11 +20,11 @@ namespace Cofoundry.Domain
         public int UserId { get; set; }
 
         /// <summary>
-        /// Unique identifier for the reset request, which is combined
-        /// with an authorization code to create the unique <see cref="Token"/> that
-        /// is used to identify and authorize the request via a url or similar mechanism.
+        /// Unique identifier for the underlying authorized task that manages the reset request.
+        /// This identifier is combined with an authorization code to create the unique <see cref="Token"/> 
+        /// that is used to identify and authorize the request via a url or similar mechanism.
         /// </summary>
-        public Guid UserAccountRecoveryRequestId { get; set; }
+        public Guid AuthorizedTaskId { get; set; }
 
         /// <summary>
         /// A token that can be used to identify and authenticates the password 

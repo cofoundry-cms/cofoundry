@@ -27,7 +27,7 @@ namespace Cofoundry.Domain.Internal
         private void DetectDuplicates(IEnumerable<IPermission> permissions)
         {
             var dulpicateCodes = permissions
-                .GroupBy(e => GetUniqueKey(e))
+                .GroupBy(e => GetUniqueKey(e), StringComparer.OrdinalIgnoreCase)
                 .Where(g => g.Count() > 1);
 
             if (dulpicateCodes.Any())

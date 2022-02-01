@@ -14,6 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Cofoundry\MailTemplates\CustomerUsers\Templates\AccountVerificationMailTemplate_html.cshtml" />
+    <Content Remove="Cofoundry\MailTemplates\CustomerUsers\Templates\AccountVerificationMailTemplate_text.cshtml" />
     <Content Remove="Views\PartnerAuth\AccountRecovery.cshtml" />
     <Content Remove="Views\PartnerAuth\AccountRecoveryComplete.cshtml" />
     <Content Remove="Views\PartnerAuth\AccountRecoveryRequestInvalid.cshtml" />
@@ -21,6 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Cofoundry\MailTemplates\CustomerUsers\Templates\AccountVerificationMailTemplate_html.cshtml" />
+    <EmbeddedResource Include="Cofoundry\MailTemplates\CustomerUsers\Templates\AccountVerificationMailTemplate_text.cshtml" />
     <EmbeddedResource Include="Views\PartnerAuth\ForgotPassword.cshtml" />
     <EmbeddedResource Include="Views\PartnerAuth\AccountRecovery.cshtml" />
     <EmbeddedResource Include="Views\PartnerAuth\AccountRecoveryComplete.cshtml" />

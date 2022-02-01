@@ -28,6 +28,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly ITransactionScopeManager _transactionScopeFactory;
         private readonly IUserDataFormatter _userDataFormatter;
+        private readonly IPasswordPolicyService _passwordPolicyService;
 
         public AddUserWithTemporaryPasswordCommandHandler(
             CofoundryDbContext dbContext,
@@ -38,7 +39,8 @@ namespace Cofoundry.Domain.Internal
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             ITransactionScopeManager transactionScopeFactory,
-            IUserDataFormatter userDataFormatter
+            IUserDataFormatter userDataFormatter,
+            IPasswordPolicyService passwordPolicyService
             )
         {
             _dbContext = dbContext;
@@ -50,6 +52,7 @@ namespace Cofoundry.Domain.Internal
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _transactionScopeFactory = transactionScopeFactory;
             _userDataFormatter = userDataFormatter;
+            _passwordPolicyService = passwordPolicyService;
         }
 
         public async Task ExecuteAsync(AddUserWithTemporaryPasswordCommand command, IExecutionContext executionContext)
@@ -98,7 +101,12 @@ namespace Cofoundry.Domain.Internal
 
         private AddUserCommand MapCommand(AddUserWithTemporaryPasswordCommand command)
         {
+            // The password policy should be configured with the definitive min-length
+            // as an attribute, but otherwise fall-back to the configured option
+            var passwordPolicy = _passwordPolicyService.GetDescription(command.UserAreaCode);
+            var minLengthAttribute = passwordPolicy.Attributes.GetOrDefault(PasswordPolicyAttributes.MinLength);
             var options = _userAreaDefinitionRepository.GetOptionsByCode(command.UserAreaCode);
+            var minLength = IntParser.ParseOrDefault(minLengthAttribute, options.Password.MinLength);
 
             var newUserCommand = new AddUserCommand()
             {
@@ -106,7 +114,7 @@ namespace Cofoundry.Domain.Internal
                 LastName = command.LastName,
                 Email = command.Email,
                 Username = command.Username,
-                Password = _passwordGenerationService.Generate(options.Password.MinLength),
+                Password = _passwordGenerationService.Generate(minLength),
                 RequirePasswordChange = true,
                 UserAreaCode = command.UserAreaCode,
                 RoleId = command.RoleId,

@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,7 +43,7 @@ namespace Cofoundry.Domain.Internal
 
         private void DetectInvalidDefinitions(IEnumerable<IRoleDefinition> definitions)
         {
-            const string WHY_VALID_CODE_MESSAGE = "All role codes must be 3 characters and contain only non-unicode caracters.";
+            const string WHY_VALID_CODE_MESSAGE = "All role codes must be 3 characters and contain only non-unicode characters.";
 
             var nullRoleCode = definitions
                 .Where(d => string.IsNullOrWhiteSpace(d.RoleCode))
@@ -60,9 +61,9 @@ namespace Cofoundry.Domain.Internal
                 .Where(d => string.IsNullOrWhiteSpace(d.UserAreaCode))
                 .FirstOrDefault();
 
-            if (nullRoleCode != null)
+            if (nullUserAreaCode != null)
             {
-                var message = nullRoleCode.GetType().Name + " does not have a user area code specified.";
+                var message = nullUserAreaCode.GetType().Name + " does not have a user area code specified.";
                 throw new InvalidRoleDefinitionException(message, nullUserAreaCode, definitions);
             }
 
@@ -77,7 +78,7 @@ namespace Cofoundry.Domain.Internal
             }
 
             var dulpicateCode = definitions
-                .GroupBy(e => new { e.UserAreaCode, e.RoleCode })
+                .GroupBy(e => CreateLookupKey(e.UserAreaCode, e.RoleCode), StringComparer.OrdinalIgnoreCase)
                 .Where(g => g.Count() > 1)
                 .FirstOrDefault();
 

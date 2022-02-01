@@ -126,7 +126,6 @@ namespace Cofoundry.Domain.Internal
                 user.Email = null;
                 user.UniqueEmail = null;
                 user.EmailDomainId = null;
-                user.IsEmailConfirmed = false;
 
                 result.HasEmailChanged = true;
                 return result;
@@ -150,7 +149,6 @@ namespace Cofoundry.Domain.Internal
             user.EmailDomainId = await GetEmailDomainIdAsync(emailFormatResult, executionContext);
             user.Email = emailFormatResult.NormalizedEmailAddress;
             user.UniqueEmail = emailFormatResult.UniqueEmailAddress;
-            user.IsEmailConfirmed = false;
 
             if (userArea.UseEmailAsUsername)
             {
@@ -238,7 +236,7 @@ namespace Cofoundry.Domain.Internal
         {
             if (emailAddress == null) return null;
 
-            var emailDomainId = await _userStoredProcedures.AddEmailDomainIfNotExists(
+            var emailDomainId = await _userStoredProcedures.AddEmailDomainIfNotExistsAsync(
                 emailAddress.Domain.Name,
                 emailAddress.Domain.IdnName,
                 executionContext.ExecutionDate

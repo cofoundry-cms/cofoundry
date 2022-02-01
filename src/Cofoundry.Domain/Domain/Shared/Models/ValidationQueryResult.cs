@@ -13,8 +13,7 @@ namespace Cofoundry.Domain
 
         public ValidationQueryResult(ValidationError error)
         {
-            Error = error;
-            IsSuccess = error == null;
+            UpdateError(error);
         }
 
         /// <summary>
@@ -42,6 +41,17 @@ namespace Cofoundry.Domain
             }
 
             Error.Throw();
+        }
+
+        /// <summary>
+        /// Updates the result with the specified error, automatically updating
+        /// <see cref="IsSuccess"/> to the correct state.
+        /// </summary>
+        /// <param name="error"></param>
+        public virtual void UpdateError(ValidationError error)
+        {
+            Error = error;
+            IsSuccess = error == null;
         }
 
         /// <summary>

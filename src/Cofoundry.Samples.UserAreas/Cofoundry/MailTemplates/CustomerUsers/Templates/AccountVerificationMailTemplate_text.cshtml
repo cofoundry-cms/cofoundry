@@ -1,0 +1,10 @@
+﻿@model DefaultAccountVerificationMailTemplate
+@using Cofoundry.Domain.MailTemplates.DefaultMailTemplates
+@{
+    Layout = Model.GetLayoutFilePathForTextTemplate();
+}
+Welcome customer!
+
+Please verify your account on the @Model.ApplicationName site by following this link:
+
+@Model.VerificationUrl

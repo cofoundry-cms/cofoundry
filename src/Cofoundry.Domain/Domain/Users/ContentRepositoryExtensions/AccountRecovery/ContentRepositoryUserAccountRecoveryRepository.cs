@@ -17,17 +17,17 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IDomainRepositoryQueryContext<ValidationQueryResult> Validate(ValidateUserAccountRecoveryRequestQuery query)
+        public IDomainRepositoryQueryContext<AuthorizedTaskTokenValidationResult> ValidateAsync(ValidateUserAccountRecoveryByEmailQuery query)
         {
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task InitiateAsync(InitiateUserAccountRecoveryCommand command)
+        public Task InitiateAsync(InitiateUserAccountRecoveryByEmailCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        public Task CompleteAsync(CompleteUserAccountRecoveryCommand command)
+        public Task CompleteAsync(CompleteUserAccountRecoveryByEmailCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }

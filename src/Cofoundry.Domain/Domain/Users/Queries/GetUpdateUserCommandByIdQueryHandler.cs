@@ -1,27 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class GetUpdateUserCommandByIdQueryHandler 
+    public class GetUpdateUserCommandByIdQueryHandler
         : IQueryHandler<GetUpdateCommandByIdQuery<UpdateUserCommand>, UpdateUserCommand>
         , ILoggedInPermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public GetUpdateUserCommandByIdQueryHandler(
             CofoundryDbContext dbContext,
-            IPermissionValidationService permissionValidationService
+            IPermissionValidationService permissionValidationService,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
             _dbContext = dbContext;
             _permissionValidationService = permissionValidationService;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
         public async Task<UpdateUserCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateUserCommand> query, IExecutionContext executionContext)
@@ -44,17 +44,23 @@ namespace Cofoundry.Domain.Internal
                 _permissionValidationService.EnforceCurrentUserOrHasPermission<NonCofoundryUserReadPermission>(query.Id, executionContext.UserContext);
             }
 
+            var userArea = _userAreaDefinitionRepository.GetByCode(dbUser.UserAreaCode);
+
             var user = new UpdateUserCommand()
             {
                 Email = dbUser.Email,
                 FirstName = dbUser.FirstName,
-                IsEmailConfirmed = dbUser.IsEmailConfirmed,
                 LastName = dbUser.LastName,
                 RequirePasswordChange = dbUser.RequirePasswordChange,
                 RoleId = dbUser.RoleId,
-                UserId = dbUser.RoleId,
-                Username = dbUser.Username
+                UserId = dbUser.UserId,
+                IsAccountVerified = dbUser.AccountVerifiedDate.HasValue
             };
+
+            if (!userArea.UseEmailAsUsername)
+            {
+                user.Username = dbUser.Username;
+            }
 
             return user;
         }

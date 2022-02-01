@@ -31,7 +31,6 @@ namespace Cofoundry.Domain
         [StringLength(32)]
         public string LastName { get; set; }
 
-        private string _email = null;
         /// <summary>
         /// The email address is required if the user area has 
         /// <see cref="IUserAreaDefinition.UseEmailAsUsername"/> set to <see langword="true"/>.
@@ -68,10 +67,13 @@ namespace Cofoundry.Domain
         public bool RequirePasswordChange { get; set; }
 
         /// <summary>
-        /// A flag to indicate if the users email address has been confirmed via a 
-        /// sign-up notification.
+        /// Indicates whether the user account is marked as verified or activated. One 
+        /// common way of verification is via an email sign-up notification. Given that account 
+        /// verification is not tied to any specified data, it is not automatically
+        /// cleared when for example an email address is updated. The management of this property
+        /// is left to the implementor.
         /// </summary>
-        public bool IsEmailConfirmed { get; set; }
+        public bool IsAccountVerified { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

@@ -9,10 +9,10 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// Determines if an account recovery request is valid. The result is returned as a 
-        /// <see cref="ValidationQueryResult"/> which describes any errors that have occured.
+        /// <see cref="AuthorizedTaskTokenValidationResult"/> which describes any errors that have occured.
         /// </summary>
         /// <param name="query">Query parameters.</param>
-        IDomainRepositoryQueryContext<ValidationQueryResult> Validate(ValidateUserAccountRecoveryRequestQuery query);
+        IDomainRepositoryQueryContext<AuthorizedTaskTokenValidationResult> ValidateAsync(ValidateUserAccountRecoveryByEmailQuery query);
 
         /// <summary>
         /// <para>
@@ -27,13 +27,13 @@ namespace Cofoundry.Domain
         /// </para>
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task InitiateAsync(InitiateUserAccountRecoveryCommand command);
+        Task InitiateAsync(InitiateUserAccountRecoveryByEmailCommand command);
 
         /// <summary>
         /// Completes an account recovery request initiated by <see cref="InitiateAsync"/>, 
         /// updating the users password if the request is verified.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task CompleteAsync(CompleteUserAccountRecoveryCommand command);
+        Task CompleteAsync(CompleteUserAccountRecoveryByEmailCommand command);
     }
 }

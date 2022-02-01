@@ -34,6 +34,14 @@ namespace Cofoundry.Domain
         public int MinUniqueCharacters { get; set; } = 5;
 
         /// <summary>
+        /// Indicates whether to send a confirmation notification to the user to let them
+        /// know their password has been changed. This only applied when a password is changed
+        /// by the user and not via a reset e.g. via <see cref="UpdateCurrentUserPasswordCommand"/>
+        /// or <see cref="CompleteUserAccountRecoveryByEmailCommand"/>. Defaults to <see langword="true"/>.
+        /// </summary>
+        public bool SendNotificationOnUpdate { get; set; } = true;
+
+        /// <summary>
         /// Clones the options, copying data over to a new <see cref="PasswordOptions"/>
         /// instance.
         /// </summary>
@@ -43,7 +51,8 @@ namespace Cofoundry.Domain
             {
                 MaxLength = MaxLength,
                 MinLength = MinLength,
-                MinUniqueCharacters = MinUniqueCharacters
+                MinUniqueCharacters = MinUniqueCharacters,
+                SendNotificationOnUpdate = SendNotificationOnUpdate
             };
         }
 

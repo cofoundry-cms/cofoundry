@@ -1,7 +1,6 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,7 +15,6 @@ namespace Cofoundry.Domain.Internal
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserCommand>
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly IUserStoredProcedures _userStoredProcedures;
         private readonly IDomainRepository _domainRepository;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
@@ -24,7 +22,6 @@ namespace Cofoundry.Domain.Internal
 
         public UpdateCurrentUserCommandHandler(
             CofoundryDbContext dbContext,
-            IUserStoredProcedures userStoredProcedures,
             IDomainRepository domainRepository,
             IPermissionValidationService permissionValidationService,
             IUserUpdateCommandHelper userUpdateCommandHelper,
@@ -32,7 +29,6 @@ namespace Cofoundry.Domain.Internal
             )
         {
             _dbContext = dbContext;
-            _userStoredProcedures = userStoredProcedures;
             _domainRepository = domainRepository;
             _permissionValidationService = permissionValidationService;
             _userUpdateCommandHelper = userUpdateCommandHelper;
@@ -66,7 +62,9 @@ namespace Cofoundry.Domain.Internal
 
                 // Here we could assume that reset requests only need invalidating if the contact email changes, but if the
                 // user is updating their account details, then we could also assume that old requests are stale anyway.
-                await _userStoredProcedures.InvalidateUserAccountRecoveryRequests(userId, executionContext.ExecutionDate);
+                await _domainRepository
+                    .WithContext(executionContext)
+                    .ExecuteCommandAsync(new InvalidateAuthorizedTaskBatchCommand(userId, UserAccountRecoveryAuthorizedTaskType.Code));
 
                 scope.QueueCompletionTask(() => OnTransactionComplete(user, updateResult));
                 await scope.CompleteAsync();

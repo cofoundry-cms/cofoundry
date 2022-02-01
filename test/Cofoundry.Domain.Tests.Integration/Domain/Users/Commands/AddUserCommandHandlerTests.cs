@@ -67,7 +67,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.Email.Should().Be(command.Email);
                 user.UniqueEmail.Should().Be(lowerEmail);
                 user.IsDeleted.Should().BeFalse();
-                user.IsEmailConfirmed.Should().BeFalse();
+                user.AccountVerifiedDate.Should().BeNull();
                 user.IsSystemAccount.Should().BeFalse();
                 user.LastLoginDate.Should().BeNull();
                 user.LastPasswordChangeDate.Should().NotBeDefault();
@@ -158,6 +158,43 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 command.OutputUserId.Should().BePositive();
                 user.Should().NotBeNull();
                 user.RequirePasswordChange.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async Task CanSetVerifiedTrue()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(CanSetVerifiedTrue);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var userArea = app.SeededEntities.TestUserArea1;
+
+            var command = new AddUserCommand()
+            {
+                Email = uniqueData + EMAIL_DOMAIN,
+                Password = PASSWORD,
+                RoleCode = userArea.RoleA.RoleCode,
+                UserAreaCode = userArea.UserAreaCode,
+                IsAccountVerified = true
+            };
+
+            await contentRepository
+                .Users()
+                .AddAsync(command);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(command.OutputUserId)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                command.OutputUserId.Should().BePositive();
+                user.Should().NotBeNull();
+                user.AccountVerifiedDate.Should().NotBeNull().And.NotBeDefault();
             }
         }
 

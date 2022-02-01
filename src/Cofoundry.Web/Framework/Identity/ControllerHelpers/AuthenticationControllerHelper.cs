@@ -16,14 +16,14 @@ namespace Cofoundry.Web.Identity
         private readonly IQueryExecutor _queryExecutor;
         private readonly ILoginService _loginService;
         private readonly IControllerResponseHelper _controllerResponseHelper;
-        private readonly IUserAccountRecoveryUrlHelper _userAccountRecoveryUrlHelper;
+        private readonly IAuthorizedTaskTokenUrlHelper _userAccountRecoveryUrlHelper;
         private readonly TUserArea _userAreaDefinition;
 
         public AuthenticationControllerHelper(
             IQueryExecutor queryExecutor,
             ILoginService loginService,
             IControllerResponseHelper controllerResponseHelper,
-            IUserAccountRecoveryUrlHelper userAccountRecoveryUrlHelper,
+            IAuthorizedTaskTokenUrlHelper userAccountRecoveryUrlHelper,
             TUserArea userAreaDefinition
             )
         {
@@ -34,17 +34,17 @@ namespace Cofoundry.Web.Identity
             _userAreaDefinition = userAreaDefinition;
         }
 
-        public async Task<UserLoginInfoAuthenticationResult> AuthenticateAsync(Controller controller, ILoginViewModel viewModel)
+        public async Task<UserCredentialsValidationResult> AuthenticateAsync(Controller controller, ILoginViewModel viewModel)
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
             if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
 
             if (!controller.ModelState.IsValid)
             {
-                return UserLoginInfoAuthenticationResult.CreateFailedResult();
+                return UserCredentialsValidationResult.CreateFailedResult();
             }
 
-            var query = new GetUserLoginInfoIfAuthenticatedQuery()
+            var query = new ValidateUserCredentialsQuery()
             {
                 UserAreaCode = _userAreaDefinition.UserAreaCode,
                 Username = viewModel.Username,
@@ -156,7 +156,7 @@ namespace Cofoundry.Web.Identity
 
             if (controller.ModelState.IsValid)
             {
-                var command = new UpdateUnauthenticatedUserPasswordCommand()
+                var command = new UpdateUserPasswordByCredentialsCommand()
                 {
                     UserAreaCode = _userAreaDefinition.UserAreaCode,
                     Username = vm.Username,
@@ -180,7 +180,7 @@ namespace Cofoundry.Web.Identity
         {
             if (!controller.ModelState.IsValid) return Task.CompletedTask;
 
-            var command = new InitiateUserAccountRecoveryCommand()
+            var command = new InitiateUserAccountRecoveryByEmailCommand()
             {
                 Username = vm.Username,
                 UserAreaCode = _userAreaDefinition.UserAreaCode
@@ -195,7 +195,7 @@ namespace Cofoundry.Web.Identity
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
 
-            var query = new ValidateUserAccountRecoveryRequestQuery()
+            var query = new ValidateUserAccountRecoveryByEmailQuery()
             {
                 UserAreaCode = _userAreaDefinition.UserAreaCode
             };
@@ -218,7 +218,7 @@ namespace Cofoundry.Web.Identity
             return result;
         }
 
-        private async Task<AccountRecoveryRequestValidationResult> ValidateAndMapAsync(ValidateUserAccountRecoveryRequestQuery query)
+        private async Task<AccountRecoveryRequestValidationResult> ValidateAndMapAsync(ValidateUserAccountRecoveryByEmailQuery query)
         {
             var validationResult = await _queryExecutor.ExecuteAsync(query);
 
@@ -237,7 +237,7 @@ namespace Cofoundry.Web.Identity
         {
             if (!controller.ModelState.IsValid) return Task.CompletedTask;
 
-            var command = new CompleteUserAccountRecoveryCommand()
+            var command = new CompleteUserAccountRecoveryByEmailCommand()
             {
                 NewPassword = vm.NewPassword,
                 Token = vm.Token,

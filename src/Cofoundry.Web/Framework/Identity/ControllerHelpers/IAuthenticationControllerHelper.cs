@@ -26,7 +26,7 @@ namespace Cofoundry.Web.Identity
         /// </param>
         /// <param name="viewModel">The view-model data posted to the action.</param>
         /// <returns>The result of the authentication check, this should never be null.</returns>
-        Task<UserLoginInfoAuthenticationResult> AuthenticateAsync(Controller controller, ILoginViewModel viewModel);
+        Task<UserCredentialsValidationResult> AuthenticateAsync(Controller controller, ILoginViewModel viewModel);
 
         /// <summary>
         /// Logs in a user that has already been authenticated, typically

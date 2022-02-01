@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -56,7 +57,7 @@ namespace Cofoundry.Domain.Internal
 
         private static void DetectInvalidDefinitions(IEnumerable<ICustomEntityDefinition> definitions)
         {
-            const string WHY_VALID_CODE_MESSAGE = "All custom entity definition codes must be 6 characters and contain only non-unicode caracters.";
+            const string WHY_VALID_CODE_MESSAGE = "All custom entity definition codes must be 6 characters and contain only non-unicode characters.";
 
             var nullCode = definitions
                 .Where(d => string.IsNullOrWhiteSpace(d.CustomEntityDefinitionCode))
@@ -79,7 +80,7 @@ namespace Cofoundry.Domain.Internal
             }
 
             var dulpicateCode = definitions
-                .GroupBy(e => e.CustomEntityDefinitionCode)
+                .GroupBy(e => e.CustomEntityDefinitionCode, StringComparer.OrdinalIgnoreCase)
                 .Where(g => g.Count() > 1)
                 .FirstOrDefault();
 
@@ -90,7 +91,7 @@ namespace Cofoundry.Domain.Internal
             }
 
             var dulpicateName = definitions
-                .GroupBy(e => e.Name)
+                .GroupBy(e => e.Name, StringComparer.OrdinalIgnoreCase)
                 .Where(g => g.Count() > 1)
                 .FirstOrDefault();
 

@@ -11,27 +11,27 @@ namespace Cofoundry.Domain
     public class AccountRecoveryOptions : IValidatableObject
     {
         /// <summary>
-        /// The number of hours an account recovery token is valid for, specified as a 
+        /// The length of time an account recovery token is valid for, specified as a 
         /// <see cref="TimeSpan"/> or in JSON configuration as a time format string 
         /// e.g. "01:00:00" to represent 1 hour. Defaults to 16 hours. If zero or
         /// less, then time-based validation does not occur.
         /// </summary>
-        public TimeSpan ValidityPeriod { get; set; } = TimeSpan.FromHours(16);
+        public TimeSpan ExpireAfter { get; set; } = TimeSpan.FromHours(16);
 
         /// <summary>
         /// The maximum number of account recovery attempts to allow within the
-        /// given <see cref="MaxAttemptsWindow"/>. If zero or less, then max attempt 
-        /// validation does not occur.
+        /// given <see cref="RateLimitWindow"/>. Defaults to 16 attempts. If zero 
+        /// or less, then max attempt validation does not occur.
         /// </summary>
-        public int MaxAttempts { get; set; } = 16;
+        public int RateLimitQuantity { get; set; } = 16;
 
         /// <summary>
         /// The time-window in which to count account recovery attempts when enforcing
-        /// <see cref="MaxAttempts"/> validation, specified as a <see cref="TimeSpan"/> 
+        /// <see cref="RateLimitQuantity"/> validation, specified as a <see cref="TimeSpan"/> 
         /// or in JSON configuration as a time format string e.g. "01:00:00" to represent 
         /// 1 hour. Defaults to 24 hours. If zero or less, then max attempt validation does not occur.
         /// </summary>
-        public TimeSpan MaxAttemptsWindow { get; set; } = TimeSpan.FromHours(24);
+        public TimeSpan RateLimitWindow { get; set; } = TimeSpan.FromHours(24);
 
         /// <summary>
         /// <para>
@@ -59,9 +59,9 @@ namespace Cofoundry.Domain
         {
             return new AccountRecoveryOptions()
             {
-                ValidityPeriod = ValidityPeriod,
-                MaxAttempts = MaxAttempts,
-                MaxAttemptsWindow = MaxAttemptsWindow,
+                ExpireAfter = ExpireAfter,
+                RateLimitQuantity = RateLimitQuantity,
+                RateLimitWindow = RateLimitWindow,
                 RecoveryUrlBase = RecoveryUrlBase
             };
         }

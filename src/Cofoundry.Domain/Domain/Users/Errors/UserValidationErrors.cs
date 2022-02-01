@@ -1,5 +1,7 @@
 ﻿using Cofoundry.Core.Validation;
 using Cofoundry.Core.Validation.Internal;
+using System;
+using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
@@ -9,7 +11,7 @@ namespace Cofoundry.Domain
     public static class UserValidationErrors
     {
         /// <summary>
-        /// Library of validation errors used in <see cref="GetUserLoginInfoIfAuthenticatedQuery"/> or other
+        /// Library of validation errors used in <see cref="ValidateUserCredentialsQuery"/> or other
         /// functions that require authentication.
         /// </summary>
         public static class Authentication
@@ -53,6 +55,27 @@ namespace Cofoundry.Domain
                 "The authentication attempt was unsuccessful."
                 );
 
+            /// <summary>
+            /// The credentials are valid but a password change is required before login is permitted.
+            /// This error isn't expected to be shown to the user but is instead excpected to be intercepted 
+            /// and handled in the UI.
+            /// </summary>
+            public static readonly ValidationErrorTemplate PasswordChangeRequired = new ValidationErrorTemplate(
+                AddAuthenticationNamespace("password-change-required"),
+                "A password change is required before you can log in.",
+                e => new PasswordChangeRequiredException(e)
+                );
+
+            /// <summary>
+            /// The credentials are valid but the acount has not been verified, and the user are is configured to
+            /// not allow logins for unverified users.
+            /// </summary>
+            public static readonly ValidationErrorTemplate AccountNotVerified = new ValidationErrorTemplate(
+                AddAuthenticationNamespace("account-not-verified"),
+                "You account needs to be verified before you can log in.",
+                e => new AccountNotVerifiedException(e)
+                );
+
             private static string AddAuthenticationNamespace(string errorCode)
             {
                 return AddNamespace("auth-" + errorCode);
@@ -67,17 +90,15 @@ namespace Cofoundry.Domain
         {
             /// <summary>
             /// Used to namespace Cofoundry error codes for errors returned
-            /// from <see cref="InitiateUserAccountRecoveryCommand"/>.
+            /// from <see cref="InitiateUserAccountRecoveryByEmailCommand"/>.
             /// </summary>
             public static class Initiation
             {
                 /// <summary>
-                /// Invalid id and token combination. This can include
-                /// situations where the id or token are not correctly
-                /// formatted, or if the request cannot be located in the database.
+                /// The configured IP address rate limit has been exceeded.
                 /// </summary>
-                public static readonly ValidationErrorTemplate MaxAttemptsExceeded = new ValidationErrorTemplate(
-                    AddInitiationNamespace("max-attempts-exceeded"),
+                public static readonly ValidationErrorTemplate RateLimitExceeded = new ValidationErrorTemplate(
+                    AddInitiationNamespace("rate-limit-exceeded"),
                     "Maximum password reset attempts exceeded."
                     );
 
@@ -89,10 +110,18 @@ namespace Cofoundry.Domain
 
             /// <summary>
             /// Used to namespace Cofoundry error codes for errors returned
-            /// from <see cref="ValidateUserAccountRecoveryRequestQuery"/>.
+            /// from <see cref="ValidateUserAccountRecoveryByEmailQuery"/>.
             /// </summary>
             public static class RequestValidation
             {
+                private static readonly Dictionary<string, Func<ValidationErrorTemplate>> ErrorMap = new Dictionary<string, Func<ValidationErrorTemplate>>()
+                {
+                    { AuthorizedTaskValidationErrors.TokenValidation.NotFound.ErrorCode , () => NotFound },
+                    { AuthorizedTaskValidationErrors.TokenValidation.Invalidated.ErrorCode , () => Invalidated },
+                    { AuthorizedTaskValidationErrors.TokenValidation.AlreadyComplete.ErrorCode , () => AlreadyComplete },
+                    { AuthorizedTaskValidationErrors.TokenValidation.Expired.ErrorCode , () => Expired },
+                };
+
                 /// <summary>
                 /// Invalid id and token combination. This can include
                 /// situations where the id or token are not correctly
@@ -129,6 +158,19 @@ namespace Cofoundry.Domain
                     "The account recovery request has expired."
                     );
 
+                public static ValidationError Map(AuthorizedTaskTokenValidationResult result)
+                {
+                    if (result.IsSuccess) return null;
+
+                    var mappedError = ErrorMap.GetValueOrDefault(result.Error.ErrorCode)?.Invoke();
+                    if (mappedError != null)
+                    {
+                        return mappedError.Create();
+                    }
+
+                    return result.Error;
+                }
+
                 private static string AddRequestValidationNamespace(string errorCode)
                 {
                     return AddAccountRecoveryNamespace("request-" + errorCode);
@@ -138,6 +180,117 @@ namespace Cofoundry.Domain
             private static string AddAccountRecoveryNamespace(string errorCode)
             {
                 return AddNamespace("account-recovery-" + errorCode);
+            }
+        }
+
+
+        /// <summary>
+        /// Library of validation errors relating to account verification (AKA confirm account) 
+        /// functionality.
+        /// </summary>
+        public static class AccountVerification
+        {
+            /// <summary>
+            /// Used to namespace Cofoundry error codes for errors returned
+            /// from <see cref="InitiateUserAccountVerificationByEmailCommand"/>.
+            /// </summary>
+            public static class Initiation
+            {
+                /// <summary>
+                /// The configured IP address rate limit has been exceeded.
+                /// </summary>
+                public static readonly ValidationErrorTemplate RateLimitExceeded = new ValidationErrorTemplate(
+                    AddInitiationNamespace("rate-limit-exceeded"),
+                    "Maximum account verification requests exceeded."
+                    );
+
+                private static string AddInitiationNamespace(string errorCode)
+                {
+                    return AddAccountRecoveryNamespace("initiation-" + errorCode);
+                }
+            }
+
+            /// <summary>
+            /// Used to namespace Cofoundry error codes for errors returned
+            /// from <see cref="ValidateUserAccountVerificationByEmailQuery"/>.
+            /// </summary>
+            public static class RequestValidation
+            {
+                private static readonly Dictionary<string, Func<ValidationErrorTemplate>> ErrorMap = new Dictionary<string, Func<ValidationErrorTemplate>>()
+                {
+                    { AuthorizedTaskValidationErrors.TokenValidation.NotFound.ErrorCode , () => NotFound },
+                    { AuthorizedTaskValidationErrors.TokenValidation.Invalidated.ErrorCode , () => Invalidated },
+                    { AuthorizedTaskValidationErrors.TokenValidation.AlreadyComplete.ErrorCode , () => AlreadyComplete },
+                    { AuthorizedTaskValidationErrors.TokenValidation.Expired.ErrorCode , () => Expired },
+                };
+
+                /// <summary>
+                /// Invalid id and token combination. This can include
+                /// situations where the id or token are not correctly
+                /// formatted, or if the request cannot be located in the database.
+                /// </summary>
+                public static readonly ValidationErrorTemplate NotFound = new ValidationErrorTemplate(
+                    AddRequestValidationNamespace("not-found"),
+                    "The account verification request is not valid."
+                    );
+
+                /// <summary>
+                /// The request has been invalidated, likely because the
+                /// password has already been updated, or a valid login
+                /// has occured.
+                /// </summary>
+                public static readonly ValidationErrorTemplate Invalidated = new ValidationErrorTemplate(
+                    AddRequestValidationNamespace("invalidated"),
+                    "The account verification request is no longer valid."
+                    );
+
+                /// <summary>
+                /// The request exists but has already been completed.
+                /// </summary>
+                public static readonly ValidationErrorTemplate AlreadyComplete = new ValidationErrorTemplate(
+                    AddRequestValidationNamespace("already-complete"),
+                    "The account verification request has already been completed."
+                    );
+
+                /// <summary>
+                /// The request exists but has expired.
+                /// </summary>
+                public static readonly ValidationErrorTemplate Expired = new ValidationErrorTemplate(
+                    AddRequestValidationNamespace("expired"),
+                    "The account verification request has expired."
+                    );
+
+                /// <summary>
+                /// The request exists but the user has updated their email since the request was sent and is 
+                /// therefore considered expired.
+                /// </summary>
+                public static readonly ValidationErrorTemplate EmailMismatch = new ValidationErrorTemplate(
+                    AddRequestValidationNamespace("email-mismatch"),
+                    "The account verification request has expired."
+                    );
+
+                public static ValidationError Map(AuthorizedTaskTokenValidationResult result)
+                {
+                    if (result.IsSuccess) return null;
+
+                    var mappedError = ErrorMap.GetValueOrDefault(result.Error.ErrorCode)?.Invoke();
+                    if (mappedError != null)
+                    {
+                        return mappedError.Create();
+                    }
+
+                    return result.Error;
+                }
+
+                private static string AddRequestValidationNamespace(string errorCode)
+                {
+                    return AddAccountRecoveryNamespace("request-" + errorCode);
+                }
+            }
+
+            private static string AddAccountRecoveryNamespace(string errorCode)
+            {
+                return AddNamespace("account-verification-" + errorCode);
             }
         }
 

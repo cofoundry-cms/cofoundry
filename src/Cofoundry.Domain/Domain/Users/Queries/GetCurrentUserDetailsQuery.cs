@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Gets a UserSummary object representing the currently logged in 
-    /// user. If the user is not logged in then null is returned.
+    /// Gets a <see cref="UserSummary"/> object representing the currently logged in  user. If 
+    /// the user is not logged in then <see langword="null"/> is returned. If  multiple user areas 
+    /// are implemented, then the returned user will depend on the "ambient" auth scheme, which 
+    /// is typically the default user area unless the ambient scheme has been changed during 
+    /// the flow of the request e.g. via an AuthorizeUserAreaAttribute.
     /// </summary>
     public class GetCurrentUserDetailsQuery : IQuery<UserDetails>
     {

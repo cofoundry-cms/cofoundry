@@ -40,10 +40,10 @@ namespace Cofoundry.Domain
         public bool RequirePasswordChange { get; set; }
 
         /// <summary>
-        /// A flag to indicate if the users email address has been confirmed via a 
-        /// sign-up notification.
+        /// A generic verification date that can be used to mark an account as verified
+        /// or activated. One common way of verification is via an email sign-up notification.
         /// </summary>
-        public bool IsEmailConfirmed { get; set; }
+        public DateTime? AccountVerifiedDate { get; set; }
 
         /// <summary>
         /// Data detailing who created the user and when.

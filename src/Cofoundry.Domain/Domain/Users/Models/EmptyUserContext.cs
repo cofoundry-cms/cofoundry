@@ -14,6 +14,8 @@
 
         public bool IsPasswordChangeRequired { get; }
 
+        public bool IsAccountVerified { get; }
+
         public int? RoleId { get; }
 
         public string RoleCode { get; }

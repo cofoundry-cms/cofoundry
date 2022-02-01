@@ -337,21 +337,55 @@ go
 alter table Cofoundry.[User] alter column SecurityStamp nvarchar(max) not null
 go
 
+
 /*
-	#479: Self-service Password Reset: Rename to "Account Recovery" and audit/tidy
+	Tables for IPAddresses
 */
+
+create table Cofoundry.IPAddress (
+	IPAddressId bigint identity (1,1) not null,
+	[Address] varchar(45) not null,
+	CreateDate datetime2(7) not null,
+
+	constraint PK_IPAddress primary key (IPAddressId)
+)
 go
-exec sp_rename 'Cofoundry.UserPasswordResetRequest', 'UserAccountRecoveryRequest'
+
+create unique index UIX_IPAddress_IPAddress on Cofoundry.IPAddress ([Address])
+
+/*
+	#485: Users: Confirm Account
+*/
+
+alter table Cofoundry.[User] add AccountVerifiedDate datetime2(7) null
 go
-exec sp_rename 'Cofoundry.UserAccountRecoveryRequest.UserPasswordResetRequestId' , 'UserAccountRecoveryRequestId', 'column'
-exec sp_rename 'Cofoundry.UserAccountRecoveryRequest.Token' , 'AuthorizationCode', 'column'
-exec sp_rename 'Cofoundry.PK_UserPasswordResetRequest', 'PK_UserAccountRecoveryRequest', 'object'
-exec sp_rename 'Cofoundry.FK_UserPasswordResetRequest_User', 'FK_UserAccountRecoveryRequest_User', 'object'
+update Cofoundry.[User] set AccountVerifiedDate = GetUtcDate() where IsEmailConfirmed = 1
 go
-alter table Cofoundry.UserAccountRecoveryRequest add InvalidatedDate datetime2(7) null
-alter table Cofoundry.UserAccountRecoveryRequest add CompletedDate datetime2(7) null
+alter table Cofoundry.[User] drop column IsEmailConfirmed
 go
-update Cofoundry.UserAccountRecoveryRequest set CompletedDate = GETUTCDATE() where IsComplete = 1
+
+create table Cofoundry.AuthorizedTask (
+	AuthorizedTaskId uniqueidentifier not null,
+	ClusterId bigint identity(1,1) not null, -- Used in the clustered index to avoid excessive fragmentation. Not otherwise used and can be ignored.
+	UserId int not null,
+	AuthorizedTaskTypeCode char(6) not null,
+	AuthorizationCode varchar(max) not null,
+	IPAddressId bigint null,
+	TaskData varchar(max) null,
+	CreateDate datetime2(7) not null,
+	InvalidatedDate datetime2(7) null,
+	ExpiryDate datetime2(7) null,
+	CompletedDate datetime2(7) null,
+
+	constraint PK_AuthorizedTask primary key nonclustered (AuthorizedTaskId),
+	constraint FK_AuthorizedTask_User foreign key (UserId) references Cofoundry.[User] (UserId), 
+	constraint FK_AuthorizedTask_IPAddress foreign key (IPAddressId) references Cofoundry.IPAddress (IPAddressId), 
+)
+
 go
-alter table Cofoundry.UserAccountRecoveryRequest drop column IsComplete
+create unique clustered index CIX_UserAuthorizedTask_ClusterId on Cofoundry.AuthorizedTask (ClusterId)
+go
+
+-- Since reset requests have a short lifecycle, we won't migrate them
+drop table Cofoundry.UserPasswordResetRequest
 go

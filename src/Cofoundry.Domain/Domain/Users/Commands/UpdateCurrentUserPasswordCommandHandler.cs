@@ -1,9 +1,7 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.Data;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.Data.Internal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -21,7 +19,6 @@ namespace Cofoundry.Domain.Internal
         , IPermissionRestrictedCommandHandler<UpdateCurrentUserPasswordCommand>
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly IUserStoredProcedures _userStoredProcedures;
         private readonly IDomainRepository _domainRepository;
         private readonly UserAuthenticationHelper _userAuthenticationHelper;
         private readonly IPermissionValidationService _permissionValidationService;
@@ -34,7 +31,6 @@ namespace Cofoundry.Domain.Internal
 
         public UpdateCurrentUserPasswordCommandHandler(
             CofoundryDbContext dbContext,
-            IUserStoredProcedures userStoredProcedures,
             IDomainRepository domainRepository,
             UserAuthenticationHelper userAuthenticationHelper,
             IPermissionValidationService permissionValidationService,
@@ -47,7 +43,6 @@ namespace Cofoundry.Domain.Internal
             )
         {
             _dbContext = dbContext;
-            _userStoredProcedures = userStoredProcedures;
             _domainRepository = domainRepository;
             _userAuthenticationHelper = userAuthenticationHelper;
             _permissionValidationService = permissionValidationService;
@@ -76,7 +71,11 @@ namespace Cofoundry.Domain.Internal
             using (var scope = _domainRepository.Transactions().CreateScope())
             {
                 await _dbContext.SaveChangesAsync();
-                await _userStoredProcedures.InvalidateUserAccountRecoveryRequests(user.UserId, executionContext.ExecutionDate);
+                await _domainRepository
+                    .WithContext(executionContext)
+                    .ExecuteCommandAsync(new InvalidateAuthorizedTaskBatchCommand(user.UserId, UserAccountRecoveryAuthorizedTaskType.Code));
+
+                await _passwordUpdateCommandHelper.SendPasswordChangedNotification(user);
 
                 scope.QueueCompletionTask(() => OnTransactionComplete(user));
                 await scope.CompleteAsync();
@@ -99,6 +98,7 @@ namespace Cofoundry.Domain.Internal
         {
             return _dbContext
                 .Users
+                .IncludeForSummary()
                 .FilterCanLogIn()
                 .FilterById(executionContext.UserContext.UserId.Value)
                 .SingleOrDefaultAsync();

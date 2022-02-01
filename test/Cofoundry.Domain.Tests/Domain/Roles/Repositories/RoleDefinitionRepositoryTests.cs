@@ -71,7 +71,8 @@ namespace Cofoundry.Domain.Tests
             roleDefinitions.Add(new TestRoleDefinition()
             {
                 RoleCode = code,
-                Title = "A unique title"
+                Title = "A unique title",
+                UserAreaCode = TestUserArea1.Code
             });
 
             FluentActions
@@ -87,7 +88,8 @@ namespace Cofoundry.Domain.Tests
             roleDefinitions.Add(new TestRoleDefinition()
             {
                 RoleCode = "UNQ",
-                Title = null
+                Title = null,
+                UserAreaCode = TestUserArea1.Code
             });
 
             FluentActions

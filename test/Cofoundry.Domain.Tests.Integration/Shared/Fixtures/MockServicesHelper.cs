@@ -3,6 +3,7 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
 using Cofoundry.Domain.Tests.Integration.Mocks;
+using Cofoundry.Domain.Tests.Shared.Mocks;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -29,9 +30,35 @@ namespace Cofoundry.Domain.Tests.Integration
         /// <see cref="IDateTimeService"/>) to a specific value.
         /// </summary>
         /// <param name="utcNow">The UTC time to set as the current time.</param>
+        public void MockIPAddress(string ipAddress)
+        {
+            var clientConnectionService = _serviceScope.GetService<IClientConnectionService>() as MockClientConnectionService;
+            if (clientConnectionService == null)
+            {
+                throw new Exception($"{nameof(IClientConnectionService)} is expected to be an instance of {nameof(MockClientConnectionService)} in testing");
+            }
+            clientConnectionService.ClientConnectionInfo.IPAddress = ipAddress;
+        }
+
+        /// <summary>
+        /// Sets the date and time used by Cofoundry (via 
+        /// <see cref="IDateTimeService"/>) to a specific value.
+        /// </summary>
+        /// <param name="utcNow">The UTC time to set as the current time.</param>
         public void MockDateTime(DateTime utcNow)
         {
-            var dateTimeService = _serviceScope.GetService<IDateTimeService>() as MockDateTimeService;
+            MockDateTime(_serviceScope, utcNow);
+        }
+
+        /// <summary>
+        /// Sets the date and time used by Cofoundry (via 
+        /// <see cref="IDateTimeService"/>) to a specific value.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider to set mock the date on.</param>
+        /// <param name="utcNow">The UTC time to set as the current time.</param>
+        public static void MockDateTime(IServiceProvider serviceProvider, DateTime utcNow)
+        {
+            var dateTimeService = serviceProvider.GetService<IDateTimeService>() as MockDateTimeService;
             if (dateTimeService == null)
             {
                 throw new Exception($"{nameof(IDateTimeService)} is expected to be an instance of {nameof(MockDateTimeService)} in testing");

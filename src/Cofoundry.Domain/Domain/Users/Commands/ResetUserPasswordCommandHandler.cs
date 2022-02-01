@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.Internal
     /// will need to be changed at first login (if the user area supports 
     /// it). This is designed to be used from an admin screen rather than 
     /// a self-service reset which can be done via 
-    /// <see cref="InitiateUserAccountRecoveryCommand"/>.
+    /// <see cref="InitiateUserAccountRecoveryByEmailCommand"/>.
     /// </summary>
     public class ResetUserPasswordCommandHandler
         : ICommandHandler<ResetUserPasswordCommand>

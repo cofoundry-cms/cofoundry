@@ -44,7 +44,7 @@
         IContentRepositoryUserSearchQueryBuilder Search();
 
         /// <summary>
-        /// Queries relating to the currently logged in user.
+        /// Queries and commands relating to the currently logged in user.
         /// </summary>
         IContentRepositoryCurrentUserRepository Current();
     }

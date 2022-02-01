@@ -65,13 +65,15 @@ namespace Cofoundry.Domain.Data
         public static ModelBuilder MapCofoundryUsers(this ModelBuilder modelBuilder)
         {
             modelBuilder
+                .ApplyConfiguration(new IPAddressMap())
+                .ApplyConfiguration(new AuthorizedTaskMap())
                 .ApplyConfiguration(new EmailDomainMap())
                 .ApplyConfiguration(new UserMap())
                 .ApplyConfiguration(new UserAreaMap())
                 .ApplyConfiguration(new RoleMap())
                 .ApplyConfiguration(new PermissionMap())
                 .ApplyConfiguration(new RolePermissionMap())
-                .ApplyConfiguration(new UserAccountRecoveryRequestMap());
+                ;
 
             return modelBuilder;
         }

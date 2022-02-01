@@ -1,7 +1,6 @@
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Moq;
-using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -15,7 +14,7 @@ namespace Cofoundry.Web.Tests
             RoleId = 85,
             UserArea = new CofoundryAdminUserArea(new AdminSettings())
         };
-                
+
         [Fact]
         public async Task GetAsync_WhenNotLoggedIn_ReturnsAnonymous()
         {

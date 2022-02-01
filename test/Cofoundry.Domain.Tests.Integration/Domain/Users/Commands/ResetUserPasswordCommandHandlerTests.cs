@@ -73,14 +73,13 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 var mockPasswordGenerator = new Mock<IPasswordGenerationService>();
                 mockPasswordGenerator
                     .SetupSequence(m => m.Generate(It.IsAny<int>()))
-                    .Returns(password1)
                     .Returns(password2);
                 s.AddSingleton(mockPasswordGenerator.Object);
             });
 
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var userId = await app.TestData.Users().AddAsync(uniqueData);
+            var userId = await app.TestData.Users().AddAsync(uniqueData, c => c.Password = password1);
             var siteUrlResolver = app.Services.GetRequiredService<ISiteUrlResolver>();
             var loginUrl = siteUrlResolver.MakeAbsolute(app.SeededEntities.TestUserArea1.Definition.LoginPath);
 
@@ -98,7 +97,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .CountDispatchedMail(
                     user.Email,
                     "Test Site",
-                    "site administrator has reset your password",
+                    "has reset your password",
                     "username is: " + user.Username,
                     "password is: " + password2,
                     loginUrl

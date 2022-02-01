@@ -74,6 +74,13 @@ namespace Cofoundry.Domain
         Task UpdateAsync(UpdateUserCommand command);
 
         /// <summary>
+        /// Updates the password of an unathenticated user, using the
+        /// credentials in the command to authenticate the request.
+        /// </summary>
+        /// <param name="command">Command parameters.</param>
+        Task UpdatePasswordByCredentialsAsync(UpdateUserPasswordByCredentialsCommand command);
+
+        /// <summary>
         /// Marks a user as deleted in the database (soft delete).
         /// </summary>
         /// <param name="userId">UserId of the role to delete.</param>
@@ -85,10 +92,15 @@ namespace Cofoundry.Domain
         /// will need to be changed at first login (if the user area supports 
         /// it). This is designed to be used from an admin screen rather than 
         /// a self-service reset which can be done via 
-        /// <see cref="InitiateUserAccountRecoveryCommand"/>.
+        /// <see cref="InitiateUserAccountRecoveryByEmailCommand"/>.
         /// </summary>
         /// <param name="userId">Required. The database id of the user to reset the password to.</param>
         Task ResetPasswordAsync(int userId);
+
+        /// <summary>
+        /// Queries and commands relating to the currently logged in user.
+        /// </summary>
+        IAdvancedContentRepositoryCurrentUserRepository Current();
 
         /// <summary>
         /// Users can initiate self-service account recovery (AKA "forgot password") 
@@ -98,8 +110,14 @@ namespace Cofoundry.Domain
         IAdvancedContentRepositoryUserAccountRecoveryRepository AccountRecovery();
 
         /// <summary>
-        /// Queries and commands relating to the currently logged in user.
+        /// Users can verify their account via an out-of-band notification such as
+        /// an email containing a unique verification link.
         /// </summary>
-        IAdvancedContentRepositoryCurrentUserRepository Current();
+        IAdvancedContentRepositoryUserAccountVerificationRepository AccountVerification();
+
+        /// <summary>
+        /// Authenticate a user and log in or out.
+        /// </summary>
+        IAdvancedContentRepositoryUserAuthenticationRepository Authentication();
     }
 }

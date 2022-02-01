@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Cofoundry.Domain.Data
 {
@@ -47,6 +48,18 @@ namespace Cofoundry.Domain.Data
         {
             var user = users
                 .Where(u => u.UserAreaCode == userArea);
+
+            return user;
+        }
+
+        /// <summary>
+        /// Includes the required entities to map a <see cref="Domain.UserSummary"/> projection.
+        /// </summary>
+        public static IQueryable<User> IncludeForSummary(this IQueryable<User> users)
+        {
+            var user = users
+                .Include(u => u.Role)
+                .Include(u => u.Creator);
 
             return user;
         }

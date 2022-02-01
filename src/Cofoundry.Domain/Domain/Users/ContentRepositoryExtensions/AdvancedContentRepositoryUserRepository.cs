@@ -78,16 +78,6 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(new DeleteUserCommand(userId));
         }
 
-        public Task UpdateCurrentUserAccountAsync(UpdateCurrentUserCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
-
-        public Task UpdateCurrentUserPasswordAsync(UpdateCurrentUserPasswordCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
-
         public Task ResetPasswordAsync(int userId)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(new ResetUserPasswordCommand()
@@ -96,14 +86,29 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        public IAdvancedContentRepositoryUserAccountRecoveryRepository AccountRecovery()
+        public Task UpdatePasswordByCredentialsAsync(UpdateUserPasswordByCredentialsCommand command)
         {
-            return new ContentRepositoryUserAccountRecoveryRepository(ExtendableContentRepository);
+            return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
         public IAdvancedContentRepositoryCurrentUserRepository Current()
         {
             return new ContentRepositoryCurrentUserRepository(ExtendableContentRepository);
+        }
+
+        public IAdvancedContentRepositoryUserAccountRecoveryRepository AccountRecovery()
+        {
+            return new ContentRepositoryUserAccountRecoveryRepository(ExtendableContentRepository);
+        }
+
+        public IAdvancedContentRepositoryUserAccountVerificationRepository AccountVerification()
+        {
+            return new ContentRepositoryUserAccountVerificationRepository(ExtendableContentRepository);
+        }
+
+        public IAdvancedContentRepositoryUserAuthenticationRepository Authentication()
+        {
+            return new ContentRepositoryUserAuthenticationRepository(ExtendableContentRepository);
         }
     }
 }

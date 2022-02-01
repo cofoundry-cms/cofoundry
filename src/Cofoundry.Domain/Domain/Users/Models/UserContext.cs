@@ -11,9 +11,12 @@ namespace Cofoundry.Domain
 
         public bool IsPasswordChangeRequired { get; set; }
 
+        public bool IsAccountVerified { get; set; }
+
         public int? RoleId { get; set; }
 
         public string RoleCode { get; set; }
+
 
         public bool IsCofoundryUser()
         {

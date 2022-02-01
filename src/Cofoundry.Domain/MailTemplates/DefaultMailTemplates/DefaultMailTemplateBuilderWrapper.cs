@@ -40,5 +40,10 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
         {
             return await _defaultMailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
         }
+
+        public async Task<IMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context)
+        {
+            return await _defaultMailTemplateBuilder.BuildAccountVerificationTemplateAsync(context);
+        }
     }
 }

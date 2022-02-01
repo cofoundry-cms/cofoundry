@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Core.Web;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared;
 using Cofoundry.Domain.Tests.Shared.Assertions;
@@ -61,7 +62,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 await repository.ExecuteCommandAsync(command);
             }
 
-            UserLoginInfoAuthenticationResult authResult;
+            UserCredentialsValidationResult authResult;
             User user = null;
 
             using (var app = _appFactory.Create())
@@ -70,7 +71,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 var dbContext = app.Services.GetService<CofoundryDbContext>();
 
                 // Use the auth query to verify the password has been changed
-                authResult = await repository.ExecuteQueryAsync(new GetUserLoginInfoIfAuthenticatedQuery()
+                authResult = await repository.ExecuteQueryAsync(new ValidateUserCredentialsQuery()
                 {
                     UserAreaCode = TestUserArea1.Code,
                     Username = username,
@@ -91,7 +92,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 authResult.Should().NotBeNull();
                 authResult.IsSuccess.Should().BeTrue();
                 user.RequirePasswordChange.Should().BeFalse();
-                user.IsEmailConfirmed.Should().BeFalse();
+                user.AccountVerifiedDate.Should().BeNull();
                 user.LastPasswordChangeDate.Should().Be(updateDate);
                 user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
             }
@@ -193,6 +194,48 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     .CountMessagesPublished<UserSecurityStampUpdatedMessage>(m => m.UserId == userId && m.UserAreaCode == TestUserArea1.Code)
                     .Should().Be(1);
             }
+        }
+
+        [Fact]
+        public async Task SendsMail()
+        {
+            var username = "SendsMail" + TEST_DOMAIN;
+            var userId = await AddUserIfNotExistsAsync(username);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepository();
+            var loginService = app.Services.GetRequiredService<ILoginService>();
+
+            await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, userId, false);
+            await contentRepository
+                .Users()
+                .Current()
+                .UpdatePasswordAsync(new UpdateCurrentUserPasswordCommand()
+                {
+                    NewPassword = NEW_PASSWORD,
+                    OldPassword = OLD_PASSWORD
+                });
+
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var siteUrlResolver = app.Services.GetRequiredService<ISiteUrlResolver>();
+            var loginUrl = siteUrlResolver.MakeAbsolute(app.SeededEntities.TestUserArea1.Definition.LoginPath);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            app.Mocks
+                .CountDispatchedMail(
+                    user.Email,
+                    "password",
+                    "Test Site",
+                    "has been changed",
+                    "username for this account is " + user.Username,
+                    loginUrl
+                )
+                .Should().Be(1);
         }
 
         private async Task<int> AddUserIfNotExistsAsync(string username)

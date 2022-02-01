@@ -38,6 +38,21 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
+        /// <para>
+        /// Authorized tasks represent a single user-based operation that can be executed without
+        /// being logged in. Task authorization is validated by a crytographically random 
+        /// generated token, often communicated via an out-of-band communication mechanism
+        /// such as an email. Examples include password reset or email address validation flows.
+        /// </para>
+        /// <para>
+        /// Tasks tend to be single-use and can be marked when completed, and can also be 
+        /// invalidated explicitly. They can also be rate-limited by IPAddress and time-limited
+        /// by validating against the <see cref="CreateDate"/>.
+        /// </para>
+        /// </summary>
+        public DbSet<AuthorizedTask> AuthorizedTasks { get; set; }
+
+        /// <summary>
         /// This queue keeps track of files belonging to assets that 
         /// have been deleted in the system. The files don't get deleted
         /// at the same time as the asset record and instead are queued
@@ -155,6 +170,12 @@ namespace Cofoundry.Domain.Data
         public DbSet<ImageAsset> ImageAssets { get; set; }
 
         public DbSet<ImageAssetTag> ImageAssetTags { get; set; }
+
+        /// <summary>
+        /// A central logging table of IP addresses which supports optional
+        /// hashing of the IP addresses for privacy purposes.
+        /// </summary>
+        public DbSet<IPAddress> IPAddresses { get; set; }
 
         /// <summary>
         /// A Page Template represents a physical view template file and is used
@@ -317,13 +338,6 @@ namespace Cofoundry.Domain.Data
         /// are defined in code by defining an IUserAreaDefinition
         /// </summary>
         public DbSet<UserArea> UserAreas { get; set; }
-
-        /// <summary>
-        /// Users can initiate self-service account recovery (AKA "forgot password")  
-        /// requests that are verified by sending a message with a unique link, typically 
-        /// via email. This table tracks those requests and logs when they are completed.
-        /// </summary>
-        public DbSet<UserAccountRecoveryRequest> UserAccountRecoveryRequests { get; set; }
 
         /// <summary>
         /// Contains a record of a relation between one entitiy and another

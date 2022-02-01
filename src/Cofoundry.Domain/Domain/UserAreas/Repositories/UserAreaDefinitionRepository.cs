@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -82,7 +83,7 @@ namespace Cofoundry.Domain.Internal
             }
 
             var duplicateCode = definitions
-                .GroupBy(e => e.UserAreaCode)
+                .GroupBy(e => e.UserAreaCode, StringComparer.OrdinalIgnoreCase)
                 .Where(g => g.Count() > 1)
                 .FirstOrDefault();
 
@@ -92,14 +93,14 @@ namespace Cofoundry.Domain.Internal
                 throw new InvalidUserAreaDefinitionException(message, duplicateCode.First(), definitions);
             }
 
-            var codeNot3Chars = definitions
-                .Where(d => d.UserAreaCode.Length != 3)
+            var notValidCode = definitions
+                .Where(d => !SqlCharValidator.IsValid(d.UserAreaCode, 3))
                 .FirstOrDefault();
 
-            if (codeNot3Chars != null)
+            if (notValidCode != null)
             {
-                var message = codeNot3Chars.GetType().Name + " has a definition code that is not 3 characters in length. All user area definition codes must be 3 characters.";
-                throw new InvalidUserAreaDefinitionException(message, codeNot3Chars, definitions);
+                var message = notValidCode.GetType().Name + " has an invalid code. User area codes must be 3 characters and contain only non-unicode characters.";
+                throw new InvalidUserAreaDefinitionException(message, notValidCode, definitions);
             }
 
             var nullName = definitions
@@ -119,17 +120,28 @@ namespace Cofoundry.Domain.Internal
             if (nameTooLong != null)
             {
                 var message = nameTooLong.GetType().Name + " has a name that is more than 20 characters in length. All user area definition names must be 20 characters or less.";
-                throw new InvalidUserAreaDefinitionException(message, codeNot3Chars, definitions);
+                throw new InvalidUserAreaDefinitionException(message, nameTooLong, definitions);
+            }
+
+            var duplicateName = definitions
+                .GroupBy(e => e.Name, StringComparer.OrdinalIgnoreCase)
+                .Where(g => g.Count() > 1)
+                .FirstOrDefault();
+
+            if (duplicateName != null)
+            {
+                var message = "Duplicate IUserAreaDefinition.Name: " + duplicateName.Key;
+                throw new InvalidUserAreaDefinitionException(message, duplicateName.First(), definitions);
             }
 
             var defaultUserAreas = definitions
-                .Where(d => d.IsDefaultAuthScheme)
-                .Select(d => d.UserAreaCode);
+                .Where(d => d.IsDefaultAuthScheme);
 
-            if (defaultUserAreas.Skip(1).FirstOrDefault() != null)
+            var invalidDefaultUserArea = defaultUserAreas.Skip(1).FirstOrDefault();
+            if (invalidDefaultUserArea != null)
             {
-                var message = "More than one user area has IsDefaultAuthSchema defined. Only a single default user area can be defined. Duplicates: " + string.Join(", ", defaultUserAreas);
-                throw new InvalidUserAreaDefinitionException(message, codeNot3Chars, definitions);
+                var message = $"More than one user area has {nameof(IUserAreaDefinition.IsDefaultAuthScheme)} defined. Only a single default user area can be defined. Duplicates: " + string.Join(", ", defaultUserAreas);
+                throw new InvalidUserAreaDefinitionException(message, invalidDefaultUserArea, definitions);
             }
         }
 

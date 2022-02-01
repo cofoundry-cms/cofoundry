@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Internal;
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -91,6 +92,26 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
         }
 
         [Fact]
+        public async Task GetCurrentContextAsync_WhenAccountVerified_MapsTrue()
+        {
+            var uniqueData = "GCurCtx_AccV_MapsTrue";
+
+            using var app = _appFactory.Create();
+            var userContextService = app.Services.GetRequiredService<IUserContextService>();
+            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var userArea = app.SeededEntities.TestUserArea1;
+            var userId = await app.TestData.Users().AddAsync(uniqueData, UNIQUE_PREFIX, c => c.IsAccountVerified = true);
+
+            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
+            var currentUser = await userContextService.GetCurrentContextAsync();
+
+            using (new AssertionScope())
+            {
+                currentUser.IsAccountVerified.Should().BeTrue();
+            }
+        }
+
+        [Fact]
         public async Task GetSystemUserContextAsync_ReturnsSystemUser()
         {
             using var app = _appFactory.Create();
@@ -113,6 +134,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
                 systemUserContext.UserArea.Should().NotBeNull();
                 systemUserContext.UserArea.UserAreaCode.Should().Be(CofoundryAdminUserArea.Code);
                 systemUserContext.IsPasswordChangeRequired.Should().BeFalse();
+                systemUserContext.IsAccountVerified.Should().BeFalse();
                 systemUserContext.IsCofoundryUser().Should().BeTrue();
             }
         }

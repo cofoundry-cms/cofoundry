@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The number of hours a password reset link is valid for. Defaults to 16 hours.
         /// </summary>
-        [Obsolete("This is now set via User:AccountRecovery:ValidityPeriod")]
+        [Obsolete("This is now set via User:AccountRecovery:ExpireAfter")]
         public int NumHoursPasswordResetLinkValid { get; set; } = 16;
 
         /// <summary>

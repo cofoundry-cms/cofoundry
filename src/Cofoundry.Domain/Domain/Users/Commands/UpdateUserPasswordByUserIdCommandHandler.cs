@@ -2,7 +2,6 @@
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.Data.Internal;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -13,7 +12,6 @@ namespace Cofoundry.Domain.Internal
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly IUserStoredProcedures _userStoredProcedures;
         private readonly IDomainRepository _domainRepository;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
@@ -24,7 +22,6 @@ namespace Cofoundry.Domain.Internal
 
         public UpdateUserPasswordByUserIdCommandHandler(
             CofoundryDbContext dbContext,
-            IUserStoredProcedures userStoredProcedures,
             IDomainRepository domainRepository,
             IUserAreaDefinitionRepository userAreaRepository,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
@@ -35,7 +32,6 @@ namespace Cofoundry.Domain.Internal
             )
         {
             _dbContext = dbContext;
-            _userStoredProcedures = userStoredProcedures;
             _domainRepository = domainRepository;
             _userAreaRepository = userAreaRepository;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
@@ -60,7 +56,9 @@ namespace Cofoundry.Domain.Internal
 
                 // Typically we only invalidate when the current user changes their password, but we
                 // can't be certain of the origin of the request here, so invalidate them anyway.
-                await _userStoredProcedures.InvalidateUserAccountRecoveryRequests(user.UserId, executionContext.ExecutionDate);
+                await _domainRepository
+                    .WithContext(executionContext)
+                    .ExecuteCommandAsync(new InvalidateAuthorizedTaskBatchCommand(user.UserId, UserAccountRecoveryAuthorizedTaskType.Code));
 
                 scope.QueueCompletionTask(() => OnTransactionComplete(user));
                 await scope.CompleteAsync();

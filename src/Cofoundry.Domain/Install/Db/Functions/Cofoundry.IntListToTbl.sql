@@ -1,4 +1,5 @@
-﻿CREATE FUNCTION Cofoundry.IntListToTbl (@list varchar(MAX))
+﻿-- Adapted from https://www.sommarskog.se/arrays-in-sql-2005.html copyright Erland Sommarskog
+CREATE FUNCTION Cofoundry.IntListToTbl (@list varchar(MAX))
  RETURNS @tbl TABLE (number int NULL) AS
 BEGIN
    DECLARE @pos        int,
