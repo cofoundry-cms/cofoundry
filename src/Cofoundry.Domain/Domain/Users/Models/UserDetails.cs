@@ -22,10 +22,10 @@ namespace Cofoundry.Domain
         public RoleDetails Role { get; set; }
 
         /// <summary>
-        /// The date the user last logged into the application. May be
-        /// null if the user has not logged in yet.
+        /// The date the user last signed into the application. May be
+        /// null if the user has not signed in yet.
         /// </summary>
-        public DateTime? LastLoginDate { get; set; }
+        public DateTime? LastSignInDate { get; set; }
 
         /// <summary>
         /// The date the password was last changed or the that the password

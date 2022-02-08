@@ -205,9 +205,9 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
         }
 
         [Fact]
-        public async Task WhenPageAccessRuleWithRedirectAndNotLoggedIn_RedirectsToLogin()
+        public async Task WhenPageAccessRuleWithRedirectAndNotSignedIn_RedirectsToSignIn()
         {
-            var uniqueData = UNIQUE_PREFIX + "PARWithRedirectNotLoggedIn";
+            var uniqueData = UNIQUE_PREFIX + "PARWithRedirectNotSignedIn";
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
             using var app = _webApplicationFactory.CreateApp();
@@ -217,18 +217,18 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
                 pageId,
                 app.SeededEntities.TestUserArea1.UserAreaCode,
                 null,
-                c => c.UserAreaCodeForLoginRedirect = app.SeededEntities.TestUserArea1.UserAreaCode
+                c => c.UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea1.UserAreaCode
                 );
 
             using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
             var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
-            LoginRedirectAssertions.AssertLoginRedirect(result, app.SeededEntities.TestUserArea1);
+            SignInRedirectAssertions.AssertSignInRedirect(result, app.SeededEntities.TestUserArea1);
         }
 
         [Fact]
-        public async Task WhenPageAccessRuleWithRedirectAndInvalidLogin_ReturnsDefaultAction()
+        public async Task WhenPageAccessRuleWithRedirectAndInvalidCredentials_ReturnsDefaultAction()
         {
-            var uniqueData = UNIQUE_PREFIX + "PARWithRedirectInvalidLogin";
+            var uniqueData = UNIQUE_PREFIX + "PARWithRedirectInvalidCred";
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
             using var app = _webApplicationFactory.CreateApp();
@@ -339,9 +339,9 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
         }
 
         [Fact]
-        public async Task WhenDirectoryAccessRuleWithRedirectAndNotLoggedIn_RedirectsToLogin()
+        public async Task WhenDirectoryAccessRuleWithRedirectAndNotSignedIn_RedirectsToSignIn()
         {
-            var uniqueData = UNIQUE_PREFIX + "DARWithRedirectNotLoggedIn";
+            var uniqueData = UNIQUE_PREFIX + "DARWithRedirectNotSignedIn";
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
             using var app = _webApplicationFactory.CreateApp();
@@ -351,19 +351,19 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
                 directoryId,
                 app.SeededEntities.TestUserArea1.UserAreaCode,
                 null,
-                c => c.UserAreaCodeForLoginRedirect = app.SeededEntities.TestUserArea1.UserAreaCode
+                c => c.UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea1.UserAreaCode
                 );
 
             using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
             var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
 
-            LoginRedirectAssertions.AssertLoginRedirect(result, app.SeededEntities.TestUserArea1);
+            SignInRedirectAssertions.AssertSignInRedirect(result, app.SeededEntities.TestUserArea1);
         }
 
         [Fact]
-        public async Task WhenDirectoryAccessRuleWithRedirectAndInvalidLogin_ReturnsDefaultAction()
+        public async Task WhenDirectoryAccessRuleWithRedirectAndInvalidCredentials_ReturnsDefaultAction()
         {
-            var uniqueData = UNIQUE_PREFIX + "DARWithRedirectInvalidLogin";
+            var uniqueData = UNIQUE_PREFIX + "DARWithRedirectInvalidCred";
             var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
             using var app = _webApplicationFactory.CreateApp();

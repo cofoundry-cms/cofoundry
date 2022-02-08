@@ -22,9 +22,9 @@ namespace Cofoundry.Domain.Data
                 .WithMany(d => d.ChildPageDirectories)
                 .HasForeignKey(s => s.ParentPageDirectoryId);
 
-            builder.HasOne(s => s.UserAreaForLoginRedirect)
+            builder.HasOne(s => s.UserAreaForSignInRedirect)
                 .WithMany()
-                .HasForeignKey(s => s.UserAreaCodeForLoginRedirect);
+                .HasForeignKey(s => s.UserAreaCodeForSignInRedirect);
 
             builder.HasOne(s => s.PageDirectoryPath)
                 .WithOne(d => d.PageDirectory)

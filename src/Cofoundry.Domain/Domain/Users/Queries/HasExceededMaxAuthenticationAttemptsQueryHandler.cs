@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class HasExceededMaxLoginAttemptsQueryHandler
-        : IQueryHandler<HasExceededMaxLoginAttemptsQuery, bool>
+    public class HasExceededMaxAuthenticationAttemptsQueryHandler
+        : IQueryHandler<HasExceededMaxAuthenticationAttemptsQuery, bool>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
@@ -15,7 +15,7 @@ namespace Cofoundry.Domain.Internal
         private readonly AuthenticationSettings _authenticationSettings;
         private readonly IClientConnectionService _clientConnectionService;
 
-        public HasExceededMaxLoginAttemptsQueryHandler(
+        public HasExceededMaxAuthenticationAttemptsQueryHandler(
             CofoundryDbContext dbContext,
             IEntityFrameworkSqlExecutor sqlExecutor,
             AuthenticationSettings authenticationSettings,
@@ -28,7 +28,7 @@ namespace Cofoundry.Domain.Internal
             _clientConnectionService = clientConnectionService;
         }
 
-        public async Task<bool> ExecuteAsync(HasExceededMaxLoginAttemptsQuery query, IExecutionContext executionContext)
+        public async Task<bool> ExecuteAsync(HasExceededMaxAuthenticationAttemptsQuery query, IExecutionContext executionContext)
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 

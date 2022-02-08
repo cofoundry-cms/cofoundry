@@ -1,9 +1,9 @@
 ﻿namespace Cofoundry.Domain
 {
     /// <summary>
-    /// This message is published when a user logs out.
+    /// This message is published when a user signs out.
     /// </summary>
-    public class UserLoggedOutMessage
+    public class UserSignedOutMessage
     {
         /// <summary>
         /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
@@ -12,7 +12,7 @@
         public string UserAreaCode { get; set; }
 
         /// <summary>
-        /// Id of the user that has logged out. If logout was due to a user deletion,
+        /// Id of the user that has signed out. If logout was due to a user deletion,
         /// then the user will not exist.
         /// </summary>
         public int UserId { get; set; }

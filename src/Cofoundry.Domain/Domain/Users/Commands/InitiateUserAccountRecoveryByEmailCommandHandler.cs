@@ -93,9 +93,9 @@ namespace Cofoundry.Domain
         {
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
 
-            if (!userArea.AllowPasswordLogin)
+            if (!userArea.AllowPasswordSignIn)
             {
-                throw new InvalidOperationException($"Cannot reset the password because the {userArea.Name} user area does not allow password logins.");
+                throw new InvalidOperationException($"Cannot reset the password because the {userArea.Name} user area does not allow password sign in.");
             }
 
             if (!userArea.UseEmailAsUsername)
@@ -111,7 +111,7 @@ namespace Cofoundry.Domain
                 .Users
                 .Include(u => u.Role)
                 .FilterByUserArea(command.UserAreaCode)
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .SingleOrDefaultAsync(u => u.Username == username);
 
             var user = _userSummaryMapper.Map(dbUser);

@@ -115,13 +115,13 @@ namespace Cofoundry.Web.Extendable
             cookieOptions.Cookie.SameSite = SameSiteMode.Lax;
             cookieOptions.Events.OnValidatePrincipal = ValidateCookiePrincipal;
 
-            if (!string.IsNullOrWhiteSpace(schemeRegistrationOptions.UserArea.LoginPath))
+            if (!string.IsNullOrWhiteSpace(schemeRegistrationOptions.UserArea.SignInPath))
             {
-                cookieOptions.LoginPath = schemeRegistrationOptions.UserArea.LoginPath;
+                cookieOptions.LoginPath = schemeRegistrationOptions.UserArea.SignInPath;
             }
             else
             {
-                cookieOptions.Events.OnRedirectToLogin = DefaultLoginRedirectAction;
+                cookieOptions.Events.OnRedirectToLogin = DefaultSignInRedirectAction;
             }
 
             cookieOptions.Events.OnRedirectToAccessDenied = DefaultDenyAction;
@@ -139,14 +139,14 @@ namespace Cofoundry.Web.Extendable
 
         /// <summary>
         /// <para>
-        /// This action runs when <see cref="IUserAreaDefinition.LoginPath"/> is null and the "Challenge" action
-        /// is triggered (the user is not authenticated). By default ASP.NET tries to redirect to a default login
+        /// This action runs when <see cref="IUserAreaDefinition.SignInPath"/> is null and the "Challenge" action
+        /// is triggered (the user is not authenticated). By default ASP.NET tries to redirect to a default sign in
         /// page that probably won't exist, so in Cofoundry we override this with the <see cref="DefaultDenyAction"/>
         /// which will throw a <see cref="NotPermittedException"/>, deferring to the default error handling 
         /// page to return a 403 (Forbidden) error.
         /// </para>
         /// <para>
-        /// Override this to customize this behaviour for the login redriect, or override <see cref="DefaultDenyAction"/>
+        /// Override this to customize this behaviour for the sign in redriect, or override <see cref="DefaultDenyAction"/>
         /// to override the behaviour to both default actions.
         /// </para>
         /// </summary>
@@ -155,7 +155,7 @@ namespace Cofoundry.Web.Extendable
         /// implementation this will be <see cref="Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationOptions"/>.
         /// </typeparam>
         /// <param name="redirectContext">The context of the redirect action.</param>
-        protected virtual Task DefaultLoginRedirectAction<TOptions>(RedirectContext<TOptions> redirectContext)
+        protected virtual Task DefaultSignInRedirectAction<TOptions>(RedirectContext<TOptions> redirectContext)
             where TOptions : AuthenticationSchemeOptions
         {
             return DefaultDenyAction(redirectContext);

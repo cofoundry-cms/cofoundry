@@ -24,7 +24,7 @@ namespace Cofoundry.Web.Internal
             var result = await _cofoundryDbContext
                 .Users
                 .AsNoTracking()
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .FilterById(userId)
                 .Select(u => new ClaimsPrincipalBuilderContext()
                 {

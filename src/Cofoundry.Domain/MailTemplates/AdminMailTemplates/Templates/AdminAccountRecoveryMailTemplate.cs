@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// Template for the email sent when a user requests an account recovery 
-    /// via the 'forgot password' mechanism on login form. This version of the template
+    /// via the 'forgot password' mechanism on a sign in form. This version of the template
     /// is used by default for the Cofoundry admin user area.
     /// </summary>
     public class AdminAccountRecoveryMailTemplate : DefaultMailTemplateBase

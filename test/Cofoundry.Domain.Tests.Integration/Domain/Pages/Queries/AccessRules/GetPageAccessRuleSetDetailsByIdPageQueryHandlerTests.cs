@@ -45,7 +45,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 accessDetails.PageId.Should().Be(pageId);
                 accessDetails.AccessRules.Should().NotBeNull().And.BeEmpty();
                 accessDetails.InheritedAccessRules.Should().NotBeNull().And.BeEmpty();
-                accessDetails.UserAreaForLoginRedirect.Should().BeNull();
+                accessDetails.UserAreaForSignInRedirect.Should().BeNull();
                 accessDetails.ViolationAction.Should().Be(AccessRuleViolationAction.Error);
             }
         }
@@ -91,7 +91,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             var command = new UpdatePageAccessRuleSetCommand()
             {
                 PageId = pageId,
-                UserAreaCodeForLoginRedirect = userArea1.UserAreaCode,
+                UserAreaCodeForSignInRedirect = userArea1.UserAreaCode,
                 ViolationAction = AccessRuleViolationAction.NotFound
             };
 
@@ -114,9 +114,9 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             using (new AssertionScope())
             {
                 accessDetails.Should().NotBeNull();
-                accessDetails.UserAreaForLoginRedirect.Should().NotBeNull();
-                accessDetails.UserAreaForLoginRedirect.UserAreaCode.Should().Be(userArea1.UserAreaCode);
-                accessDetails.UserAreaForLoginRedirect.Name.Should().Be(userArea1.Definition.Name);
+                accessDetails.UserAreaForSignInRedirect.Should().NotBeNull();
+                accessDetails.UserAreaForSignInRedirect.UserAreaCode.Should().Be(userArea1.UserAreaCode);
+                accessDetails.UserAreaForSignInRedirect.Name.Should().Be(userArea1.Definition.Name);
                 accessDetails.ViolationAction.Should().Be(command.ViolationAction);
                 accessDetails.InheritedAccessRules.Should().NotBeNull().And.BeEmpty();
                 accessDetails.AccessRules.Should().HaveCount(3);
@@ -174,7 +174,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
             await app.TestData.PageDirectories().AddAccessRuleAsync(directory1Id, userArea1.UserAreaCode, userArea1.RoleA.RoleId, c =>
             {
                 c.AccessRules.AddNew(userArea2.UserAreaCode);
-                c.UserAreaCodeForLoginRedirect = userArea2.UserAreaCode;
+                c.UserAreaCodeForSignInRedirect = userArea2.UserAreaCode;
                 c.ViolationAction = AccessRuleViolationAction.NotFound;
             });
             var directory2Id = await app.TestData.PageDirectories().AddAsync(uniqueData, directory1Id);
@@ -197,9 +197,9 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 accessDetails.InheritedAccessRules.Should().HaveCount(2);
 
                 var ruleSet1 = accessDetails.InheritedAccessRules.FirstOrDefault();
-                ruleSet1.UserAreaForLoginRedirect.Should().NotBeNull();
-                ruleSet1.UserAreaForLoginRedirect.UserAreaCode.Should().Be(userArea2.UserAreaCode);
-                ruleSet1.UserAreaForLoginRedirect.Name.Should().Be(userArea2.Definition.Name);
+                ruleSet1.UserAreaForSignInRedirect.Should().NotBeNull();
+                ruleSet1.UserAreaForSignInRedirect.UserAreaCode.Should().Be(userArea2.UserAreaCode);
+                ruleSet1.UserAreaForSignInRedirect.Name.Should().Be(userArea2.Definition.Name);
                 ruleSet1.ViolationAction.Should().Be(AccessRuleViolationAction.NotFound);
                 ruleSet1.AccessRules.Should().HaveCount(2);
 
@@ -210,7 +210,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 ValidateRuleMapping(rule2, userArea2, directory1Id, false);
 
                 var ruleSet2 = accessDetails.InheritedAccessRules.Skip(1).FirstOrDefault();
-                ruleSet2.UserAreaForLoginRedirect.Should().BeNull();
+                ruleSet2.UserAreaForSignInRedirect.Should().BeNull();
                 ruleSet2.ViolationAction.Should().Be(AccessRuleViolationAction.Error);
                 ruleSet2.AccessRules.Should().HaveCount(1);
 

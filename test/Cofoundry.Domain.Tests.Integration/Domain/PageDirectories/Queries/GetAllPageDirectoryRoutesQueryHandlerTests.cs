@@ -118,7 +118,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
             {
                 PageDirectoryId = directory2Id,
                 ViolationAction = AccessRuleViolationAction.NotFound,
-                UserAreaCodeForLoginRedirect = app.SeededEntities.TestUserArea2.UserAreaCode
+                UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea2.UserAreaCode
             };
 
             addRuleToDirectory2Command
@@ -149,7 +149,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
                 directory1RuleSet.AccessRules.Should().HaveCount(1);
                 directory1RuleSet.ViolationAction.Should().Be(AccessRuleViolationAction.Error);
                 directory1RuleSet.AccessRules.Should().NotBeNull();
-                directory1RuleSet.UserAreaCodeForLoginRedirect.Should().BeNull();
+                directory1RuleSet.UserAreaCodeForSignInRedirect.Should().BeNull();
 
                 var rule1 = directory1RuleSet.AccessRules.FirstOrDefault();
                 rule1.Should().NotBeNull();
@@ -161,7 +161,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
                 directory2RuleSet.AccessRules.Should().HaveCount(2);
                 directory2RuleSet.ViolationAction.Should().Be(addRuleToDirectory2Command.ViolationAction);
                 directory2RuleSet.AccessRules.Should().NotBeNull();
-                directory2RuleSet.UserAreaCodeForLoginRedirect.Should().Be(addRuleToDirectory2Command.UserAreaCodeForLoginRedirect);
+                directory2RuleSet.UserAreaCodeForSignInRedirect.Should().Be(addRuleToDirectory2Command.UserAreaCodeForSignInRedirect);
 
                 var rule2A = directory2RuleSet.AccessRules.FirstOrDefault();
                 rule2A.Should().NotBeNull();

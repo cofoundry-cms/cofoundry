@@ -1,12 +1,5 @@
-﻿using Cofoundry.Core.Validation;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Web;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.SPASite.Domain
@@ -18,22 +11,22 @@ namespace Cofoundry.Samples.SPASite.Domain
     /// validation, authentication and additional security checks 
     /// such as preventing excessive login attempts.
     /// </summary>
-    public class LogMemberInCommandHandler
-        : ICommandHandler<LogMemberInCommand>
+    public class SignInMemberCommandHandler
+        : ICommandHandler<SignInMemberCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly ICommandExecutor _commandExecutor;
-        
-        public LogMemberInCommandHandler(
+
+        public SignInMemberCommandHandler(
             ICommandExecutor commandExecutor
             )
         {
             _commandExecutor = commandExecutor;
         }
 
-        public Task ExecuteAsync(LogMemberInCommand command, IExecutionContext executionContext)
+        public Task ExecuteAsync(SignInMemberCommand command, IExecutionContext executionContext)
         {
-            var logUserInCommand = new LogUserInWithCredentialsCommand()
+            var logUserInCommand = new SignInUserWithCredentialsCommand()
             {
                 Username = command.Email,
                 Password = command.Password,

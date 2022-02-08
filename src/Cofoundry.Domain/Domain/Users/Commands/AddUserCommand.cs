@@ -30,7 +30,7 @@ namespace Cofoundry.Domain
         public string LastName { get; set; }
 
         /// <summary>
-        /// The password is required if the user area has <see cref="IUserAreaDefinition.AllowPasswordLogin"/> 
+        /// The password is required if the user area has <see cref="IUserAreaDefinition.AllowPasswordSignIn"/> 
         /// set to <see langword="true"/>, otherwise it should be empty. The password will go through
         /// additional validation depending on the password policy configuration.
         /// </summary>
@@ -43,7 +43,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// The email address is required if the user area has <see cref="IUserAreaDefinition.UseEmailAsUsername"/> 
-        /// set to <see langword="true"/> or <see cref="IUserAreaDefinition.AllowPasswordLogin"/>.
+        /// set to <see langword="true"/> or <see cref="IUserAreaDefinition.AllowPasswordSignIn"/>.
         /// </summary>
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }

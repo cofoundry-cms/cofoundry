@@ -12,7 +12,7 @@ namespace Cofoundry.Web.Internal
         /// Fetches user data for building a claims principal, returning
         /// <see langword="null"/> if the user cannot be found. This method
         /// bypasses authorization because it is used internally as part
-        /// of user login and session management.
+        /// of user sign in and session management.
         /// </summary>
         /// <param name="userId">
         /// The identifier of the user to return data for.

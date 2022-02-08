@@ -51,7 +51,7 @@ namespace Cofoundry.Domain.Internal
                 UserId = user.UserId
             });
 
-            await _userSessionService.RefreshLoginAsync(user.UserAreaCode, user.UserId);
+            await _userSessionService.RefreshAsync(user.UserAreaCode, user.UserId);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Adds a new user and sends a notification containing a generated 
-    /// password which must be changed at first login.
+    /// password which must be changed at first sign in.
     /// </summary>
     public class AddUserWithTemporaryPasswordCommandHandler
         : ICommandHandler<AddUserWithTemporaryPasswordCommand>
@@ -93,9 +93,9 @@ namespace Cofoundry.Domain.Internal
         private void ValidateUserArea(AddUserWithTemporaryPasswordCommand command)
         {
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(command.UserAreaCode);
-            if (!userArea.AllowPasswordLogin)
+            if (!userArea.AllowPasswordSignIn)
             {
-                throw new InvalidOperationException(nameof(AddUserWithTemporaryPasswordCommand) + " must be used with a user area that supports password based logins.");
+                throw new InvalidOperationException(nameof(AddUserWithTemporaryPasswordCommand) + " must be used with a user area that supports password based sign in.");
             }
         }
 

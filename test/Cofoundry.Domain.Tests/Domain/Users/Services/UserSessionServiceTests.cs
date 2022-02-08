@@ -27,7 +27,7 @@ namespace Cofoundry.Domain.Tests.Users.Services
         {
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserInAsync(TestUserArea1.Code, AREA1_USERID, false);
+            await service.SignInAsync(TestUserArea1.Code, AREA1_USERID, false);
             var userId = service.GetCurrentUserId();
 
             userId.Should().Be(AREA1_USERID);
@@ -38,7 +38,7 @@ namespace Cofoundry.Domain.Tests.Users.Services
         {
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserInAsync(TestUserArea2.Code, AREA2_USERID, false);
+            await service.SignInAsync(TestUserArea2.Code, AREA2_USERID, false);
             var userId = service.GetCurrentUserId();
 
             userId.Should().BeNull();
@@ -64,8 +64,8 @@ namespace Cofoundry.Domain.Tests.Users.Services
         {
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserInAsync(TestUserArea1.Code, AREA1_USERID, false);
-            await service.LogUserInAsync(TestUserArea2.Code, AREA2_USERID, false);
+            await service.SignInAsync(TestUserArea1.Code, AREA1_USERID, false);
+            await service.SignInAsync(TestUserArea2.Code, AREA2_USERID, false);
 
             var currentUserId = service.GetCurrentUserId();
             var userId1 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
@@ -87,11 +87,11 @@ namespace Cofoundry.Domain.Tests.Users.Services
             using (new AssertionScope())
             {
                 await service
-                    .Awaiting(s => s.LogUserOutAsync(TestUserArea1.Code))
+                    .Awaiting(s => s.SignOutAsync(TestUserArea1.Code))
                     .Should()
                     .NotThrowAsync();
                 await service
-                    .Awaiting(s => s.LogUserOutAsync(TestUserArea2.Code))
+                    .Awaiting(s => s.SignOutAsync(TestUserArea2.Code))
                     .Should()
                     .NotThrowAsync();
             }
@@ -102,9 +102,9 @@ namespace Cofoundry.Domain.Tests.Users.Services
         {
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserInAsync(TestUserArea1.Code, AREA1_USERID, false);
-            await service.LogUserInAsync(TestUserArea2.Code, AREA2_USERID, false);
-            await service.LogUserOutAsync(TestUserArea2.Code);
+            await service.SignInAsync(TestUserArea1.Code, AREA1_USERID, false);
+            await service.SignInAsync(TestUserArea2.Code, AREA2_USERID, false);
+            await service.SignOutAsync(TestUserArea2.Code);
 
             var currentUserId = service.GetCurrentUserId();
             var userId1 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
@@ -123,7 +123,7 @@ namespace Cofoundry.Domain.Tests.Users.Services
         {
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserOutOfAllUserAreasAsync();
+            await service.SignOutOfAllUserAreasAsync();
         }
 
         [Fact]
@@ -131,9 +131,9 @@ namespace Cofoundry.Domain.Tests.Users.Services
         {
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserInAsync(TestUserArea1.Code, AREA1_USERID, false);
-            await service.LogUserInAsync(TestUserArea2.Code, AREA2_USERID, false);
-            await service.LogUserOutOfAllUserAreasAsync();
+            await service.SignInAsync(TestUserArea1.Code, AREA1_USERID, false);
+            await service.SignInAsync(TestUserArea2.Code, AREA2_USERID, false);
+            await service.SignOutOfAllUserAreasAsync();
 
             var currentUserId = service.GetCurrentUserId();
             var userId1 = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
@@ -152,8 +152,8 @@ namespace Cofoundry.Domain.Tests.Users.Services
         {
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserInAsync(TestUserArea1.Code, AREA1_USERID, false);
-            await service.LogUserInAsync(TestUserArea2.Code, AREA2_USERID, false);
+            await service.SignInAsync(TestUserArea1.Code, AREA1_USERID, false);
+            await service.SignInAsync(TestUserArea2.Code, AREA2_USERID, false);
             await service.SetAmbientUserAreaAsync(TestUserArea2.Code);
             var userId = service.GetCurrentUserId();
 
@@ -166,7 +166,7 @@ namespace Cofoundry.Domain.Tests.Users.Services
             const int USER_ID = 123456;
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserInAsync(TestUserArea2.Code, USER_ID, false);
+            await service.SignInAsync(TestUserArea2.Code, USER_ID, false);
             await service.SetAmbientUserAreaAsync(TestUserArea2.Code);
             await service.SetAmbientUserAreaAsync(TestUserArea1.Code);
             var userId = service.GetCurrentUserId();
@@ -179,8 +179,8 @@ namespace Cofoundry.Domain.Tests.Users.Services
         {
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.LogUserInAsync(TestUserArea1.Code, AREA1_USERID, true);
-            await service.RefreshLoginAsync(TestUserArea1.Code, AREA1_USERID);
+            await service.SignInAsync(TestUserArea1.Code, AREA1_USERID, true);
+            await service.RefreshAsync(TestUserArea1.Code, AREA1_USERID);
 
             var currentUserId = service.GetCurrentUserId();
             var userId = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
@@ -197,7 +197,7 @@ namespace Cofoundry.Domain.Tests.Users.Services
         {
             var service = CreateService(CreateUserAreaRepository());
 
-            await service.RefreshLoginAsync(TestUserArea1.Code, AREA1_USERID);
+            await service.RefreshAsync(TestUserArea1.Code, AREA1_USERID);
 
             var currentUserId = service.GetCurrentUserId();
             var userId = await service.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);

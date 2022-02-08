@@ -52,10 +52,10 @@ namespace Cofoundry.Domain.Internal
                 ViolationAction = violationAction ?? AccessRuleViolationAction.Error
             };
 
-            if (!string.IsNullOrWhiteSpace(entity.UserAreaCodeForLoginRedirect))
+            if (!string.IsNullOrWhiteSpace(entity.UserAreaCodeForSignInRedirect))
             {
-                var userArea = _userAreaDefinitionRepository.GetRequiredByCode(entity.UserAreaCodeForLoginRedirect);
-                result.UserAreaCodeForLoginRedirect = userArea.UserAreaCode;
+                var userArea = _userAreaDefinitionRepository.GetRequiredByCode(entity.UserAreaCodeForSignInRedirect);
+                result.UserAreaCodeForSignInRedirect = userArea.UserAreaCode;
             }
 
             result.AccessRules = entity

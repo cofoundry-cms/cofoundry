@@ -71,13 +71,13 @@
                 cms-model="vm.command.username"
                 ng-if="::!vm.userArea.useEmailAsUsername"
                 ng-required="::!vm.userArea.useEmailAsUsername"
-                cms-description="The username that the user uses to log in with."
+                cms-description="The username that the user uses to sign in with."
                 maxlength="150"></cms-form-field-text>
 
             <cms-form-field-email-address cms-title="Email Address"
                 cms-model="vm.command.email"
                 maxlength="150"
-                ng-required="::vm.userArea.allowPasswordLogin || vm.userArea.useEmailAsUsername"></cms-form-field-email-address>
+                ng-required="::vm.userArea.allowPasswordSignIn || vm.userArea.useEmailAsUsername"></cms-form-field-email-address>
 
             <cms-form-field-dropdown cms-title="Role"
                 cms-options="vm.roles"
@@ -89,8 +89,8 @@
 
             <cms-form-field-checkbox cms-title="Require Password Change"
                 cms-model="vm.command.requirePasswordChange"
-                ng-if="::vm.userArea.allowPasswordLogin"
-                cms-description="If selected, the user will be required to change their password the next time they log in."></cms-form-field-checkbox>
+                ng-if="::vm.userArea.allowPasswordSignIn"
+                cms-description="If selected, the user will be required to change their password the next time they sign in."></cms-form-field-checkbox>
 
             <cms-form-field-checkbox cms-title="Account Verified"
                 cms-model="vm.command.isAccountVerified"
@@ -112,12 +112,12 @@
 
         <cms-form-section cms-title="Logs">
 
-            <cms-form-field-container cms-title="Last logged in">
-                <cms-time-ago cms-time="vm.user.lastLoginDate"></cms-time-ago>
+            <cms-form-field-container cms-title="Last signed in">
+                <cms-time-ago cms-time="vm.user.lastSignInDate"></cms-time-ago>
             </cms-form-field-container>
 
             <cms-form-field-container cms-title="Password last changed"
-                                      ng-if="::vm.userArea.allowPasswordLogin">
+                                      ng-if="::vm.userArea.allowPasswordSignIn">
                 <cms-time-ago cms-time="vm.user.lastPasswordChangeDate"
                               ng-if="vm.user.lastPasswordChangeDate !== vm.user.auditData.createDate"></cms-time-ago>
                 <span ng-if="vm.user.lastPasswordChangeDate === vm.user.auditData.createDate">Never</span>

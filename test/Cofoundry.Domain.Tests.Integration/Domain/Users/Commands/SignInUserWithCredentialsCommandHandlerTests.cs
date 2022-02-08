@@ -1,29 +1,25 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Core.Validation;
+﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.Tests.Shared;
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 {
     [Collection(nameof(DbDependentFixtureCollection))]
-    public class LogUserInWithCredentialsCommandHandlerTests
+    public class SignInUserWithCredentialsCommandHandlerTests
     {
-        const string UNIQUE_PREFIX = "LogInWCredCHT-";
+        const string UNIQUE_PREFIX = "SignInWCredCHT-";
 
         private readonly DbDependentTestApplicationFactory _appFactory;
 
         const string PASSWORD = "(>\")><(\"<)";
 
-        public LogUserInWithCredentialsCommandHandlerTests(
+        public SignInUserWithCredentialsCommandHandlerTests(
             DbDependentTestApplicationFactory appFactory
             )
         {
@@ -45,7 +41,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             await contentRepository
                 .Users()
                 .Authentication()
-                .LogUserInWithCredentialsAsync(new LogUserInWithCredentialsCommand()
+                .SignInWithCredentialsAsync(new SignInUserWithCredentialsCommand()
                 {
                     UserAreaCode = user.UserAreaCode,
                     Password = PASSWORD,
@@ -70,7 +66,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var user = await AddUser(app, uniqueData);
 
             await contentRepository
-                .Awaiting(r => r.Users().Authentication().LogUserInWithCredentialsAsync(new LogUserInWithCredentialsCommand()
+                .Awaiting(r => r.Users().Authentication().SignInWithCredentialsAsync(new SignInUserWithCredentialsCommand()
                 {
                     UserAreaCode = user.UserAreaCode,
                     Password = "wibble",
@@ -94,7 +90,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             });
 
             await contentRepository
-                .Awaiting(r => r.Users().Authentication().LogUserInWithCredentialsAsync(new LogUserInWithCredentialsCommand()
+                .Awaiting(r => r.Users().Authentication().SignInWithCredentialsAsync(new SignInUserWithCredentialsCommand()
                 {
                     UserAreaCode = user.UserAreaCode,
                     Password = PASSWORD,
@@ -115,7 +111,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var user = await AddUser(app, uniqueData);
 
             await contentRepository
-                .Awaiting(r => r.Users().Authentication().LogUserInWithCredentialsAsync(new LogUserInWithCredentialsCommand()
+                .Awaiting(r => r.Users().Authentication().SignInWithCredentialsAsync(new SignInUserWithCredentialsCommand()
                 {
                     UserAreaCode = user.UserAreaCode,
                     Password = PASSWORD,
@@ -127,7 +123,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
-        public async Task WhenVerificationRequired_CanLogInVerifiedUser()
+        public async Task WhenVerificationRequired_CanSignInVerifiedUser()
         {
             var uniqueData = UNIQUE_PREFIX + "VerReqVerOk";
 
@@ -139,7 +135,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             await contentRepository
                 .Users()
                 .Authentication()
-                .LogUserInWithCredentialsAsync(new LogUserInWithCredentialsCommand()
+                .SignInWithCredentialsAsync(new SignInUserWithCredentialsCommand()
                 {
                     UserAreaCode = user.UserAreaCode,
                     Password = PASSWORD,
@@ -156,7 +152,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         {
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
-            var userId = await app.TestData.Users().AddAsync(uniqueData, c => {
+            var userId = await app.TestData.Users().AddAsync(uniqueData, c =>
+            {
                 c.Password = PASSWORD;
                 configureCommand?.Invoke(c);
             });

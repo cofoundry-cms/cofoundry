@@ -22,17 +22,17 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// Unique 3 character code representing the <see cref="UserArea"/> with
-        /// a login page to redirect to when a user does not meet the criteria of 
+        /// a sign in page to redirect to when a user does not meet the criteria of 
         /// the access rules directly associated with this entity.
         /// </summary>
-        string UserAreaCodeForLoginRedirect { get; set; }
+        string UserAreaCodeForSignInRedirect { get; set; }
 
         /// <summary>
-        /// The <see cref="UserAreaForLoginRedirect"/> with a login page to redirect to when a user 
+        /// The <see cref="UserAreaForSignInRedirect"/> with a sign in page to redirect to when a user 
         /// does not meet the criteria of the access rules directly associated with 
         /// this entity.
         /// </summary>
-        UserArea UserAreaForLoginRedirect { get; set; }
+        UserArea UserAreaForSignInRedirect { get; set; }
 
         /// <summary>
         /// <para>

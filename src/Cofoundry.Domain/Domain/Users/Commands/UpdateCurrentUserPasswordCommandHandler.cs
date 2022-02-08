@@ -61,7 +61,7 @@ namespace Cofoundry.Domain.Internal
             var user = await GetUser(executionContext);
             EntityNotFoundException.ThrowIfNull(user, executionContext.UserContext.UserId);
 
-            await ValidateMaxLoginAttemptsNotExceededAsync(user, executionContext);
+            await ValidateMaxAuthenticationAttemptsNotExceededAsync(user, executionContext);
             await AuthenticateAsync(command, user);
             await ValidatePasswordAsync(command, user, executionContext);
 
@@ -99,24 +99,24 @@ namespace Cofoundry.Domain.Internal
             return _dbContext
                 .Users
                 .IncludeForSummary()
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .FilterById(executionContext.UserContext.UserId.Value)
                 .SingleOrDefaultAsync();
         }
 
-        private async Task ValidateMaxLoginAttemptsNotExceededAsync(User dbUser, IExecutionContext executionContext)
+        private async Task ValidateMaxAuthenticationAttemptsNotExceededAsync(User dbUser, IExecutionContext executionContext)
         {
-            var query = new HasExceededMaxLoginAttemptsQuery()
+            var query = new HasExceededMaxAuthenticationAttemptsQuery()
             {
                 UserAreaCode = dbUser.UserAreaCode,
                 Username = dbUser.Username
             };
 
-            var hasExceededMaxLoginAttempts = await _domainRepository
+            var hasExceededMaxAuthenticationAttempts = await _domainRepository
                 .WithContext(executionContext)
                 .ExecuteQueryAsync(query);
 
-            if (hasExceededMaxLoginAttempts)
+            if (hasExceededMaxAuthenticationAttempts)
             {
                 UserValidationErrors.Authentication.TooManyFailedAttempts.Throw();
             }
@@ -140,7 +140,7 @@ namespace Cofoundry.Domain.Internal
         {
             if (_userAuthenticationHelper.VerifyPassword(user, command.OldPassword) == PasswordVerificationResult.Failed)
             {
-                var logFailedAttemptCommand = new LogFailedLoginAttemptCommand(user.UserAreaCode, user.Username);
+                var logFailedAttemptCommand = new LogFailedAuthenticationAttemptCommand(user.UserAreaCode, user.Username);
                 await _domainRepository.ExecuteCommandAsync(logFailedAttemptCommand);
 
                 UserValidationErrors.Authentication.InvalidPassword.Throw(nameof(command.OldPassword));

@@ -40,9 +40,9 @@ namespace Cofoundry.Domain.Data
 
         public int AccessRuleViolationActionId { get; set; }
 
-        public string UserAreaCodeForLoginRedirect { get; set; }
+        public string UserAreaCodeForSignInRedirect { get; set; }
 
-        public virtual UserArea UserAreaForLoginRedirect { get; set; }
+        public virtual UserArea UserAreaForSignInRedirect { get; set; }
 
         public DateTime CreateDate { get; set; }
 

@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class LogFailedLoginAttemptCommandHandler
-        : ICommandHandler<LogFailedLoginAttemptCommand>
+    public class LogFailedAuthenticationAttemptCommandHandler
+        : ICommandHandler<LogFailedAuthenticationAttemptCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
@@ -18,7 +18,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IClientConnectionService _clientConnectionService;
         private readonly IMessageAggregator _messageAggregator;
 
-        public LogFailedLoginAttemptCommandHandler(
+        public LogFailedAuthenticationAttemptCommandHandler(
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
             IEntityFrameworkSqlExecutor sqlExecutor,
@@ -33,7 +33,7 @@ namespace Cofoundry.Domain.Internal
             _messageAggregator = messageAggregator;
         }
 
-        public async Task ExecuteAsync(LogFailedLoginAttemptCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(LogFailedAuthenticationAttemptCommand command, IExecutionContext executionContext)
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 
@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Internal
             await _domainRepository.Transactions().QueueCompletionTaskAsync(() => OnTransactionComplete(command));
         }
 
-        private async Task OnTransactionComplete(LogFailedLoginAttemptCommand command)
+        private async Task OnTransactionComplete(LogFailedAuthenticationAttemptCommand command)
         {
             await _messageAggregator.PublishAsync(new UserAuthenticationFailedMessage()
             {

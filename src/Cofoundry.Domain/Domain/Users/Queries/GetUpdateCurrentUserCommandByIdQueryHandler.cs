@@ -29,7 +29,7 @@ namespace Cofoundry.Domain.Internal
             var user = await _dbContext
                 .Users
                 .AsNoTracking()
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .FilterById(executionContext.UserContext.UserId.Value)
                 .Select(u => new UpdateCurrentUserCommand()
                 {

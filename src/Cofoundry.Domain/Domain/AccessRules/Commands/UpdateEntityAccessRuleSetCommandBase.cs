@@ -23,10 +23,10 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Unique 3 character code representing the <see cref="UserArea"/> with
-        /// a login page to redirect to when a user does not meet the criteria of 
+        /// the sign in page to redirect to when a user does not meet the criteria of 
         /// the access rules directly associated with this page.
         /// </summary>
-        public string UserAreaCodeForLoginRedirect { get; set; }
+        public string UserAreaCodeForSignInRedirect { get; set; }
 
         /// <summary>
         /// The action that should be taken when a user does not meet the criteria 
@@ -39,14 +39,14 @@ namespace Cofoundry.Domain
         {
             var accessRules = EnumerableHelper.Enumerate(AccessRules);
 
-            if (!string.IsNullOrEmpty(UserAreaCodeForLoginRedirect)
-                && !accessRules.Any(r => r.UserAreaCode == UserAreaCodeForLoginRedirect))
+            if (!string.IsNullOrEmpty(UserAreaCodeForSignInRedirect)
+                && !accessRules.Any(r => r.UserAreaCode == UserAreaCodeForSignInRedirect))
             {
-                yield return new ValidationResult("You can only redirect to the login page for a user area that appears in the access rules.", new string[] { nameof(UserAreaCodeForLoginRedirect) });
+                yield return new ValidationResult("You can only redirect to the sign in page for a user area that appears in the access rules.", new string[] { nameof(UserAreaCodeForSignInRedirect) });
             }
-            else if (UserAreaCodeForLoginRedirect == CofoundryAdminUserArea.Code)
+            else if (UserAreaCodeForSignInRedirect == CofoundryAdminUserArea.Code)
             {
-                yield return new ValidationResult("You cannot redirect to the Cofoundry admin user area because access rules only apply to custom user areas.", new string[] { nameof(UserAreaCodeForLoginRedirect) });
+                yield return new ValidationResult("You cannot redirect to the Cofoundry admin user area because access rules only apply to custom user areas.", new string[] { nameof(UserAreaCodeForSignInRedirect) });
             }
 
             var duplicates = accessRules

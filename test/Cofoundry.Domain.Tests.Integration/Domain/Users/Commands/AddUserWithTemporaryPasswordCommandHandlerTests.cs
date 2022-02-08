@@ -73,14 +73,14 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
-        public async Task WhenNotPasswordLogin_Throws()
+        public async Task WhenNotPasswordSignIn_Throws()
         {
-            var uniqueData = UNIQUE_PREFIX + nameof(WhenNotPasswordLogin_Throws);
+            var uniqueData = UNIQUE_PREFIX + nameof(WhenNotPasswordSignIn_Throws);
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var userAreaCode = UserAreaWithoutPasswordLogin.Code;
+            var userAreaCode = UserAreaWithoutPasswordSignIn.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
 
             var command = new AddUserWithTemporaryPasswordCommand()
@@ -94,7 +94,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Awaiting(r => r.ExecuteCommandAsync(command))
                 .Should()
                 .ThrowAsync<InvalidOperationException>()
-                .WithMessage("*must*support*password*logins*");
+                .WithMessage("*must*support*password*sign in*");
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var siteUrlResolver = app.Services.GetRequiredService<ISiteUrlResolver>();
-            var loginUrl = siteUrlResolver.MakeAbsolute(app.SeededEntities.TestUserArea1.Definition.LoginPath);
+            var signInUrl = siteUrlResolver.MakeAbsolute(app.SeededEntities.TestUserArea1.Definition.SignInPath);
 
             var command = new AddUserWithTemporaryPasswordCommand()
             {
@@ -131,7 +131,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     "Test Site",
                     "username is: " + command.Email,
                     "password is: " + password,
-                    loginUrl
+                    signInUrl
                 )
                 .Should().Be(1);
         }

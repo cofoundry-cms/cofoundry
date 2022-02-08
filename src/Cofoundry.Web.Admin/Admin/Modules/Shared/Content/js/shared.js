@@ -8264,70 +8264,6 @@ function (
 
     return service;
 }]);
-angular.module('cms.shared').directive('cmsButton', [
-    'shared.internalModulePath',
-function (
-    modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/Button.html',
-        scope: {
-            text: '@cmsText'
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonIcon', [
-    'shared.internalModulePath',
-    function (modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: false,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonIcon.html',
-        scope: {
-            title: '@cmsTitle',
-            icon: '@cmsIcon',
-            href: '@cmsHref',
-            external: '@cmsExternal'
-        },
-        link: function (scope, el) {
-            if (scope.icon) {
-                scope.iconCls = 'fa-' + scope.icon;
-            }
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonLink', [
-    'shared.internalModulePath',
-    function (modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonLink.html',
-        scope: {
-            text: '@cmsText',
-            href: '@cmsHref'
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonSubmit', [
-    'shared.internalModulePath',
-function (
-    modulePath
-) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonSubmit.html',
-        scope: {
-            text: '@cmsText'
-        }
-    };
-}]);
 angular.module('cms.shared').controller('AddCustomEntityDialogController', [
     '$scope',
     '$location',
@@ -9228,6 +9164,70 @@ function (
 
     function Controller() {
     }
+}]);
+angular.module('cms.shared').directive('cmsButton', [
+    'shared.internalModulePath',
+function (
+    modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/Button.html',
+        scope: {
+            text: '@cmsText'
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonIcon', [
+    'shared.internalModulePath',
+    function (modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: false,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonIcon.html',
+        scope: {
+            title: '@cmsTitle',
+            icon: '@cmsIcon',
+            href: '@cmsHref',
+            external: '@cmsExternal'
+        },
+        link: function (scope, el) {
+            if (scope.icon) {
+                scope.iconCls = 'fa-' + scope.icon;
+            }
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonLink', [
+    'shared.internalModulePath',
+    function (modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonLink.html',
+        scope: {
+            text: '@cmsText',
+            href: '@cmsHref'
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonSubmit', [
+    'shared.internalModulePath',
+function (
+    modulePath
+) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonSubmit.html',
+        scope: {
+            text: '@cmsText'
+        }
+    };
 }]);
 angular.module('cms.shared').directive('cmsFormFieldDirectorySelector', [
     '_',
@@ -10352,8 +10352,8 @@ function (
             return command;
         });
 
-        if (!vm.command.redirectoToLogin) {
-            vm.command.userAreaCodeForLoginRedirect = null;
+        if (!vm.command.redirectoToSignIn) {
+            vm.command.userAreaCodeForSignInRedirect = null;
         }
 
         setLoadingOn(vm.saveLoadState);
@@ -10458,12 +10458,12 @@ function (
                 
                 _.each(vm.accessRuleSet.inheritedAccessRules, function (inheritedAccessRuleSet) {
                     inheritedAccessRuleSet.violationAction = _.findWhere(vm.violationActions, { id: inheritedAccessRuleSet.violationAction });
-                    if (inheritedAccessRuleSet.userAreaForLoginRedirect) {
-                        inheritedAccessRuleSet.loginRedirect = 'Yes';
-                        inheritedAccessRuleSet.loginRedirectDescription = 'If the user is not logged in, then they will be redirected to the login page associated with the ' + inheritedAccessRuleSet.userAreaForLoginRedirect.name + ' user area.';
+                    if (inheritedAccessRuleSet.userAreaForSignInRedirect) {
+                        inheritedAccessRuleSet.signInRedirect = 'Yes';
+                        inheritedAccessRuleSet.signInRedirectDescription = 'If the user is not signed in, then they will be redirected to the sign in page associated with the ' + inheritedAccessRuleSet.userAreaForSignInRedirect.name + ' user area.';
                     } else {
-                        inheritedAccessRuleSet.loginRedirect = 'No';
-                        inheritedAccessRuleSet.loginRedirectDescription = 'No login redirection, the default action will trigger instead.';
+                        inheritedAccessRuleSet.signInRedirect = 'No';
+                        inheritedAccessRuleSet.signInRedirectDescription = 'No sign in redirection, the default action will trigger instead.';
                     }
 
                     _.each(inheritedAccessRuleSet.accessRules, function(rule) {
@@ -10481,13 +10481,13 @@ function (
 
         var command = _.pick(accessRuleSet,
             options.entityIdPrefix + 'Id',
-            'userAreaCodeForLoginRedirect',
+            'userAreaCodeForSignInRedirect',
             'violationAction'
         );
         
-        if (accessRuleSet.userAreaForLoginRedirect) {
-            command.userAreaCodeForLoginRedirect = accessRuleSet.userAreaForLoginRedirect.userAreaCode;
-            command.redirectoToLogin = true;
+        if (accessRuleSet.userAreaForSignInRedirect) {
+            command.userAreaCodeForSignInRedirect = accessRuleSet.userAreaForSignInRedirect.userAreaCode;
+            command.redirectoToSignIn = true;
         }
 
         return command;
@@ -10503,17 +10503,17 @@ function (
 
         if (!vm.userAreasInRules.length) {
             // all user areas have been removed from the list
-            vm.command.redirectoToLogin = false;
-            vm.command.userAreaCodeForLoginRedirect = null;
-        } else if (!_.find(vm.userAreasInRules, function(userArea) { return userArea.userAreaCode === vm.command.userAreaCodeForLoginRedirect; })) {
+            vm.command.redirectoToSignIn = false;
+            vm.command.userAreaCodeForSignInRedirect = null;
+        } else if (!_.find(vm.userAreasInRules, function(userArea) { return userArea.userAreaCode === vm.command.userAreaCodeForSignInRedirect; })) {
             // the selected user area has been removed from the list
-            vm.command.redirectoToLogin = false;
-            vm.command.userAreaCodeForLoginRedirect = null;
+            vm.command.redirectoToSignIn = false;
+            vm.command.userAreaCodeForSignInRedirect = null;
         }
         
-        if (!vm.command.userAreaCodeForLoginRedirect && vm.userAreasInRules.length) {
+        if (!vm.command.userAreaCodeForSignInRedirect && vm.userAreasInRules.length) {
             // set a default selection in-case the list is hidden
-            vm.command.userAreaCodeForLoginRedirect = vm.userAreasInRules[0].userAreaCode;
+            vm.command.userAreaCodeForSignInRedirect = vm.userAreasInRules[0].userAreaCode;
         } 
     }
 

@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
-    public class LogFailedLoginAttemptCommand : ICommand
+    public class LogFailedAuthenticationAttemptCommand : ICommand
     {
-        public LogFailedLoginAttemptCommand() { }
+        public LogFailedAuthenticationAttemptCommand() { }
 
-        public LogFailedLoginAttemptCommand(string userAreaCode, string username)
+        public LogFailedAuthenticationAttemptCommand(string userAreaCode, string username)
         {
             Username = username;
             UserAreaCode = userAreaCode;
@@ -15,13 +15,13 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area 
-        /// attempting to be logged in to.
+        /// attempting to be authenticated.
         /// </summary>
         [Required]
         public string UserAreaCode { get; set; }
 
         /// <summary>
-        /// The username used in the login attempt. This is expected to be in a 
+        /// The username used in the authentication attempt. This is expected to be in a 
         /// "uniquified" format, as this should have been already processed whenever 
         /// this needs to be called.
         /// </summary>

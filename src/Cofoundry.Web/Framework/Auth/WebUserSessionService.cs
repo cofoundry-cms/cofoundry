@@ -11,7 +11,7 @@ namespace Cofoundry.Web.Internal
 {
     /// <summary>
     /// Implementation of <see cref="IUserSessionService"/> that uses the ASP.NET
-    /// auth mechanisms to persit a login session.
+    /// auth mechanisms to persit a user session.
     /// </summary>
     /// <inheritdoc/>
     public class WebUserSessionService : IUserSessionService
@@ -82,13 +82,13 @@ namespace Cofoundry.Web.Internal
             if (userId.HasValue)
             {
                 // cache the auth by logging into to the in-memory service
-                await _inMemoryUserSessionService.LogUserInAsync(userAreaCode, userId.Value, true);
+                await _inMemoryUserSessionService.SignInAsync(userAreaCode, userId.Value, true);
             }
 
             return userId;
         }
 
-        public async Task LogUserInAsync(string userAreaCode, int userId, bool rememberUser)
+        public async Task SignInAsync(string userAreaCode, int userId, bool rememberUser)
         {
             if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
             if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
@@ -107,25 +107,25 @@ namespace Cofoundry.Web.Internal
                 await _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal);
             }
 
-            await _inMemoryUserSessionService.LogUserInAsync(userAreaCode, userId, rememberUser);
+            await _inMemoryUserSessionService.SignInAsync(userAreaCode, userId, rememberUser);
         }
 
-        public async Task LogUserOutAsync(string userAreaCode)
+        public async Task SignOutAsync(string userAreaCode)
         {
             if (userAreaCode == null)
             {
                 throw new ArgumentNullException(nameof(userAreaCode));
             }
 
-            await _inMemoryUserSessionService.LogUserOutAsync(userAreaCode);
+            await _inMemoryUserSessionService.SignOutAsync(userAreaCode);
 
             var scheme = AuthenticationSchemeNames.UserArea(userAreaCode);
             await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
         }
 
-        public async Task LogUserOutOfAllUserAreasAsync()
+        public async Task SignOutOfAllUserAreasAsync()
         {
-            await _inMemoryUserSessionService.LogUserOutOfAllUserAreasAsync();
+            await _inMemoryUserSessionService.SignOutOfAllUserAreasAsync();
 
             foreach (var customEntityDefinition in _userAreaDefinitionRepository.GetAll())
             {
@@ -147,7 +147,7 @@ namespace Cofoundry.Web.Internal
             await _inMemoryUserSessionService.SetAmbientUserAreaAsync(userAreaCode);
         }
 
-        public async Task RefreshLoginAsync(string userAreaCode, int userId)
+        public async Task RefreshAsync(string userAreaCode, int userId)
         {
             if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
             if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
@@ -155,7 +155,7 @@ namespace Cofoundry.Web.Internal
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
             var loggedInUser = await GetUserIdByUserAreaCodeAsync(userAreaCode);
 
-            // Only refresh the login if the user is currently logged in
+            // Only refresh the sign in if the user is currently logged in
             if (loggedInUser != userId) return;
 
             var scheme = AuthenticationSchemeNames.UserArea(userArea.UserAreaCode);
@@ -163,7 +163,7 @@ namespace Cofoundry.Web.Internal
             var auth = await _httpContextAccessor.HttpContext.AuthenticateAsync(scheme);
             var isPeristent = auth?.Properties?.IsPersistent ?? false;
 
-            await LogUserInAsync(userAreaCode, userId, isPeristent);
+            await SignInAsync(userAreaCode, userId, isPeristent);
         }
 
         private async Task<ClaimsPrincipal> CreateUserPrincipal(int userId, IUserAreaDefinition userArea)

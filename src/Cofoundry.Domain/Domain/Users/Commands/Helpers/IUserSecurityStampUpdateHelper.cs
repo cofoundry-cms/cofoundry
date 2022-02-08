@@ -18,7 +18,7 @@ namespace Cofoundry.Domain.Internal
 
         /// <summary>
         /// Helper to fire off the <see cref="UserSecurityStampUpdatedMessage"/>
-        /// and refresh the user claims principal by calling <see cref="IUserSessionService.RefreshLoginAsync"/>
+        /// and refresh the user claims principal by calling <see cref="IUserSessionService.RefreshAsync"/>
         /// </summary>
         /// <param name="user">The updated user record.</param>
         Task OnTransactionCompleteAsync(User user);

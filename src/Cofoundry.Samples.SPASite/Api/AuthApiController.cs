@@ -49,13 +49,13 @@ namespace Cofoundry.Samples.SPASite
         }
 
         [HttpPost("register")]
-        public Task<JsonResult> Register([FromBody] RegisterMemberAndLogInCommand command)
+        public Task<JsonResult> Register([FromBody] RegisterMemberAndSignInCommand command)
         {
             return _apiResponseHelper.RunCommandAsync(command);
         }
 
         [HttpPost("login")]
-        public Task<JsonResult> Login([FromBody] LogMemberInCommand command)
+        public Task<JsonResult> Login([FromBody] SignInMemberCommand command)
         {
             return _apiResponseHelper.RunCommandAsync(command);
         }
@@ -63,7 +63,7 @@ namespace Cofoundry.Samples.SPASite
         [HttpPost("sign-out")]
         public Task<JsonResult> SignOut()
         {
-            var command = new LogMemberOutCommand();
+            var command = new SignOutMemberCommand();
             return _apiResponseHelper.RunCommandAsync(command);
         }
     }

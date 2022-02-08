@@ -53,7 +53,7 @@ namespace Cofoundry.Domain.Internal
             return _userIdCache.GetValueOrDefault(userAreaCode);
         }
         
-        public Task LogUserInAsync(string userAreaCode, int userId, bool rememberUser)
+        public Task SignInAsync(string userAreaCode, int userId, bool rememberUser)
         {
             if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
             if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
@@ -75,7 +75,7 @@ namespace Cofoundry.Domain.Internal
             return Task.CompletedTask;
         }
 
-        public Task LogUserOutAsync(string userAreaCode)
+        public Task SignOutAsync(string userAreaCode)
         {
             if (userAreaCode == null)
             {
@@ -115,7 +115,7 @@ namespace Cofoundry.Domain.Internal
         /// <summary>
         /// Logs the user out of all user areas.
         /// </summary>
-        public Task LogUserOutOfAllUserAreasAsync()
+        public Task SignOutOfAllUserAreasAsync()
         {
             lock (_lock)
             {
@@ -155,7 +155,7 @@ namespace Cofoundry.Domain.Internal
             return _ambientUserAreaCode == userArea.UserAreaCode;
         }
 
-        public Task RefreshLoginAsync(string userAreaCode, int userId)
+        public Task RefreshAsync(string userAreaCode, int userId)
         {
             // No-op: nothing to refresh
             return Task.CompletedTask;

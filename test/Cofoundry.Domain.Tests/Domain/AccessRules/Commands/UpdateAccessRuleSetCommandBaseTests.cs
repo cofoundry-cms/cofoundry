@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Tests.Domain.AccessRules
         {
             var command = new UpdatePageAccessRuleSetCommand();
             command.PageId = 1;
-            command.UserAreaCodeForLoginRedirect = CofoundryAdminUserArea.Code;
+            command.UserAreaCodeForSignInRedirect = CofoundryAdminUserArea.Code;
             command.AccessRules
                 .AddNew("TST")
                 .AddNew(CofoundryAdminUserArea.Code);
@@ -47,7 +47,7 @@ namespace Cofoundry.Domain.Tests.Domain.AccessRules
             using (new AssertionScope())
             {
                 errors.Should().HaveCount(2);
-                var error = errors.Single(e => e.Properties.Contains(nameof(command.UserAreaCodeForLoginRedirect)));
+                var error = errors.Single(e => e.Properties.Contains(nameof(command.UserAreaCodeForSignInRedirect)));
                 error.Should().NotBeNull();
                 error.Properties.Should().HaveCount(1);
                 error.Message.Should().Match("*redirect*admin user area*");
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain.Tests.Domain.AccessRules
         {
             var command = new UpdatePageAccessRuleSetCommand();
             command.PageId = 1;
-            command.UserAreaCodeForLoginRedirect = "NON";
+            command.UserAreaCodeForSignInRedirect = "NON";
             command.AccessRules.AddNew("TST");
 
             var validationService = new ModelValidationService();
@@ -68,10 +68,10 @@ namespace Cofoundry.Domain.Tests.Domain.AccessRules
             using (new AssertionScope())
             {
                 errors.Should().HaveCount(1);
-                var error = errors.Single(e => e.Properties.Contains(nameof(command.UserAreaCodeForLoginRedirect)));
+                var error = errors.Single(e => e.Properties.Contains(nameof(command.UserAreaCodeForSignInRedirect)));
                 error.Should().NotBeNull();
                 error.Properties.Should().HaveCount(1);
-                error.Message.Should().Match("*redirect*login*access rules*");
+                error.Message.Should().Match("*redirect*sign in*access rules*");
             }
         }
 

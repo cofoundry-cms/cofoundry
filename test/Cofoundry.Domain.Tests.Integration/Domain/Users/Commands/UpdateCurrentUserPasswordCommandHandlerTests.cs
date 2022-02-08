@@ -55,8 +55,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
                 app.Mocks.MockDateTime(updateDate);
 
-                var loginService = app.Services.GetService<ILoginService>();
-                await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, userId, false);
+                var signInService = app.Services.GetService<IUserSignInService>();
+                await signInService.SignInAuthenticatedUserAsync(TestUserArea1.Code, userId, false);
 
                 var repository = app.Services.GetService<IDomainRepository>();
                 await repository.ExecuteCommandAsync(command);
@@ -113,8 +113,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
 
             var repository = app.Services.GetService<IDomainRepository>();
-            var loginService = app.Services.GetService<ILoginService>();
-            await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, userId, false);
+            var signInService = app.Services.GetService<IUserSignInService>();
+            await signInService.SignInAuthenticatedUserAsync(TestUserArea1.Code, userId, false);
 
             await repository
                 .Awaiting(r => r.ExecuteCommandAsync(command))
@@ -124,7 +124,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
-        public async Task WhenNotLoggedIn_Throws()
+        public async Task WhenNotSignedIn_Throws()
         {
             var command = new UpdateCurrentUserPasswordCommand()
             {
@@ -172,9 +172,9 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
 
-            await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, userId, false);
+            await signInService.SignInAuthenticatedUserAsync(TestUserArea1.Code, userId, false);
             await contentRepository
                 .Users()
                 .Current()
@@ -204,9 +204,9 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
 
-            await loginService.LogAuthenticatedUserInAsync(TestUserArea1.Code, userId, false);
+            await signInService.SignInAuthenticatedUserAsync(TestUserArea1.Code, userId, false);
             await contentRepository
                 .Users()
                 .Current()
@@ -218,7 +218,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var siteUrlResolver = app.Services.GetRequiredService<ISiteUrlResolver>();
-            var loginUrl = siteUrlResolver.MakeAbsolute(app.SeededEntities.TestUserArea1.Definition.LoginPath);
+            var signInUrl = siteUrlResolver.MakeAbsolute(app.SeededEntities.TestUserArea1.Definition.SignInPath);
 
             var user = await dbContext
                 .Users
@@ -233,7 +233,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     "Test Site",
                     "has been changed",
                     "username for this account is " + user.Username,
-                    loginUrl
+                    signInUrl
                 )
                 .Should().Be(1);
         }

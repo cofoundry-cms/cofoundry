@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
             AdminSettings adminSetting
             )
         {
-            LoginPath = "/" + adminSetting.DirectoryName + "/auth/login";
+            SignInPath = "/" + adminSetting.DirectoryName + "/auth/login";
             _adminSetting = adminSetting;
         }
 
@@ -29,11 +29,11 @@ namespace Cofoundry.Domain
 
         public string Name { get; } = "Cofoundry";
 
-        public bool AllowPasswordLogin { get; } = true;
+        public bool AllowPasswordSignIn { get; } = true;
 
         public bool UseEmailAsUsername { get; } = true;
 
-        public string LoginPath { get; private set; }
+        public string SignInPath { get; private set; }
 
         /// <summary>
         /// Although this is set to false, it is the fall-back schema if no default schema is set.

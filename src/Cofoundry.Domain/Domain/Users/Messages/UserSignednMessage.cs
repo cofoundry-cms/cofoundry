@@ -1,9 +1,9 @@
 ﻿namespace Cofoundry.Domain
 {
     /// <summary>
-    /// This message is published when a user successfully logs in.
+    /// This message is published when a user successfully signs in.
     /// </summary>
-    public class UserLoggedInMessage
+    public class UserSignednMessage
     {
         /// <summary>
         /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area

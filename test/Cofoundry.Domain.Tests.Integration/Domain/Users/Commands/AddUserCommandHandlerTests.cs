@@ -27,9 +27,9 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
-        public async Task WhenPasswordLogin_CanAddWithMinimalData()
+        public async Task WhenPasswordSignIn_CanAddWithMinimalData()
         {
-            var uniqueData = UNIQUE_PREFIX + "PWLogin_AddMinData";
+            var uniqueData = UNIQUE_PREFIX + "PWSignIn_AddMinData";
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
@@ -69,11 +69,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.IsDeleted.Should().BeFalse();
                 user.AccountVerifiedDate.Should().BeNull();
                 user.IsSystemAccount.Should().BeFalse();
-                user.LastLoginDate.Should().BeNull();
+                user.LastSignInDate.Should().BeNull();
                 user.LastPasswordChangeDate.Should().NotBeDefault();
                 user.Password.Should().NotBeNullOrWhiteSpace();
                 user.PasswordHashVersion.Should().BePositive();
-                user.PreviousLoginDate.Should().NotBeDefault();
+                user.PreviousSignInDate.Should().NotBeDefault();
                 user.RequirePasswordChange.Should().BeFalse();
                 user.Role.RoleCode.Should().Be(command.RoleCode);
                 user.RoleId.Should().BePositive();
@@ -199,9 +199,9 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
-        public async Task WithPasswordLogin_PasswordRequired()
+        public async Task WithPasswordSignIn_PasswordRequired()
         {
-            var uniqueData = UNIQUE_PREFIX + nameof(WithPasswordLogin_PasswordRequired);
+            var uniqueData = UNIQUE_PREFIX + nameof(WithPasswordSignIn_PasswordRequired);
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
@@ -406,14 +406,14 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
-        public async Task WhenNotPasswordLogin_EmailNotRequired()
+        public async Task WhenNotPasswordSignIn_EmailNotRequired()
         {
-            var uniqueData = UNIQUE_PREFIX + "NotPWLogin_EmailNotReq";
+            var uniqueData = UNIQUE_PREFIX + "NotPWSignIn_EmailNotReq";
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var userAreaCode = UserAreaWithoutPasswordLogin.Code;
+            var userAreaCode = UserAreaWithoutPasswordSignIn.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
 
             var command = new AddUserCommand()

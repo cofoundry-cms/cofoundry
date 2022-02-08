@@ -8,11 +8,11 @@
 
         public string Name => "Test Area 2";
 
-        public bool AllowPasswordLogin => true;
+        public bool AllowPasswordSignIn => true;
 
         public bool UseEmailAsUsername => true;
 
-        public string LoginPath => "/area-2/login";
+        public string SignInPath => "/area-2/sign-in";
 
         public bool IsDefaultAuthScheme => false;
     }

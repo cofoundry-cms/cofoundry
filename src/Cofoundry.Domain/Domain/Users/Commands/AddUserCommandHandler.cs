@@ -120,15 +120,15 @@ namespace Cofoundry.Domain.Internal
         {
             var isPasswordEmpty = string.IsNullOrWhiteSpace(command.Password);
 
-            if (userArea.AllowPasswordLogin && isPasswordEmpty)
+            if (userArea.AllowPasswordSignIn && isPasswordEmpty)
             {
                 throw ValidationErrorException.CreateWithProperties("Password field is required", nameof(command.Password));
             }
-            else if (!userArea.AllowPasswordLogin && !isPasswordEmpty)
+            else if (!userArea.AllowPasswordSignIn && !isPasswordEmpty)
             {
                 throw ValidationErrorException.CreateWithProperties("Password field should be empty because the specified user area does not use passwords", nameof(command.Password));
             }
-            else if (!userArea.AllowPasswordLogin)
+            else if (!userArea.AllowPasswordSignIn)
             {
                 return;
             }
@@ -143,7 +143,7 @@ namespace Cofoundry.Domain.Internal
 
         private void SetPassword(User user, AddUserCommand command, IUserAreaDefinition userArea)
         {
-            if (userArea.AllowPasswordLogin)
+            if (userArea.AllowPasswordSignIn)
             {
                 var hashResult = _passwordCryptographyService.CreateHash(command.Password);
                 user.Password = hashResult.Hash;

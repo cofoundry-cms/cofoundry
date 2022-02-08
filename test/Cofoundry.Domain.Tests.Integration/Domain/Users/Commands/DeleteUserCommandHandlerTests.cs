@@ -75,8 +75,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     UserAreaCode = CofoundryAdminUserArea.Code
                 });
 
-            var loginService = app.Services.GetService<ILoginService>();
-            await loginService.LogAuthenticatedUserInAsync(CofoundryAdminUserArea.Code, currentUserId, false);
+            var signInService = app.Services.GetService<IUserSignInService>();
+            await signInService.SignInAuthenticatedUserAsync(CofoundryAdminUserArea.Code, currentUserId, false);
 
             await contentRepository
                 .Awaiting(r => r.Users().DeleteAsync(userToDeleteId))

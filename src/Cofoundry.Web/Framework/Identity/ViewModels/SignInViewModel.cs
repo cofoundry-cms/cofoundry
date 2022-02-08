@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Web.Identity
 {
     /// <summary>
-    /// A default implementation of ILoginViewModel for
+    /// A default implementation of <see cref="ISignInViewModel"/> for
     /// user accounts that use email addresses as usernames.
     /// </summary>
-    public class LoginViewModel : ILoginViewModel
+    public class SignInViewModel : ISignInViewModel
     {
         /// <summary>
         /// A Cofoundry username can be an email address or a text string 

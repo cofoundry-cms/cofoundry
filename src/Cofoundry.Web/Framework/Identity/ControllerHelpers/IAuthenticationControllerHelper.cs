@@ -6,16 +6,16 @@ namespace Cofoundry.Web.Identity
 {
     /// <summary>
     /// A helper class with shared functionality between controllers
-    /// that manage user login.
+    /// that manage user sign in.
     /// </summary>
     public interface IAuthenticationControllerHelper<TUserArea>
         where TUserArea : IUserAreaDefinition
     {
 
         /// <summary>
-        /// Attempts to authenticate the login request, returning the result. This
-        /// does not log the user in and can be used instead of LogUserInAsync when 
-        /// you want more control over the login workflow. 
+        /// Attempts to authenticate the sign in request, returning the result. This
+        /// does not log the user in and can be used instead of SignInUserAsync when 
+        /// you want more control over the sign in workflow. 
         /// 
         /// ModelState is first checked to be valid before checking the auth data against 
         /// the database. An auth errors are added to the ModelState.
@@ -26,23 +26,23 @@ namespace Cofoundry.Web.Identity
         /// </param>
         /// <param name="viewModel">The view-model data posted to the action.</param>
         /// <returns>The result of the authentication check, this should never be null.</returns>
-        Task<UserCredentialsValidationResult> AuthenticateAsync(Controller controller, ILoginViewModel viewModel);
+        Task<UserCredentialsValidationResult> AuthenticateAsync(Controller controller, ISignInViewModel viewModel);
 
         /// <summary>
-        /// Logs in a user that has already been authenticated, typically
+        /// Signs in a user that has already been authenticated, typically
         /// by the AuthenticateAsync method.
         /// </summary>
         /// <param name="controller">
         /// This method is intended to be called from an MVC controller and this
         /// should be the controller instance.
         /// </param>
-        /// <param name="user">A UserLoginInfo object that has been returned from a sucessful authentication request.</param>
+        /// <param name="user">A <see cref="UserSignInInfo"/> object that has been returned from a sucessful authentication request.</param>
         /// <param name="rememberUser">
-        /// True if the user should stay logged in perminantely; false
-        /// if the user should only stay logged in for the duration of
+        /// <see langword="true"/> if the user should stay signed in perminantely; otherwise <see langword="false"/>.
+        /// if the user should only stay signed in for the duration of
         /// the browser session.
         /// </param>
-        Task LogUserInAsync(Controller controller, UserLoginInfo user, bool rememberUser);
+        Task SignInUserAsync(Controller controller, UserSignInInfo user, bool rememberUser);
 
         /// <summary>
         /// Retreives the ASP.NET MVC standard "ReturnUrl" query parameter and
@@ -56,8 +56,8 @@ namespace Cofoundry.Web.Identity
         string GetAndValidateReturnUrl(Controller controller);
 
         /// <summary>
-        /// Used to change a users password when it is required before login. Once
-        /// completed the user should be redirected back to login to re-authenticate.
+        /// Used to change a users password when it is required before sign in. Once
+        /// completed the user should be redirected back to sign in to re-authenticate.
         /// </summary>
         /// <param name="controller">
         /// This method is intended to be called from an MVC controller and this
@@ -72,7 +72,7 @@ namespace Cofoundry.Web.Identity
         /// <summary>
         /// Signs the user out of the user area.
         /// </summary>
-        Task LogoutAsync();
+        Task SignOutAsync();
 
         /// <summary>
         /// Checks the ModelState is valid and then initiates

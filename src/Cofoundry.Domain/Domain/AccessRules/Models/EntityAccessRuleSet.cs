@@ -35,12 +35,12 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// This optional field indicates that unathenticated users should be
-        /// redirected to the login page associated with the specified user 
+        /// redirected to the sign in page associated with the specified user 
         /// area. In rare circumstances <see cref="AccessRules"/> may contain
         /// rules for multiple user area, therefore this field helps to 
         /// distinguish which user area should be used for the redirection.
         /// </summary>
-        public string UserAreaCodeForLoginRedirect { get; set; }
+        public string UserAreaCodeForSignInRedirect { get; set; }
 
         /// <summary>
         /// Determines if the <paramref name="user"/> is permitted to
@@ -75,11 +75,11 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Determines if this rule set requires users that unauthenticated users are
-        /// redirected to a login page.
+        /// redirected to a sign in page.
         /// </summary>
         public bool ShouldTryRedirect()
         {
-            return !string.IsNullOrEmpty(UserAreaCodeForLoginRedirect);
+            return !string.IsNullOrEmpty(UserAreaCodeForSignInRedirect);
         }
     }
 }

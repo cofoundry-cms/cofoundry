@@ -36,17 +36,17 @@ namespace Cofoundry.Domain
                 );
 
             /// <summary>
-            /// Too many failed login attempts have occured either for the
+            /// Too many failed authentication attempts have occured either for the
             /// username or IP address.
             /// </summary>
             public static readonly ValidationErrorTemplate TooManyFailedAttempts = new ValidationErrorTemplate(
                 AddAuthenticationNamespace("max-attempts-exceeded"),
-                "Too many failed login attempts have been detected, please try again later."
+                "Too many failed authentication attempts have been detected, please try again later."
                 );
 
             /// <summary>
             /// The error was not specified. This can be used when an error
-            /// is picked up outside of the core login function occurs e.g.
+            /// is picked up outside of the core authentication operation e.g.
             /// in MVC if the ModelState is invalid and the result is returned
             /// before authentication is attempted.
             /// </summary>
@@ -56,7 +56,7 @@ namespace Cofoundry.Domain
                 );
 
             /// <summary>
-            /// The credentials are valid but a password change is required before login is permitted.
+            /// The credentials are valid but a password change is required before sign in is permitted.
             /// This error isn't expected to be shown to the user but is instead excpected to be intercepted 
             /// and handled in the UI.
             /// </summary>
@@ -68,7 +68,7 @@ namespace Cofoundry.Domain
 
             /// <summary>
             /// The credentials are valid but the acount has not been verified, and the user are is configured to
-            /// not allow logins for unverified users.
+            /// not allow sign ins for unverified users.
             /// </summary>
             public static readonly ValidationErrorTemplate AccountNotVerified = new ValidationErrorTemplate(
                 AddAuthenticationNamespace("account-not-verified"),
@@ -134,7 +134,7 @@ namespace Cofoundry.Domain
 
                 /// <summary>
                 /// The request has been invalidated, likely because the
-                /// password has already been updated, or a valid login
+                /// password has already been updated, or a valid sign in
                 /// has occured.
                 /// </summary>
                 public static readonly ValidationErrorTemplate Invalidated = new ValidationErrorTemplate(
@@ -236,7 +236,7 @@ namespace Cofoundry.Domain
 
                 /// <summary>
                 /// The request has been invalidated, likely because the
-                /// password has already been updated, or a valid login
+                /// password has already been updated, or a valid sign in
                 /// has occured.
                 /// </summary>
                 public static readonly ValidationErrorTemplate Invalidated = new ValidationErrorTemplate(

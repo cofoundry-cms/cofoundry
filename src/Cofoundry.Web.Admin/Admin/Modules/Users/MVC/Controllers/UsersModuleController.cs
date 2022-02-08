@@ -17,7 +17,7 @@ namespace Cofoundry.Web.Admin
             {
                 UserAreaCode = userArea.UserAreaCode,
                 Name = userArea.Name,
-                AllowPasswordLogin = userArea.AllowPasswordLogin,
+                AllowPasswordSignIn = userArea.AllowPasswordSignIn,
                 UseEmailAsUsername = userArea.UseEmailAsUsername
             };
 

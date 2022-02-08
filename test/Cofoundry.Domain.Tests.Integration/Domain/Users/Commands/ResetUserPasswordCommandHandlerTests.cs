@@ -81,7 +81,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var userId = await app.TestData.Users().AddAsync(uniqueData, c => c.Password = password1);
             var siteUrlResolver = app.Services.GetRequiredService<ISiteUrlResolver>();
-            var loginUrl = siteUrlResolver.MakeAbsolute(app.SeededEntities.TestUserArea1.Definition.LoginPath);
+            var signInUrl = siteUrlResolver.MakeAbsolute(app.SeededEntities.TestUserArea1.Definition.SignInPath);
 
             await contentRepository
                 .Users()
@@ -100,7 +100,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     "has reset your password",
                     "username is: " + user.Username,
                     "password is: " + password2,
-                    loginUrl
+                    signInUrl
                 )
                 .Should().Be(1);
         }

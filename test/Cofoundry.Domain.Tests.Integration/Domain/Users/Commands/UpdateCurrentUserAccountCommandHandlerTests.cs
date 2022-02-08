@@ -33,7 +33,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userArea = app.SeededEntities.TestUserArea1;
 
             var addCommand = new AddUserCommand()
@@ -57,7 +57,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .FilterById(userId)
                 .SingleOrDefaultAsync();
 
-            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea.UserAreaCode, userId, true);
 
             var updateCommand = new UpdateCurrentUserCommand()
             {
@@ -93,7 +93,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userArea = app.SeededEntities.TestUserArea1;
 
             var addCommand = new AddUserCommand()
@@ -115,7 +115,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .FilterById(userId)
                 .SingleOrDefaultAsync();
 
-            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea.UserAreaCode, userId, true);
 
             var newEmailDomain = $"{UNIQUE_PREFIX}2.example.com";
             var newEmailLocal = "TAFKAP@";
@@ -161,7 +161,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
 
@@ -185,7 +185,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .FilterById(userId)
                 .SingleOrDefaultAsync();
 
-            await loginService.LogAuthenticatedUserInAsync(userAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(userAreaCode, userId, true);
 
             var updateCommand = new UpdateCurrentUserCommand()
             {
@@ -221,8 +221,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
-            var userAreaCode = UserAreaWithoutPasswordLogin.Code;
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
+            var userAreaCode = UserAreaWithoutPasswordSignIn.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
 
             var addCommand = new AddUserCommand()
@@ -240,7 +240,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .AddAsync(addCommand);
 
-            await loginService.LogAuthenticatedUserInAsync(userAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(userAreaCode, userId, true);
 
             await contentRepository
                 .Users()
@@ -274,7 +274,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         {
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userArea = app.SeededEntities.TestUserArea1;
 
             await contentRepository
@@ -304,7 +304,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 Email = $"djones" + EMAIL_DOMAIN,
             };
 
-            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea.UserAreaCode, userId, true);
 
             await contentRepository
                 .Awaiting(r => r.Users().Current().UpdateAsync(updateCommand))
@@ -321,7 +321,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userArea = app.SeededEntities.TestUserArea1;
 
             await contentRepository
@@ -351,7 +351,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 Email = uniqueData + EMAIL_DOMAIN,
             };
 
-            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea.UserAreaCode, userId, true);
 
             await contentRepository
                 .Awaiting(r => r.Users().Current().UpdateAsync(updateCommand))
@@ -380,7 +380,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var addCommand = app.TestData.Users().CreateAddCommand(uniqueData);
 
             var userId = await contentRepository
@@ -388,7 +388,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .AddAsync(addCommand);
 
-            await loginService.LogAuthenticatedUserInAsync(addCommand.UserAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(addCommand.UserAreaCode, userId, true);
 
             var updateCommand = new UpdateCurrentUserCommand()
             {
@@ -429,7 +429,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var addCommand = app.TestData.Users().CreateAddCommand(uniqueData);
 
             var userId = await contentRepository
@@ -437,7 +437,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .AddAsync(addCommand);
 
-            await loginService.LogAuthenticatedUserInAsync(addCommand.UserAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(addCommand.UserAreaCode, userId, true);
 
             var updateCommand = new UpdateCurrentUserCommand()
             {
@@ -478,8 +478,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepository();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
-            var userAreaCode = UserAreaWithoutPasswordLogin.Code;
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
+            var userAreaCode = UserAreaWithoutPasswordSignIn.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
             var addCommand = new AddUserCommand()
             {
@@ -493,7 +493,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .AddAsync(addCommand);
 
-            await loginService.LogAuthenticatedUserInAsync(addCommand.UserAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(addCommand.UserAreaCode, userId, true);
 
             var updateCommand = new UpdateCurrentUserCommand()
             {

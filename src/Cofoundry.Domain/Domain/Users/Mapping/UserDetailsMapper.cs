@@ -47,7 +47,7 @@ namespace Cofoundry.Domain.Internal
                 LastName = dbUser.LastName,
                 UserId = dbUser.UserId,
                 Username = dbUser.Username,
-                LastLoginDate = DbDateTimeMapper.AsUtc(dbUser.LastLoginDate),
+                LastSignInDate = DbDateTimeMapper.AsUtc(dbUser.LastSignInDate),
                 LastPasswordChangeDate = DbDateTimeMapper.AsUtc(dbUser.LastPasswordChangeDate),
                 RequirePasswordChange = dbUser.RequirePasswordChange,
                 AccountVerifiedDate = dbUser.AccountVerifiedDate

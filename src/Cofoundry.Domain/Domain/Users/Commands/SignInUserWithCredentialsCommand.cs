@@ -1,21 +1,16 @@
 ﻿using Cofoundry.Domain.CQS;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Logs a user into the application for a specified user area
+    /// Signs a user into the application for a specified user area
     /// using username and password credentials. Checks for valid
     /// credentials and includes additional security checking such
-    /// as preventing excessive login attempts. Validation errors
+    /// as preventing excessive authentication attempts. Validation errors
     /// are thrown as ValidationExceptions.
     /// </summary>
-    public class LogUserInWithCredentialsCommand : ICommand
+    public class SignInUserWithCredentialsCommand : ICommand
     {
         /// <summary>
         /// The username may be an email address or text string depending

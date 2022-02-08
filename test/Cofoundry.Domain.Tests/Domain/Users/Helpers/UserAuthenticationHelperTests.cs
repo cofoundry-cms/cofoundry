@@ -66,7 +66,7 @@ namespace Cofoundry.Domain.Tests.Users.Helpers
         private IUserAreaDefinition CreateUserAreaDefinition(string code, bool allowPasswordLogin)
         {
             var userAreaDefinition = new Mock<IUserAreaDefinition>();
-            userAreaDefinition.SetupGet(o => o.AllowPasswordLogin).Returns(allowPasswordLogin);
+            userAreaDefinition.SetupGet(o => o.AllowPasswordSignIn).Returns(allowPasswordLogin);
             userAreaDefinition.SetupGet(o => o.UserAreaCode).Returns(code);
             userAreaDefinition.SetupGet(o => o.Name).Returns(code);
 

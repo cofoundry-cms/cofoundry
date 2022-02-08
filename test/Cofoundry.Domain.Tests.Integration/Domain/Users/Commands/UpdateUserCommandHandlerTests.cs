@@ -104,7 +104,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var userAreaCode = UserAreaWithoutPasswordLogin.Code;
+            var userAreaCode = UserAreaWithoutPasswordSignIn.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
 
             var addCommand = new AddUserCommand()
@@ -539,7 +539,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var userAreaCode = UserAreaWithoutPasswordLogin.Code;
+            var userAreaCode = UserAreaWithoutPasswordSignIn.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
             var addCommand = new AddUserCommand()
             {

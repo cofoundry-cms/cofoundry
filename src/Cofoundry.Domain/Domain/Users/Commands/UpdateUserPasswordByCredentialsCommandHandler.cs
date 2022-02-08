@@ -37,7 +37,7 @@ namespace Cofoundry.Domain.Internal
                 throw new Exception("UpdateUnauthenticatedUserPasswordCommand cannot be used when the user is already logged in.");
             }
 
-            var authResult = await GetUserLoginInfoAsync(command, executionContext);
+            var authResult = await GetUserSignInInfoAsync(command, executionContext);
             authResult.ThrowIfNotSuccess();
 
             var user = await GetUserAsync(authResult);
@@ -69,7 +69,7 @@ namespace Cofoundry.Domain.Internal
                 .Users
                 .AsNoTracking()
                 .IncludeForSummary()
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .FilterById(authResult.User.UserId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(user, authResult.User.UserId);
@@ -77,7 +77,7 @@ namespace Cofoundry.Domain.Internal
             return user;
         }
 
-        private Task<UserCredentialsValidationResult> GetUserLoginInfoAsync(
+        private Task<UserCredentialsValidationResult> GetUserSignInInfoAsync(
             UpdateUserPasswordByCredentialsCommand command,
             IExecutionContext executionContext
             )

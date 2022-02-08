@@ -50,7 +50,7 @@
                 <tr>
                     <th>Username</th>
                     <th>Role</th>
-                    <th>Last Logged In</th>
+                    <th>Last Signed In</th>
                     <th>Created</th>
                     <th cms-table-column-actions>Actions</th>
                 </tr>
@@ -68,8 +68,8 @@
                         <span ng-if="!vm.canRead">{{::user.role.title}}</span>
                     </td>
                     <td>
-                        <span ng-if="::!user.lastLoginDate">Never</span>
-                        <cms-time-ago cms-time="::user.lastLoginDate"></cms-time-ago>
+                        <span ng-if="::!user.lastSignInDate">Never</span>
+                        <cms-time-ago cms-time="::user.lastSignInDate"></cms-time-ago>
                     </td>
                     <td class="lowPriority">
                         <cms-table-cell-created-audit-data cms-audit-data="::user.auditData"></cms-table-cell-created-audit-data>

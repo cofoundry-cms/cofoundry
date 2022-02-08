@@ -40,9 +40,9 @@ namespace Cofoundry.Domain
 
         public void ValidateUserArea(IUserAreaDefinition userArea)
         {
-            if (!userArea.AllowPasswordLogin)
+            if (!userArea.AllowPasswordSignIn)
             {
-                throw new InvalidOperationException("Cannot update the password to account in a user area that does not allow password logins.");
+                throw new InvalidOperationException("Cannot update the password to account in a user area that does not allow password sign in.");
             }
         }
 

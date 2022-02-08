@@ -38,7 +38,7 @@ namespace Cofoundry.Samples.UserAreas
         /// the password field will be null and login will typically be via SSO or some 
         /// other method.
         /// </summary>
-        public bool AllowPasswordLogin => false;
+        public bool AllowPasswordSignIn => false;
 
         /// <summary>
         /// Indicates whether the user should login using thier email address as the username.
@@ -47,7 +47,7 @@ namespace Cofoundry.Samples.UserAreas
         /// </summary>
         public bool UseEmailAsUsername => false;
 
-        public string LoginPath => null;
+        public string SignInPath => null;
 
         /// <summary>
         /// Setting this to true means that this user area will be used as the default login

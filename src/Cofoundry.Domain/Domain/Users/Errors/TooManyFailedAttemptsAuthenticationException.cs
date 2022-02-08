@@ -3,9 +3,8 @@
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Exception thrown from the domain layer when a login 
-    /// attempt is invalid because too many invalid attempts
-    /// have been logged.
+    /// Exception thrown from the domain layer when an authentication
+    /// attempt is invalid because too many invalid attempts have been logged.
     /// </summary>
     public class TooManyFailedAttemptsAuthenticationException : ValidationErrorException
     {

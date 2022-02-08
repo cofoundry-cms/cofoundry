@@ -110,7 +110,7 @@ namespace Cofoundry.Domain.Internal
         {
             var user = _dbContext
                 .Users
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .FilterById(command.UserId)
                 .SingleOrDefaultAsync();
 

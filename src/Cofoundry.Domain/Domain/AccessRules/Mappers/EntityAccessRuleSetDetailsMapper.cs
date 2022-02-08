@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Internal
             if (!dbEntity.AccessRules.Any()) return;
 
             await MapAccessRules(dbEntity, result, executionContext, ruleMapper);
-            MapUserAreaForLoginRedirect(dbEntity, result);
+            MapUserAreaForSignInRedirect(dbEntity, result);
         }
 
         private async Task MapAccessRules<TAccessRule, TEntityAccessRuleSummary>(
@@ -93,26 +93,26 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private void MapUserAreaForLoginRedirect<TAccessRule, TEntityAccessRuleSummary>(
+        private void MapUserAreaForSignInRedirect<TAccessRule, TEntityAccessRuleSummary>(
             IEntityAccessRestrictable<TAccessRule> dbEntity, 
             IEntityAccessRuleSetDetails<TEntityAccessRuleSummary> result
             )
             where TAccessRule : IEntityAccessRule
             where TEntityAccessRuleSummary : IEntityAccessRuleSummary
         {
-            if (dbEntity.UserAreaCodeForLoginRedirect != null)
+            if (dbEntity.UserAreaCodeForSignInRedirect != null)
             {
-                result.UserAreaForLoginRedirect = result
+                result.UserAreaForSignInRedirect = result
                     .AccessRules
                     .Select(r => r.UserArea)
-                    .Where(a => a.UserAreaCode == dbEntity.UserAreaCodeForLoginRedirect)
+                    .Where(a => a.UserAreaCode == dbEntity.UserAreaCodeForSignInRedirect)
                     .FirstOrDefault();
 
-                if (result.UserAreaForLoginRedirect == null)
+                if (result.UserAreaForSignInRedirect == null)
                 {
                     _logger.LogWarning(
-                        "UserAreaCodeForLoginRedirect of value '{UserAreaCodeForLoginRedirect}' is expected to exist in the AccessRules collection, but could not be found.",
-                        dbEntity.UserAreaCodeForLoginRedirect
+                        "UserAreaCodeForSignInRedirect of value '{UserAreaCodeForSignInRedirect}' is expected to exist in the AccessRules collection, but could not be found.",
+                        dbEntity.UserAreaCodeForSignInRedirect
                         );
                 }
             }

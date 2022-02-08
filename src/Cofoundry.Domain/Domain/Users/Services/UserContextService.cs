@@ -99,7 +99,7 @@ namespace Cofoundry.Domain.Internal
                 .Include(u => u.Role)
                 .AsNoTracking()
                 .FilterById(userId)
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .SingleOrDefaultAsync();
 
             if (dbResult != null)
@@ -110,8 +110,8 @@ namespace Cofoundry.Domain.Internal
             {
                 cx = UserContext.Empty;
 
-                // User no longer valid, clear out all logins to be safe
-                await _userSessionService.LogUserOutOfAllUserAreasAsync();
+                // User no longer valid, clear out all sessions to be safe
+                await _userSessionService.SignOutOfAllUserAreasAsync();
             }
 
             return cx;

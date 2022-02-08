@@ -3,7 +3,7 @@
     /// <summary>
     /// Implementing this allows you to define a custom user area that is completely separate to 
     /// from other user areas, but can take advantage of the same tools for handling and managing 
-    /// users, registrations and logins. This is what the Cofoundry admin panel uses for logins,
+    /// users, registrations and sign in. This is what the Cofoundry admin panel uses for user accounts,
     /// other examples might be a client area or members only area of your website. The 
     /// username for a user must be unique for each user area, but the same username can exist
     /// in different user areas which allows a person to be a member of each user area. User areas
@@ -26,16 +26,16 @@
         string Name { get; }
 
         /// <summary>
-        /// Indicates if users in this area can login using a password. If this
+        /// Indicates if users in this area can sign in using a password. If this
         /// is <see langword="false"/> the password field will be <see langword="null"/> 
-        /// and login will typically be via SSO or some other method. If this is 
+        /// and sign in will typically be via SSO or some other method. If this is 
         /// <see langword="true"/> then the email field is required, because it is
         /// needed for account recovery.
         /// </summary>
-        bool AllowPasswordLogin { get; }
+        bool AllowPasswordSignIn { get; }
 
         /// <summary>
-        /// Indicates whether the user should login using thier email address
+        /// Indicates whether the user should sign in using thier email address
         /// as the username. Some SSO systems might provide only a username and not
         /// an email address so in this case the email address is allowed to be 
         /// <see langword="null"/>. 
@@ -43,13 +43,13 @@
         bool UseEmailAsUsername { get; }
 
         /// <summary>
-        /// The path to a login page to use when a user does not have permission to 
+        /// The path to a sign in page to use when a user does not have permission to 
         /// access a resource. The path to the denied resource is appended to the query
-        /// string of the <see cref="LoginPath"/> using the parameter name "ReturnUrl".
+        /// string of the <see cref="SignInPath"/> using the parameter name "ReturnUrl".
         /// If set to <see langword="null"/> then a 403 (Forbidden) error page will be 
-        /// returned instead of the loginredirect.
+        /// returned instead of the sign in redirect.
         /// </summary>
-        string LoginPath { get; }
+        string SignInPath { get; }
 
         /// <summary>
         /// Cofoundry creates an auth scheme for each user area. Use this property to set this

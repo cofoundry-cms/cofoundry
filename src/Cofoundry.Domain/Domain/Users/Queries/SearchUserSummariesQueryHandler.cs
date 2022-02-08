@@ -47,7 +47,7 @@ namespace Cofoundry.Domain.Internal
                 .AsNoTracking()
                 .Include(u => u.Role)
                 .Include(u => u.Creator)
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .Where(p => p.UserAreaCode == query.UserAreaCode);
 
             if (!string.IsNullOrEmpty(query.Email))

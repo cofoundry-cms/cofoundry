@@ -25,7 +25,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
         }
 
         [Fact]
-        public async Task GetCurrentContextAsync_WhenNotLoggedIn_ReturnsEmpty()
+        public async Task GetCurrentContextAsync_WhenNotSignedIn_ReturnsEmpty()
         {
             using var app = _appFactory.Create();
             var userContextService = app.Services.GetRequiredService<IUserContextService>();
@@ -36,14 +36,14 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
         }
 
         [Fact]
-        public async Task GetCurrentContextAsync_WhenLoggedIn_MapsBasicData()
+        public async Task GetCurrentContextAsync_WhenSignedIn_MapsBasicData()
         {
             using var app = _appFactory.Create();
             var userContextService = app.Services.GetRequiredService<IUserContextService>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userArea = app.SeededEntities.TestUserArea1;
 
-            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userArea.RoleA.User.UserId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea.UserAreaCode, userArea.RoleA.User.UserId, true);
             var currentUser = await userContextService.GetCurrentContextAsync();
 
             using (new AssertionScope())
@@ -53,16 +53,16 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
         }
 
         [Fact]
-        public async Task GetCurrentContextAsync_WhenLoggedInMultiple_ReturnsCorrectUser()
+        public async Task GetCurrentContextAsync_WhenSignedInMultiple_ReturnsCorrectUser()
         {
             using var app = _appFactory.Create();
             var userContextService = app.Services.GetRequiredService<IUserContextService>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userArea1 = app.SeededEntities.TestUserArea1;
             var userArea2 = app.SeededEntities.TestUserArea2;
 
-            await loginService.LogAuthenticatedUserInAsync(userArea2.UserAreaCode, userArea2.RoleA.User.UserId, true);
-            await loginService.LogAuthenticatedUserInAsync(userArea1.UserAreaCode, userArea1.RoleA.User.UserId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea2.UserAreaCode, userArea2.RoleA.User.UserId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea1.UserAreaCode, userArea1.RoleA.User.UserId, true);
             var currentUser = await userContextService.GetCurrentContextAsync();
 
             using (new AssertionScope())
@@ -78,11 +78,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
 
             using var app = _appFactory.Create();
             var userContextService = app.Services.GetRequiredService<IUserContextService>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userArea = app.SeededEntities.TestUserArea1;
             var userId = await app.TestData.Users().AddAsync(uniqueData, UNIQUE_PREFIX, c => c.RequirePasswordChange = true);
 
-            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea.UserAreaCode, userId, true);
             var currentUser = await userContextService.GetCurrentContextAsync();
 
             using (new AssertionScope())
@@ -98,11 +98,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
 
             using var app = _appFactory.Create();
             var userContextService = app.Services.GetRequiredService<IUserContextService>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userArea = app.SeededEntities.TestUserArea1;
             var userId = await app.TestData.Users().AddAsync(uniqueData, UNIQUE_PREFIX, c => c.IsAccountVerified = true);
 
-            await loginService.LogAuthenticatedUserInAsync(userArea.UserAreaCode, userId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea.UserAreaCode, userId, true);
             var currentUser = await userContextService.GetCurrentContextAsync();
 
             using (new AssertionScope())
@@ -117,7 +117,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
             using var app = _appFactory.Create();
             var userContextService = app.Services.GetRequiredService<IUserContextService>();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
 
             var dbSystemUser = dbContext
                 .Users
@@ -140,11 +140,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
         }
 
         [Fact]
-        public async Task GetCurrentContextByUserAreaAsync_NotLoggedIn_ReturnsEmpty()
+        public async Task GetCurrentContextByUserAreaAsync_NotSignedIn_ReturnsEmpty()
         {
             using var app = _appFactory.Create();
             var userContextService = app.Services.GetRequiredService<IUserContextService>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userArea1 = app.SeededEntities.TestUserArea1;
 
             var currentUser = await userContextService.GetCurrentContextByUserAreaAsync(userArea1.UserAreaCode);
@@ -153,16 +153,16 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
         }
 
         [Fact]
-        public async Task GetCurrentContextByUserAreaAsync_WhenLoggedInMultiple_ReturnsCorrectUser()
+        public async Task GetCurrentContextByUserAreaAsync_WhenSignedInMultiple_ReturnsCorrectUser()
         {
             using var app = _appFactory.Create();
             var userContextService = app.Services.GetRequiredService<IUserContextService>();
-            var loginService = app.Services.GetRequiredService<ILoginService>();
+            var signInService = app.Services.GetRequiredService<IUserSignInService>();
             var userArea1 = app.SeededEntities.TestUserArea1;
             var userArea2 = app.SeededEntities.TestUserArea1;
 
-            await loginService.LogAuthenticatedUserInAsync(userArea1.UserAreaCode, userArea1.RoleA.User.UserId, true);
-            await loginService.LogAuthenticatedUserInAsync(userArea2.UserAreaCode, userArea2.RoleA.User.UserId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea1.UserAreaCode, userArea1.RoleA.User.UserId, true);
+            await signInService.SignInAuthenticatedUserAsync(userArea2.UserAreaCode, userArea2.RoleA.User.UserId, true);
             var currentUser = await userContextService.GetCurrentContextByUserAreaAsync(userArea1.UserAreaCode);
 
             using (new AssertionScope())

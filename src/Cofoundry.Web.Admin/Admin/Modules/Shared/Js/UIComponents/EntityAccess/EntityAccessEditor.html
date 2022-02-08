@@ -54,7 +54,7 @@
                                     <th>Directory</th>
                                     <th>User Area</th>
                                     <th>Role</th>
-                                    <th>Redirect to Login</th>
+                                    <th>Redirect to Sign-in</th>
                                     <th>Default Action</th>
                                 </tr>
                             </thead>
@@ -63,7 +63,7 @@
                                     <td><a href="{{urlLibrary.directoryDetails(rule.accessRuleSet.pageDirectory.pageDirectoryId)}}" target="_blank">{{rule.accessRuleSet.pageDirectory.fullUrlPath}}</a></td>
                                     <td>{{rule.userArea.name}}</td>
                                     <td>{{rule.role.title}}</td>
-                                    <td title="{{rule.accessRuleSet.loginRedirectDescription}}">{{rule.accessRuleSet.loginRedirect}}</td>
+                                    <td title="{{rule.accessRuleSet.signInRedirectDescription}}">{{rule.accessRuleSet.signInRedirect}}</td>
                                     <td title="{{rule.accessRuleSet.violationAction.description}}">{{rule.accessRuleSet.violationAction.name}}</td>
                                 </tr>
                             </tbody>
@@ -131,18 +131,18 @@
                     <p>These options describe what should happen if the user is denied access.</p>
                 </cms-form-field-container>
 
-                <cms-form-field-checkbox cms-title="Redirect to login"
-                    cms-model="command.redirectoToLogin"
-                    cms-description="Selecting this option will redirect the user to the login page if they are not logged in. If they are logged in but not authorized to view the page then the default action will be triggered."
+                <cms-form-field-checkbox cms-title="Redirect to sign-in"
+                    cms-model="command.redirectToSignIn"
+                    cms-description="Selecting this option will redirect the user to the sign-in page if they are not logged in. If they are logged in but not authorized to view the page then the default action will be triggered."
                 ></cms-form-field-checkbox>
 
-                <cms-form-field-dropdown cms-title="Redirect to login for area"
+                <cms-form-field-dropdown cms-title="Redirect to sign-in for area"
                     cms-options="userAreasInRules"
                     cms-option-name="name"
                     cms-option-value="userAreaCode"
-                    cms-model="command.userAreaCodeForLoginRedirect"
-                    cms-description="If the user is not logged in, then they will be redirected to the login page for the selected user area."
-                    ng-if="command.redirectoToLogin && userAreasInRules.length > 1"
+                    cms-model="command.userAreaCodeForSignInRedirect"
+                    cms-description="If the user is not signed-in in, then they will be redirected to the sign-in page for the selected user area."
+                    ng-if="command.redirectToSignIn && userAreasInRules.length > 1"
                     required></cms-form-field-dropdown>
 
                 <cms-form-field-dropdown cms-title="Default Action"

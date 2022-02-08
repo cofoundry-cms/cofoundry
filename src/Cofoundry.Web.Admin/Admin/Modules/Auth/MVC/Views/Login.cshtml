@@ -1,9 +1,9 @@
-﻿@model Cofoundry.Web.Identity.LoginViewModel
+﻿@model Cofoundry.Web.Identity.SignInViewModel
 @inject IStaticResourceReferenceRenderer staticResourceReferenceRenderer
 @inject IAdminRouteLibrary adminRouteLibrary
 @inject ICofoundryHelper Cofoundry
 @{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Sign In";
     Layout = adminRouteLibrary.Auth.LoginLayoutPath;
     var returnUrl = Context.Request.Query["ReturnUrl"];
 }
@@ -44,7 +44,7 @@
             </label>
 
             <div class="actions">
-                <input type="submit" class="btn main-cta btn-primary" value="Login" tabindex="4" />
+                <input type="submit" class="btn main-cta btn-primary" value="Sign In" tabindex="4" />
             </div>
         </fieldset>
     </form>

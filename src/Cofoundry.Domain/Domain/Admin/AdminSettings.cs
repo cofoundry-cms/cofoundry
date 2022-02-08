@@ -19,7 +19,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Disables the admin panel, removing all routes from
-        /// the routing table and disabling login.
+        /// the routing table and disabling sign in.
         /// </summary>
         public bool Disabled { get; set; }
 

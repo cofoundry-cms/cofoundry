@@ -1,9 +1,7 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,11 +10,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
-    /// <summary>
-    /// Validate that the currently logged in user can access the route. If
-    /// the user fails any access rules checks, then the action associated 
-    /// with the rule is carried out e.g. redirect to login, 404, throw error.  
-    /// </summary>
+    /// <inheritdoc/>
     public class ValidateAccessRulesRoutingStep : IValidateAccessRulesRoutingStep
     {
         private readonly IQueryExecutor _queryExecutor;
@@ -97,8 +91,8 @@ namespace Cofoundry.Web
                     if (ruleViolation == null)
                     {
                         _logger.LogDebug(
-                            "User is logged into non-default user area {UserAreaCode} that passes access rule validation, switching ambient context to userId {UserId}.", 
-                            context.UserArea.UserAreaCode, 
+                            "User is logged into non-default user area {UserAreaCode} that passes access rule validation, switching ambient context to userId {UserId}.",
+                            context.UserArea.UserAreaCode,
                             context.UserId
                             );
 
@@ -137,8 +131,8 @@ namespace Cofoundry.Web
         {
             if (!state.AmbientUserContext.IsLoggedIn() && accessRuleViolation.ShouldTryRedirect())
             {
-                _logger.LogInformation("User not authenticated, redirecting to login page for user area {UserAreaCodeForLoginRedirect}.", accessRuleViolation.UserAreaCodeForLoginRedirect);
-                var challengeScheme = AuthenticationSchemeNames.UserArea(accessRuleViolation.UserAreaCodeForLoginRedirect);
+                _logger.LogInformation("User not authenticated, redirecting to sign in page for user area {UserAreaCodeForLoginRedirect}.", accessRuleViolation.UserAreaCodeForSignInRedirect);
+                var challengeScheme = AuthenticationSchemeNames.UserArea(accessRuleViolation.UserAreaCodeForSignInRedirect);
                 state.Result = new ChallengeResult(challengeScheme);
                 return;
             }

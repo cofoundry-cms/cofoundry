@@ -117,7 +117,7 @@ namespace Cofoundry.Domain.Internal
             var result = new UpdateEmailAndUsernameResult();
             var isEmailDefined = !string.IsNullOrWhiteSpace(email);
 
-            if (!isEmailDefined && (userArea.UseEmailAsUsername || userArea.AllowPasswordLogin))
+            if (!isEmailDefined && (userArea.UseEmailAsUsername || userArea.AllowPasswordSignIn))
             {
                 throw ValidationErrorException.CreateWithProperties("Email field is required.", EMAIL_PROPERTY);
             }

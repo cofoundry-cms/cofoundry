@@ -22,13 +22,13 @@
             @if (user.IsLoggedIn)
             {
                 <li class="nav-item">
-                    <a class="nav-link" href="@UrlLibrary.PartnerLogout()">Logout</a>
+                    <a class="nav-link" href="@UrlLibrary.PartnerSignOut()">Logout</a>
                 </li>
             }
             else
             {
                 <li class="nav-item">
-                    <a class="nav-link" href="@UrlLibrary.PartnerLogin()">Login</a>
+                    <a class="nav-link" href="@UrlLibrary.PartnerSignIn()">Login</a>
                 </li>
             }
         </ul>

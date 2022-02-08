@@ -60,7 +60,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Adds a new user and sends a notification containing a generated 
-        /// password which must be changed at first login.
+        /// password which must be changed at first sign in.
         /// </summary>
         /// <param name="command">Command parameters.</param>
         /// <returns>Id of the newly created user.</returns>
@@ -89,7 +89,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Resets a users password to a randomly generated temporary value
         /// and sends it in a mail a notification to the user. The password
-        /// will need to be changed at first login (if the user area supports 
+        /// will need to be changed at first sign in (if the user area supports 
         /// it). This is designed to be used from an admin screen rather than 
         /// a self-service reset which can be done via 
         /// <see cref="InitiateUserAccountRecoveryByEmailCommand"/>.

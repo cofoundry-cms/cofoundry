@@ -26,13 +26,13 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
         public virtual async Task<AdminNewUserWithTemporaryPasswordMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
-            var loginUrl = GetLoginUrl();
+            var signInUrl = GetSignInUrl();
 
             return new AdminNewUserWithTemporaryPasswordMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginUrl = loginUrl,
+                SignInUrl = signInUrl,
                 TemporaryPassword = context.TemporaryPassword,
                 LayoutFile = AdminMailTemplatePath.LayoutPath
             };
@@ -41,13 +41,13 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
         public virtual async Task<AdminPasswordResetMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
-            var loginUrl = GetLoginUrl();
+            var loginUrl = GetSignInUrl();
 
             return new AdminPasswordResetMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginUrl = loginUrl,
+                SignInUrl = loginUrl,
                 TemporaryPassword = context.TemporaryPassword,
                 LayoutFile = AdminMailTemplatePath.LayoutPath
             };
@@ -74,18 +74,18 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
         public virtual async Task<AdminPasswordChangedMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)
         {
             var applicationName = await GetApplicationNameAsync();
-            var loginUrl = GetLoginUrl();
+            var loginUrl = GetSignInUrl();
 
             return new AdminPasswordChangedMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginUrl = loginUrl,
+                SignInUrl = loginUrl,
                 LayoutFile = AdminMailTemplatePath.LayoutPath
             };
         }
 
-        private string GetLoginUrl()
+        private string GetSignInUrl()
         {
             return _siteUrlResolver.MakeAbsolute("/" + _adminSettings.DirectoryName);
         }

@@ -14,7 +14,7 @@ namespace Cofoundry.Domain.Internal
     /// <summary>
     /// Resets a users password to a randomly generated temporary value
     /// and sends it in a mail a notification to the user. The password
-    /// will need to be changed at first login (if the user area supports 
+    /// will need to be changed at first sign in (if the user area supports 
     /// it). This is designed to be used from an admin screen rather than 
     /// a self-service reset which can be done via 
     /// <see cref="InitiateUserAccountRecoveryByEmailCommand"/>.
@@ -106,7 +106,7 @@ namespace Cofoundry.Domain.Internal
             var user = _dbContext
                 .Users
                 .FilterById(userId)
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .SingleOrDefaultAsync();
 
             EntityNotFoundException.ThrowIfNull(user, userId);
@@ -118,9 +118,9 @@ namespace Cofoundry.Domain.Internal
         {
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
 
-            if (!userArea.AllowPasswordLogin)
+            if (!userArea.AllowPasswordSignIn)
             {
-                throw new InvalidOperationException($"Cannot reset the password because the {userArea.Name} user area does not allow password logins.");
+                throw new InvalidOperationException($"Cannot reset the password because the {userArea.Name} user area does not allow password sign in.");
             }
 
             if (!userArea.UseEmailAsUsername)

@@ -83,7 +83,7 @@ namespace Cofoundry.Domain.Internal
             return _dbContext
                 .Users
                 .FilterById(userId)
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .SingleOrDefaultAsync();
         }
 

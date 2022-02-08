@@ -2,7 +2,7 @@
 	#187 Pages / Directories: Restrict by User Area
 */
 
--- Action to take when no access e.g.RedirectToLogin, Error, NotFound, RedirectToUrl
+-- Action to take when no access e.g.RedirectToSignIn, Error, NotFound, RedirectToUrl
 create table Cofoundry.AccessRuleViolationAction (
 	AccessRuleViolationActionId int not null,
 	Title varchar(20) not null,
@@ -20,10 +20,10 @@ insert into Cofoundry.AccessRuleViolationAction (AccessRuleViolationActionId, Ti
 go
 
 alter table Cofoundry.[Page] add AccessRuleViolationActionId int null
-alter table Cofoundry.[Page] add UserAreaCodeForLoginRedirect char(3) null
+alter table Cofoundry.[Page] add UserAreaCodeForSignInRedirect char(3) null
 go
-alter table Cofoundry.[Page] add constraint FK_Page_UserAreasForLoginRedirect foreign key (UserAreaCodeForLoginRedirect) references Cofoundry.UserArea (UserAreaCode)
-alter table Cofoundry.[Page] add constraint CK_Page_UserAreaCodeForLoginRedirect_NotCofoundryAdmin check (UserAreaCodeForLoginRedirect <> 'COF')
+alter table Cofoundry.[Page] add constraint FK_Page_UserAreasForSignInRedirect foreign key (UserAreaCodeForSignInRedirect) references Cofoundry.UserArea (UserAreaCode)
+alter table Cofoundry.[Page] add constraint CK_Page_UserAreaCodeForSignInRedirect_NotCofoundryAdmin check (UserAreaCodeForSignInRedirect <> 'COF')
 go
 update Cofoundry.[Page] set AccessRuleViolationActionId = 0
 go
@@ -52,10 +52,10 @@ create unique index UIX_PageAccessRule_Rule on Cofoundry.PageAccessRule (PageId,
 go
 
 alter table Cofoundry.PageDirectory add AccessRuleViolationActionId int null
-alter table Cofoundry.PageDirectory add UserAreaCodeForLoginRedirect char(3) null
+alter table Cofoundry.PageDirectory add UserAreaCodeForSignInRedirect char(3) null
 go
-alter table Cofoundry.PageDirectory add constraint FK_PageDirectory_UserAreaForLoginRedirect foreign key (UserAreaCodeForLoginRedirect) references Cofoundry.UserArea (UserAreaCode)
-alter table Cofoundry.PageDirectory add constraint CK_PageDirectory_UserAreaCodeForLoginRedirect_NotCofoundryAdmin check (UserAreaCodeForLoginRedirect <> 'COF')
+alter table Cofoundry.PageDirectory add constraint FK_PageDirectory_UserAreaForSignInRedirect foreign key (UserAreaCodeForSignInRedirect) references Cofoundry.UserArea (UserAreaCode)
+alter table Cofoundry.PageDirectory add constraint CK_PageDirectory_UserAreaCodeForSignInedirect_NotCofoundryAdmin check (UserAreaCodeForSignInRedirect <> 'COF')
 go
 update Cofoundry.PageDirectory set AccessRuleViolationActionId = 0
 go
@@ -388,4 +388,14 @@ go
 
 -- Since reset requests have a short lifecycle, we won't migrate them
 drop table Cofoundry.UserPasswordResetRequest
+go
+
+/*
+	#487: Changes uses of the term "Login" and "Logout" to "SignIn" and "SignOut"
+*/
+
+
+go
+exec sp_rename 'Cofoundry.User.LastLoginDate' , 'LastSignInDate', 'column'
+exec sp_rename 'Cofoundry.User.PreviousLoginDate' , 'PreviousSignInDate', 'column'
 go

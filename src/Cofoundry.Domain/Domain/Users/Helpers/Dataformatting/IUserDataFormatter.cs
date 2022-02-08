@@ -57,7 +57,7 @@ namespace Cofoundry.Domain
         /// <para>
         /// Formats the specified username into a consistent format that can be
         /// used for comparing usernames e.g. as a unique value to prevent duplication
-        /// and during login to lookup a username. The default implementation 
+        /// and during sign in to lookup a username. The default implementation 
         /// lowercases the username. If the username is null or empty then
         /// <see langword="null"/> is returned.
         /// </para>

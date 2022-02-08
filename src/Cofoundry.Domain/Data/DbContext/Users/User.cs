@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Data
         /// copy of the email address. Although this version of the username does go through a normalization 
         /// process it is generally unaltered, whereas the <see cref="UniqueUsername"/> field is formatted by a
         /// "uniquification" process which can be more involved, because that field used for 
-        /// comparisons when logging in.
+        /// comparisons when signing in.
         /// </summary>
         public string Username { get; set; }
 
@@ -93,9 +93,9 @@ namespace Cofoundry.Domain.Data
         /// <para>
         /// A random string that gets updated when key user identity fields are changed, such 
         /// as a password or username. During user session validation this field is checked to
-        /// detect any changes and invalidate any out of date sessions. For example, if I am logged 
+        /// detect any changes and invalidate any out of date sessions. For example, if I am signed in 
         /// into the admin panel on a Latop and a PC, and change my password on the Laptop session, then
-        /// I would be logged out of the session on the PC.
+        /// I would be signed out of the session on the PC.
         /// </para>
         /// <para>
         /// This field is synonymous with the SecurityStamp field in ASP.NET Identity.
@@ -116,18 +116,18 @@ namespace Cofoundry.Domain.Data
         public DateTime LastPasswordChangeDate { get; set; }
 
         /// <summary>
-        /// The date and time the user last logged in, if ever.
+        /// The date and time the user last signed in, if ever.
         /// </summary>
-        public DateTime? LastLoginDate { get; set; }
+        public DateTime? LastSignInDate { get; set; }
 
         /// <summary>
-        /// The date and time the user logged in before the <see cref="LastLoginDate"/>.
+        /// The date and time the user signed-in in before the <see cref="LastSignInDate"/>.
         /// </summary>
         /// <remarks>
-        /// We can consider dropping this now we have a LoginLog table, I don't think it's
+        /// We can consider dropping this now we have a sign in auditing table, I don't think it's
         /// used for anything else
         /// </remarks>
-        public DateTime? PreviousLoginDate { get; set; }
+        public DateTime? PreviousSignInDate { get; set; }
 
         /// <summary>
         /// True if a password change is required, this is set to true when an account is
@@ -156,7 +156,7 @@ namespace Cofoundry.Domain.Data
 
         /// <summary>
         /// The Cofoundry user system can be partitioned into user areas. This enables
-        /// reuse of user functionality to create custom login areas in your application.
+        /// reuse of user functionality to create custom sign in areas in your application.
         /// </summary>
         public virtual UserArea UserArea { get; set; }
 

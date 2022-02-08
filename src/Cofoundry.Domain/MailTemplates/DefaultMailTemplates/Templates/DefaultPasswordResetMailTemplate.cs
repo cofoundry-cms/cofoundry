@@ -28,8 +28,8 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
         public IHtmlContent TemporaryPassword { get; set; }
 
         /// <summary>
-        /// The absolute login page url e.g. "https://www.example.com/members/login".
+        /// The absolute sign in page url e.g. "https://www.example.com/members/sign-in".
         /// </summary>
-        public string LoginUrl { get; set; }
+        public string SignInUrl { get; set; }
     }
 }

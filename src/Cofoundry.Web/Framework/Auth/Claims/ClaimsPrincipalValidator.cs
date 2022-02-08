@@ -154,7 +154,7 @@ namespace Cofoundry.Web.Internal
 
             if (_userAreaDefinitionRepository.Exists(userAreaCode))
             {
-                await _userSessionService.LogUserOutAsync(userAreaCode);
+                await _userSessionService.SignOutAsync(userAreaCode);
             }
         }
     }

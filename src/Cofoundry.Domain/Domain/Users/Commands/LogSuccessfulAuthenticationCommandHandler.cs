@@ -9,19 +9,18 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Updates user auditing information in the database to record 
-    /// the successful login. Does not do anything to login a user
-    /// session.
+    /// Logs user auditing information in the database to record 
+    /// the successful authentication of a user account.
     /// </summary>
-    public class LogSuccessfulLoginCommandHandler
-        : ICommandHandler<LogSuccessfulLoginCommand>
+    public class LogSuccessfulAuthenticationCommandHandler
+        : ICommandHandler<LogSuccessfulAuthenticationCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IEntityFrameworkSqlExecutor _sqlExecutor;
         private readonly IClientConnectionService _clientConnectionService;
 
-        public LogSuccessfulLoginCommandHandler(
+        public LogSuccessfulAuthenticationCommandHandler(
             CofoundryDbContext dbContext,
             IEntityFrameworkSqlExecutor sqlExecutor,
             IClientConnectionService clientConnectionService
@@ -32,7 +31,7 @@ namespace Cofoundry.Domain.Internal
             _clientConnectionService = clientConnectionService;
         }
 
-        public async Task ExecuteAsync(LogSuccessfulLoginCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(LogSuccessfulAuthenticationCommand command, IExecutionContext executionContext)
         {
             var user = await QueryUserAsync(command.UserId);
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
@@ -53,7 +52,7 @@ namespace Cofoundry.Domain.Internal
             var user = await _dbContext
                 .Users
                 .FilterById(userId)
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(user, userId);
 
@@ -62,8 +61,8 @@ namespace Cofoundry.Domain.Internal
 
         private void SetLoggedIn(User user, IExecutionContext executionContext)
         {
-            user.PreviousLoginDate = user.LastLoginDate;
-            user.LastLoginDate = executionContext.ExecutionDate;
+            user.PreviousSignInDate = user.LastSignInDate;
+            user.LastSignInDate = executionContext.ExecutionDate;
         }
     }
 }

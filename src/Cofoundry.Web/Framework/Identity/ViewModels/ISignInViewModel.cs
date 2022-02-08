@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Cofoundry.Web.Identity
+﻿namespace Cofoundry.Web.Identity
 {
     /// <summary>
-    /// A view model for login information, used by the
+    /// A view model for sign in credentials, used by the
     /// Cofoundry identity MVC controller helpers.
     /// </summary>
-    public interface ILoginViewModel
+    public interface ISignInViewModel
     {
         /// <summary>
         /// The username may be an email address or text string depending

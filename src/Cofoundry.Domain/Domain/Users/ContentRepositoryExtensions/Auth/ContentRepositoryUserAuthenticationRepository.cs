@@ -22,7 +22,7 @@ namespace Cofoundry.Domain.Internal
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task LogUserInWithCredentialsAsync(LogUserInWithCredentialsCommand command)
+        public Task SignInWithCredentialsAsync(SignInUserWithCredentialsCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }

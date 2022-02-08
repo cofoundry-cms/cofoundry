@@ -39,7 +39,7 @@ namespace Cofoundry.Web.Tests.Integration.TestWebApp
 
             if (userAreaCode == null) throw new Exception("User not found");
 
-            await  _userSessionService.LogUserInAsync(userAreaCode, id, true);
+            await  _userSessionService.SignInAsync(userAreaCode, id, true);
         }
 
         [HttpGet("current")]

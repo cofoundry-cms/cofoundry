@@ -14,27 +14,27 @@ namespace Cofoundry.Web.Identity
         where TUserArea : IUserAreaDefinition
     {
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ILoginService _loginService;
+        private readonly IUserSignInService _signInService;
         private readonly IControllerResponseHelper _controllerResponseHelper;
         private readonly IAuthorizedTaskTokenUrlHelper _userAccountRecoveryUrlHelper;
         private readonly TUserArea _userAreaDefinition;
 
         public AuthenticationControllerHelper(
             IQueryExecutor queryExecutor,
-            ILoginService loginService,
+            IUserSignInService signInService,
             IControllerResponseHelper controllerResponseHelper,
             IAuthorizedTaskTokenUrlHelper userAccountRecoveryUrlHelper,
             TUserArea userAreaDefinition
             )
         {
             _queryExecutor = queryExecutor;
-            _loginService = loginService;
+            _signInService = signInService;
             _controllerResponseHelper = controllerResponseHelper;
             _userAccountRecoveryUrlHelper = userAccountRecoveryUrlHelper;
             _userAreaDefinition = userAreaDefinition;
         }
 
-        public async Task<UserCredentialsValidationResult> AuthenticateAsync(Controller controller, ILoginViewModel viewModel)
+        public async Task<UserCredentialsValidationResult> AuthenticateAsync(Controller controller, ISignInViewModel viewModel)
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
             if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
@@ -61,9 +61,9 @@ namespace Cofoundry.Web.Identity
             return result;
         }
 
-        public Task LogUserInAsync(
+        public Task SignInUserAsync(
             Controller controller,
-            UserLoginInfo user,
+            UserSignInInfo user,
             bool rememberUser
             )
         {
@@ -80,7 +80,7 @@ namespace Cofoundry.Web.Identity
                 throw new ValidationException("This user account is not permitted to log in via this route.");
             }
 
-            return _loginService.LogAuthenticatedUserInAsync(
+            return _signInService.SignInAuthenticatedUserAsync(
                 _userAreaDefinition.UserAreaCode,
                 user.UserId,
                 rememberUser
@@ -168,9 +168,9 @@ namespace Cofoundry.Web.Identity
             }
         }
 
-        public Task LogoutAsync()
+        public Task SignOutAsync()
         {
-            return _loginService.SignOutAsync(_userAreaDefinition.UserAreaCode);
+            return _signInService.SignOutAsync(_userAreaDefinition.UserAreaCode);
         }
 
         public Task SendAccountRecoveryNotificationAsync(

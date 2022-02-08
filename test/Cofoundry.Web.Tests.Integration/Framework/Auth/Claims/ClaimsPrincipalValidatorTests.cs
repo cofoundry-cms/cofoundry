@@ -43,7 +43,7 @@ namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Claims
 
             await client.ImpersonateUserAsync(user);
             dateTimeService.MockDateTime = seedDate.AddMinutes(35);
-            var userId = await GetCurrentlyLoggedInUserId(client);
+            var userId = await GetCurrentlySignedInUserId(client);
 
             userId.Should().Be(user.UserId);
         }
@@ -68,14 +68,14 @@ namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Claims
             response.EnsureSuccessStatusCode();
 
             dateTimeService.MockDateTime = seedDate.AddMinutes(35);
-            var client1UserId = await GetCurrentlyLoggedInUserId(client1);
-            var client2UserId = await GetCurrentlyLoggedInUserId(client2);
+            var client1UserId = await GetCurrentlySignedInUserId(client1);
+            var client2UserId = await GetCurrentlySignedInUserId(client2);
 
             client1UserId.Should().Be(userId);
             client2UserId.Should().BeNull();
         }
 
-        private async Task<int?> GetCurrentlyLoggedInUserId(HttpClient client)
+        private async Task<int?> GetCurrentlySignedInUserId(HttpClient client)
         {
             var response = await client.GetAsync("/tests/users/current");
             response.EnsureSuccessStatusCode();

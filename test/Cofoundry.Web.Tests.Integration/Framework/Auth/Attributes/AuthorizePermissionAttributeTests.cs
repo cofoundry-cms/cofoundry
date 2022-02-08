@@ -24,7 +24,7 @@ namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Attributes
         }
 
         [Fact]
-        public async Task PermissionOnAnonymousRole_WhenNotLoggedIn_OK()
+        public async Task PermissionOnAnonymousRole_WhenNotSignedIn_OK()
         {
             using var app = _webApplicationFactory.CreateApp();
             using var client = _webApplicationFactory.CreateClient();
@@ -59,14 +59,14 @@ namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Attributes
         }
 
         [Fact]
-        public async Task Permission_WhenNotLoggedIn_RedirectsToDefaultScheme()
+        public async Task Permission_WhenNotSignedIn_RedirectsToDefaultScheme()
         {
             using var app = _webApplicationFactory.CreateApp();
             using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
 
             var result = await client.GetAsync(GetRoute("permission"));
 
-            LoginRedirectAssertions.AssertLoginRedirect(result, app.SeededEntities.TestUserArea1);
+            SignInRedirectAssertions.AssertSignInRedirect(result, app.SeededEntities.TestUserArea1);
         }
 
         [Fact]

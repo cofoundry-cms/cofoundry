@@ -21,7 +21,7 @@ namespace Cofoundry.Samples.SPASite.Domain
         /// the password field will be null and login will typically be via SSO or some 
         /// other method.
         /// </summary>
-        public bool AllowPasswordLogin => true;
+        public bool AllowPasswordSignIn => true;
 
         /// <summary>
         /// Display name of the area, used in the Cofoundry admin panel
@@ -47,7 +47,7 @@ namespace Cofoundry.Samples.SPASite.Domain
         /// Because the login routing is handled by the front end framework, we don't need to redirect to 
         /// a specific login route.
         /// </summary>
-        public string LoginPath => "/";
+        public string SignInPath => "/";
 
         /// <summary>
         /// Setting this to true means that this user area will be used as the default login

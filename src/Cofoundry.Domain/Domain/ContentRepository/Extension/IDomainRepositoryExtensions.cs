@@ -61,8 +61,8 @@ namespace Cofoundry.Domain
         /// Runs any queries or commands chained off this instance under
         /// the system user account which has no permission restrictions.
         /// This is useful when you need to perform an action that the currently
-        /// logged in user does not have permission for, e.g. signing up a new
-        /// user prior to login.
+        /// signed in user does not have permission for, e.g. signing up a new
+        /// user prior to sign.
         /// </summary>
         public static IDomainRepository WithElevatedPermissions(this IDomainRepository domainRepository)
         {

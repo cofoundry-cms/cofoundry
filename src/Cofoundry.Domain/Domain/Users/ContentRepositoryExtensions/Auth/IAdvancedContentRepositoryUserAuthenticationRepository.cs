@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// Validates user credentials. If the authentication was successful then user information 
-        /// pertinent to login is returned, otherwise error information is returned detailing
+        /// pertinent to sign in is returned, otherwise error information is returned detailing
         /// why the authentication failed.
         /// </summary>
         /// <param name="query">Query parameters.</param>
@@ -20,6 +20,12 @@ namespace Cofoundry.Domain
         /// updating the users password if the request is verified.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task LogUserInWithCredentialsAsync(LogUserInWithCredentialsCommand command);
+        Task SignInWithCredentialsAsync(SignInUserWithCredentialsCommand command);
+
+        //Task SignInAuthenticatedUserInAsync(LogUserInWithCredentialsCommand command);
+
+        //Task SignInWithCredentialsAsync(LogUserOutCommand command);
+        //Task SignInAsync(SignInUserCommand command);
+        //Task SignOutAsync(SignOutUserCommand command);
     }
 }

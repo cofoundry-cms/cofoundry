@@ -21,27 +21,27 @@ namespace Cofoundry.Domain
 
 
         /// <summary>
-        /// The maximum number of failed login attempts allowed per IP address 
+        /// The maximum number of failed authentication attempts allowed per IP address 
         /// during the time window described by the MaxIPAttemptsBoundaryInMinutes
         /// property. The default value is 60 minutes.
         /// </summary>
         public int MaxIPAttempts { get; set; }
 
         /// <summary>
-        /// The maximum number of failed login attempts allowed per username 
+        /// The maximum number of failed authentication attempts allowed per username 
         /// during the time window described by the MaxUsernameAttemptsBoundaryInMinutes
         /// property. The default value is 40 minutes.
         /// </summary>
         public int MaxUsernameAttempts { get; set; }
 
         /// <summary>
-        /// The time window to measure login attempts when testing for blocking by IP 
+        /// The time window to measure authentication attempts when testing for blocking by IP 
         /// address. The default value is 40 minutes.
         /// </summary>
         public int MaxIPAttemptsBoundaryInMinutes { get; set; }
 
         /// <summary>
-        /// The time window to measure login attempts when testing for blocking by 
+        /// The time window to measure authentication attempts when testing for blocking by 
         /// username. The default value is 20 minutes.
         /// </summary>
         public int MaxUsernameAttemptsBoundaryInMinutes { get; set; }

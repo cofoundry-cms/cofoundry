@@ -113,7 +113,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             await contentRepository.Users().UpdatePasswordByCredentialsAsync(command);
 
             var siteUrlResolver = app.Services.GetRequiredService<ISiteUrlResolver>();
-            var loginUrl = siteUrlResolver.MakeAbsolute(app.SeededEntities.TestUserArea1.Definition.LoginPath);
+            var signInUrl = siteUrlResolver.MakeAbsolute(app.SeededEntities.TestUserArea1.Definition.SignInPath);
 
             var user = await dbContext
                 .Users
@@ -128,7 +128,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     "Test Site",
                     "has been changed",
                     "username for this account is " + user.Username,
-                    loginUrl
+                    signInUrl
                 )
                 .Should().Be(1);
         }

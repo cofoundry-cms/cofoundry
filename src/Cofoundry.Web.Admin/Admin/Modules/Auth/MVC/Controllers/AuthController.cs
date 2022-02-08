@@ -66,14 +66,14 @@ namespace Cofoundry.Web.Admin
             if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
-            var vm = new LoginViewModel();
+            var vm = new SignInViewModel();
 
             return View(viewPath, vm);
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Login(string returnUrl, LoginViewModel viewModel)
+        public async Task<ActionResult> Login(string returnUrl, SignInViewModel viewModel)
         {
             var authResult = await _authenticationControllerHelper.AuthenticateAsync(this, viewModel);
 
@@ -92,7 +92,7 @@ namespace Cofoundry.Web.Admin
             }
 
             // If no action required, log the user in
-            await _authenticationControllerHelper.LogUserInAsync(this, authResult.User, true);
+            await _authenticationControllerHelper.SignInUserAsync(this, authResult.User, true);
 
             if (redirectUrl != null)
             {
@@ -104,7 +104,7 @@ namespace Cofoundry.Web.Admin
 
         public async Task<ActionResult> Logout()
         {
-            await _authenticationControllerHelper.LogoutAsync();
+            await _authenticationControllerHelper.SignOutAsync();
             return Redirect(_adminRouteLibrary.Auth.Login());
         }
 
@@ -179,7 +179,7 @@ namespace Cofoundry.Web.Admin
                 }
 
                 // The user shouldn't be logged in, but if so, log them out
-                await _authenticationControllerHelper.LogoutAsync();
+                await _authenticationControllerHelper.SignOutAsync();
             }
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
@@ -199,7 +199,7 @@ namespace Cofoundry.Web.Admin
                 }
 
                 // The user shouldn't be logged in, but if so, log them out
-                await _authenticationControllerHelper.LogoutAsync();
+                await _authenticationControllerHelper.SignOutAsync();
             }
 
             await _authenticationControllerHelper.ChangePasswordAsync(this, vm);

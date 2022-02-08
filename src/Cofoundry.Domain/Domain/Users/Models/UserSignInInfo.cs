@@ -1,9 +1,11 @@
 ﻿namespace Cofoundry.Domain
 {
     /// <summary>
-    /// User information relating to a login request
+    /// User information relating to a user sign in request. This includes the bare-minimum
+    /// of data to resolve a sign in request, including properties that may need action taken
+    /// such as <see cref="RequirePasswordChange"/>.
     /// </summary>
-    public class UserLoginInfo
+    public class UserSignInInfo
     {
         /// <summary>
         /// Database id of the user.

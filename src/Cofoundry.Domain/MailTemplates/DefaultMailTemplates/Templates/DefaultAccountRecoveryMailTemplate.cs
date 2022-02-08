@@ -3,7 +3,7 @@
     /// <summary>
     /// Template for the email sent when a user requests to resets their 
     /// own password which is usually via a 'forgot password' mechanism on
-    /// a login form. This default version of the template is used for all 
+    /// a sign in page. This default version of the template is used for all 
     /// user areas except the Cofoundry admin user area.
     /// </summary>
     public class DefaultAccountRecoveryMailTemplate : DefaultMailTemplateBase

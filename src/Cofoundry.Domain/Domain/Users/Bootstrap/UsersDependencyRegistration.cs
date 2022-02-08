@@ -15,7 +15,7 @@ namespace Cofoundry.Domain.Registration
                 .Register<IPasswordUpdateCommandHelper, PasswordUpdateCommandHelper>()
                 .Register<IUserContextService, UserContextService>()
                 .Register<IUserSessionService, InMemoryUserSessionService>(RegistrationOptions.Scoped())
-                .Register<ILoginService, LoginService>()
+                .Register<IUserSignInService, UserSignInService>()
                 .Register<IUserMicroSummaryMapper, UserMicroSummaryMapper>()
                 .Register<IUserSummaryMapper, UserSummaryMapper>()
                 .Register<IUserDetailsMapper, UserDetailsMapper>()

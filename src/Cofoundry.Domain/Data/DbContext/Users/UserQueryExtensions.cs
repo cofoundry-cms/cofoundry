@@ -19,7 +19,7 @@ namespace Cofoundry.Domain.Data
         /// <summary>
         /// Filters the collection to only include users who have an active
         /// account (i.e. not deleted). This includes the system user account; to exclude
-        /// it use <see cref="FilterCanLogIn"/> instead.
+        /// it use <see cref="FilterCanSignIn"/> instead.
         /// </summary>
         public static IQueryable<User> FilterActive(this IQueryable<User> users)
         {
@@ -30,10 +30,10 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
-        /// Returns only users that are allowed to be logged in i.e. is not
+        /// Returns only users that are allowed to be signed in in i.e. is not
         /// deleted and is not the system user.
         /// </summary>
-        public static IQueryable<User> FilterCanLogIn(this IQueryable<User> users)
+        public static IQueryable<User> FilterCanSignIn(this IQueryable<User> users)
         {
             var user = users
                 .Where(u => !u.IsSystemAccount && !u.IsDeleted);

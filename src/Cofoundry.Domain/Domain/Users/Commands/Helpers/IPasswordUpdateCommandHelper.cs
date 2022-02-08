@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// Validates that the current user area has a password-based
-        /// login and therefore accepts password updates.
+        /// sigh in and therefore accepts password updates.
         /// </summary>
         /// <param name="userArea">The user area to check.</param>
         void ValidateUserArea(IUserAreaDefinition userArea);

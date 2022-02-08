@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     /// <inheritdoc/>
-    public class LoginService : ILoginService
+    public class UserSignInService : IUserSignInService
     {
         private readonly ICommandExecutor _commandExecutor;
         private readonly IUserSessionService _userSessionService;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
-        public LoginService(
+        public UserSignInService(
             ICommandExecutor commandExecutor,
             IUserSessionService userSessionService,
             IMessageAggregator messageAggregator,
@@ -26,21 +26,21 @@ namespace Cofoundry.Domain.Internal
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
-        public virtual async Task LogAuthenticatedUserInAsync(string userAreaCode, int userId, bool rememberUser)
+        public virtual async Task SignInAuthenticatedUserAsync(string userAreaCode, int userId, bool rememberUser)
         {
             // Clear any existing session
-            await _userSessionService.LogUserOutAsync(userAreaCode);
+            await _userSessionService.SignOutAsync(userAreaCode);
 
             // Log in new session
-            await _userSessionService.LogUserInAsync(userAreaCode, userId, rememberUser);
+            await _userSessionService.SignInAsync(userAreaCode, userId, rememberUser);
             // Switch the ambient user area to the logged in user for the remainder of the request / scope
             await _userSessionService.SetAmbientUserAreaAsync(userAreaCode);
 
             // Update the user record
-            var command = new LogSuccessfulLoginCommand() { UserId = userId };
+            var command = new LogSuccessfulAuthenticationCommand() { UserId = userId };
             await _commandExecutor.ExecuteAsync(command);
 
-            await _messageAggregator.PublishAsync(new UserLoggedInMessage()
+            await _messageAggregator.PublishAsync(new UserSignednMessage()
             {
                 UserAreaCode = userAreaCode,
                 UserId = userId
@@ -53,27 +53,27 @@ namespace Cofoundry.Domain.Internal
 
             if (userId.HasValue)
             {
-                await _messageAggregator.PublishAsync(new UserLoggedOutMessage()
+                await _messageAggregator.PublishAsync(new UserSignedOutMessage()
                 {
                     UserId = userId.Value,
                     UserAreaCode = userAreaCode
                 });
             }
 
-            await _userSessionService.LogUserOutAsync(userAreaCode);
+            await _userSessionService.SignOutAsync(userAreaCode);
         }
 
         public virtual async Task SignOutAllUserAreasAsync()
         {
             var userAreas = _userAreaDefinitionRepository.GetAll();
-            var messages = new List<UserLoggedOutMessage>();
+            var messages = new List<UserSignedOutMessage>();
 
             foreach (var userArea in userAreas)
             {
                 var userId = await _userSessionService.GetUserIdByUserAreaCodeAsync(userArea.UserAreaCode);
                 if (userId.HasValue)
                 {
-                    messages.Add(new UserLoggedOutMessage()
+                    messages.Add(new UserSignedOutMessage()
                     {
                         UserAreaCode = userArea.UserAreaCode,
                         UserId = userId.Value
@@ -81,7 +81,7 @@ namespace Cofoundry.Domain.Internal
                 }
             }
 
-            await _userSessionService.LogUserOutOfAllUserAreasAsync();
+            await _userSessionService.SignOutOfAllUserAreasAsync();
             await _messageAggregator.PublishBatchAsync(messages);
         }
     }

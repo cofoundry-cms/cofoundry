@@ -49,7 +49,7 @@ function (
         vm.canUpdate = permissionValidationService.canUpdate(entityDefinitionCode);
         vm.canDelete = permissionValidationService.canDelete(entityDefinitionCode);
         vm.canResetPassword = permissionValidationService.hasPermission(entityDefinitionCode + 'RSTPWD')
-            && options.allowPasswordLogin 
+            && options.allowPasswordSignIn 
             && options.useEmailAsUsername
             && !isCurrentUser;
         
@@ -83,7 +83,7 @@ function (
     function resetPassword() {
         var options = {
             title: 'Reset Password',
-            message: 'Resetting a password will log the user out of all sessions and email them a new temporary password that needs to be changed at first login.<br><br>Do you want to continue?',
+            message: 'Resetting a password will sign the user out of all sessions and email them a new temporary password that needs to be changed at first sign in.<br><br>Do you want to continue?',
             okButtonTitle: 'Yes, reset it',
             onOk: onOk
         };

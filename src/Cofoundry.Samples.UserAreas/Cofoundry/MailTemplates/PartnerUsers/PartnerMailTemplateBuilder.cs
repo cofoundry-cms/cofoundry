@@ -31,7 +31,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             var template = new NewUserWithTemporaryPasswordMailTemplate()
             {
                 Username = context.User.Username,
-                LoginUrl = GetLoginUrl(),
+                SignInUrl = GetSignInUrl(),
                 TemporaryPassword = context.TemporaryPassword
             };
 
@@ -43,7 +43,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             var template = new PasswordResetMailTemplate()
             {
                 Username = context.User.Username,
-                LoginUrl = GetLoginUrl(),
+                SignInUrl = GetSignInUrl(),
                 TemporaryPassword = context.TemporaryPassword
             };
 
@@ -66,7 +66,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             var template = new PasswordChangedMailTemplate()
             {
                 Username = context.User.Username,
-                LoginUrl = GetLoginUrl()
+                SignInUrl = GetSignInUrl()
             };
 
             return Task.FromResult<IMailTemplate>(template);
@@ -78,9 +78,9 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             throw new NotSupportedException();
         }
 
-        private string GetLoginUrl()
+        private string GetSignInUrl()
         {
-            return _siteUrlResolver.MakeAbsolute(UrlLibrary.PartnerLogin());
+            return _siteUrlResolver.MakeAbsolute(UrlLibrary.PartnerSignIn());
         }
     }
 }

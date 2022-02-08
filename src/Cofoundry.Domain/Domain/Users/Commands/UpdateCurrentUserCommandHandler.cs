@@ -42,7 +42,7 @@ namespace Cofoundry.Domain.Internal
 
             var user = await _dbContext
                 .Users
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .FilterById(userId)
                 .SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(user, userId);

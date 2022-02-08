@@ -32,13 +32,13 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
             )
         {
             var applicationName = await GetApplicationNameAsync();
-            var loginUrl = GetLoginUrl();
+            var signInUrl = GetSignInUrl();
 
             return new DefaultNewUserWithTemporaryPasswordMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginUrl = loginUrl,
+                SignInUrl = signInUrl,
                 TemporaryPassword = context.TemporaryPassword,
                 LayoutFile = DefaultMailTemplatePath.LayoutPath
             };
@@ -49,13 +49,13 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
             )
         {
             var applicationName = await GetApplicationNameAsync();
-            var loginUrl = GetLoginUrl();
+            var loginUrl = GetSignInUrl();
 
             return new DefaultPasswordResetMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginUrl = loginUrl,
+                SignInUrl = loginUrl,
                 TemporaryPassword = context.TemporaryPassword,
                 LayoutFile = DefaultMailTemplatePath.LayoutPath
             };
@@ -122,20 +122,20 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
             )
         {
             var applicationName = await GetApplicationNameAsync();
-            var loginUrl = GetLoginUrl();
+            var loginUrl = GetSignInUrl();
 
             return new DefaultPasswordChangedMailTemplate()
             {
                 Username = context.User.Username,
                 ApplicationName = applicationName,
-                LoginUrl = loginUrl,
+                SignInUrl = loginUrl,
                 LayoutFile = DefaultMailTemplatePath.LayoutPath
             };
         }
 
-        private string GetLoginUrl()
+        private string GetSignInUrl()
         {
-            return _siteUrlResolver.MakeAbsolute(_userAreaDefinition.LoginPath);
+            return _siteUrlResolver.MakeAbsolute(_userAreaDefinition.SignInPath);
         }
 
         private async Task<string> GetApplicationNameAsync()

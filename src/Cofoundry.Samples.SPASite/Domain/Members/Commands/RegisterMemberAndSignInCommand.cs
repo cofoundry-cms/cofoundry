@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Samples.SPASite
 {
-    public class RegisterMemberAndLogInCommand : ICommand
+    public class RegisterMemberAndSignInCommand : ICommand
     {
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }

@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain.Tests.Shared.SeedData
 {
     /// <summary>
-    /// AllowPasswordLogin = <see langword="true"/>,
+    /// AllowPasswordSignIn = <see langword="true"/>,
     /// UseEmailAsUsername = <see langword="false"/>
     /// </summary>
     public class UserAreaWithoutEmailAsUsername : IUserAreaDefinition
@@ -12,11 +12,11 @@
 
         public string Name => "Username not email";
 
-        public bool AllowPasswordLogin => true;
+        public bool AllowPasswordSignIn => true;
 
         public bool UseEmailAsUsername => false;
 
-        public string LoginPath => "/weu/login";
+        public string SignInPath => "/weu/sign-in";
 
         public bool IsDefaultAuthScheme => false;
     }

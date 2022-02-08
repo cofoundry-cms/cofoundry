@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Used to wrap a <see cref="UserLoginInfo"/> result with additional
+    /// Used to wrap a <see cref="UserSignInInfo"/> result with additional
     /// information about why an authentication attempt is unsuccessful.
     /// This is the result of the <see cref="ValidateUserCredentialsQuery"/>.
     /// </summary>
@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
         /// If successful this will be filled with user data; otherwise
         /// it will be null.
         /// </summary>
-        public UserLoginInfo User { get; set; }
+        public UserSignInInfo User { get; set; }
 
         /// <summary>
         /// Indicates if the authentication attempt was successful. If

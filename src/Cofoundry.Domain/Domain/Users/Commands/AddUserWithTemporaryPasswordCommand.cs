@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Adds a new user and sends a notification containing a generated 
-    /// password which must be changed at first login.
+    /// password which must be changed at first sign in.
     /// </summary>
     /// <remarks>
     /// Sealed because we should be setting these properties

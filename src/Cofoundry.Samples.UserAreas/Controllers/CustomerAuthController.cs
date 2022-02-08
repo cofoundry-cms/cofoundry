@@ -128,13 +128,13 @@ namespace Cofoundry.Samples.UserAreas
 
             // If you need to customize the model you can create your own 
             // that implements ILoginViewModel
-            var viewModel = new LoginViewModel();
+            var viewModel = new SignInViewModel();
 
             return View(viewModel);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginViewModel viewModel)
+        public async Task<IActionResult> Login(SignInViewModel viewModel)
         {
             // First authenticate the user without logging them in
             var authResult = await _authenticationControllerHelper.AuthenticateAsync(this, viewModel);
@@ -156,7 +156,7 @@ namespace Cofoundry.Samples.UserAreas
             }
 
             // If no action required, log the user in
-            await _authenticationControllerHelper.LogUserInAsync(this, authResult.User, true);
+            await _authenticationControllerHelper.SignInUserAsync(this, authResult.User, true);
 
             // Support redirect urls from login
             var redirectUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
@@ -171,8 +171,8 @@ namespace Cofoundry.Samples.UserAreas
         [Route("logout")]
         public async Task<ActionResult> Logout()
         {
-            await _authenticationControllerHelper.LogoutAsync();
-            return Redirect(UrlLibrary.PartnerLogin());
+            await _authenticationControllerHelper.SignOutAsync();
+            return Redirect(UrlLibrary.PartnerSignIn());
         }
 
         [Route("forgot-password")]
@@ -236,7 +236,7 @@ namespace Cofoundry.Samples.UserAreas
         }
 
         [Route("email-verification-required")]
-        public async Task<ActionResult> EmailVerificationRequired(LoginViewModel viewModel)
+        public async Task<ActionResult> EmailVerificationRequired(SignInViewModel viewModel)
         {
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
             if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();

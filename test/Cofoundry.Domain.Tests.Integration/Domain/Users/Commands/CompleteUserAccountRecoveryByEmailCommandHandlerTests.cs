@@ -63,8 +63,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
         [Theory]
         [InlineData(CofoundryAdminUserArea.Code, SuperAdminRole.SuperAdminRoleCode, "/admin")]
-        [InlineData(TestUserArea1.Code, TestUserArea1RoleB.Code, TestUserArea1.LoginPathSetting)]
-        public async Task SendsMail(string userAreaCode, string roleCode, string loginPath)
+        [InlineData(TestUserArea1.Code, TestUserArea1RoleB.Code, TestUserArea1.SignInPathSetting)]
+        public async Task SendsMail(string userAreaCode, string roleCode, string signInPath)
         {
             var uniqueData = UNIQUE_PREFIX + nameof(SendsMail);
 
@@ -79,7 +79,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 c.RoleId = null;
             });
             var token = MakeResetToken(resetRequest);
-            var loginUrl = siteUrlResolver.MakeAbsolute(loginPath);
+            var signInUrl = siteUrlResolver.MakeAbsolute(signInPath);
 
             await contentRepository
                 .Users()
@@ -98,7 +98,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     "Test Site",
                     "has been changed",
                     "account is " + resetRequest.User.Username,
-                    loginUrl
+                    signInUrl
                 )
                 .Should().Be(1);
         }

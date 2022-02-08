@@ -1,10 +1,6 @@
 ﻿using Cofoundry.Core.Mail;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.SPASite.Domain
@@ -14,18 +10,18 @@ namespace Cofoundry.Samples.SPASite.Domain
     /// into Cofoundry such as saving a new user, sending a notification
     /// and logging them in.
     /// </summary>
-    public class RegisterMemberAndLogInCommandHandler
-        : ICommandHandler<RegisterMemberAndLogInCommand>
+    public class RegisterMemberAndSignInCommandHandler
+        : ICommandHandler<RegisterMemberAndSignInCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly IAdvancedContentRepository _contentRepository;
 
-        private readonly ILoginService _loginService;
+        private readonly IUserSignInService _loginService;
         private readonly IMailService _mailService;
-        
-        public RegisterMemberAndLogInCommandHandler(
+
+        public RegisterMemberAndSignInCommandHandler(
             IAdvancedContentRepository contentRepository,
-            ILoginService loginService,
+            IUserSignInService loginService,
             IMailService mailService
             )
         {
@@ -34,10 +30,10 @@ namespace Cofoundry.Samples.SPASite.Domain
             _mailService = mailService;
         }
 
-        public async Task ExecuteAsync(RegisterMemberAndLogInCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(RegisterMemberAndSignInCommand command, IExecutionContext executionContext)
         {
             var addUserCommand = MapAddUserCommand(command);
-            
+
             // Because we're not logged in, we'll need to elevate permissions to add a new user account.
             var userId = await _contentRepository
                 .WithElevatedPermissions()
@@ -46,7 +42,7 @@ namespace Cofoundry.Samples.SPASite.Domain
 
             await SendWelcomeNotification(command);
 
-            await _loginService.LogAuthenticatedUserInAsync(addUserCommand.UserAreaCode, userId, true);
+            await _loginService.SignInAuthenticatedUserAsync(addUserCommand.UserAreaCode, userId, true);
         }
 
         /// <summary>
@@ -59,7 +55,7 @@ namespace Cofoundry.Samples.SPASite.Domain
         /// 
         /// See https://www.owasp.org/index.php/Web_Parameter_Tampering
         /// </summary>
-        private AddUserCommand MapAddUserCommand(RegisterMemberAndLogInCommand command)
+        private AddUserCommand MapAddUserCommand(RegisterMemberAndSignInCommand command)
         {
             var addUserCommand = new AddUserCommand();
             addUserCommand.Email = command.Email;
@@ -75,7 +71,7 @@ namespace Cofoundry.Samples.SPASite.Domain
         /// <summary>
         /// For more info on sending mail with Cofoundry see https://www.cofoundry.org/docs/framework/mail
         /// </summary>
-        private async Task SendWelcomeNotification(RegisterMemberAndLogInCommand command)
+        private async Task SendWelcomeNotification(RegisterMemberAndSignInCommand command)
         {
             var welcomeEmailTemplate = new NewUserWelcomeMailTemplate();
             welcomeEmailTemplate.FirstName = command.FirstName;

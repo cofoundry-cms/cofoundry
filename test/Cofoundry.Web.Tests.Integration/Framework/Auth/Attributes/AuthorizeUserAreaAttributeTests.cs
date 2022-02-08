@@ -36,7 +36,7 @@ namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Attributes
         }
 
         [Fact]
-        public async Task WhenUserNotLoggedIn_RedirectsToLogin()
+        public async Task WhenUserNotSignedIn_RedirectsToSignIn()
         {
             using var app = _webApplicationFactory.CreateApp();
             using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
@@ -44,7 +44,7 @@ namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Attributes
             await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleA.User);
             var result = await client.GetAsync(GetRoute("user-area"));
 
-            LoginRedirectAssertions.AssertLoginRedirect(result, app.SeededEntities.TestUserArea2);
+            SignInRedirectAssertions.AssertSignInRedirect(result, app.SeededEntities.TestUserArea2);
         }
 
         private string GetRoute(string path)

@@ -1,34 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
     [Area(RouteConstants.AdminAreaName)]
     public class SetupController : Controller
     {
-        #region Constructor
-
         private readonly IQueryExecutor _queryExecutor;
-        private readonly ILoginService _loginService;
+        private readonly IUserSignInService _signInService;
         private readonly IAdminRouteLibrary _adminRouteLibrary;
 
         public SetupController(
             IQueryExecutor queryExecutor,
-            ILoginService loginService,
+            IUserSignInService signInService,
             IAdminRouteLibrary adminRouteLibrary
             )
         {
             _queryExecutor = queryExecutor;
-            _loginService = loginService;
+            _signInService = signInService;
             _adminRouteLibrary = adminRouteLibrary;
         }
-
-        #endregion
 
         public async Task<ActionResult> Index()
         {
@@ -39,7 +32,7 @@ namespace Cofoundry.Web.Admin
             }
 
             // force sign-out - solves a rare case where you're re-initializing a db after being signed into a previous version.
-            await _loginService.SignOutAllUserAreasAsync();
+            await _signInService.SignOutAllUserAreasAsync();
 
             var viewPath = ViewPathFormatter.View("Setup", nameof(Index));
             return View(viewPath);

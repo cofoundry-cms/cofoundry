@@ -38,7 +38,7 @@ namespace Cofoundry.Samples.UserAreas
         /// the password field will be null and login will typically be via SSO or some 
         /// other method.
         /// </summary>
-        public bool AllowPasswordLogin => true;
+        public bool AllowPasswordSignIn => true;
 
         /// <summary>
         /// Indicates whether the user should login using thier email address as the username.
@@ -50,11 +50,11 @@ namespace Cofoundry.Samples.UserAreas
         /// <summary>
         /// The path to a login page to use when a user does not have permission to 
         /// access a resource. The path to the denied resource is appended to the query
-        /// string of the <see cref="LoginPath"/> using the parameter name "ReturnUrl".
+        /// string of the <see cref="SignInPath"/> using the parameter name "ReturnUrl".
         /// If set to <see langword="null"/> then a 403 (Forbidden) error page will be 
         /// returned instead of the loginredirect.
         /// </summary>
-        public string LoginPath => "/customers/login/";
+        public string SignInPath => "/customers/login/";
 
         /// <summary>
         /// Setting this to true means that this user area will be used as the default login

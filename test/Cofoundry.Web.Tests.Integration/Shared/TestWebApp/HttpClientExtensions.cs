@@ -7,7 +7,7 @@ namespace Cofoundry.Web.Tests.Integration.TestWebApp
     public static class HttpClientExtensions
     {
         /// <summary>
-        /// Sends a login request to impersonate the specified user on the test
+        /// Sends a sign in request to impersonate the specified user on the test
         /// server environment.
         /// </summary>
         /// <param name="userInfo">
@@ -19,7 +19,7 @@ namespace Cofoundry.Web.Tests.Integration.TestWebApp
         }
 
         /// <summary>
-        /// Sends a login request to impersonate the specified user on the test
+        /// Sends a sign in request to impersonate the specified user on the test
         /// server environment.
         /// </summary>
         /// <param name="userId">

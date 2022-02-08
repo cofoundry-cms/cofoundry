@@ -30,7 +30,7 @@ namespace Cofoundry.Domain.Internal
 
             var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
 
-            if (!userArea.AllowPasswordLogin)
+            if (!userArea.AllowPasswordSignIn)
             {
                 throw new InvalidOperationException("This user is not permitted to log in with a password.");
             }

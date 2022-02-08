@@ -177,15 +177,15 @@ namespace Cofoundry.Domain.Internal
         {
             entity.AccessRuleViolationActionId = (int)command.ViolationAction;
 
-            if (string.IsNullOrEmpty(command.UserAreaCodeForLoginRedirect))
+            if (string.IsNullOrEmpty(command.UserAreaCodeForSignInRedirect))
             {
-                entity.UserAreaCodeForLoginRedirect = null;
+                entity.UserAreaCodeForSignInRedirect = null;
             }
             else
             {
-                var userArea = userAreas.GetOrDefault(command.UserAreaCodeForLoginRedirect);
-                EntityNotFoundException.ThrowIfNull(userArea, command.UserAreaCodeForLoginRedirect);
-                entity.UserAreaCodeForLoginRedirect = userArea.UserAreaCode;
+                var userArea = userAreas.GetOrDefault(command.UserAreaCodeForSignInRedirect);
+                EntityNotFoundException.ThrowIfNull(userArea, command.UserAreaCodeForSignInRedirect);
+                entity.UserAreaCodeForSignInRedirect = userArea.UserAreaCode;
             }
         }
 

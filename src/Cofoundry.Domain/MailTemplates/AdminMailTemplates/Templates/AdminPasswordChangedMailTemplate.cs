@@ -19,8 +19,8 @@
         public string Username { get; set; }
 
         /// <summary>
-        /// The absolute login page url e.g. "https://www.example.com/admin/".
+        /// The absolute sign in page url e.g. "https://www.example.com/admin/".
         /// </summary>
-        public string LoginUrl { get; set; }
+        public string SignInUrl { get; set; }
     }
 }

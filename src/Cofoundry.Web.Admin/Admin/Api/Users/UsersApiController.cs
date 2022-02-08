@@ -42,7 +42,7 @@ namespace Cofoundry.Web.Admin
         public async Task<JsonResult> Post([FromBody] AddUserCommand command)
         {
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(command.UserAreaCode);
-            if (userArea.AllowPasswordLogin)
+            if (userArea.AllowPasswordSignIn)
             {
                 return await _apiResponseHelper.RunCommandAsync(new AddUserWithTemporaryPasswordCommand()
                 {

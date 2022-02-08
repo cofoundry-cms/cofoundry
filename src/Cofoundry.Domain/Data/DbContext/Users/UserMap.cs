@@ -42,9 +42,9 @@ namespace Cofoundry.Domain.Data
                 .IsRequired()
                 .IsNVarCharMaxType();
 
-            builder.Property(s => s.LastLoginDate).IsUtc();
+            builder.Property(s => s.LastSignInDate).IsUtc();
             builder.Property(s => s.LastPasswordChangeDate).IsUtc();
-            builder.Property(s => s.PreviousLoginDate).IsUtc();
+            builder.Property(s => s.PreviousSignInDate).IsUtc();
             builder.Property(s => s.CreateDate).IsUtc();
 
             builder.HasOne(s => s.EmailDomain)

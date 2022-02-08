@@ -29,6 +29,6 @@ namespace Cofoundry.Domain
 
         public AccessRuleViolationAction ViolationAction { get; set; }
 
-        public UserAreaMicroSummary UserAreaForLoginRedirect { get; set; }
+        public UserAreaMicroSummary UserAreaForSignInRedirect { get; set; }
     }
 }

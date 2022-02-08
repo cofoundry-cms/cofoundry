@@ -34,13 +34,13 @@ namespace Cofoundry.Samples.UserAreas
 
             // If you need to customize the model you can create your own 
             // that implements ILoginViewModel
-            var viewModel = new LoginViewModel();
+            var viewModel = new SignInViewModel();
 
             return View(viewModel);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginViewModel viewModel)
+        public async Task<IActionResult> Login(SignInViewModel viewModel)
         {
             // First authenticate the user without logging them in
             var authResult = await _authenticationControllerHelper.AuthenticateAsync(this, viewModel);
@@ -63,7 +63,7 @@ namespace Cofoundry.Samples.UserAreas
             }
 
             // If no action required, log the user in
-            await _authenticationControllerHelper.LogUserInAsync(this, authResult.User, true);
+            await _authenticationControllerHelper.SignInUserAsync(this, authResult.User, true);
 
             if (redirectUrl != null)
             {
@@ -85,7 +85,7 @@ namespace Cofoundry.Samples.UserAreas
                 }
 
                 // The user shouldn't be logged in, but if so, log them out
-                await _authenticationControllerHelper.LogoutAsync();
+                await _authenticationControllerHelper.SignOutAsync();
             }
 
             // If you need to customize the model you can create your own 
@@ -107,7 +107,7 @@ namespace Cofoundry.Samples.UserAreas
                 }
 
                 // The user shouldn't be logged in, but if so, log them out
-                await _authenticationControllerHelper.LogoutAsync();
+                await _authenticationControllerHelper.SignOutAsync();
             }
             await _authenticationControllerHelper.ChangePasswordAsync(this, viewModel);
 
@@ -119,8 +119,8 @@ namespace Cofoundry.Samples.UserAreas
         [Route("logout")]
         public async Task<ActionResult> Logout()
         {
-            await _authenticationControllerHelper.LogoutAsync();
-            return Redirect(UrlLibrary.PartnerLogin());
+            await _authenticationControllerHelper.SignOutAsync();
+            return Redirect(UrlLibrary.PartnerSignIn());
         }
 
         [Route("forgot-password")]

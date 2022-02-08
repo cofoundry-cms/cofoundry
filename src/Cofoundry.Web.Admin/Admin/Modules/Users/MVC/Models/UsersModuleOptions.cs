@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
-
-namespace Cofoundry.Web.Admin
+﻿namespace Cofoundry.Web.Admin
 {
     /// <summary>
     /// A set of useful settings and options output as a js object for the front
@@ -23,14 +18,14 @@ namespace Cofoundry.Web.Admin
         public string Name { get; set; }
 
         /// <summary>
-        /// Indicates if users in this area can login using a password. If this
-        /// is false the password field will be null and login will typically be via
+        /// Indicates if users in this area can sign in using a password. If this
+        /// is false the password field will be null and sign in will typically be via
         /// SSO or some other method.
         /// </summary>
-        public bool AllowPasswordLogin { get; set; }
+        public bool AllowPasswordSignIn { get; set; }
 
         /// <summary>
-        /// Indicates whether the user should login using thier email address
+        /// Indicates whether the user should sign in using thier email address
         /// as the username. Some SSO systems might provide only a username and not
         /// an email address so in this case the email address is allowed to be null. 
         /// </summary>

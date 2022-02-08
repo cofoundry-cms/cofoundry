@@ -9,17 +9,17 @@
 
         public const string RecoveryUrlBase = "/ts1-auth/forgot-password";
         public const string VerificationUrlBase = "/ts1-auth/verify";
-        public const string LoginPathSetting = "/area-1/login";
+        public const string SignInPathSetting = "/area-1/sign-in";
 
         public string UserAreaCode => Code;
 
         public string Name => "Test Area 1";
 
-        public bool AllowPasswordLogin => true;
+        public bool AllowPasswordSignIn => true;
 
         public bool UseEmailAsUsername => true;
 
-        public string LoginPath => LoginPathSetting;
+        public string SignInPath => SignInPathSetting;
 
         public bool IsDefaultAuthScheme => true;
 

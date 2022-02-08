@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     public class UpdateUserPasswordByCredentialsCommand : ICommand, ILoggableCommand
     {
         /// <summary>
-        /// The unique code of the user area match logins for. Note
+        /// The unique code of the user area the user is expected to belong to. Note
         /// that usernames are unique per user area and therefore a given username
         /// may have an account for more than one user area.
         /// </summary>

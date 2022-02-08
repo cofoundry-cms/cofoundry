@@ -5,14 +5,14 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Validates user credentials. If the authentication was successful then user information 
-    /// pertinent to login is returned, otherwise error information is returned detailing
+    /// pertinent to sign in is returned, otherwise error information is returned detailing
     /// why the authentication failed.
     /// </summary>
     public class ValidateUserCredentialsQuery : IQuery<UserCredentialsValidationResult>
     {
         /// <summary>
-        /// The <see cref="IUserAreaDefinition.UserAreaCode"/> to match logins for. Note
-        /// that usernames are unique per user area and therefore a given username
+        /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area the user is expected 
+        /// to belong to. Note that usernames are unique per user area and therefore a given username
         /// may have an account for more than one user area.
         /// </summary>
         [Required]

@@ -3,9 +3,8 @@
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Exception thrown from the domain layer when a login 
-    /// attempt is invalid because the username or password
-    /// is invalid.
+    /// Exception thrown from the domain layer when an authentication 
+    /// attempt is invalid because the username or password is invalid.
     /// </summary>
     public class InvalidCredentialsAuthenticationException : ValidationErrorException
     {

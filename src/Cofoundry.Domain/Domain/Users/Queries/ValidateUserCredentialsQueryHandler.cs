@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// Returns information about a user if the specified credentials
-    /// pass an authentication check.
+    /// Validates user credentials. If the authentication was successful then user information 
+    /// pertinent to sign in is returned, otherwise error information is returned detailing
+    /// why the authentication failed.
     /// </summary>
     public class ValidateUserCredentialsQueryHandler
         : IQueryHandler<ValidateUserCredentialsQuery, UserCredentialsValidationResult>
@@ -49,8 +50,8 @@ namespace Cofoundry.Domain.Internal
                 return GetAuthenticationFailedForUnknownUserResult(query);
             }
 
-            var hasExceededMaxLoginAttempts = await HasExceededMaxLoginAttemptsAsync(query.UserAreaCode, uniqueUsername, executionContext);
-            if (hasExceededMaxLoginAttempts)
+            var hasExceededMaxAuthenticationInAttempts = await HasExceededMaxAuthenticationAttemptsAsync(query.UserAreaCode, uniqueUsername, executionContext);
+            if (hasExceededMaxAuthenticationInAttempts)
             {
                 _logger.LogDebug("Authentication failed due to too many failed attempts {UserAreaCode}", query.UserAreaCode);
                 return new UserCredentialsValidationResult()
@@ -62,7 +63,7 @@ namespace Cofoundry.Domain.Internal
             var dbUser = await GetUserAsync(query.UserAreaCode, uniqueUsername);
             if (dbUser == null)
             {
-                await LogFailedLogginAttemptAsync(query.UserAreaCode, uniqueUsername, executionContext);
+                await LogFailedAuthenticationAttemptAsync(query.UserAreaCode, uniqueUsername, executionContext);
                 return GetAuthenticationFailedForUnknownUserResult(query);
             }
 
@@ -84,15 +85,15 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        private Task<bool> HasExceededMaxLoginAttemptsAsync(string userAreaCode, string uniqueUsername, IExecutionContext executionContext)
+        private Task<bool> HasExceededMaxAuthenticationAttemptsAsync(string userAreaCode, string uniqueUsername, IExecutionContext executionContext)
         {
-            var hasExceededMaxLoginAttemptsQuery = new HasExceededMaxLoginAttemptsQuery()
+            var hasExceededMaxAuthenticationAttemptsQuery = new HasExceededMaxAuthenticationAttemptsQuery()
             {
                 UserAreaCode = userAreaCode,
                 Username = uniqueUsername
             };
 
-            return _queryExecutor.ExecuteAsync(hasExceededMaxLoginAttemptsQuery, executionContext);
+            return _queryExecutor.ExecuteAsync(hasExceededMaxAuthenticationAttemptsQuery, executionContext);
         }
 
         private Task<User> GetUserAsync(string userAreaCode, string uniqueUsername)
@@ -101,25 +102,25 @@ namespace Cofoundry.Domain.Internal
                 .Users
                 .AsNoTracking()
                 .FilterByUserArea(userAreaCode)
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .Where(u => u.UniqueUsername == uniqueUsername)
                 .FirstOrDefaultAsync();
         }
 
-        private async Task LogFailedLogginAttemptAsync(string userAreaCode, string uniqueUsername, IExecutionContext executionContext)
+        private async Task LogFailedAuthenticationAttemptAsync(string userAreaCode, string uniqueUsername, IExecutionContext executionContext)
         {
-            var command = new LogFailedLoginAttemptCommand(userAreaCode, uniqueUsername);
+            var command = new LogFailedAuthenticationAttemptCommand(userAreaCode, uniqueUsername);
             await _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
-        private UserLoginInfo MapUser(ValidateUserCredentialsQuery query, User dbUser)
+        private UserSignInInfo MapUser(ValidateUserCredentialsQuery query, User dbUser)
         {
             if (dbUser == null) throw new ArgumentNullException(nameof(dbUser));
 
             var verificationResult = VerifyPassword(query, dbUser);
             if (verificationResult == PasswordVerificationResult.Failed) return null;
 
-            var userLoginInfo = new UserLoginInfo()
+            var userSignInInfo = new UserSignInInfo()
             {
                 RequirePasswordChange = dbUser.RequirePasswordChange,
                 UserAreaCode = dbUser.UserAreaCode,
@@ -128,7 +129,7 @@ namespace Cofoundry.Domain.Internal
                 PasswordRehashNeeded = verificationResult == PasswordVerificationResult.SuccessRehashNeeded
             };
 
-            return userLoginInfo;
+            return userSignInInfo;
         }
 
         private PasswordVerificationResult VerifyPassword(ValidateUserCredentialsQuery query, User dbUser)
@@ -167,7 +168,7 @@ namespace Cofoundry.Domain.Internal
         {
             if (result.User == null)
             {
-                await LogFailedLogginAttemptAsync(query.UserAreaCode, uniqueUsername, executionContext);
+                await LogFailedAuthenticationAttemptAsync(query.UserAreaCode, uniqueUsername, executionContext);
 
                 result.Error = UserValidationErrors.Authentication.InvalidCredentials.Create(query.PropertyToValidate);
             }

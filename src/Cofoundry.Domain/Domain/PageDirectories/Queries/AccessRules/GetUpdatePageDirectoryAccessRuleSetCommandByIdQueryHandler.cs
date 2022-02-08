@@ -42,7 +42,7 @@ namespace Cofoundry.Domain.Internal
             var command = new UpdatePageDirectoryAccessRuleSetCommand()
             {
                 PageDirectoryId = dbPageDirectory.PageDirectoryId,
-                UserAreaCodeForLoginRedirect = dbPageDirectory.UserAreaCodeForLoginRedirect,
+                UserAreaCodeForSignInRedirect = dbPageDirectory.UserAreaCodeForSignInRedirect,
                 ViolationAction = violationAction.Value
             };
 

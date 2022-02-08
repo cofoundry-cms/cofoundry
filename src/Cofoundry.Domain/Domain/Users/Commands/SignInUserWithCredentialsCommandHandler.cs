@@ -11,25 +11,25 @@ namespace Cofoundry.Domain.Internal
     /// Logs a user into the application for a specified user area
     /// using username and password credentials. Checks for valid
     /// credentials and includes additional security checking such
-    /// as preventing excessive login attempts. Validation errors
+    /// as preventing excessive authentication attempts. Validation errors
     /// are thrown as ValidationExceptions.
     /// </summary>
-    public class LogUserInWithCredentialsCommandHandler
-        : ICommandHandler<LogUserInWithCredentialsCommand>
+    public class SignInUserWithCredentialsCommandHandler
+        : ICommandHandler<SignInUserWithCredentialsCommand>
         , IIgnorePermissionCheckHandler
     {
-        private readonly ILogger<LogUserInWithCredentialsCommandHandler> _logger;
+        private readonly ILogger<SignInUserWithCredentialsCommandHandler> _logger;
         private readonly CofoundryDbContext _dbContext;
         private readonly IDomainRepository _domainRepository;
-        private readonly ILoginService _loginService;
+        private readonly IUserSignInService _signInService;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
-        public LogUserInWithCredentialsCommandHandler(
-            ILogger<LogUserInWithCredentialsCommandHandler> logger,
+        public SignInUserWithCredentialsCommandHandler(
+            ILogger<SignInUserWithCredentialsCommandHandler> logger,
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
-            ILoginService loginService,
+            IUserSignInService signInService,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
             IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
@@ -37,15 +37,15 @@ namespace Cofoundry.Domain.Internal
             _logger = logger;
             _dbContext = dbContext;
             _domainRepository = domainRepository;
-            _loginService = loginService;
+            _signInService = signInService;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
 
-        public async Task ExecuteAsync(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(SignInUserWithCredentialsCommand command, IExecutionContext executionContext)
         {
-            var authResult = await GetUserLoginInfoAsync(command, executionContext);
+            var authResult = await GetUserSignInInfoAsync(command, executionContext);
             authResult.ThrowIfNotSuccess();
 
             if (authResult.User.RequirePasswordChange)
@@ -74,14 +74,14 @@ namespace Cofoundry.Domain.Internal
                 .WithContext(executionContext)
                 .ExecuteCommandAsync(new InvalidateAuthorizedTaskBatchCommand(authResult.User.UserId, UserAccountRecoveryAuthorizedTaskType.Code));
 
-            await _loginService.LogAuthenticatedUserInAsync(
+            await _signInService.SignInAuthenticatedUserAsync(
                 command.UserAreaCode,
                 authResult.User.UserId,
                 command.RememberUser
                 );
         }
 
-        private Task<UserCredentialsValidationResult> GetUserLoginInfoAsync(LogUserInWithCredentialsCommand command, IExecutionContext executionContext)
+        private Task<UserCredentialsValidationResult> GetUserSignInInfoAsync(SignInUserWithCredentialsCommand command, IExecutionContext executionContext)
         {
             var query = new ValidateUserCredentialsQuery()
             {

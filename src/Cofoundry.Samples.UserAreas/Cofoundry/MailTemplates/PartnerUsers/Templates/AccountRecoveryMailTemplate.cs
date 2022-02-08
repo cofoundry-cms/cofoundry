@@ -5,7 +5,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
     /// <summary>
     /// Template for the email sent when a user requests to recover their
     /// account via the 'forgot password' mechanism on partner users
-    /// login form.
+    /// sign in form.
     /// </summary>
     public class AccountRecoveryMailTemplate : IMailTemplate
     {

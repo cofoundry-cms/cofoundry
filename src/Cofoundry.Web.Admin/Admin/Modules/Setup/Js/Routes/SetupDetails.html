@@ -1,6 +1,6 @@
 ﻿<cms-page-body ng-if="vm.isSetupComplete">
     <cms-form-section cms-title="Setup complete">
-        <p>You're all set to go. Please follow the link below to login to Cofoundry.</p>
+        <p>You're all set to go. Please follow the link below to sign in to Cofoundry.</p>
         <div class="actions">
             <a class="btn main-cta" href="{{::vm.urlLibrary.login()}}">Login</a>
         </div>
@@ -18,7 +18,7 @@
 
         <cms-form-section cms-title="Site setup">
 
-            <p>Before we get started, we're gonna need some basic setup information from you. This will give your application a name and also create the default login account.</p>
+            <p>Before we get started, we're gonna need some basic setup information from you. This will give your application a name and also create the default user account.</p>
 
             <cms-form-field-text cms-title="Application Name"
                                  cms-model="vm.command.applicationName"

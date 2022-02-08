@@ -29,7 +29,7 @@ namespace Cofoundry.Domain.Internal
             var dbUser = await _dbContext
                 .Users
                 .AsNoTracking()
-                .FilterCanLogIn()
+                .FilterCanSignIn()
                 .FilterById(query.Id)
                 .SingleOrDefaultAsync();
 

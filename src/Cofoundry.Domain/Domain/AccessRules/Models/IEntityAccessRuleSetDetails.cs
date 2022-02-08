@@ -30,6 +30,6 @@ namespace Cofoundry.Domain
         /// <summary>
         /// The user area to restrict access to.
         /// </summary>
-        public UserAreaMicroSummary UserAreaForLoginRedirect { get; set; }
+        public UserAreaMicroSummary UserAreaForSignInRedirect { get; set; }
     }
 }
