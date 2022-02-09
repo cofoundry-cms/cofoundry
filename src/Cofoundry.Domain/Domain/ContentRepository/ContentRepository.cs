@@ -1,54 +1,56 @@
 ﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Extendable;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class ContentRepository 
+    /// <inheritdoc/>
+    public class ContentRepository
         : IContentRepository
         , IAdvancedContentRepository
         , IExtendableContentRepository
     {
-        private readonly IQueryExecutor _queryExecutor;
-        private readonly ICommandExecutor _commandExecutor;
+        private IDomainRepositoryExecutor _domainRepositoryExecutor;
 
         public ContentRepository(
             IServiceProvider serviceProvider,
-            IQueryExecutor queryExecutor,
-            ICommandExecutor commandExecutor
+            IDomainRepositoryExecutor domainRepositoryExecutor
             )
         {
             ServiceProvider = serviceProvider;
-            _queryExecutor = queryExecutor;
-            _commandExecutor = commandExecutor;
+            _domainRepositoryExecutor = domainRepositoryExecutor;
         }
 
-        /// <summary>
-        /// Service provider instance to be used for extension only
-        /// i.e. by internal Cofoundry or plugins. Access this by casting
-        /// to the IExtendableContentRepository interface.
-        /// </summary>
         public virtual IServiceProvider ServiceProvider { get; private set; }
 
-        /// <summary>
-        /// Handles the asynchronous execution the specified query.
-        /// </summary>
-        /// <param name="query">Query to execute.</param>
         public virtual Task<TResult> ExecuteQueryAsync<TResult>(IQuery<TResult> query)
         {
-            return _queryExecutor.ExecuteAsync(query);
+            return _domainRepositoryExecutor.ExecuteAsync(query, null);
         }
 
-        /// <summary>
-        /// Handles the execution of the specified command.
-        /// </summary>
-        /// <param name="command">Command to execute.</param>
         public virtual Task ExecuteCommandAsync(ICommand command)
         {
-            return _commandExecutor.ExecuteAsync(command);
+            return _domainRepositoryExecutor.ExecuteAsync(command, null);
         }
+
+        public IExtendableContentRepository WithExecutor(Func<IDomainRepositoryExecutor, IDomainRepositoryExecutor> domainRepositoryExecutorFactory)
+        {
+            var newRepository = new ContentRepository(ServiceProvider, _domainRepositoryExecutor);
+            newRepository.DecorateExecutor(domainRepositoryExecutorFactory);
+
+            return newRepository;
+        }
+
+        private void DecorateExecutor(Func<IDomainRepositoryExecutor, IDomainRepositoryExecutor> domainRepositoryExecutorFactory)
+        {
+            if (domainRepositoryExecutorFactory == null) throw new ArgumentNullException(nameof(domainRepositoryExecutorFactory));
+
+            var newExecutor = domainRepositoryExecutorFactory.Invoke(_domainRepositoryExecutor);
+            if (newExecutor == null) throw new InvalidOperationException(nameof(domainRepositoryExecutorFactory) + " did not return an instance.");
+
+            _domainRepositoryExecutor = newExecutor;
+        }
+
     }
 }

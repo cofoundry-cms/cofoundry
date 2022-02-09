@@ -1,14 +1,16 @@
 ﻿using Cofoundry.Domain.CQS;
 using System.ComponentModel.DataAnnotations;
+using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
     /// Signs a user into the application for a specified user area
-    /// using username and password credentials. Checks for valid
-    /// credentials and includes additional security checking such
-    /// as preventing excessive authentication attempts. Validation errors
-    /// are thrown as ValidationExceptions.
+    /// using username and password credentials to authenticate. Additional
+    /// security checks are also made such as preventing excessive authentication 
+    /// attempts. Validation errors are thrown as <see cref="ValidationErrorException"/>. 
+    /// The ambient user area (i.e. "current" user context) is switched to the specified area 
+    /// for the remainder of the DI scope (i.e. request for web apps).
     /// </summary>
     public class SignInUserWithCredentialsCommand : ICommand
     {
@@ -28,7 +30,7 @@ namespace Cofoundry.Domain
         public string Password { get; set; }
 
         /// <summary>
-        /// The unique code of the user area to attempt to log into. Note
+        /// The unique code of the user area to attempt to sign into. Note
         /// that usernames are unique per user area and therefore a given username
         /// may have an account for more than one user area.
         /// </summary>

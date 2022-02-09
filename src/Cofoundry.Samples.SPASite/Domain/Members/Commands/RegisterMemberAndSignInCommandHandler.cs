@@ -16,17 +16,14 @@ namespace Cofoundry.Samples.SPASite.Domain
     {
         private readonly IAdvancedContentRepository _contentRepository;
 
-        private readonly IUserSignInService _loginService;
         private readonly IMailService _mailService;
 
         public RegisterMemberAndSignInCommandHandler(
             IAdvancedContentRepository contentRepository,
-            IUserSignInService loginService,
             IMailService mailService
             )
         {
             _contentRepository = contentRepository;
-            _loginService = loginService;
             _mailService = mailService;
         }
 
@@ -42,7 +39,14 @@ namespace Cofoundry.Samples.SPASite.Domain
 
             await SendWelcomeNotification(command);
 
-            await _loginService.SignInAuthenticatedUserAsync(addUserCommand.UserAreaCode, userId, true);
+            await _contentRepository
+                .Users()
+                .Authentication()
+                .SignInAuthenticatedUserAsync(new SignInAuthenticatedUserCommand()
+                {
+                    UserId = userId,
+                    RememberUser = true
+                });
         }
 
         /// <summary>

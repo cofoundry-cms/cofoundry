@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     public static class UserValidationErrors
     {
         /// <summary>
-        /// Library of validation errors used in <see cref="ValidateUserCredentialsQuery"/> or other
+        /// Library of validation errors used in <see cref="AuthenticateUserCredentialsQuery"/> or other
         /// functions that require authentication.
         /// </summary>
         public static class Authentication

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.CQS
 {
@@ -10,18 +6,18 @@ namespace Cofoundry.Domain.CQS
     /// Service for executing commands of various types.
     /// </summary>
     /// <remarks>
-    /// See http://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=91
+    /// CQS design influenced by http://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=91
     /// </remarks>
     public interface ICommandExecutor
     {
         /// <summary>
-        /// Handles the execution of the specified command.
+        /// Handles the execution of the specified <paramref name="command"/>.
         /// </summary>
         /// <param name="command">Command to execute.</param>
         Task ExecuteAsync(ICommand command);
 
         /// <summary>
-        /// Handles the execution of the specified command.
+        /// Handles the execution of the specified <paramref name="command"/>.
         /// </summary>
         /// <param name="command">Command to execute.</param>
         /// <param name="executionContext">
@@ -31,7 +27,7 @@ namespace Cofoundry.Domain.CQS
         Task ExecuteAsync(ICommand command, IExecutionContext executionContext);
 
         /// <summary>
-        /// Handles the execution of the specified command.
+        /// Handles the execution of the specified <paramref name="command"/>.
         /// </summary>
         /// <param name="command">Command to execute.</param>
         /// <param name="userContext">

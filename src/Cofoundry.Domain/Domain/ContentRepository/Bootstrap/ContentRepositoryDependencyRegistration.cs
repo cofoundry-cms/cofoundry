@@ -1,8 +1,7 @@
 ﻿using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cofoundry.Domain.Registration
 {
@@ -11,10 +10,9 @@ namespace Cofoundry.Domain.Registration
         public void Register(IContainerRegister container)
         {
             container.Register<ContentRepository>(new Type[] { typeof(IContentRepository), typeof(IAdvancedContentRepository), typeof(IDomainRepository) });
-            container.Register<IContentRepositoryWithElevatedPermissions, ContentRepositoryWithElevatedPermissions>();
-            container.Register<IContentRepositoryWithCustomExecutionContext, ContentRepositoryWithCustomExecutionContext>();
+            container.Register<IDomainRepositoryExecutor, DomainRepositoryExecutor>();
             container.Register<IDomainRepositoryTransactionManager, DomainRepositoryTransactionManager>();
-            
+
         }
     }
 }

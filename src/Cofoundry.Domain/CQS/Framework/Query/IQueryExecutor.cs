@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.CQS
 {
@@ -12,13 +8,13 @@ namespace Cofoundry.Domain.CQS
     public interface IQueryExecutor
     {
         /// <summary>
-        /// Handles the asynchronous execution the specified query.
+        /// Handles the execution the specified <paramref name="query"/>.
         /// </summary>
         /// <param name="query">Query to execute.</param>
         Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query);
 
         /// <summary>
-        /// Handles the asynchronous execution the specified query.
+        /// Handles the execution the specified <paramref name="query"/>.
         /// </summary>
         /// <param name="query">Query to execute.</param>
         /// <param name="executionContext">
@@ -28,7 +24,7 @@ namespace Cofoundry.Domain.CQS
         Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext);
 
         /// <summary>
-        /// Handles the asynchronous execution the specified query.
+        /// Handles the execution the specified <paramref name="query"/>.
         /// </summary>
         /// <param name="query">Query to execute.</param>
         /// <param name="userContext">

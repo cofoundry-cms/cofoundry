@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -27,15 +28,22 @@ namespace Cofoundry.Domain
         /// <param name="executionContext">
         /// The execution context instance to use.
         /// </param>
-        public static IDomainRepository WithContext(this IDomainRepository repository, IExecutionContext executionContext)
+        public static TRepository WithContext<TRepository>(this TRepository repository, IExecutionContext executionContext)
+            where TRepository : IDomainRepository
         {
             if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
 
             var extendedContentRepositry = repository.AsExtendableContentRepository();
-            var newRepository = extendedContentRepositry.ServiceProvider.GetRequiredService<IContentRepositoryWithCustomExecutionContext>();
-            newRepository.SetExecutionContext(executionContext);
+            return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithExecutionContext(executor, executionContext));
+        }
 
-            return newRepository;
+        public static TRepository WithContextx<TRepository>(this TRepository repository, IExecutionContext executionContext)
+            where TRepository : IDomainRepository
+        {
+            if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+
+            var extendedContentRepositry = repository.AsExtendableContentRepository();
+            return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithExecutionContext(executor, executionContext));
         }
 
         /// <summary>
@@ -46,15 +54,37 @@ namespace Cofoundry.Domain
         /// <param name="userContext">
         /// The <see cref="IUserContext"/> to build into a new <see cref="IExecutionContext"/>.
         /// </param>
-        public static IDomainRepository WithContext(this IDomainRepository repository, IUserContext userContext)
+        public static TRepository WithContext<TRepository>(this TRepository repository, IUserContext userContext)
+            where TRepository : IDomainRepository
         {
             if (userContext == null) throw new ArgumentNullException(nameof(userContext));
 
             var extendedContentRepositry = repository.AsExtendableContentRepository();
             var executionContextFactory = extendedContentRepositry.ServiceProvider.GetRequiredService<IExecutionContextFactory>();
-            var executionContext = executionContextFactory.Create(userContext);
 
-            return repository.WithContext(executionContext);
+            return (TRepository) extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithUserContext(executor, executionContextFactory, userContext));
+        }
+
+        /// <summary>
+        /// Execute queries or commands using the user context associated with the
+        /// specified user area. This is useful when implementing multiple user areas
+        /// whereby a client can be logged into multiple user accounts belonging to 
+        /// different user areas. Use this to force execution to use the context
+        /// of a specific user area rather than relying on the "ambient" or default.
+        /// </summary>
+        /// <typeparam name="TUserAreaDefinition">
+        /// The user area to use when determining the signed in user to execute
+        /// tasks with.
+        /// </typeparam>
+        public static IDomainRepository WithContext<TUserAreaDefinition>(this IDomainRepository repository)
+            where TUserAreaDefinition : IUserAreaDefinition
+        {
+            var extendedContentRepositry = repository.AsExtendableContentRepository();
+            var userArea = extendedContentRepositry.ServiceProvider.GetRequiredService<TUserAreaDefinition>();
+            var userContextService = extendedContentRepositry.ServiceProvider.GetRequiredService<IUserContextService>();
+            var executionContextFactory = extendedContentRepositry.ServiceProvider.GetRequiredService<IExecutionContextFactory>();
+
+            return extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithUserAreaContext(executor, userArea, userContextService, executionContextFactory));
         }
 
         /// <summary>
@@ -64,11 +94,13 @@ namespace Cofoundry.Domain
         /// signed in user does not have permission for, e.g. signing up a new
         /// user prior to sign.
         /// </summary>
-        public static IDomainRepository WithElevatedPermissions(this IDomainRepository domainRepository)
+        public static TRepository WithElevatedPermissions<TRepository>(this TRepository repository)
+            where TRepository : IDomainRepository
         {
-            var extendedApi = domainRepository.AsExtendableContentRepository();
+            var extendedContentRepositry = repository.AsExtendableContentRepository();
+            var executionContextFactory = extendedContentRepositry.ServiceProvider.GetRequiredService<IExecutionContextFactory>();
 
-            return extendedApi.ServiceProvider.GetRequiredService<IContentRepositoryWithElevatedPermissions>();
+            return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithElevatedPermissions(executor, executionContextFactory));
         }
 
         /// <summary>

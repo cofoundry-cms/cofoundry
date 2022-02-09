@@ -29,11 +29,5 @@
         /// of verification is via an email sign-up notification.
         /// </summary>>
         public bool IsAccountVerified { get; set; }
-
-        /// <summary>
-        /// True if the password hash version is out of date. If this true then the password 
-        /// needs updating with the latest hash.
-        /// </summary>
-        public bool PasswordRehashNeeded { get; set; }
     }
 }

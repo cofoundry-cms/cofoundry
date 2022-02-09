@@ -51,7 +51,7 @@ namespace Cofoundry.Web.Internal
             if (cachedUserId.HasValue) return cachedUserId;
 
             var user = _httpContextAccessor?.HttpContext?.User;
-            var userIdClaim = user?.FindFirst(ClaimTypes.NameIdentifier);
+            var userIdClaim = user?.FindFirst(CofoundryClaimTypes.UserId);
 
             if (userIdClaim == null) return null;
 
@@ -74,7 +74,7 @@ namespace Cofoundry.Web.Internal
             var result = await _httpContextAccessor.HttpContext.AuthenticateAsync(scheme);
             if (!result.Succeeded) return null;
 
-            var userIdClaim = result.Principal.FindFirst(ClaimTypes.NameIdentifier);
+            var userIdClaim = result.Principal.FindFirst(CofoundryClaimTypes.UserId);
             if (userIdClaim == null) return null;
 
             var userId = IntParser.ParseOrNull(userIdClaim.Value);

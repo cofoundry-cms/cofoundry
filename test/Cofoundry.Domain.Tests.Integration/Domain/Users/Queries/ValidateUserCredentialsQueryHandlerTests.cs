@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             await AddUserIfNotExistsAsync();
 
-            var query = new ValidateUserCredentialsQuery()
+            var query = new AuthenticateUserCredentialsQuery()
             {
                 UserAreaCode = CofoundryAdminUserArea.Code,
                 Username = username,
@@ -66,7 +66,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             await AddUserIfNotExistsAsync();
 
-            var query = new ValidateUserCredentialsQuery()
+            var query = new AuthenticateUserCredentialsQuery()
             {
                 UserAreaCode = TestUserArea1.Code,
                 Username = VALID_USERNAME,
@@ -107,14 +107,14 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 await dbContext.SaveChangesAsync();
             }
 
-            var query = new ValidateUserCredentialsQuery()
+            var query = new AuthenticateUserCredentialsQuery()
             {
                 UserAreaCode = CofoundryAdminUserArea.Code,
                 Username = "System",
                 Password = VALID_PASSWORD
             };
 
-            UserCredentialsValidationResult result;
+            UserCredentialsAuthenticationResult result;
 
             using (var app = _appFactory.Create())
             {
@@ -145,14 +145,14 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                     .ExecuteCommandAsync(new DeleteUserCommand(userId));
             }
 
-            var query = new ValidateUserCredentialsQuery()
+            var query = new AuthenticateUserCredentialsQuery()
             {
                 UserAreaCode = CofoundryAdminUserArea.Code,
                 Username = username,
                 Password = VALID_PASSWORD
             };
 
-            UserCredentialsValidationResult result;
+            UserCredentialsAuthenticationResult result;
 
             using (var app = _appFactory.Create())
             {
@@ -174,14 +174,14 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             await AddUserIfNotExistsAsync();
 
-            var query = new ValidateUserCredentialsQuery()
+            var query = new AuthenticateUserCredentialsQuery()
             {
                 UserAreaCode = TestUserArea2.Code,
                 Username = VALID_USERNAME,
                 Password = VALID_PASSWORD
             };
 
-            UserCredentialsValidationResult result;
+            UserCredentialsAuthenticationResult result;
 
             using (var app = _appFactory.Create())
             {
@@ -203,7 +203,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var userId = await AddUserIfNotExistsAsync();
 
-            var query = new ValidateUserCredentialsQuery()
+            var query = new AuthenticateUserCredentialsQuery()
             {
                 UserAreaCode = TestUserArea1.Code,
                 Username = VALID_USERNAME,
@@ -226,7 +226,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
 
                 // Non-defaults for these props are covered in other tests
                 result.User.RequirePasswordChange.Should().BeFalse();
-                result.User.PasswordRehashNeeded.Should().BeFalse();
                 result.User.IsAccountVerified.Should().BeFalse();
             }
         }
@@ -237,14 +236,14 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
             var username = "WhenPasswordChangeRequired_RequirePasswordChangeTrue" + TEST_DOMAIN;
             var userId = await AddUserIfNotExistsAsync(username, c => c.RequirePasswordChange = true);
 
-            var query = new ValidateUserCredentialsQuery()
+            var query = new AuthenticateUserCredentialsQuery()
             {
                 UserAreaCode = TestUserArea1.Code,
                 Username = username,
                 Password = VALID_PASSWORD
             };
 
-            UserCredentialsValidationResult result;
+            UserCredentialsAuthenticationResult result;
 
             using var app = _appFactory.Create();
             var repository = app.Services.GetService<IDomainRepository>();
@@ -261,12 +260,12 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 result.User.RequirePasswordChange.Should().BeTrue();
             }
         }
-
-        [Fact]
-        public async Task WhenOldPasswordHash_PasswordRehashNeededTrue()
+        
+        public async Task WhenOldPasswordHash_PasswordRehashed()
         {
-            var username = "WhenOldPasswordHash_PasswordRehashNeededTrue" + TEST_DOMAIN;
+            var username = "WhenOldPasswordHash_PasswordRehashed" + TEST_DOMAIN;
             var userId = await AddUserIfNotExistsAsync(username);
+            string oldHash;
 
             using (var app = _appFactory.Create())
             {
@@ -277,33 +276,39 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
 
                 user.Password = Defuse.PasswordCryptographyV2.CreateHash(VALID_PASSWORD);
                 user.PasswordHashVersion = (int)PasswordHashVersion.V2;
+                oldHash = user.Password;
 
                 await dbContext.SaveChangesAsync();
             }
 
-            var query = new ValidateUserCredentialsQuery()
+            var query = new AuthenticateUserCredentialsQuery()
             {
                 UserAreaCode = TestUserArea1.Code,
                 Username = username,
                 Password = VALID_PASSWORD
             };
 
-            UserCredentialsValidationResult result;
+            UserCredentialsAuthenticationResult result;
+            User updatedUser;
 
             using (var app = _appFactory.Create())
             {
                 var repository = app.Services.GetService<IDomainRepository>();
+                var dbContext = app.Services.GetService<CofoundryDbContext>();
+
                 result = await repository.ExecuteQueryAsync(query);
+                updatedUser = await dbContext
+                    .Users
+                    .FilterById(userId)
+                    .SingleAsync();
             }
 
             using (new AssertionScope())
             {
                 result.Should().NotBeNull();
-                result.User.Should().NotBeNull();
-                result.User.UserId.Should().Be(userId);
                 result.IsSuccess.Should().BeTrue();
                 result.Error.Should().BeNull();
-                result.User.PasswordRehashNeeded.Should().BeTrue();
+                updatedUser.Password.Should().NotBe(oldHash);
             }
         }
 
@@ -315,7 +320,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
             using var app = _appFactory.Create();
             var repository = app.Services.GetService<IDomainRepository>();
 
-            var query = new ValidateUserCredentialsQuery()
+            var query = new AuthenticateUserCredentialsQuery()
             {
                 UserAreaCode = TestUserArea1.Code,
                 Username = VALID_USERNAME,

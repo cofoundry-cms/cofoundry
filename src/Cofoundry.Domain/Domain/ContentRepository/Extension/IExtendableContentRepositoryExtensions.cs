@@ -4,6 +4,12 @@ namespace Cofoundry.Domain.Extendable
 {
     public static class IExtendableContentRepositoryExtensions
     {
+        /// <summary>
+        /// Casts the repository instance as <see cref="IExtendableContentRepository"/> to
+        /// provide access to hidden functionality intended for extending a repository with
+        /// bespoke features. These are advanced feature intended to be used for extension only 
+        /// e.g. internally by Cofoundry, in plugins or custom extensions
+        /// </summary>
         public static IExtendableContentRepository AsExtendableContentRepository(this IDomainRepository contentRepository)
         {
             return CastToExtendableContentRepository(contentRepository);

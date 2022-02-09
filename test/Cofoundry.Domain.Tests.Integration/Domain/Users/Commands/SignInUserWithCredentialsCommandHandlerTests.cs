@@ -2,6 +2,7 @@
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -51,7 +52,17 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             var sessionUserId = await userSessionService.GetUserIdByUserAreaCodeAsync(user.UserAreaCode);
 
-            sessionUserId.Should().Be(sessionUserId);
+            using (new AssertionScope())
+            {
+                sessionUserId.Should().Be(sessionUserId);
+
+                app.Mocks
+                    .CountMessagesPublished<UserSignednMessage>(m =>
+                    {
+                        return m.UserId == user.UserId && m.UserAreaCode == user.UserAreaCode;
+                    })
+                    .Should().Be(1);
+            }
         }
 
         [Fact]

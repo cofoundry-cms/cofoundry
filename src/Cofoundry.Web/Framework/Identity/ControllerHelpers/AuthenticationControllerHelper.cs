@@ -3,7 +3,6 @@ using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,45 +12,44 @@ namespace Cofoundry.Web.Identity
     public class AuthenticationControllerHelper<TUserArea> : IAuthenticationControllerHelper<TUserArea>
         where TUserArea : IUserAreaDefinition
     {
-        private readonly IQueryExecutor _queryExecutor;
-        private readonly IUserSignInService _signInService;
+        private readonly IAdvancedContentRepository _contentRepository;
         private readonly IControllerResponseHelper _controllerResponseHelper;
         private readonly IAuthorizedTaskTokenUrlHelper _userAccountRecoveryUrlHelper;
         private readonly TUserArea _userAreaDefinition;
 
         public AuthenticationControllerHelper(
-            IQueryExecutor queryExecutor,
-            IUserSignInService signInService,
+            IAdvancedContentRepository contentRepository,
             IControllerResponseHelper controllerResponseHelper,
             IAuthorizedTaskTokenUrlHelper userAccountRecoveryUrlHelper,
             TUserArea userAreaDefinition
             )
         {
-            _queryExecutor = queryExecutor;
-            _signInService = signInService;
+            _contentRepository = contentRepository;
             _controllerResponseHelper = controllerResponseHelper;
             _userAccountRecoveryUrlHelper = userAccountRecoveryUrlHelper;
             _userAreaDefinition = userAreaDefinition;
         }
 
-        public async Task<UserCredentialsValidationResult> AuthenticateAsync(Controller controller, ISignInViewModel viewModel)
+        public async Task<UserCredentialsAuthenticationResult> AuthenticateAsync(Controller controller, ISignInViewModel viewModel)
         {
             if (controller == null) throw new ArgumentNullException(nameof(controller));
             if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
 
             if (!controller.ModelState.IsValid)
             {
-                return UserCredentialsValidationResult.CreateFailedResult();
+                return UserCredentialsAuthenticationResult.CreateFailedResult();
             }
 
-            var query = new ValidateUserCredentialsQuery()
-            {
-                UserAreaCode = _userAreaDefinition.UserAreaCode,
-                Username = viewModel.Username,
-                Password = viewModel.Password
-            };
-
-            var result = await _queryExecutor.ExecuteAsync(query);
+            var result = await _contentRepository
+                .Users()
+                .Authentication()
+                .AuthenticateCredentialsAsync(new AuthenticateUserCredentialsQuery()
+                {
+                    UserAreaCode = _userAreaDefinition.UserAreaCode,
+                    Username = viewModel.Username,
+                    Password = viewModel.Password
+                })
+                .ExecuteAsync();
 
             if (!result.IsSuccess)
             {
@@ -61,7 +59,7 @@ namespace Cofoundry.Web.Identity
             return result;
         }
 
-        public Task SignInUserAsync(
+        public async Task SignInUserAsync(
             Controller controller,
             UserSignInInfo user,
             bool rememberUser
@@ -70,21 +68,66 @@ namespace Cofoundry.Web.Identity
             if (controller == null) throw new ArgumentNullException(nameof(controller));
             if (user == null) throw new ArgumentNullException(nameof(user));
 
-            if (user.RequirePasswordChange)
+            //if (user.RequirePasswordChange)
+            //{
+            //    throw new PasswordChangeRequiredException();
+            //}
+
+            // TODO: should catch errors and add to model state
+            await _contentRepository
+                .Users()
+                .Authentication()
+                .SignInAuthenticatedUserAsync(new SignInAuthenticatedUserCommand()
+                {
+                    UserId = user.UserId,
+                    RememberUser = rememberUser
+                });
+        }
+
+        public async Task<UserCredentialsAuthenticationResult> AuthenticateAndLogUserInAsync(Controller controller, ISignInViewModel viewModel, bool rememberMe)
+        {
+            // More of a demo on how you'd run a login action - I think we'll be able to do without the controller 
+            // helper because it's not too difficult, especially if we can outpt errors easily into model state
+
+            if (!controller.ModelState.IsValid)
             {
-                throw new PasswordChangeRequiredException();
+                return UserCredentialsAuthenticationResult.CreateFailedResult();
             }
 
-            if (_userAreaDefinition.UserAreaCode != user.UserAreaCode)
+            var result = await _contentRepository
+                .Users()
+                .Authentication()
+                .AuthenticateCredentialsAsync(new AuthenticateUserCredentialsQuery()
+                {
+                    UserAreaCode = _userAreaDefinition.UserAreaCode,
+                    Username = viewModel.Username,
+                    Password = viewModel.Password
+                })
+                .ExecuteAsync();
+
+            //if (result.User.RequirePasswordChange)
+            //{
+            //    // Take action! I guess if you don't and then proceed with login it will throw an exception
+            //}
+
+            if (!result.IsSuccess)
             {
-                throw new ValidationException("This user account is not permitted to log in via this route.");
+                controller.ModelState.AddModelError(string.Empty, result.Error.Message);
+            }
+            else
+            {
+                // TODO: capture errors into model state
+                await _contentRepository
+                    .Users()
+                    .Authentication()
+                    .SignInAuthenticatedUserAsync(new SignInAuthenticatedUserCommand()
+                    {
+                        UserId = result.User.UserId,
+                        RememberUser = rememberMe
+                    });
             }
 
-            return _signInService.SignInAuthenticatedUserAsync(
-                _userAreaDefinition.UserAreaCode,
-                user.UserId,
-                rememberUser
-                );
+            return result;
         }
 
         /// <summary>
@@ -170,7 +213,11 @@ namespace Cofoundry.Web.Identity
 
         public Task SignOutAsync()
         {
-            return _signInService.SignOutAsync(_userAreaDefinition.UserAreaCode);
+            return _contentRepository
+                //.WithContext<TUserArea>
+                .Users()
+                .Authentication()
+                .SignOutAsync();
         }
 
         public Task SendAccountRecoveryNotificationAsync(
@@ -220,7 +267,11 @@ namespace Cofoundry.Web.Identity
 
         private async Task<AccountRecoveryRequestValidationResult> ValidateAndMapAsync(ValidateUserAccountRecoveryByEmailQuery query)
         {
-            var validationResult = await _queryExecutor.ExecuteAsync(query);
+            var validationResult = await _contentRepository
+                .Users()
+                .AccountRecovery()
+                .ValidateAsync(query)
+                .ExecuteAsync();
 
             var result = new AccountRecoveryRequestValidationResult();
             result.Token = query.Token;

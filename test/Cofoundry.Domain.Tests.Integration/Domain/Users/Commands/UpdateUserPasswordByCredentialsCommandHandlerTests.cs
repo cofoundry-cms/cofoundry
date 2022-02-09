@@ -49,7 +49,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             await contentRepository.Users().UpdatePasswordByCredentialsAsync(command);
 
             // Use the auth query to verify the password has been changed
-            var authResult = await contentRepository.ExecuteQueryAsync(new ValidateUserCredentialsQuery()
+            var authResult = await contentRepository.ExecuteQueryAsync(new AuthenticateUserCredentialsQuery()
             {
                 UserAreaCode = command.UserAreaCode,
                 Username = command.Username,

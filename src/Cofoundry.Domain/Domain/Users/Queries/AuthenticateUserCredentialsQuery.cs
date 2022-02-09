@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
     /// pertinent to sign in is returned, otherwise error information is returned detailing
     /// why the authentication failed.
     /// </summary>
-    public class ValidateUserCredentialsQuery : IQuery<UserCredentialsValidationResult>
+    public class AuthenticateUserCredentialsQuery : IQuery<UserCredentialsAuthenticationResult>
     {
         /// <summary>
         /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area the user is expected 

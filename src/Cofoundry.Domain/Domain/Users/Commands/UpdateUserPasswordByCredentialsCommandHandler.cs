@@ -61,7 +61,7 @@ namespace Cofoundry.Domain.Internal
             command.OutputUserId = authResult.User.UserId;
         }
 
-        private async Task<User> GetUserAsync(UserCredentialsValidationResult authResult)
+        private async Task<User> GetUserAsync(UserCredentialsAuthenticationResult authResult)
         {
             // in most other command that send password changed notifications we already have a user to 
             // send on to the helper, but not here
@@ -77,14 +77,14 @@ namespace Cofoundry.Domain.Internal
             return user;
         }
 
-        private Task<UserCredentialsValidationResult> GetUserSignInInfoAsync(
+        private Task<UserCredentialsAuthenticationResult> GetUserSignInInfoAsync(
             UpdateUserPasswordByCredentialsCommand command,
             IExecutionContext executionContext
             )
         {
             return _domainRepository
                 .WithContext(executionContext)
-                .ExecuteQueryAsync(new ValidateUserCredentialsQuery()
+                .ExecuteQueryAsync(new AuthenticateUserCredentialsQuery()
                 {
                     UserAreaCode = command.UserAreaCode,
                     Username = command.Username,

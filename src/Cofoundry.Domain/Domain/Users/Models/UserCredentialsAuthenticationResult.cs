@@ -5,9 +5,9 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Used to wrap a <see cref="UserSignInInfo"/> result with additional
     /// information about why an authentication attempt is unsuccessful.
-    /// This is the result of the <see cref="ValidateUserCredentialsQuery"/>.
+    /// This is the result of the <see cref="AuthenticateUserCredentialsQuery"/>.
     /// </summary>
-    public class UserCredentialsValidationResult : ValidationQueryResult
+    public class UserCredentialsAuthenticationResult : ValidationQueryResult
     {
         /// <summary>
         /// If successful this will be filled with user data; otherwise
@@ -31,9 +31,9 @@ namespace Cofoundry.Domain
         /// Creates a new unsuccesful authentication result using the 
         /// <see cref="UserValidationErrors.Authentication.NotSpecified"/> reason.
         /// </summary>
-        public static UserCredentialsValidationResult CreateFailedResult()
+        public static UserCredentialsAuthenticationResult CreateFailedResult()
         {
-            return new UserCredentialsValidationResult()
+            return new UserCredentialsAuthenticationResult()
             {
                 Error = UserValidationErrors.Authentication.NotSpecified.Create()
             };

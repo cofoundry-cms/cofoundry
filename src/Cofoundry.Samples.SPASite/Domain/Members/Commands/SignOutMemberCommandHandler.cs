@@ -13,18 +13,21 @@ namespace Cofoundry.Samples.SPASite.Domain
         : ICommandHandler<SignOutMemberCommand>
         , IIgnorePermissionCheckHandler
     {
-        private readonly IUserSignInService _signInService;
+        private readonly IAdvancedContentRepository _contentRepository;
 
         public SignOutMemberCommandHandler(
-            IUserSignInService signInService
+            IAdvancedContentRepository contentRepository
             )
         {
-            _signInService = signInService;
+            _contentRepository = contentRepository;
         }
 
         public Task ExecuteAsync(SignOutMemberCommand command, IExecutionContext executionContext)
         {
-            return _signInService.SignOutAsync(MemberUserArea.Code);
+            return _contentRepository
+                .Users()
+                .Authentication()
+                .SignOutAsync();
         }
     }
 }

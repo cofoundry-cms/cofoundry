@@ -75,11 +75,16 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     UserAreaCode = CofoundryAdminUserArea.Code
                 });
 
-            var signInService = app.Services.GetService<IUserSignInService>();
-            await signInService.SignInAuthenticatedUserAsync(CofoundryAdminUserArea.Code, currentUserId, false);
+            await contentRepository
+                .Users()
+                .Authentication()
+                .SignInAuthenticatedUserAsync(new SignInAuthenticatedUserCommand()
+                {
+                    UserId = currentUserId
+                });
 
             await contentRepository
-                .Awaiting(r => r.Users().DeleteAsync(userToDeleteId))
+                .Awaiting(r => r.WithContext<CofoundryAdminUserArea>().Users().DeleteAsync(userToDeleteId))
                 .Should()
                 .ThrowAsync<NotPermittedException>()
                 .WithMessage($"* Super Administrator * delete other *");
