@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Cofoundry.Web.Identity
+namespace Cofoundry.Samples.UserAreas
 {
-    public class ChangePasswordViewModel : IChangePasswordViewModel
+    public class ChangePasswordViewModel
     {
         [DataType(DataType.EmailAddress)]
         [Required]

@@ -25,7 +25,7 @@ namespace Cofoundry.Web.Auth.Internal
         {
             var user = await _userContextService.GetCurrentContextAsync();
 
-            if (user.IsLoggedIn() 
+            if (user.IsSignedIn() 
                 && user.UserArea.UserAreaCode == requirement.UserAreaCode 
                 && EnumerableHelper.Enumerate(requirement.RoleCodes).Contains(user.RoleCode))
             {

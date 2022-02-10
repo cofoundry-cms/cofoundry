@@ -39,7 +39,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             var result = await contentRepository
                 .Users()
                 .AccountRecovery()
-                .ValidateAsync(new ValidateUserAccountRecoveryByEmailQuery()
+                .Validate(new ValidateUserAccountRecoveryByEmailQuery()
                 {
                     UserAreaCode = request.User.UserAreaCode,
                     Token = token,
@@ -71,7 +71,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             var result = await contentRepository
                 .Users()
                 .AccountRecovery()
-                .ValidateAsync(new ValidateUserAccountRecoveryByEmailQuery()
+                .Validate(new ValidateUserAccountRecoveryByEmailQuery()
                 {
                     UserAreaCode = request.User.UserAreaCode,
                     Token = token,
@@ -112,7 +112,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             var result = await contentRepository
                 .Users()
                 .AccountRecovery()
-                .ValidateAsync(new ValidateUserAccountRecoveryByEmailQuery()
+                .Validate(new ValidateUserAccountRecoveryByEmailQuery()
                 {
                     UserAreaCode = request.User.UserAreaCode,
                     Token = token,
@@ -146,7 +146,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             var result = await contentRepository
                 .Users()
                 .AccountRecovery()
-                .ValidateAsync(new ValidateUserAccountRecoveryByEmailQuery()
+                .Validate(new ValidateUserAccountRecoveryByEmailQuery()
                 {
                     UserAreaCode = request.User.UserAreaCode,
                     Token = token,
@@ -178,7 +178,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             var result = await contentRepository
                 .Users()
                 .AccountRecovery()
-                .ValidateAsync(new ValidateUserAccountRecoveryByEmailQuery()
+                .Validate(new ValidateUserAccountRecoveryByEmailQuery()
                 {
                     UserAreaCode = request.User.UserAreaCode,
                     Token = token + "X",

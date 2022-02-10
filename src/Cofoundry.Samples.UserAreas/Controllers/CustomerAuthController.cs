@@ -1,12 +1,8 @@
 ﻿using Cofoundry.Core.Mail;
 using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
 using Cofoundry.Web;
 using Cofoundry.Web.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas
@@ -14,28 +10,16 @@ namespace Cofoundry.Samples.UserAreas
     [Route("customers/auth")]
     public class CustomerAuthController : Controller
     {
-        private readonly IAuthenticationControllerHelper<CustomerUserArea> _authenticationControllerHelper;
-        private readonly IUserContextService _userContextService;
         private readonly IAdvancedContentRepository _contentRepository;
-        private readonly IExecutionContextFactory _executionContextFactory;
         private readonly IMailService _mailService;
-        private readonly IControllerResponseHelper _controllerResponseHelper;
 
         public CustomerAuthController(
-            IAuthenticationControllerHelper<CustomerUserArea> authenticationControllerHelper,
             IAdvancedContentRepository contentRepository,
-            IUserContextService userContextService,
-            IExecutionContextFactory executionContextFactory,
-            IMailService mailService,
-            IControllerResponseHelper controllerResponseHelper
+            IMailService mailService
             )
         {
-            _authenticationControllerHelper = authenticationControllerHelper;
-            _userContextService = userContextService;
             _contentRepository = contentRepository;
-            _executionContextFactory = executionContextFactory;
             _mailService = mailService;
-            _controllerResponseHelper = controllerResponseHelper;
         }
 
         [Route("")]
@@ -47,8 +31,8 @@ namespace Cofoundry.Samples.UserAreas
         [Route("register")]
         public async Task<IActionResult> Register()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
             var viewModel = new RegisterNewUserViewModel();
 
@@ -58,28 +42,28 @@ namespace Cofoundry.Samples.UserAreas
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterNewUserViewModel viewModel)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
-            if (user.IsLoggedIn())
-            {
-                ModelState.AddModelError(string.Empty, "You cannot register because you are already logged in.");
-            }
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
-            if (!ModelState.IsValid) return View(viewModel);
-
-            await ExecuteInTransaction(this, async repository =>
+            using (var scope = _contentRepository.Transactions().CreateScope())
             {
-                var userId = await repository
+                // Because we're not logged in, we'll need to elevate permissions to 
+                // add a new user account. Using "WithElevatedPermissions" make the
+                // command is executed with the system user account.
+                var userId = await _contentRepository
+                    .WithModelState(this)
                     .WithElevatedPermissions()
                     .Users()
                     .AddAsync(new AddUserCommand()
                     {
+                        UserAreaCode = CustomerUserArea.Code,
+                        RoleCode = CustomerRole.Code,
                         Email = viewModel.Email,
                         Password = viewModel.Password,
-                        RoleCode = CustomerRole.Code,
-                        UserAreaCode = CustomerUserArea.Code,
                     });
 
-                await repository
+                // For customers, we need to validate their account before we let them sign in
+                await _contentRepository
                     .Users()
                     .AccountVerification()
                     .EmailFlow()
@@ -87,35 +71,9 @@ namespace Cofoundry.Samples.UserAreas
                     {
                         UserId = userId
                     });
-            });
 
-            //using (var scope = _contentRepository.Transactions().CreateScope())
-            //{
-            //    // Because we're not logged in, we'll need to elevate permissions to 
-            //    // add a new user account. Using "WithElevatedPermissions" make the
-            //    // command is executed with the system user account.
-            //    var userId = await _contentRepository
-            //        .WithElevatedPermissions()
-            //        .Users()
-            //        .AddAsync(new AddUserCommand()
-            //        {
-            //            Email = viewModel.Email,
-            //            Password = viewModel.Password,
-            //            RoleCode = CustomerRole.Code,
-            //            UserAreaCode = CustomerUserArea.Code,
-            //        });
-
-            //    await _contentRepository
-            //        .Users()
-            //        .AccountVerification()
-            //        .EmailFlow()
-            //        .InitiateAsync(new InitiateUserAccountVerificationByEmailCommand()
-            //        {
-            //            UserId = userId
-            //        });
-
-            //    await scope.CompleteAsync();
-            //}
+                await scope.CompleteIfValidAsync(ModelState);
+            }
 
             return View(viewModel);
         }
@@ -123,8 +81,8 @@ namespace Cofoundry.Samples.UserAreas
         [Route("login")]
         public async Task<IActionResult> Login()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
             // If you need to customize the model you can create your own 
             // that implements ILoginViewModel
@@ -136,15 +94,27 @@ namespace Cofoundry.Samples.UserAreas
         [HttpPost("login")]
         public async Task<IActionResult> Login(SignInViewModel viewModel)
         {
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
+
             // First authenticate the user without logging them in
-            var authResult = await _authenticationControllerHelper.AuthenticateAsync(this, viewModel);
+            var authResult = await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .Authentication()
+                .AuthenticateCredentials(new AuthenticateUserCredentialsQuery()
+                {
+                    UserAreaCode = CustomerUserArea.Code,
+                    Username = viewModel.Username,
+                    Password = viewModel.Password
+                })
+                .ExecuteAsync();
 
-            if (!authResult.IsSuccess)
+            if (!ModelState.IsValid)
             {
-                // If the result isn't successful, the helper will have already populated 
-                // the ModelState with an error, but you could ignore ModelState and
-                // add your own custom error views/messages instead.
-
+                // If the result isn't successful, the the ModelState will be populated
+                // with an an error, but you could ignore ModelState handling and
+                // instead add your own custom error views/messages by using authResult directly
                 return View(viewModel);
             }
 
@@ -156,10 +126,17 @@ namespace Cofoundry.Samples.UserAreas
             }
 
             // If no action required, log the user in
-            await _authenticationControllerHelper.SignInUserAsync(this, authResult.User, true);
+            await _contentRepository
+                .Users()
+                .Authentication()
+                .SignInAuthenticatedUserAsync(new SignInAuthenticatedUserCommand()
+                {
+                    UserId = authResult.User.UserId,
+                    RememberUser = true
+                });
 
             // Support redirect urls from login
-            var redirectUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
+            var redirectUrl = RedirectUrlHelper.GetAndValidateReturnUrl(this);
             if (redirectUrl != null)
             {
                 return Redirect(redirectUrl);
@@ -171,52 +148,84 @@ namespace Cofoundry.Samples.UserAreas
         [Route("logout")]
         public async Task<ActionResult> Logout()
         {
-            await _authenticationControllerHelper.SignOutAsync();
-            return Redirect(UrlLibrary.PartnerSignIn());
+            await _contentRepository
+                .Users()
+                .Authentication()
+                .SignOutAsync();
+
+            return Redirect(UrlLibrary.CustomerSignOut());
         }
 
         [Route("forgot-password")]
         public async Task<ActionResult> ForgotPassword()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
             return View(new ForgotPasswordViewModel());
         }
 
         [HttpPost("forgot-password")]
-        public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            await _authenticationControllerHelper.SendAccountRecoveryNotificationAsync(this, command);
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
+
+            await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .AccountRecovery()
+                .InitiateAsync(new InitiateUserAccountRecoveryByEmailCommand()
+                {
+                    UserAreaCode = CustomerUserArea.Code,
+                    Username = command.Username
+                });
 
             return View(command);
         }
 
         [Route("account-recovery")]
-        public async Task<ActionResult> AccountRecovery()
+        public async Task<ActionResult> AccountRecovery([FromQuery] string t)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
-            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidateAccountRecoveryRequestAsync(this);
+            var validationResult = await _contentRepository
+                .Users()
+                .AccountRecovery()
+                .Validate(new ValidateUserAccountRecoveryByEmailQuery()
+                {
+                    UserAreaCode = CustomerUserArea.Code,
+                    Token = t
+                })
+                .ExecuteAsync();
 
-            if (!requestValidationResult.IsSuccess)
+            if (!validationResult.IsSuccess)
             {
-                return View(nameof(AccountRecovery) + "RequestInvalid", requestValidationResult);
+                return View(nameof(AccountRecovery) + "RequestInvalid", validationResult);
             }
 
-            var vm = new CompleteAccountRecoveryViewModel(requestValidationResult);
+            var vm = new CompleteAccountRecoveryViewModel();
 
             return View(vm);
         }
 
         [HttpPost("account-recovery")]
-        public async Task<ActionResult> AccountRecovery(CompleteAccountRecoveryViewModel vm)
+        public async Task<ActionResult> AccountRecovery(CompleteAccountRecoveryViewModel vm, [FromQuery] string t)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
-            await _authenticationControllerHelper.CompleteAccountRecoveryAsync(this, vm);
+            await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .AccountRecovery()
+                .CompleteAsync(new CompleteUserAccountRecoveryByEmailCommand()
+                {
+                    UserAreaCode = CustomerUserArea.Code,
+                    Token = t,
+                    NewPassword = vm.ConfirmNewPassword
+                });
 
             if (ModelState.IsValid)
             {
@@ -229,8 +238,8 @@ namespace Cofoundry.Samples.UserAreas
         [Route("email-verification-required")]
         public async Task<ActionResult> EmailVerificationRequired()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
             return View();
         }
@@ -238,8 +247,8 @@ namespace Cofoundry.Samples.UserAreas
         [Route("email-verification-required")]
         public async Task<ActionResult> EmailVerificationRequired(SignInViewModel viewModel)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
             // TODO: Verify user and re-send email
 
@@ -248,96 +257,68 @@ namespace Cofoundry.Samples.UserAreas
         }
 
         [Route("verify-email")]
-        public async Task<ActionResult> VerifyEmail()
+        public async Task<ActionResult> VerifyEmail(string t)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var validationResult = await _contentRepository
+                .Users()
+                .AccountVerification()
+                .EmailFlow()
+                .Validate(new ValidateUserAccountVerificationByEmailQuery()
+                {
+                    UserAreaCode = CustomerUserArea.Code,
+                    Token = t
+                })
+                .ExecuteAsync();
 
-            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidateAccountRecoveryRequestAsync(this);
-
-            if (!requestValidationResult.IsSuccess)
+            if (!validationResult.IsSuccess)
             {
-                return View(nameof(VerifyEmail) + "RequestInvalid", requestValidationResult);
+                return View(nameof(VerifyEmail) + "RequestInvalid", validationResult);
             }
 
-            var vm = new CompleteAccountRecoveryViewModel(requestValidationResult);
-
-            return View(vm);
+            return View();
         }
 
         [HttpPost("verify-email")]
-        public async Task<ActionResult> VerifyEmail(CompleteAccountVerificationViewModel vm)
+        public async Task<ActionResult> VerifyEmailPost([FromQuery] string t)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(CustomerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
-
-            await Execute(this, async repository =>
-            {
-                await repository
-                    .Users()
-                    .AccountVerification()
-                    .EmailFlow()
-                    .CompleteAsync(new CompleteUserAccountVerificationByEmailCommand()
-                    {
-                        UserAreaCode = CustomerUserArea.Code,
-                        Token = vm.Token
-                    });
-            });
+            await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .AccountVerification()
+                .EmailFlow()
+                .CompleteAsync(new CompleteUserAccountVerificationByEmailCommand()
+                {
+                    UserAreaCode = CustomerUserArea.Code,
+                    Token = t
+                });
 
             if (ModelState.IsValid)
             {
                 return View(nameof(VerifyEmail) + "Complete");
             }
 
-            return View(vm);
+            return View();
+        }
+        
+        private async Task<ActionResult> GetRedirectIfSignedIn()
+        {
+            var isSignedIn = await _contentRepository
+                .Users()
+                .Current()
+                .IsSignedIn()
+                .ExecuteAsync();
+
+            if (isSignedIn)
+            {
+                return GetLoggedInDefaultRedirectAction();
+            }
+
+            return null;
         }
 
         private ActionResult GetLoggedInDefaultRedirectAction()
         {
             return Redirect(UrlLibrary.PartnerDefault());
         }
-
-        #region controller helper ideas
-
-        private async Task ExecuteInTransaction(Controller controller, Func<IAdvancedContentRepository, Task> actions)
-        {
-            using (var scope = _contentRepository.Transactions().CreateScope())
-            {
-                await Execute(controller, actions);
-                await scope.CompleteAsync();
-            }
-        }
-
-        private async Task Execute(Controller controller, Func<IAdvancedContentRepository, Task> actions)
-        {
-            if (controller.ModelState.IsValid)
-            {
-                try
-                {
-                    await actions(_contentRepository);
-                }
-                catch (ValidationException ex)
-                {
-                    AddValidationExceptionToModelState(controller, ex);
-                }
-            }
-        }
-
-        private void AddValidationExceptionToModelState(Controller controller, ValidationException ex)
-        {
-            string propName = string.Empty;
-            var prefix = controller.ViewData.TemplateInfo.HtmlFieldPrefix;
-            if (!string.IsNullOrEmpty(prefix))
-            {
-                prefix += ".";
-            }
-            if (ex.ValidationResult != null && ex.ValidationResult.MemberNames.Count() == 1)
-            {
-                propName = prefix + ex.ValidationResult.MemberNames.First();
-            }
-            controller.ModelState.AddModelError(propName, ex.Message);
-        }
-
-        #endregion
     }
 }

@@ -12,7 +12,7 @@ namespace Cofoundry.Domain
         /// <see cref="AuthorizedTaskTokenValidationResult"/> which describes any errors that have occured.
         /// </summary>
         /// <param name="token">The token used to verify the request.</param>
-        IDomainRepositoryQueryContext<AuthorizedTaskTokenValidationResult> ValidateAsync(ValidateUserAccountVerificationByEmailQuery query);
+        IDomainRepositoryQueryContext<AuthorizedTaskTokenValidationResult> Validate(ValidateUserAccountVerificationByEmailQuery query);
 
         /// <summary>
         /// <para>

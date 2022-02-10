@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
 using Cofoundry.Web.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,27 +15,25 @@ namespace Cofoundry.Web.Admin
     {
         private static readonly string CONTROLLER_NAME = "Auth";
 
-        private readonly IQueryExecutor _queryExecutor;
-        private readonly IUserContextService _userContextService;
-        private readonly IAuthenticationControllerHelper<CofoundryAdminUserArea> _authenticationControllerHelper;
+        private readonly IAdvancedContentRepository _contentRepository;
+        private readonly IAuthorizedTaskTokenUrlHelper _authorizedTaskTokenUrlHelper;
         private readonly IAdminRouteLibrary _adminRouteLibrary;
 
         public AuthController(
-            IQueryExecutor queryExecutor,
-            IUserContextService userContextService,
-            IAuthenticationControllerHelper<CofoundryAdminUserArea> authenticationControllerHelper,
+            IAdvancedContentRepository contentRepository,
+            IAuthorizedTaskTokenUrlHelper authorizedTaskTokenUrlHelper,
             IAdminRouteLibrary adminRouteLibrary
             )
         {
-            _queryExecutor = queryExecutor;
-            _authenticationControllerHelper = authenticationControllerHelper;
-            _userContextService = userContextService;
+            _contentRepository = contentRepository.WithContext<CofoundryAdminUserArea>();
+            _authorizedTaskTokenUrlHelper = authorizedTaskTokenUrlHelper;
             _adminRouteLibrary = adminRouteLibrary;
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<InternalSettings>());
+            var settings = await _contentRepository.ExecuteQueryAsync(new GetSettingsQuery<InternalSettings>());
+
             if (!settings.IsSetup)
             {
                 context.Result = Redirect(_adminRouteLibrary.Setup.Setup());
@@ -62,8 +59,7 @@ namespace Cofoundry.Web.Admin
         [AllowAnonymous]
         public async Task<ActionResult> Login()
         {
-            var user = await _userContextService.GetCurrentContextAsync();
-            if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
+            if (await IsLoggedInAsync()) return await GetLoggedInDefaultRedirectActionAsync();
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
             var vm = new SignInViewModel();
@@ -75,16 +71,26 @@ namespace Cofoundry.Web.Admin
         [HttpPost]
         public async Task<ActionResult> Login(string returnUrl, SignInViewModel viewModel)
         {
-            var authResult = await _authenticationControllerHelper.AuthenticateAsync(this, viewModel);
+            var authResult = await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .Authentication()
+                .AuthenticateCredentials(new AuthenticateUserCredentialsQuery()
+                {
+                    Username = viewModel.Username,
+                    Password = viewModel.Password,
+                    UserAreaCode = CofoundryAdminUserArea.Code
+                })
+                .ExecuteAsync();
 
-            if (!authResult.IsSuccess)
+            if (!ModelState.IsValid)
             {
                 var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
                 return View(viewPath, viewModel);
             }
 
             // Support redirect urls from login
-            var redirectUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
+            var redirectUrl = RedirectUrlHelper.GetAndValidateReturnUrl(this);
 
             if (authResult.User.RequirePasswordChange)
             {
@@ -92,7 +98,14 @@ namespace Cofoundry.Web.Admin
             }
 
             // If no action required, log the user in
-            await _authenticationControllerHelper.SignInUserAsync(this, authResult.User, true);
+            await _contentRepository
+                .Users()
+                .Authentication()
+                .SignInAuthenticatedUserAsync(new SignInAuthenticatedUserCommand()
+                {
+                    UserId = authResult.User.UserId,
+                    RememberUser = true
+                });
 
             if (redirectUrl != null)
             {
@@ -104,15 +117,18 @@ namespace Cofoundry.Web.Admin
 
         public async Task<ActionResult> Logout()
         {
-            await _authenticationControllerHelper.SignOutAsync();
+            await _contentRepository
+                .Users()
+                .Authentication()
+                .SignOutAsync();
+
             return Redirect(_adminRouteLibrary.Auth.Login());
         }
 
         [AllowAnonymous]
         public async Task<ActionResult> ForgotPassword(string email)
         {
-            var user = await _userContextService.GetCurrentContextAsync();
-            if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
+            if (await IsLoggedInAsync()) return await GetLoggedInDefaultRedirectActionAsync();
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
             return View(viewPath, new ForgotPasswordViewModel { Username = email });
@@ -122,7 +138,15 @@ namespace Cofoundry.Web.Admin
         [HttpPost]
         public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            await _authenticationControllerHelper.SendAccountRecoveryNotificationAsync(this, command);
+            await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .AccountRecovery()
+                .InitiateAsync(new InitiateUserAccountRecoveryByEmailCommand()
+                {
+                    UserAreaCode = CofoundryAdminUserArea.Code,
+                    Username = command.Username
+                });
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
             return View(viewPath, command);
@@ -131,18 +155,28 @@ namespace Cofoundry.Web.Admin
         [AllowAnonymous]
         public async Task<ActionResult> ResetPassword()
         {
-            var user = await _userContextService.GetCurrentContextAsync();
-            if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
+            if (await IsLoggedInAsync()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidateAccountRecoveryRequestAsync(this);
+            var token = _authorizedTaskTokenUrlHelper.ParseTokenFromQuery(Request.Query);
 
-            if (!requestValidationResult.IsSuccess)
+            var requestValidationResult = await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .AccountRecovery()
+                .Validate(new ValidateUserAccountRecoveryByEmailQuery()
+                {
+                    UserAreaCode = CofoundryAdminUserArea.Code,
+                    Token = token
+                })
+                .ExecuteAsync();
+
+            if (!ModelState.IsValid)
             {
                 var invalidViewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword) + "RequestInvalid");
                 return View(invalidViewPath, requestValidationResult);
             }
 
-            var vm = new CompleteAccountRecoveryViewModel(requestValidationResult);
+            var vm = new CompleteAccountRecoveryViewModel();
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ResetPassword));
 
             return View(viewPath, vm);
@@ -152,10 +186,20 @@ namespace Cofoundry.Web.Admin
         [HttpPost]
         public async Task<ActionResult> ResetPassword(CompleteAccountRecoveryViewModel vm)
         {
-            var user = await _userContextService.GetCurrentContextAsync();
-            if (user.IsCofoundryUser()) return await GetLoggedInDefaultRedirectActionAsync();
+            if (await IsLoggedInAsync()) return await GetLoggedInDefaultRedirectActionAsync();
 
-            await _authenticationControllerHelper.CompleteAccountRecoveryAsync(this, vm);
+            var token = _authorizedTaskTokenUrlHelper.ParseTokenFromQuery(Request.Query);
+            
+            await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .AccountRecovery()
+                .CompleteAsync(new CompleteUserAccountRecoveryByEmailCommand()
+                {
+                    UserAreaCode = CofoundryAdminUserArea.Code,
+                    Token = token,
+                    NewPassword = vm.NewPassword
+                });
 
             if (ModelState.IsValid)
             {
@@ -170,17 +214,8 @@ namespace Cofoundry.Web.Admin
         [AllowAnonymous]
         public async Task<ActionResult> ChangePassword(string returnUrl)
         {
-            var user = await _userContextService.GetCurrentContextAsync();
-            if (user.UserId.HasValue)
-            {
-                if (!user.IsPasswordChangeRequired)
-                {
-                    return await GetLoggedInDefaultRedirectActionAsync();
-                }
-
-                // The user shouldn't be logged in, but if so, log them out
-                await _authenticationControllerHelper.SignOutAsync();
-            }
+            var redirectAction = await ValidateChangePasswordRouteAsync();
+            if (redirectAction != null) return redirectAction;
 
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
             return View(viewPath, new ChangePasswordViewModel());
@@ -190,7 +225,29 @@ namespace Cofoundry.Web.Admin
         [HttpPost]
         public async Task<ActionResult> ChangePassword(string returnUrl, ChangePasswordViewModel vm)
         {
-            var user = await _userContextService.GetCurrentContextAsync();
+            var redirectAction = await ValidateChangePasswordRouteAsync();
+            if (redirectAction != null) return redirectAction;
+
+            await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .UpdatePasswordByCredentialsAsync(new UpdateUserPasswordByCredentialsCommand()
+                {
+                    UserAreaCode = CofoundryAdminUserArea.Code,
+                    Username = vm.Username,
+                    NewPassword = vm.NewPassword,
+                    OldPassword = vm.OldPassword
+                });
+
+            ViewBag.ReturnUrl = RedirectUrlHelper.GetAndValidateReturnUrl(this);
+
+            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
+            return View(viewPath, vm);
+        }
+
+        private async Task<ActionResult> ValidateChangePasswordRouteAsync()
+        {
+            var user = await GetUserContextAsync();
             if (user.UserId.HasValue)
             {
                 if (!user.IsPasswordChangeRequired)
@@ -199,20 +256,35 @@ namespace Cofoundry.Web.Admin
                 }
 
                 // The user shouldn't be logged in, but if so, log them out
-                await _authenticationControllerHelper.SignOutAsync();
+                await _contentRepository
+                    .Users()
+                    .Authentication()
+                    .SignOutAsync();
             }
 
-            await _authenticationControllerHelper.ChangePasswordAsync(this, vm);
+            return null;
+        }
 
-            ViewBag.ReturnUrl = returnUrl;
+        private async Task<bool> IsLoggedInAsync()
+        {
+            var userContext = await GetUserContextAsync();
 
-            var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
-            return View(viewPath, vm);
+            return userContext.IsSignedIn();
+        }
+
+        private Task<IUserContext> GetUserContextAsync()
+        {
+            return _contentRepository
+                .Users()
+                .Current()
+                .Get()
+                .AsUserContext()
+                .ExecuteAsync();
         }
 
         private async Task<ActionResult> GetLoggedInDefaultRedirectActionAsync()
         {
-            var modules = await _queryExecutor.ExecuteAsync(new GetPermittedAdminModulesQuery());
+            var modules = await _contentRepository.ExecuteQueryAsync(new GetPermittedAdminModulesQuery());
             var dashboardModule = modules.FirstOrDefault(m => m.AdminModuleCode == DashboardModuleRegistration.ModuleCode);
 
             if (dashboardModule == null)

@@ -129,7 +129,7 @@ namespace Cofoundry.Web
 
         private void EnforceRuleViolation(Controller controller, PageActionRoutingState state, EntityAccessRuleSet accessRuleViolation)
         {
-            if (!state.AmbientUserContext.IsLoggedIn() && accessRuleViolation.ShouldTryRedirect())
+            if (!state.AmbientUserContext.IsSignedIn() && accessRuleViolation.ShouldTryRedirect())
             {
                 _logger.LogInformation("User not authenticated, redirecting to sign in page for user area {UserAreaCodeForLoginRedirect}.", accessRuleViolation.UserAreaCodeForSignInRedirect);
                 var challengeScheme = AuthenticationSchemeNames.UserArea(accessRuleViolation.UserAreaCodeForSignInRedirect);

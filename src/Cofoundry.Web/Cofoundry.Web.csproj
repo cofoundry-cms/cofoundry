@@ -46,4 +46,9 @@
     <EmbeddedResource Include="**\*.cshtml;**\*.html;**\*.png;**\*.jpg;**\*.svg;**\*.ico;**\*.swf;**\*.gif;**\*.css;**\*.js;**\*.woff;**\*.eot;**\*.ttf;" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Folder Include="Framework\Identity\" />
+    <Folder Include="Framework\Models\Auth\" />
+  </ItemGroup>
+  
 </Project>

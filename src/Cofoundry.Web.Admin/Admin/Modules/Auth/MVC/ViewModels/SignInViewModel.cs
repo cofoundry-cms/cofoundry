@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Cofoundry.Web.Identity
+namespace Cofoundry.Web.Admin.Internal
 {
     /// <summary>
-    /// A default implementation of <see cref="ISignInViewModel"/> for
-    /// user accounts that use email addresses as usernames.
+    /// A view model for user account sign in with user accounts that 
+    /// use email addresses as usernames.
     /// </summary>
-    public class SignInViewModel : ISignInViewModel
+    public class SignInViewModel
     {
         /// <summary>
         /// A Cofoundry username can be an email address or a text string 

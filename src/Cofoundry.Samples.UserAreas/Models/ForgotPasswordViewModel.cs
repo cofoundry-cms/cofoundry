@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace Cofoundry.Web.Identity
+namespace Cofoundry.Samples.UserAreas
 {
-    public class ForgotPasswordViewModel : IForgotPasswordViewModel
+    public class ForgotPasswordViewModel
     {
         [Required]
         [Display(Name = "Email")]

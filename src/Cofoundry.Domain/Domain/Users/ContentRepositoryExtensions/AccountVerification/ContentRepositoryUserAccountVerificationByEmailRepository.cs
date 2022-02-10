@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IDomainRepositoryQueryContext<AuthorizedTaskTokenValidationResult> ValidateAsync(ValidateUserAccountVerificationByEmailQuery query)
+        public IDomainRepositoryQueryContext<AuthorizedTaskTokenValidationResult> Validate(ValidateUserAccountVerificationByEmailQuery query)
         {
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }

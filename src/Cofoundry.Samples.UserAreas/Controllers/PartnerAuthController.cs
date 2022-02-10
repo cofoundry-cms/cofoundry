@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain;
+using Cofoundry.Web;
 using Cofoundry.Web.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -8,16 +9,13 @@ namespace Cofoundry.Samples.UserAreas
     [Route("partners/auth")]
     public class PartnerAuthController : Controller
     {
-        private readonly IAuthenticationControllerHelper<PartnerUserArea> _authenticationControllerHelper;
-        private readonly IUserContextService _userContextService;
+        private readonly IAdvancedContentRepository _contentRepository;
 
         public PartnerAuthController(
-            IAuthenticationControllerHelper<PartnerUserArea> authenticationControllerHelper,
-            IUserContextService userContextService
+            IAdvancedContentRepository contentRepository
             )
         {
-            _authenticationControllerHelper = authenticationControllerHelper;
-            _userContextService = userContextService;
+            _contentRepository = contentRepository;
         }
 
         [Route("")]
@@ -29,8 +27,8 @@ namespace Cofoundry.Samples.UserAreas
         [Route("login")]
         public async Task<IActionResult> Login()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
             // If you need to customize the model you can create your own 
             // that implements ILoginViewModel
@@ -42,28 +40,46 @@ namespace Cofoundry.Samples.UserAreas
         [HttpPost("login")]
         public async Task<IActionResult> Login(SignInViewModel viewModel)
         {
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
+
             // First authenticate the user without logging them in
-            var authResult = await _authenticationControllerHelper.AuthenticateAsync(this, viewModel);
+            var authResult = await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .Authentication()
+                .AuthenticateCredentials(new AuthenticateUserCredentialsQuery()
+                {
+                    UserAreaCode = CustomerUserArea.Code,
+                    Username = viewModel.Username,
+                    Password = viewModel.Password
+                })
+                .ExecuteAsync();
 
-            if (!authResult.IsSuccess)
+            if (!ModelState.IsValid)
             {
-                // If the result isn't successful, the helper will have already populated 
-                // the ModelState with an error, but you could ignore ModelState and
-                // add your own custom error views/messages instead.
-
+                // If the result isn't successful, the the ModelState will be populated
+                // with an an error, but you could ignore ModelState handling and
+                // instead add your own custom error views/messages by using authResult directly
                 return View(viewModel);
             }
 
-            // Support redirect urls from login
-            var redirectUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
+            var redirectUrl = RedirectUrlHelper.GetAndValidateReturnUrl(this);
 
             if (authResult.User.RequirePasswordChange)
             {
                 return RedirectToAction(nameof(ChangePassword), new { redirectUrl });
             }
 
-            // If no action required, log the user in
-            await _authenticationControllerHelper.SignInUserAsync(this, authResult.User, true);
+            // If no action required, sign the user in
+            await _contentRepository
+                .Users()
+                .Authentication()
+                .SignInAuthenticatedUserAsync(new SignInAuthenticatedUserCommand()
+                {
+                    UserId = authResult.User.UserId,
+                    RememberUser = true
+                });
 
             if (redirectUrl != null)
             {
@@ -74,20 +90,11 @@ namespace Cofoundry.Samples.UserAreas
         }
 
         [Route("change-password")]
-        public async Task<IActionResult> ChangePassword()
+        public async Task<ActionResult> ChangePassword()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
-            if (user.IsLoggedIn())
-            {
-                if (!user.IsPasswordChangeRequired)
-                {
-                    return GetLoggedInDefaultRedirectAction();
-                }
-
-                // The user shouldn't be logged in, but if so, log them out
-                await _authenticationControllerHelper.SignOutAsync();
-            }
-
+            var redirectAction = await ValidateChangePasswordRouteAsync();
+            if (redirectAction != null) return redirectAction;
+            
             // If you need to customize the model you can create your own 
             // that implements IChangePasswordViewModel
             var viewModel = new ChangePasswordViewModel();
@@ -96,22 +103,23 @@ namespace Cofoundry.Samples.UserAreas
         }
 
         [HttpPost("change-password")]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel viewModel)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
-            if (user.IsLoggedIn())
-            {
-                if (!user.IsPasswordChangeRequired)
+            var redirectAction = await ValidateChangePasswordRouteAsync();
+            if (redirectAction != null) return redirectAction;
+
+            await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .UpdatePasswordByCredentialsAsync(new UpdateUserPasswordByCredentialsCommand()
                 {
-                    return GetLoggedInDefaultRedirectAction();
-                }
+                    UserAreaCode = CofoundryAdminUserArea.Code,
+                    Username = viewModel.Username,
+                    NewPassword = viewModel.NewPassword,
+                    OldPassword = viewModel.OldPassword
+                });
 
-                // The user shouldn't be logged in, but if so, log them out
-                await _authenticationControllerHelper.SignOutAsync();
-            }
-            await _authenticationControllerHelper.ChangePasswordAsync(this, viewModel);
-
-            ViewBag.ReturnUrl = _authenticationControllerHelper.GetAndValidateReturnUrl(this);
+            ViewBag.ReturnUrl = RedirectUrlHelper.GetAndValidateReturnUrl(this);
 
             return View(viewModel);
         }
@@ -119,52 +127,84 @@ namespace Cofoundry.Samples.UserAreas
         [Route("logout")]
         public async Task<ActionResult> Logout()
         {
-            await _authenticationControllerHelper.SignOutAsync();
+            await _contentRepository
+                .Users()
+                .Authentication()
+                .SignOutAsync();
+
             return Redirect(UrlLibrary.PartnerSignIn());
         }
 
         [Route("forgot-password")]
         public async Task<ActionResult> ForgotPassword()
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
             return View(new ForgotPasswordViewModel());
         }
 
         [HttpPost("forgot-password")]
-        public async Task<ViewResult> ForgotPassword(ForgotPasswordViewModel command)
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel command)
         {
-            await _authenticationControllerHelper.SendAccountRecoveryNotificationAsync(this, command);
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
+
+            await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .AccountRecovery()
+                .InitiateAsync(new InitiateUserAccountRecoveryByEmailCommand()
+                {
+                    UserAreaCode = PartnerUserArea.Code,
+                    Username = command.Username
+                });
 
             return View(command);
         }
 
         [Route("account-recovery")]
-        public async Task<ActionResult> AccountRecovery()
+        public async Task<ActionResult> AccountRecovery([FromQuery] string t)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
-            var requestValidationResult = await _authenticationControllerHelper.ParseAndValidateAccountRecoveryRequestAsync(this);
+            var validationResult = await _contentRepository
+                .Users()
+                .AccountRecovery()
+                .Validate(new ValidateUserAccountRecoveryByEmailQuery()
+                {
+                    UserAreaCode = PartnerUserArea.Code,
+                    Token = t
+                })
+                .ExecuteAsync();
 
-            if (!requestValidationResult.IsSuccess)
+            if (!validationResult.IsSuccess)
             {
-                return View(nameof(AccountRecovery) + "RequestInvalid", requestValidationResult);
+                return View(nameof(AccountRecovery) + "RequestInvalid", validationResult);
             }
 
-            var vm = new CompleteAccountRecoveryViewModel(requestValidationResult);
+            var vm = new CompleteAccountRecoveryViewModel();
 
             return View(vm);
         }
 
         [HttpPost("account-recovery")]
-        public async Task<ActionResult> AccountRecovery(CompleteAccountRecoveryViewModel vm)
+        public async Task<ActionResult> AccountRecovery(CompleteAccountRecoveryViewModel vm, [FromQuery] string t)
         {
-            var user = await _userContextService.GetCurrentContextByUserAreaAsync(PartnerUserArea.Code);
-            if (user.IsLoggedIn()) return GetLoggedInDefaultRedirectAction();
+            var redirect = await GetRedirectIfSignedIn();
+            if (redirect != null) return redirect;
 
-            await _authenticationControllerHelper.CompleteAccountRecoveryAsync(this, vm);
+            await _contentRepository
+                .WithModelState(this)
+                .Users()
+                .AccountRecovery()
+                .CompleteAsync(new CompleteUserAccountRecoveryByEmailCommand()
+                {
+                    UserAreaCode = PartnerUserArea.Code,
+                    Token = t,
+                    NewPassword = vm.ConfirmNewPassword
+                });
 
             if (ModelState.IsValid)
             {
@@ -174,9 +214,51 @@ namespace Cofoundry.Samples.UserAreas
             return View(vm);
         }
 
+        private async Task<ActionResult> GetRedirectIfSignedIn()
+        {
+            var isSignedIn = await _contentRepository
+                .Users()
+                .Current()
+                .IsSignedIn()
+                .ExecuteAsync();
+
+            if (isSignedIn)
+            {
+                return GetLoggedInDefaultRedirectAction();
+            }
+
+            return null;
+        }
+
         private ActionResult GetLoggedInDefaultRedirectAction()
         {
             return Redirect(UrlLibrary.PartnerWelcome());
+        }
+
+        private async Task<ActionResult> ValidateChangePasswordRouteAsync()
+        {
+            var user = await _contentRepository
+                .Users()
+                .Current()
+                .Get()
+                .AsUserContext()
+                .ExecuteAsync();
+
+            if (user.UserId.HasValue)
+            {
+                if (!user.IsPasswordChangeRequired)
+                {
+                    return GetLoggedInDefaultRedirectAction();
+                }
+
+                // The user shouldn't be logged in, but if so, log them out
+                await _contentRepository
+                    .Users()
+                    .Authentication()
+                    .SignOutAsync();
+            }
+
+            return null;
         }
     }
 }

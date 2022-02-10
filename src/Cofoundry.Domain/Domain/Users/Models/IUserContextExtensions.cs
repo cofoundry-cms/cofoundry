@@ -3,9 +3,10 @@
     public static class IUserContextExtensions
     {
         /// <summary>
-        /// Indicated if the user belongs to the Cofoundry user area.
+        /// Indicates if the user is signed in i.e. <see cref="IUserContext.UserId"/>
+        /// is not <see langword="null"/>.
         /// </summary>
-        public static bool IsLoggedIn(this IUserContext userContext)
+        public static bool IsSignedIn(this IUserContext userContext)
         {
             return userContext.UserId.HasValue;
         }

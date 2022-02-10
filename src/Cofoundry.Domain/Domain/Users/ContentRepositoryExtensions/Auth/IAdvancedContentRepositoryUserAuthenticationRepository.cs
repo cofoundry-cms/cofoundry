@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
         /// why the authentication failed.
         /// </summary>
         /// <param name="query">Query parameters.</param>
-        IDomainRepositoryQueryContext<UserCredentialsAuthenticationResult> AuthenticateCredentialsAsync(AuthenticateUserCredentialsQuery query);
+        IDomainRepositoryQueryContext<UserCredentialsAuthenticationResult> AuthenticateCredentials(AuthenticateUserCredentialsQuery query);
 
         /// <summary>
         /// Signs a user into the application for a specified user area

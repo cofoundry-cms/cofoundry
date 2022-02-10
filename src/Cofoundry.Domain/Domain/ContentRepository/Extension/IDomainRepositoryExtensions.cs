@@ -37,15 +37,6 @@ namespace Cofoundry.Domain
             return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithExecutionContext(executor, executionContext));
         }
 
-        public static TRepository WithContextx<TRepository>(this TRepository repository, IExecutionContext executionContext)
-            where TRepository : IDomainRepository
-        {
-            if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
-
-            var extendedContentRepositry = repository.AsExtendableContentRepository();
-            return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithExecutionContext(executor, executionContext));
-        }
-
         /// <summary>
         /// Uses the specified <paramref name="userContext"/> to build a new <see cref="IExecutionContext"/>
         /// to run queries or commands under. Typically this is used to impersonate a user or 

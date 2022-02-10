@@ -17,7 +17,7 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IDomainRepositoryQueryContext<UserCredentialsAuthenticationResult> AuthenticateCredentialsAsync(AuthenticateUserCredentialsQuery query)
+        public IDomainRepositoryQueryContext<UserCredentialsAuthenticationResult> AuthenticateCredentials(AuthenticateUserCredentialsQuery query)
         {
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }

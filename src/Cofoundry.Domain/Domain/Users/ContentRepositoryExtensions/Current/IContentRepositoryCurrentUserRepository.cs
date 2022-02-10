@@ -11,5 +11,11 @@
         /// UserArea set as the default schema.
         /// </summary>
         IContentRepositoryCurrentUserQueryBuilder Get();
+
+        /// <summary>
+        /// Returns <see langword="true"/> if there is a user signed in, based on
+        /// the ambient user area context; otheriwse <see langword="false"/>.
+        /// </summary>
+        IDomainRepositoryQueryMutator<IUserContext, bool> IsSignedIn();
     }
 }

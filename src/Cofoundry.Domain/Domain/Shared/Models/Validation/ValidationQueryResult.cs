@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Validation;
+using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
@@ -7,7 +8,8 @@ namespace Cofoundry.Domain
     /// result can only contain a single validation error, as typically 
     /// most queries will return after a single error is found.
     /// </summary>
-    public class ValidationQueryResult
+    /// <inheritdoc/>
+    public class ValidationQueryResult : IValidationQueryResult
     {
         public ValidationQueryResult() { }
 
@@ -16,9 +18,6 @@ namespace Cofoundry.Domain
             UpdateError(error);
         }
 
-        /// <summary>
-        /// True if the query discovered no errors; otherwise false.
-        /// </summary>
         public virtual bool IsSuccess { get; set; }
 
         /// <summary>
@@ -61,6 +60,14 @@ namespace Cofoundry.Domain
         public static ValidationQueryResult ValidResult()
         {
             return new ValidationQueryResult(null);
+        }
+
+        public IEnumerable<ValidationError> GetErrors()
+        {
+            if (Error != null)
+            {
+                yield return Error;
+            }
         }
     }
 }

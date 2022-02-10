@@ -31,5 +31,14 @@ namespace Cofoundry.Domain.Internal
         {
             return new ContentRepositoryCurrentUserQueryBuilder(ExtendableContentRepository);
         }
+
+        public IDomainRepositoryQueryMutator<IUserContext, bool> IsSignedIn()
+        {
+            var query = new GetCurrentUserContextQuery();
+
+            return Get()
+                .AsUserContext()
+                .Map(u => u.IsSignedIn());
+        }
     }
 }

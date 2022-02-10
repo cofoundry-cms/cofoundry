@@ -41,7 +41,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
                 .Users()
                 .AccountVerification()
                 .EmailFlow()
-                .ValidateAsync(new ValidateUserAccountVerificationByEmailQuery()
+                .Validate(new ValidateUserAccountVerificationByEmailQuery()
                 {
                     UserAreaCode = authorizedTask.User.UserAreaCode,
                     Token = token,
@@ -74,7 +74,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
                 .Users()
                 .AccountVerification()
                 .EmailFlow()
-                .ValidateAsync(new ValidateUserAccountVerificationByEmailQuery()
+                .Validate(new ValidateUserAccountVerificationByEmailQuery()
                 {
                     UserAreaCode = authorizedTask.User.UserAreaCode,
                     Token = token,
@@ -116,7 +116,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
                 .Users()
                 .AccountVerification()
                 .EmailFlow()
-                .ValidateAsync(new ValidateUserAccountVerificationByEmailQuery()
+                .Validate(new ValidateUserAccountVerificationByEmailQuery()
                 {
                     UserAreaCode = authorizedTask.User.UserAreaCode,
                     Token = token
@@ -151,7 +151,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
                 .Users()
                 .AccountVerification()
                 .EmailFlow()
-                .ValidateAsync(new ValidateUserAccountVerificationByEmailQuery()
+                .Validate(new ValidateUserAccountVerificationByEmailQuery()
                 {
                     UserAreaCode = authorizedTask.User.UserAreaCode,
                     Token = token,
@@ -184,7 +184,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
                 .Users()
                 .AccountVerification()
                 .EmailFlow()
-                .ValidateAsync(new ValidateUserAccountVerificationByEmailQuery()
+                .Validate(new ValidateUserAccountVerificationByEmailQuery()
                 {
                     UserAreaCode = authorizedTask.User.UserAreaCode,
                     Token = token + "X",
@@ -221,7 +221,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
                 .Users()
                 .AccountVerification()
                 .EmailFlow()
-                .ValidateAsync(new ValidateUserAccountVerificationByEmailQuery()
+                .Validate(new ValidateUserAccountVerificationByEmailQuery()
                 {
                     UserAreaCode = authorizedTask.User.UserAreaCode,
                     Token = token,

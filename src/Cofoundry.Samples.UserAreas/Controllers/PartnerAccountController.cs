@@ -13,15 +13,6 @@ namespace Cofoundry.Samples.UserAreas
     [AuthorizeRole(PartnerUserArea.Code, PartnerRole.Code)]
     public class PartnerAccountController : Controller
     {
-        private readonly IAuthenticationControllerHelper<PartnerUserArea> _authenticationControllerHelper;
-
-        public PartnerAccountController(
-            IAuthenticationControllerHelper<PartnerUserArea> authenticationControllerHelper
-            )
-        {
-            _authenticationControllerHelper = authenticationControllerHelper;
-        }
-
         [Route("")]
         public IActionResult Index()
         {

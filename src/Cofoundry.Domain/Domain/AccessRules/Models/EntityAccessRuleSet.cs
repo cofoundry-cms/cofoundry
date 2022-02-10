@@ -60,7 +60,7 @@ namespace Cofoundry.Domain
                 return true;
             }
 
-            if (!user.IsLoggedIn())
+            if (!user.IsSignedIn())
             {
                 return false;
             }

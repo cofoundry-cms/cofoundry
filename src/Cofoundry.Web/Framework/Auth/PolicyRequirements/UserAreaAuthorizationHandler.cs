@@ -23,7 +23,7 @@ namespace Cofoundry.Web.Auth.Internal
         {
             var user = await _userContextService.GetCurrentContextAsync();
 
-            if (user.IsLoggedIn() && user.UserArea.UserAreaCode == requirement.UserAreaCode)
+            if (user.IsSignedIn() && user.UserArea.UserAreaCode == requirement.UserAreaCode)
             {
                 context.Succeed(requirement);
             }
