@@ -1,7 +1,6 @@
 ﻿using Cofoundry.Core.Mail;
 using Cofoundry.Domain;
 using Cofoundry.Web;
-using Cofoundry.Web.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

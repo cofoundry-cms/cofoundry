@@ -1,5 +1,5 @@
 ﻿using Cofoundry.Domain;
-using Cofoundry.Web.Identity;
+using Cofoundry.Web.Admin.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

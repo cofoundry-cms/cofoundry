@@ -1,11 +1,5 @@
-﻿using Cofoundry.Domain;
-using Cofoundry.Web;
-using Cofoundry.Web.Identity;
+﻿using Cofoundry.Web;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas
 {
