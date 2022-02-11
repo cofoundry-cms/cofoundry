@@ -59,7 +59,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 {
                     Email = uniqueData + "@example.com",
                     Password = "DELETED!!!",
-                    RoleCode = SuperAdminRole.SuperAdminRoleCode,
+                    RoleCode = SuperAdminRole.Code,
                     UserAreaCode = CofoundryAdminUserArea.Code
                 });
 
@@ -87,7 +87,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Awaiting(r => r.WithContext<CofoundryAdminUserArea>().Users().DeleteAsync(userToDeleteId))
                 .Should()
                 .ThrowAsync<NotPermittedException>()
-                .WithMessage($"* Super Administrator * delete other *");
+                .WithMessage($"* Super Administrator * manage other *");
         }
 
         [Fact]

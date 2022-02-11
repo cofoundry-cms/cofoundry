@@ -129,7 +129,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Services
             {
                 systemUserContext.Should().NotBeNull();
                 systemUserContext.UserId.Should().Be(dbSystemUser.UserId);
-                systemUserContext.RoleCode.Should().Be(SuperAdminRole.SuperAdminRoleCode);
+                systemUserContext.RoleCode.Should().Be(SuperAdminRole.Code);
                 systemUserContext.RoleId.Should().Be(dbSystemUser.RoleId);
                 systemUserContext.UserArea.Should().NotBeNull();
                 systemUserContext.UserArea.UserAreaCode.Should().Be(CofoundryAdminUserArea.Code);

@@ -1,9 +1,7 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.Mail;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.MailTemplates;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -21,12 +19,9 @@ namespace Cofoundry.Domain.Internal
         private readonly CofoundryDbContext _dbContext;
         private readonly IDomainRepository _domainRepository;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
-        private readonly IMailService _mailService;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
         private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
-        private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IUserContextCache _userContextCache;
-        private readonly IUserSummaryMapper _userSummaryMapper;
         private readonly IPasswordPolicyService _newPasswordValidationService;
         private readonly IMessageAggregator _messageAggregator;
 
@@ -34,12 +29,9 @@ namespace Cofoundry.Domain.Internal
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
-            IMailService mailService,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
             IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper,
-            IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IUserContextCache userContextCache,
-            IUserSummaryMapper userSummaryMapper,
             IPasswordPolicyService newPasswordValidationService,
             IMessageAggregator messageAggregator
             )
@@ -47,12 +39,9 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
             _domainRepository = domainRepository;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
-            _mailService = mailService;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
             _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
-            _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _userContextCache = userContextCache;
-            _userSummaryMapper = userSummaryMapper;
             _newPasswordValidationService = newPasswordValidationService;
             _messageAggregator = messageAggregator;
         }
@@ -131,7 +120,7 @@ namespace Cofoundry.Domain.Internal
             var user = await _dbContext
                 .Users
                 .IncludeForSummary()
-                .FilterActive()
+                .FilterEnabled()
                 .FilterById(userId)
                 .SingleOrDefaultAsync();
 

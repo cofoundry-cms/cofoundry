@@ -52,10 +52,5 @@
         /// for that role. Otherwise this will be <see langword="null"/>.
         /// </summary>
         string RoleCode { get; }
-
-        /// <summary>
-        /// Returns true if the user belongs to the Cofoundry user area.
-        /// </summary>
-        bool IsCofoundryUser();
     }
 }

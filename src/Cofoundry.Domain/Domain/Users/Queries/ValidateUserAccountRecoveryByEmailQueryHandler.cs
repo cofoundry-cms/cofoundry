@@ -1,6 +1,5 @@
 ﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using System;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -30,7 +29,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task<AuthorizedTaskTokenValidationResult> ExecuteAsync(ValidateUserAccountRecoveryByEmailQuery query, IExecutionContext executionContext)
         {
-            var options = GetOptions(query);
+            ValidateUserArea(query);
 
             var tokenResult = await _domainRepository
                 .WithContext(executionContext)
@@ -47,7 +46,7 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        private AccountRecoveryOptions GetOptions(ValidateUserAccountRecoveryByEmailQuery query)
+        private void ValidateUserArea(ValidateUserAccountRecoveryByEmailQuery query)
         {
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(query.UserAreaCode);
 
@@ -60,10 +59,6 @@ namespace Cofoundry.Domain.Internal
             {
                 throw new InvalidAccountRecoveryRequestException(query, $"Cannot reset the password because the {userArea.Name} user area does not require email addresses.");
             }
-
-            var options = _userAreaDefinitionRepository.GetOptionsByCode(userArea.UserAreaCode).AccountRecovery;
-
-            return options;
         }
 
         private static void RunAdditionalValidation(ValidateUserAccountRecoveryByEmailQuery query, AuthorizedTaskTokenValidationResult tokenResult)

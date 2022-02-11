@@ -35,7 +35,7 @@ namespace Cofoundry.Domain.Internal
             var exists = await _dbContext
                 .Users
                 .AsNoTracking()
-                .FilterActive()
+                .FilterNotDeleted()
                 .FilterByUserArea(query.UserAreaCode)
                 .Where(u => u.UserId != query.UserId && u.UniqueUsername == uniqueUsername)
                 .AnyAsync();

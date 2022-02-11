@@ -104,6 +104,13 @@ namespace Cofoundry.Domain.Data
         public string SecurityStamp { get; set; }
 
         /// <summary>
+        /// Setting <see cref="IsActive"/> to <see langword="false"/> deactivates
+        /// a user, preventing them from logging in or taking any actions, but does
+        /// not remove any data or prevent them from being queried.
+        /// </summary>
+        public bool IsActive { get; set; }
+
+        /// <summary>
         /// Used for soft deletes so we can maintain old relations and
         /// archive data.
         /// </summary>
@@ -194,11 +201,22 @@ namespace Cofoundry.Domain.Data
         public virtual User Creator { get; set; }
 
         /// <summary>
-        /// Simply joins the first and last name together e.g. "Scott Pilgrim"
+        /// <see langword="true"/> if the user is active and not deleted. The system 
+        /// user account will return <see langword="true"/>, to exlude it use <see cref="CanSignIn"/>
+        /// instead.
         /// </summary>
-        public string GetFullName()
+        public bool IsEnabled()
         {
-            return (FirstName + " " + LastName).Trim();
+            return !IsDeleted && IsActive;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> if the user is allowed to be signed in i.e. is active, not
+        /// deleted and not the system user.
+        /// </summary>
+        public bool CanSignIn()
+        {
+            return !IsSystemAccount && !IsDeleted && IsActive;
         }
     }
 }

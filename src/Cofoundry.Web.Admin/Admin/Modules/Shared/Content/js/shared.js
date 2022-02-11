@@ -8264,6 +8264,70 @@ function (
 
     return service;
 }]);
+angular.module('cms.shared').directive('cmsButton', [
+    'shared.internalModulePath',
+function (
+    modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/Button.html',
+        scope: {
+            text: '@cmsText'
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonIcon', [
+    'shared.internalModulePath',
+    function (modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: false,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonIcon.html',
+        scope: {
+            title: '@cmsTitle',
+            icon: '@cmsIcon',
+            href: '@cmsHref',
+            external: '@cmsExternal'
+        },
+        link: function (scope, el) {
+            if (scope.icon) {
+                scope.iconCls = 'fa-' + scope.icon;
+            }
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonLink', [
+    'shared.internalModulePath',
+    function (modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonLink.html',
+        scope: {
+            text: '@cmsText',
+            href: '@cmsHref'
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonSubmit', [
+    'shared.internalModulePath',
+function (
+    modulePath
+) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonSubmit.html',
+        scope: {
+            text: '@cmsText'
+        }
+    };
+}]);
 angular.module('cms.shared').controller('AddCustomEntityDialogController', [
     '$scope',
     '$location',
@@ -9164,70 +9228,6 @@ function (
 
     function Controller() {
     }
-}]);
-angular.module('cms.shared').directive('cmsButton', [
-    'shared.internalModulePath',
-function (
-    modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/Button.html',
-        scope: {
-            text: '@cmsText'
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonIcon', [
-    'shared.internalModulePath',
-    function (modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: false,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonIcon.html',
-        scope: {
-            title: '@cmsTitle',
-            icon: '@cmsIcon',
-            href: '@cmsHref',
-            external: '@cmsExternal'
-        },
-        link: function (scope, el) {
-            if (scope.icon) {
-                scope.iconCls = 'fa-' + scope.icon;
-            }
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonLink', [
-    'shared.internalModulePath',
-    function (modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonLink.html',
-        scope: {
-            text: '@cmsText',
-            href: '@cmsHref'
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonSubmit', [
-    'shared.internalModulePath',
-function (
-    modulePath
-) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonSubmit.html',
-        scope: {
-            text: '@cmsText'
-        }
-    };
 }]);
 angular.module('cms.shared').directive('cmsFormFieldDirectorySelector', [
     '_',
@@ -15437,7 +15437,6 @@ angular.module('cms.shared').factory('shared.SearchQuery', ['$location', '_', fu
                         }
                     }
                 });
-                console.log(qsParams);
                 $location.search(qsParams);
             }
 
@@ -15839,6 +15838,15 @@ function (
 
         vm.urlLibrary = urlLibrary;
         vm.canRead = permissionValidationService.canRead('COFUSR');
+        vm.formatName = formatName;
+    }
+
+    function formatName(user) {
+        if (user.firstName || user.lastName) {
+            return user.firstName + ' ' + user.lastName;
+        }
+
+        return user.username;
     }
 }]);
 /**

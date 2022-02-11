@@ -34,7 +34,7 @@ namespace Cofoundry.Domain.Internal
         {
             if (IsLoggedInAlready(command, executionContext))
             {
-                throw new Exception("UpdateUnauthenticatedUserPasswordCommand cannot be used when the user is already logged in.");
+                throw new Exception($"{nameof(UpdateUserPasswordByCredentialsCommand)} cannot be used when the user is already logged in.");
             }
 
             var authResult = await GetUserSignInInfoAsync(command, executionContext);

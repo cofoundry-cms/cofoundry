@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -13,12 +10,10 @@ namespace Cofoundry.Domain.Internal
     /// Finds a user by a database id returning a UserMicroSummary object if it 
     /// is found, otherwise null.
     /// </summary>
-    public class GetUserMicroSummaryByIdQueryHandler 
+    public class GetUserMicroSummaryByIdQueryHandler
         : IQueryHandler<GetUserMicroSummaryByIdQuery, UserMicroSummary>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-        
         private readonly CofoundryDbContext _dbContext;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserMicroSummaryMapper _userMicroSummaryMapper;
@@ -33,10 +28,6 @@ namespace Cofoundry.Domain.Internal
             _permissionValidationService = permissionValidationService;
             _userMicroSummaryMapper = userMicroSummaryMapper;
         }
-
-        #endregion
-
-        #region execution
 
         public async Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByIdQuery query, IExecutionContext executionContext)
         {
@@ -69,7 +60,5 @@ namespace Cofoundry.Domain.Internal
                 _permissionValidationService.EnforceCurrentUserOrHasPermission<NonCofoundryUserReadPermission>(query.UserId, executionContext.UserContext);
             }
         }
-
-        #endregion
     }
 }

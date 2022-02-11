@@ -3,10 +3,17 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Updates the password of a user to a specific value. Generally a user shouldn't
+    /// be able set another users password explicity, but this command is provided for
+    /// scenarios where authorization happpens through another mechanism such as via
+    /// <see cref="UpdateUserPasswordByCredentialsCommand"/>.
+    /// </summary>
     public class UpdateUserPasswordByUserIdCommandHandler
         : ICommandHandler<UpdateUserPasswordByUserIdCommand>
         , IIgnorePermissionCheckHandler
@@ -15,6 +22,8 @@ namespace Cofoundry.Domain.Internal
         private readonly IDomainRepository _domainRepository;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
+        private readonly IPermissionValidationService _permissionValidationService;
+        private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
         private readonly IUserContextCache _userContextCache;
         private readonly IPasswordPolicyService _newPasswordValidationService;
@@ -25,6 +34,8 @@ namespace Cofoundry.Domain.Internal
             IDomainRepository domainRepository,
             IUserAreaDefinitionRepository userAreaRepository,
             IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
+            IPermissionValidationService permissionValidationService,
+            UserCommandPermissionsHelper userCommandPermissionsHelper,
             IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper,
             IUserContextCache userContextCache,
             IPasswordPolicyService newPasswordValidationService,
@@ -35,6 +46,8 @@ namespace Cofoundry.Domain.Internal
             _domainRepository = domainRepository;
             _userAreaRepository = userAreaRepository;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
+            _permissionValidationService = permissionValidationService;
+            _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
             _userContextCache = userContextCache;
             _newPasswordValidationService = newPasswordValidationService;
@@ -43,10 +56,11 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(UpdateUserPasswordByUserIdCommand command, IExecutionContext executionContext)
         {
-            var user = await GetUser(command.UserId);
-            EntityNotFoundException.ThrowIfNull(user, command.UserId);
+            ValidatePermissions(executionContext);
 
+            var user = await GetUserAsync(command.UserId);
             await ValidatePasswordAsync(command, user, executionContext);
+            
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
             _userSecurityStampUpdateHelper.Update(user);
 
@@ -78,13 +92,29 @@ namespace Cofoundry.Domain.Internal
             });
         }
 
-        private Task<User> GetUser(int userId)
+        private async Task<User> GetUserAsync(int userId)
         {
-            return _dbContext
+            var user = await _dbContext
                 .Users
                 .FilterById(userId)
                 .FilterCanSignIn()
                 .SingleOrDefaultAsync();
+
+            EntityNotFoundException.ThrowIfNull(user, userId);
+
+            return user;
+        }
+
+        public void ValidatePermissions(IExecutionContext executionContext)
+        {
+            if (executionContext.UserContext.IsCofoundryUser())
+            {
+                _permissionValidationService.EnforcePermission(new CofoundryUserUpdatePermission(), executionContext.UserContext);
+            }
+            else
+            {
+                _permissionValidationService.EnforcePermission(new NonCofoundryUserUpdatePermission(), executionContext.UserContext);
+            }
         }
 
         private async Task ValidatePasswordAsync(
@@ -93,6 +123,8 @@ namespace Cofoundry.Domain.Internal
             IExecutionContext executionContext
             )
         {
+            await _userCommandPermissionsHelper.ThrowIfCannotManageSuperAdminAsync(user, executionContext);
+
             var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
             _passwordUpdateCommandHelper.ValidateUserArea(userArea);
             _passwordUpdateCommandHelper.ValidatePermissions(userArea, executionContext);

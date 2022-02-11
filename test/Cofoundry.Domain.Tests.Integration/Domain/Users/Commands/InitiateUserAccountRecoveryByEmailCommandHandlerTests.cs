@@ -90,7 +90,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Theory]
-        [InlineData(CofoundryAdminUserArea.Code, SuperAdminRole.SuperAdminRoleCode)]
+        [InlineData(CofoundryAdminUserArea.Code, SuperAdminRole.Code)]
         [InlineData(TestUserArea1.Code, TestUserArea1RoleB.Code)]
         public async Task SendsMail(string userAreaCode, string roleCode)
         {

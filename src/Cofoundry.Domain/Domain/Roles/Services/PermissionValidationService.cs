@@ -47,7 +47,7 @@ namespace Cofoundry.Domain.Internal
 
             if (userContext != null && userContext.UserArea is CofoundryAdminUserArea)
             {
-                isSuperAdmin = userContext.RoleCode == SuperAdminRole.SuperAdminRoleCode;
+                isSuperAdmin = userContext.RoleCode == SuperAdminRole.Code;
             }
 
             if (!isSuperAdmin)

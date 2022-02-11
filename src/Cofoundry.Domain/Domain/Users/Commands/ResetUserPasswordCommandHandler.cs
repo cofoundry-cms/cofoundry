@@ -28,6 +28,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IDomainRepository _domainRepository;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IPermissionValidationService _permissionValidationService;
+        private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly IPasswordGenerationService _passwordGenerationService;
@@ -41,6 +42,7 @@ namespace Cofoundry.Domain.Internal
             IDomainRepository domainRepository,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IPermissionValidationService permissionValidationService,
+            UserCommandPermissionsHelper userCommandPermissionsHelper,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IPasswordCryptographyService passwordCryptographyService,
             IPasswordGenerationService passwordGenerationService,
@@ -54,6 +56,7 @@ namespace Cofoundry.Domain.Internal
             _domainRepository = domainRepository;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _permissionValidationService = permissionValidationService;
+            _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _passwordCryptographyService = passwordCryptographyService;
             _passwordGenerationService = passwordGenerationService;
@@ -65,7 +68,7 @@ namespace Cofoundry.Domain.Internal
         public async Task ExecuteAsync(ResetUserPasswordCommand command, IExecutionContext executionContext)
         {
             var user = await GetUserAsync(command.UserId);
-            ValidatePermissions(user, executionContext);
+            await ValidatePermissionsAsync(user, executionContext);
             ValidateUserArea(user.UserAreaCode);
 
             var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserAreaCode);
@@ -164,7 +167,7 @@ namespace Cofoundry.Domain.Internal
             return context;
         }
 
-        public void ValidatePermissions(User user, IExecutionContext executionContext)
+        public async Task ValidatePermissionsAsync(User user, IExecutionContext executionContext)
         {
             if (user.UserId == executionContext.UserContext.UserId)
             {
@@ -180,6 +183,8 @@ namespace Cofoundry.Domain.Internal
             {
                 _permissionValidationService.EnforcePermission(new NonCofoundryUserResetPasswordPermission(), executionContext.UserContext);
             }
+
+            await _userCommandPermissionsHelper.ThrowIfCannotManageSuperAdminAsync(user, executionContext);
         }
     }
 }

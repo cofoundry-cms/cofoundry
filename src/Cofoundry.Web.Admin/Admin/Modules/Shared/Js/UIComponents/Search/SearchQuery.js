@@ -84,7 +84,6 @@
                         }
                     }
                 });
-                console.log(qsParams);
                 $location.search(qsParams);
             }
 

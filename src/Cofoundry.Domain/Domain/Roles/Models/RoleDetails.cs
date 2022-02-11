@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -25,12 +23,12 @@ namespace Cofoundry.Domain
         public string Title { get; set; }
 
         /// <summary>
-        /// True if the role is the system level "Super Admin" role.
+        /// True if the role is the system level <see cref="SuperAdminRole"/> role.
         /// </summary>
-        public bool IsSuperAdministrator { get; set; }
+        public bool IsSuperAdminRole { get; set; }
 
         /// <summary>
-        /// True if the role is the special anonymous role assigned to unauthenticated users.
+        /// True if the role is the special <see cref="AnonymousRole"/> role assigned to unauthenticated users.
         /// </summary>
         public bool IsAnonymousRole { get; set; }
 

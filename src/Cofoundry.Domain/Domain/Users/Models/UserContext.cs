@@ -17,12 +17,6 @@ namespace Cofoundry.Domain
 
         public string RoleCode { get; set; }
 
-
-        public bool IsCofoundryUser()
-        {
-            return UserArea is CofoundryAdminUserArea;
-        }
-
         /// <summary>
         /// An empty read-only <see cref="IUserContext"/> instance which can
         /// be used to represent a user that is not logged in.

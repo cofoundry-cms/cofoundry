@@ -50,23 +50,18 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(UpdateUserCommand command, IExecutionContext executionContext)
         {
-            var user = await _dbContext
-                .Users
-                .FilterCanSignIn()
-                .FilterById(command.UserId)
-                .SingleOrDefaultAsync();
-            EntityNotFoundException.ThrowIfNull(user, command.UserId);
+            var user = await GetUserAsync(command);
 
             var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
-            ValidatePermissions(userArea, executionContext);
+            await ValidatePermissionsAsync(user, userArea, executionContext);
 
+            var updateStatus = await UpdateEmailAndUsernameAsync(command, user, executionContext);
             await UpdateRoleAsync(command, executionContext, user);
-            var updateEmaiAndUsernameResult = await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
-            var hasVerificationStatusChanged = UpdateAccountVerifiedStatus(command, user, executionContext);
-
+            UpdateAccountVerifiedStatus(command, user, updateStatus, executionContext);
+            UpdateActivationStatus(command, user, updateStatus, executionContext);
             UpdateProperties(command, user);
 
-            if (updateEmaiAndUsernameResult.HasUpdate())
+            if (updateStatus.RequiresSecurityStampUpdate())
             {
                 _userSecurityStampUpdateHelper.Update(user);
             }
@@ -74,32 +69,36 @@ namespace Cofoundry.Domain.Internal
             using (var scope = _domainRepository.Transactions().CreateScope())
             {
                 await _dbContext.SaveChangesAsync();
-                if (updateEmaiAndUsernameResult.HasEmailChanged)
-                {
-                    // The only reason to invalidate would be if the contact email that a request was sent to was changed
-                    await _domainRepository
-                        .WithContext(executionContext)
-                        .ExecuteCommandAsync(new InvalidateAuthorizedTaskBatchCommand(user.UserId, UserAccountRecoveryAuthorizedTaskType.Code));
-                }
+                await InvalidateAuthorizedTasks(user, updateStatus, executionContext);
 
-                scope.QueueCompletionTask(() => OnTransactionComplete(user, updateEmaiAndUsernameResult, hasVerificationStatusChanged));
+                scope.QueueCompletionTask(() => OnTransactionComplete(user, updateStatus));
                 await scope.CompleteAsync();
             }
         }
 
         private async Task OnTransactionComplete(
-            User user, 
-            UserUpdateCommandHelper.UpdateEmailAndUsernameResult updateResult,
-            bool hasVerificationStatusChanged)
+            User user,
+            UpdateStatus updateStatus
+            )
         {
             _userContextCache.Clear(user.UserId);
 
-            if (updateResult.HasUpdate())
+            if (updateStatus.RequiresSecurityStampUpdate())
             {
                 await _userSecurityStampUpdateHelper.OnTransactionCompleteAsync(user);
             }
 
-            if (hasVerificationStatusChanged)
+            if (updateStatus.HasActivationStatusChanged)
+            {
+                await _messageAggregator.PublishAsync(new UserActivationStatusUpdatedMessage()
+                {
+                    UserAreaCode = user.UserAreaCode,
+                    UserId = user.UserId,
+                    IsActive = user.IsActive
+                });
+            }
+
+            if (updateStatus.HasVerificationStatusChanged)
             {
                 await _messageAggregator.PublishAsync(new UserAccountVerificationStatusUpdatedMessage()
                 {
@@ -109,10 +108,24 @@ namespace Cofoundry.Domain.Internal
                 });
             }
 
-            await _userUpdateCommandHelper.PublishUpdateMessagesAsync(user, updateResult);
+            await _userUpdateCommandHelper.PublishUpdateMessagesAsync(user, updateStatus.UpdateEmailAndUsernameResult);
         }
 
-        public void ValidatePermissions(IUserAreaDefinition userArea, IExecutionContext executionContext)
+        private async Task<User> GetUserAsync(UpdateUserCommand command)
+        {
+            var user = await _dbContext
+                .Users
+                .FilterNotDeleted()
+                .FilterNotSystemAccount()
+                .FilterById(command.UserId)
+                .SingleOrDefaultAsync();
+
+            EntityNotFoundException.ThrowIfNull(user, command.UserId);
+
+            return user;
+        }
+
+        public async Task ValidatePermissionsAsync(User user, IUserAreaDefinition userArea, IExecutionContext executionContext)
         {
             if (userArea is CofoundryAdminUserArea)
             {
@@ -122,6 +135,20 @@ namespace Cofoundry.Domain.Internal
             {
                 _permissionValidationService.EnforcePermission(new NonCofoundryUserUpdatePermission(), executionContext.UserContext);
             }
+
+            await _userCommandPermissionsHelper.ThrowIfCannotManageSuperAdminAsync(user, executionContext);
+        }
+
+        private async Task<UpdateStatus> UpdateEmailAndUsernameAsync(
+            UpdateUserCommand command,
+            User user,
+            IExecutionContext executionContext
+            )
+        {
+            var updateEmaiAndUsernameResult = await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
+            var updateStatus = new UpdateStatus(updateEmaiAndUsernameResult);
+
+            return updateStatus;
         }
 
         private async Task UpdateRoleAsync(UpdateUserCommand command, IExecutionContext executionContext, User user)
@@ -147,6 +174,32 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
+        private async Task InvalidateAuthorizedTasks(
+            User user,
+            UpdateStatus updateStatus,
+            IExecutionContext executionContext
+            )
+        {
+            InvalidateAuthorizedTaskBatchCommand command = null;
+
+            if (updateStatus.HasBeenDeactivated)
+            {
+                command = new InvalidateAuthorizedTaskBatchCommand(user.UserId);
+            }
+            else if (updateStatus.HasEmailChanged)
+            {
+                // The only reason to invalidate would be if the contact email that a request was sent to was changed
+                command = new InvalidateAuthorizedTaskBatchCommand(user.UserId, UserAccountRecoveryAuthorizedTaskType.Code);
+            }
+
+            if (command != null)
+            {
+                await _domainRepository
+                    .WithContext(executionContext)
+                    .ExecuteCommandAsync(command);
+            }
+        }
+
         private static void UpdateProperties(UpdateUserCommand command, User user)
         {
             user.FirstName = command.FirstName?.Trim();
@@ -154,10 +207,16 @@ namespace Cofoundry.Domain.Internal
             user.RequirePasswordChange = command.RequirePasswordChange;
         }
 
-        private static bool UpdateAccountVerifiedStatus(UpdateUserCommand command, User user, IExecutionContext executionContext)
+        private static void UpdateAccountVerifiedStatus(
+            UpdateUserCommand command,
+            User user,
+            UpdateStatus updateStatus,
+            IExecutionContext executionContext
+            )
         {
-            var hasChanged = user.AccountVerifiedDate.HasValue != command.IsAccountVerified;
-            if (!hasChanged) return hasChanged;
+            updateStatus.HasVerificationStatusChanged = user.AccountVerifiedDate.HasValue != command.IsAccountVerified;
+
+            if (!updateStatus.HasVerificationStatusChanged) return;
 
             if (command.IsAccountVerified)
             {
@@ -167,8 +226,52 @@ namespace Cofoundry.Domain.Internal
             {
                 user.AccountVerifiedDate = null;
             }
+        }
 
-            return hasChanged;
+        private static void UpdateActivationStatus(
+            UpdateUserCommand command, 
+            User user, 
+            UpdateStatus updateStatus,
+            IExecutionContext executionContext
+            )
+        {
+            updateStatus.HasActivationStatusChanged = user.IsActive != command.IsActive;
+            if (!updateStatus.HasActivationStatusChanged) return;
+
+            if (!user.IsActive && user.UserId == executionContext.UserContext.UserId)
+            {
+                throw new NotPermittedException("A user cannot deactivate their own account.");
+            }
+
+            user.IsActive = command.IsActive;
+            updateStatus.HasBeenDeactivated = !user.IsActive;
+        }
+
+        private class UpdateStatus
+        {
+            private readonly UserUpdateCommandHelper.UpdateEmailAndUsernameResult _updateEmailAndUsernameResult;
+
+            public UpdateStatus(UserUpdateCommandHelper.UpdateEmailAndUsernameResult updateEmailAndUsernameResult)
+            {
+                _updateEmailAndUsernameResult = updateEmailAndUsernameResult;
+            }
+
+            public bool HasEmailChanged => _updateEmailAndUsernameResult.HasEmailChanged;
+
+            public bool HasUsernameChanged => _updateEmailAndUsernameResult.HasUsernameChanged;
+
+            public bool HasVerificationStatusChanged { get; set; }
+
+            public bool HasBeenDeactivated { get; set; }
+
+            public bool HasActivationStatusChanged { get; set; }
+
+            public UserUpdateCommandHelper.UpdateEmailAndUsernameResult UpdateEmailAndUsernameResult => _updateEmailAndUsernameResult;
+
+            public bool RequiresSecurityStampUpdate()
+            {
+                return _updateEmailAndUsernameResult.HasUpdate() || HasBeenDeactivated;
+            }
         }
     }
 }

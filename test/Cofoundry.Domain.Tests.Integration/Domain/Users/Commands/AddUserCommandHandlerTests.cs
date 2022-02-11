@@ -66,6 +66,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.CreatorId.Should().BePositive();
                 user.Email.Should().Be(command.Email);
                 user.UniqueEmail.Should().Be(lowerEmail);
+                user.IsActive.Should().BeTrue();
                 user.IsDeleted.Should().BeFalse();
                 user.AccountVerifiedDate.Should().BeNull();
                 user.IsSystemAccount.Should().BeFalse();

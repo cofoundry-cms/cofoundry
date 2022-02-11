@@ -66,11 +66,11 @@ namespace Cofoundry.Domain.Internal
                 .Users
                 .Include(u => u.Role)
                 .FilterByUserArea(CofoundryAdminUserArea.Code)
-                .FilterActive()
+                .FilterEnabled()
                 .Where(u => u.IsSystemAccount)
                 .FirstOrDefaultAsync();
 
-            EntityNotFoundException.ThrowIfNull(dbUser, SuperAdminRole.SuperAdminRoleCode);
+            EntityNotFoundException.ThrowIfNull(dbUser, "IsSystemAccount");
             var impersonatedUserContext = _userContextMapper.Map(dbUser);
 
             return impersonatedUserContext;

@@ -58,7 +58,7 @@ namespace Cofoundry.Domain.Internal
                 Password = command.Password,
                 RequirePasswordChange = command.RequirePasswordChange,
                 UserAreaCode = CofoundryAdminUserArea.Code,
-                RoleCode = SuperAdminRole.SuperAdminRoleCode
+                RoleCode = SuperAdminRole.Code
             };
 
             await _domainRepository.ExecuteCommandAsync(newUserCommand);

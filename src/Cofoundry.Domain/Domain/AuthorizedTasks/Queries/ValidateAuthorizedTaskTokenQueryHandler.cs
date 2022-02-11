@@ -1,7 +1,6 @@
 ﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,10 +22,8 @@ namespace Cofoundry.Domain.Internal
 
         public ValidateAuthorizedTaskTokenQueryHandler(
             CofoundryDbContext dbContext,
-            IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IAuthorizedTaskTokenFormatter authorizedTaskTokenFormatter,
-            IAuthorizedTaskTypeDefinitionRepository authorizedTaskTypeDefinitionRepository,
-            IUserMicroSummaryMapper userMicroSummaryMapper
+            IAuthorizedTaskTypeDefinitionRepository authorizedTaskTypeDefinitionRepository
             )
         {
             _dbContext = dbContext;
@@ -48,10 +45,11 @@ namespace Cofoundry.Domain.Internal
                 .AuthorizedTasks
                 .AsNoTracking()
                 .Include(r => r.User)
-                .Where(r => r.AuthorizedTaskId == tokenParts.AuthorizedTaskId && r.AuthorizedTaskTypeCode == authrizedTaskType.AuthorizedTaskTypeCode)
+                .Where(r => r.AuthorizedTaskId == tokenParts.AuthorizedTaskId 
+                    && r.AuthorizedTaskTypeCode == authrizedTaskType.AuthorizedTaskTypeCode)
                 .SingleOrDefaultAsync();
 
-            var result = ValidatePasswordRequest(authorizedTask, tokenParts, query, executionContext);
+            var result = Validate(authorizedTask, tokenParts, query, executionContext);
 
             if (result.IsSuccess)
             {
@@ -67,16 +65,14 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        private AuthorizedTaskTokenValidationResult ValidatePasswordRequest(
+        private AuthorizedTaskTokenValidationResult Validate(
             AuthorizedTask authorizedTask,
             AuthorizedTaskTokenParts tokenParts,
             ValidateAuthorizedTaskTokenQuery query,
             IExecutionContext executionContext
             )
         {
-            if (authorizedTask == null 
-                || authorizedTask.User.IsDeleted
-                || !ConstantEquals(authorizedTask.AuthorizationCode, tokenParts.AuthorizationCode))
+            if (authorizedTask == null || !ConstantEquals(authorizedTask.AuthorizationCode, tokenParts.AuthorizationCode))
             {
                 return NotFoundResult();
             }
@@ -91,7 +87,7 @@ namespace Cofoundry.Domain.Internal
                 return new AuthorizedTaskTokenValidationResult(AuthorizedTaskValidationErrors.TokenValidation.AlreadyComplete.Create());
             }
 
-            if (authorizedTask.InvalidatedDate.HasValue)
+            if (authorizedTask.InvalidatedDate.HasValue || !authorizedTask.User.IsEnabled())
             {
                 return new AuthorizedTaskTokenValidationResult(AuthorizedTaskValidationErrors.TokenValidation.Invalidated.Create());
             }

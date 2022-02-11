@@ -22,5 +22,14 @@ function (
 
         vm.urlLibrary = urlLibrary;
         vm.canRead = permissionValidationService.canRead('COFUSR');
+        vm.formatName = formatName;
+    }
+
+    function formatName(user) {
+        if (user.firstName || user.lastName) {
+            return user.firstName + ' ' + user.lastName;
+        }
+
+        return user.username;
     }
 }]);

@@ -89,6 +89,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.Username.Should().Be(normalizedEmail);
                 user.UniqueUsername.Should().Be(lowerEmail);
                 user.AccountVerifiedDate.Should().BeNull();
+                user.IsActive.Should().BeTrue();
                 user.RequirePasswordChange.Should().BeTrue();
                 user.EmailDomain.Name.Should().Be(normalizedDomain);
                 user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
@@ -386,6 +387,94 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
+        public async Task CanActivate()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(CanActivate);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+
+            var addCommand = app.TestData.Users().CreateAddCommand(uniqueData);
+            addCommand.IsActive = false;
+            var userId = await contentRepository
+                .Users()
+                .AddAsync(addCommand);
+
+            var updateCommand = MapUpdateCommand(addCommand);
+            updateCommand.IsActive = true;
+
+            await contentRepository
+                .Users()
+                .UpdateAsync(updateCommand);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.IsActive.Should().BeTrue();
+                app.Mocks
+                    .CountMessagesPublished<UserActivationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode && m.IsActive)
+                    .Should().Be(1);
+                app.Mocks
+                    .CountMessagesPublished<UserSecurityStampUpdatedMessage>()
+                    .Should().Be(0);
+            }
+        }
+
+        [Fact]
+        public async Task CanDeactivate()
+        {
+            var uniqueData = UNIQUE_PREFIX + nameof(CanDeactivate);
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+
+            var addCommand = app.TestData.Users().CreateAddCommand(uniqueData);
+            var userId = await contentRepository
+                .Users()
+                .AddAsync(addCommand);
+
+            var originalUserState = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            var updateCommand = MapUpdateCommand(addCommand);
+            updateCommand.IsActive = false;
+
+            await contentRepository
+                .Users()
+                .UpdateAsync(updateCommand);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
+                user.IsActive.Should().BeFalse();
+                app.Mocks
+                    .CountMessagesPublished<UserActivationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode && !m.IsActive)
+                    .Should().Be(1);
+                app.Mocks
+                    .CountMessagesPublished<UserSecurityStampUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .Should().Be(1);
+            }
+        }
+
+        [Fact]
         public async Task WhenUsernameNotUnique_Throws()
         {
             using var app = _appFactory.Create();
@@ -483,11 +572,15 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     .Should().Be(0);
 
                 app.Mocks
-                    .CountMessagesPublished<UserSecurityStampUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .CountMessagesPublished<UserSecurityStampUpdatedMessage>()
                     .Should().Be(0);
 
                 app.Mocks
-                    .CountMessagesPublished<UserAccountVerificationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode)
+                    .CountMessagesPublished<UserAccountVerificationStatusUpdatedMessage>()
+                    .Should().Be(0);
+
+                app.Mocks
+                    .CountMessagesPublished<UserAccountVerificationStatusUpdatedMessage>()
                     .Should().Be(0);
             }
         }
@@ -590,7 +683,9 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     RoleId = command.RoleId,
                     RoleCode = command.RoleCode,
                     UserId = command.OutputUserId,
-                    Username = command.Username
+                    Username = command.Username,
+                    IsActive = command.IsActive,
+                    IsAccountVerified = command.IsAccountVerified
                 };
             }
         }

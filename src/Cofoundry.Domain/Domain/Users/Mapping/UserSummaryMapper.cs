@@ -1,14 +1,10 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain.Data;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Simple mapper for mapping to UserSummary objects.
-    /// </summary>
+    /// <inheritdoc/>
     public class UserSummaryMapper : IUserSummaryMapper
     {
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
@@ -26,11 +22,6 @@ namespace Cofoundry.Domain.Internal
             _roleMicroSummaryMapper = roleMicroSummaryMapper;
         }
 
-        /// <summary>
-        /// Maps an EF user record from the db into a UserSummary object. If the
-        /// db record is null then null is returned.
-        /// </summary>
-        /// <param name="dbUser">User record from the database.</param>
         public virtual UserSummary Map(User dbUser)
         {
             if (dbUser == null) return null;
@@ -40,15 +31,8 @@ namespace Cofoundry.Domain.Internal
                 throw new ArgumentException("dbUser.Role must be included in the query to map to use the UserSummaryMapper");
             }
 
-            var user = new UserSummary()
-            {
-                Email = dbUser.Email,
-                FirstName = dbUser.FirstName,
-                LastName = dbUser.LastName,
-                UserId = dbUser.UserId,
-                Username = dbUser.Username,
-                LastSignInDate = DbDateTimeMapper.AsUtc(dbUser.LastSignInDate)
-            };
+            var user = _userMicroSummaryMapper.Map<UserSummary>(dbUser);
+            user.LastSignInDate = DbDateTimeMapper.AsUtc(dbUser.LastSignInDate);
 
             user.AuditData = new CreateAuditData()
             {

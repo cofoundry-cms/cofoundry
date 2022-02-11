@@ -54,5 +54,21 @@ namespace Cofoundry.Domain.Data
         /// collection references zero or more access rules at the <see cref="PageDirectory"/> level.
         /// </summary>
         public virtual ICollection<PageDirectoryAccessRule> PageDirectoryAccessRules { get; set; } = new List<PageDirectoryAccessRule>();
+
+        /// <summary>
+        /// <see langword="true"/> if this role is the special <see cref="AnonymousRole"/>.
+        /// </summary>
+        public bool IsAnonymousRole()
+        {
+            return RoleCode == AnonymousRole.Code && UserAreaCode == CofoundryAdminUserArea.Code;
+        }
+
+        /// <summary>
+        /// <see langword="true"/> if this role is the special Cofoundry <see cref="SuperAdminRole"/>.
+        /// </summary>
+        public bool IsSuperAdminRole()
+        {
+            return RoleCode == SuperAdminRole.Code && UserAreaCode == CofoundryAdminUserArea.Code;
+        }
     }
 }

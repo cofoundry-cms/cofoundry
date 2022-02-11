@@ -394,8 +394,19 @@ go
 	#487: Changes uses of the term "Login" and "Logout" to "SignIn" and "SignOut"
 */
 
-
 go
 exec sp_rename 'Cofoundry.User.LastLoginDate' , 'LastSignInDate', 'column'
 exec sp_rename 'Cofoundry.User.PreviousLoginDate' , 'PreviousSignInDate', 'column'
 go
+
+/*
+	#490: Users: Deactivate
+*/
+
+alter table Cofoundry.[User] add IsActive bit null
+go
+update Cofoundry.[User] set IsActive = 1 where IsDeleted = 0
+go
+alter table Cofoundry.[User] alter column IsActive bit not null
+go
+

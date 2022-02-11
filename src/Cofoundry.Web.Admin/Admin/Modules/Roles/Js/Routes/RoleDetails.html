@@ -13,7 +13,7 @@
                     cms-text="Edit"
                     ng-if="::vm.canUpdate"
                     ng-click="vm.edit()"
-                    ng-show="!vm.editMode && !vm.role.isSuperAdministrator"
+                    ng-show="!vm.editMode && !vm.role.isSuperAdminRole"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
         <cms-button cms-text="Delete"

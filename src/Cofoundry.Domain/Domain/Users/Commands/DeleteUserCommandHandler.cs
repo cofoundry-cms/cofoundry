@@ -44,9 +44,11 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(DeleteUserCommand command, IExecutionContext executionContext)
         {
-            var user = await QueryUser(command.UserId).SingleOrDefaultAsync();
-            var executorRole = await _userCommandPermissionsHelper.GetExecutorRoleAsync(executionContext);
-            ValidateCustomPermissions(user, executionContext, executorRole);
+            var user = await GetUserAsync(command.UserId);
+            await ValidateCustomPermissionsAsync(user, executionContext);
+
+            if (user.IsDeleted && !user.IsActive) return;
+
             MarkRecordDeleted(user, executionContext);
 
             using (var scope = _domainRepository.Transactions().CreateScope())
@@ -82,26 +84,30 @@ namespace Cofoundry.Domain.Internal
 
         private void MarkRecordDeleted(User user, IExecutionContext executionContext)
         {
-            if (user != null && !user.IsDeleted)
-            {
-                user.IsDeleted = true;
-            }
+            user.IsDeleted = true;
+            user.IsActive = false;
         }
 
-        private IQueryable<User> QueryUser(int userId)
+        private async Task<User> GetUserAsync(int userId)
         {
-            return _dbContext
+            var user = await _dbContext
                 .Users
                 .Include(u => u.Role)
-                .FilterById(userId);
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            EntityNotFoundException.ThrowIfNull(user, userId);
+
+            return user;
         }
 
-        private void ValidateCustomPermissions(User user, IExecutionContext executionContext, RoleDetails executorRole)
+        private async Task ValidateCustomPermissionsAsync(User user, IExecutionContext executionContext)
         {
             if (user.IsSystemAccount)
             {
                 throw new NotPermittedException("You cannot delete the system account.");
             }
+
             if (user.UserAreaCode == CofoundryAdminUserArea.Code)
             {
                 _permissionValidationService.EnforcePermission(new CofoundryUserUpdatePermission(), executionContext.UserContext);
@@ -117,10 +123,7 @@ namespace Cofoundry.Domain.Internal
             }
 
             // Only super admins can delete super admin
-            if (user.Role.RoleCode == SuperAdminRole.SuperAdminRoleCode && !executorRole.IsSuperAdministrator)
-            {
-                throw new NotPermittedException("Only Super Administrator users can delete other users with the Super Administrator role");
-            }
+            await _userCommandPermissionsHelper.ThrowIfCannotManageSuperAdminAsync(user, executionContext);
         }
 
         public IEnumerable<IPermissionApplication> GetPermissions(DeleteUserCommand command)

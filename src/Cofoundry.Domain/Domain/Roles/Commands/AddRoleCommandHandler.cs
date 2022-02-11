@@ -1,25 +1,22 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Adds a new role to a user area with a set of permissions.
     /// </summary>
-    public class AddRoleCommandHandler 
+    public class AddRoleCommandHandler
         : ICommandHandler<AddRoleCommand>
         , IPermissionRestrictedCommandHandler<AddRoleCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly ICommandExecutor _commandExecutor;
@@ -41,10 +38,6 @@ namespace Cofoundry.Domain.Internal
             _permissionValidationService = permissionValidationService;
         }
 
-        #endregion
-
-        #region execution
-
         public async Task ExecuteAsync(AddRoleCommand command, IExecutionContext executionContext)
         {
             ValidatePermissions(command);
@@ -58,10 +51,6 @@ namespace Cofoundry.Domain.Internal
 
             command.OutputRoleId = role.RoleId;
         }
-
-        #endregion
-
-        #region helpers
 
         private Task EnsureUserAreaExistsAsync(AddRoleCommand command, IExecutionContext executionContext)
         {
@@ -82,7 +71,7 @@ namespace Cofoundry.Domain.Internal
                 rolePermission.Permission = permission;
                 role.RolePermissions.Add(rolePermission);
             }
-            
+
             _dbContext.Roles.Add(role);
             return role;
         }
@@ -140,8 +129,8 @@ namespace Cofoundry.Domain.Internal
                 foreach (var permissionCommand in command.Permissions)
                 {
                     var dbPermission = dbPermissions
-                        .SingleOrDefault(p => 
-                            p.PermissionCode == permissionCommand.PermissionCode 
+                        .SingleOrDefault(p =>
+                            p.PermissionCode == permissionCommand.PermissionCode
                             && (string.IsNullOrWhiteSpace(permissionCommand.EntityDefinitionCode) || p.EntityDefinitionCode == permissionCommand.EntityDefinitionCode)
                             );
                     // Because permissions are defined in code, it might not exists yet. If it doesn't lets add it.
@@ -167,15 +156,9 @@ namespace Cofoundry.Domain.Internal
             return permissions;
         }
 
-        #endregion
-        
-        #region Permission
-
         public IEnumerable<IPermissionApplication> GetPermissions(AddRoleCommand command)
         {
             yield return new RoleCreatePermission();
         }
-
-        #endregion
     }
 }

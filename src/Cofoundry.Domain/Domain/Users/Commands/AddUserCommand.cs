@@ -69,6 +69,14 @@ namespace Cofoundry.Domain
         public bool IsAccountVerified { get; set; }
 
         /// <summary>
+        /// Setting <see cref="IsActive"/> to <see langword="false"/> deactivates
+        /// a user, preventing them from logging in or taking any actions, but does
+        /// not remove any data or prevent them from being queried. Defaults
+        /// to <see langword="true"/>.
+        /// </summary>
+        public bool IsActive { get; set; } = true;
+
+        /// <summary>
         /// The Cofoundry user system is partitioned into user areas a user
         /// must belong to one of these user areas.
         /// </summary>

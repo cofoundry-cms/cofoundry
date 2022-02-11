@@ -10,7 +10,7 @@
     <cms-page-actions ng-show="!vm.editMode">
 
         <cms-button cms-text="Edit"
-                    ng-if="::vm.canUpdate"
+                    ng-if="vm.canUpdate"
                     ng-click="vm.edit()"
                     ng-show="!vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
@@ -19,16 +19,6 @@
                     ng-if="::vm.canResetPassword"
                     ng-click="vm.resetPassword()"
                     ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
-
-        <cms-button cms-text="Mark Verified"
-            ng-if="vm.canVerifyAccount && !vm.user.accountVerifiedDate"
-            ng-click="vm.updateVerificationStatus()"
-            ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
-    
-        <cms-button cms-text="Clear Verification"
-            ng-if="vm.canVerifyAccount && vm.user.accountVerifiedDate"
-            ng-click="vm.updateVerificationStatus()"
-            ng-disabled="vm.editMode || vm.globalLoadState.isLoading"></cms-button>
         
         <cms-button cms-text="Delete"
                     ng-if="::vm.canDelete"
@@ -85,6 +75,7 @@
                 cms-option-value="roleId"
                 cms-model="vm.command.roleId"
                 cms-description="The role dictates which permissions a user has."
+                cms-readonly="vm.isCurrentUser"
                 required></cms-form-field-dropdown>
 
             <cms-form-field-checkbox cms-title="Require Password Change"
@@ -105,6 +96,11 @@
                 </span>
                 <span ng-if="!vm.user.accountVerifiedDate">No</span>
             </cms-form-field-container>
+
+            <cms-form-field-checkbox cms-title="Account Active"
+                cms-readonly="vm.isCurrentUser"
+                cms-model="vm.command.isActive"
+                cms-description="If an account is deactivated, the user will be signed out and prevented from signing in.."></cms-form-field-checkbox>
 
         </cms-form-section>
 

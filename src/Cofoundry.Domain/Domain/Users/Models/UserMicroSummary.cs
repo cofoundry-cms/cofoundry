@@ -35,6 +35,14 @@
         public string LastName { get; set; }
 
         /// <summary>
+        /// Encapsulates a number of status' that a user account can be in.
+        /// This status can be used to determine if an account is <see cref="Deleted"/>
+        /// or <see cref="Deactivated"/> allowing you to render data or adjust functionality
+        /// accordingly.
+        /// </summary>
+        public UserAccountStatus AccountStatus { get; set; }
+
+        /// <summary>
         /// Each user must be assigned to a user area (but not more than
         /// one).
         /// </summary>

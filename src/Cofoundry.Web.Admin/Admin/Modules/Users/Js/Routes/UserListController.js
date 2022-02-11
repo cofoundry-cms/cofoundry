@@ -25,10 +25,25 @@ function (
         vm.urlLibrary = urlLibrary;
         vm.gridLoadState = new LoadState();
         vm.query = new SearchQuery({
-            onChanged: onQueryChanged
+            onChanged: onQueryChanged,
+            defaultParams: {
+                accountStatus: 'Active'
+            }
         });
         vm.filter = vm.query.getFilters();
         vm.toggleFilter = toggleFilter;
+        vm.filterOptions = {
+            accountStatus: [{ 
+                name: 'Any', 
+                value: 'Any'
+            },{ 
+                name: 'Active', 
+                value: 'Active' 
+            }, {
+                name: 'Deactivated',
+                value: 'Deactivated'
+            }]
+        }
 
         var entityDefinitionCode = options.userAreaCode === 'COF' ? 'COFUSR' : 'COFUSN';
         vm.canRead = permissionValidationService.canRead(entityDefinitionCode);

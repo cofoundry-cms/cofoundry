@@ -29,7 +29,8 @@ namespace Cofoundry.Domain.Internal
             var dbUser = await _dbContext
                 .Users
                 .AsNoTracking()
-                .FilterCanSignIn()
+                .FilterNotDeleted()
+                .FilterNotSystemAccount()
                 .FilterById(query.Id)
                 .SingleOrDefaultAsync();
 
@@ -54,7 +55,8 @@ namespace Cofoundry.Domain.Internal
                 RequirePasswordChange = dbUser.RequirePasswordChange,
                 RoleId = dbUser.RoleId,
                 UserId = dbUser.UserId,
-                IsAccountVerified = dbUser.AccountVerifiedDate.HasValue
+                IsAccountVerified = dbUser.AccountVerifiedDate.HasValue,
+                IsActive = dbUser.IsActive
             };
 
             if (!userArea.UseEmailAsUsername)

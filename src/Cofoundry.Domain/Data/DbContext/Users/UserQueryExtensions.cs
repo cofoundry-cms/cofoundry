@@ -17,11 +17,10 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
-        /// Filters the collection to only include users who have an active
-        /// account (i.e. not deleted). This includes the system user account; to exclude
-        /// it use <see cref="FilterCanSignIn"/> instead.
+        /// Filters the collection to only include users who are not deleted (i.e. not deleted).
+        /// This will not filter out inactive users.
         /// </summary>
-        public static IQueryable<User> FilterActive(this IQueryable<User> users)
+        public static IQueryable<User> FilterNotDeleted(this IQueryable<User> users)
         {
             var user = users
                 .Where(u => !u.IsDeleted);
@@ -30,13 +29,37 @@ namespace Cofoundry.Domain.Data
         }
 
         /// <summary>
-        /// Returns only users that are allowed to be signed in in i.e. is not
+        /// Filters the collection to only include users who have an active account that has not 
+        /// been deleted. This includes the system user account; to exclude it use 
+        /// <see cref="FilterCanSignIn"/> instead.
+        /// </summary>
+        public static IQueryable<User> FilterEnabled(this IQueryable<User> users)
+        {
+            var user = users
+                .Where(u => !u.IsDeleted && u.IsActive);
+
+            return user;
+        }
+
+        /// <summary>
+        /// Returns only users that are allowed to be signed in i.e. is active, not
         /// deleted and is not the system user.
         /// </summary>
         public static IQueryable<User> FilterCanSignIn(this IQueryable<User> users)
         {
             var user = users
-                .Where(u => !u.IsSystemAccount && !u.IsDeleted);
+                .Where(u => !u.IsSystemAccount && !u.IsDeleted && u.IsActive);
+
+            return user;
+        }
+
+        /// <summary>
+        /// Filters the collection to only exclude the system user account.
+        /// </summary>
+        public static IQueryable<User> FilterNotSystemAccount(this IQueryable<User> users)
+        {
+            var user = users
+                .Where(u => !u.IsSystemAccount);
 
             return user;
         }

@@ -90,8 +90,8 @@ namespace Cofoundry.Domain.Internal
         {
             return _roleCache.GetOrAddAnonymousRole(() =>
             {
-                var dbRole = QueryAnonymousRole().FirstOrDefault();
-                EntityNotFoundException.ThrowIfNull(dbRole, AnonymousRole.AnonymousRoleCode);
+                var dbRole = QueryAnonymousRole().SingleOrDefault();
+                EntityNotFoundException.ThrowIfNull(dbRole, AnonymousRole.Code);
                 var role = _roleDetailsMapper.Map(dbRole);
 
                 return role;
@@ -100,10 +100,10 @@ namespace Cofoundry.Domain.Internal
 
         private Task<RoleDetails> GetAnonymousRoleFromCacheAsync()
         {
-            return _roleCache.GetOrAddAnonymousRoleAsync(async () => 
+            return _roleCache.GetOrAddAnonymousRoleAsync(async () =>
             {
-                var dbRole = await QueryAnonymousRole().FirstOrDefaultAsync();
-                EntityNotFoundException.ThrowIfNull(dbRole, AnonymousRole.AnonymousRoleCode);
+                var dbRole = await QueryAnonymousRole().SingleOrDefaultAsync();
+                EntityNotFoundException.ThrowIfNull(dbRole, AnonymousRole.Code);
                 var role = _roleDetailsMapper.Map(dbRole);
 
                 return role;
@@ -113,7 +113,7 @@ namespace Cofoundry.Domain.Internal
         private IQueryable<Role> QueryAnonymousRole()
         {
             return QueryRoles()
-                .Where(r => r.RoleCode == AnonymousRole.AnonymousRoleCode);
+                .Where(r => r.RoleCode == AnonymousRole.Code && r.UserAreaCode == CofoundryAdminUserArea.Code);
 
         }
 

@@ -65,7 +65,7 @@ namespace Cofoundry.Domain.Internal
             if (query.ExcludeAnonymous)
             {
                 dbQuery = dbQuery
-                    .Where(r => r.RoleCode != AnonymousRole.AnonymousRoleCode);
+                    .Where(r => r.RoleCode != AnonymousRole.Code);
             }
 
             if (!string.IsNullOrEmpty(query.Text))

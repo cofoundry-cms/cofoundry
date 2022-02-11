@@ -45,13 +45,7 @@ function (
         vm.formLoadState = new LoadState(true);
         vm.userArea = options;
 
-        var entityDefinitionCode = options.userAreaCode === 'COF' ? 'COFUSR' : 'COFUSN';
-        vm.canUpdate = permissionValidationService.canUpdate(entityDefinitionCode);
-        vm.canDelete = permissionValidationService.canDelete(entityDefinitionCode);
-        vm.canResetPassword = permissionValidationService.hasPermission(entityDefinitionCode + 'RSTPWD')
-            && options.allowPasswordSignIn 
-            && options.useEmailAsUsername
-            && !isCurrentUser;
+        vm.isCurrentUser = isCurrentUser;
         
         // Init
         $q.all([loadRoles(), loadUser()])
@@ -153,7 +147,33 @@ function (
         function load(user) {
 
             vm.user = user;
+
+            setPermissions(user);
         }
+    }
+
+    function setPermissions(user){ 
+
+        var isEditEnabled = true,
+            entityDefinitionCode = options.userAreaCode === 'COF' ? 'COFUSR' : 'COFUSN';
+
+        if (!user) return;
+
+        if (user.accountStatus === 'Deleted') {
+            isEditEnabled = false;
+            vm.mainForm.formStatus.error('This user cannot be edited because it has been deleted.')
+        } else if (user.role.isSuperAdminRole && !currentUser.isSuperAdmin) {
+            isEditEnabled = false;
+            vm.mainForm.formStatus.error('You need to be in the super admin role to update this user.')
+        }
+
+        vm.canUpdate = isEditEnabled && permissionValidationService.canUpdate(entityDefinitionCode);
+        vm.canDelete = isEditEnabled && !isCurrentUser && permissionValidationService.canDelete(entityDefinitionCode);
+        vm.canResetPassword = isEditEnabled 
+            && options.allowPasswordSignIn 
+            && options.useEmailAsUsername
+            && !isCurrentUser
+            && permissionValidationService.hasPermission(entityDefinitionCode + 'RSTPWD');
     }
 
     function initForm() {
@@ -174,6 +194,10 @@ function (
 
         if (vm.user.accountVerifiedDate) {
             command.isAccountVerified = true;
+        }
+
+        if (vm.user.accountStatus === 'Active') {
+            command.isActive = true;
         }
         
         if (vm.user.role) {

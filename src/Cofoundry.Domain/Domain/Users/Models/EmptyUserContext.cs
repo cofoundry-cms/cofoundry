@@ -19,10 +19,5 @@
         public int? RoleId { get; }
 
         public string RoleCode { get; }
-
-        public bool IsCofoundryUser()
-        {
-            return false;
-        }
     }
 }

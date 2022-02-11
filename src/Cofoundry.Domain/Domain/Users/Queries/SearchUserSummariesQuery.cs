@@ -29,5 +29,10 @@ namespace Cofoundry.Domain
         /// Filter by username
         /// </summary>
         public string Username { get; set; }
+
+        /// <summary>
+        /// Filter by whether the account is active or not.
+        /// </summary>
+        public UserAccountStatusFilter AccountStatus { get; set; } = UserAccountStatusFilter.Active;
     }
 }

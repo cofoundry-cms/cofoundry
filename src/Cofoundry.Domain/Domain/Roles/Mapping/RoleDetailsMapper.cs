@@ -32,8 +32,8 @@ namespace Cofoundry.Domain.Internal
 
             var role = new RoleDetails()
             {
-                IsAnonymousRole = dbRole.RoleCode == AnonymousRole.AnonymousRoleCode,
-                IsSuperAdministrator = dbRole.RoleCode == SuperAdminRole.SuperAdminRoleCode,
+                IsAnonymousRole = dbRole.RoleCode == AnonymousRole.Code && dbRole.UserAreaCode == CofoundryAdminUserArea.Code,
+                IsSuperAdminRole = dbRole.RoleCode == SuperAdminRole.Code && dbRole.UserAreaCode == CofoundryAdminUserArea.Code,
                 RoleId = dbRole.RoleId,
                 RoleCode = dbRole.RoleCode,
                 Title = dbRole.Title
@@ -46,7 +46,7 @@ namespace Cofoundry.Domain.Internal
                 Name = userArea.Name
             };
 
-            if (role.IsSuperAdministrator)
+            if (role.IsSuperAdminRole)
             {
                 // Grant super users all permissions
                 role.Permissions = _permissionRepository.GetAll().ToArray();

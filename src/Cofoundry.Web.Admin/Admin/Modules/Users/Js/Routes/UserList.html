@@ -9,20 +9,27 @@
         </a>
 
         <!--FILTER-->
-        <cms-search-filter cms-query="vm.query"
-                           cms-filter="vm.filter"
-                           ng-show="vm.isFilterVisible">
+            <cms-search-filter cms-query="vm.query"
+                cms-filter="vm.filter"
+                ng-show="vm.isFilterVisible">
 
-        <cms-form-field-text cms-title="Username"
-                            cms-model="vm.filter.username"
-                            ng-if="::!vm.userArea.useEmailAsUsername"></cms-form-field-text>
+            <cms-form-field-text cms-title="Username"
+                cms-model="vm.filter.username"
+                ng-if="::!vm.userArea.useEmailAsUsername"></cms-form-field-text>
 
-        <cms-form-field-text cms-title="Email"
-                                cms-model="vm.filter.email"></cms-form-field-text>
+            <cms-form-field-text cms-title="Email"
+                cms-model="vm.filter.email"></cms-form-field-text>
 
-        <cms-form-field-text cms-title="Name"
-                            cms-model="vm.filter.name"></cms-form-field-text>
+            <cms-form-field-text cms-title="Name"
+                cms-model="vm.filter.name"></cms-form-field-text>
 
+            <cms-form-field-dropdown cms-title="Active"
+                cms-options="vm.filterOptions.accountStatus"
+                cms-option-name="name"
+                cms-option-value="value"
+                cms-model="vm.filter.accountStatus"
+                cms-required="true">
+            </cms-form-field-dropdown>
         </cms-search-filter>
     </cms-page-header-buttons>
 </cms-page-sub-header>
@@ -62,6 +69,7 @@
                 <tr ng-repeat="user in vm.result.items">
                     <td>
                         <a href="{{::vm.urlLibrary.userDetails(user.userArea, user.userId)}}">{{::user.username}}</a>
+                        <div ng-if="user.accountStatus == 'Deactivated'">(deactivated)</div>
                     </td>
                     <td>
                         <a href="{{::vm.urlLibrary.roleDetails(user.role.roleId)}}" ng-if="::vm.canRead">{{::user.role.title}}</a>

@@ -75,6 +75,13 @@ namespace Cofoundry.Domain
         /// </summary>
         public bool IsAccountVerified { get; set; }
 
+        /// <summary>
+        /// Setting <see cref="IsActive"/> to <see langword="false"/> deactivates
+        /// a user, preventing them from logging in or taking any actions, but does
+        /// not remove any data or prevent them from being queried.
+        /// </summary>
+        public bool IsActive { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (string.IsNullOrWhiteSpace(RoleCode) && !RoleId.HasValue)

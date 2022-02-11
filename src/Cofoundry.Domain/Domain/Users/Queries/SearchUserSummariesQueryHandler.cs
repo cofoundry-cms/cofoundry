@@ -47,8 +47,15 @@ namespace Cofoundry.Domain.Internal
                 .AsNoTracking()
                 .Include(u => u.Role)
                 .Include(u => u.Creator)
-                .FilterCanSignIn()
+                .FilterNotDeleted()
+                .FilterNotSystemAccount()
                 .Where(p => p.UserAreaCode == query.UserAreaCode);
+
+            if (query.AccountStatus != UserAccountStatusFilter.Any)
+            {
+                var isActive = query.AccountStatus == UserAccountStatusFilter.Active;
+                dbQuery = dbQuery.Where(u => u.IsActive == isActive);
+            }
 
             if (!string.IsNullOrEmpty(query.Email))
             {

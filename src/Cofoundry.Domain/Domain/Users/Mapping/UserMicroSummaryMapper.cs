@@ -1,39 +1,37 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Simple mapper for mapping to UserMicroSummary objects.
-    /// </summary>
+    /// <inheritdoc/>
     public class UserMicroSummaryMapper : IUserMicroSummaryMapper
     {
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
+        private readonly ILogger<UserMicroSummaryMapper> _logger;
 
-        public UserMicroSummaryMapper(IUserAreaDefinitionRepository userAreaRepository)
+        public UserMicroSummaryMapper(
+            IUserAreaDefinitionRepository userAreaRepository,
+            ILogger<UserMicroSummaryMapper> logger
+            )
         {
             _userAreaRepository = userAreaRepository;
+            _logger = logger;
         }
 
-        /// <summary>
-        /// Maps an EF user record from the db into a UserMicroSummary object. If the
-        /// db record is null then null is returned.
-        /// </summary>
-        /// <param name="dbUser">User record from the database.</param>
-        public virtual UserMicroSummary Map(User dbUser)
+        public virtual TModel Map<TModel>(User dbUser)
+            where TModel : UserMicroSummary, new()
         {
             if (dbUser == null) return null;
 
-            var user = new UserMicroSummary()
+            var user = new TModel()
             {
                 Email = dbUser.Email,
                 FirstName = dbUser.FirstName,
                 LastName = dbUser.LastName,
                 UserId = dbUser.UserId,
-                Username = dbUser.Username
+                Username = dbUser.Username,
+                AccountStatus = MapAccountStatus(dbUser)
             };
 
             var userArea = _userAreaRepository.GetRequiredByCode(dbUser.UserAreaCode);
@@ -46,6 +44,30 @@ namespace Cofoundry.Domain.Internal
             };
 
             return user;
+        }
+
+        private UserAccountStatus MapAccountStatus(User dbUser)
+        {
+            if (dbUser.IsDeleted)
+            {
+                return UserAccountStatus.Deleted;
+            }
+            else if (!dbUser.IsActive)
+            {
+                return UserAccountStatus.Deactivated;
+            }
+            else if (dbUser.IsActive)
+            {
+                return UserAccountStatus.Active;
+            }
+
+            _logger.LogWarning("Unknown UserAccountStatus when mapping user {UserId}", dbUser.UserId);
+            return UserAccountStatus.Unknown;
+        }
+
+        public virtual UserMicroSummary Map(User dbUser)
+        {
+            return Map<UserMicroSummary>(dbUser);
         }
     }
 }
