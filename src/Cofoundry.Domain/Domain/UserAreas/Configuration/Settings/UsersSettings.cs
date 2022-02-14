@@ -34,6 +34,12 @@ namespace Cofoundry.Domain
         public CookieOptions Cookies { get; set; } = new CookieOptions();
 
         /// <summary>
+        /// Options to control the behavior of the authentication process and related
+        /// security features
+        /// </summary>
+        public AuthenticationOptions Authentication { get; set; } = new AuthenticationOptions();
+
+        /// <summary>
         /// Options to control the behavior of the self-service account recovery feature.
         /// </summary>
         public AccountRecoveryOptions AccountRecovery { get; set; } = new AccountRecoveryOptions();

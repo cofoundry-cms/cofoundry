@@ -36,6 +36,12 @@ namespace Cofoundry.Domain
         public CookieOptions Cookies { get; set; } = new CookieOptions();
 
         /// <summary>
+        /// Options to control the behavior of the authentication process and related
+        /// security features
+        /// </summary>
+        public AuthenticationOptions Authentication { get; set; } = new AuthenticationOptions();
+
+        /// <summary>
         /// Options to control the behavior of the self-service account recovery feature.
         /// </summary>
         public AccountRecoveryOptions AccountRecovery { get; set; } = new AccountRecoveryOptions();
@@ -61,7 +67,9 @@ namespace Cofoundry.Domain
             EntityInvalidOperationException.ThrowIfNull(settings, s => s.Password);
             EntityInvalidOperationException.ThrowIfNull(settings, s => s.Username);
             EntityInvalidOperationException.ThrowIfNull(settings, s => s.Cookies);
+            EntityInvalidOperationException.ThrowIfNull(settings, s => s.Authentication);
             EntityInvalidOperationException.ThrowIfNull(settings, s => s.AccountRecovery);
+            EntityInvalidOperationException.ThrowIfNull(settings, s => s.AccountVerification);
 
             var options = new UserAreaOptions()
             {
@@ -69,6 +77,7 @@ namespace Cofoundry.Domain
                 Password = settings.Password.Clone(),
                 Username = settings.Username.Clone(),
                 Cookies = settings.Cookies.Clone(),
+                Authentication = settings.Authentication.Clone(),
                 AccountRecovery = settings.AccountRecovery.Clone(),
                 AccountVerification = settings.AccountVerification.Clone()
             };

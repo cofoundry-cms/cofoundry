@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core.ExecutionDurationRandomizer;
+using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,27 +28,42 @@ namespace Cofoundry.Domain.Internal
         private readonly ILogger<AuthenticateUserCredentialsQueryHandler> _logger;
         private readonly CofoundryDbContext _dbContext;
         private readonly IDomainRepository _domainRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IUserDataFormatter _userDataFormatter;
         private readonly IPasswordUpdateCommandHelper _passwordUpdateCommandHelper;
+        private readonly IExecutionDurationRandomizerScopeManager _executionDurationRandomizerScopeManager;
 
         public AuthenticateUserCredentialsQueryHandler(
             ILogger<AuthenticateUserCredentialsQueryHandler> logger,
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository,
             UserAuthenticationHelper userAuthenticationHelper,
             IUserDataFormatter userDataFormatter,
-            IPasswordUpdateCommandHelper passwordUpdateCommandHelper
+            IPasswordUpdateCommandHelper passwordUpdateCommandHelper,
+            IExecutionDurationRandomizerScopeManager executionDurationRandomizerScopeManager
             )
         {
             _userAuthenticationHelper = userAuthenticationHelper;
             _logger = logger;
             _dbContext = dbContext;
             _domainRepository = domainRepository;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _userDataFormatter = userDataFormatter;
             _passwordUpdateCommandHelper = passwordUpdateCommandHelper;
+            _executionDurationRandomizerScopeManager = executionDurationRandomizerScopeManager;
         }
 
         public async Task<UserCredentialsAuthenticationResult> ExecuteAsync(AuthenticateUserCredentialsQuery query, IExecutionContext executionContext)
+        {
+            var options = _userAreaDefinitionRepository.GetOptionsByCode(query.UserAreaCode).Authentication;
+            await using (_executionDurationRandomizerScopeManager.Create(options.ExecutionDuration))
+            {
+                return await ExecuteInternalAsync(query, executionContext);
+            }
+        }
+
+        private async Task<UserCredentialsAuthenticationResult> ExecuteInternalAsync(AuthenticateUserCredentialsQuery query, IExecutionContext executionContext)
         {
             var uniqueUsername = _userDataFormatter.UniquifyUsername(query.UserAreaCode, query.Username);
             if (string.IsNullOrWhiteSpace(uniqueUsername) || string.IsNullOrWhiteSpace(query.Password))

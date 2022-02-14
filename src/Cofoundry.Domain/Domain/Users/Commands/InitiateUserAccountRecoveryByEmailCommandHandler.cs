@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core.Mail;
 using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.ExecutionDurationRandomizer;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
@@ -35,6 +36,7 @@ namespace Cofoundry.Domain
         private readonly IUserDataFormatter _userDataFormatter;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IAuthorizedTaskTokenUrlHelper _authorizedTaskTokenUrlHelper;
+        private readonly IExecutionDurationRandomizerScopeManager _executionDurationRandomizerScopeManager;
         private readonly IUserSummaryMapper _userSummaryMapper;
 
         public InitiateUserAccountRecoveryByEmailCommandHandler(
@@ -46,6 +48,7 @@ namespace Cofoundry.Domain
             IUserDataFormatter userDataFormatter,
             IMessageAggregator messageAggregator,
             IAuthorizedTaskTokenUrlHelper authorizedTaskTokenUrlHelper,
+            IExecutionDurationRandomizerScopeManager taskDurationRandomizerScopeManager,
             IUserSummaryMapper userSummaryMapper
             )
         {
@@ -57,10 +60,20 @@ namespace Cofoundry.Domain
             _userDataFormatter = userDataFormatter;
             _messageAggregator = messageAggregator;
             _authorizedTaskTokenUrlHelper = authorizedTaskTokenUrlHelper;
+            _executionDurationRandomizerScopeManager = taskDurationRandomizerScopeManager;
             _userSummaryMapper = userSummaryMapper;
         }
 
         public async Task ExecuteAsync(InitiateUserAccountRecoveryByEmailCommand command, IExecutionContext executionContext)
+        {
+            var options = _userAreaDefinitionRepository.GetOptionsByCode(command.UserAreaCode).AccountRecovery;
+            await using (_executionDurationRandomizerScopeManager.Create(options.ExecutionDuration))
+            {
+                await ExecuteInternalAsync(command, executionContext);
+            }
+        }
+
+        private async Task ExecuteInternalAsync(InitiateUserAccountRecoveryByEmailCommand command, IExecutionContext executionContext)
         {
             ValidateUserArea(command.UserAreaCode);
             var options = _userAreaDefinitionRepository.GetOptionsByCode(command.UserAreaCode).AccountRecovery;

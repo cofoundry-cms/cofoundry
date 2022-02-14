@@ -1,8 +1,10 @@
-﻿using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core.ExecutionDurationRandomizer;
+using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -53,7 +55,7 @@ namespace Cofoundry.Domain
             var extendedContentRepositry = repository.AsExtendableContentRepository();
             var executionContextFactory = extendedContentRepositry.ServiceProvider.GetRequiredService<IExecutionContextFactory>();
 
-            return (TRepository) extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithUserContext(executor, executionContextFactory, userContext));
+            return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithUserContext(executor, executionContextFactory, userContext));
         }
 
         /// <summary>
@@ -105,6 +107,57 @@ namespace Cofoundry.Domain
             var extendableContentRepository = domainRepository.AsExtendableContentRepository();
 
             return DomainRepositoryQueryContextFactory.Create(query, extendableContentRepository);
+        }
+
+        /// <summary>
+        /// Prevents execution completing before a random duration has elapsed by padding the
+        /// execution time using <see cref="Task.Delay"/>. This can help mitigate against time-based 
+        /// enumeration attacks by extending the <paramref name="minDurationInMilliseconds"/>  beyond 
+        /// the expected bounds of the completion time. For example, this could be used to mitigate harvesting 
+        /// of valid usernames from login or forgot password pages by measuring the response times.
+        /// </summary>
+        /// <param name="minDurationInMilliseconds">
+        /// The minimum duration to extend the exection to. The execution will not complete quicker
+        /// than this value.
+        /// </param>
+        /// <param name="maxDurationInMilliseconds">
+        /// The maximum duration to extend the exection to.
+        /// </param>
+        public static TRepository WithRandomDuration<TRepository>(
+            this TRepository repository,
+            int minDurationInMilliseconds,
+            int maxDurationInMilliseconds
+            )
+            where TRepository : IDomainRepository
+        {
+            return WithRandomDuration(repository, new RandomizedExecutionDuration()
+            {
+                Enabled = true,
+                MinInMilliseconds = minDurationInMilliseconds,
+                MaxInMilliseconds = maxDurationInMilliseconds
+            });
+        }
+
+        /// <summary>
+        /// Prevents execution completing before a random duration has elapsed by padding the
+        /// execution time using <see cref="Task.Delay"/>. This can help mitigate against time-based 
+        /// enumeration attacks by extending the exection duration beyond the expected bounds 
+        /// of the query or command completion time. For example, this could be used to mitigate harvesting 
+        /// of valid usernames from login or forgot password pages by measuring the response times.
+        /// </summary>
+        /// <param name="duration">
+        /// The parameters to use in extending the duration.
+        /// </param>
+        public static TRepository WithRandomDuration<TRepository>(
+            this TRepository repository,
+            RandomizedExecutionDuration duration
+            )
+            where TRepository : IDomainRepository
+        {
+            var extendedContentRepositry = repository.AsExtendableContentRepository();
+            var executionDurationRandomizerScopeManager = extendedContentRepositry.ServiceProvider.GetRequiredService<IExecutionDurationRandomizerScopeManager>();
+
+            return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithRandomizedDuration(executor, executionDurationRandomizerScopeManager, duration));
         }
     }
 }

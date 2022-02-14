@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain;
+﻿using Cofoundry.Core.ExecutionDurationRandomizer;
+using Cofoundry.Domain;
 using Cofoundry.Web.Admin.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,16 +19,19 @@ namespace Cofoundry.Web.Admin
         private readonly IAdvancedContentRepository _contentRepository;
         private readonly IAuthorizedTaskTokenUrlHelper _authorizedTaskTokenUrlHelper;
         private readonly IAdminRouteLibrary _adminRouteLibrary;
+        private readonly AdminSettings _adminSettings;
 
         public AuthController(
             IAdvancedContentRepository contentRepository,
             IAuthorizedTaskTokenUrlHelper authorizedTaskTokenUrlHelper,
-            IAdminRouteLibrary adminRouteLibrary
+            IAdminRouteLibrary adminRouteLibrary,
+            AdminSettings adminSettings
             )
         {
             _contentRepository = contentRepository.WithContext<CofoundryAdminUserArea>();
             _authorizedTaskTokenUrlHelper = authorizedTaskTokenUrlHelper;
             _adminRouteLibrary = adminRouteLibrary;
+            _adminSettings = adminSettings;
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)

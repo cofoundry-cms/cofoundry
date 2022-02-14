@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.Web;
+﻿using Cofoundry.Core.ExecutionDurationRandomizer;
+using Cofoundry.Core.Web;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,6 +33,18 @@ namespace Cofoundry.Domain
         /// 1 hour. Defaults to 24 hours. If zero or less, then max attempt validation does not occur.
         /// </summary>
         public TimeSpan RateLimitWindow { get; set; } = TimeSpan.FromHours(24);
+
+        /// <summary>
+        /// The randomized duration parameters when executing the account recovery (forgot password) initiation 
+        /// command. The lower bound of the duration should exceed the expected execution time of the account recovery 
+        /// initialization command to mitigate time-based enumeration attacks to discover valid usernames.
+        /// Defaults to a random duration between 1.5 and 2 seconds.
+        /// </summary>
+        public RandomizedExecutionDuration ExecutionDuration { get; set; } = new RandomizedExecutionDuration()
+        {
+            MinInMilliseconds = 1500,
+            MaxInMilliseconds = 2000
+        };
 
         /// <summary>
         /// <para>

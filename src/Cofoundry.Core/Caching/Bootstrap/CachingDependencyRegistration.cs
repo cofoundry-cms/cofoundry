@@ -13,7 +13,7 @@ namespace Cofoundry.Core.Caching.Registration
     {
         public void Register(IContainerRegister container)
         {
-            var cacheMode = container.Configuration.GetValue("Cofoundry:InMemoryObjectCache:CacheMode", InMemoryObjectCacheMode.Persitent);
+            var cacheMode = container.Configuration.GetValue("Cofoundry:InMemoryObjectCache:CacheMode", InMemoryObjectCacheMode.Persistent);
 
             if (cacheMode == InMemoryObjectCacheMode.PerScope)
             {

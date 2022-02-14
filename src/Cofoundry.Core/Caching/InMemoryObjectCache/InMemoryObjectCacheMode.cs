@@ -27,8 +27,8 @@ namespace Cofoundry.Core.Caching
 
         /// <summary>
         /// The cache is persistent i.e. has singleton scope. This mode
-        /// is not compatible with a multi-server configuration
+        /// is not compatible with a multi-server configuration.
         /// </summary>
-        Persitent
+        Persistent
     }
 }
