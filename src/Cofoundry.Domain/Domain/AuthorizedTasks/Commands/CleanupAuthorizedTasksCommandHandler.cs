@@ -23,7 +23,7 @@ namespace Cofoundry.Domain.Internal
 
         public Task ExecuteAsync(CleanupAuthorizedTasksCommand command, IExecutionContext executionContext)
         {
-            return _authorizedTaskStoredProcedures.CleanupAsync(command.RetentionPeriod.TotalSeconds);
+            return _authorizedTaskStoredProcedures.CleanupAsync(command.RetentionPeriod.TotalSeconds, executionContext.ExecutionDate);
         }
     }
 }

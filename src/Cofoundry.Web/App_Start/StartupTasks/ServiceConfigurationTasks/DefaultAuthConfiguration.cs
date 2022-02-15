@@ -53,10 +53,10 @@ namespace Cofoundry.Web.Extendable
             var defaultScheme = GetDefaultScheme();
 
             var authBuilder = mvcBuilder.Services.AddAuthentication(defaultScheme);
-            var cookieNamespace = _authCookieNamespaceProvider.GetNamespace();
 
             foreach (var userArea in allUserAreas)
             {
+                var cookieNamespace = _authCookieNamespaceProvider.GetNamespace(userArea.UserAreaCode);
                 var scheme = AuthenticationSchemeNames.UserArea(userArea.UserAreaCode);
                 var options = new UserAreaSchemeRegistrationOptions(userArea, scheme, cookieNamespace);
 

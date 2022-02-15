@@ -3,6 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Returns <see langword="true"/> if the parameters of the authentication
+    /// attempt exceed the limits sets in configuration e.g. attempts per IP Address
+    /// or per username.
+    /// </summary>
     public class HasExceededMaxAuthenticationAttemptsQuery : IQuery<bool>
     {
         /// <summary>

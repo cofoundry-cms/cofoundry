@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.ExecutionDurationRandomizer;
+using Cofoundry.Core.Validation;
 using Cofoundry.Core.Web;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,10 @@ namespace Cofoundry.Domain
     /// </summary>
     public class AccountRecoveryOptions : IValidatableObject
     {
+        public AccountRecoveryOptions()
+        {
+        }
+
         /// <summary>
         /// The length of time an account recovery token is valid for, specified as a 
         /// <see cref="TimeSpan"/> or in JSON configuration as a time format string 
@@ -20,19 +25,11 @@ namespace Cofoundry.Domain
         public TimeSpan ExpireAfter { get; set; } = TimeSpan.FromHours(16);
 
         /// <summary>
-        /// The maximum number of account recovery attempts to allow within the
-        /// given <see cref="RateLimitWindow"/>. Defaults to 16 attempts. If zero 
-        /// or less, then max attempt validation does not occur.
+        /// The maximum number of account recovery initiation attempts to allow per IP address. The 
+        /// default value is 16 attempts per day.
         /// </summary>
-        public int RateLimitQuantity { get; set; } = 16;
-
-        /// <summary>
-        /// The time-window in which to count account recovery attempts when enforcing
-        /// <see cref="RateLimitQuantity"/> validation, specified as a <see cref="TimeSpan"/> 
-        /// or in JSON configuration as a time format string e.g. "01:00:00" to represent 
-        /// 1 hour. Defaults to 24 hours. If zero or less, then max attempt validation does not occur.
-        /// </summary>
-        public TimeSpan RateLimitWindow { get; set; } = TimeSpan.FromHours(24);
+        [ValidateObject]
+        public RateLimitConfiguration InitiationRateLimit { get; set; } = new RateLimitConfiguration(16, TimeSpan.FromDays(1));
 
         /// <summary>
         /// The randomized duration parameters when executing the account recovery (forgot password) initiation 
@@ -40,6 +37,7 @@ namespace Cofoundry.Domain
         /// initialization command to mitigate time-based enumeration attacks to discover valid usernames.
         /// Defaults to a random duration between 1.5 and 2 seconds.
         /// </summary>
+        [ValidateObject]
         public RandomizedExecutionDuration ExecutionDuration { get; set; } = new RandomizedExecutionDuration()
         {
             MinInMilliseconds = 1500,
@@ -73,8 +71,7 @@ namespace Cofoundry.Domain
             return new AccountRecoveryOptions()
             {
                 ExpireAfter = ExpireAfter,
-                RateLimitQuantity = RateLimitQuantity,
-                RateLimitWindow = RateLimitWindow,
+                InitiationRateLimit = InitiationRateLimit.Clone(),
                 RecoveryUrlBase = RecoveryUrlBase
             };
         }

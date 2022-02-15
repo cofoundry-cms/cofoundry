@@ -34,6 +34,14 @@ namespace Cofoundry.Domain
         public TimeSpan ClaimsValidationInterval { get; set; } = new SecurityStampValidatorOptions().ValidationInterval;
 
         /// <summary>
+        /// The text to use to namespace the auth cookie. The user area
+        /// code will be appended to this to make the cookie name, e.g.
+        /// "MyAppAuth_COF". By default the cookie namespace is created
+        /// using characters from the entry assembly name of your application.
+        /// </summary>
+        public string Namespace { get; set; }
+
+        /// <summary>
         /// Copies the options to a new instance, which can be modified
         /// without altering the base settings. This is used for user area
         /// specific configuration.
@@ -42,7 +50,8 @@ namespace Cofoundry.Domain
         {
             return new CookieOptions()
             {
-                ClaimsValidationInterval = ClaimsValidationInterval
+                ClaimsValidationInterval = ClaimsValidationInterval,
+                Namespace = Namespace
             };
         }
     }

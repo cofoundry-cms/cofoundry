@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Core.Configuration
 {
@@ -13,6 +11,15 @@ namespace Cofoundry.Core.Configuration
     /// </summary>
     public class InvalidConfigurationException : Exception
     {
+        /// <summary>
+        /// Creates a new InvalidConfigurationException with a custom message.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
+        public InvalidConfigurationException(string message)
+            : base(message)
+        {
+        }
+
         /// <summary>
         /// Creates a new InvalidConfigurationException relating to multiple property
         /// errors.

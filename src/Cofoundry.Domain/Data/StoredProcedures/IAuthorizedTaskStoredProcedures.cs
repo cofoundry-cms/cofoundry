@@ -28,6 +28,10 @@ namespace Cofoundry.Domain.Data.Internal
         /// <param name="completedItemRetentionTimeInSeconds">
         /// The amount of time in seconds to keep completed, invalid or expired tasks.
         /// </param>
-        Task CleanupAsync(double retentionPeriodInSeconds);
+        /// <param name="dateNow">The current date and time to set the InvalidatedDate to.</param>
+        Task CleanupAsync(
+            double retentionPeriodInSeconds,
+            DateTime dateNow
+            );
     }
 }

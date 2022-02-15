@@ -340,6 +340,16 @@ namespace Cofoundry.Domain.Data
         public DbSet<UserArea> UserAreas { get; set; }
 
         /// <summary>
+        /// A logging table that record failed user authentication attempts.
+        /// </summary>
+        public DbSet<UserAuthenticationFailLog> UserAuthenticationFailLogs { get; set; }
+
+        /// <summary>
+        /// A logging table that record successful user authentication events.
+        /// </summary>
+        public DbSet<UserAuthenticationLog> UserAuthenticationLogs { get; set; }
+
+        /// <summary>
         /// Contains a record of a relation between one entitiy and another
         /// when it's defined in unstructured data. Also contains information on how deletions
         /// should cascade for the relationship.

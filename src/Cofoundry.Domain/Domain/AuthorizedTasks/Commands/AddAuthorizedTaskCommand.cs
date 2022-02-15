@@ -36,17 +36,11 @@ namespace Cofoundry.Domain
         public string TaskData { get; set; }
 
         /// <summary>
-        /// The maximum number of token generations to allow within the given <see cref="RateLimitWindow"/>.
-        /// If zero or less, then rate limiting does not occur.
+        /// The maximum number of token generations to allow within a rate limit window.
+        /// If <see langword="null"/> or an invalid rate limit configuration, then rate limiting 
+        /// does not occur.
         /// </summary>
-        public int? RateLimitQuantity { get; set; }
-
-        /// <summary>
-        /// The time-window in which to count the number of tokens generated when enforcing
-        /// the <see cref="RateLimitQuantity"/>. If zero or less, then <see cref="RateLimitQuantity"/> 
-        /// is applied without a time window.
-        /// </summary>
-        public TimeSpan? RateLimitWindow { get; set; }
+        public RateLimitConfiguration RateLimit { get; set; } = new RateLimitConfiguration();
 
         /// <summary>
         /// The length of time a token is valid for, specified as a  <see cref="TimeSpan"/>. If <see langword="null"/>,

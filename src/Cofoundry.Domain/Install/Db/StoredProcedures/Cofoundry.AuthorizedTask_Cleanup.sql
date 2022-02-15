@@ -1,13 +1,12 @@
 create procedure Cofoundry.AuthorizedTask_Cleanup
 	(
-		@RetentionPeriodInSeconds float
+		@RetentionPeriodInSeconds float,
+		@Datenow datetime2
 		)
 	as
 begin
 	
 	set nocount on;
-
-	declare @Datenow DateTime2(4) = GetUtcDate()
 
 	delete from Cofoundry.AuthorizedTask
 	where (CompletedDate is not null and CompletedDate < DateAdd(second, -@RetentionPeriodInSeconds, @Datenow))

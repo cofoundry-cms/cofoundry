@@ -3,7 +3,9 @@ using Cofoundry.Domain.Tests.Shared;
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -35,6 +37,9 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             var userId = await app.TestData.Users().AddAsync(uniqueData);
 
+            var now = DateTime.UtcNow;
+            app.Mocks.MockDateTime(now);
+
             await contentRepository
                 .Users()
                 .Authentication()
@@ -44,10 +49,12 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 });
 
             var sessionUserId = await userSessionService.GetUserIdByUserAreaCodeAsync(TestUserArea1.Code);
+            var user = await dbContext.Users.AsNoTracking().FilterById(userId).SingleOrDefaultAsync();
 
             using (new AssertionScope())
             {
                 sessionUserId.Should().Be(sessionUserId);
+                user.LastSignInDate.Should().Be(now);
 
                 app.Mocks
                     .CountMessagesPublished<UserSignednMessage>(m =>

@@ -1,34 +1,33 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Core.EntityFramework;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.Data.SqlClient;
+using Cofoundry.Domain.Data.Internal;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Writes a log entry to the FailedAuthenticationAttempt table indicating
+    /// an unsuccessful login attempt occured.
+    /// </summary>
     public class LogFailedAuthenticationAttemptCommandHandler
         : ICommandHandler<LogFailedAuthenticationAttemptCommand>
         , IIgnorePermissionCheckHandler
     {
-        private readonly CofoundryDbContext _dbContext;
         private readonly IDomainRepository _domainRepository;
-        private readonly IEntityFrameworkSqlExecutor _sqlExecutor;
+        private readonly IUserStoredProcedures _userStoredProcedures;
         private readonly IClientConnectionService _clientConnectionService;
         private readonly IMessageAggregator _messageAggregator;
 
         public LogFailedAuthenticationAttemptCommandHandler(
-            CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
-            IEntityFrameworkSqlExecutor sqlExecutor,
+            IUserStoredProcedures userStoredProcedures,
             IClientConnectionService clientConnectionService,
             IMessageAggregator messageAggregator
             )
         {
-            _dbContext = dbContext;
             _domainRepository = domainRepository;
-            _sqlExecutor = sqlExecutor;
+            _userStoredProcedures = userStoredProcedures;
             _clientConnectionService = clientConnectionService;
             _messageAggregator = messageAggregator;
         }
@@ -37,12 +36,11 @@ namespace Cofoundry.Domain.Internal
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 
-            await _sqlExecutor.ExecuteCommandAsync(_dbContext,
-                "Cofoundry.FailedAuthticationAttempt_Add",
-                new SqlParameter("UserAreaCode", command.UserAreaCode),
-                new SqlParameter("Username", TextFormatter.Limit(command.Username, 150)),
-                new SqlParameter("IPAddress", connectionInfo.IPAddress),
-                new SqlParameter("DateTimeNow", executionContext.ExecutionDate)
+            await _userStoredProcedures.LogAuthenticationFailed(
+                command.UserAreaCode,
+                TextFormatter.Limit(command.Username, 150),
+                connectionInfo.IPAddress,
+                executionContext.ExecutionDate
                 );
 
             await _domainRepository.Transactions().QueueCompletionTaskAsync(() => OnTransactionComplete(command));

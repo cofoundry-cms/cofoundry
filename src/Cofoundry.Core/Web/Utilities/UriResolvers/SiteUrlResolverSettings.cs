@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Cofoundry.Core.Configuration;
+﻿using Cofoundry.Core.Configuration;
 
 namespace Cofoundry.Core.Web
 {
@@ -11,9 +8,9 @@ namespace Cofoundry.Core.Web
     public class SiteUrlResolverSettings : CofoundryConfigurationSettingsBase
     {
         /// <summary>
-        /// The root url to use when resolving a relative to absolute 
+        /// The root URL to use when resolving a relative to absolute 
         /// url, e.g. 'http://www.cofoundry.org'. If this value is not defined
-        /// then the default implementation will fall back to using the url from
+        /// then the default implementation will fall back to using the URL from
         /// the request.
         /// </summary>
         public string SiteUrlRoot { get; set; }

@@ -51,11 +51,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenTooLong_ReturnsInvalid);
 
-            var identitySettings = new UsersSettings();
-            identitySettings.Username.MaxLength = 15;
+            var userSettings = new UsersSettings();
+            userSettings.Username.MaxLength = 15;
             using var app = _appFactory.Create(s =>
             {
-                s.AddSingleton(identitySettings);
+                s.AddSingleton(userSettings);
             });
 
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
@@ -76,11 +76,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = UNIQUE_PREFIX + "2S";
 
-            var identitySettings = new UsersSettings();
-            identitySettings.Username.MinLength = uniqueData.Length + 1;
+            var userSettings = new UsersSettings();
+            userSettings.Username.MinLength = uniqueData.Length + 1;
             using var app = _appFactory.Create(s =>
             {
-                s.AddSingleton(identitySettings);
+                s.AddSingleton(userSettings);
             });
 
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
@@ -93,7 +93,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 })
                 .ExecuteAsync();
 
-            AssertErrorMessage(result, "min-length-not-met", $"* less than {identitySettings.Username.MinLength} *");
+            AssertErrorMessage(result, "min-length-not-met", $"* less than {userSettings.Username.MinLength} *");
         }
 
         [Fact]
@@ -101,12 +101,12 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = UNIQUE_PREFIX + nameof(WhenInvalidFormat_ReturnsInvalid);
 
-            var identitySettings = new UsersSettings();
-            identitySettings.Username.AllowAnyCharacter = false;
-            identitySettings.Username.AllowAnyLetter = false;
+            var userSettings = new UsersSettings();
+            userSettings.Username.AllowAnyCharacter = false;
+            userSettings.Username.AllowAnyLetter = false;
             using var app = _appFactory.Create(s =>
             {
-                s.AddSingleton(identitySettings);
+                s.AddSingleton(userSettings);
             });
 
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();

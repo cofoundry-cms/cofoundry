@@ -105,8 +105,8 @@ namespace Cofoundry.Domain.Tests.Integration.AuthorizedTasks.Commands
                     .AuthorizedTasks()
                     .CreateAddCommand(initialCommand.UserId, c =>
                     {
-                        c.RateLimitQuantity = 2;
-                        c.RateLimitWindow = TimeSpan.FromHours(2);
+                        c.RateLimit.Quantity = 2;
+                        c.RateLimit.Window = TimeSpan.FromHours(2);
                     });
             }
         }

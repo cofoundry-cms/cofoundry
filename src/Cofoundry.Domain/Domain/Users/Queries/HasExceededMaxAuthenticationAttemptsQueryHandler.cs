@@ -1,51 +1,78 @@
-﻿using Cofoundry.Core.EntityFramework;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.Data.SqlClient;
+using Cofoundry.Domain.Data.Internal;
+using System;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
+    /// <summary>
+    /// Returns <see langword="true"/> if the parameters of the authentication
+    /// attempt exceed the limits sets in configuration e.g. attempts per IP Address
+    /// or per username.
+    /// </summary>
     public class HasExceededMaxAuthenticationAttemptsQueryHandler
         : IQueryHandler<HasExceededMaxAuthenticationAttemptsQuery, bool>
         , IIgnorePermissionCheckHandler
     {
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IEntityFrameworkSqlExecutor _sqlExecutor;
-        private readonly AuthenticationSettings _authenticationSettings;
+        private readonly IUserStoredProcedures _userStoredProcedures;
         private readonly IClientConnectionService _clientConnectionService;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public HasExceededMaxAuthenticationAttemptsQueryHandler(
-            CofoundryDbContext dbContext,
-            IEntityFrameworkSqlExecutor sqlExecutor,
-            AuthenticationSettings authenticationSettings,
-            IClientConnectionService clientConnectionService
+            IUserStoredProcedures userStoredProcedures,
+            IClientConnectionService clientConnectionService,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
-            _dbContext = dbContext;
-            _sqlExecutor = sqlExecutor;
-            _authenticationSettings = authenticationSettings;
+            _userStoredProcedures = userStoredProcedures;
             _clientConnectionService = clientConnectionService;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
         public async Task<bool> ExecuteAsync(HasExceededMaxAuthenticationAttemptsQuery query, IExecutionContext executionContext)
         {
+            var options = _userAreaDefinitionRepository.GetOptionsByCode(query.UserAreaCode).Authentication;
+
+            if ((options.IPAddressRateLimit == null || !options.IPAddressRateLimit.HasValidQuantityAndWindow()) 
+                && (options.UsernameRateLimit == null || !options.UsernameRateLimit.HasValidQuantityAndWindow()))
+            {
+                return false;
+            }
+
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 
-            var isValid = await _sqlExecutor.ExecuteScalarAsync<int>(_dbContext,
-                "Cofoundry.FailedAuthticationAttempt_IsAttemptValid",
-                new SqlParameter("UserAreaCode", query.UserAreaCode),
-                new SqlParameter("Username", query.Username),
-                new SqlParameter("IPAddress", connectionInfo.IPAddress),
-                new SqlParameter("DateTimeNow", executionContext.ExecutionDate),
-                new SqlParameter("MaxIPAttempts", _authenticationSettings.MaxIPAttempts),
-                new SqlParameter("MaxUsernameAttempts", _authenticationSettings.MaxUsernameAttempts),
-                new SqlParameter("MaxIPAttemptsBoundaryInMinutes", _authenticationSettings.MaxIPAttemptsBoundaryInMinutes),
-                new SqlParameter("MaxUsernameAttemptsBoundaryInMinutes", _authenticationSettings.MaxUsernameAttemptsBoundaryInMinutes)
+            var isValid = await _userStoredProcedures.IsAuthenticationAttemptValid(
+                query.UserAreaCode,
+                TextFormatter.Limit(query.Username, 150),
+                 connectionInfo.IPAddress,
+                 executionContext.ExecutionDate,
+                GetRateLimitQuantityIfValid(options.IPAddressRateLimit),
+                RateLimitWindowToSeconds(options.IPAddressRateLimit),
+                GetRateLimitQuantityIfValid(options.UsernameRateLimit),
+                RateLimitWindowToSeconds(options.UsernameRateLimit)
                 );
 
-            return isValid != 1;
+            return !isValid;
+        }
+
+        private int? GetRateLimitQuantityIfValid(RateLimitConfiguration rateLimit)
+        {
+            if (rateLimit == null || !rateLimit.HasValidQuantityAndWindow()) return null;
+
+            return rateLimit.Quantity;
+        }
+
+        private int? RateLimitWindowToSeconds(RateLimitConfiguration rateLimit)
+        {
+            if (rateLimit == null || !rateLimit.HasValidQuantityAndWindow()) return null;
+
+            if (rateLimit.Window.TotalSeconds > Int32.MaxValue)
+            {
+                throw new InvalidOperationException("Invalid rate limiting window. The number of seconds cannot exceed Int32.MaxValue.");
+            }
+
+            return Convert.ToInt32(rateLimit.Window.TotalSeconds);
         }
     }
-
 }

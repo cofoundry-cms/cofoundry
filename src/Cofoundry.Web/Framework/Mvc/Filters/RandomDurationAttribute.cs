@@ -18,7 +18,7 @@ namespace Cofoundry.Web
     /// execution of the action.
     /// </para>
     /// </summary>
-    public class RandomizedDurationAttribute : ActionFilterAttribute
+    public class RandomDurationAttribute : ActionFilterAttribute
     {
         /// <param name="minDurationInMilliseconds">
         /// The inclusive lower bound of the randomized task duration, measured in 
@@ -29,7 +29,7 @@ namespace Cofoundry.Web
         /// The inclusive upper bound of the randomized task duration, measured in 
         /// milliseconds (1000ms = 1s). Set to zero or null to disable the feature.
         /// </param>
-        public RandomizedDurationAttribute(
+        public RandomDurationAttribute(
             int minDurationInMilliseconds,
             int maxDurationInMilliseconds
             )

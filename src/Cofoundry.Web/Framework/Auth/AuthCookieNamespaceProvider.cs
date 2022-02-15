@@ -9,26 +9,24 @@ namespace Cofoundry.Web
     public class AuthCookieNamespaceProvider : IAuthCookieNamespaceProvider
     {
         private readonly IHostEnvironment _hostingEnvironment;
-        private readonly AuthenticationSettings _authenticationSettings;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public AuthCookieNamespaceProvider(
             IHostEnvironment hostingEnvironment,
-            AuthenticationSettings authenticationSettings
+            IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
             _hostingEnvironment = hostingEnvironment;
-            _authenticationSettings = authenticationSettings;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
-        /// <summary>
-        /// Gets a string that can be used to uniquely namespace the auth cookies
-        /// for this application.
-        /// </summary>
-        public string GetNamespace()
+        public string GetNamespace(string userAreaCode)
         {
-            if (!string.IsNullOrWhiteSpace(_authenticationSettings.CookieNamespace))
+            var options = _userAreaDefinitionRepository.GetOptionsByCode(userAreaCode).Cookies;
+
+            if (!string.IsNullOrWhiteSpace(options.Namespace))
             {
-                return _authenticationSettings.CookieNamespace;
+                return options.Namespace;
             }
 
             // Try and build a short and somewhat unique name using the 

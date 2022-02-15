@@ -410,3 +410,57 @@ go
 alter table Cofoundry.[User] alter column IsActive bit not null
 go
 
+/*
+	#492 UserLoginLog: Rename to UserAthentication and move rate limit settings to user settings
+*/
+
+if (exists (select * from sysobjects 
+	where id = object_id(N'Cofoundry.UserLoginLog_Add') and ObjectProperty(id, N'IsProcedure') = 1))
+begin
+	drop procedure Cofoundry.UserLoginLog_Add
+end
+go
+if (exists (select * from sysobjects 
+	where id = object_id(N'Cofoundry.FailedAuthticationAttempt_Add') and ObjectProperty(id, N'IsProcedure') = 1))
+begin
+	drop procedure Cofoundry.FailedAuthticationAttempt_Add
+end
+go
+if (exists (select * from sysobjects 
+	where id = object_id(N'Cofoundry.FailedAuthticationAttempt_IsAttemptValid') and ObjectProperty(id, N'IsProcedure') = 1))
+begin
+	drop procedure Cofoundry.FailedAuthticationAttempt_IsAttemptValid
+end
+go
+
+drop index IX_FailedAuthenticationAttempt_IPAddress on Cofoundry.FailedAuthenticationAttempt
+drop index IX_FailedAuthenticationAttempt_Username on Cofoundry.FailedAuthenticationAttempt
+drop table Cofoundry.FailedAuthenticationAttempt
+drop table Cofoundry.UserLoginLog
+
+create table Cofoundry.UserAuthenticationLog (
+	UserAuthenticationLogId bigint identity(1,1) not null,
+	UserId int not null,
+	IPAddressId bigint not null,
+	CreateDate datetime2(7) not null,
+
+	constraint PK_UserAuthenticationLog primary key (UserAuthenticationLogId),
+	constraint FK_UserAuthenticationLog_UserId foreign key (UserId) references Cofoundry.[User] (UserId),
+	constraint FK_UserAuthenticationLog_IPAddressId foreign key (IPAddressId) references Cofoundry.IPAddress (IPAddressId)
+)
+
+create table Cofoundry.UserAuthenticationFailLog (
+	UserAuthenticationFailLogId bigint identity(1,1) not null,
+	UserAreaCode char(3) not null,
+	Username nvarchar(150) not null,
+	IPAddressId bigint not null,
+	CreateDate datetime2(7) not null,
+
+	constraint PK_UserAuthenticationFailed primary key (UserAuthenticationFailLogId),
+	constraint FK_UserAuthenticationFailed_IPAddressId foreign key (IPAddressId) references Cofoundry.IPAddress (IPAddressId),
+	constraint FK_UserAuthenticationFailed_UserAreaCode foreign key (UserAreaCode) references Cofoundry.UserArea (UserAreaCode)
+)
+
+create index IX_UserAuthenticationFailLog_IPAddress on Cofoundry.UserAuthenticationFailLog (UserAreaCode, IPAddressId, CreateDate)
+create index IX_UserAuthenticationFailLog_Username on Cofoundry.UserAuthenticationFailLog (UserAreaCode, Username, CreateDate)
+go

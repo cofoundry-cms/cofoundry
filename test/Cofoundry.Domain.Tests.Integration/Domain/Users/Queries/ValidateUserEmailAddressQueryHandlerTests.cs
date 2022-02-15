@@ -71,11 +71,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = nameof(WhenTooLong_ReturnsInvalid) + UNIQUE_DOMAIN;
 
-            var identitySettings = new UsersSettings();
-            identitySettings.EmailAddress.MaxLength = 15;
+            var userSettings = new UsersSettings();
+            userSettings.EmailAddress.MaxLength = 15;
             using var app = _appFactory.Create(s =>
             {
-                s.AddSingleton(identitySettings);
+                s.AddSingleton(userSettings);
             });
 
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
@@ -96,11 +96,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = "2S" + UNIQUE_DOMAIN;
 
-            var identitySettings = new UsersSettings();
-            identitySettings.EmailAddress.MinLength = uniqueData.Length + 1;
+            var userSettings = new UsersSettings();
+            userSettings.EmailAddress.MinLength = uniqueData.Length + 1;
             using var app = _appFactory.Create(s =>
             {
-                s.AddSingleton(identitySettings);
+                s.AddSingleton(userSettings);
             });
 
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
@@ -113,7 +113,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 })
                 .ExecuteAsync();
 
-            AssertErrorMessage(result, "min-length-not-met", $"* less than {identitySettings.EmailAddress.MinLength} *");
+            AssertErrorMessage(result, "min-length-not-met", $"* less than {userSettings.EmailAddress.MinLength} *");
         }
 
         [Fact]
@@ -121,12 +121,12 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = nameof(WhenInvalidFormat_ReturnsInvalid) + UNIQUE_DOMAIN;
 
-            var identitySettings = new UsersSettings();
-            identitySettings.EmailAddress.AllowAnyCharacter = false;
-            identitySettings.EmailAddress.AllowAnyLetter = false;
+            var userSettings = new UsersSettings();
+            userSettings.EmailAddress.AllowAnyCharacter = false;
+            userSettings.EmailAddress.AllowAnyLetter = false;
             using var app = _appFactory.Create(s =>
             {
-                s.AddSingleton(identitySettings);
+                s.AddSingleton(userSettings);
             });
 
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
@@ -165,11 +165,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
         {
             var uniqueData = "NotUniq_NValUnq" + UNIQUE_DOMAIN;
 
-            var identitySettings = new UsersSettings();
-            identitySettings.EmailAddress.RequireUnique = false;
+            var userSettings = new UsersSettings();
+            userSettings.EmailAddress.RequireUnique = false;
             using var app = _appFactory.Create(s =>
             {
-                s.AddSingleton(identitySettings);
+                s.AddSingleton(userSettings);
             });
 
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();

@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
         /// </param>
         /// <param name="userId">UserId belonging to the owner of the current session.</param>
         /// <param name="rememberUser">
-        /// True if the session should last indefinately; false if the 
+        /// True if the session should last indefinitely; false if the 
         /// session should close after a timeout period.
         /// </param>
         Task SignInAsync(string userAreaDefinitionCode, int userId, bool rememberUser);

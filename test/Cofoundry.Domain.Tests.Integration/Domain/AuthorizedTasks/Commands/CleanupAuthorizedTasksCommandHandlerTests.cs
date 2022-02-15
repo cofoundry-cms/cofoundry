@@ -1,6 +1,4 @@
-﻿using Cofoundry.Core.Validation;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.Tests.Shared;
+﻿using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -14,13 +12,13 @@ using Xunit;
 namespace Cofoundry.Domain.Tests.Integration.AuthorizedTasks.Commands
 {
     [Collection(nameof(DbDependentFixtureCollection))]
-    public class CleanupAuthorizedTasksCommandTests
+    public class CleanupAuthorizedTasksCommandHandlerTests
     {
         const string UNIQUE_PREFIX = "CUpAuthTskCHT-";
 
         private readonly DbDependentTestApplicationFactory _appFactory;
 
-        public CleanupAuthorizedTasksCommandTests(
+        public CleanupAuthorizedTasksCommandHandlerTests(
              DbDependentTestApplicationFactory appFactory
             )
         {

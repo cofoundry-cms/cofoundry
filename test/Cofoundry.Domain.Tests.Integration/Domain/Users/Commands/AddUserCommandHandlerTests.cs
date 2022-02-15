@@ -448,11 +448,11 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         {
             var uniqueData = UNIQUE_PREFIX + "EmailReqUniq_ValEmailUnique";
 
-            var identitySettings = new UsersSettings();
-            identitySettings.EmailAddress.RequireUnique = true;
+            var userSettings = new UsersSettings();
+            userSettings.EmailAddress.RequireUnique = true;
             using var app = _appFactory.Create(s =>
             {
-                s.AddSingleton(identitySettings);
+                s.AddSingleton(userSettings);
             });
 
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();

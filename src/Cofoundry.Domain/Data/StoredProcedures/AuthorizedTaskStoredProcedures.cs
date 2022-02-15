@@ -43,12 +43,13 @@ namespace Cofoundry.Domain.Data.Internal
                  );
         }
 
-        public Task CleanupAsync(double retentionPeriodInSeconds)
+        public Task CleanupAsync(double retentionPeriodInSeconds, DateTime dateNow)
         {
             return _entityFrameworkSqlExecutor
                 .ExecuteCommandAsync(_dbContext,
                 "Cofoundry.AuthorizedTask_Cleanup",
-                 new SqlParameter("@RetentionPeriodInSeconds", retentionPeriodInSeconds)
+                 new SqlParameter("@RetentionPeriodInSeconds", retentionPeriodInSeconds),
+                 new SqlParameter("@DateNow", dateNow)
                  );
         }
     }

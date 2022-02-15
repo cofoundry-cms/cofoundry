@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain.Internal;
+﻿using Cofoundry.Domain.BackgroundTasks;
+using Cofoundry.Domain.Internal;
 using Cofoundry.Domain.Tests.Shared.Assertions;
 using Cofoundry.Domain.Tests.Shared.Mocks;
 using FluentAssertions;

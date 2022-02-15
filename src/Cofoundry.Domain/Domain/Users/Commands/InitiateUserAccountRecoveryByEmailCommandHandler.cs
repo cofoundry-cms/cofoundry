@@ -152,10 +152,9 @@ namespace Cofoundry.Domain
 
             // Authorized tasks supports rate limits without a time window, but password 
             // resets require a quantity and a window to set a rate limit 
-            if (options.RateLimitQuantity > 0 && options.RateLimitWindow > TimeSpan.Zero)
+            if (options.InitiationRateLimit != null && options.InitiationRateLimit.HasValidQuantityAndWindow())
             {
-                command.RateLimitQuantity = options.RateLimitQuantity;
-                command.RateLimitWindow = options.RateLimitWindow;
+                command.RateLimit = options.InitiationRateLimit;
             }
 
             try

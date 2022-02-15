@@ -33,25 +33,31 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Options to control the behavior of any authentication cookies.
         /// </summary>
-        public CookieOptions Cookies { get; set; } = new CookieOptions();
+        public CookieOptions Cookies { get; set; }
 
         /// <summary>
         /// Options to control the behavior of the authentication process and related
         /// security features
         /// </summary>
-        public AuthenticationOptions Authentication { get; set; } = new AuthenticationOptions();
+        public AuthenticationOptions Authentication { get; set; }
 
         /// <summary>
         /// Options to control the behavior of the self-service account recovery feature.
         /// </summary>
-        public AccountRecoveryOptions AccountRecovery { get; set; } = new AccountRecoveryOptions();
+        public AccountRecoveryOptions AccountRecovery { get; set; }
 
         /// <summary>
         /// Options to control the behavior of the account verification feature.
         /// Note that the Cofoundry admin panel does not support an account 
         /// verification flow and therefore these settings do not apply.
         /// </summary>
-        public AccountVerificationOptions AccountVerification { get; set; } = new AccountVerificationOptions();
+        public AccountVerificationOptions AccountVerification { get; set; }
+
+        /// <summary>
+        /// Options to control the background task that runs to clean up 
+        /// stale user data.
+        /// </summary>
+        public UserCleanupOptions Cleanup { get; set; }
 
         /// <summary>
         /// Create a new <see cref="UserAreaOptions"/>, copying data from 
@@ -70,6 +76,7 @@ namespace Cofoundry.Domain
             EntityInvalidOperationException.ThrowIfNull(settings, s => s.Authentication);
             EntityInvalidOperationException.ThrowIfNull(settings, s => s.AccountRecovery);
             EntityInvalidOperationException.ThrowIfNull(settings, s => s.AccountVerification);
+            EntityInvalidOperationException.ThrowIfNull(settings, s => s.Cleanup);
 
             var options = new UserAreaOptions()
             {
@@ -79,7 +86,8 @@ namespace Cofoundry.Domain
                 Cookies = settings.Cookies.Clone(),
                 Authentication = settings.Authentication.Clone(),
                 AccountRecovery = settings.AccountRecovery.Clone(),
-                AccountVerification = settings.AccountVerification.Clone()
+                AccountVerification = settings.AccountVerification.Clone(),
+                Cleanup = settings.Cleanup.Clone()
             };
 
             return options;

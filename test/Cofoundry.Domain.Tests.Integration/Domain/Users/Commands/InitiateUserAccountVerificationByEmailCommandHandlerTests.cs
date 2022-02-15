@@ -56,8 +56,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create(s => s.Configure<UsersSettings>(s =>
             {
-                s.AccountVerification.RateLimitQuantity = 2;
-                s.AccountVerification.RateLimitWindow = TimeSpan.FromHours(2);
+                s.AccountVerification.InitiationRateLimit.Quantity = 2;
+                s.AccountVerification.InitiationRateLimit.Window = TimeSpan.FromHours(2);
             }));
             var contentRepository = app.Services.GetContentRepository();
             app.Mocks.MockDateTime(seedDate);

@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.Web;
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Core.Web;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,19 +29,11 @@ namespace Cofoundry.Domain
         public TimeSpan ExpireAfter { get; set; } = TimeSpan.FromDays(7);
 
         /// <summary>
-        /// The maximum number of account verification attempts to allow within the
-        /// given <see cref="RateLimitWindow"/>. Defaults to 16 attempts. If zero 
-        /// or less, then rate limiting does not occur.
+        /// The maximum number of account verification initiation attempts to allow per IP address. The 
+        /// default value is 16 attempts per day.
         /// </summary>
-        public int RateLimitQuantity { get; set; } = 16;
-
-        /// <summary>
-        /// The time-window in which to count account verification attempts when enforcing
-        /// <see cref="RateLimitQuantity"/> validation, specified as a <see cref="TimeSpan"/> 
-        /// or in JSON configuration as a time format string e.g. "01:00:00" to represent 
-        /// 1 hour. Defaults to 24 hours. If zero or less, then rate limiting does not occur.
-        /// </summary>
-        public TimeSpan RateLimitWindow { get; set; } = TimeSpan.FromHours(24);
+        [ValidateObject]
+        public RateLimitConfiguration InitiationRateLimit { get; set; } = new RateLimitConfiguration(16, TimeSpan.FromDays(1));
 
         /// <summary>
         /// <para>
@@ -70,8 +63,7 @@ namespace Cofoundry.Domain
             {
                 RequireVerification = RequireVerification,
                 ExpireAfter = ExpireAfter,
-                RateLimitQuantity = RateLimitQuantity,
-                RateLimitWindow = RateLimitWindow,
+                InitiationRateLimit = InitiationRateLimit.Clone(),
                 VerificationUrlBase = VerificationUrlBase
             };
         }

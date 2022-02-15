@@ -9,9 +9,13 @@ begin
 	declare @DefinitionCode char(6) = 'COFUSR'
 
 	-- Dependencies
-    delete Cofoundry.UserLoginLog
-	from Cofoundry.UserLoginLog e
+    delete Cofoundry.UserAuthenticationLog
+	from Cofoundry.UserAuthenticationLog e
 	inner join deleted d on e.UserId = d.UserId
+
+    delete Cofoundry.UserAuthenticationFailLog
+	from Cofoundry.UserAuthenticationFailLog e
+	inner join deleted d on e.[Username] = d.[Username]
 
     delete Cofoundry.AuthorizedTask
 	from Cofoundry.AuthorizedTask e

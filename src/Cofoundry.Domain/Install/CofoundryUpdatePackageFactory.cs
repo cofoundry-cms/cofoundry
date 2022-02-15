@@ -33,6 +33,7 @@ namespace Cofoundry.Domain.Installation
 
         private IEnumerable<IAlwaysRunUpdateCommand> GetAlwaysUpdateCommand()
         {
+            yield return new ValidateMigratedSettingsCommand();
             yield return new RegisterPermissionsAndRolesUpdateCommand();
             yield return new RegisterPageTemplatesAndPageBlockTypesCommand();
         }

@@ -30,5 +30,123 @@ namespace Cofoundry.Domain.Data.Internal
             string uniqueName,
             DateTime dateNow
             );
+
+        /// <summary>
+        /// Writes a log entry to the FailedAuthenticationAttempt table indicating
+        /// an unsuccessful login attempt occured.
+        /// </summary>
+        /// <param name="userAreaCode">
+        /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area 
+        /// attempting to be authenticated.
+        /// </param>
+        /// <param name="username">
+        /// The username used in the authentication attempt. This is expected to be in a 
+        /// "uniquified" format, as this should have been already processed whenever 
+        /// this needs to be called.
+        /// </param>
+        /// <param name="ipAddress">
+        /// The string representation of the IP Address. This can be IP4, IP6
+        /// or a hashed value less than 45 characters.
+        /// </param>
+        /// <param name="dateNow">
+        /// The current date and time.
+        /// </param>
+        Task LogAuthenticationFailed(
+            string userAreaCode,
+            string username,
+            string ipAddress,
+            DateTime dateNow
+            );
+
+        /// <summary>
+        /// Writes a log entry to the UserAuthentication table indicating
+        /// a successful authentication attempt.
+        /// </summary>
+        /// <param name="userId">
+        /// The <see cref="User.UserId"/> of the user that successfully
+        /// authenticated.
+        /// </param>
+        /// <param name="ipAddress">
+        /// The string representation of the IP Address. This can be IP4, IP6
+        /// or a hashed value less than 45 characters.
+        /// </param>
+        /// <param name="dateNow">The current date and time.</param>
+        Task LogAuthenticationSuccess(
+            int userId,
+            string ipAddress,
+            DateTime dateNow
+            );
+
+        /// <summary>
+        /// Determines if an authentication attempt is valid, returning <see langword="false"/> 
+        /// if the attempt should be blocked due to too many failed attempts.
+        /// </summary>
+        /// <param name="userAreaCode">
+        /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area 
+        /// attempting to be authenticated.
+        /// </param>
+        /// <param name="username">
+        /// The username used in the authentication attempt. This is expected to be in a 
+        /// "uniquified" format, as this should have been already processed whenever 
+        /// this needs to be called.
+        /// </param>
+        /// <param name="ipAddress">
+        /// The string representation of the IP Address. This can be IP4, IP6
+        /// or a hashed value less than 45 characters.
+        /// </param>
+        /// <param name="dateNow">The current date and time.</param>
+        /// <param name="ipAddressRateLimitQuantity">
+        /// The maximum number of failed authentication attempts allowed per IP address 
+        /// during the rate limiting time window.
+        /// </param>
+        /// </param>
+        /// <param name="ipAddressRateLimitWindowInSeconds">
+        /// The time window to measure authentication attempts when rate limiting by IP 
+        /// address.
+        /// </param>
+        /// <param name="usernameRateLimitQuantity">
+        /// The maximum number of failed authentication attempts allowed per username 
+        /// during the rate limiting time window.
+        /// <param name="usernameRateLimitWindowInSeconds">
+        /// The time window to measure authentication attempts when rate limiting by 
+        /// username.
+        /// </param>
+        /// <returns><see langword="true"/> if the attmpet is valid and may proceed.</returns>
+        Task<bool> IsAuthenticationAttemptValid(
+            string userAreaCode,
+            string username,
+            string ipAddress,
+            DateTime dateNow,
+            int? ipAddressRateLimitQuantity,
+            int? ipAddressRateLimitWindowInSeconds,
+            int? usernameRateLimitQuantity,
+            int? usernameRateLimitWindowInSeconds
+            );
+
+        /// <summary>
+        /// General task for cleaning up stale user data. Currently this only removes data 
+        /// from the <see cref="UserAuthenticationLog"/> and  <see cref="UserAuthenticationFailLog"/> tables.
+        /// </summary>
+        /// <param name="userAreaCode">
+        /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area 
+        /// to clean up records for.
+        /// </param>
+        /// <param name="authenticationLogRetentionPeriodInSeconds">
+        /// The amount of time to keep records in the <see cref="UserAuthenticationLog"/> tables. 
+        /// Defaults to the <see cref="DefaultRetentionPeriod"/>. If set to zero or less then data
+        /// is kept indefinitely.
+        /// </param>
+        /// <param name="authenticationFailedLogRetentionPeriodInSeconds">
+        /// The amount of time to keep records in the <see cref="UserAuthenticationFailLog"/> tables. 
+        /// Defaults to the <see cref="DefaultRetentionPeriod"/>. If set to zero or less then data
+        /// is kept indefinitely.
+        /// </param>
+        /// <param name="dateNow">The current date and time.</param>
+        Task CleanupAsync(
+            string userAreaCode,
+            double authenticationLogRetentionPeriodInSeconds,
+            double authenticationFailedLogRetentionPeriodInSeconds,
+            DateTime dateNow
+            );
     }
 }

@@ -75,10 +75,8 @@ namespace Cofoundry.Domain.Internal
         {
             // Rate limiting may not be enabled or ip may be null if IP logging is completely disabled
             if (!ipAddressId.HasValue
-                || !command.RateLimitWindow.HasValue
-                || !command.RateLimitQuantity.HasValue
-                || command.RateLimitWindow <= TimeSpan.Zero
-                || command.RateLimitQuantity < 1
+                || command.RateLimit == null
+                || !command.RateLimit.HasValidQuantity()
                 )
             {
                 return;
@@ -91,16 +89,16 @@ namespace Cofoundry.Domain.Internal
                     && t.CreateDate <= executionContext.ExecutionDate
                     );
 
-            if (command.RateLimitWindow.HasValue || command.RateLimitWindow > TimeSpan.Zero)
+            if (command.RateLimit.HasValidWindow())
             {
-                var dateToDetectAttempts = executionContext.ExecutionDate.Add(-command.RateLimitWindow.Value);
+                var dateToDetectAttempts = executionContext.ExecutionDate.Add(-command.RateLimit.Window);
 
                 dbQuery = dbQuery.Where(t => t.CreateDate > dateToDetectAttempts);
             }
 
             var numTasks = await dbQuery.CountAsync();
 
-            if (numTasks >= command.RateLimitQuantity.Value)
+            if (numTasks >= command.RateLimit.Quantity)
             {
                 AuthorizedTaskValidationErrors.Create.RateLimitExceeded.Throw();
             }

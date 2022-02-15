@@ -95,8 +95,7 @@ namespace Cofoundry.Domain
             {
                 AuthorizedTaskTypeCode = UserAccountVerificationAuthorizedTaskType.Code,
                 UserId = user.UserId,
-                RateLimitQuantity = options.RateLimitQuantity,
-                RateLimitWindow = options.RateLimitWindow,
+                RateLimit = options.InitiationRateLimit,
                 ExpireAfter = options.ExpireAfter,
                 TaskData = user.Email
             };

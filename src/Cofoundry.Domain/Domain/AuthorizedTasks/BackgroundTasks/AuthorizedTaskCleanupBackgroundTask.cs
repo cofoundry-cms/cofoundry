@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.BackgroundTasks
 {
     public class AuthorizedTaskCleanupBackgroundTask : IAsyncRecurringBackgroundTask
     {

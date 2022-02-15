@@ -52,7 +52,8 @@ namespace Cofoundry.Domain.Tests.Integration
                 delete from Cofoundry.CustomEntity
                 delete from Cofoundry.DocumentAsset
                 delete from Cofoundry.DocumentAssetGroup
-                delete from Cofoundry.FailedAuthenticationAttempt
+                truncate table Cofoundry.UserAuthenticationLog
+                truncate table Cofoundry.UserAuthenticationFailLog
                 delete from Cofoundry.ImageAsset
                 delete from Cofoundry.ImageAssetGroup
                 delete from Cofoundry.[Page]
@@ -61,7 +62,6 @@ namespace Cofoundry.Domain.Tests.Integration
                 delete from Cofoundry.PageTemplate where [FileName] not in ('TestTemplate', 'TestCustomEntityTemplate')
                 delete from Cofoundry.RewriteRule
                 delete from Cofoundry.Tag
-                delete from Cofoundry.UserLoginLog
                 delete from Cofoundry.AuthorizedTask
                 delete Cofoundry.[User] where IsSystemAccount = 0 and [Username] <> 'admin@example.com'
                 delete from Cofoundry.[Role] where RoleCode is null

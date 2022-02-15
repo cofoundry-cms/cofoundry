@@ -16,7 +16,7 @@ namespace Cofoundry.Domain.Registration
 
         public void Register(IBackgroundTaskScheduler scheduler)
         {
-            scheduler.RegisterAsyncRecurringTask<AssetFileCleanupBackgroundTask>(_authorizedTaskCleanupSettings.BackgroundTaskFrequencyInHours, 0);
+            scheduler.RegisterAsyncRecurringTask<AuthorizedTaskCleanupBackgroundTask>(_authorizedTaskCleanupSettings.BackgroundTaskFrequencyInMinutes);
         }
     }
 }
