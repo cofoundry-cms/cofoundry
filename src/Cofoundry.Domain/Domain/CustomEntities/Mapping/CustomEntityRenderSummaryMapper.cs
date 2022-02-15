@@ -4,18 +4,13 @@ using Cofoundry.Domain.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Simple mapper for mapping to CustomEntityRenderSummary objects.
-    /// </summary>
+    /// <inheritdoc/>
     public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
         private readonly IQueryExecutor _queryExecutor;
@@ -34,14 +29,6 @@ namespace Cofoundry.Domain.Internal
             _customEntityDefinitionRepository = customEntityDefinitionRepository;
         }
 
-        #endregion
-
-        /// <summary>
-        /// Maps an EF CustomEntityVersion record from the db into a CustomEntityRenderSummary 
-        /// object. If the db record is null then null is returned.
-        /// </summary>
-        /// <param name="dbResult">CustomEntityVersion record from the database.</param>
-        /// <param name="executionContext">Context to run any sub queries under.</param>
         public async Task<CustomEntityRenderSummary> MapAsync(
             CustomEntityVersion dbResult,
             IExecutionContext executionContext
@@ -62,12 +49,6 @@ namespace Cofoundry.Domain.Internal
             return MapSingle(dbResult, routing, locale);
         }
 
-        /// <summary>
-        /// Maps a collection of EF CustomEntityVersion record from the db into CustomEntityRenderSummary 
-        /// objects.
-        /// </summary>
-        /// <param name="dbResult">CustomEntityVersion records from the database.</param>
-        /// <param name="executionContext">Context to run any sub queries under.</param>
         public async Task<ICollection<CustomEntityRenderSummary>> MapAsync(
             ICollection<CustomEntityVersion> dbResults,
             IExecutionContext executionContext
@@ -79,8 +60,6 @@ namespace Cofoundry.Domain.Internal
 
             return Map(dbResults, allRoutings, allLocales);
         }
-
-        #region helpers
 
         private static GetPageRoutingInfoByCustomEntityIdRangeQuery GetPageRoutingQuery(ICollection<CustomEntityVersion> dbResults)
         {
@@ -139,7 +118,7 @@ namespace Cofoundry.Domain.Internal
         {
             var entity = new CustomEntityRenderSummary()
             {
-                CreateDate = DbDateTimeMapper.AsUtc(dbResult.CreateDate),
+                CreateDate = dbResult.CreateDate,
                 CustomEntityDefinitionCode = dbResult.CustomEntity.CustomEntityDefinitionCode,
                 CustomEntityId = dbResult.CustomEntityId,
                 CustomEntityVersionId = dbResult.CustomEntityVersionId,
@@ -147,8 +126,8 @@ namespace Cofoundry.Domain.Internal
                 Title = dbResult.Title,
                 UrlSlug = dbResult.CustomEntity.UrlSlug,
                 WorkFlowStatus = (WorkFlowStatus)dbResult.WorkFlowStatusId,
-                PublishDate = DbDateTimeMapper.AsUtc(dbResult.CustomEntity.PublishDate),
-                LastPublishDate = DbDateTimeMapper.AsUtc(dbResult.CustomEntity.LastPublishDate)
+                PublishDate = dbResult.CustomEntity.PublishDate,
+                LastPublishDate = dbResult.CustomEntity.LastPublishDate
             };
 
             entity.PublishStatus = PublishStatusMapper.FromCode(dbResult.CustomEntity.PublishStatusCode);
@@ -158,7 +137,7 @@ namespace Cofoundry.Domain.Internal
         }
 
         private ICollection<string> MapPageRoutings(
-            ICollection<PageRoutingInfo> allRoutings, 
+            ICollection<PageRoutingInfo> allRoutings,
             CustomEntityVersion dbResult)
         {
             if (allRoutings == null) return Array.Empty<string>();
@@ -177,7 +156,5 @@ namespace Cofoundry.Domain.Internal
 
             return urls;
         }
-
-        #endregion
     }
 }

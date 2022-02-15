@@ -5,14 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Simple mapper for mapping to CustomEntitySummary objects.
-    /// </summary>
+    /// <inheritdoc/>
     public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
     {
         private readonly CofoundryDbContext _dbContext;
@@ -33,14 +30,6 @@ namespace Cofoundry.Domain.Internal
             _auditDataMapper = auditDataMapper;
         }
 
-        /// <summary>
-        /// Maps a collection of EF CustomEntityPublishStatusQuery records from the db 
-        /// into CustomEntitySummary objects. The records must include data for the the 
-        /// CustomEntity, CustomEntityVersion, CustomEntity.Creator and CustomEntityVersion.Creator 
-        /// properties.
-        /// </summary>
-        /// <param name="dbCustomEntities">Collection of CustomEntityPublishStatusQuery records to map.</param>
-        /// <param name="executionContext">Execution context to pass down when executing child queries.</param>
         public async Task<List<CustomEntitySummary>> MapAsync(ICollection<CustomEntityPublishStatusQuery> dbCustomEntities, IExecutionContext executionContext)
         {
             var entities = new List<CustomEntitySummary>(dbCustomEntities.Count);
@@ -122,8 +111,8 @@ namespace Cofoundry.Domain.Internal
                 // note that if this is not a published version, we do further checks on this later in the process
                 HasPublishedVersion = dbStatusQuery.CustomEntityVersion.WorkFlowStatusId == (int)WorkFlowStatus.Published,
                 PublishStatus = PublishStatusMapper.FromCode(dbStatusQuery.CustomEntity.PublishStatusCode),
-                PublishDate = DbDateTimeMapper.AsUtc(dbStatusQuery.CustomEntity.PublishDate),
-                LastPublishDate = DbDateTimeMapper.AsUtc(dbStatusQuery.CustomEntity.LastPublishDate),
+                PublishDate = dbStatusQuery.CustomEntity.PublishDate,
+                LastPublishDate = dbStatusQuery.CustomEntity.LastPublishDate,
                 Ordering = dbStatusQuery.CustomEntity.Ordering,
                 Title = dbStatusQuery.CustomEntityVersion.Title,
                 UrlSlug = dbStatusQuery.CustomEntity.UrlSlug

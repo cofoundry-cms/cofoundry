@@ -1,18 +1,12 @@
 ﻿using Cofoundry.Domain.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Simple mapper for mapping to DocumentAssetDetails objects.
-    /// </summary>
+    /// <inheritdoc/>
     public class DocumentAssetDetailsMapper : IDocumentAssetDetailsMapper
     {
         private readonly DocumentAssetSummaryMapper _documentAssetSummaryMapper;
-        private readonly IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
+
         public DocumentAssetDetailsMapper(
             IAuditDataMapper auditDataMapper,
             IDocumentAssetRouteLibrary documentAssetRouteLibrary
@@ -33,7 +27,7 @@ namespace Cofoundry.Domain.Internal
             var document = new DocumentAssetDetails();
             _documentAssetSummaryMapper.Map(document, dbDocument);
             document.Description = dbDocument.Description;
-            document.FileUpdateDate = DbDateTimeMapper.AsUtc(dbDocument.FileUpdateDate);
+            document.FileUpdateDate = dbDocument.FileUpdateDate;
 
             return document;
         }

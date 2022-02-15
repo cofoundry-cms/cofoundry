@@ -32,11 +32,11 @@ namespace Cofoundry.Domain.Internal
             }
 
             var user = _userMicroSummaryMapper.Map<UserSummary>(dbUser);
-            user.LastSignInDate = DbDateTimeMapper.AsUtc(dbUser.LastSignInDate);
+            user.LastSignInDate = dbUser.LastSignInDate;
 
             user.AuditData = new CreateAuditData()
             {
-                CreateDate = DbDateTimeMapper.AsUtc(dbUser.CreateDate)
+                CreateDate = dbUser.CreateDate
             };
 
             if (dbUser.Creator != null)

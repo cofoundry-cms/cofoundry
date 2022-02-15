@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -114,7 +113,7 @@ namespace Cofoundry.Domain.Internal
 
             var entity = new CustomEntityRenderDetails()
             {
-                CreateDate = DbDateTimeMapper.AsUtc(dbResult.CreateDate),
+                CreateDate = dbResult.CreateDate,
                 CustomEntityDefinitionCode = dbResult.CustomEntity.CustomEntityDefinitionCode,
                 CustomEntityId = dbResult.CustomEntityId,
                 CustomEntityVersionId = dbResult.CustomEntityVersionId,
@@ -122,12 +121,12 @@ namespace Cofoundry.Domain.Internal
                 Title = dbResult.Title,
                 UrlSlug = dbResult.CustomEntity.UrlSlug,
                 WorkFlowStatus = (WorkFlowStatus)dbResult.WorkFlowStatusId,
-                PublishDate = DbDateTimeMapper.AsUtc(dbResult.CustomEntity.PublishDate)
+                PublishDate = dbResult.CustomEntity.PublishDate
             };
 
             entity.PublishStatus = PublishStatusMapper.FromCode(dbResult.CustomEntity.PublishStatusCode);
             entity.Model = _customEntityDataModelMapper.Map(dbResult.CustomEntity.CustomEntityDefinitionCode, dbResult.SerializedData);
-            
+
             return entity;
         }
 

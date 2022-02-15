@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Simple mapper for mapping to PageTemplateSummary objects.
-    /// </summary>
+    /// <inheritdoc/>
     public class PageTemplateSummaryMapper : IPageTemplateSummaryMapper
     {
         private readonly IPageTemplateCustomEntityTypeMapper _pageTemplateCustomEntityTypeMapper;
@@ -21,11 +19,6 @@ namespace Cofoundry.Domain.Internal
             _pageTemplateCustomEntityTypeMapper = pageTemplateCustomEntityTypeMapper;
         }
 
-        /// <summary>
-        /// Maps an EF PageTemplate record from the db into an PageTemplateSummary 
-        /// object. If the db record is null then null is returned.
-        /// </summary>
-        /// <param name="queryModel">Query model with data from the database.</param>
         public virtual PageTemplateSummary Map(PageTemplateSummaryQueryModel queryModel)
         {
             var dbPageTemplate = queryModel?.PageTemplate;
@@ -36,11 +29,11 @@ namespace Cofoundry.Domain.Internal
                 IsArchived = dbPageTemplate.IsArchived,
                 Name = dbPageTemplate.Name,
                 PageTemplateId = dbPageTemplate.PageTemplateId,
-                CreateDate = DbDateTimeMapper.AsUtc(dbPageTemplate.CreateDate),
+                CreateDate = dbPageTemplate.CreateDate,
                 Description = dbPageTemplate.Description,
                 FileName = dbPageTemplate.FileName,
                 PageType = (PageType)dbPageTemplate.PageTypeId,
-                UpdateDate = DbDateTimeMapper.AsUtc(dbPageTemplate.UpdateDate),
+                UpdateDate = dbPageTemplate.UpdateDate,
                 NumPages = queryModel.NumPages,
                 NumRegions = queryModel.NumRegions
             };

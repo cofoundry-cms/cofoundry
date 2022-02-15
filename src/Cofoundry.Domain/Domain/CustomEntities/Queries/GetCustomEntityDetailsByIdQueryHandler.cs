@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -16,12 +15,10 @@ namespace Cofoundry.Domain.Internal
     /// and the CustomEntityDetails projection includes audit data and other additional 
     /// information that should normally be hidden from a customer facing app.
     /// </summary>
-    public class GetCustomEntityDetailsByIdQueryHandler 
+    public class GetCustomEntityDetailsByIdQueryHandler
         : IQueryHandler<GetCustomEntityDetailsByIdQuery, CustomEntityDetails>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IQueryExecutor _queryExecutor;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
@@ -49,20 +46,18 @@ namespace Cofoundry.Domain.Internal
             _auditDataMapper = auditDataMapper;
         }
 
-        #endregion
-
         public async Task<CustomEntityDetails> ExecuteAsync(GetCustomEntityDetailsByIdQuery query, IExecutionContext executionContext)
         {
             var customEntityVersion = await QueryAsync(query.CustomEntityId);
             if (customEntityVersion == null) return null;
 
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(customEntityVersion.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
-            
+
             return await MapAsync(query, customEntityVersion, executionContext);
         }
 
         private async Task<CustomEntityDetails> MapAsync(
-            GetCustomEntityDetailsByIdQuery query, 
+            GetCustomEntityDetailsByIdQuery query,
             CustomEntityVersion dbVersion,
             IExecutionContext executionContext
             )
@@ -101,10 +96,10 @@ namespace Cofoundry.Domain.Internal
             var entity = new CustomEntityDetails()
             {
                 CustomEntityId = dbVersion.CustomEntity.CustomEntityId,
-                UrlSlug = dbVersion.CustomEntity.UrlSlug,             
+                UrlSlug = dbVersion.CustomEntity.UrlSlug,
                 PublishStatus = PublishStatusMapper.FromCode(dbVersion.CustomEntity.PublishStatusCode),
-                PublishDate = DbDateTimeMapper.AsUtc(dbVersion.CustomEntity.PublishDate),
-                LastPublishDate = DbDateTimeMapper.AsUtc(dbVersion.CustomEntity.LastPublishDate),
+                PublishDate = dbVersion.CustomEntity.PublishDate,
+                LastPublishDate = dbVersion.CustomEntity.LastPublishDate,
             };
 
             entity.AuditData = _auditDataMapper.MapCreateAuditData(dbVersion.CustomEntity);
@@ -133,7 +128,7 @@ namespace Cofoundry.Domain.Internal
                 .Where(r => r.CustomEntityRouteRule != null);
 
             if (!routings.Any()) return;
-            
+
             // Map templates
 
             var pageTemplateIds = routings
@@ -229,8 +224,8 @@ namespace Cofoundry.Domain.Internal
         }
 
         private async Task MapDataModelAsync(
-            GetCustomEntityDetailsByIdQuery query, 
-            CustomEntityVersion dbVersion, 
+            GetCustomEntityDetailsByIdQuery query,
+            CustomEntityVersion dbVersion,
             CustomEntityVersionDetails version,
             IExecutionContext executionContext
             )

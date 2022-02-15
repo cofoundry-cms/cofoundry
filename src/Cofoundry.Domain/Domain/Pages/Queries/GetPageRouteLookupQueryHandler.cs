@@ -57,9 +57,9 @@ namespace Cofoundry.Domain.Internal
             var allLocales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
 
             var routes = Map(
-                dbPages, 
-                dbPageVersionLookup, 
-                pageDirectoryLookup, 
+                dbPages,
+                dbPageVersionLookup,
+                pageDirectoryLookup,
                 templates,
                 dbPageAccessRulesLookup,
                 allLocales
@@ -148,8 +148,8 @@ namespace Cofoundry.Domain.Internal
                     UrlPath = dbPage.UrlPath,
                     PageType = (PageType)dbPage.PageTypeId,
                     CustomEntityDefinitionCode = dbPage.CustomEntityDefinitionCode,
-                    PublishDate = DbDateTimeMapper.AsUtc(dbPage.PublishDate),
-                    LastPublishDate = DbDateTimeMapper.AsUtc(dbPage.LastPublishDate),
+                    PublishDate = dbPage.PublishDate,
+                    LastPublishDate = dbPage.LastPublishDate,
                     PublishStatus = PublishStatusMapper.FromCode(dbPage.PublishStatusCode)
                 };
 
@@ -163,7 +163,7 @@ namespace Cofoundry.Domain.Internal
 
                 var accessRules = accessRuleLookup.GetOrDefault(pageRoute.PageId);
                 pageRoute.AccessRuleSet = _routeAccessRuleMapper.Map(dbPage);
-                
+
                 // Configure Locale
                 string directoryPath = null;
                 if (dbPage.LocaleId.HasValue)
@@ -241,7 +241,7 @@ namespace Cofoundry.Domain.Internal
             var versionRouting = new PageVersionRoute();
             versionRouting.WorkFlowStatus = (WorkFlowStatus)version.WorkFlowStatusId;
             versionRouting.Title = version.Title;
-            versionRouting.CreateDate = DbDateTimeMapper.AsUtc(version.CreateDate);
+            versionRouting.CreateDate = version.CreateDate;
             versionRouting.VersionId = version.PageVersionId;
 
             var template = templates.GetOrDefault(version.PageTemplateId);

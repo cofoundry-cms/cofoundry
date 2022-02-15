@@ -1,8 +1,5 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Domain.Data;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cofoundry.Domain.Internal
 {
@@ -31,14 +28,14 @@ namespace Cofoundry.Domain.Internal
             }
 
             var user = _userMicroSummaryMapper.Map<UserDetails>(dbUser);
-            user.LastSignInDate = DbDateTimeMapper.AsUtc(dbUser.LastSignInDate);
-            user.LastPasswordChangeDate = DbDateTimeMapper.AsUtc(dbUser.LastPasswordChangeDate);
+            user.LastSignInDate = dbUser.LastSignInDate;
+            user.LastPasswordChangeDate = dbUser.LastPasswordChangeDate;
             user.RequirePasswordChange = dbUser.RequirePasswordChange;
             user.AccountVerifiedDate = dbUser.AccountVerifiedDate;
 
             user.AuditData = new CreateAuditData()
             {
-                CreateDate = DbDateTimeMapper.AsUtc(dbUser.CreateDate)
+                CreateDate = dbUser.CreateDate
             };
 
             if (dbUser.Creator != null)
