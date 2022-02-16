@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Internal
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 
-            await _userStoredProcedures.LogAuthenticationFailed(
+            await _userStoredProcedures.LogAuthenticationFailedAsync(
                 command.UserAreaCode,
                 TextFormatter.Limit(command.Username, 150),
                 connectionInfo.IPAddress,

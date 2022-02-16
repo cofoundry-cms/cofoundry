@@ -89,7 +89,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.Username.Should().Be(normalizedEmail);
                 user.UniqueUsername.Should().Be(lowerEmail);
                 user.AccountVerifiedDate.Should().BeNull();
-                user.IsActive.Should().BeTrue();
+                user.DeactivatedDate.Should().BeNull();
                 user.RequirePasswordChange.Should().BeTrue();
                 user.EmailDomain.Name.Should().Be(normalizedDomain);
                 user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
@@ -417,7 +417,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             using (new AssertionScope())
             {
                 user.Should().NotBeNull();
-                user.IsActive.Should().BeTrue();
+                user.DeactivatedDate.Should().BeNull();
                 app.Mocks
                     .CountMessagesPublished<UserActivationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode && m.IsActive)
                     .Should().Be(1);
@@ -464,7 +464,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             {
                 user.Should().NotBeNull();
                 user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
-                user.IsActive.Should().BeFalse();
+                user.DeactivatedDate.Should().NotBeNull();
                 app.Mocks
                     .CountMessagesPublished<UserActivationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode && !m.IsActive)
                     .Should().Be(1);

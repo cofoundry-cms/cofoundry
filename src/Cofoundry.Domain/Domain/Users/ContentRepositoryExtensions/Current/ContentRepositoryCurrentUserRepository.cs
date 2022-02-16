@@ -17,16 +17,6 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task UpdateAsync(UpdateCurrentUserCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
-
-        public Task UpdatePasswordAsync(UpdateCurrentUserPasswordCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
-
         public IContentRepositoryCurrentUserQueryBuilder Get()
         {
             return new ContentRepositoryCurrentUserQueryBuilder(ExtendableContentRepository);
@@ -39,6 +29,21 @@ namespace Cofoundry.Domain.Internal
             return Get()
                 .AsUserContext()
                 .Map(u => u.IsSignedIn());
+        }
+
+        public Task UpdateAsync(UpdateCurrentUserCommand command)
+        {
+            return ExtendableContentRepository.ExecuteCommandAsync(command);
+        }
+
+        public Task UpdatePasswordAsync(UpdateCurrentUserPasswordCommand command)
+        {
+            return ExtendableContentRepository.ExecuteCommandAsync(command);
+        }
+
+        public Task DeleteAsync()
+        {
+            return ExtendableContentRepository.ExecuteCommandAsync(new DeleteCurrentUserCommand());
         }
     }
 }

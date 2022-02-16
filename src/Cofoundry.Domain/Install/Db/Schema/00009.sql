@@ -322,7 +322,8 @@ set UniqueUsername = lower([Username]),
 go
 alter table Cofoundry.[User] alter column UniqueUsername nvarchar(150) not null
 drop index UIX_User_Email on Cofoundry.[User]
-create unique index UIX_User_UniqueUsername on Cofoundry.[User] (UserAreaCode, UniqueUsername) where UniqueUsername is not null and IsDeleted = 0
+-- NB: Index created further down as deletion flag has changed
+-- create unique index UIX_User_UniqueUsername on Cofoundry.[User] (UserAreaCode, UniqueUsername) where UniqueUsername is not null and IsDeleted = 0
 
 go
 
@@ -400,17 +401,6 @@ exec sp_rename 'Cofoundry.User.PreviousLoginDate' , 'PreviousSignInDate', 'colum
 go
 
 /*
-	#490: Users: Deactivate
-*/
-
-alter table Cofoundry.[User] add IsActive bit null
-go
-update Cofoundry.[User] set IsActive = 1 where IsDeleted = 0
-go
-alter table Cofoundry.[User] alter column IsActive bit not null
-go
-
-/*
 	#492 UserLoginLog: Rename to UserAthentication and move rate limit settings to user settings
 */
 
@@ -464,3 +454,24 @@ create table Cofoundry.UserAuthenticationFailLog (
 create index IX_UserAuthenticationFailLog_IPAddress on Cofoundry.UserAuthenticationFailLog (UserAreaCode, IPAddressId, CreateDate)
 create index IX_UserAuthenticationFailLog_Username on Cofoundry.UserAuthenticationFailLog (UserAreaCode, Username, CreateDate)
 go
+
+/* 
+	#490: Users: Deactivate
+	#494: Users: Soft-deletes should anonymise data
+*/
+
+go
+
+drop index UIX_User_Username on Cofoundry.[User]
+alter table Cofoundry.[User] drop constraint DF_User_IsDeleted
+alter table Cofoundry.[User] add DeletedDate datetime2(7) null
+alter table Cofoundry.[User] add DeactivatedDate datetime2(7) null
+go
+
+update Cofoundry.[User] set DeletedDate = GetUtcDate(), DeactivatedDate = GetUtcDate() where IsDeleted = 1
+
+go
+
+create unique index UIX_User_UniqueUsername on Cofoundry.[User] (UserAreaCode, UniqueUsername) where UniqueUsername is not null and DeletedDate is null
+create unique index UIX_User_Username on Cofoundry.[User] (UserAreaCode, [Username]) where DeletedDate is null
+alter table Cofoundry.[User] drop column IsDeleted

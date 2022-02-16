@@ -46,6 +46,8 @@ namespace Cofoundry.Domain.Data
             builder.Property(s => s.LastPasswordChangeDate).IsUtc();
             builder.Property(s => s.PreviousSignInDate).IsUtc();
             builder.Property(s => s.CreateDate).IsUtc();
+            builder.Property(s => s.DeactivatedDate).IsUtc();
+            builder.Property(s => s.DeletedDate).IsUtc();
 
             builder.HasOne(s => s.EmailDomain)
                 .WithMany(d => d.Users)

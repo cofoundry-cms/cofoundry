@@ -42,7 +42,7 @@ namespace Cofoundry.Domain.Internal
 
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 
-            var isValid = await _userStoredProcedures.IsAuthenticationAttemptValid(
+            var isValid = await _userStoredProcedures.IsAuthenticationAttemptValidAsync(
                 query.UserAreaCode,
                 TextFormatter.Limit(query.Username, 150),
                  connectionInfo.IPAddress,

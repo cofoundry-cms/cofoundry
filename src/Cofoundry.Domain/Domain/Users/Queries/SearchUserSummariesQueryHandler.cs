@@ -53,8 +53,8 @@ namespace Cofoundry.Domain.Internal
 
             if (query.AccountStatus != UserAccountStatusFilter.Any)
             {
-                var isActive = query.AccountStatus == UserAccountStatusFilter.Active;
-                dbQuery = dbQuery.Where(u => u.IsActive == isActive);
+                var isActive = query.AccountStatus == UserAccountStatusFilter.Deactivated;
+                dbQuery = dbQuery.Where(u => u.DeactivatedDate.HasValue != isActive);
             }
 
             if (!string.IsNullOrEmpty(query.Email))

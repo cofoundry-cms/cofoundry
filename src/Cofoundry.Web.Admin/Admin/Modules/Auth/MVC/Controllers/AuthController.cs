@@ -83,7 +83,8 @@ namespace Cofoundry.Web.Admin
                 {
                     Username = viewModel.Username,
                     Password = viewModel.Password,
-                    UserAreaCode = CofoundryAdminUserArea.Code
+                    UserAreaCode = CofoundryAdminUserArea.Code,
+                    PropertyToValidate = nameof(viewModel.Password)
                 })
                 .ExecuteAsync();
 

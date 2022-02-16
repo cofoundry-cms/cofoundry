@@ -33,10 +33,16 @@ namespace Cofoundry.Domain.Internal
         public async Task ExecuteAsync(SignOutCurrentUserCommand command, IExecutionContext executionContext)
         {
             var userAreaCode = command.UserAreaCode;
+            int? userId;
 
-            if (string.IsNullOrEmpty(userAreaCode))
+            if (string.IsNullOrEmpty(command.UserAreaCode))
             {
+                userId = executionContext.UserContext.UserId;
                 userAreaCode = executionContext.UserContext.UserArea?.UserAreaCode;
+            }
+            else
+            {
+                userId = await _userSessionService.GetUserIdByUserAreaCodeAsync(command.UserAreaCode);
             }
 
             if (userAreaCode == null)
@@ -45,7 +51,6 @@ namespace Cofoundry.Domain.Internal
                 return;
             }
 
-            var userId = await _userSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
             await _userSessionService.SignOutAsync(userAreaCode);
 
             if (userId.HasValue)

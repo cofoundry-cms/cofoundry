@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Data
         public static IQueryable<User> FilterById(this IQueryable<User> users, int id)
         {
             var user = users
-                .Where(u => u.UserId == id && !u.IsDeleted);
+                .Where(u => u.UserId == id);
 
             return user;
         }
@@ -23,7 +23,7 @@ namespace Cofoundry.Domain.Data
         public static IQueryable<User> FilterNotDeleted(this IQueryable<User> users)
         {
             var user = users
-                .Where(u => !u.IsDeleted);
+                .Where(u => !u.DeletedDate.HasValue);
 
             return user;
         }
@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Data
         public static IQueryable<User> FilterEnabled(this IQueryable<User> users)
         {
             var user = users
-                .Where(u => !u.IsDeleted && u.IsActive);
+                .Where(u => !u.DeletedDate.HasValue && !u.DeactivatedDate.HasValue);
 
             return user;
         }
@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Data
         public static IQueryable<User> FilterCanSignIn(this IQueryable<User> users)
         {
             var user = users
-                .Where(u => !u.IsSystemAccount && !u.IsDeleted && u.IsActive);
+                .Where(u => !u.IsSystemAccount && !u.DeletedDate.HasValue && !u.DeactivatedDate.HasValue);
 
             return user;
         }

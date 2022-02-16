@@ -70,9 +70,13 @@ namespace Cofoundry.Domain.Internal
                 Role = role,
                 UserArea = dbUserArea,
                 CreatorId = executionContext.UserContext.UserId,
-                SecurityStamp = _securityStampGenerator.Generate(),
-                IsActive = command.IsActive
+                SecurityStamp = _securityStampGenerator.Generate()
             };
+
+            if (!command.IsActive)
+            {
+                user.DeactivatedDate = executionContext.ExecutionDate;
+            }
 
             await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
             await ValidatePasswordAsync(userArea, user, command, executionContext);

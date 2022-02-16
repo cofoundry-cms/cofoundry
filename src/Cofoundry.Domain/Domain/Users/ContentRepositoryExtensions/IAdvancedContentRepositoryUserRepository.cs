@@ -81,7 +81,11 @@ namespace Cofoundry.Domain
         Task UpdatePasswordByCredentialsAsync(UpdateUserPasswordByCredentialsCommand command);
 
         /// <summary>
-        /// Marks a user as deleted in the database (soft delete).
+        /// Marks a user as deleted in the database (soft delete), removing personal 
+        /// data fields and any optional relations from the UnstructuredDataDependency
+        /// table. The remaining user record and relations are left in place for auditing.
+        /// Log tables that contain IP references are not deleted, but should be
+        /// cleared out periodically by the <see cref="BackgroundTasks.UserCleanupBackgroundTask"/>.
         /// </summary>
         /// <param name="userId">UserId of the role to delete.</param>
         Task DeleteAsync(int userId);

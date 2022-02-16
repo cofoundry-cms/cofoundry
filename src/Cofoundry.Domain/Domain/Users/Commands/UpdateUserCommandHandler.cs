@@ -94,7 +94,7 @@ namespace Cofoundry.Domain.Internal
                 {
                     UserAreaCode = user.UserAreaCode,
                     UserId = user.UserId,
-                    IsActive = user.IsActive
+                    IsActive = !user.DeactivatedDate.HasValue
                 });
             }
 
@@ -235,16 +235,25 @@ namespace Cofoundry.Domain.Internal
             IExecutionContext executionContext
             )
         {
-            updateStatus.HasActivationStatusChanged = user.IsActive != command.IsActive;
+            var isCurrentlyActive = !user.DeactivatedDate.HasValue;
+            updateStatus.HasActivationStatusChanged = isCurrentlyActive != command.IsActive;
             if (!updateStatus.HasActivationStatusChanged) return;
 
-            if (!user.IsActive && user.UserId == executionContext.UserContext.UserId)
+            if (!command.IsActive && user.UserId == executionContext.UserContext.UserId)
             {
                 throw new NotPermittedException("A user cannot deactivate their own account.");
             }
 
-            user.IsActive = command.IsActive;
-            updateStatus.HasBeenDeactivated = !user.IsActive;
+            if (command.IsActive)
+            {
+                user.DeactivatedDate = null;
+            }
+            else
+            {
+                user.DeactivatedDate = executionContext.ExecutionDate;
+            }
+
+            updateStatus.HasBeenDeactivated = !command.IsActive;
         }
 
         private class UpdateStatus

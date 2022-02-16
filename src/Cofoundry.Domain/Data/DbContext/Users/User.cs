@@ -104,17 +104,18 @@ namespace Cofoundry.Domain.Data
         public string SecurityStamp { get; set; }
 
         /// <summary>
-        /// Setting <see cref="IsActive"/> to <see langword="false"/> deactivates
-        /// a user, preventing them from logging in or taking any actions, but does
-        /// not remove any data or prevent them from being queried.
+        /// Used for soft deletes so we can maintain old relations and
+        /// archive data. Deleted accounts are anonymized and are therefore
+        /// not recoverable.
         /// </summary>
-        public bool IsActive { get; set; }
+        public DateTime? DeletedDate { get; set; }
 
         /// <summary>
-        /// Used for soft deletes so we can maintain old relations and
-        /// archive data.
+        /// Setting <see cref="DeactivatedDate"/> deactivates a user account, 
+        /// preventing them from logging in or taking any actions, but does
+        /// not remove any data or prevent them from being queried.
         /// </summary>
-        public bool IsDeleted { get; set; }
+        public DateTime? DeactivatedDate { get; set; }
 
         /// <summary>
         /// The date and time the password was last changed or the that the password
@@ -207,7 +208,7 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public bool IsEnabled()
         {
-            return !IsDeleted && IsActive;
+            return !DeletedDate.HasValue && !DeactivatedDate.HasValue;
         }
 
         /// <summary>
@@ -216,7 +217,7 @@ namespace Cofoundry.Domain.Data
         /// </summary>
         public bool CanSignIn()
         {
-            return !IsSystemAccount && !IsDeleted && IsActive;
+            return !IsSystemAccount && !DeletedDate.HasValue && !DeactivatedDate.HasValue;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Cofoundry.Domain.Data.Internal
         /// <param name="dateNow">
         /// The current date and time.
         /// </param>
-        Task LogAuthenticationFailed(
+        Task LogAuthenticationFailedAsync(
             string userAreaCode,
             string username,
             string ipAddress,
@@ -71,7 +71,7 @@ namespace Cofoundry.Domain.Data.Internal
         /// or a hashed value less than 45 characters.
         /// </param>
         /// <param name="dateNow">The current date and time.</param>
-        Task LogAuthenticationSuccess(
+        Task LogAuthenticationSuccessAsync(
             int userId,
             string ipAddress,
             DateTime dateNow
@@ -112,7 +112,7 @@ namespace Cofoundry.Domain.Data.Internal
         /// username.
         /// </param>
         /// <returns><see langword="true"/> if the attmpet is valid and may proceed.</returns>
-        Task<bool> IsAuthenticationAttemptValid(
+        Task<bool> IsAuthenticationAttemptValidAsync(
             string userAreaCode,
             string username,
             string ipAddress,
@@ -121,6 +121,24 @@ namespace Cofoundry.Domain.Data.Internal
             int? ipAddressRateLimitWindowInSeconds,
             int? usernameRateLimitQuantity,
             int? usernameRateLimitWindowInSeconds
+            );
+
+        /// <summary>
+        /// Soft-deletes a user account, removing personal data fields
+        /// and any optional relations from the UnstructuredDataDependency
+        /// table. The username is replaced with a <paramref name="pseudonym"/>
+        /// which should be a unique non-identifying string of characters e.g. a GUID.
+        /// </summary>
+        /// <param name="userId">The <see cref="User.UserId"/> of the user to soft delete.</param>
+        /// <param name="pseudonym">
+        /// A unique string of up to 50 characters to replace the username with, typically
+        /// this would be a GUID.
+        /// </param>
+        /// <param name="dateNow">The current date and time.</param>
+        Task SoftDeleteAsync(
+            int userId,
+            string pseudonym,
+            DateTime dateNow
             );
 
         /// <summary>

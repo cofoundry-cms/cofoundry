@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Domain.BackgroundTasks;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Marks a user as deleted in the database (soft delete).
+    /// Marks a user as deleted in the database (soft delete), removing personal 
+    /// data fields and any optional relations from the UnstructuredDataDependency
+    /// table. The remaining user record and relations are left in place for auditing.
+    /// Log tables that contain IP references are not deleted, but should be
+    /// cleared out periodically by the <see cref="UserCleanupBackgroundTask"/>.
     /// </summary>
     public class DeleteUserCommand : ICommand, ILoggableCommand
     {
         public DeleteUserCommand() { }
 
-        /// <summary>
-        /// Initializes the command with parameters.
-        /// </summary>
         /// <param name="userId">Id of the user to delete.</param>
         public DeleteUserCommand(int userId)
         {

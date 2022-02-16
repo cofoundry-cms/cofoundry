@@ -45,7 +45,7 @@ namespace Cofoundry.Domain.Data.Internal
             return emailDomainId.Value;
         }
 
-        public async Task LogAuthenticationSuccess(int userId, string ipAddress, DateTime dateNow)
+        public async Task LogAuthenticationSuccessAsync(int userId, string ipAddress, DateTime dateNow)
         {
             await _entityFrameworkSqlExecutor.ExecuteCommandAsync(_dbContext,
                    "Cofoundry.UserAuthenticationLog_Add",
@@ -55,7 +55,7 @@ namespace Cofoundry.Domain.Data.Internal
                    );
         }
 
-        public async Task LogAuthenticationFailed(string userAreaCode, string username, string ipAddress, DateTime dateNow)
+        public async Task LogAuthenticationFailedAsync(string userAreaCode, string username, string ipAddress, DateTime dateNow)
         {
             await _entityFrameworkSqlExecutor.ExecuteCommandAsync(_dbContext,
                    "Cofoundry.UserAuthenticationFailLog_Add",
@@ -66,7 +66,7 @@ namespace Cofoundry.Domain.Data.Internal
                    );
         }
 
-        public async Task<bool> IsAuthenticationAttemptValid(
+        public async Task<bool> IsAuthenticationAttemptValidAsync(
             string userAreaCode,
             string username, 
             string ipAddress, 
@@ -90,6 +90,16 @@ namespace Cofoundry.Domain.Data.Internal
                 );
 
             return isValid == 1;
+        }
+
+        public async Task SoftDeleteAsync(int userId, string pseudonym, DateTime dateNow)
+        {
+            await _entityFrameworkSqlExecutor.ExecuteCommandAsync(_dbContext,
+                   "Cofoundry.User_SoftDelete",
+                   new SqlParameter("UserId", userId),
+                   new SqlParameter("Pseudonym", pseudonym),
+                   new SqlParameter("DateNow", dateNow)
+                   );
         }
 
         public async Task CleanupAsync(

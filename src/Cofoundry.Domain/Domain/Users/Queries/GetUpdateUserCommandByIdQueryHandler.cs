@@ -56,7 +56,7 @@ namespace Cofoundry.Domain.Internal
                 RoleId = dbUser.RoleId,
                 UserId = dbUser.UserId,
                 IsAccountVerified = dbUser.AccountVerifiedDate.HasValue,
-                IsActive = dbUser.IsActive
+                IsActive = !dbUser.DeactivatedDate.HasValue
             };
 
             if (!userArea.UseEmailAsUsername)

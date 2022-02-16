@@ -28,7 +28,7 @@ namespace Cofoundry.Domain.Internal
         {
             var connectionInfo = _clientConnectionService.GetConnectionInfo();
 
-            await _userStoredProcedures.LogAuthenticationSuccess(
+            await _userStoredProcedures.LogAuthenticationSuccessAsync(
                 command.UserId,
                 connectionInfo.IPAddress,
                 executionContext.ExecutionDate
