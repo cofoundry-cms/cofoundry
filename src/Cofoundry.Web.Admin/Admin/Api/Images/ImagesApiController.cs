@@ -11,19 +11,16 @@ namespace Cofoundry.Web.Admin
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-        private readonly IFormFileUploadedFileFactory _formFileUploadedFileFactory;
         private readonly ImageAssetsSettings _imageAssetsSettings;
 
         public ImagesApiController(
             IQueryExecutor queryExecutor,
             IApiResponseHelper apiResponseHelper,
-            IFormFileUploadedFileFactory formFileUploadedFileFactory,
             ImageAssetsSettings imageAssetsSettings
             )
         {
             _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
-            _formFileUploadedFileFactory = formFileUploadedFileFactory;
             _imageAssetsSettings = imageAssetsSettings;
         }
 
@@ -64,13 +61,13 @@ namespace Cofoundry.Web.Admin
 
         public Task<JsonResult> Post(AddImageAssetCommand command, IFormFile file)
         {
-            command.File = _formFileUploadedFileFactory.Create(file);
+            command.File = new FormFileSource(file);
             return _apiResponseHelper.RunCommandAsync(command);
         }
 
         public Task<JsonResult> Put(int imageAssetId, UpdateImageAssetCommand command, IFormFile file)
         {
-            command.File = _formFileUploadedFileFactory.Create(file);
+            command.File = new FormFileSource(file);
             return _apiResponseHelper.RunCommandAsync(command);
         }
 

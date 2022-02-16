@@ -13,15 +13,16 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// The file source to retreive the document data from. The
-        /// IUploadedFile abstarction is used here to support multiple
-        /// types of file source.
+        /// <see cref="IFileSource"/> abstraction is used here to support multiple
+        /// types of file source e.g. FormFileSource, <see cref="EmbeddedResourceFileSource"/>.
+        /// or <see cref="StreamFileSource"/>.
         /// </summary>
         [Required]
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         [ValidateObject]
-        public IUploadedFile File { get; set; }
+        public IFileSource File { get; set; }
 
         /// <summary>
         /// A short descriptive title of the document (130 characters).
@@ -40,16 +41,12 @@ namespace Cofoundry.Domain
         /// </summary>
         public ICollection<string> Tags { get; set; } = new List<string>();
 
-        #region Output
-
         /// <summary>
         /// The database id of the newly created document asset. This is set 
         /// after the command has been run.
         /// </summary>
         [OutputValue]
         public int OutputDocumentAssetId { get; set; }
-
-        #endregion
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

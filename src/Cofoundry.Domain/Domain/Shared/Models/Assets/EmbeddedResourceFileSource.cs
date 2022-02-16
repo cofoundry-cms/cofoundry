@@ -10,7 +10,8 @@ namespace Cofoundry.Domain
     /// <summary>
     /// A file source for files embedded in an assembly.
     /// </summary>
-    public class EmbeddedResourceFileSource : IUploadedFile
+    /// <inheritdoc/>
+    public class EmbeddedResourceFileSource : IFileSource
     {
         /// <summary>
         /// Creates a new EmbeddedResourceFileSource instance.
@@ -59,13 +60,11 @@ namespace Cofoundry.Domain
         /// <param name="fileName">The name of the file with an extention e.g. "MyFile.txt".</param>
         /// <param name="fullPath">The full embedded resource path e.g. "MyAssembly.MyFolder.MyFile.txt"</param>
         /// <param name="mimeType">The mime type of the file.</param>
-        /// <param name="fileLength">The length of the file in bytes.</param>
         public EmbeddedResourceFileSource(
             Assembly assembly,
             string fileName,
             string fullPath,
-            string mimeType,
-            long? fileLength
+            string mimeType
             )
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
@@ -76,13 +75,10 @@ namespace Cofoundry.Domain
             if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
             if (string.IsNullOrWhiteSpace(fullPath)) throw new ArgumentEmptyException(nameof(fullPath));
 
-            if (fileLength < 0) throw new ArgumentOutOfRangeException(nameof(fileLength));
-
             Assembly = assembly;
             FileName = fileName;
             FullPath = fullPath;
             MimeType = mimeType;
-            FileLength = fileLength ?? 0;
         }
 
         /// <summary>
@@ -95,12 +91,6 @@ namespace Cofoundry.Domain
         /// embedded resources this is not often known.
         /// </summary>
         public string MimeType { get; private set; }
-
-        /// <summary>
-        /// Optional total length of the file in bytes, if it is known. For embedded 
-        /// resources this is not often supplied as it requires opening the file stream.
-        /// </summary>
-        public long FileLength { get; private set; }
 
         /// <summary>
         /// The full embedded resource path including the namespace, folder 

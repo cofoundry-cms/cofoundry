@@ -51,7 +51,6 @@ namespace Cofoundry.Web.Registration
                 .Register<IClientConnectionService, WebClientConnectionService>(lowPriorityOverrideRegistrationOptions)
 
                 .Register<JsonDeltaModelBinder>()
-                .Register<IFormFileUploadedFileFactory, FormFileUploadedFileFactory>()
 
                 .RegisterAll<IRouteRegistration>()
                 .Register<IRouteInitializer, RouteInitializer>()

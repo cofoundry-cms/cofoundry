@@ -38,7 +38,7 @@ namespace Cofoundry.Domain
 
         #endregion
 
-        public async Task SaveFile(IUploadedFile uploadedFile, DocumentAsset documentAsset)
+        public async Task SaveFile(IFileSource uploadedFile, DocumentAsset documentAsset)
         {
             documentAsset.ContentType = _mimeTypeService.MapFromFileName(uploadedFile.FileName, uploadedFile.MimeType);
             documentAsset.FileExtension = Path.GetExtension(uploadedFile.FileName).TrimStart('.');
@@ -80,7 +80,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Some shared validation to prevent image asset types from being added to documents.
         /// </summary>
-        public static IEnumerable<ValidationResult> Validate(IUploadedFile file)
+        public static IEnumerable<ValidationResult> Validate(IFileSource file)
         {
             if (file != null && !string.IsNullOrWhiteSpace(file.FileName))
             {

@@ -14,20 +14,15 @@ namespace Cofoundry.Web.Admin
     {
         private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-        private readonly IFormFileUploadedFileFactory _formFileUploadedFileFactory;
 
         public DocumentsApiController(
             IQueryExecutor queryExecutor,
-            IApiResponseHelper apiResponseHelper,
-            IFormFileUploadedFileFactory formFileUploadedFileFactory
+            IApiResponseHelper apiResponseHelper
             )
         {
             _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
-            _formFileUploadedFileFactory = formFileUploadedFileFactory;
         }
-
-        #region queries
 
         public async Task<JsonResult> Get(
             [FromQuery] SearchDocumentAssetSummariesQuery query, 
@@ -55,19 +50,15 @@ namespace Cofoundry.Web.Admin
             return _apiResponseHelper.SimpleQueryResponse(result);
         }
 
-        #endregion
-
-        #region commands
-
         public Task<JsonResult> Post(AddDocumentAssetCommand command, IFormFile file)
         {
-            command.File = _formFileUploadedFileFactory.Create(file);
+            command.File = new FormFileSource(file);
             return _apiResponseHelper.RunCommandAsync(command);
         }
 
         public Task<JsonResult> Put(int documentAssetId, UpdateDocumentAssetCommand command, IFormFile file)
         {
-            command.File = _formFileUploadedFileFactory.Create(file);
+            command.File = new FormFileSource(file);
 
             return _apiResponseHelper.RunCommandAsync(command);
         }
@@ -79,8 +70,5 @@ namespace Cofoundry.Web.Admin
 
             return _apiResponseHelper.RunCommandAsync(command);
         }
-
-
-        #endregion
     }
 }

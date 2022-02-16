@@ -50,7 +50,7 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp
         #endregion
 
         public async Task SaveAsync(
-            IUploadedFile uploadedFile,
+            IFileSource uploadedFile,
             ImageAsset imageAsset,
             string propertyName
             )

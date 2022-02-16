@@ -30,7 +30,7 @@ namespace Cofoundry.Domain.Tests.Shared.Mocks
 
         public int? HeightInPixels { get; set; }
 
-        public async Task SaveAsync(IUploadedFile fileToSave, ImageAsset imageAsset, string validationErrorPropertyName)
+        public async Task SaveAsync(IFileSource fileToSave, ImageAsset imageAsset, string validationErrorPropertyName)
         {
             var fileExtension = Path.GetExtension(fileToSave.FileName);
 

@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Abstraction of a file in the process of being uploaded. In ASP.Net terms
-    /// this is an abstraction ofver IFormFile but has broader scope and can be used 
+    /// Abstraction of a file in the process of being uploaded. In ASP.NET terms
+    /// this is an abstraction of IFormFile but has broader scope and can be used 
     /// to represent files uploaded to Cofoundry by other mechanisms.
     /// </summary>
-    public interface IUploadedFile
+    public interface IFileSource
     {
         /// <summary>
         /// The name of the file including file extension (if available). For some
@@ -27,11 +23,6 @@ namespace Cofoundry.Domain
         /// trusted.
         /// </summary>
         string MimeType { get; }
-
-        /// <summary>
-        /// Optional total length of the file in bytes, if it is known.
-        /// </summary>
-        long FileLength { get; }
 
         /// <summary>
         /// Opens a stream of the file contents. The callee is responsible for disposing 

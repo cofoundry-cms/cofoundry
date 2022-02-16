@@ -24,13 +24,16 @@ namespace Cofoundry.Domain
         /// Optional file source to use when updating the file
         /// for this document asset. If the file is updated then
         /// existing links to the asset file will redirect to the 
-        /// new asset file.
+        /// new asset file. The <see cref="IFileSource"/> abstraction is
+        /// used here to support multiple types of file source e.g. 
+        /// FormFileSource, <see cref="EmbeddedResourceFileSource"/>.
+        /// or <see cref="StreamFileSource"/>.
         /// </summary>
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         [ValidateObject]
-        public IUploadedFile File { get; set; }
+        public IFileSource File { get; set; }
 
         /// <summary>
         /// A short descriptive title of the document (130 characters).

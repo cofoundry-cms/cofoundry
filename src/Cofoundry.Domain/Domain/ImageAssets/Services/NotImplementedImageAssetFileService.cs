@@ -13,7 +13,7 @@ namespace Cofoundry.Domain.Internal
     /// </summary>
     public class NotImplementedImageAssetFileService : IImageAssetFileService
     {
-        public Task SaveAsync(IUploadedFile uploadedFile, ImageAsset imageAsset, string propertyName)
+        public Task SaveAsync(IFileSource uploadedFile, ImageAsset imageAsset, string propertyName)
         {
             throw new ImageAssetFileServiceNotImplementedException();
         }

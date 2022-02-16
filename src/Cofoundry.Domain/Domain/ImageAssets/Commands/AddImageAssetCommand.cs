@@ -13,15 +13,16 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// The file source to retreive the image data from. The
-        /// IUploadedFile abstarction is used here to support multiple
-        /// types of file source.
+        /// <see cref="IFileSource"/> abstraction is used here to support multiple
+        /// types of file source e.g. FormFileSource, <see cref="EmbeddedResourceFileSource"/>.
+        /// or <see cref="StreamFileSource"/>.
         /// </summary>
         [Required]
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]
         [ValidateObject]
-        public IUploadedFile File { get; set; }
+        public IFileSource File { get; set; }
 
         /// <summary>
         /// The title or alt text for an image. Recommended to be up 
@@ -42,15 +43,11 @@ namespace Cofoundry.Domain
         /// </summary>
         public ICollection<string> Tags { get; set; } = new List<string>();
 
-        #region Output
-
         /// <summary>
         /// The database id of the newly created image asset. This is set 
         /// after the command has been run.
         /// </summary>
         [OutputValue]
         public int OutputImageAssetId { get; set; }
-
-        #endregion
     }
 }

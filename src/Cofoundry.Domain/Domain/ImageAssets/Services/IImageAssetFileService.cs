@@ -35,6 +35,6 @@ namespace Cofoundry.Domain
         /// If a validation error is generated, this is the property name that should
         /// be used to associate the validation error with.
         /// </param>
-        Task SaveAsync(IUploadedFile fileToSave, ImageAsset imageAsset, string validationErrorPropertyName);
+        Task SaveAsync(IFileSource fileToSave, ImageAsset imageAsset, string validationErrorPropertyName);
     }
 }
