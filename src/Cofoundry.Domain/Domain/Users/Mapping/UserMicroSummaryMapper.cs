@@ -22,9 +22,6 @@ namespace Cofoundry.Domain.Internal
 
             var user = new TModel()
             {
-                Email = dbUser.Email,
-                FirstName = dbUser.FirstName,
-                LastName = dbUser.LastName,
                 UserId = dbUser.UserId,
                 Username = dbUser.Username,
                 AccountStatus = MapAccountStatus(dbUser)

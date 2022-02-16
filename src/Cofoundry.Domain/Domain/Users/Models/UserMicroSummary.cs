@@ -13,26 +13,10 @@
         public int UserId { get; set; }
 
         /// <summary>
-        /// The email address isn't always required depending on the 
-        /// user area settings.
-        /// </summary>
-        public string Email { get; set; }
-
-        /// <summary>
         /// The username is always required and depending on the user area
         /// settings this might just be a copy of the email address.
         /// </summary>
         public string Username { get; set; }
-
-        /// <summary>
-        /// The first name is optional.
-        /// </summary>
-        public string FirstName { get; set; }
-
-        /// <summary>
-        /// The last name is optional.
-        /// </summary>
-        public string LastName { get; set; }
 
         /// <summary>
         /// Encapsulates a number of status' that a user account can be in.
@@ -47,14 +31,5 @@
         /// one).
         /// </summary>
         public UserAreaMicroSummary UserArea { get; set; }
-
-        /// <summary>
-        /// Joins the FirstName and LastName properties to make
-        /// a full name.
-        /// </summary>
-        public string GetFullName()
-        {
-            return (FirstName + " " + LastName).Trim();
-        }
     }
 }

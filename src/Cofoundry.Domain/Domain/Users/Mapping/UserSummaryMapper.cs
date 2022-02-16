@@ -32,6 +32,9 @@ namespace Cofoundry.Domain.Internal
             }
 
             var user = _userMicroSummaryMapper.Map<UserSummary>(dbUser);
+            user.Email = dbUser.Email;
+            user.FirstName = dbUser.FirstName;
+            user.LastName = dbUser.LastName;
             user.LastSignInDate = dbUser.LastSignInDate;
 
             user.AuditData = new CreateAuditData()

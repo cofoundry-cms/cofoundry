@@ -11,6 +11,22 @@ namespace Cofoundry.Domain
     public class UserSummary : UserMicroSummary, ICreateAudited
     {
         /// <summary>
+        /// The first name is optional.
+        /// </summary>
+        public string FirstName { get; set; }
+
+        /// <summary>
+        /// The last name is optional.
+        /// </summary>
+        public string LastName { get; set; }
+
+        /// <summary>
+        /// The email address isn't always required depending on the 
+        /// user area settings.
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
         /// Each user must be assigned to a role which provides
         /// information about the actions a user is permitted to 
         /// perform.

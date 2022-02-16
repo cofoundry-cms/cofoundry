@@ -33,13 +33,13 @@ namespace Cofoundry.Samples.SPASite.Domain
                 .Users()
                 .Current()
                 .Get()
-                .AsMicroSummary()
+                .AsSummary()
                 .ExecuteAsync();
 
             return new MemberSummary()
             {
                 UserId = user.UserId,
-                Name = user.GetFullName()
+                Name = user.FirstName + " " + user.LastName
             };
         }
 

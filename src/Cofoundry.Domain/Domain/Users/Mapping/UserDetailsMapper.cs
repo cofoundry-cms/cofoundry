@@ -28,6 +28,9 @@ namespace Cofoundry.Domain.Internal
             }
 
             var user = _userMicroSummaryMapper.Map<UserDetails>(dbUser);
+            user.Email = dbUser.Email;
+            user.FirstName = dbUser.FirstName;
+            user.LastName = dbUser.LastName;
             user.LastSignInDate = dbUser.LastSignInDate;
             user.LastPasswordChangeDate = dbUser.LastPasswordChangeDate;
             user.RequirePasswordChange = dbUser.RequirePasswordChange;
