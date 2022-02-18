@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.AutoUpdate;
 using System.Collections.Generic;
 using System.Linq;
-using Cofoundry.Core.AutoUpdate;
-using Cofoundry.Core;
 using System.Reflection;
 
 namespace Cofoundry.Domain.Installation
@@ -33,7 +32,6 @@ namespace Cofoundry.Domain.Installation
 
         private IEnumerable<IAlwaysRunUpdateCommand> GetAlwaysUpdateCommand()
         {
-            yield return new ValidateMigratedSettingsCommand();
             yield return new RegisterPermissionsAndRolesUpdateCommand();
             yield return new RegisterPageTemplatesAndPageBlockTypesCommand();
         }

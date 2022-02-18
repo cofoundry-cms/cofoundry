@@ -1,13 +1,9 @@
 ﻿using Cofoundry.Core.DistributedLocks;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cofoundry.Core.AutoUpdate
 {
-    /// <summary>
-    /// Used to define the identity for a distributed lock.
-    /// </summary>
+    /// <inheritdoc/>
     public class AutoUpdateDistributedLockDefinition : IDistributedLockDefinition
     {
         public AutoUpdateDistributedLockDefinition(

@@ -1,10 +1,5 @@
 ﻿using Cofoundry.Core.AutoUpdate.Internal;
 using Cofoundry.Core.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Core.AutoUpdate.Registration
 {
@@ -18,10 +13,12 @@ namespace Cofoundry.Core.AutoUpdate.Registration
                 .RegisterAllGenericImplementations(typeof(ISyncAlwaysRunUpdateCommandHandler<>))
                 .RegisterAllGenericImplementations(typeof(IAsyncAlwaysRunUpdateCommandHandler<>))
                 .Register<IUpdateCommandHandlerFactory, UpdateCommandHandlerFactory>()
+                .Register<IAutoUpdateStore, AutoUpdateStore>()
                 .Register<IAutoUpdateService, AutoUpdateService>()
                 .Register<IUpdatePackageOrderer, UpdatePackageOrderer>()
                 .Register<IAutoUpdateDistributedLockManager, AutoUpdateDistributedLockManager>()
                 .RegisterAll<IUpdatePackageFactory>()
+                .RegisterAll<IStartupValidator>()
                 ;
         }
     }

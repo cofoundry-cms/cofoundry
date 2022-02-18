@@ -1,12 +1,11 @@
-﻿using Cofoundry.Core.Data.SimpleDatabase;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Core.AutoUpdate.Internal
 {
@@ -16,61 +15,51 @@ namespace Cofoundry.Core.AutoUpdate.Internal
     /// </summary>
     public class AutoUpdateService : IAutoUpdateService
     {
-        #region private variables
+        private static readonly MethodInfo _runVersionedCommandMethod = typeof(AutoUpdateService).GetMethod(nameof(ExecuteGenericVersionedCommand), BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo _runAlwaysRunCommandMethod = typeof(AutoUpdateService).GetMethod(nameof(ExecuteGenericAlwaysRunCommand), BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private static readonly MethodInfo _runVersionedCommandMethod = typeof(AutoUpdateService).GetMethod("ExecuteGenericVersionedCommand", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly MethodInfo _runAlwaysRunCommandMethod = typeof(AutoUpdateService).GetMethod("ExecuteGenericAlwaysRunCommand", BindingFlags.NonPublic | BindingFlags.Instance);
-
+        private readonly IAutoUpdateStore _autoUpdateStore;
         private readonly IEnumerable<IUpdatePackageFactory> _updatePackageFactories;
+        private readonly IEnumerable<IStartupValidator> _startupValidators;
         private readonly IUpdateCommandHandlerFactory _commandHandlerFactory;
-        private readonly ICofoundryDatabase _db;
         private readonly IUpdatePackageOrderer _updatePackageOrderer;
         private readonly AutoUpdateSettings _autoUpdateSettings;
         private readonly IAutoUpdateDistributedLockManager _autoUpdateDistributedLockManager;
-
-        #endregion
-
-        #region constructor
+        private readonly ILogger<AutoUpdateService> _logger;
 
         public AutoUpdateService(
+            IAutoUpdateStore autoUpdateStore,
             IEnumerable<IUpdatePackageFactory> updatePackageFactories,
+            IEnumerable<IStartupValidator> startupValidators,
             IUpdateCommandHandlerFactory commandHandlerFactory,
-            ICofoundryDatabase db,
             IUpdatePackageOrderer updatePackageOrderer,
             AutoUpdateSettings autoUpdateSettings,
-            IAutoUpdateDistributedLockManager autoUpdateDistributedLockManager
+            IAutoUpdateDistributedLockManager autoUpdateDistributedLockManager,
+            ILogger<AutoUpdateService> logger
             )
         {
+            _autoUpdateStore = autoUpdateStore;
             _updatePackageFactories = updatePackageFactories;
+            _startupValidators = startupValidators;
             _commandHandlerFactory = commandHandlerFactory;
-            _db = db;
             _updatePackageOrderer = updatePackageOrderer;
             _autoUpdateSettings = autoUpdateSettings;
             _autoUpdateDistributedLockManager = autoUpdateDistributedLockManager;
+            _logger = logger;
         }
 
-        #endregion
-        
-        #region update
-
-        /// <summary>
-        /// Updates an application and referenced modules by scanning for implementations
-        /// of IUpdatePackageFactory and executing any packages found.
-        /// </summary>
         public async Task UpdateAsync(CancellationToken? cancellationToken = null)
         {
-            var previouslyAppliedVersions = await GetUpdateVersionHistoryAsync();
+            RunStartupValidation();
 
-            var filteredPackages = _updatePackageFactories
-                .SelectMany(f => f.Create(previouslyAppliedVersions))
-                .ToList();
-
-            var packages = _updatePackageOrderer.Order(filteredPackages);
-
-            if (!packages.Any()) return;
+            var packages = await GetOrderedPackages();
+            if (!packages.Any())
+            {
+                _logger.LogTrace("No update packages found.");
+                return;
+            }
 
             var isLocked = await IsLockedAsync();
-
             if (isLocked && !packages.Any(p => p.ContainsVersionUpdates()))
             {
                 // if locked ignore always-update commands and only throw if there
@@ -84,6 +73,53 @@ namespace Cofoundry.Core.AutoUpdate.Internal
 
             if (IsCancelled(cancellationToken)) return;
 
+            await RunUpdates(packages, cancellationToken);
+        }
+
+        private void RunStartupValidation()
+        {
+            // run these prior to taking a lock to avoid any
+            // developer exceptions causing an orphaned lock
+            foreach (var startupValidator in _startupValidators)
+            {
+                startupValidator.Validate();
+            }
+        }
+
+        public async Task<bool> IsLockedAsync()
+        {
+            if (_autoUpdateSettings.Disabled) return true;
+
+            return await _autoUpdateStore.IsDatabaseLockedAsync();
+        }
+
+        public Task SetLockedAsync(bool isLocked)
+        {
+            return _autoUpdateStore.SetDatabaseLockedAsync(isLocked);
+        }
+
+        private async Task<ICollection<UpdatePackage>> GetOrderedPackages()
+        {
+            var previouslyAppliedVersions = await _autoUpdateStore.GetVersionHistoryAsync();
+
+            var filteredPackages = _updatePackageFactories
+                .SelectMany(f => f.Create(previouslyAppliedVersions))
+                .ToList();
+
+            var packages = _updatePackageOrderer.Order(filteredPackages);
+
+            return packages;
+        }
+
+        private bool IsCancelled(CancellationToken? cancellationToken)
+        {
+            _logger.LogTrace("Cancellation requested");
+
+            return cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested;
+        }
+
+        private async Task RunUpdates(ICollection<UpdatePackage> packages, CancellationToken? cancellationToken)
+        {
             // Lock the process to prevent concurrent updates
             var distributedLock = await _autoUpdateDistributedLockManager.LockAsync();
 
@@ -99,14 +135,28 @@ namespace Cofoundry.Core.AutoUpdate.Internal
                     await ExecutePackage(package, cancellationToken);
                 }
             }
-            finally
+            catch (Exception updateProcessException)
             {
-                await _autoUpdateDistributedLockManager.UnlockAsync(distributedLock);
+                // Try and close the lock before we throw the exception
+                try
+                {
+                    await _autoUpdateDistributedLockManager.UnlockAsync(distributedLock);
+                }
+                catch (Exception unlockException)
+                {
+                    _logger.LogError(unlockException, unlockException.Message);
+                }
+
+                throw;
             }
+
+            await _autoUpdateDistributedLockManager.UnlockAsync(distributedLock);
         }
 
         private async Task ExecutePackage(UpdatePackage package, CancellationToken? cancellationToken)
         {
+            _logger.LogDebug("Executing module package {ModuleIdentifier}.", package.ModuleIdentifier);
+
             // Versioned Commands
             foreach (var command in EnumerableHelper.Enumerate(package.VersionedCommands))
             {
@@ -115,6 +165,8 @@ namespace Cofoundry.Core.AutoUpdate.Internal
                     // If cancelled, don't try the next version package, but do try and run the always run commands.
                     break;
                 }
+
+                _logger.LogDebug("Executing version {Version} command '{Description}'.", command.Version, command.Description);
 
                 try
                 {
@@ -126,50 +178,22 @@ namespace Cofoundry.Core.AutoUpdate.Internal
                     throw;
                 }
 
-                await LogUpdateSuccessAsync(package.ModuleIdentifier, command.Version, command.Description);
+                await _autoUpdateStore.LogSuccessAsync(package.ModuleIdentifier, command.Version, command.Description);
             }
 
             // Always Run Commands
             foreach (var command in EnumerableHelper.Enumerate(package.AlwaysUpdateCommands))
             {
+                _logger.LogDebug("Executing always run command '{Description}'.", command.Description);
                 await ExecuteCommandAsync(command);
             }
         }
 
-        private static bool IsCancelled(CancellationToken? cancellationToken)
-        {
-            return cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested;
-        }
-
-        private Task LogUpdateSuccessAsync(string module, int version, string description)
-        {
-            var sql = @"
-	                insert into Cofoundry.ModuleUpdate (Module, [Version], [Description], ExecutionDate) 
-	                values (@Module, @Version, @Description, @ExecutionDate)";
-
-            return _db.ExecuteAsync(sql,
-                new SqlParameter("Module", module),
-                new SqlParameter("Version", version),
-                new SqlParameter("Description", description),
-                new SqlParameter("ExecutionDate", DateTime.UtcNow)
-                );
-        }
-
-        private Task LogUpdateErrorAsync(string module, int version, string description, Exception ex)
+        private async Task LogUpdateErrorAsync(string module, int version, string description, Exception ex)
         {
             try
             {
-                var sql = @"
-                    insert into Cofoundry.ModuleUpdateError (Module, [Version], [Description], ExecutionDate, ExceptionMessage) 
-	                values (@Module, @Version, @Description, @ExecutionDate, @ExceptionMessage)";
-
-                return _db.ExecuteAsync(sql,
-                    new SqlParameter("Module", module),
-                    new SqlParameter("Version", version),
-                    new SqlParameter("Description", description),
-                    new SqlParameter("ExecutionDate", DateTime.UtcNow),
-                    new SqlParameter("ExceptionMessage", ex.ToString())
-                    );
+                await _autoUpdateStore.LogErrorAsync(module, version, description, ex);
             }
             catch (Exception loggingException)
             {
@@ -224,79 +248,5 @@ namespace Cofoundry.Core.AutoUpdate.Internal
                 return Task.CompletedTask;
             }
         }
-
-        /// <summary>
-        /// Gets a collections of module updates that have already been applied
-        /// to the system.
-        /// </summary>
-        private async Task<ICollection<ModuleVersion>> GetUpdateVersionHistoryAsync()
-        {
-            var query = @"
-                if (exists (select * 
-                                 from information_schema.tables 
-                                 where table_schema = 'Cofoundry' 
-                                 and  table_name = 'ModuleUpdate'))
-                begin
-                    select Module, MAX([Version]) as Version
-	                from  Cofoundry.ModuleUpdate
-	                group by Module
-	                order by Module
-                end";
-
-            var moduleVersions = await _db.ReadAsync(query, r =>
-            {
-                var moduleVersion = new ModuleVersion();
-                moduleVersion.Module = (string)r["Module"];
-                moduleVersion.Version = (int)r["Version"];
-
-                return moduleVersion;
-            });
-
-            return moduleVersions;
-        }
-
-        #endregion
-
-        #region locking
-
-        /// <summary>
-        /// Works out whether the database is locked for 
-        /// schema updates. This is different to distributed locking which 
-        /// is intended to prevent multile update instances running.
-        /// </summary>
-        public async Task<bool> IsLockedAsync()
-        {
-            // First check config
-            if (_autoUpdateSettings.Disabled) return true;
-
-            // else this option can also be set in the db
-            var query = @"
-                if (exists (select * 
-                                 from information_schema.tables 
-                                 where table_schema = 'Cofoundry' 
-                                 and  table_name = 'AutoUpdateLock'))
-                begin
-                    select IsLocked from Cofoundry.AutoUpdateLock;
-                end";
-
-            var isLocked = await _db.ReadAsync(query, (r) =>
-            {
-                return (bool)r["IsLocked"];
-            });
-
-            return isLocked.FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Sets a flag in the database to enable/disable database updates.
-        /// </summary>
-        /// <param name="isLocked">True to lock the database and prevent schema updates</param>
-        public Task SetLockedAsync(bool isLocked)
-        {
-            var cmd = "update Cofoundry.AutoUpdateLock set IsLocked = @IsLocked";
-            return _db.ExecuteAsync(cmd, new SqlParameter("@IsLocked", isLocked));
-        }
-
-        #endregion
     }
 }

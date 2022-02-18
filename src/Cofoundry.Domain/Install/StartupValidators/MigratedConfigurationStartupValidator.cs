@@ -1,14 +1,16 @@
-﻿using Cofoundry.Core.AutoUpdate;
+﻿using Cofoundry.Core.AutoUpdate.Internal;
 using Cofoundry.Core.Configuration;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Installation
+namespace Cofoundry.Domain.Install
 {
-    public class ValidateMigratedSettingsCommandHandler : IAsyncAlwaysRunUpdateCommandHandler<ValidateMigratedSettingsCommand>
+    /// <summary>
+    /// Validates that any migrated settings are not referenced in configuration
+    /// </summary>
+    public class MigratedConfigurationStartupValidator : IStartupValidator
     {
         private readonly IConfiguration _configuration;
 
@@ -22,14 +24,14 @@ namespace Cofoundry.Domain.Installation
             { "Cofoundry:Authentication:CookieNamespace", "Cofoundry:Users:Cookie:Namespace" },
         };
 
-        public ValidateMigratedSettingsCommandHandler(
+        public MigratedConfigurationStartupValidator(
             IConfiguration configuration
             )
         {
             _configuration = configuration;
         }
 
-        public Task ExecuteAsync(ValidateMigratedSettingsCommand command)
+        public void Validate()
         {
             var invalidSettings = ConfigMappings
                 .Where(kvp => _configuration.GetValue<string>(kvp.Key) != null)
@@ -48,8 +50,6 @@ namespace Cofoundry.Domain.Installation
 
                 throw new InvalidConfigurationException(sb.ToString());
             }
-
-            return Task.CompletedTask;
         }
     }
 }
