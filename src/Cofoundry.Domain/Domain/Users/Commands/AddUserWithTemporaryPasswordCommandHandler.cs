@@ -112,6 +112,7 @@ namespace Cofoundry.Domain.Internal
             {
                 FirstName = command.FirstName,
                 LastName = command.LastName,
+                DisplayName = command.DisplayName,
                 Email = command.Email,
                 Username = command.Username,
                 Password = _passwordGenerationService.Generate(minLength),

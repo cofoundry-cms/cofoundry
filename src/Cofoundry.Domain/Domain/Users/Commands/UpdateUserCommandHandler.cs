@@ -17,6 +17,7 @@ namespace Cofoundry.Domain.Internal
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IDomainRepository _domainRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
         private readonly IUserAreaDefinitionRepository _userAreaRepository;
         private readonly IPermissionValidationService _permissionValidationService;
@@ -28,6 +29,7 @@ namespace Cofoundry.Domain.Internal
         public UpdateUserCommandHandler(
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
             IUserAreaDefinitionRepository userAreaRepository,
             IPermissionValidationService permissionValidationService,
@@ -39,6 +41,7 @@ namespace Cofoundry.Domain.Internal
         {
             _dbContext = dbContext;
             _domainRepository = domainRepository;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
             _userAreaRepository = userAreaRepository;
             _permissionValidationService = permissionValidationService;
@@ -200,8 +203,18 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private static void UpdateProperties(UpdateUserCommand command, User user)
+        private void UpdateProperties(UpdateUserCommand command, User user)
         {
+            var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserAreaCode);
+            if (options.Username.UseAsDisplayName)
+            {
+                user.DisplayName = user.Username;
+            }
+            else
+            {
+                user.DisplayName = command.DisplayName?.Trim();
+            }
+
             user.FirstName = command.FirstName?.Trim();
             user.LastName = command.LastName?.Trim();
             user.RequirePasswordChange = command.RequirePasswordChange;

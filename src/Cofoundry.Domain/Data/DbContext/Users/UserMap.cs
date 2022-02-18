@@ -17,6 +17,9 @@ namespace Cofoundry.Domain.Data
             builder.Property(s => s.LastName)
                 .HasMaxLength(32);
 
+            builder.Property(s => s.DisplayName)
+                .HasMaxLength(150);
+
             builder.Property(s => s.Email)
                 .HasMaxLength(150);
 

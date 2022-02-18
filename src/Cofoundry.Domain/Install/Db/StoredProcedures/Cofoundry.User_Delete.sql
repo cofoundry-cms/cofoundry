@@ -33,6 +33,7 @@ begin
 			UniqueUsername = @Pseudonym,
 			FirstName = null,
 			LastName = null,
+			DisplayName = null,
 			Email = null,
 			UniqueEmail = null,
 			EmailDomainId = null,

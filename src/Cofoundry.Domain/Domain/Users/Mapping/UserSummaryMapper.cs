@@ -35,6 +35,7 @@ namespace Cofoundry.Domain.Internal
             user.Email = dbUser.Email;
             user.FirstName = dbUser.FirstName;
             user.LastName = dbUser.LastName;
+            user.Username = dbUser.Username;
             user.LastSignInDate = dbUser.LastSignInDate;
 
             user.AuditData = new CreateAuditData()

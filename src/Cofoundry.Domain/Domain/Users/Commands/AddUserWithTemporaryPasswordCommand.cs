@@ -30,6 +30,16 @@ namespace Cofoundry.Domain
         public string LastName { get; set; }
 
         /// <summary>
+        /// An optional display-friendly name. This is capped at 150 characters to
+        /// match the <see cref="Username"/>, which may be used as the username in 
+        /// some cases. If <see cref="UsernameOptions.UseAsDisplayName"/> is set to
+        /// <see langword="true"/> then this field is ignored and the display name
+        /// is instead copied from the normalized username.
+        /// </summary>
+        [StringLength(150)]
+        public string DisplayName { get; set; }
+
+        /// <summary>
         /// An email address is required for this command so that an email
         /// notification can be sent.
         /// </summary>

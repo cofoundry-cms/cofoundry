@@ -27,6 +27,12 @@ namespace Cofoundry.Domain
         public string Email { get; set; }
 
         /// <summary>
+        /// The username is always required and depending on the user area
+        /// settings this might just be a copy of the email address.
+        /// </summary>
+        public string Username { get; set; }
+
+        /// <summary>
         /// Each user must be assigned to a role which provides
         /// information about the actions a user is permitted to 
         /// perform.

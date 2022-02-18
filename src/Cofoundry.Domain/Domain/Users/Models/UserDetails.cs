@@ -21,6 +21,12 @@ namespace Cofoundry.Domain
         public string LastName { get; set; }
 
         /// <summary>
+        /// The username is always required and depending on the user area
+        /// settings this might just be a copy of the email address.
+        /// </summary>
+        public string Username { get; set; }
+
+        /// <summary>
         /// The email address isn't always required depending on the 
         /// user area settings.
         /// </summary>

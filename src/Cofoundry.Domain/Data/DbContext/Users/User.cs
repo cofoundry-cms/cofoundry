@@ -26,6 +26,15 @@ namespace Cofoundry.Domain.Data
         public string LastName { get; set; }
 
         /// <summary>
+        /// An optional display-friendly name. This is capped at 150 characters to
+        /// match the <see cref="Username"/>, which may be used as the username in 
+        /// some cases. If <see cref="UsernameOptions.UseAsDisplayName"/> is set to
+        /// <see langword="true"/> then this field will be a copy of the <see cref="Username"/>
+        /// field.
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
         /// The users primary email address whcih can be used to comminicate with the user.
         /// This can be optional depending on the user area settings, if 
         /// <see cref="IUserAreaDefinition.UseEmailAsUsername"/> is set to <see langword="true"/>

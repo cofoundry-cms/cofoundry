@@ -23,7 +23,7 @@ namespace Cofoundry.Domain.Internal
             var user = new TModel()
             {
                 UserId = dbUser.UserId,
-                Username = dbUser.Username,
+                DisplayName = dbUser.DisplayName,
                 AccountStatus = MapAccountStatus(dbUser)
             };
 

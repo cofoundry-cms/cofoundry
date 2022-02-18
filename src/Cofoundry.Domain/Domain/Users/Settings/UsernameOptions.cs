@@ -95,6 +95,13 @@ namespace Cofoundry.Domain
         public int MaxLength { get; set; } = MAX_LENGTH_BOUNDARY;
 
         /// <summary>
+        /// If <see langword="true"/> then the normalized username is automatically copied 
+        /// to the display name field whenever it is updated. The display name field will
+        /// no longer be able to be updated independently.
+        /// </summary>
+        public bool UseAsDisplayName { get; set; }
+
+        /// <summary>
         /// Copies the options to a new instance, which can be modified
         /// without altering the base settings. This is used for user area
         /// specific configuration.
@@ -108,7 +115,8 @@ namespace Cofoundry.Domain
                 AdditionalAllowedCharacters = AdditionalAllowedCharacters,
                 AllowAnyCharacter = AllowAnyCharacter,
                 MinLength = MinLength,
-                MaxLength = MaxLength
+                MaxLength = MaxLength,
+                UseAsDisplayName = UseAsDisplayName
             };
         }
 

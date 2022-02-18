@@ -53,8 +53,7 @@ namespace Cofoundry.Domain.Internal
             var newUserCommand = new AddUserCommand()
             {
                 Email = command.Email,
-                FirstName = command.FirstName,
-                LastName = command.LastName,
+                DisplayName = command.DisplayName,
                 Password = command.Password,
                 RequirePasswordChange = command.RequirePasswordChange,
                 UserAreaCode = CofoundryAdminUserArea.Code,

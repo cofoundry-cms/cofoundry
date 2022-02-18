@@ -81,12 +81,26 @@ namespace Cofoundry.Domain.Internal
             await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
             await ValidatePasswordAsync(userArea, user, command, executionContext);
             SetPassword(user, command, userArea);
+            SetDisplayName(command, user);
 
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
             await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(userArea, user));
 
             command.OutputUserId = user.UserId;
+        }
+
+        private void SetDisplayName(AddUserCommand command, User user)
+        {
+            var options = _userAreaRepository.GetOptionsByCode(command.UserAreaCode);
+            if (options.Username.UseAsDisplayName)
+            {
+                user.DisplayName = user.Username;
+            }
+            else
+            {
+                user.DisplayName = command.DisplayName?.Trim();
+            }
         }
 
         private async Task OnTransactionComplete(IUserAreaDefinition userArea, User user)

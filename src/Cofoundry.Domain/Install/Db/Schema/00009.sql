@@ -475,3 +475,13 @@ go
 create unique index UIX_User_UniqueUsername on Cofoundry.[User] (UserAreaCode, UniqueUsername) where UniqueUsername is not null and DeletedDate is null
 create unique index UIX_User_Username on Cofoundry.[User] (UserAreaCode, [Username]) where DeletedDate is null
 alter table Cofoundry.[User] drop column IsDeleted
+
+/*
+	#496 Users: Add "DisplayName"
+*/
+
+alter table Cofoundry.[User] add DisplayName nvarchar(150) null
+go
+
+update Cofoundry.[User] set DisplayName = LTRIM(RTRIM(IsNull(FirstName, '') + ' ' + IsNull(LastName, '')))
+go

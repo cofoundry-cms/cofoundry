@@ -16,6 +16,7 @@ namespace Cofoundry.Domain.Internal
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IDomainRepository _domainRepository;
+        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
         private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
@@ -23,6 +24,7 @@ namespace Cofoundry.Domain.Internal
         public UpdateCurrentUserCommandHandler(
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
+            IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IPermissionValidationService permissionValidationService,
             IUserUpdateCommandHelper userUpdateCommandHelper,
             IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper
@@ -30,6 +32,7 @@ namespace Cofoundry.Domain.Internal
         {
             _dbContext = dbContext;
             _domainRepository = domainRepository;
+            _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _permissionValidationService = permissionValidationService;
             _userUpdateCommandHelper = userUpdateCommandHelper;
             _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
@@ -48,6 +51,7 @@ namespace Cofoundry.Domain.Internal
             EntityNotFoundException.ThrowIfNull(user, userId);
 
             var updateResult = await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
+            UpdateName(command, user);
             user.FirstName = command.FirstName?.Trim();
             user.LastName = command.LastName?.Trim();
 
@@ -69,6 +73,22 @@ namespace Cofoundry.Domain.Internal
                 scope.QueueCompletionTask(() => OnTransactionComplete(user, updateResult));
                 await scope.CompleteAsync();
             }
+        }
+
+        private void UpdateName(UpdateCurrentUserCommand command, User user)
+        {
+            var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserAreaCode);
+            if (options.Username.UseAsDisplayName)
+            {
+                user.DisplayName = user.Username;
+            }
+            else
+            {
+                user.DisplayName = command.DisplayName?.Trim();
+            }
+
+            user.FirstName = command.FirstName?.Trim();
+            user.LastName = command.LastName?.Trim();
         }
 
         private async Task OnTransactionComplete(User user, UserUpdateCommandHelper.UpdateEmailAndUsernameResult updateResult)

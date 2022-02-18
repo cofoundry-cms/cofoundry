@@ -11,11 +11,8 @@ namespace Cofoundry.Domain
         [StringLength(50)]
         public string ApplicationName { get; set; }
 
-        [StringLength(32)]
-        public string FirstName { get; set; }
-
-        [StringLength(32)]
-        public string LastName { get; set; }
+        [StringLength(150)]
+        public string DisplayName { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
