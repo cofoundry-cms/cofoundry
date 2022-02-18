@@ -52,7 +52,8 @@ namespace Cofoundry.Web.Admin
                     RoleCode = command.RoleCode,
                     RoleId = command.RoleId,
                     UserAreaCode = command.UserAreaCode,
-                    Username = command.Username
+                    Username = command.Username,
+                    DisplayName = command.DisplayName
                 });
             }
 

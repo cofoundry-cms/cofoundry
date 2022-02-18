@@ -21,42 +21,45 @@
             <p>Before we get started, we're gonna need some basic setup information from you. This will give your application a name and also create the default user account.</p>
 
             <cms-form-field-text cms-title="Application Name"
-                                 cms-model="vm.command.applicationName"
-                                 maxlength="100"
-                                 required></cms-form-field-text>
+                cms-model="vm.command.applicationName"
+                maxlength="100"
+                required
+                placeholder="e.g. My Application"
+                cms-description="A name to describe your application, up to 100 characters."></cms-form-field-text>
 
-            <cms-form-field-text cms-title="First Name"
-                                 cms-model="vm.command.firstName"
-                                 maxlength="32"></cms-form-field-text>
+            <cms-form-field-sub-heading>Default User Account</cms-form-field-sub-heading>
 
-            <cms-form-field-text cms-title="Last Name"
-                                 cms-model="vm.command.lastName"
-                                 maxlength="32"></cms-form-field-text>
+            <cms-form-field-text cms-title="Name"
+                cms-model="vm.command.displayName"
+                maxlength="150"
+                placeholder="e.g. Example User"
+                cms-description="A display name for the default user account, can be up to 150 characters."></cms-form-field-text>
 
             <cms-form-field-email-address cms-title="Email"
-                                          cms-model="vm.command.email"
-                                          maxlength="150"
-                                          required></cms-form-field-email-address>
+                cms-model="vm.command.email"
+                maxlength="150"
+                required
+                placeholder="e.g. user@example.com"
+                cms-description="An email address to use as the username for the default account and to send account recovery notifications to."></cms-form-field-email-address>
 
             <cms-form-field-password cms-title="Password"
-                                     cms-model="vm.command.password"
-                                     cms-password-policy="vm.passwordPolicy"
-                                     required></cms-form-field-password>
+                cms-model="vm.command.password"
+                cms-password-policy="vm.passwordPolicy"
+                required></cms-form-field-password>
 
             <cms-form-field-password cms-title="Confirm password"
-                                     cms-model="vm.command.confirmPassword"
-                                     cms-match="vm.command.password"
-                                     cms-match-val-msg="Passwords must match"
-                                     maxlength="2048"
-                                     required></cms-form-field-password>
+                cms-model="vm.command.confirmPassword"
+                cms-match="vm.command.password"
+                cms-match-val-msg="Passwords must match"
+                maxlength="2048"
+                required></cms-form-field-password>
             
             <div class="actions">
                 <cms-button-submit cms-text="Save"
-                       ng-disabled="vm.mainForm.$invalid || vm.saveLoadState.isLoading"
-                       cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
+                    ng-disabled="vm.mainForm.$invalid || vm.saveLoadState.isLoading"
+                    cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
             </div>
         </cms-form-section>
-
         
     </cms-page-body>
 

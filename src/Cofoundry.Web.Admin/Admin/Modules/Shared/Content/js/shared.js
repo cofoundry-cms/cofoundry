@@ -12438,6 +12438,20 @@ function (
         bindToController: true
     };
 }]);
+angular.module('cms.shared').directive('cmsFormFieldSubHeading', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/FormFields/FormFieldSubHeading.html',
+        require: ['^^cmsForm'],
+        replace: true,
+        transclude: true
+    };
+}]);
 angular.module('cms.shared').directive('cmsFormFieldText', [
     '_',
     'shared.internalModulePath',
@@ -15842,11 +15856,7 @@ function (
     }
 
     function formatName(user) {
-        if (user.firstName || user.lastName) {
-            return user.firstName + ' ' + user.lastName;
-        }
-
-        return user.username;
+        return user.displayName || user.username || 'User ' + user.userId;
     }
 }]);
 /**

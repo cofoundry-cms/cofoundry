@@ -23,8 +23,7 @@ namespace Cofoundry.Web.Admin
             {
                 ApplicationName = dto.ApplicationName,
                 Email = dto.Email,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
+                DisplayName = dto.DisplayName,
                 Password = dto.Password
             };
 

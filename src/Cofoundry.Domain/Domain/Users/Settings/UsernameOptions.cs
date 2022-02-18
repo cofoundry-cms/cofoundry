@@ -97,7 +97,8 @@ namespace Cofoundry.Domain
         /// <summary>
         /// If <see langword="true"/> then the normalized username is automatically copied 
         /// to the display name field whenever it is updated. The display name field will
-        /// no longer be able to be updated independently.
+        /// no longer be able to be updated independently, but this is useful if your usernames
+        /// are display-friendly and you don't want them to have to fill out a separate field.
         /// </summary>
         public bool UseAsDisplayName { get; set; }
 

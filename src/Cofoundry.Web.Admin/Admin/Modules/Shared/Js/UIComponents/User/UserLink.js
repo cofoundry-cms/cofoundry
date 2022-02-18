@@ -26,10 +26,6 @@ function (
     }
 
     function formatName(user) {
-        if (user.firstName || user.lastName) {
-            return user.firstName + ' ' + user.lastName;
-        }
-
-        return user.username;
+        return user.displayName || user.username || 'User ' + user.userId;
     }
 }]);

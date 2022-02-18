@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Web.Admin
+﻿using Cofoundry.Domain;
+
+namespace Cofoundry.Web.Admin
 {
     /// <summary>
     /// A set of useful settings and options output as a js object for the front
@@ -30,5 +32,12 @@
         /// an email address so in this case the email address is allowed to be null. 
         /// </summary>
         public bool UseEmailAsUsername { get; set; }
+
+        /// <summary>
+        /// <see langword="true"/> if the display name property should be visible
+        /// in the admin UI. This will be <see langword="false"/> if <see cref="UsernameOptions.UseAsDisplayName"/>
+        /// is set to <see langword="true"/>.
+        /// </summary>
+        public bool ShowDisplayName { get; set; }
     }
 }

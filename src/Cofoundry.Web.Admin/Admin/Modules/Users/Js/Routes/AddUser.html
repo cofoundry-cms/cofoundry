@@ -6,11 +6,11 @@
 
     <cms-page-actions>
         <cms-button-submit cms-text="Save" 
-                           ng-disabled="vm.mainForm.$invalid"
-                           cms-loading="vm.globalLoadState.isLoading"></cms-button-submit>
+            ng-disabled="vm.mainForm.$invalid"
+            cms-loading="vm.globalLoadState.isLoading"></cms-button-submit>
         <cms-button cms-text="Cancel" 
-                    ng-click="vm.cancel()"
-                    ng-disabled="vm.globalLoadState.isLoading"></cms-button>
+            ng-click="vm.cancel()"
+            ng-disabled="vm.globalLoadState.isLoading"></cms-button>
     </cms-page-actions>
 
 
@@ -22,36 +22,45 @@
 
         <cms-form-section cms-title="User Details">
 
-            <cms-form-field-text cms-title="First Name"
-                                 cms-model="vm.command.firstName"
-                                 maxlength="32"></cms-form-field-text>
-
-            <cms-form-field-text cms-title="Last Name"
-                                 cms-model="vm.command.lastName"
-                                 maxlength="32"></cms-form-field-text>
+            <cms-form-field-text cms-title="Display Name"
+                cms-model="vm.command.displayName"
+                maxlength="150"
+                ng-if="vm.userArea.showDisplayName"
+                cms-description="A display-friendly name such as a real name or pseudonym."></cms-form-field-text>
 
             <cms-form-field-text cms-title="Username"
-                                cms-model="vm.command.username"
-                                maxlength="150"
-                                ng-if="::!vm.userArea.useEmailAsUsername"
-                                ng-required="::!vm.userArea.useEmailAsUsername"
-                                cms-description="The username that the user uses to sign in with."></cms-form-field-text>
+                cms-model="vm.command.username"
+                maxlength="150"
+                ng-if="::!vm.userArea.useEmailAsUsername"
+                ng-required="::!vm.userArea.useEmailAsUsername"
+                cms-description="The username that the user uses to sign in with."></cms-form-field-text>
 
             <cms-form-field-email-address cms-title="Email"
-                                          cms-model="vm.command.email"
-                                          maxlength="150"
-                                          ng-required="::vm.userArea.allowPasswordSignIn || vm.userArea.useEmailAsUsername"></cms-form-field-email-address>
+                cms-model="vm.command.email"
+                maxlength="150"
+                ng-required="::vm.userArea.allowPasswordSignIn || vm.userArea.useEmailAsUsername"></cms-form-field-email-address>
 
             <cms-form-field-dropdown cms-title="Role"
-                                     cms-options="vm.roles"
-                                     cms-option-name="title"
-                                     cms-option-value="roleId"
-                                     cms-model="vm.command.roleId"
-                                     cms-description="The role dictates which permissions a user has."
-                                     required></cms-form-field-dropdown>
+                cms-options="vm.roles"
+                cms-option-name="title"
+                cms-option-value="roleId"
+                cms-model="vm.command.roleId"
+                cms-description="The role dictates which permissions a user has."
+                required></cms-form-field-dropdown>
 
         </cms-form-section>
 
+        <cms-form-section cms-title="Additional Details" ng-if="!vm.isCofoundryAdmin">
+
+            <cms-form-field-text cms-title="First Name"
+                cms-model="vm.command.firstName"
+                maxlength="32"></cms-form-field-text>
+
+            <cms-form-field-text cms-title="Last Name"
+                cms-model="vm.command.lastName"
+                maxlength="32"></cms-form-field-text>
+
+        </cms-form-section>
     </cms-page-body>
 
 </cms-form>

@@ -5499,6 +5499,13 @@ input[type="color"] {
   margin-top: 10px;
   text-align: right; }
 
+.form-field-heading {
+  font-weight: normal;
+  margin: 0.8em 0 0 0;
+  padding: 0.5em 0 0 0;
+  font-size: 15.6px;
+  font-size: 1.3rem; }
+
 .image-asset {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;

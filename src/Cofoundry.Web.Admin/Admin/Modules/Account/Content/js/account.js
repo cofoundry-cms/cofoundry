@@ -150,8 +150,7 @@ function (
     function mapUpdateCommand(user) {
 
         return _.pick(user,
-            'firstName',
-            'lastName',
+            'displayName',
             'email'
             );
     }

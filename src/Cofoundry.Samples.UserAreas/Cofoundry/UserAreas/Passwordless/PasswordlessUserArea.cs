@@ -54,5 +54,10 @@ namespace Cofoundry.Samples.UserAreas
         /// schema which means the HttpContext.User property will be set to this identity.
         /// </summary>
         public bool IsDefaultAuthScheme => false;
+        
+        public void ConfigureOptions(UserAreaOptions options)
+        {
+            options.Username.UseAsDisplayName = true;
+        }
     }
 }

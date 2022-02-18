@@ -33,7 +33,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
-            var userId = await app.TestData.Users().AddAsync(uniqueData);
+            var userId = await app.TestData.Users().AddAsync(uniqueData, c => c.DisplayName = "Test");
             var originalUser = await GetUserAsync(dbContext, userId);
 
             await contentRepository
@@ -49,6 +49,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 deletedUser.UniqueEmail.Should().BeNull();
                 deletedUser.FirstName.Should().BeNull();
                 deletedUser.LastName.Should().BeNull();
+                deletedUser.DisplayName.Should().BeNull();
                 deletedUser.EmailDomainId.Should().BeNull();
                 deletedUser.Password.Should().NotBeNull().And.NotBe(originalUser.Username);
                 deletedUser.Username.Should().NotBeNull().And.NotBe(originalUser.Username);

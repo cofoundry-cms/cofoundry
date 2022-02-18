@@ -29,6 +29,7 @@ function (
         vm.globalLoadState = new LoadState();
         vm.editMode = false;
         vm.userArea = options;
+        vm.isCofoundryAdmin = options.userAreaCode === 'COF';
 
         vm.save = save;
         vm.cancel = cancel;

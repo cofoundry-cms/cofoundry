@@ -118,6 +118,7 @@ function (
         vm.globalLoadState = new LoadState();
         vm.editMode = false;
         vm.userArea = options;
+        vm.isCofoundryAdmin = options.userAreaCode === 'COF';
 
         vm.save = save;
         vm.cancel = cancel;
@@ -212,6 +213,7 @@ function (
         vm.formLoadState = new LoadState(true);
         vm.userArea = options;
 
+        vm.isCofoundryAdmin = options.userAreaCode === 'COF';
         vm.isCurrentUser = isCurrentUser;
         
         // Init
@@ -356,7 +358,8 @@ function (
             'lastName',
             'email',
             'requirePasswordChange',
-            'isEmailConfirmed'
+            'isEmailConfirmed',
+            'displayName'
             );
 
         if (vm.user.accountVerifiedDate) {

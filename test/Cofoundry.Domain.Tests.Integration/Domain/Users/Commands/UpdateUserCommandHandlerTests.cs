@@ -43,6 +43,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 Password = PASSWORD,
                 FirstName = "Reginald",
                 LastName = "Dwight",
+                DisplayName = "Reggie",
                 RoleCode = userArea.RoleA.RoleCode,
                 UserAreaCode = userArea.UserAreaCode,
                 RequirePasswordChange = false
@@ -62,6 +63,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             updateCommand.Email = "E.john@" + alternateDomain;
             updateCommand.FirstName = "Elton";
             updateCommand.LastName = "John";
+            updateCommand.DisplayName = "Rocketman";
             updateCommand.RequirePasswordChange = true;
 
             await contentRepository
@@ -84,6 +86,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.Should().NotBeNull();
                 user.FirstName.Should().Be(updateCommand.FirstName);
                 user.LastName.Should().Be(updateCommand.LastName);
+                user.DisplayName.Should().Be(updateCommand.DisplayName);
                 user.Email.Should().Be(normalizedEmail);
                 user.UniqueEmail.Should().Be(lowerEmail);
                 user.Username.Should().Be(normalizedEmail);
@@ -94,6 +97,52 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.EmailDomain.Name.Should().Be(normalizedDomain);
                 user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
                 user.AccountVerifiedDate.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task WhenUsernameAsDisplayName_DisplayNameUpdated()
+        {
+            var uniqueData = UNIQUE_PREFIX + "UnAsDN_DNUpd";
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
+            var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
+
+            var addCommand = new AddUserCommand()
+            {
+                Email = uniqueData + "@example.com",
+                Username = uniqueData,
+                Password = PASSWORD,
+                RoleId = roleId,
+                UserAreaCode = userAreaCode,
+                RequirePasswordChange = false
+            };
+
+            var userId = await contentRepository
+                .Users()
+                .AddAsync(addCommand);
+
+            var updateCommand = MapUpdateCommand(addCommand);
+            updateCommand.Username = uniqueData + "1";
+
+            await contentRepository
+                .Users()
+                .UpdateAsync(updateCommand);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .Include(u => u.EmailDomain)
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.DisplayName.Should().Be(updateCommand.DisplayName);
             }
         }
 
@@ -114,6 +163,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 Username = uniqueData,
                 FirstName = "John",
                 LastName = "Kruger",
+                DisplayName = "Eraser",
                 RoleId = roleId,
                 UserAreaCode = userAreaCode
             };
@@ -148,6 +198,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.Should().NotBeNull();
                 user.FirstName.Should().BeNull();
                 user.LastName.Should().BeNull();
+                user.DisplayName.Should().BeNull();
                 user.Email.Should().BeNull();
                 user.UniqueEmail.Should().BeNull();
                 user.EmailDomainId.Should().BeNull();

@@ -62,6 +62,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.Should().NotBeNull();
                 user.FirstName.Should().BeNull();
                 user.LastName.Should().BeNull();
+                user.DisplayName.Should().BeNull();
                 user.CreateDate.Should().NotBeDefault();
                 user.CreatorId.Should().BePositive();
                 user.Email.Should().Be(command.Email);
@@ -83,6 +84,80 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.UniqueUsername.Should().Be(lowerEmail);
                 user.EmailDomain.Name.Should().Be("example.com");
                 user.SecurityStamp.Should().NotBeNullOrEmpty().And.HaveLength(32);
+            }
+        }
+
+        [Fact]
+        public async Task CanAddWithNameData()
+        {
+            var uniqueData = UNIQUE_PREFIX + "AddNameData";
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var command = new AddUserCommand()
+            {
+                Email = uniqueData + EMAIL_DOMAIN,
+                Password = PASSWORD,
+                RoleCode = app.SeededEntities.TestUserArea1.RoleA.RoleCode,
+                UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode,
+                DisplayName = "Display Name",
+                FirstName = "FName",
+                LastName = "LName"
+            };
+
+            await contentRepository
+                .Users()
+                .AddAsync(command);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(command.OutputUserId)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.FirstName.Should().Be(command.FirstName);
+                user.LastName.Should().Be(command.LastName);
+                user.DisplayName.Should().Be(command.DisplayName);
+            }
+        }
+
+        [Fact]
+        public async Task WhenUserNameAsDisplayName_CopiesUsername()
+        {
+            var uniqueData = UNIQUE_PREFIX + "UNasDN_Copies";
+
+            using var app = _appFactory.Create(s => s.Configure<UsersSettings>(c => c.Username.UseAsDisplayName = true));
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var command = new AddUserCommand()
+            {
+                Email = uniqueData + EMAIL_DOMAIN,
+                Password = PASSWORD,
+                RoleCode = app.SeededEntities.TestUserArea1.RoleA.RoleCode,
+                UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode,
+                DisplayName = "Display Name",
+                FirstName = "FName",
+                LastName = "LName"
+            };
+
+            await contentRepository
+                .Users()
+                .AddAsync(command);
+
+            var user = await dbContext
+                .Users
+                .AsNoTracking()
+                .FilterById(command.OutputUserId)
+                .SingleOrDefaultAsync();
+
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.DisplayName.Should().Be(user.Username);
             }
         }
 

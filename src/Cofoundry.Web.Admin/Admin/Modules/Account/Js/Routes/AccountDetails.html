@@ -45,13 +45,10 @@
         <!--MAIN-->
         <cms-form-section cms-title="My Profile">
 
-            <cms-form-field-text cms-title="First Name"
-                                 cms-model="vm.command.firstName"
-                                 maxlength="32"></cms-form-field-text>
-
-            <cms-form-field-text cms-title="Last Name"
-                                 cms-model="vm.command.lastName"
-                                 maxlength="32"></cms-form-field-text>
+            <cms-form-field-text cms-title="Display Name"
+                cms-model="vm.command.displayName"
+                maxlength="150"
+                cms-description="A display-friendly name such as a real name or pseudonym."></cms-form-field-text>
 
             <cms-form-field-email-address cms-title="Email"
                                           cms-model="vm.command.email"
@@ -67,8 +64,8 @@
                 <cms-time-ago cms-time="::vm.user.lastPasswordChangeDate"></cms-time-ago>
             </cms-form-field-container>
 
-            <cms-form-field-container cms-title="Logged in">
-                <cms-time-ago cms-time="::vm.user.lastLoginDate"></cms-time-ago>
+            <cms-form-field-container cms-title="Last signed in">
+                <cms-time-ago cms-time="::vm.user.lastSignInDate"></cms-time-ago>
             </cms-form-field-container>
 
             <cms-form-field-container cms-title="Created">

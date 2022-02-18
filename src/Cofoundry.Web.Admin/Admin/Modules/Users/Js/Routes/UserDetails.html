@@ -49,13 +49,12 @@
 
         <!--MAIN-->
         <cms-form-section cms-title="Main">
-            <cms-form-field-text cms-title="First Name"
-                cms-model="vm.command.firstName"
-                maxlength="32"></cms-form-field-text>
 
-            <cms-form-field-text cms-title="Last Name"
-                cms-model="vm.command.lastName"
-                maxlength="32"></cms-form-field-text>
+            <cms-form-field-text cms-title="Display Name"
+                cms-model="vm.command.displayName"
+                ng-if="vm.userArea.showDisplayName"
+                maxlength="150"
+                cms-description="A display-friendly name such as a real name or pseudonym."></cms-form-field-text>
 
             <cms-form-field-text cms-title="Username"
                 cms-model="vm.command.username"
@@ -101,6 +100,18 @@
                 cms-readonly="vm.isCurrentUser"
                 cms-model="vm.command.isActive"
                 cms-description="If an account is deactivated, the user will be signed out and prevented from signing in.."></cms-form-field-checkbox>
+
+        </cms-form-section>
+
+        <cms-form-section cms-title="Additional Details" ng-if="!vm.isCofoundryAdmin">
+
+            <cms-form-field-text cms-title="First Name"
+                cms-model="vm.command.firstName"
+                maxlength="32"></cms-form-field-text>
+
+            <cms-form-field-text cms-title="Last Name"
+                cms-model="vm.command.lastName"
+                maxlength="32"></cms-form-field-text>
 
         </cms-form-section>
 
