@@ -97,8 +97,7 @@ namespace Cofoundry.Domain.Tests.Integration
                 {
                     ApplicationName = "Test Site",
                     Email = seededEntities.AdminUser.Username,
-                    FirstName = "Test",
-                    LastName = "Admin",
+                    DisplayName = "Test Admin",
                     Password = seededEntities.AdminUser.Password
                 });
             }

@@ -62,7 +62,7 @@ namespace Cofoundry.Domain.Internal
             await UpdateRoleAsync(command, executionContext, user);
             UpdateAccountVerifiedStatus(command, user, updateStatus, executionContext);
             UpdateActivationStatus(command, user, updateStatus, executionContext);
-            UpdateProperties(command, user);
+            UpdateProperties(command, user, updateStatus);
 
             if (updateStatus.RequiresSecurityStampUpdate())
             {
@@ -203,7 +203,11 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private void UpdateProperties(UpdateUserCommand command, User user)
+        private void UpdateProperties(
+            UpdateUserCommand command, 
+            User user,
+            UpdateStatus updateStatus
+            )
         {
             var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserAreaCode);
             if (options.Username.UseAsDisplayName)
@@ -217,10 +221,12 @@ namespace Cofoundry.Domain.Internal
 
             user.FirstName = command.FirstName?.Trim();
             user.LastName = command.LastName?.Trim();
+
+            updateStatus.IsPasswordChangeRequiredSetTrue = command.RequirePasswordChange && !user.RequirePasswordChange;
             user.RequirePasswordChange = command.RequirePasswordChange;
         }
 
-        private static void UpdateAccountVerifiedStatus(
+        private void UpdateAccountVerifiedStatus(
             UpdateUserCommand command,
             User user,
             UpdateStatus updateStatus,
@@ -237,6 +243,8 @@ namespace Cofoundry.Domain.Internal
             }
             else
             {
+                var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserAreaCode).AccountVerification;
+                updateStatus.RequireReVerificationBeforeSignIn = options.RequireVerification;
                 user.AccountVerifiedDate = null;
             }
         }
@@ -284,15 +292,22 @@ namespace Cofoundry.Domain.Internal
 
             public bool HasVerificationStatusChanged { get; set; }
 
+            /// <summary>
+            /// IsVerified has been set to false and the user area requires a user to be verified before sign in.
+            /// </summary>
+            public bool RequireReVerificationBeforeSignIn { get; set; }
+
             public bool HasBeenDeactivated { get; set; }
 
             public bool HasActivationStatusChanged { get; set; }
+
+            public bool IsPasswordChangeRequiredSetTrue { get; set; }
 
             public UserUpdateCommandHelper.UpdateEmailAndUsernameResult UpdateEmailAndUsernameResult => _updateEmailAndUsernameResult;
 
             public bool RequiresSecurityStampUpdate()
             {
-                return _updateEmailAndUsernameResult.HasUpdate() || HasBeenDeactivated;
+                return _updateEmailAndUsernameResult.HasUpdate() || HasBeenDeactivated || IsPasswordChangeRequiredSetTrue || RequireReVerificationBeforeSignIn;
             }
         }
     }

@@ -4,6 +4,7 @@ using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -23,6 +24,13 @@ namespace Cofoundry.Web.Internal
         /// </summary>
         private readonly InMemoryUserSessionService _inMemoryUserSessionService;
 
+        /// <summary>
+        /// HttpContext.User does not clear out the claims principal which causes
+        /// issues if the user is requested after sign out has occured (e.g. in 
+        /// view rendering). This is used to track sign-outs and prevent this occuring.
+        /// </summary>
+        private HashSet<string> _signedOutUserAreas = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IUserContextCache _userContextCache;
@@ -52,8 +60,12 @@ namespace Cofoundry.Web.Internal
 
             var user = _httpContextAccessor?.HttpContext?.User;
             var userIdClaim = user?.FindFirst(CofoundryClaimTypes.UserId);
+            var userAreaClaim = user?.FindFirst(CofoundryClaimTypes.UserAreaCode);
 
-            if (userIdClaim == null) return null;
+            if (userIdClaim == null || userAreaClaim == null) return null;
+
+            // User has been signed out during this request so ignore
+            if (_signedOutUserAreas.Contains(userAreaClaim.Value)) return null;
 
             // Otherwise get it from the Identity
             var userId = IntParser.ParseOrNull(userIdClaim.Value);
@@ -67,6 +79,7 @@ namespace Cofoundry.Web.Internal
                 throw new ArgumentNullException(nameof(userAreaCode));
             }
 
+            if (_signedOutUserAreas.Contains(userAreaCode)) return null;
             var cachedUserId = await _inMemoryUserSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
             if (cachedUserId.HasValue) return cachedUserId;
 
@@ -81,7 +94,7 @@ namespace Cofoundry.Web.Internal
 
             if (userId.HasValue)
             {
-                // cache the auth by logging into to the in-memory service
+                // cache the auth by logging into the in-memory service
                 await _inMemoryUserSessionService.SignInAsync(userAreaCode, userId.Value, true);
             }
 
@@ -108,6 +121,11 @@ namespace Cofoundry.Web.Internal
             }
 
             await _inMemoryUserSessionService.SignInAsync(userAreaCode, userId, rememberUser);
+            if (!_signedOutUserAreas.Contains(userAreaCode))
+            {
+                // signed out and back in during the same request: odd but let's handle it.
+                _signedOutUserAreas.Add(userAreaCode);
+            }
         }
 
         public async Task SignOutAsync(string userAreaCode)
@@ -121,16 +139,18 @@ namespace Cofoundry.Web.Internal
 
             var scheme = AuthenticationSchemeNames.UserArea(userAreaCode);
             await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
+            TrackSignOut(userAreaCode);
         }
 
         public async Task SignOutOfAllUserAreasAsync()
         {
             await _inMemoryUserSessionService.SignOutOfAllUserAreasAsync();
 
-            foreach (var customEntityDefinition in _userAreaDefinitionRepository.GetAll())
+            foreach (var userArea in _userAreaDefinitionRepository.GetAll())
             {
-                var scheme = AuthenticationSchemeNames.UserArea(customEntityDefinition.UserAreaCode);
+                var scheme = AuthenticationSchemeNames.UserArea(userArea.UserAreaCode);
                 await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
+                TrackSignOut(userArea.UserAreaCode);
             }
         }
 
@@ -183,6 +203,14 @@ namespace Cofoundry.Web.Internal
             }
 
             return userPrincipal;
+        }
+
+        private void TrackSignOut(string userAreaCode)
+        {
+            if (!_signedOutUserAreas.Contains(userAreaCode))
+            {
+                _signedOutUserAreas.Add(userAreaCode);
+            }
         }
     }
 }

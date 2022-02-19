@@ -33,7 +33,7 @@ namespace Cofoundry.Domain.Internal
         {
             if (string.IsNullOrEmpty(query.UserAreaCode))
             {
-                return executionContext.UserContext;
+                return await _userContextService.GetCurrentContextAsync();
             }
 
             var user = await _userContextService.GetCurrentContextByUserAreaAsync(query.UserAreaCode);

@@ -34,7 +34,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var userArea = app.SeededEntities.TestUserArea1;
 
             var addCommand = new AddUserCommand()
@@ -53,29 +52,19 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .AddAsync(addCommand);
 
-            var originalUserState = await dbContext
-                .Users
-                .AsNoTracking()
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var originalUserState = await GetUserByIdAsync(app, userId);
 
             var updateCommand = MapUpdateCommand(addCommand);
             updateCommand.Email = "E.john@" + alternateDomain;
             updateCommand.FirstName = "Elton";
             updateCommand.LastName = "John";
             updateCommand.DisplayName = "Rocketman";
-            updateCommand.RequirePasswordChange = true;
 
             await contentRepository
                 .Users()
                 .UpdateAsync(updateCommand);
 
-            var user = await dbContext
-                .Users
-                .AsNoTracking()
-                .Include(u => u.EmailDomain)
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var user = await GetUserByIdAsync(app, userId);
 
             var normalizedDomain = alternateDomain.ToLowerInvariant();
             var normalizedEmail = "E.john@" + normalizedDomain;
@@ -93,7 +82,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 user.UniqueUsername.Should().Be(lowerEmail);
                 user.AccountVerifiedDate.Should().BeNull();
                 user.DeactivatedDate.Should().BeNull();
-                user.RequirePasswordChange.Should().BeTrue();
+                user.RequirePasswordChange.Should().BeFalse();
                 user.EmailDomain.Name.Should().Be(normalizedDomain);
                 user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
                 user.AccountVerifiedDate.Should().BeNull();
@@ -107,7 +96,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var userAreaCode = UserAreaWithoutEmailAsUsername.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
 
@@ -132,12 +120,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .UpdateAsync(updateCommand);
 
-            var user = await dbContext
-                .Users
-                .AsNoTracking()
-                .Include(u => u.EmailDomain)
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var user = await GetUserByIdAsync(app, userId);
 
             using (new AssertionScope())
             {
@@ -153,7 +136,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var userAreaCode = UserAreaWithoutPasswordSignIn.Code;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userAreaCode);
 
@@ -172,11 +154,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .AddAsync(addCommand);
 
-            var originalUserState = await dbContext
-                .Users
-                .AsNoTracking()
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var originalUserState = await GetUserByIdAsync(app, userId);
 
             var updateCommand = MapUpdateCommand(addCommand);
             updateCommand.Email = null;
@@ -187,11 +165,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .UpdateAsync(updateCommand);
 
-            var user = await dbContext
-                .Users
-                .AsNoTracking()
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var user = await GetUserByIdAsync(app, userId);
 
             using (new AssertionScope())
             {
@@ -215,7 +189,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var userArea = app.SeededEntities.TestUserArea1;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, userArea.UserAreaCode);
 
@@ -239,11 +212,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .UpdateAsync(updateCommand);
 
-            var user = await dbContext
-                .Users
-                .AsNoTracking()
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var user = await GetUserByIdAsync(app, userId);
 
             using (new AssertionScope())
             {
@@ -259,7 +228,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var userArea = app.SeededEntities.TestUserArea1;
 
             var addCommand = new AddUserCommand()
@@ -281,12 +249,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .UpdateAsync(updateCommand);
 
-            var user = await dbContext
-                .Users
-                .AsNoTracking()
-                .Include(u => u.Role)
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var user = await GetUserByIdAsync(app, userId);
 
             using (new AssertionScope())
             {
@@ -302,7 +265,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var userArea1 = app.SeededEntities.TestUserArea1;
             var roleId = await app.TestData.Roles().AddAsync(uniqueData, app.SeededEntities.TestUserArea2.UserAreaCode);
 
@@ -336,7 +298,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 
             using var app = _appFactory.Create();
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var userArea1 = app.SeededEntities.TestUserArea1;
             var userArea2 = app.SeededEntities.TestUserArea2;
 
@@ -363,6 +324,43 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         }
 
         [Fact]
+        public async Task CanRequirePasswordChange()
+        {
+            var uniqueData = UNIQUE_PREFIX + "ReqPwChng";
+
+            using var app = _appFactory.Create();
+            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+
+            var addCommand = app.TestData.Users().CreateAddCommand(uniqueData);
+            addCommand.RequirePasswordChange = false;
+            var userId = await contentRepository
+                .Users()
+                .AddAsync(addCommand);
+
+            var originalUser = await GetUserByIdAsync(app, userId);
+
+            var updateCommand = MapUpdateCommand(addCommand);
+            updateCommand.RequirePasswordChange = true;
+
+            await contentRepository
+                .Users()
+                .UpdateAsync(updateCommand);
+
+            var user = await GetUserByIdAsync(app, userId);
+
+            using (new AssertionScope())
+            {
+                user.Should().NotBeNull();
+                user.RequirePasswordChange.Should().BeTrue();
+                user.SecurityStamp.Should().NotBe(originalUser.SecurityStamp);
+                app.Mocks
+                    .CountMessagesPublished<UserSecurityStampUpdatedMessage>()
+                    .Should().Be(1);
+            }
+        }
+
+
+        [Fact]
         public async Task CanVerifyAccount()
         {
             var uniqueData = UNIQUE_PREFIX + nameof(CanVerifyAccount);
@@ -383,11 +381,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .UpdateAsync(updateCommand);
 
-            var user = await dbContext
-                .Users
-                .AsNoTracking()
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var user = await GetUserByIdAsync(app, userId);
 
             using (new AssertionScope())
             {
@@ -421,11 +415,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .UpdateAsync(updateCommand);
 
-            var user = await dbContext
-                .Users
-                .AsNoTracking()
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var user = await GetUserByIdAsync(app, userId);
 
             using (new AssertionScope())
             {
@@ -459,11 +449,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .UpdateAsync(updateCommand);
 
-            var user = await dbContext
-                .Users
-                .AsNoTracking()
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var user = await GetUserByIdAsync(app, userId);
 
             using (new AssertionScope())
             {
@@ -492,11 +478,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .AddAsync(addCommand);
 
-            var originalUserState = await dbContext
-                .Users
-                .AsNoTracking()
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var originalUserState = await GetUserByIdAsync(app, userId);
 
             var updateCommand = MapUpdateCommand(addCommand);
             updateCommand.IsActive = false;
@@ -505,11 +487,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                 .Users()
                 .UpdateAsync(updateCommand);
 
-            var user = await dbContext
-                .Users
-                .AsNoTracking()
-                .FilterById(userId)
-                .SingleOrDefaultAsync();
+            var user = await GetUserByIdAsync(app, userId);
 
             using (new AssertionScope())
             {
@@ -739,5 +717,18 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
                     IsAccountVerified = command.IsAccountVerified
                 };
             }
+
+        private async Task<User> GetUserByIdAsync(DbDependentTestApplication app, int userId)
+        {
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+
+            return await dbContext
+                .Users
+                .AsNoTracking()
+                .Include(u => u.EmailDomain)
+                .Include(u => u.Role)
+                .FilterById(userId)
+                .SingleOrDefaultAsync();
         }
+    }
 }

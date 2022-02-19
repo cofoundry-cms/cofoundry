@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Domain;
+using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Domain;
-using Cofoundry.Core;
 
 namespace Cofoundry.Web
 {
@@ -12,12 +11,10 @@ namespace Cofoundry.Web
     /// </summary>
     public class CurrentUserViewHelper : ICurrentUserViewHelper
     {
-        #region construction
-
         private CurrentUserViewHelperContext _helperContext = null;
         private Dictionary<string, CurrentUserViewHelperContext> _alternativeHelperContextCache = new Dictionary<string, CurrentUserViewHelperContext>();
 
-        private readonly IUserContextService _userContextServiceService;
+        private readonly IUserContextService _userContextService;
         private readonly IQueryExecutor _queryExecutor;
 
         public CurrentUserViewHelper(
@@ -25,11 +22,9 @@ namespace Cofoundry.Web
             IQueryExecutor queryExecutor
             )
         {
-            _userContextServiceService = userContextServiceService;
+            _userContextService = userContextServiceService;
             _queryExecutor = queryExecutor;
         }
-
-        #endregion
 
         /// <summary>
         /// Returns information about the currently logged in user. If your 
@@ -43,7 +38,7 @@ namespace Cofoundry.Web
             // since this only runs in views it shouldn't need to be threadsafe
             if (_helperContext == null)
             {
-                var userContext = await _userContextServiceService.GetCurrentContextAsync();
+                var userContext = await _userContextService.GetCurrentContextAsync();
                 _helperContext = await GetHelperContextAsync(userContext);
             }
 
@@ -76,7 +71,7 @@ namespace Cofoundry.Web
                 return helperContext;
             }
 
-            var userContext = await _userContextServiceService.GetCurrentContextByUserAreaAsync(userAreaCode);
+            var userContext = await _userContextService.GetCurrentContextByUserAreaAsync(userAreaCode);
             helperContext = await GetHelperContextAsync(userContext);
 
             _alternativeHelperContextCache.Add(userAreaCode, helperContext);
