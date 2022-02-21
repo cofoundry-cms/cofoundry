@@ -99,9 +99,10 @@ namespace Cofoundry.Web.Internal
 
         }
 
-        public async Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta) where TCommand : class, ICommand
+        public async Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta) 
+            where TCommand : class, IPatchableByIdCommand
         {
-            var query = new GetUpdateCommandByIdQuery<TCommand>(id);
+            var query = new GetPatchableCommandByIdQuery<TCommand>(id);
             var command = await _queryExecutor.ExecuteAsync(query);
 
             if (delta != null)
@@ -112,9 +113,10 @@ namespace Cofoundry.Web.Internal
             return await RunCommandAsync(command);
         }
 
-        public async Task<JsonResult> RunCommandAsync<TCommand>(IDelta<TCommand> delta) where TCommand : class, ICommand
+        public async Task<JsonResult> RunCommandAsync<TCommand>(IDelta<TCommand> delta) 
+            where TCommand : class, IPatchableCommand
         {
-            var query = new GetUpdateCommandQuery<TCommand>();
+            var query = new GetPatchableCommandQuery<TCommand>();
             var command = await _queryExecutor.ExecuteAsync(query);
 
             if (delta != null)

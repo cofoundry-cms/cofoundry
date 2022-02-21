@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain.Extendable;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ namespace Cofoundry.Domain.Internal
             return new ContentRepositoryRoleSearchQueryBuilder(ExtendableContentRepository);
         }
 
-        public IDomainRepositoryQueryContext<bool> IsRoleTitleUnique(IsRoleTitleUniqueQuery query)
+        public IDomainRepositoryQueryContext<bool> IsTitleUnique(IsRoleTitleUniqueQuery query)
         {
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
@@ -49,12 +50,17 @@ namespace Cofoundry.Domain.Internal
             return command.OutputRoleId;
         }
 
-        public Task UpdateRoleAsync(UpdateRoleCommand command)
+        public Task UpdateAsync(UpdateRoleCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        public Task DeleteRoleAsync(int roleId)
+        public Task UpdateAsync(int roleId, Action<UpdateRoleCommand> commandPatcher)
+        {
+            return ExtendableContentRepository.PatchCommandAsync(roleId, commandPatcher);
+        }
+
+        public Task DeleteAsync(int roleId)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(new DeleteRoleCommand(roleId));
         }

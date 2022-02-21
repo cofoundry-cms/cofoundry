@@ -1,19 +1,16 @@
-﻿using System;
+﻿using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdatePageVersionBlockCommandByIdQueryHandler
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
-        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
+        : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
+        , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageVersionBlockModelMapper _pageVersionBlockModelMapper;
 
@@ -26,11 +23,7 @@ namespace Cofoundry.Domain.Internal
             _pageVersionBlockModelMapper = pageVersionBlockModelMapper;
         }
 
-        #endregion
-
-        #region execution
-
-        public async Task<UpdatePageVersionBlockCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand> query, IExecutionContext executionContext)
+        public async Task<UpdatePageVersionBlockCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand> query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .PageVersionBlocks
@@ -63,15 +56,9 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        #endregion
-
-        #region Permission
-
-        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand> query)
         {
             yield return new PageReadPermission();
         }
-
-        #endregion
     }
 }

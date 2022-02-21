@@ -1,7 +1,6 @@
 ﻿using Cofoundry.Domain.Extendable;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -19,8 +18,6 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        #region queries
-
         public IAdvancedContentRepositoryImageAssetByIdQueryBuilder GetById(int imageAssetId)
         {
             return new AdvancedContentRepositoryImageAssetByIdQueryBuilder(ExtendableContentRepository, imageAssetId);
@@ -36,10 +33,6 @@ namespace Cofoundry.Domain.Internal
             return new ContentRepositoryImageAssetSearchQueryBuilder(ExtendableContentRepository);
         }
 
-        #endregion
-
-        #region commands
-
         public async Task<int> AddAsync(AddImageAssetCommand command)
         {
             await ExtendableContentRepository.ExecuteCommandAsync(command);
@@ -51,6 +44,11 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
+        public Task UpdateAsync(int imageAssetId, Action<UpdateImageAssetCommand> commandPatcher)
+        {
+            return ExtendableContentRepository.PatchCommandAsync(imageAssetId, commandPatcher);
+        }
+
         public Task DeleteAsync(int imageAssetId)
         {
             var command = new DeleteImageAssetCommand()
@@ -60,7 +58,5 @@ namespace Cofoundry.Domain.Internal
 
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
-
-        #endregion
     }
 }

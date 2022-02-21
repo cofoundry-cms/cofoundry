@@ -38,7 +38,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Queries
                 .Pages()
                 .AddAsync(addPageCommand);
 
-            var query = new GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand>(addPageCommand.OutputPageId);
+            var query = new GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand>(addPageCommand.OutputPageId);
             var command = await contentRepository.ExecuteQueryAsync(query);
 
             using (new AssertionScope())

@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain.Extendable;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -97,6 +98,11 @@ namespace Cofoundry.Domain.Internal
         public Task UpdateAsync(UpdatePageCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
+        }
+
+        public Task UpdateAsync(int pageId, Action<UpdatePageCommand> commandPatcher)
+        {
+            return ExtendableContentRepository.PatchCommandAsync(pageId, commandPatcher);
         }
 
         public Task UpdateUrlAsync(UpdatePageUrlCommand command)

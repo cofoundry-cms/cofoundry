@@ -7,7 +7,10 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Updates all access rules associated with a page.
     /// </summary>
-    public class UpdatePageAccessRuleSetCommand : UpdateAccessRuleSetCommandBase<UpdatePageAccessRuleSetCommand.AddOrUpdatePageAccessRuleCommand>, ILoggableCommand
+    public class UpdatePageAccessRuleSetCommand 
+        : UpdateAccessRuleSetCommandBase<UpdatePageAccessRuleSetCommand.AddOrUpdatePageAccessRuleCommand>
+        , IPatchableByIdCommand
+        , ILoggableCommand
     {
         /// <summary>
         /// Id of the page to update.

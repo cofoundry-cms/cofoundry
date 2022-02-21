@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdatePageDraftVersionCommandByIdQueryHandler
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
-        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
+        : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
+        , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
     {
         private readonly CofoundryDbContext _dbContext;
 
@@ -20,7 +20,7 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
         }
 
-        public async Task<UpdatePageDraftVersionCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand> query, IExecutionContext executionContext)
+        public async Task<UpdatePageDraftVersionCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand> query, IExecutionContext executionContext)
         {
             var command = await _dbContext
                 .PageVersions
@@ -43,7 +43,7 @@ namespace Cofoundry.Domain.Internal
             return command;
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageDraftVersionCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand> query)
         {
             yield return new PageReadPermission();
         }

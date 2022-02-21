@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdateImageAssetCommandByIdQueryHandler 
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
-        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
+        : IQueryHandler<GetPatchableCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
+        , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
     {
         private readonly CofoundryDbContext _dbContext;
 
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
         }
 
-        public async Task<UpdateImageAssetCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateImageAssetCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateImageAssetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateImageAssetCommand> query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .ImageAssets
@@ -50,7 +50,7 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdateImageAssetCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdateImageAssetCommand> query)
         {
             yield return new ImageAssetUpdatePermission();
         }

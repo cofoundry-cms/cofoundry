@@ -51,6 +51,5 @@ namespace Cofoundry.Domain.Internal
 
             _domainRepositoryExecutor = newExecutor;
         }
-
     }
 }

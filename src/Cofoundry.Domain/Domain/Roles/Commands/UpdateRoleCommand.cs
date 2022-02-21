@@ -1,19 +1,14 @@
-﻿using System;
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
     /// Updates an existing role. Also updates the role permission set.
     /// </summary>
-    public class UpdateRoleCommand : ICommand, ILoggableCommand
+    public class UpdateRoleCommand : IPatchableByIdCommand, ILoggableCommand
     {
         /// <summary>
         /// The database id of the role to update.

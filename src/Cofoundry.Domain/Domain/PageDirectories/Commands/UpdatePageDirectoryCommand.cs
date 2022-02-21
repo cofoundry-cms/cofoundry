@@ -8,10 +8,10 @@ namespace Cofoundry.Domain
     /// Updates the main properties of an existing page directory. To
     /// update properties that affect the route, use <see cref="UpdatePageDirectoryUrlCommand"/>.
     /// </summary>
-    public class UpdatePageDirectoryCommand : ICommand, ILoggableCommand
+    public class UpdatePageDirectoryCommand : IPatchableByIdCommand, ILoggableCommand
     {
         /// <summary>
-        /// Database primary key.
+        /// Database id of the page directory to update.
         /// </summary>
         [Required]
         [PositiveInteger]

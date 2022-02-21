@@ -10,8 +10,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IAdvancedContentRepositoryImageAssetRepository
     {
-        #region queries
-
         /// <summary>
         /// Retrieve an image asset by a unique database id.
         /// </summary>
@@ -31,10 +29,6 @@ namespace Cofoundry.Domain
         /// </summary>
         IContentRepositoryImageAssetSearchQueryBuilder Search();
 
-        #endregion
-
-        #region commands
-
         /// <summary>
         /// Adds a new image asset.
         /// </summary>
@@ -51,13 +45,25 @@ namespace Cofoundry.Domain
         Task UpdateAsync(UpdateImageAssetCommand command);
 
         /// <summary>
+        /// Updates the properties of an existing image asset. Updating
+        /// the file is optional, but if you do then existing links to the
+        /// asset file will redirect to the new asset file.
+        /// </summary>
+        /// <param name="imageAssetId">
+        /// Database id of the image asset to update.
+        /// </param>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with the existing image asset data.
+        /// </param>
+        Task UpdateAsync(int imageAssetId, Action<UpdateImageAssetCommand> commandPatcher);
+
+        /// <summary>
         /// Removes an image asset from the system and
         /// queues any related files or caches to be removed
         /// as a separate process.
         /// </summary>
         /// <param name="imageAssetId">Id of the image asset to delete.</param>
         Task DeleteAsync(int imageAssetId);
-
-        #endregion
     }
 }

@@ -8,7 +8,7 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdateGeneralSiteSettingsCommandQueryHandler 
-        : IQueryHandler<GetUpdateCommandQuery<UpdateGeneralSiteSettingsCommand>, UpdateGeneralSiteSettingsCommand>
+        : IQueryHandler<GetPatchableCommandQuery<UpdateGeneralSiteSettingsCommand>, UpdateGeneralSiteSettingsCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly IQueryExecutor _queryExecutor;
@@ -20,7 +20,7 @@ namespace Cofoundry.Domain.Internal
             _queryExecutor = queryExecutor;
         }
 
-        public async Task<UpdateGeneralSiteSettingsCommand> ExecuteAsync(GetUpdateCommandQuery<UpdateGeneralSiteSettingsCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateGeneralSiteSettingsCommand> ExecuteAsync(GetPatchableCommandQuery<UpdateGeneralSiteSettingsCommand> query, IExecutionContext executionContext)
         {
             var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<GeneralSiteSettings>(), executionContext);
 

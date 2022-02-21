@@ -7,10 +7,10 @@ using System.ComponentModel.DataAnnotations;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// A generic user update command for use with Cofoundry users and
+    /// A general-purpose user update command for use with Cofoundry users and
     /// other non-Cofoundry users.
     /// </summary>
-    public class UpdateUserCommand : ICommand, ILoggableCommand, IValidatableObject
+    public class UpdateUserCommand : IPatchableByIdCommand, ILoggableCommand, IValidatableObject
     {
         /// <summary>
         /// Database id of the user to update.

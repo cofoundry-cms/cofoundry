@@ -7,22 +7,19 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdateCurrentUserCommandByIdQueryHandler
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateCurrentUserCommand>, UpdateCurrentUserCommand>
+        : IQueryHandler<GetPatchableCommandQuery<UpdateCurrentUserCommand>, UpdateCurrentUserCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
-        private readonly IPermissionValidationService _permissionValidationService;
 
         public GetUpdateCurrentUserCommandByIdQueryHandler(
-            CofoundryDbContext dbContext,
-            IPermissionValidationService permissionValidationService
+            CofoundryDbContext dbContext
             )
         {
             _dbContext = dbContext;
-            _permissionValidationService = permissionValidationService;
         }
 
-        public async Task<UpdateCurrentUserCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateCurrentUserCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateCurrentUserCommand> ExecuteAsync(GetPatchableCommandQuery<UpdateCurrentUserCommand> query, IExecutionContext executionContext)
         {
             if (!executionContext.UserContext.UserId.HasValue) return null;
 

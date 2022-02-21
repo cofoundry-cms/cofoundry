@@ -7,9 +7,9 @@
     /// to be changed.
     /// </summary>
     /// <typeparam name="TCommand"><see cref="ICommand"/>type to fetch.</typeparam>
-    public class GetUpdateCommandQuery<TCommand>
+    public class GetPatchableCommandQuery<TCommand>
         : IQuery<TCommand>
-        where TCommand : ICommand
+        where TCommand : IPatchableCommand
     {
     }
 }

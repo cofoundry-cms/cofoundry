@@ -35,10 +35,7 @@ namespace Cofoundry.Web.Admin
         
         public async Task<JsonResult> Patch([FromBody] IDelta<UpdateCurrentUserCommand> delta)
         {
-            var userContext = await _userContextService.GetCurrentContextAsync();
-            var userId = userContext.UserId.Value;
-
-            return await _apiResponseHelper.RunCommandAsync(userId, delta);
+            return await _apiResponseHelper.RunCommandAsync(delta);
         }
 
         public Task<JsonResult> PutPassword([FromBody] UpdateCurrentUserPasswordCommandDto dto)

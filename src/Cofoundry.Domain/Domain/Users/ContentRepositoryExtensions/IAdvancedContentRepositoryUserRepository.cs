@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -67,11 +68,22 @@ namespace Cofoundry.Domain
         Task<int> AddWithTemporaryPasswordAsync(AddUserWithTemporaryPasswordCommand command);
 
         /// <summary>
-        /// A generic user update command for use with Cofoundry users and
+        /// A general-purpose user update command for use with Cofoundry users and
         /// other non-Cofoundry users.
         /// </summary>
         /// <param name="command">Command parameters.</param>
         Task UpdateAsync(UpdateUserCommand command);
+
+        /// <summary>
+        /// A general-purpose user update command for use with Cofoundry users and
+        /// other non-Cofoundry users.
+        /// </summary>
+        /// <param name="userId">Database id of the user to update.</param>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with the existing user data.
+        /// </param>
+        Task UpdateAsync(int userId, Action<UpdateUserCommand> commandPatcher);
 
         /// <summary>
         /// Updates the password of an unathenticated user, using the

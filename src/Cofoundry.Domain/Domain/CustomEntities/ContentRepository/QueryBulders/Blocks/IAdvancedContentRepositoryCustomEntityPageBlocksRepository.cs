@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
@@ -10,17 +8,11 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IAdvancedContentRepositoryCustomEntityPageBlocksRepository
     {
-        #region queries
-
         /// <summary>
         /// Query for page blocks in custom entity pages by an id.
         /// </summary>
         /// <param name="customEntityVersionPageBlockId">Database id of the custom entity version page block to get.</param>
         IAdvancedContentRepositoryCustomEntityPageBlockByIdQueryBuilder GetById(int customEntityVersionPageBlockId);
-
-        #endregion
-
-        #region commands
 
         /// <summary>
         /// Adds a new block to a template region on a custom entity page.
@@ -37,6 +29,19 @@ namespace Cofoundry.Domain
         Task UpdateAsync(UpdateCustomEntityVersionPageBlockCommand command);
 
         /// <summary>
+        /// Updates an existing block within a template region 
+        /// of a custom entity page.
+        /// </summary>
+        /// <param name="customEntityVersionPageBlockId">
+        /// Id of the block to update.
+        /// </param>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with the existing block data.
+        /// </param>
+        Task UpdateAsync(int customEntityVersionPageBlockId, Action<UpdateCustomEntityVersionPageBlockCommand> commandPatcher);
+
+        /// <summary>
         /// Moves a block up or down within a multi-block region 
         /// on a custom entity page.
         /// </summary>
@@ -48,7 +53,5 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="customEntityVersionPageBlockId">Id of the block to delete.</param>
         Task DeleteAsync(int customEntityVersionPageBlockId);
-
-        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
@@ -111,6 +112,19 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="command">Command parameters.</param>
         Task UpdateAsync(UpdatePageCommand command);
+
+        /// <summary>
+        /// Updates page properties that aren't specific to a
+        /// version.
+        /// </summary>
+        /// <param name="pageId">
+        /// Database id of the page to update.
+        /// </param>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with the existing page data.
+        /// </param>
+        Task UpdateAsync(int pageId, Action<UpdatePageCommand> commandPatcher);
 
         /// <summary>
         /// Updates the url of a page.

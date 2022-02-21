@@ -213,7 +213,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             var authorizedTask = await AddUserAndInitiateRequest(uniqueData, app);
             var token = MakeToken(authorizedTask);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdateUserCommand>(authorizedTask.UserId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdateUserCommand>(authorizedTask.UserId));
             updateCommand.Email = uniqueData + "@2.example.com";
             await contentRepository.Users().UpdateAsync(updateCommand);
 

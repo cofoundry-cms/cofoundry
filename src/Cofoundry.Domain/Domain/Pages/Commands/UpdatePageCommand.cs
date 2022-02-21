@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Cofoundry.Core.Validation;
-using Cofoundry.Domain.CQS;
 
 namespace Cofoundry.Domain
 {
@@ -11,7 +9,7 @@ namespace Cofoundry.Domain
     /// Updates page properties that aren't specific to a
     /// version.
     /// </summary>
-    public class UpdatePageCommand : ICommand, ILoggableCommand
+    public class UpdatePageCommand : IPatchableByIdCommand, ILoggableCommand
     {
         /// <summary>
         /// Database id of the page to update.

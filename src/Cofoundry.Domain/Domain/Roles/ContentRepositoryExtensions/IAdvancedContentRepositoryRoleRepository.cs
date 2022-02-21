@@ -10,8 +10,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IAdvancedContentRepositoryRoleRepository : IContentRepositoryRoleRepository
     {
-        #region queries
-
         /// <summary>
         /// Seaches roles based on simple filter criteria.
         /// </summary>
@@ -23,11 +21,7 @@ namespace Cofoundry.Domain
         /// Role titles only have to be unique per UserArea.
         /// </summary>
         /// <param name="query">The parameters to run the query with.</param>
-        IDomainRepositoryQueryContext<bool> IsRoleTitleUnique(IsRoleTitleUniqueQuery query);
-
-        #endregion
-
-        #region commands
+        IDomainRepositoryQueryContext<bool> IsTitleUnique(IsRoleTitleUniqueQuery query);
 
         /// <summary>
         /// Adds a new role to a user area with a specific set of permissions.
@@ -40,14 +34,26 @@ namespace Cofoundry.Domain
         /// Updates an existing role. Also updates the role permission set.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task UpdateRoleAsync(UpdateRoleCommand command);
+        Task UpdateAsync(UpdateRoleCommand command);
+
+        /// <summary>
+        /// Updates an existing role. Also updates the role permission set.
+        /// </summary>
+        /// <param name="roleId">
+        /// The database id of the role to update.
+        /// </param>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with the existing role data.
+        /// </param>
+        Task UpdateAsync(int roleId, Action<UpdateRoleCommand> commandPatcher);
 
         /// <summary>
         /// Deletes a role with the specified database id. Roles cannot be
         /// deleted if assigned to users.
         /// </summary>
         /// <param name="roleId">RoleId of the role to delete.</param>
-        Task DeleteRoleAsync(int roleId);
+        Task DeleteAsync(int roleId);
 
         /// <summary>
         /// Registers new roles defined in code via IRoleDefinition and initializes
@@ -66,12 +72,6 @@ namespace Cofoundry.Domain
         /// </param>
         Task RegisterPermissionsAndRoles(RegisterPermissionsAndRolesCommand command);
 
-        #endregion
-
-        #region child entities
-
         IAdvancedContentRepositoryPermissionsRepository Permissions();
-
-        #endregion
     }
 }

@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdatePageCommandByIdQueryHandler
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand>
-        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand>
+        : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand>
+        , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand>
     {
         private readonly CofoundryDbContext _dbContext;
 
@@ -21,7 +21,7 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
         }
 
-        public async Task<UpdatePageCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageCommand> query, IExecutionContext executionContext)
+        public async Task<UpdatePageCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageCommand> query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .Pages
@@ -47,7 +47,7 @@ namespace Cofoundry.Domain.Internal
             return command;
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdatePageCommand> query)
         {
             yield return new PageReadPermission();
         }

@@ -252,7 +252,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
 
             updateCommand.UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea2.UserAreaCode;
             var userAreaAccessRuleCommand = updateCommand.AccessRules.Single();
@@ -309,7 +309,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
 
             updateCommand.UserAreaCodeForSignInRedirect = userArea2.UserAreaCode;
             var roleAccessRuleCommand = updateCommand.AccessRules.Single();
@@ -364,7 +364,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
             var userAreaAccessRuleCommand = updateCommand.AccessRules.Single();
             userAreaAccessRuleCommand.RoleId = null;
 
@@ -417,7 +417,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
             updateCommand.ViolationAction = AccessRuleViolationAction.NotFound;
 
             await contentRepository
@@ -466,7 +466,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
             var accessRuleCommand = updateCommand.AccessRules.Single(r => r.RoleId == app.SeededEntities.TestUserArea1.RoleA.RoleId);
             updateCommand.AccessRules.Remove(accessRuleCommand);
 
@@ -517,7 +517,7 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands
                 .AccessRules()
                 .UpdateAsync(command);
 
-            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+            var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
             updateCommand.UserAreaCodeForSignInRedirect = null;
             updateCommand.ViolationAction = AccessRuleViolationAction.Error;
 

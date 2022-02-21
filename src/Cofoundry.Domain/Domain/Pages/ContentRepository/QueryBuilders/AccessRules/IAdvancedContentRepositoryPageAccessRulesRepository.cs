@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -18,5 +19,17 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="command">Command parameters.</param>
         Task UpdateAsync(UpdatePageAccessRuleSetCommand command);
+
+        /// <summary>
+        /// Updates all access rules associated with a page.
+        /// </summary>
+        /// <param name="pageId">
+        /// Database id of the page to update.
+        /// </param>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with the existing page access rule data.
+        /// </param>
+        Task UpdateAsync(int pageId, Action<UpdatePageAccessRuleSetCommand> commandPatcher);
     }
 }

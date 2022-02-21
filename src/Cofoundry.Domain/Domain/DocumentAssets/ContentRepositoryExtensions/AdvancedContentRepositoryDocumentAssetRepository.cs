@@ -1,7 +1,6 @@
 ﻿using Cofoundry.Domain.Extendable;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -19,8 +18,6 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        #region queries
-
         public IAdvancedContentRepositoryDocumentAssetByIdQueryBuilder GetById(int documentAssetId)
         {
             return new AdvancedContentRepositoryDocumentAssetByIdQueryBuilder(ExtendableContentRepository, documentAssetId);
@@ -36,10 +33,6 @@ namespace Cofoundry.Domain.Internal
             return new ContentRepositoryDocumentAssetSearchQueryBuilder(ExtendableContentRepository);
         }
 
-        #endregion
-
-        #region commands
-
         public async Task<int> AddAsync(AddDocumentAssetCommand command)
         {
             await ExtendableContentRepository.ExecuteCommandAsync(command);
@@ -51,6 +44,11 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
+        public Task UpdateAsync(int documentAssetId, Action<UpdateDocumentAssetCommand> commandPatcher)
+        {
+            return ExtendableContentRepository.PatchCommandAsync(documentAssetId, commandPatcher);
+        }
+
         public Task DeleteAsync(int documentAssetId)
         {
             var command = new DeleteDocumentAssetCommand()
@@ -60,7 +58,5 @@ namespace Cofoundry.Domain.Internal
 
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
-
-        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -37,6 +38,19 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="command">Command parameters.</param>
         Task UpdateAsync(UpdatePageDirectoryCommand command);
+
+        /// <summary>
+        /// Updates the main properties of an existing page directory. To
+        /// update properties that affect the route, use <see cref="UpdatePageDirectoryUrlCommand"/>.
+        /// </summary>
+        /// <param name="pageDirectoryId">
+        /// Database id of the page directory to update.
+        /// </param>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with the existing directory data.
+        /// </param>
+        Task UpdateAsync(int pageDirectoryId, Action<UpdatePageDirectoryCommand> commandPatcher);
 
         /// <summary>
         /// Updates the url of a page directory. Changing a directory url

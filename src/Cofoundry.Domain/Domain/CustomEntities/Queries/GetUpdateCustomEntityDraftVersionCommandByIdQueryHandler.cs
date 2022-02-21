@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class GetUpdateCustomEntityDraftVersionCommandByIdQueryHandler 
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateCustomEntityDraftVersionCommand>, UpdateCustomEntityDraftVersionCommand>
+    public class GetUpdateCustomEntityDraftVersionCommandByIdQueryHandler
+        : IQueryHandler<GetPatchableCommandByIdQuery<UpdateCustomEntityDraftVersionCommand>, UpdateCustomEntityDraftVersionCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
         private readonly IQueryExecutor _queryExecutor;
@@ -34,11 +29,7 @@ namespace Cofoundry.Domain.Internal
             _permissionValidationService = permissionValidationService;
         }
 
-        #endregion
-
-        #region execution
-
-        public async Task<UpdateCustomEntityDraftVersionCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateCustomEntityDraftVersionCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateCustomEntityDraftVersionCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateCustomEntityDraftVersionCommand> query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .CustomEntityVersions
@@ -66,7 +57,5 @@ namespace Cofoundry.Domain.Internal
 
             return command;
         }
-
-        #endregion
     }
 }

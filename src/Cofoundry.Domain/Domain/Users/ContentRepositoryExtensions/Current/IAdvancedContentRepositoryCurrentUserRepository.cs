@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -12,6 +13,15 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="command">Command parameters.</param>
         Task UpdateAsync(UpdateCurrentUserCommand command);
+
+        /// <summary>
+        /// Updates the user account of the currently logged in user.
+        /// </summary>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with the current user data.
+        /// </param>
+        Task UpdateAsync(Action<UpdateCurrentUserCommand> commandPatcher);
 
         /// <summary>
         /// Updates the password of the currently logged in user, using the

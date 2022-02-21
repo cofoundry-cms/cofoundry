@@ -1,7 +1,5 @@
 ﻿using Cofoundry.Domain.Extendable;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -19,16 +17,10 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        #region queries
-
         public IAdvancedContentRepositoryPageBlockByIdQueryBuilder GetById(int pageVersionBlockId)
         {
             return new ContentRepositoryPageBlockByIdQueryBuilder(ExtendableContentRepository, pageVersionBlockId);
         }
-
-        #endregion
-
-        #region commands
 
         public async Task<int> AddAsync(AddPageVersionBlockCommand command)
         {
@@ -41,6 +33,11 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
+        public Task UpdateAsync(int pageVersionBlockId, Action<UpdatePageVersionBlockCommand> commandPatcher)
+        {
+            return ExtendableContentRepository.PatchCommandAsync(pageVersionBlockId, commandPatcher);
+        }
+
         public Task MoveAsync(MovePageVersionBlockCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
@@ -51,7 +48,5 @@ namespace Cofoundry.Domain.Internal
             var command = new DeletePageVersionBlockCommand() { PageVersionBlockId = pageVersionBlockId };
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
-
-        #endregion
     }
 }

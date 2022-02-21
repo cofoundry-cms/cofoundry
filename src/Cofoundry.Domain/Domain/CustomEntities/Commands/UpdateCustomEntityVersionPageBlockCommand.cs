@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using System.ComponentModel.DataAnnotations;
-using Cofoundry.Core.Validation;
 
 namespace Cofoundry.Domain
 {
@@ -13,7 +8,7 @@ namespace Cofoundry.Domain
     /// Updates an existing block within a template region 
     /// of a custom entity page.
     /// </summary>
-    public class UpdateCustomEntityVersionPageBlockCommand : ICommand, ILoggableCommand, IPageVersionBlockDataModelCommand
+    public class UpdateCustomEntityVersionPageBlockCommand : IPatchableByIdCommand, ILoggableCommand, IPageVersionBlockDataModelCommand
     {
         /// <summary>
         /// Id of the block to update.

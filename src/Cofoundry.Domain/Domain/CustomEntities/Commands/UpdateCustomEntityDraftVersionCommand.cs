@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core.Validation;
+﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
@@ -14,7 +10,7 @@ namespace Cofoundry.Domain
     /// does not exist then one is created first from the currently
     /// published version.
     /// </summary>
-    public class UpdateCustomEntityDraftVersionCommand : ICustomEntityDataModelCommand, ICommand, ILoggableCommand
+    public class UpdateCustomEntityDraftVersionCommand : ICustomEntityDataModelCommand, IPatchableByIdCommand, ILoggableCommand
     {
         /// <summary>
         /// Unique 6 character code representing the type of custom entity.
@@ -25,7 +21,7 @@ namespace Cofoundry.Domain
 
         /// <summary>
         /// Database id of the custom enitity to update the draft version
-        /// for. A custom entity can onl have one draft version. If a draft
+        /// for. A custom entity can only have one draft version. If a draft
         /// version does not exist then one is created from the currently
         /// published version.
         /// </summary>

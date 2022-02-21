@@ -110,6 +110,46 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
+        /// Patches a command to modify the current state and then executes it.
+        /// </summary>
+        /// <typeparam name="TCommand">Type of command to patch and execute.</typeparam>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with existing data.
+        /// </param>
+        public static async Task PatchCommandAsync<TCommand>(this IDomainRepository repository, Action<TCommand> commandPatcher)
+            where TCommand : IPatchableCommand
+        {
+            var query = new GetPatchableCommandQuery<TCommand>();
+            var command = await repository.ExecuteQueryAsync(query);
+            commandPatcher(command);
+
+            await repository.ExecuteCommandAsync(command);
+        }
+
+        /// <summary>
+        /// Patches a command to modify the current state and then executes it.
+        /// </summary>
+        /// <typeparam name="TCommand">Type of command to patch and execute.</typeparam>
+        /// <param name="id">
+        /// The integer database identifier of the entity associated with
+        /// patchable command.
+        /// </param>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with existing data.
+        /// </param>
+        public static async Task PatchCommandAsync<TCommand>(this IDomainRepository repository, int id, Action<TCommand> commandPatcher)
+            where TCommand : IPatchableByIdCommand
+        {
+            var query = new GetPatchableCommandByIdQuery<TCommand>(id);
+            var command = await repository.ExecuteQueryAsync(query);
+            commandPatcher(command);
+
+            await repository.ExecuteCommandAsync(command);
+        }
+
+        /// <summary>
         /// Prevents execution completing before a random duration has elapsed by padding the
         /// execution time using <see cref="Task.Delay"/>. This can help mitigate against time-based 
         /// enumeration attacks by extending the <paramref name="minDurationInMilliseconds"/>  beyond 

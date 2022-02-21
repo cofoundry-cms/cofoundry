@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
-    /// A generic user update command for use with Cofoundry users and
+    /// A general-purpose user update command for use with Cofoundry users and
     /// other non-Cofoundry users.
     /// </summary>
     public class UpdateUserCommandHandler

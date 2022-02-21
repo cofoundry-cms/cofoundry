@@ -7,11 +7,11 @@
     /// to be changed.
     /// </summary>
     /// <typeparam name="TCommand"><see cref="ICommand"/>type to fetch.</typeparam>
-    public class GetUpdateCommandByIdQuery<TCommand>
+    public class GetPatchableCommandByIdQuery<TCommand>
         : IQuery<TCommand>
-        where TCommand : ICommand
+        where TCommand : IPatchableByIdCommand
     {
-        public GetUpdateCommandByIdQuery()
+        public GetPatchableCommandByIdQuery()
         {
         }
 
@@ -20,16 +20,16 @@
         /// </summary>
         /// <param name="id">
         /// The integer database identifier of the entity associated with
-        /// update command.
+        /// patchable command.
         /// </param>
-        public GetUpdateCommandByIdQuery(int id)
+        public GetPatchableCommandByIdQuery(int id)
         {
             Id = id;
         }
 
         /// <summary>
         /// The integer database identifier of the entity associated with
-        /// update command.
+        /// patchable command.
         /// </summary>
         public int Id { get; set; }
     }

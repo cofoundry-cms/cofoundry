@@ -55,7 +55,8 @@ namespace Cofoundry.Web
         /// </summary>
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta) where TCommand : class, ICommand;
+        Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta) 
+            where TCommand : class, IPatchableByIdCommand;
 
         /// <summary>
         /// Executes a command in a "Patch" style, allowing for a partial update of a resource. In
@@ -66,7 +67,8 @@ namespace Cofoundry.Web
         /// </summary>
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<JsonResult> RunCommandAsync<TCommand>(IDelta<TCommand> delta) where TCommand : class, ICommand;
+        Task<JsonResult> RunCommandAsync<TCommand>(IDelta<TCommand> delta) 
+            where TCommand : class, IPatchableCommand;
 
         /// <summary>
         /// Executes a command and returns a formatted JsonResult, handling any validation 

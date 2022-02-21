@@ -11,7 +11,7 @@ namespace Cofoundry.Domain
     /// the file is optional, but if you do then existing links to the
     /// asset file will redirect to the new asset file.
     /// </summary>
-    public class UpdateDocumentAssetCommand : ICommand, ILoggableCommand, IValidatableObject
+    public class UpdateDocumentAssetCommand : IPatchableByIdCommand, ILoggableCommand, IValidatableObject
     {
         /// <summary>
         /// Database id of the document to update.

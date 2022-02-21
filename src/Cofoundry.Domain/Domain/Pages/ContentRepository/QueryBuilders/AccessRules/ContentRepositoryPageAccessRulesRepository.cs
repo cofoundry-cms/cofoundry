@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain.Extendable;
+using System;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -25,6 +26,11 @@ namespace Cofoundry.Domain.Internal
         public Task UpdateAsync(UpdatePageAccessRuleSetCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
+        }
+
+        public Task UpdateAsync(int pageId, Action<UpdatePageAccessRuleSetCommand> commandPatcher)
+        {
+            return ExtendableContentRepository.PatchCommandAsync(pageId, commandPatcher);
         }
     }
 }

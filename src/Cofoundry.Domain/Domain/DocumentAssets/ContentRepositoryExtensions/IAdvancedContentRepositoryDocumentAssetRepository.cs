@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
@@ -10,8 +9,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IAdvancedContentRepositoryDocumentAssetRepository
     {
-        #region queries
-
         /// <summary>
         /// Retrieve an document asset by a unique database id.
         /// </summary>
@@ -31,10 +28,6 @@ namespace Cofoundry.Domain
         /// </summary>
         IContentRepositoryDocumentAssetSearchQueryBuilder Search();
 
-        #endregion
-
-        #region commands
-
         /// <summary>
         /// Adds a new document asset.
         /// </summary>
@@ -51,13 +44,25 @@ namespace Cofoundry.Domain
         Task UpdateAsync(UpdateDocumentAssetCommand command);
 
         /// <summary>
+        /// Updates the properties of an existing document asset. Updating
+        /// the file is optional, but if you do then existing links to the
+        /// asset file will redirect to the new asset file.
+        /// </summary>
+        /// <param name="documentAssetId">
+        /// Database id of the document to update.
+        /// </param>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with the existing document asset data.
+        /// </param>
+        Task UpdateAsync(int documentAssetId, Action<UpdateDocumentAssetCommand> commandPatcher);
+
+        /// <summary>
         /// Removes a document asset from the system and
         /// queues any related files or caches to be removed
         /// as a separate process.
         /// </summary>
         /// <param name="documentAssetId">Id of the document asset to delete.</param>
         Task DeleteAsync(int documentAssetId);
-
-        #endregion
     }
 }

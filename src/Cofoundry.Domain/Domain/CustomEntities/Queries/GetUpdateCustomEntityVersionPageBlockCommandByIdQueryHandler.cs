@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdateCustomEntityVersionPageBlockCommandByIdQueryHandler
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>, UpdateCustomEntityVersionPageBlockCommand>
+        : IQueryHandler<GetPatchableCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>, UpdateCustomEntityVersionPageBlockCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly CofoundryDbContext _dbContext;
         private readonly IPageVersionBlockModelMapper _pageVersionBlockModelMapper;
         private readonly IPermissionValidationService _permissionValidationService;
@@ -30,11 +25,7 @@ namespace Cofoundry.Domain.Internal
             _permissionValidationService = permissionValidationService;
         }
 
-        #endregion
-
-        #region execution
-
-        public async Task<UpdateCustomEntityVersionPageBlockCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateCustomEntityVersionPageBlockCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand> query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .CustomEntityVersionPageBlocks
@@ -63,13 +54,10 @@ namespace Cofoundry.Domain.Internal
                 PageBlockTypeId = dbPageBlock.PageBlockTypeId,
                 PageBlockTypeTemplateId = dbPageBlock.PageBlockTypeTemplateId
             };
-                
+
             result.DataModel = _pageVersionBlockModelMapper.MapDataModel(pageBlockTypeFileName, dbPageBlock);
 
             return result;
         }
-
-        #endregion
-
     }
 }

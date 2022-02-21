@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdateUserCommandByIdQueryHandler
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateUserCommand>, UpdateUserCommand>
+        : IQueryHandler<GetPatchableCommandByIdQuery<UpdateUserCommand>, UpdateUserCommand>
         , ILoggedInPermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
@@ -24,7 +24,7 @@ namespace Cofoundry.Domain.Internal
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
 
-        public async Task<UpdateUserCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateUserCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateUserCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateUserCommand> query, IExecutionContext executionContext)
         {
             var dbUser = await _dbContext
                 .Users

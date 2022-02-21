@@ -37,7 +37,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
                 .PageDirectories()
                 .AddAsync(addDirectoryCommand);
 
-            var query = new GetUpdateCommandByIdQuery<UpdatePageDirectoryCommand>(addDirectoryCommand.OutputPageDirectoryId);
+            var query = new GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>(addDirectoryCommand.OutputPageDirectoryId);
             var command = await contentRepository.ExecuteQueryAsync(query);
 
             using (new AssertionScope())
@@ -53,7 +53,7 @@ namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
         {
             using var app = _appFactory.Create();
             var rootDirectoryId = await app.TestData.PageDirectories().GetRootDirectoryIdAsync();
-            var query = new GetUpdateCommandByIdQuery<UpdatePageDirectoryCommand>(rootDirectoryId);
+            var query = new GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>(rootDirectoryId);
 
             var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
             await contentRepository

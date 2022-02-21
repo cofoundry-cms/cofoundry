@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdatePageAccessRuleSetCommandByIdQueryHandler
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand>, UpdatePageAccessRuleSetCommand>
-        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand>, UpdatePageAccessRuleSetCommand>
+        : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>, UpdatePageAccessRuleSetCommand>
+        , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>, UpdatePageAccessRuleSetCommand>
     {
         private readonly CofoundryDbContext _dbContext;
 
@@ -22,7 +22,7 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
         }
 
-        public async Task<UpdatePageAccessRuleSetCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand> query, IExecutionContext executionContext)
+        public async Task<UpdatePageAccessRuleSetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand> query, IExecutionContext executionContext)
         {
             var dbPage = await _dbContext
                 .Pages
@@ -59,7 +59,7 @@ namespace Cofoundry.Domain.Internal
             return command;
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdatePageAccessRuleSetCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand> query)
         {
             yield return new PageReadPermission();
         }

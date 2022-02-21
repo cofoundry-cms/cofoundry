@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdateDocumentAssetCommandByIdQueryHandler
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
-        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
+        : IQueryHandler<GetPatchableCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
+        , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
     {
         private readonly CofoundryDbContext _dbContext;
 
@@ -20,7 +20,7 @@ namespace Cofoundry.Domain.Internal
             _dbContext = dbContext;
         }
 
-        public async Task<UpdateDocumentAssetCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateDocumentAssetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateDocumentAssetCommand> query, IExecutionContext executionContext)
         {
             var dbResult = await _dbContext
                 .DocumentAssets
@@ -48,7 +48,7 @@ namespace Cofoundry.Domain.Internal
             return result;
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdateDocumentAssetCommand> query)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdateDocumentAssetCommand> query)
         {
             yield return new DocumentAssetReadPermission();
         }

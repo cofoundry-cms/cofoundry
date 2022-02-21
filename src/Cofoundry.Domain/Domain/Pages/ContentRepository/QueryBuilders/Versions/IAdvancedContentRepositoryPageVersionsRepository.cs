@@ -10,8 +10,6 @@ namespace Cofoundry.Domain
     /// </summary>
     public interface IAdvancedContentRepositoryPageVersionsRepository
     {
-        #region queries
-        
         /// <summary>
         /// Search for page entities, returning paged lists of data.
         /// </summary>
@@ -23,10 +21,6 @@ namespace Cofoundry.Domain
         /// </summary>
         /// <param name="pageId">PageId of the page to check.</param>
         IDomainRepositoryQueryContext<bool> HasDraft(int pageId);
-
-        #endregion
-
-        #region commands
 
         /// <summary>
         /// Creates a new draft version of a page from the currently published version. If there
@@ -45,15 +39,25 @@ namespace Cofoundry.Domain
         Task UpdateDraftAsync(UpdatePageDraftVersionCommand command);
 
         /// <summary>
+        /// Updates the draft version of a page. If a draft version
+        /// does not exist then one is created first.
+        /// </summary>
+        /// <param name="pageId">
+        /// Id of the page to update the draft version for. A
+        /// page can only have one drfat version.
+        /// </param>
+        /// <param name="commandPatcher">
+        /// An action to configure or "patch" a command that's been initialized
+        /// with the existing page version data.
+        /// </param>
+        Task UpdateDraftAsync(int pageId, Action<UpdatePageDraftVersionCommand> commandPatcher);
+
+        /// <summary>
         /// Deletes the draft verison of a page permanently if 
         /// it exists. If no draft exists then no action is taken.
         /// </summary>
         /// <param name="pageId">Id of the page to delete the draft version for.</param>
         Task DeleteDraftAsync(int pageId);
-
-        #endregion
-
-        #region child entities
 
         /// <summary>
         /// Each PageTemplate can have zero or more regions which are defined in the 
@@ -62,7 +66,5 @@ namespace Cofoundry.Domain
         /// areas where page blocks can be placed (i.e. insert content).
         /// </summary>
         IAdvancedContentRepositoryPageRegionsRepository Regions();
-
-        #endregion
     }
 }

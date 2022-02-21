@@ -32,7 +32,7 @@ namespace Cofoundry.Web.Admin
         {
             if (dataType == CustomEntityVersionPageBlocksActionDataType.UpdateCommand)
             {
-                var updateCommandQuery = new GetUpdateCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>(customEntityVersionPageBlockId);
+                var updateCommandQuery = new GetPatchableCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>(customEntityVersionPageBlockId);
                 var updateCommandResult = await _queryExecutor.ExecuteAsync(updateCommandQuery);
 
                 return _apiResponseHelper.SimpleQueryResponse(updateCommandResult);

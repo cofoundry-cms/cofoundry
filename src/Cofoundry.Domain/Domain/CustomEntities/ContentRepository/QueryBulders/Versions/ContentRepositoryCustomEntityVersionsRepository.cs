@@ -19,16 +19,10 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        #region queries
-
         public IAdvancedContentRepositoryCustomEntityVersionsByCustomEntityIdQueryBuilder GetByCustomEntityId()
         {
             return new ContentRepositoryCustomEntityVersionsByCustomEntityIdQueryBuilder(ExtendableContentRepository);
         }
-
-        #endregion
-
-        #region commands
 
         public async Task<int> AddDraftAsync(AddCustomEntityDraftVersionCommand command)
         {
@@ -41,21 +35,20 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
+        public Task UpdateDraftAsync(int customEntityId, Action<UpdateCustomEntityDraftVersionCommand> commandPatcher)
+        {
+            return ExtendableContentRepository.PatchCommandAsync(customEntityId, commandPatcher);
+        }
+
         public Task DeleteDraftAsync(int customEntityId)
         {
             var command = new DeleteCustomEntityDraftVersionCommand() { CustomEntityId = customEntityId };
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        #endregion
-
-        #region child entities
-
         public IAdvancedContentRepositoryPageRegionsRepository Regions()
         {
             return new ContentRepositoryPageRegionsRepository(ExtendableContentRepository);
         }
-
-        #endregion
     }
 }

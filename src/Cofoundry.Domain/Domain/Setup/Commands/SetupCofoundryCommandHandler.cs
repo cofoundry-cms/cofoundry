@@ -34,7 +34,7 @@ namespace Cofoundry.Domain.Internal
             {
                 var userId = await CreateAdminUser(command);
 
-                var settingsCommand = await _domainRepository.ExecuteQueryAsync(new GetUpdateCommandQuery<UpdateGeneralSiteSettingsCommand>());
+                var settingsCommand = await _domainRepository.ExecuteQueryAsync(new GetPatchableCommandQuery<UpdateGeneralSiteSettingsCommand>());
                 settingsCommand.ApplicationName = command.ApplicationName;
                 await _domainRepository.ExecuteCommandAsync(settingsCommand);
 

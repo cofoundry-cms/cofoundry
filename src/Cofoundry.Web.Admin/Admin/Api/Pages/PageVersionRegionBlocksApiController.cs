@@ -37,7 +37,7 @@ namespace Cofoundry.Web.Admin
         {
             if (dataType == PageVersionRegionBlocksActionDataType.UpdateCommand)
             {
-                var updateCommandQuery = new GetUpdateCommandByIdQuery<UpdatePageVersionBlockCommand>(pageVersionBlockId);
+                var updateCommandQuery = new GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand>(pageVersionBlockId);
                 var updateCommandResult = await _queryExecutor.ExecuteAsync(updateCommandQuery);
 
                 return _apiResponseHelper.SimpleQueryResponse(updateCommandResult);

@@ -14,10 +14,10 @@ namespace Cofoundry.Domain
     /// abstraction is used here to support multiple types of file source e.g. 
     /// FormFileSource, <see cref="EmbeddedResourceFileSource"/>. or <see cref="StreamFileSource"/>.
     /// </summary>
-    public class UpdateImageAssetCommand : ICommand, ILoggableCommand
+    public class UpdateImageAssetCommand : IPatchableByIdCommand, ILoggableCommand
     {
         /// <summary>
-        /// Database if of the image asset to update.
+        /// Database id of the image asset to update.
         /// </summary>
         [Required]
         [PositiveInteger]

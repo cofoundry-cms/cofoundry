@@ -8,8 +8,8 @@ using Cofoundry.Domain.CQS;
 namespace Cofoundry.Domain.Internal
 {
     public class GetUpdateRoleCommandByIdQueryHandler 
-        : IQueryHandler<GetUpdateCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
-        , IPermissionRestrictedQueryHandler<GetUpdateCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
+        : IQueryHandler<GetPatchableCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
+        , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
     {
         private readonly IInternalRoleRepository _internalRoleRepository;
 
@@ -20,7 +20,7 @@ namespace Cofoundry.Domain.Internal
             _internalRoleRepository = internalRoleRepository;
         }
 
-        public async Task<UpdateRoleCommand> ExecuteAsync(GetUpdateCommandByIdQuery<UpdateRoleCommand> query, IExecutionContext executionContext)
+        public async Task<UpdateRoleCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateRoleCommand> query, IExecutionContext executionContext)
         {
             var role = await _internalRoleRepository.GetByIdAsync(query.Id);
             if (role == null) return null;
@@ -43,7 +43,7 @@ namespace Cofoundry.Domain.Internal
             return command;
         }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(GetUpdateCommandByIdQuery<UpdateRoleCommand> command)
+        public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdateRoleCommand> command)
         {
             yield return new RoleReadPermission();
         }

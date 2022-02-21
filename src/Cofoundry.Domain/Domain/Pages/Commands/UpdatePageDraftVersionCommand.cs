@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core.Validation;
+﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
@@ -13,7 +9,7 @@ namespace Cofoundry.Domain
     /// Updates the draft version of a page. If a draft version
     /// does not exist then one is created first.
     /// </summary>
-    public class UpdatePageDraftVersionCommand : ICommand, ILoggableCommand
+    public class UpdatePageDraftVersionCommand : IPatchableByIdCommand, ILoggableCommand
     {
         /// <summary>
         /// Id of the page to update the draft version for. A

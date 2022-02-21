@@ -121,10 +121,10 @@ namespace Cofoundry.Web.Internal
             }
 
             await _inMemoryUserSessionService.SignInAsync(userAreaCode, userId, rememberUser);
-            if (!_signedOutUserAreas.Contains(userAreaCode))
+            if (_signedOutUserAreas.Contains(userAreaCode))
             {
                 // signed out and back in during the same request: odd but let's handle it.
-                _signedOutUserAreas.Add(userAreaCode);
+                _signedOutUserAreas.Remove(userAreaCode);
             }
         }
 

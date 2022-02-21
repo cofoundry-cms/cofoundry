@@ -1,7 +1,5 @@
 ﻿using Cofoundry.Domain.Extendable;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
@@ -19,8 +17,6 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        #region queries
-
         public IAdvancedContentRepositoryPageVersionsByPageIdQueryBuilder GetByPageId()
         {
             return new ContentRepositoryPageVersionsByPageIdQueryBuilder(ExtendableContentRepository);
@@ -31,10 +27,6 @@ namespace Cofoundry.Domain.Internal
             var query = new DoesPageHaveDraftVersionQuery(pageId);
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
-
-        #endregion
-
-        #region commands
 
         public async Task<int> AddDraftAsync(AddPageDraftVersionCommand command)
         {
@@ -47,21 +39,20 @@ namespace Cofoundry.Domain.Internal
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
+        public Task UpdateDraftAsync(int pageId, Action<UpdatePageDraftVersionCommand> commandPatcher)
+        {
+            return ExtendableContentRepository.PatchCommandAsync(pageId, commandPatcher);
+        }
+
         public Task DeleteDraftAsync(int pageId)
         {
             var command = new DeletePageDraftVersionCommand() { PageId = pageId };
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        #endregion
-
-        #region child entities
-
         public IAdvancedContentRepositoryPageRegionsRepository Regions()
         {
             return new ContentRepositoryPageRegionsRepository(ExtendableContentRepository);
         }
-
-        #endregion
     }
 }
