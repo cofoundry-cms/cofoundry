@@ -1,5 +1,8 @@
 ﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to delete the currently signed in user account.
+    /// </summary>
     public class CurrentUserDeletePermission : IEntityPermission
     {
         public CurrentUserDeletePermission()

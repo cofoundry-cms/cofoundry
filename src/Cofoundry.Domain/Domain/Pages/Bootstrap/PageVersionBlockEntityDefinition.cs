@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
-    public class PageVersionBlockEntityDefinition : IDependableEntityDefinition
+    public sealed class PageVersionBlockEntityDefinition : IDependableEntityDefinition
     {
         public const string DefinitionCode = "COFPGB";
 

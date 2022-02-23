@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Read access to image assets. Read access is required in order
+    /// to include any other image asset permissions.
+    /// </summary>
     public class ImageAssetReadPermission : IEntityPermission
     {
         public ImageAssetReadPermission()

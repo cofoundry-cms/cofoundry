@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to update the UrlSlug and locale of a custom entity which often forms
+    /// the identity of the entity and can form part of the URL when used in
+    /// custom entity pages.
+    /// </summary>
     public class CustomEntityUpdateUrlPermission : ICustomEntityPermissionTemplate
     {
         /// <summary>

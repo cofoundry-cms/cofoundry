@@ -19,5 +19,9 @@
         public string SignInPath => "/weu/sign-in";
 
         public bool IsDefaultAuthScheme => false;
+
+        public void ConfigureOptions(UserAreaOptions options)
+        {
+        }
     }
 }

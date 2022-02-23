@@ -36,6 +36,22 @@ namespace Cofoundry.Domain.Internal
             return definition;
         }
 
+        public IRoleDefinition GetRequired<TDefinition>()
+            where TDefinition : IRoleDefinition
+        {
+            var definition = _roleDefinitions
+                .Select(p => p.Value)
+                .FirstOrDefault(p => p is TDefinition);
+
+            if (definition == null)
+            {
+                var identifier = typeof(TDefinition).Name;
+                throw new EntityNotFoundException<IRoleDefinition>($"IRoleDefinition 'identifier' is not registered, but has been requested.", identifier);
+            }
+
+            return definition;
+        }
+
         public IEnumerable<IRoleDefinition> GetAll()
         {
             return _roleDefinitions.Select(p => p.Value);

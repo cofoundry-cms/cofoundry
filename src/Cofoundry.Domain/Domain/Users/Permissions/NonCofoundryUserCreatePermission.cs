@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to create new users in custom user areas (excludes the Cofoundry admin user area).
+    /// </summary>
     public class NonCofoundryUserCreatePermission : IEntityPermission
     {
         public NonCofoundryUserCreatePermission()

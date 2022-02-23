@@ -1,5 +1,9 @@
 ﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to update a custom entity, but not to update a url
+    /// or publish.
+    /// </summary>
     public class CustomEntityUpdatePermission : ICustomEntityPermissionTemplate
     {
         /// <summary>

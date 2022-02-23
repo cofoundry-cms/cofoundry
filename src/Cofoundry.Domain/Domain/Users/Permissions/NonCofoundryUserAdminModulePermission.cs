@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to access the users module in the admin panel for custom user areas (excludes the Cofoundry admin user area).
+    /// </summary>
     public class NonCofoundryUserAdminModulePermission : IEntityPermission
     {
         public NonCofoundryUserAdminModulePermission()

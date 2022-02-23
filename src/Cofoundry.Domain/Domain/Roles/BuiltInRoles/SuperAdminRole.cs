@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain
 {
@@ -12,7 +8,7 @@ namespace Cofoundry.Domain
     /// cannot be changed.
     /// </summary>
     /// <inheritdoc/>
-    public class SuperAdminRole : IRoleDefinition
+    public sealed class SuperAdminRole : IRoleDefinition
     {
         /// <summary>
         /// Constant value for the Super Administrator role code
@@ -27,5 +23,10 @@ namespace Cofoundry.Domain
         public string RoleCode { get { return Code; } }
 
         public string UserAreaCode { get { return CofoundryAdminUserArea.Code; } }
+
+        public void ConfigurePermissions(IPermissionSetBuilder builder)
+        {
+            builder.IncludeAll();
+        }
     }
 }

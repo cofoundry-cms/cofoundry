@@ -1,8 +1,4 @@
 ﻿using Cofoundry.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas
 {
@@ -40,5 +36,17 @@ namespace Cofoundry.Samples.UserAreas
         /// used for partner user area.
         /// </summary
         public string UserAreaCode { get { return CustomerUserArea.Code; } }
+
+        /// <summary>
+        /// This method determins what permissions the role has. To help do this
+        /// you are provided with a builder that contains all permissions in the system 
+        /// which you can use to either include or exclude permissions based on rules.
+        /// </summary>
+        public void ConfigurePermissions(IPermissionSetBuilder builder)
+        {
+            builder
+                .ApplyAnonymousRoleConfiguration()
+                .Include<CurrentUserUpdatePermission>();
+        }
     }
 }

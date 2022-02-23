@@ -49,6 +49,7 @@ namespace Cofoundry.Domain.Tests.Integration
 
             // reset data between tests to baseline
             await dbContext.Database.ExecuteSqlRawAsync(@"
+                delete from Cofoundry.DistributedLock
                 delete from Cofoundry.CustomEntity
                 delete from Cofoundry.DocumentAsset
                 delete from Cofoundry.DocumentAssetGroup

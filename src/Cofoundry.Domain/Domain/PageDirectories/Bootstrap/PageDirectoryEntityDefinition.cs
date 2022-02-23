@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
-    public class PageDirectoryEntityDefinition : IDependableEntityDefinition
+    public sealed class PageDirectoryEntityDefinition : IDependableEntityDefinition
     {
         public const string DefinitionCode = "COFDIR";
 

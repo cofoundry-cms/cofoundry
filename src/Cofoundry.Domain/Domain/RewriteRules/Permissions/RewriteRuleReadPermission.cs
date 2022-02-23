@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Read access to rewrite rules. Read access is required in order
+    /// to include any other rewrite rule permissions.
+    /// </summary>
     public class RewriteRuleReadPermission : IEntityPermission
     {
         public RewriteRuleReadPermission()

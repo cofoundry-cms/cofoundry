@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to access the current user account module in the admin panel. This only applied
+    /// to the current user in the Cofoundry admnin user area and not to any custom user areas.
+    /// </summary>
     public class CurrentUserAdminModulePermission : IEntityPermission
     {
         public CurrentUserAdminModulePermission()

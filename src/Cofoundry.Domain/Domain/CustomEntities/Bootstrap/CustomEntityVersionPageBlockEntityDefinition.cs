@@ -3,7 +3,11 @@ using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
-    public class CustomEntityVersionPageBlockEntityDefinition : IDependableEntityDefinition
+    /// <summary>
+    /// Page block data for a specific custom entity version on a custom entity
+    /// details page.
+    /// </summary>
+    public sealed class CustomEntityVersionPageBlockEntityDefinition : IDependableEntityDefinition
     {
         public static string DefinitionCode = "COFCEB";
 

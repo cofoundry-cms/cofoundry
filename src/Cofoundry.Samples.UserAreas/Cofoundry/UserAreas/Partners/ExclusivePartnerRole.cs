@@ -40,5 +40,10 @@ namespace Cofoundry.Samples.UserAreas
         /// used for partner user area.
         /// </summary
         public string UserAreaCode { get { return PartnerUserArea.Code; } }
+
+        public void ConfigurePermissions(IPermissionSetBuilder builder)
+        {
+            builder.ApplyAnonymousRoleConfiguration();
+        }
     }
 }

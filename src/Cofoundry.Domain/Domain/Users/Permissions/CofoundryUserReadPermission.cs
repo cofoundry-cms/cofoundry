@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
-    /// <remarks>
-    /// Note that user permissions are divided between Cofoundry Admin users and all other
-    /// user areas. I don't think this needs to be more granular than this so
-    /// for the sake of simplicity they are grouped in this way.
-    /// </remarks>
+    /// <summary>
+    /// Read access to all users in the Cofoundry admin user area. Read access is 
+    /// required in order to include any other Cofoundry user permissions.
+    /// </summary>
     public class CofoundryUserReadPermission : IEntityPermission
     {
         public CofoundryUserReadPermission()

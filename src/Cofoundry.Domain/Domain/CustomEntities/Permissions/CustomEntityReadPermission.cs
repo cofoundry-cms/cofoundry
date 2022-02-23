@@ -1,5 +1,9 @@
 ﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Read access to a custom entity. Read access is required in order
+    /// to include any other custom entity permissions.
+    /// </summary>
     public class CustomEntityReadPermission : ICustomEntityPermissionTemplate
     {
         /// <summary>

@@ -1,5 +1,8 @@
 ﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to access the custom entity module in the admin panel.
+    /// </summary>
     public class CustomEntityAdminModulePermission : ICustomEntityPermissionTemplate
     {
         /// <summary>

@@ -54,5 +54,9 @@ namespace Cofoundry.Samples.SPASite.Domain
         /// schema which means the HttpContext.User property will be set to this identity.
         /// </summary>
         public bool IsDefaultAuthScheme => true;
+
+        public void ConfigureOptions(UserAreaOptions options)
+        {
+        }
     }
 }

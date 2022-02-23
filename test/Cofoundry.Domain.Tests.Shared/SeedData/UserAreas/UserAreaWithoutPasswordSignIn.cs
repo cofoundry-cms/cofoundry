@@ -19,5 +19,9 @@
         public string SignInPath => "/npw/login";
 
         public bool IsDefaultAuthScheme => false;
+
+        public void ConfigureOptions(UserAreaOptions options)
+        {
+        }
     }
 }

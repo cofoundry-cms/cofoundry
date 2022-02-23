@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
 
         public int GetHashCode(IPermission obj)
         {
-            return obj.GetHashCode();
+            return obj.GetUniqueIdentifier().GetHashCode();
         }
     }
 }

@@ -1,34 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.Validation;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core;
+﻿using Cofoundry.Core;
 using Cofoundry.Core.Data;
+using Cofoundry.Core.MessageAggregator;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Updates the UrlSlug and locale of a custom entity which often forms
-    /// the identity of the entity and can form part fo the url when used in
+    /// the identity of the entity and can form part of the URL when used in
     /// custom entity pages. This is a specific action that can
     /// have specific side effects such as breaking page links outside
     /// of the CMS.
     /// </summary>
-    public class UpdateCustomEntityUrlCommandHandler 
+    public class UpdateCustomEntityUrlCommandHandler
         : ICommandHandler<UpdateCustomEntityUrlCommand>
         , IIgnorePermissionCheckHandler
     {
-        #region constructor
-
         private readonly IQueryExecutor _queryExecutor;
         private readonly CofoundryDbContext _dbContext;
-        private readonly EntityAuditHelper _entityAuditHelper;
         private readonly ICustomEntityCache _customEntityCache;
         private readonly IMessageAggregator _messageAggregator;
         private readonly IPermissionValidationService _permissionValidationService;
@@ -37,7 +31,6 @@ namespace Cofoundry.Domain.Internal
         public UpdateCustomEntityUrlCommandHandler(
             IQueryExecutor queryExecutor,
             CofoundryDbContext dbContext,
-            EntityAuditHelper entityAuditHelper,
             ICustomEntityCache customEntityCache,
             IMessageAggregator messageAggregator,
             IPermissionValidationService permissionValidationService,
@@ -46,14 +39,11 @@ namespace Cofoundry.Domain.Internal
         {
             _queryExecutor = queryExecutor;
             _dbContext = dbContext;
-            _entityAuditHelper = entityAuditHelper;
             _customEntityCache = customEntityCache;
             _messageAggregator = messageAggregator;
             _permissionValidationService = permissionValidationService;
             _transactionScopeFactory = transactionScopeFactory;
         }
-
-        #endregion
 
         public async Task ExecuteAsync(UpdateCustomEntityUrlCommand command, IExecutionContext executionContext)
         {
@@ -90,7 +80,7 @@ namespace Cofoundry.Domain.Internal
         }
 
         private async Task ValidateIsUniqueAsync(
-            UpdateCustomEntityUrlCommand command, 
+            UpdateCustomEntityUrlCommand command,
             CustomEntityDefinitionSummary definition,
             IExecutionContext executionContext
             )
@@ -106,9 +96,9 @@ namespace Cofoundry.Domain.Internal
             var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
             if (!isUnique)
             {
-                var message = string.Format("A {0} already exists with the {2} '{1}'", 
-                    definition.Name, 
-                    command.UrlSlug, 
+                var message = string.Format("A {0} already exists with the {2} '{1}'",
+                    definition.Name,
+                    command.UrlSlug,
                     definition.Terms.GetOrDefault(CustomizableCustomEntityTermKeys.UrlSlug, "url slug").ToLower());
                 throw new UniqueConstraintViolationException(message, "UrlSlug", command.UrlSlug);
             }

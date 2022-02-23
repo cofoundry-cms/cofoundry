@@ -36,11 +36,18 @@ namespace Cofoundry.Domain.Internal
         public IEntityDefinition GetRequiredByCode(string entityDefinitionCode)
         {
             var definition = GetByCode(entityDefinitionCode);
+            ValidateDefinitionExists(definition, entityDefinitionCode);
 
-            if (definition == null)
-            {
-                throw new EntityNotFoundException<IEntityDefinition>($"IEntityDefinition '{entityDefinitionCode}' is not registered. but has been requested.", entityDefinitionCode);
-            }
+            return definition;
+        }
+
+        public IEntityDefinition GetRequired<TDefinition>()
+            where TDefinition : IEntityDefinition
+        {
+            var definition = _entityDefinitions
+                .Select(p => p.Value)
+                .FirstOrDefault(p => p is TDefinition);
+            ValidateDefinitionExists(definition, typeof(TDefinition).Name);
 
             return definition;
         }
@@ -114,6 +121,14 @@ namespace Cofoundry.Domain.Internal
             {
                 var message = notValidCode.GetType().Name + " has an invalid definition code. " + WHY_VALID_CODE_MESSAGE;
                 throw new InvalidEntityDefinitionException(message, notValidCode, definitions);
+            }
+        }
+
+        private static void ValidateDefinitionExists(IEntityDefinition definition, string identifier)
+        {
+            if (definition == null)
+            {
+                throw new EntityNotFoundException<IEntityDefinition>($"IEntityDefinition '{identifier}' is not registered, but has been requested.", identifier);
             }
         }
     }

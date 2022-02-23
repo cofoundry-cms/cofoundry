@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Cofoundry.Domain.Data
 {
     /// <summary>
-    /// Represents an image that has been uploaded to the CMS.
+    /// Represents an image file that has been uploaded to the CMS.
     /// </summary>
     public class ImageAsset : IUpdateAuditable
     {

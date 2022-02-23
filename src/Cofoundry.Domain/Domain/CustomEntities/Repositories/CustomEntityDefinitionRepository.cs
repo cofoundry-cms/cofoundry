@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.Internal
             return _customEntityDefinitions.Select(p => p.Value);
         }
 
-        public ICustomEntityDefinition Get<TDefinition>()
+        public ICustomEntityDefinition GetRequired<TDefinition>()
             where TDefinition : ICustomEntityDefinition
         {
             var definition = _customEntityDefinitions

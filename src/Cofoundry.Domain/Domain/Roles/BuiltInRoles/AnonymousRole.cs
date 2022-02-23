@@ -8,7 +8,7 @@ namespace Cofoundry.Domain
     /// for anyone not logged into the application.
     /// </summary>
     /// <inheritdoc/>
-    public class AnonymousRole : IRoleDefinition
+    public sealed class AnonymousRole : IRoleDefinition
     {
         /// <summary>
         /// Constant value for the anonymous role code
@@ -23,5 +23,10 @@ namespace Cofoundry.Domain
         public string RoleCode { get { return Code; } }
 
         public string UserAreaCode { get { return CofoundryAdminUserArea.Code; } }
+
+        public void ConfigurePermissions(IPermissionSetBuilder builder)
+        {
+            builder.IncludeAnonymousRoleDefaults();
+        }
     }
 }

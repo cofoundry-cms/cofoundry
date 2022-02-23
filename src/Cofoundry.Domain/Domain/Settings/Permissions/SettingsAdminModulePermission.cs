@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to access the settings module in the admin panel.
+    /// </summary>
     public class SettingsAdminModulePermission : IEntityPermission
     {
         public SettingsAdminModulePermission()

@@ -5,7 +5,7 @@ namespace Cofoundry.Domain
     /// <summary>
     /// Defines the Cofoundry admin panel user area.
     /// </summary>
-    public class CofoundryAdminUserArea : IUserAreaDefinition
+    public sealed class CofoundryAdminUserArea : IUserAreaDefinition
     {
         private readonly AdminSettings _adminSetting;
 

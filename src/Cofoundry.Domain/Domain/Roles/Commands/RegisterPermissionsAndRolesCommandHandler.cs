@@ -25,7 +25,8 @@ namespace Cofoundry.Domain.Internal
         private readonly IRoleCache _roleCache;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IRoleDefinitionRepository _roleDefinitionRepository;
-        private readonly IRoleInitializerFactory _roleInitializerFactory;
+        private readonly IRolePermissionInitializerFactory _rolePermissionInitializerFactory;
+        private readonly IPermissionSetBuilderFactory _permissionSetBuilderFactory;
         private readonly IPermissionRepository _permissionRepository;
         private readonly IEntityDefinitionRepository _entityDefinitionRepository;
         private readonly ITransactionScopeManager _transactionScopeFactory;
@@ -36,7 +37,8 @@ namespace Cofoundry.Domain.Internal
             IRoleCache roleCache,
             IPermissionValidationService permissionValidationService,
             IRoleDefinitionRepository roleDefinitionRepository,
-            IRoleInitializerFactory roleInitializerFactory,
+            IRolePermissionInitializerFactory rolePermissionInitializerFactory,
+            IPermissionSetBuilderFactory permissionSetBuilderFactory,
             IPermissionRepository permissionRepository,
             IEntityDefinitionRepository entityDefinitionRepository,
             ITransactionScopeManager transactionScopeFactory
@@ -47,7 +49,8 @@ namespace Cofoundry.Domain.Internal
             _roleCache = roleCache;
             _permissionValidationService = permissionValidationService;
             _roleDefinitionRepository = roleDefinitionRepository;
-            _roleInitializerFactory = roleInitializerFactory;
+            _rolePermissionInitializerFactory = rolePermissionInitializerFactory;
+            _permissionSetBuilderFactory = permissionSetBuilderFactory;
             _permissionRepository = permissionRepository;
             _entityDefinitionRepository = entityDefinitionRepository;
             _transactionScopeFactory = transactionScopeFactory;
@@ -198,12 +201,11 @@ namespace Cofoundry.Domain.Internal
             bool allowDeletions
             )
         {
-            var roleInitializer = _roleInitializerFactory.Create(roleDefinition);
-            if (roleInitializer == null) return;
+            var roleInitializer = _rolePermissionInitializerFactory.Create(roleDefinition);
+            var permissionSetBuilder = _permissionSetBuilderFactory.Create(codePermissions);
+            roleInitializer.Initialize(permissionSetBuilder);
 
-            var permissionsToInclude = roleInitializer
-                .GetPermissions(codePermissions)
-                .ToList();
+            var permissionsToInclude = permissionSetBuilder.Build();
 
             // Remove permissions
             if (allowDeletions)
@@ -260,7 +262,7 @@ namespace Cofoundry.Domain.Internal
         private void ValidatePermissions(ICollection<RolePermission> existingPermissions, IEnumerable<IPermission> permissions)
         {
             var entityWithoutReadPermission = permissions
-                .FilterEntityPermissions()
+                .FilterToEntityPermissions()
                 .Where(p => !string.IsNullOrWhiteSpace(p.EntityDefinition?.EntityDefinitionCode))
                 .GroupBy(p => p.EntityDefinition.EntityDefinitionCode)
                 .Where(g =>

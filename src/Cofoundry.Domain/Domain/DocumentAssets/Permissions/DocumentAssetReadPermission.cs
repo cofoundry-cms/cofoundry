@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Read access to document assets. Read access is required in order
+    /// to include any other document asset permissions.
+    /// </summary>
     public class DocumentAssetReadPermission : IEntityPermission
     {
         public DocumentAssetReadPermission()

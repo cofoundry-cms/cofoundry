@@ -1,11 +1,8 @@
 ﻿using Cofoundry.Domain;
-using System.Collections.Generic;
 
 namespace Cofoundry.Samples.UserAreas
 {
-    public class DefaultPasswordlessRole
-        : IRoleDefinition
-        , IRoleInitializer<DefaultPasswordlessRole>
+    public class DefaultPasswordlessRole : IRoleDefinition
     {
         public const string Code = "DEF";
 
@@ -15,14 +12,10 @@ namespace Cofoundry.Samples.UserAreas
 
         public string UserAreaCode { get { return PasswordlessUserArea.Code; } }
 
-        public IEnumerable<IPermission> GetPermissions(IEnumerable<IPermission> allPermissions)
+
+        public void ConfigurePermissions(IPermissionSetBuilder builder)
         {
-            // In this example application we don't require any additional permissions for members
-            // so we can re-use the permission set on the anonymous role which include read access 
-            // to most entities.
-            return allPermissions
-                .FilterToAnonymousRoleDefaults()
-                ;
+            builder.ApplyAnonymousRoleConfiguration();
         }
     }
 }

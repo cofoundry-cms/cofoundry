@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace Cofoundry.Domain.Tests.Shared
+﻿namespace Cofoundry.Domain.Tests.Shared
 {
-    public class TestUserArea2RoleA : IRoleDefinition, IRoleInitializer<TestUserArea2RoleA>
+    public class TestUserArea2RoleA : IRoleDefinition
     {
         public const string Code = "T2A";
 
@@ -12,9 +10,9 @@ namespace Cofoundry.Domain.Tests.Shared
 
         public string UserAreaCode => TestUserArea2.Code;
 
-        public IEnumerable<IPermission> GetPermissions(IEnumerable<IPermission> allPermissions)
+        public void ConfigurePermissions(IPermissionSetBuilder builder)
         {
-            return allPermissions;
+            builder.IncludeAll();
         }
     }
 }

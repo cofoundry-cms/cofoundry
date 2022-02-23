@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Core.Validation;
+﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
     /// <summary>
     /// Updates the UrlSlug and locale of a custom entity which often forms
-    /// the identity of the entity and can form part fo the url when used in
+    /// the identity of the entity and can form part of the URL when used in
     /// custom entity pages. This is a specific action that can
     /// have specific side effects such as breaking page links outside
     /// of the CMS.

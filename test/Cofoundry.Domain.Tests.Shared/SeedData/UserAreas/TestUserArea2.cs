@@ -15,5 +15,9 @@
         public string SignInPath => "/area-2/sign-in";
 
         public bool IsDefaultAuthScheme => false;
+
+        public void ConfigureOptions(UserAreaOptions options)
+        {
+        }
     }
 }

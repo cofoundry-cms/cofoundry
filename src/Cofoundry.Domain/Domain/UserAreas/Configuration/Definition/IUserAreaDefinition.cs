@@ -61,14 +61,11 @@
         bool IsDefaultAuthScheme { get; }
 
         /// <summary>
-        /// Optionally implement this method to configure any additional settings.
+        /// Configure any additional optional settings.
         /// </summary>
         /// <param name="options">
         /// The current configuration with any values from configuration providers (e.g. appsettings.json) applied.
         /// </param>
-        void ConfigureOptions(UserAreaOptions options)
-        {
-            // Default: No additional config
-        }
+        void ConfigureOptions(UserAreaOptions options);
     }
 }

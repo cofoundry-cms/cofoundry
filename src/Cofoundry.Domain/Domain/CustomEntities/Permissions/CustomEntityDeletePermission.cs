@@ -1,5 +1,8 @@
 ﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to delete a custom entity.
+    /// </summary>
     public class CustomEntityDeletePermission : ICustomEntityPermissionTemplate
     {
         /// <summary>

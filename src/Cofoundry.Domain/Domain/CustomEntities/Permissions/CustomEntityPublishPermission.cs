@@ -1,5 +1,8 @@
 ﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to publish and unpublish a custom entity.
+    /// </summary>
     public class CustomEntityPublishPermission : ICustomEntityPermissionTemplate
     {
         /// <summary>

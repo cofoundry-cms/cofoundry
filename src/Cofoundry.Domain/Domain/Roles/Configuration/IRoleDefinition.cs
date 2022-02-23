@@ -25,5 +25,17 @@
         /// A role must be assigned to a user area e.g. CofoundryAdminUserArea.
         /// </summary>
         string UserAreaCode { get; }
+
+        /// <summary>
+        /// Configures the permissions that that should be added to the role when
+        /// it is first created. This is also invoked when new permissions are added
+        /// to the system to determine whether it should be automatically added to the 
+        /// role, based on the rules defined in the <paramref name="builder"/>.
+        /// </summary>
+        /// <param name="builder">
+        /// Use the builder to configure the rules that determine whether a permission
+        /// should be added to the system.
+        /// </param>
+        void ConfigurePermissions(IPermissionSetBuilder builder);
     }
 }

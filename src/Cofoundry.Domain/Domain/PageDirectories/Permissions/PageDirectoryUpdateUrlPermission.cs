@@ -1,5 +1,8 @@
 ﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to update the url of a page directory.
+    /// </summary>
     public class PageDirectoryUpdateUrlPermission : IEntityPermission
     {
         public PageDirectoryUpdateUrlPermission()

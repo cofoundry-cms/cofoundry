@@ -22,8 +22,9 @@ namespace Cofoundry.Domain.Registration
                 .RegisterSingleton<IPermissionRepository, PermissionRepository>()
 
                 .RegisterAll<IRoleDefinition>(singletonOptions)
-                .RegisterAllGenericImplementations(typeof(IRoleInitializer<>))
-                .Register<IRoleInitializerFactory, RoleInitializerFactory>()
+                .RegisterAll<IAnonymousRolePermissionConfiguration>()
+                .Register<IRolePermissionInitializerFactory, RolePermissionInitializerFactory>()
+                .Register<IPermissionSetBuilderFactory, PermissionSetBuilderFactory>()
                 ;
         }
     }

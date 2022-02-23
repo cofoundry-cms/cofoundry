@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Read access to page templates. Read access is required in order
+    /// to include any other page template permissions.
+    /// </summary>
     public class PageTemplateReadPermission : IEntityPermission
     {
         public PageTemplateReadPermission()

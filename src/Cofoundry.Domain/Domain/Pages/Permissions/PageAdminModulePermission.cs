@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
-    public class PageAdminModulePermission : IEntityPermission
+    /// <summary>
+    /// Permission to access the pages module in the admin panel.
+    /// </summary>
+    public sealed class PageAdminModulePermission : IEntityPermission
     {
         public PageAdminModulePermission()
         {

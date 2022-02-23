@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Read access to users in custom user areas (excludes the Cofoundry admin user area). Read access is 
+    /// required in order to include any other permissions.
+    /// </summary>
     public class NonCofoundryUserReadPermission : IEntityPermission
     {
         public NonCofoundryUserReadPermission()

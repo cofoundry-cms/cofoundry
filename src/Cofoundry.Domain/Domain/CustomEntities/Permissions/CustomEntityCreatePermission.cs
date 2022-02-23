@@ -1,5 +1,8 @@
 ﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to create new custom entities.
+    /// </summary>
     public class CustomEntityCreatePermission : ICustomEntityPermissionTemplate
     {
         /// <summary>

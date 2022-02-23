@@ -185,6 +185,11 @@ namespace Cofoundry.Domain.Tests
             public string RoleCode { get; set; }
 
             public string UserAreaCode { get; set; }
+
+            public void ConfigurePermissions(IPermissionSetBuilder builder)
+            {
+                // all permissions
+            }
         }
 
         private List<IRoleDefinition> GetBaseRoleDefinitions()

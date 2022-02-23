@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to update users in custom user areas (excludes the Cofoundry admin user area), but not actions
+    /// covered by special permissions such as issuing a password reset.
+    /// </summary>
     public class NonCofoundryUserUpdatePermission : IEntityPermission
     {
         public NonCofoundryUserUpdatePermission()

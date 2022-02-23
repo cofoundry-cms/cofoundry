@@ -3,7 +3,12 @@ using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
-    public class CustomEntityVersionEntityDefinition : IDependableEntityDefinition
+    /// <summary>
+    /// Custom entities can have one or more version, with a collection
+    /// of versions representing the change history of custom entity
+    /// data. 
+    /// </summary>
+    public sealed class CustomEntityVersionEntityDefinition : IDependableEntityDefinition
     {
         public static string DefinitionCode = "COFCEV";
 

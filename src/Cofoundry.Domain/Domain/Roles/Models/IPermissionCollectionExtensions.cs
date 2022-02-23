@@ -20,8 +20,8 @@ namespace Cofoundry.Domain
         /// Filters a collection of permissions to only include IEntityPermission types.
         /// </summary>
         /// <param name="permissionsToFilter">The collection of permissions to filter</param>
-        /// <returns>Filtered collection cast to IEnumerable&lt;IEntityPermission&gt;</returns>
-        public static IEnumerable<IEntityPermission> FilterEntityPermissions(this IEnumerable<IPermission> permissionsToFilter)
+        /// <returns>Filtered collection cast to IEnumerable{IEntityPermission}/returns>
+        public static IEnumerable<IEntityPermission> FilterToEntityPermissions(this IEnumerable<IPermission> permissionsToFilter)
         {
             return permissionsToFilter
                 .Where(p => p is IEntityPermission)
@@ -34,7 +34,7 @@ namespace Cofoundry.Domain
         /// <param name="permissionsToFilter">The collection of permissions to filter</param>
         /// <param name="entityDefinitionCode">The definition code of the entity to filter on e.g. PageEntityDefinition.DefinitionCode</param>
         /// <returns>Filtered collection cast to IEnumerable&lt;IEntityPermission&gt;</returns>
-        public static IEnumerable<IEntityPermission> FilterEntityPermissions(this IEnumerable<IPermission> permissionsToFilter, string entityDefinitionCode)
+        public static IEnumerable<IEntityPermission> FilterToEntityPermissions(this IEnumerable<IPermission> permissionsToFilter, string entityDefinitionCode)
         {
             return permissionsToFilter
                 .Where(p => p is IEntityPermission)
@@ -242,6 +242,20 @@ namespace Cofoundry.Domain
         {
             return permissionsToFilter
                 .Where(p => !(p is IEntityPermission) || ((IEntityPermission)p).EntityDefinition?.EntityDefinitionCode != entityDefinitionCode);
+        }
+
+        /// <summary>
+        /// Filters a collection of permissions to exclude permissions to
+        /// access to sections in the admin panel. Specifically permissions that use the
+        /// admin module common permission type code and the dashboard permission type code.
+        /// </summary>
+        /// <param name="permissionsToFilter">The collection of permissions to filter</param>
+        /// <returns>Filtered collection of permissions</returns>
+        public static IEnumerable<IPermission> ExceptAdminModulePermissions(this IEnumerable<IPermission> permissionsToFilter)
+        {
+            return permissionsToFilter
+                .Where(p => p.PermissionType.Code != CommonPermissionTypes.AdminModulePermissionCode
+                    && p.PermissionType.Code != DashboardAdminModulePermission.PermissionTypeCode);
         }
 
         /// <summary>

@@ -3,7 +3,12 @@ using System.Collections.Generic;
 
 namespace Cofoundry.Domain
 {
-    public class PageEntityDefinition : IDependableEntityDefinition
+    /// <summary>
+    /// Pages represent the dynamically navigable pages of your website. Each page uses a template 
+    /// which defines the regions of content that users can edit.
+    /// </summary>
+    /// <inheritdoc/>
+    public sealed class PageEntityDefinition : IDependableEntityDefinition
     {
         public const string DefinitionCode = "COFPGE";
 

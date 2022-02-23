@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
     public class TestRole : IRoleDefinition
     {
@@ -15,5 +9,20 @@ namespace Cofoundry.Domain
         public string RoleCode { get { return TestRoleCode; } }
 
         public string UserAreaCode { get { return CofoundryAdminUserArea.Code; } }
+
+        public void ConfigurePermissions(IPermissionSetBuilder builder)
+        {
+            builder
+                .ApplyRoleConfiguration<AnonymousRole>()
+                .IncludeAllRead()
+                .IncludePage(c => c.CRUD())
+                .IncludeCurrentUser(c => c.Update().Delete())
+                .ExcludeUserInCofoundryAdminUserArea()
+                .ExcludeUserInAllUserAreas()
+                .IncludeAllWrite(p => p.ExceptEntityPermissions<PageEntityDefinition>())
+                .IncludeAllAdminModule(p => p.ExceptEntityPermissions<PageEntityDefinition>())
+                .Include<CofoundryUserCreatePermission>()
+                ;
+        }
     }
 }

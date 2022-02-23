@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
-    public class PageReadPermission : IEntityPermission
+    /// <summary>
+    /// Read access to pages. Read access is required in order
+    /// to include any other page permissions.
+    /// </summary>
+    public sealed class PageReadPermission : IEntityPermission
     {
         public IEntityDefinition EntityDefinition => new PageEntityDefinition();
 

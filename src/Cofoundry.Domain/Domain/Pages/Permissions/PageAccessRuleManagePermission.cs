@@ -1,5 +1,10 @@
 ﻿namespace Cofoundry.Domain
 {
+    /// <summary>
+    /// Permission to manage the set of access rule that
+    /// govern who has permission to view a page and what
+    /// action should be taken if permission is denied.
+    /// </summary>
     public class PageAccessRuleManagePermission : IEntityPermission
     {
         public PageAccessRuleManagePermission()

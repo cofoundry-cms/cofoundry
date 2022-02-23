@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
-    public class RoleEntityDefinition : IEntityDefinition
+    /// <summary>
+    /// Roles are an assignable collection of permissions. Every user has to be assigned 
+    /// to one role.
+    /// </summary>
+    public sealed class RoleEntityDefinition : IEntityDefinition
     {
         public const string DefinitionCode = "COFROL";
 

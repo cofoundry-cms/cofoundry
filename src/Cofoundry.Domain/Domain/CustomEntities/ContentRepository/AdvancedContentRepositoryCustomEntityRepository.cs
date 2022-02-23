@@ -29,7 +29,7 @@ namespace Cofoundry.Domain.Internal
 
         public IContentRepositoryCustomEntityByDefinitionQueryBuilder GetByDefinition<TDefinition>() where TDefinition : ICustomEntityDefinition
         {
-            var customEntityDefinition = _customEntityDefinitionRepository.Get<TDefinition>();
+            var customEntityDefinition = _customEntityDefinitionRepository.GetRequired<TDefinition>();
 
             if (customEntityDefinition == null)
             {
@@ -58,7 +58,7 @@ namespace Cofoundry.Domain.Internal
 
         public IContentRepositoryCustomEntityByUrlSlugQueryBuilder GetByUrlSlug<TDefinition>(string urlSlug) where TDefinition : ICustomEntityDefinition
         {
-            var customEntityDefinition = _customEntityDefinitionRepository.Get<TDefinition>();
+            var customEntityDefinition = _customEntityDefinitionRepository.GetRequired<TDefinition>();
 
             if (customEntityDefinition == null)
             {

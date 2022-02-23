@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain
 {
-    public class PageDeletePermission : IEntityPermission
+    /// <summary>
+    /// Permission to delete a page.
+    /// </summary>
+    public sealed class PageDeletePermission : IEntityPermission
     {
         public PageDeletePermission()
         {
