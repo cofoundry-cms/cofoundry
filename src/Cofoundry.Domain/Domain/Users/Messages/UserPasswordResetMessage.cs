@@ -4,7 +4,7 @@
     /// This message is published when a user password is reset via the admin
     /// panel or via <see cref="ResetUserPasswordCommand"/>, assigning a new
     /// temporary password. This is a separate action to the self-service 
-    /// account recovery flow initiated using <see cref="InitiateUserAccountRecoveryByEmailCommand"/>.
+    /// account recovery flow initiated using <see cref="InitiateUserAccountRecoveryViaEmailCommand"/>.
     /// </summary>
     public class UserPasswordResetMessage
     {

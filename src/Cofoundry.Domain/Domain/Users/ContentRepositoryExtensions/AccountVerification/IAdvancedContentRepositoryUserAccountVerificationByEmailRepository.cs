@@ -26,7 +26,7 @@ namespace Cofoundry.Domain
         /// </para>
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task InitiateAsync(InitiateUserAccountVerificationByEmailCommand command);
+        Task InitiateAsync(InitiateUserAccountVerificationViaEmailCommand command);
 
         /// <summary>
         /// Initiates an email-based user account verification flow whereby validation is performed
@@ -39,6 +39,6 @@ namespace Cofoundry.Domain
         /// directly.
         /// </remarks>
         /// <param name="command">Command parameters.</param>
-        Task CompleteAsync(CompleteUserAccountVerificationByEmailCommand command);
+        Task CompleteAsync(CompleteUserAccountVerificationViaEmailCommand command);
     }
 }

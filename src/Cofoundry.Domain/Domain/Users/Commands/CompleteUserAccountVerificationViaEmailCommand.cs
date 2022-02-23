@@ -13,7 +13,7 @@ namespace Cofoundry.Domain
     /// you want a more customized process then you may wish to use the authorized task framework 
     /// directly.
     /// </remarks>
-    public class CompleteUserAccountVerificationByEmailCommand : ICommand, ILoggableCommand
+    public class CompleteUserAccountVerificationViaEmailCommand : ICommand, ILoggableCommand
     {
         /// <summary>
         /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area

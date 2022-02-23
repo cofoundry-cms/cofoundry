@@ -4,7 +4,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// This message is published when a user successfully completes the account 
-    /// recovery process via <see cref="CompleteUserAccountRecoveryByEmailCommand"/>. This
+    /// recovery process via <see cref="CompleteUserAccountRecoveryViaEmailCommand"/>. This
     /// command will also trigger <see cref="UserPasswordUpdatedMessage"/>.
     /// </summary>
     public class UserAccountRecoveryCompletedMessage

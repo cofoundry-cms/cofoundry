@@ -14,7 +14,7 @@ namespace Cofoundry.BasicTestSite
         {
             builder
                 .IncludeAnonymousRoleDefaults()
-                .IncludeAllUpdate();
+                .IncludePage(p => p.Create());
         }
     }
 }

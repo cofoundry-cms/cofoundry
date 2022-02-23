@@ -15,7 +15,7 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// If set to <see langword="true"/>, then an account is required to be
-        /// verified before being able to log in. Defaults to <see langword="false"/>.
+        /// verified before being able to sign in. Defaults to <see langword="false"/>.
         /// The Cofoundry Admin panel does not support account verification.
         /// </summary>
         public bool RequireVerification { get; set; }

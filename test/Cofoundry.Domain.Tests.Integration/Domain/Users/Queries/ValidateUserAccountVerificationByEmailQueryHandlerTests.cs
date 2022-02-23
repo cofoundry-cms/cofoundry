@@ -106,7 +106,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
                 .Users()
                 .AccountVerification()
                 .EmailFlow()
-                .CompleteAsync(new CompleteUserAccountVerificationByEmailCommand()
+                .CompleteAsync(new CompleteUserAccountVerificationViaEmailCommand()
                 {
                     UserAreaCode = authorizedTask.User.UserAreaCode,
                     Token = token
@@ -265,7 +265,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
                 .Users()
                 .AccountVerification()
                 .EmailFlow()
-                .InitiateAsync(new InitiateUserAccountVerificationByEmailCommand()
+                .InitiateAsync(new InitiateUserAccountVerificationViaEmailCommand()
                 {
                     UserId = userId
                 });

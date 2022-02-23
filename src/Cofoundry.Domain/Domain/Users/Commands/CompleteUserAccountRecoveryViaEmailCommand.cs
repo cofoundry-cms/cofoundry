@@ -6,10 +6,10 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Completes an account recovery request initiated by
-    /// <see cref="InitiateUserAccountRecoveryByEmailCommand"/>, updating the users
+    /// <see cref="InitiateUserAccountRecoveryViaEmailCommand"/>, updating the users
     /// password if the request is verified.
     /// </summary>
-    public class CompleteUserAccountRecoveryByEmailCommand : ICommand, ILoggableCommand
+    public class CompleteUserAccountRecoveryViaEmailCommand : ICommand, ILoggableCommand
     {
         /// <summary>
         /// The token used to verify the request.

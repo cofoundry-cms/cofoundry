@@ -66,7 +66,7 @@ namespace Cofoundry.Samples.UserAreas
                     .Users()
                     .AccountVerification()
                     .EmailFlow()
-                    .InitiateAsync(new InitiateUserAccountVerificationByEmailCommand()
+                    .InitiateAsync(new InitiateUserAccountVerificationViaEmailCommand()
                     {
                         UserId = userId
                     });
@@ -174,7 +174,7 @@ namespace Cofoundry.Samples.UserAreas
                 .WithModelState(this)
                 .Users()
                 .AccountRecovery()
-                .InitiateAsync(new InitiateUserAccountRecoveryByEmailCommand()
+                .InitiateAsync(new InitiateUserAccountRecoveryViaEmailCommand()
                 {
                     UserAreaCode = CustomerUserArea.Code,
                     Username = command.Username
@@ -219,7 +219,7 @@ namespace Cofoundry.Samples.UserAreas
                 .WithModelState(this)
                 .Users()
                 .AccountRecovery()
-                .CompleteAsync(new CompleteUserAccountRecoveryByEmailCommand()
+                .CompleteAsync(new CompleteUserAccountRecoveryViaEmailCommand()
                 {
                     UserAreaCode = CustomerUserArea.Code,
                     Token = t,
@@ -285,7 +285,7 @@ namespace Cofoundry.Samples.UserAreas
                 .Users()
                 .AccountVerification()
                 .EmailFlow()
-                .CompleteAsync(new CompleteUserAccountVerificationByEmailCommand()
+                .CompleteAsync(new CompleteUserAccountVerificationViaEmailCommand()
                 {
                     UserAreaCode = CustomerUserArea.Code,
                     Token = t

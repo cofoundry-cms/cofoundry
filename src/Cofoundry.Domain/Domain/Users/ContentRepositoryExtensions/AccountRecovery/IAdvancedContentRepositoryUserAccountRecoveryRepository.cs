@@ -27,13 +27,13 @@ namespace Cofoundry.Domain
         /// </para>
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task InitiateAsync(InitiateUserAccountRecoveryByEmailCommand command);
+        Task InitiateAsync(InitiateUserAccountRecoveryViaEmailCommand command);
 
         /// <summary>
         /// Completes an account recovery request initiated by <see cref="InitiateAsync"/>, 
         /// updating the users password if the request is verified.
         /// </summary>
         /// <param name="command">Command parameters.</param>
-        Task CompleteAsync(CompleteUserAccountRecoveryByEmailCommand command);
+        Task CompleteAsync(CompleteUserAccountRecoveryViaEmailCommand command);
     }
 }

@@ -5,10 +5,11 @@ using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.MailTemplates;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// <para>
@@ -21,22 +22,24 @@ namespace Cofoundry.Domain
     /// directly.
     /// </para>
     /// </summary>
-    public class InitiateUserAccountVerificationByEmailCommandHandler
-        : ICommandHandler<InitiateUserAccountVerificationByEmailCommand>
+    public class InitiateUserAccountVerificationViaEmailCommandHandler
+        : ICommandHandler<InitiateUserAccountVerificationViaEmailCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IDomainRepository _domainRepository;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
+        private readonly IUserSummaryMapper _userSummaryMapper;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IMailService _mailService;
         private readonly IAuthorizedTaskTokenUrlHelper _authorizedTaskTokenUrlHelper;
         private readonly IMessageAggregator _messageAggregator;
 
-        public InitiateUserAccountVerificationByEmailCommandHandler(
+        public InitiateUserAccountVerificationViaEmailCommandHandler(
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
+            IUserSummaryMapper userSummaryMapper,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IMailService mailService,
             IAuthorizedTaskTokenUrlHelper authorizedTaskTokenUrlHelper,
@@ -46,17 +49,17 @@ namespace Cofoundry.Domain
             _dbContext = dbContext;
             _domainRepository = domainRepository;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
+            _userSummaryMapper = userSummaryMapper;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _mailService = mailService;
             _authorizedTaskTokenUrlHelper = authorizedTaskTokenUrlHelper;
             _messageAggregator = messageAggregator;
         }
 
-        public async Task ExecuteAsync(InitiateUserAccountVerificationByEmailCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(InitiateUserAccountVerificationViaEmailCommand command, IExecutionContext executionContext)
         {
             var user = await GetUserAndVerifyAsync(command);
             var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserArea.UserAreaCode).AccountVerification;
-
 
             using (var scope = _domainRepository.Transactions().CreateScope())
             {
@@ -78,7 +81,6 @@ namespace Cofoundry.Domain
                 Token = addAuthorizedTaskCommand.OutputToken
             });
         }
-
 
         private async Task<AddAuthorizedTaskCommand> GenerateTokenAsync(
             UserSummary user,
@@ -165,12 +167,24 @@ namespace Cofoundry.Domain
             return context;
         }
 
-        private async Task<UserSummary> GetUserAndVerifyAsync(InitiateUserAccountVerificationByEmailCommand command)
+        private async Task<UserSummary> GetUserAndVerifyAsync(InitiateUserAccountVerificationViaEmailCommand command)
         {
-            var user = await _domainRepository
-                .WithElevatedPermissions()
-                .ExecuteQueryAsync(new GetUserSummaryByIdQuery(command.UserId));
-            EntityNotFoundException.ThrowIfNull(user, command.UserId);
+            var dbUser = await _dbContext
+                .Users
+                .AsNoTracking()
+                .IncludeForSummary()
+                .FilterCanSignIn()
+                .FilterById(command.UserId)
+                .SingleOrDefaultAsync();
+
+            EntityNotFoundException.ThrowIfNull(dbUser, command.UserId);
+
+            if (dbUser.AccountVerifiedDate.HasValue)
+            {
+                UserValidationErrors.AccountVerification.Initiation.AlreadyVerified.Throw();
+            }
+
+            var user = _userSummaryMapper.Map(dbUser);
 
             return user;
         }

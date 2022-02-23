@@ -153,7 +153,7 @@ namespace Cofoundry.Samples.UserAreas
                 .WithModelState(this)
                 .Users()
                 .AccountRecovery()
-                .InitiateAsync(new InitiateUserAccountRecoveryByEmailCommand()
+                .InitiateAsync(new InitiateUserAccountRecoveryViaEmailCommand()
                 {
                     UserAreaCode = PartnerUserArea.Code,
                     Username = command.Username
@@ -198,7 +198,7 @@ namespace Cofoundry.Samples.UserAreas
                 .WithModelState(this)
                 .Users()
                 .AccountRecovery()
-                .CompleteAsync(new CompleteUserAccountRecoveryByEmailCommand()
+                .CompleteAsync(new CompleteUserAccountRecoveryViaEmailCommand()
                 {
                     UserAreaCode = PartnerUserArea.Code,
                     Token = t,

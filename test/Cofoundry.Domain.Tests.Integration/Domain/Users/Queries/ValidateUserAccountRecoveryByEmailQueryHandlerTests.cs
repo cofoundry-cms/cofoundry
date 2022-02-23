@@ -102,7 +102,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             await contentRepository
                 .Users()
                 .AccountRecovery()
-                .CompleteAsync(new CompleteUserAccountRecoveryByEmailCommand()
+                .CompleteAsync(new CompleteUserAccountRecoveryViaEmailCommand()
                 {
                     UserAreaCode = request.User.UserAreaCode,
                     Token = token,
@@ -221,7 +221,7 @@ namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries
             await contentRepository
                 .Users()
                 .AccountRecovery()
-                .InitiateAsync(new InitiateUserAccountRecoveryByEmailCommand()
+                .InitiateAsync(new InitiateUserAccountRecoveryViaEmailCommand()
                 {
                     UserAreaCode = addUserCommand.UserAreaCode,
                     Username = addUserCommand.Email

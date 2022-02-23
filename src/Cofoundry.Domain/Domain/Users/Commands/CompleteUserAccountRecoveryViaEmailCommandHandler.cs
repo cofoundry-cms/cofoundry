@@ -9,11 +9,11 @@ namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Completes an account recovery request initiated by
-    /// <see cref="InitiateUserAccountRecoveryByEmailCommand"/>, updating the users
+    /// <see cref="InitiateUserAccountRecoveryViaEmailCommand"/>, updating the users
     /// password if the request is verified.
     /// </summary>
-    public class CompleteUserAccountRecoveryByEmailCommandHandler
-        : ICommandHandler<CompleteUserAccountRecoveryByEmailCommand>
+    public class CompleteUserAccountRecoveryViaEmailCommandHandler
+        : ICommandHandler<CompleteUserAccountRecoveryViaEmailCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
@@ -25,7 +25,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IPasswordPolicyService _newPasswordValidationService;
         private readonly IMessageAggregator _messageAggregator;
 
-        public CompleteUserAccountRecoveryByEmailCommandHandler(
+        public CompleteUserAccountRecoveryViaEmailCommandHandler(
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
@@ -46,7 +46,7 @@ namespace Cofoundry.Domain.Internal
             _messageAggregator = messageAggregator;
         }
 
-        public async Task ExecuteAsync(CompleteUserAccountRecoveryByEmailCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(CompleteUserAccountRecoveryViaEmailCommand command, IExecutionContext executionContext)
         {
             var validationResult = await ValidateRequestAsync(command, executionContext);
             var user = await GetUserAsync(validationResult.Data.UserId);
@@ -97,7 +97,7 @@ namespace Cofoundry.Domain.Internal
         }
 
         private async Task<AuthorizedTaskTokenValidationResult> ValidateRequestAsync(
-            CompleteUserAccountRecoveryByEmailCommand command,
+            CompleteUserAccountRecoveryViaEmailCommand command,
             IExecutionContext executionContext
             )
         {
@@ -129,7 +129,7 @@ namespace Cofoundry.Domain.Internal
             return user;
         }
 
-        private async Task ValidatePasswordAsync(User user, CompleteUserAccountRecoveryByEmailCommand command, IExecutionContext executionContext)
+        private async Task ValidatePasswordAsync(User user, CompleteUserAccountRecoveryViaEmailCommand command, IExecutionContext executionContext)
         {
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(command.UserAreaCode);
             _passwordUpdateCommandHelper.ValidateUserArea(userArea);
@@ -142,7 +142,7 @@ namespace Cofoundry.Domain.Internal
             await _newPasswordValidationService.ValidateAsync(context);
         }
 
-        private void UpdatePassword(User user, CompleteUserAccountRecoveryByEmailCommand command, IExecutionContext executionContext)
+        private void UpdatePassword(User user, CompleteUserAccountRecoveryViaEmailCommand command, IExecutionContext executionContext)
         {
             _passwordUpdateCommandHelper.UpdatePassword(command.NewPassword, user, executionContext);
             _userSecurityStampUpdateHelper.Update(user);

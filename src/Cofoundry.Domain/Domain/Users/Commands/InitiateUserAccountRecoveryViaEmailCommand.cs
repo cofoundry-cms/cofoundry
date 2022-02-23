@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// attempts being initiated in a set period of time.
     /// </para>
     /// </summary>
-    public class InitiateUserAccountRecoveryByEmailCommand : ICommand, ILoggableCommand
+    public class InitiateUserAccountRecoveryViaEmailCommand : ICommand, ILoggableCommand
     {
         /// <summary>
         /// Required. The username of the user account to recover. If the username

@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Validation;
+using Cofoundry.Core.Web;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared;
 using Cofoundry.Domain.Tests.Shared.Assertions;
@@ -14,13 +15,13 @@ using Xunit;
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands
 {
     [Collection(nameof(DbDependentFixtureCollection))]
-    public class InitiateUserAccountVerificationByEmailCommandHandlerTests
+    public class InitiateUserAccountRecoveryViaEmailCommandHandlerTests
     {
-        const string UNIQUE_PREFIX = "InitAccVerCHT ";
+        const string UNIQUE_PREFIX = "InitAccRecCHT ";
 
         private readonly DbDependentTestApplicationFactory _appFactory;
 
-        public InitiateUserAccountVerificationByEmailCommandHandlerTests(
+        public InitiateUserAccountRecoveryViaEmailCommandHandlerTests(
             DbDependentTestApplicationFactory appFactory
             )
         {
@@ -33,18 +34,18 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var uniqueData = UNIQUE_PREFIX + nameof(CreatesRequest);
 
             using var app = _appFactory.Create();
-            var authenticatedTask = await AddUserAndInitiate(uniqueData, app);
+            var resetRequest = await AddUserAndInitiateRequest(uniqueData, app);
 
             using (new AssertionScope())
             {
-                authenticatedTask.Should().NotBeNull();
-                authenticatedTask.CreateDate.Should().NotBeDefault();
-                authenticatedTask.IPAddress.Address.Should().Be(TestIPAddresses.Localhost);
-                authenticatedTask.CompletedDate.Should().BeNull();
-                authenticatedTask.InvalidatedDate.Should().BeNull();
-                authenticatedTask.AuthorizationCode.Should().NotBeEmpty();
-                authenticatedTask.UserId.Should().BePositive();
-                authenticatedTask.AuthorizedTaskId.Should().NotBeEmpty();
+                resetRequest.Should().NotBeNull();
+                resetRequest.CreateDate.Should().NotBeDefault();
+                resetRequest.IPAddress.Address.Should().Be(TestIPAddresses.Localhost);
+                resetRequest.CompletedDate.Should().BeNull();
+                resetRequest.InvalidatedDate.Should().BeNull();
+                resetRequest.AuthorizationCode.Should().NotBeEmpty();
+                resetRequest.UserId.Should().BePositive();
+                resetRequest.AuthorizedTaskId.Should().NotBeEmpty();
             }
         }
 
@@ -52,67 +53,74 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
         public async Task MaxAttemptsExceeded_Throws()
         {
             var uniqueData = UNIQUE_PREFIX + "MaxAttExceeded";
-            var seedDate = new DateTime(1953, 01, 19);
+            var seedDate = new DateTime(2022, 01, 19);
 
             using var app = _appFactory.Create(s => s.Configure<UsersSettings>(s =>
             {
-                s.AccountVerification.InitiationRateLimit.Quantity = 2;
-                s.AccountVerification.InitiationRateLimit.Window = TimeSpan.FromHours(2);
+                s.AccountRecovery.InitiationRateLimit.Quantity = 2;
+                s.AccountRecovery.InitiationRateLimit.Window = TimeSpan.FromHours(2);
             }));
             var contentRepository = app.Services.GetContentRepository();
             app.Mocks.MockDateTime(seedDate);
-            var authenticatedTask = await AddUserAndInitiate(uniqueData + 1, app);
-            var command = new InitiateUserAccountVerificationByEmailCommand()
+            var request = await AddUserAndInitiateRequest(uniqueData + 1, app);
+            var command = new InitiateUserAccountRecoveryViaEmailCommand()
             {
-                UserId = authenticatedTask.UserId
+                UserAreaCode = request.User.UserAreaCode,
+                Username = request.User.Email
             };
 
             app.Mocks.MockDateTime(seedDate.AddHours(1));
-            await contentRepository.Users().AccountVerification().EmailFlow().InitiateAsync(command);
+            await contentRepository.Users().AccountRecovery().InitiateAsync(command);
 
             using (new AssertionScope())
             {
                 app.Mocks.MockDateTime(seedDate.AddHours(1).AddMinutes(59));
                 await contentRepository
-                    .Awaiting(r => r.Users().AccountVerification().EmailFlow().InitiateAsync(command))
+                    .Awaiting(r => r.Users().AccountRecovery().InitiateAsync(command))
                     .Should()
                     .ThrowAsync<ValidationErrorException>()
-                    .WithErrorCode(UserValidationErrors.AccountVerification.Initiation.RateLimitExceeded.ErrorCode);
+                    .WithErrorCode(UserValidationErrors.AccountRecovery.Initiation.RateLimitExceeded.ErrorCode);
 
                 app.Mocks.MockDateTime(seedDate.AddHours(2));
                 await contentRepository
-                    .Awaiting(r => r.Users().AccountVerification().EmailFlow().InitiateAsync(command))
+                    .Awaiting(r => r.Users().AccountRecovery().InitiateAsync(command))
                     .Should()
                     .NotThrowAsync();
             }
         }
 
-        [Fact]
-        public async Task SendsMail()
+        [Theory]
+        [InlineData(CofoundryAdminUserArea.Code, SuperAdminRole.Code)]
+        [InlineData(TestUserArea1.Code, TestUserArea1RoleB.Code)]
+        public async Task SendsMail(string userAreaCode, string roleCode)
         {
-            var userAreaCode = TestUserArea1.Code;
-            var roleCode = TestUserArea1RoleB.Code;
             var uniqueData = UNIQUE_PREFIX + nameof(SendsMail);
 
             using var app = _appFactory.Create();
-            var authenticatedTask = await AddUserAndInitiate(uniqueData, app, c =>
+            var userAreaDefinitionRepository = app.Services.GetRequiredService<IUserAreaDefinitionRepository>();
+            var siteUrlResolver = app.Services.GetRequiredService<ISiteUrlResolver>();
+
+            var resetRequest = await AddUserAndInitiateRequest(uniqueData, app, c =>
             {
                 c.UserAreaCode = userAreaCode;
                 c.RoleCode = roleCode;
                 c.RoleId = null;
             });
-            var token = MakeToken(authenticatedTask);
+            var token = MakeResetToken(resetRequest);
+            var userAreaOptions = userAreaDefinitionRepository.GetOptionsByCode(userAreaCode);
+            var recoveryUrl = siteUrlResolver.MakeAbsolute(userAreaOptions.AccountRecovery.RecoveryUrlBase);
 
             app.Mocks
                 .CountDispatchedMail(
-                    authenticatedTask.User.Email,
-                    "Please verify your account ",
+                    resetRequest.User.Email,
+                    "request to reset the password for your account",
                     "Test Site",
-                    TestUserArea1.VerificationUrlBase,
+                    recoveryUrl,
                     token
                 )
                 .Should().Be(1);
         }
+
 
         [Fact]
         public async Task SendsMessage()
@@ -120,21 +128,21 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var uniqueData = UNIQUE_PREFIX + "SendMsg";
 
             using var app = _appFactory.Create();
-            var authenticatedTask = await AddUserAndInitiate(uniqueData, app);
-            var token = MakeToken(authenticatedTask);
+            var resetRequest = await AddUserAndInitiateRequest(uniqueData, app);
+            var token = MakeResetToken(resetRequest);
 
             app.Mocks
-                .CountMessagesPublished<UserAccountVerificationInitiatedMessage>(m =>
+                .CountMessagesPublished<UserAccountRecoveryInitiatedMessage>(m =>
                 {
-                    return m.UserId == authenticatedTask.UserId
+                    return m.UserId == resetRequest.UserId
                         && m.UserAreaCode == TestUserArea1.Code
-                        && m.AuthorizedTaskId == authenticatedTask.AuthorizedTaskId
+                        && m.AuthorizedTaskId == resetRequest.AuthorizedTaskId
                         && m.Token == token;
                 })
                 .Should().Be(1);
         }
 
-        private static string MakeToken(AuthorizedTask authorizedTask)
+        private static string MakeResetToken(AuthorizedTask authorizedTask)
         {
             var formatter = new AuthorizedTaskTokenFormatter();
             return formatter.Format(new AuthorizedTaskTokenParts()
@@ -144,7 +152,7 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             });
         }
 
-        private static async Task<AuthorizedTask> AddUserAndInitiate(
+        private static async Task<AuthorizedTask> AddUserAndInitiateRequest(
             string uniqueData,
             DbDependentTestApplication app,
             Action<AddUserCommand> configration = null
@@ -155,18 +163,18 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands
             var addUserCommand = app.TestData.Users().CreateAddCommand(uniqueData);
             if (configration != null) configration(addUserCommand);
 
-            var userId = await contentRepository
+            await contentRepository
                 .WithElevatedPermissions()
                 .Users()
                 .AddAsync(addUserCommand);
 
             await contentRepository
                 .Users()
-                .AccountVerification()
-                .EmailFlow()
-                .InitiateAsync(new InitiateUserAccountVerificationByEmailCommand()
+                .AccountRecovery()
+                .InitiateAsync(new InitiateUserAccountRecoveryViaEmailCommand()
                 {
-                    UserId = userId
+                    UserAreaCode = addUserCommand.UserAreaCode,
+                    Username = addUserCommand.Email
                 });
 
             var authorizedTask = await dbContext

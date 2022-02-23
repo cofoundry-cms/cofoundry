@@ -4,7 +4,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// This message is published when a user successfully initiates the account
-    /// recovery process via <see cref="InitiateUserAccountRecoveryByEmailCommand"/>.
+    /// recovery process via <see cref="InitiateUserAccountRecoveryViaEmailCommand"/>.
     /// </summary>
     public class UserAccountRecoveryInitiatedMessage
     {

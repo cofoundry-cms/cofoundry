@@ -22,12 +22,12 @@ namespace Cofoundry.Domain.Internal
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
 
-        public Task InitiateAsync(InitiateUserAccountRecoveryByEmailCommand command)
+        public Task InitiateAsync(InitiateUserAccountRecoveryViaEmailCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }
 
-        public Task CompleteAsync(CompleteUserAccountRecoveryByEmailCommand command)
+        public Task CompleteAsync(CompleteUserAccountRecoveryViaEmailCommand command)
         {
             return ExtendableContentRepository.ExecuteCommandAsync(command);
         }

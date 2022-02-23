@@ -33,9 +33,9 @@ namespace Cofoundry.Samples.SPASite.Domain
         public string UserAreaCode { get { return MemberUserArea.Code; } }
 
         /// <summary>
-        /// This method determins what permissions the role has. To help do this
-        /// you are provided with a builder that contains all permissions in the system 
-        /// which you can use to either include or exclude permissions based on rules.
+        /// This method determines which permissions the role is granted when it is first created. 
+        /// To help do this you are provided with a builder that contains all permissions in the 
+        /// system which you can use to either include or exclude permissions based on rules.
         /// </summary>
         public void ConfigurePermissions(IPermissionSetBuilder builder)
         {

@@ -4,7 +4,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// This message is published when a user successfully initiates the account
-    /// verification process via <see cref="InitiateUserAccountVerificationByEmailCommand"/>.
+    /// verification process via <see cref="InitiateUserAccountVerificationViaEmailCommand"/>.
     /// </summary>
     public class UserAccountVerificationInitiatedMessage
     {

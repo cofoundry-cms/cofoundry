@@ -90,7 +90,7 @@ namespace Cofoundry.Domain
         {
             /// <summary>
             /// Used to namespace Cofoundry error codes for errors returned
-            /// from <see cref="InitiateUserAccountRecoveryByEmailCommand"/>.
+            /// from <see cref="InitiateUserAccountRecoveryViaEmailCommand"/>.
             /// </summary>
             public static class Initiation
             {
@@ -192,7 +192,7 @@ namespace Cofoundry.Domain
         {
             /// <summary>
             /// Used to namespace Cofoundry error codes for errors returned
-            /// from <see cref="InitiateUserAccountVerificationByEmailCommand"/>.
+            /// from <see cref="InitiateUserAccountVerificationViaEmailCommand"/>.
             /// </summary>
             public static class Initiation
             {
@@ -202,6 +202,15 @@ namespace Cofoundry.Domain
                 public static readonly ValidationErrorTemplate RateLimitExceeded = new ValidationErrorTemplate(
                     AddInitiationNamespace("rate-limit-exceeded"),
                     "Maximum account verification requests exceeded."
+                    );
+
+                /// <summary>
+                /// The user account aready contains an AcccountVerificationDate
+                /// indicating that it has already been verified.
+                /// </summary>
+                public static readonly ValidationErrorTemplate AlreadyVerified = new ValidationErrorTemplate(
+                    AddInitiationNamespace("already-verified"),
+                    "The account is already verified."
                     );
 
                 private static string AddInitiationNamespace(string errorCode)

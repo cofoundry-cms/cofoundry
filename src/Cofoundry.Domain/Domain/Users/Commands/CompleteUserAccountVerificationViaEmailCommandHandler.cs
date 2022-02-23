@@ -5,17 +5,17 @@ namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Completes an account recovery request initiated by
-    /// <see cref="InitiateUserAccountRecoveryByEmailCommand"/>, updating the users
+    /// <see cref="InitiateUserAccountRecoveryViaEmailCommand"/>, updating the users
     /// password if the request is verified.
     /// </summary>
-    public class CompleteUserAccountVerificationByEmailCommandHandler
-        : ICommandHandler<CompleteUserAccountVerificationByEmailCommand>
+    public class CompleteUserAccountVerificationViaEmailCommandHandler
+        : ICommandHandler<CompleteUserAccountVerificationViaEmailCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly IDomainRepository _domainRepository;
         private readonly IUserContextCache _userContextCache;
 
-        public CompleteUserAccountVerificationByEmailCommandHandler(
+        public CompleteUserAccountVerificationViaEmailCommandHandler(
             IDomainRepository domainRepository,
             IUserContextCache userContextCache
             )
@@ -24,7 +24,7 @@ namespace Cofoundry.Domain.Internal
             _userContextCache = userContextCache;
         }
 
-        public async Task ExecuteAsync(CompleteUserAccountVerificationByEmailCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(CompleteUserAccountVerificationViaEmailCommand command, IExecutionContext executionContext)
         {
             var validationResult = await ValidateRequestAsync(command, executionContext);
 
@@ -61,7 +61,7 @@ namespace Cofoundry.Domain.Internal
         }
 
         private async Task<AuthorizedTaskTokenValidationResult> ValidateRequestAsync(
-            CompleteUserAccountVerificationByEmailCommand command,
+            CompleteUserAccountVerificationViaEmailCommand command,
             IExecutionContext executionContext
             )
         {

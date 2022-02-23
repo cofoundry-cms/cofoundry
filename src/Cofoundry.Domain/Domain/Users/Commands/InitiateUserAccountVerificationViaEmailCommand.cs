@@ -16,7 +16,7 @@ namespace Cofoundry.Domain
     /// directly.
     /// </para>
     /// </summary>
-    public class InitiateUserAccountVerificationByEmailCommand : ICommand, ILoggableCommand
+    public class InitiateUserAccountVerificationViaEmailCommand : ICommand, ILoggableCommand
     {
         /// <summary>
         /// The id of the user to initiate the account verification process with.

@@ -37,7 +37,7 @@ namespace Cofoundry.Domain
         /// Indicates whether to send a confirmation notification to the user to let them
         /// know their password has been changed. This only applied when a password is changed
         /// by the user and not via a reset e.g. via <see cref="UpdateCurrentUserPasswordCommand"/>
-        /// or <see cref="CompleteUserAccountRecoveryByEmailCommand"/>. Defaults to <see langword="true"/>.
+        /// or <see cref="CompleteUserAccountRecoveryViaEmailCommand"/>. Defaults to <see langword="true"/>.
         /// </summary>
         public bool SendNotificationOnUpdate { get; set; } = true;
 

@@ -1,16 +1,15 @@
-﻿using Cofoundry.Core.Mail;
+﻿using Cofoundry.Core.ExecutionDurationRandomizer;
+using Cofoundry.Core.Mail;
 using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.ExecutionDurationRandomizer;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.Internal;
 using Cofoundry.Domain.MailTemplates;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// <para>
@@ -24,8 +23,8 @@ namespace Cofoundry.Domain
     /// attempts being initiated in a set period of time.
     /// </para>
     /// </summary>
-    public class InitiateUserAccountRecoveryByEmailCommandHandler
-        : ICommandHandler<InitiateUserAccountRecoveryByEmailCommand>
+    public class InitiateUserAccountRecoveryViaEmailCommandHandler
+        : ICommandHandler<InitiateUserAccountRecoveryViaEmailCommand>
         , IIgnorePermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
@@ -39,7 +38,7 @@ namespace Cofoundry.Domain
         private readonly IExecutionDurationRandomizerScopeManager _executionDurationRandomizerScopeManager;
         private readonly IUserSummaryMapper _userSummaryMapper;
 
-        public InitiateUserAccountRecoveryByEmailCommandHandler(
+        public InitiateUserAccountRecoveryViaEmailCommandHandler(
             CofoundryDbContext dbContext,
             IDomainRepository domainRepository,
             IMailService mailService,
@@ -64,7 +63,7 @@ namespace Cofoundry.Domain
             _userSummaryMapper = userSummaryMapper;
         }
 
-        public async Task ExecuteAsync(InitiateUserAccountRecoveryByEmailCommand command, IExecutionContext executionContext)
+        public async Task ExecuteAsync(InitiateUserAccountRecoveryViaEmailCommand command, IExecutionContext executionContext)
         {
             var options = _userAreaDefinitionRepository.GetOptionsByCode(command.UserAreaCode).AccountRecovery;
             await using (_executionDurationRandomizerScopeManager.Create(options.ExecutionDuration))
@@ -73,7 +72,7 @@ namespace Cofoundry.Domain
             }
         }
 
-        private async Task ExecuteInternalAsync(InitiateUserAccountRecoveryByEmailCommand command, IExecutionContext executionContext)
+        private async Task ExecuteInternalAsync(InitiateUserAccountRecoveryViaEmailCommand command, IExecutionContext executionContext)
         {
             ValidateUserArea(command.UserAreaCode);
             var options = _userAreaDefinitionRepository.GetOptionsByCode(command.UserAreaCode).AccountRecovery;
@@ -117,7 +116,7 @@ namespace Cofoundry.Domain
             }
         }
 
-        private async Task<UserSummary> GetUserAsync(InitiateUserAccountRecoveryByEmailCommand command)
+        private async Task<UserSummary> GetUserAsync(InitiateUserAccountRecoveryViaEmailCommand command)
         {
             var username = _userDataFormatter.UniquifyUsername(command.UserAreaCode, command.Username);
             var dbUser = await _dbContext
