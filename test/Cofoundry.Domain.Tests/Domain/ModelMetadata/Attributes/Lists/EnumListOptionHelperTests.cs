@@ -12,7 +12,7 @@ namespace Cofoundry.Domain.Tests.ModelMetadata.Attributes.Lists
         [Fact]
         public void CanConvert()
         {
-            var result = EnumListOptionHelper.GetOptions(typeof(TestEnum))?.ToList();
+            var result = EnumListOptionHelper.ConvertToOptions(typeof(TestEnum))?.ToList();
 
             using (new AssertionScope())
             {

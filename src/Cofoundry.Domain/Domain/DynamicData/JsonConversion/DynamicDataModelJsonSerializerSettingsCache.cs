@@ -47,14 +47,7 @@ namespace Cofoundry.Domain.Internal
         /// </summary>
         private void HandleDeserializationError(object sender, ErrorEventArgs errorArgs)
         {
-            if (Debugger.IsAttached)
-            {
-                Debug.Assert(false, errorArgs.ErrorContext.Error.Message);
-            }
-            else
-            {
-                _logger.LogWarning(0, errorArgs.ErrorContext.Error, errorArgs.ErrorContext.Error.Message);
-            }
+            _logger.LogWarning(0, errorArgs.ErrorContext.Error, errorArgs.ErrorContext.Error.Message);
             errorArgs.ErrorContext.Handled = true;
         }
     }
