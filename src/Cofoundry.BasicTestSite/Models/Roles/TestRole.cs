@@ -14,14 +14,14 @@
         {
             builder
                 .ApplyRoleConfiguration<AnonymousRole>()
-                .IncludeAllRead()
                 .IncludePage(c => c.CRUD())
                 .IncludeCurrentUser(c => c.Update().Delete())
                 .ExcludeUserInCofoundryAdminUserArea()
-                .ExcludeUserInAllUserAreas()
                 .IncludeAllWrite(p => p.ExceptEntityPermissions<PageEntityDefinition>())
                 .IncludeAllAdminModule(p => p.ExceptEntityPermissions<PageEntityDefinition>())
                 .Include<CofoundryUserCreatePermission>()
+                .IncludeAllRead()
+                .ExcludeUserInAllUserAreas()
                 ;
         }
     }

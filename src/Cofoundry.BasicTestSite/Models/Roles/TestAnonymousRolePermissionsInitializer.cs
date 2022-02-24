@@ -13,8 +13,7 @@ namespace Cofoundry.BasicTestSite
         public void ConfigurePermissions(IPermissionSetBuilder builder)
         {
             builder
-                .IncludeAnonymousRoleDefaults()
-                .IncludePage(p => p.Create());
+                .IncludeAnonymousRoleDefaults();
         }
     }
 }

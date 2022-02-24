@@ -201,6 +201,9 @@ namespace Cofoundry.Domain.Internal
             bool allowDeletions
             )
         {
+            // Super admin role does not require any db-based permissions.
+            if (roleDefinition is SuperAdminRole) return;
+
             var roleInitializer = _rolePermissionInitializerFactory.Create(roleDefinition);
             var permissionSetBuilder = _permissionSetBuilderFactory.Create(codePermissions);
             roleInitializer.Initialize(permissionSetBuilder);
@@ -222,7 +225,7 @@ namespace Cofoundry.Domain.Internal
             }
 
             if (!permissionsToInclude.Any()) return;
-            ValidatePermissions(dbRole.RolePermissions, permissionsToInclude);
+            ValidatePermissions(dbRole, permissionsToInclude);
 
             // add new permissions
             IEnumerable<IPermission> permissionsToAdd;
@@ -259,8 +262,9 @@ namespace Cofoundry.Domain.Internal
         /// permission. E.g. having 'UpdatePage' permission without also
         /// having 'ReadPage' permission.
         /// </summary>
-        private void ValidatePermissions(ICollection<RolePermission> existingPermissions, IEnumerable<IPermission> permissions)
+        private void ValidatePermissions(Role dbRole, IEnumerable<IPermission> permissions)
         {
+            var existingPermissions = dbRole.RolePermissions;
             var entityWithoutReadPermission = permissions
                 .FilterToEntityPermissions()
                 .Where(p => !string.IsNullOrWhiteSpace(p.EntityDefinition?.EntityDefinitionCode))
@@ -276,7 +280,7 @@ namespace Cofoundry.Domain.Internal
 
                 if (readPermission != null)
                 {
-                    var msg = "Read permissions must be granted to entity " + entityCode + " in order to assign additional permissions";
+                    var msg = $"Could not update {dbRole.Title} role with additional permissions for entity '{entityCode}' because the role does not have read permissions to the entity.";
                     throw new ValidationException(msg);
                 }
             }

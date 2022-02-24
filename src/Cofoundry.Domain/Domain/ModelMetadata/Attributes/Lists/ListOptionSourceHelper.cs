@@ -1,9 +1,8 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Cofoundry.Domain
 {
@@ -21,10 +20,7 @@ namespace Cofoundry.Domain
 
             if (optionSourceType.IsEnum)
             {
-                options = Enum
-                    .GetNames(optionSourceType)
-                    .Select(e => new ListOption(TextFormatter.PascalCaseToSentence(e), e))
-                    .ToList();
+                options = EnumListOptionHelper.ConvertToOptions(optionSourceType);
             }
             else
             {
