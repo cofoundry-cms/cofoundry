@@ -14,9 +14,9 @@
         }
 
         /// <summary>
-        /// The username of the user who has had their password changed.
+        /// The user who has had their password changed.
         /// </summary>
-        public string Username { get; set; }
+        public UserSummary User { get; set; }
 
         /// <summary>
         /// The absolute sign in page url e.g. "https://www.example.com/members/sign-in".

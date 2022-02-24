@@ -14,9 +14,9 @@
         }
 
         /// <summary>
-        /// The username of the user requesting to recover their account.
+        /// The user requesting to recover their account.
         /// </summary>
-        public string Username { get; set; }
+        public UserSummary User { get; set; }
 
         /// <summary>
         /// The absolute url for the account recovery completion form e.g.

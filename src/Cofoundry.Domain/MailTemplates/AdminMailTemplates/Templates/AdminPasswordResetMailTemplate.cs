@@ -17,9 +17,9 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
         }
 
         /// <summary>
-        /// The username of the user who has had their password reset.
+        /// The user who has had their password reset.
         /// </summary>
-        public string Username { get; set; }
+        public UserSummary User { get; set; }
 
         /// <summary>
         /// The temporary password that the user can use to log in to 

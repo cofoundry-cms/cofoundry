@@ -30,7 +30,7 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
 
             return new AdminNewUserWithTemporaryPasswordMailTemplate()
             {
-                Username = context.User.Username,
+                User = context.User,
                 ApplicationName = applicationName,
                 SignInUrl = signInUrl,
                 TemporaryPassword = context.TemporaryPassword,
@@ -45,7 +45,7 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
 
             return new AdminPasswordResetMailTemplate()
             {
-                Username = context.User.Username,
+                User = context.User,
                 ApplicationName = applicationName,
                 SignInUrl = loginUrl,
                 TemporaryPassword = context.TemporaryPassword,
@@ -64,7 +64,7 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
 
             return new AdminAccountRecoveryMailTemplate()
             {
-                Username = context.User.Username,
+                User = context.User,
                 ApplicationName = applicationName,
                 RecoveryUrl = _siteUrlResolver.MakeAbsolute(context.RecoveryUrlPath),
                 LayoutFile = AdminMailTemplatePath.LayoutPath
@@ -78,7 +78,7 @@ namespace Cofoundry.Domain.MailTemplates.AdminMailTemplates
 
             return new AdminPasswordChangedMailTemplate()
             {
-                Username = context.User.Username,
+                User = context.User,
                 ApplicationName = applicationName,
                 SignInUrl = loginUrl,
                 LayoutFile = AdminMailTemplatePath.LayoutPath

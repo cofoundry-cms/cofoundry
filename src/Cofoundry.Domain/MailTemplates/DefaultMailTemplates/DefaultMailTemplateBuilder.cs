@@ -36,7 +36,7 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 
             return new DefaultNewUserWithTemporaryPasswordMailTemplate()
             {
-                Username = context.User.Username,
+                User = context.User,
                 ApplicationName = applicationName,
                 SignInUrl = signInUrl,
                 TemporaryPassword = context.TemporaryPassword,
@@ -53,7 +53,7 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 
             return new DefaultPasswordResetMailTemplate()
             {
-                Username = context.User.Username,
+                User = context.User,
                 ApplicationName = applicationName,
                 SignInUrl = loginUrl,
                 TemporaryPassword = context.TemporaryPassword,
@@ -83,7 +83,7 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 
             return new DefaultAccountRecoveryMailTemplate()
             {
-                Username = context.User.Username,
+                User = context.User,
                 ApplicationName = applicationName,
                 RecoveryUrl = _siteUrlResolver.MakeAbsolute(context.RecoveryUrlPath),
                 LayoutFile = DefaultMailTemplatePath.LayoutPath
@@ -110,7 +110,7 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 
             return new DefaultAccountVerificationMailTemplate()
             {
-                Username = context.User.Username,
+                User = context.User,
                 ApplicationName = applicationName,
                 VerificationUrl = _siteUrlResolver.MakeAbsolute(context.VerificationUrlPath),
                 LayoutFile = DefaultMailTemplatePath.LayoutPath
@@ -126,7 +126,7 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
 
             return new DefaultPasswordChangedMailTemplate()
             {
-                Username = context.User.Username,
+                User = context.User,
                 ApplicationName = applicationName,
                 SignInUrl = loginUrl,
                 LayoutFile = DefaultMailTemplatePath.LayoutPath

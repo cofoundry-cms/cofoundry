@@ -15,9 +15,9 @@
         }
 
         /// <summary>
-        /// The username of the user verifying their account.
+        /// The user verifying their account.
         /// </summary>
-        public string Username { get; set; }
+        public UserSummary User { get; set; }
 
         /// <summary>
         /// The absolute url for the account verification page e.g.

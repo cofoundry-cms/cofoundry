@@ -17,9 +17,9 @@ namespace Cofoundry.Domain.MailTemplates.DefaultMailTemplates
         }
 
         /// <summary>
-        /// The username of the new user.
+        /// The newly created user.
         /// </summary>
-        public string Username { get; set; }
+        public UserSummary User { get; set; }
 
         /// <summary>
         /// The temporary password that the user can use to log in to 
