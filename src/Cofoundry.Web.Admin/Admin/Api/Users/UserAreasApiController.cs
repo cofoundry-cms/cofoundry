@@ -21,13 +21,12 @@ namespace Cofoundry.Web.Admin
 
         public async Task<JsonResult> Get()
         {
-            var results = await _contentRepository
+            return await _apiResponseHelper.RunWithResultAsync(() => _contentRepository
                 .UserAreas()
                 .GetAll()
                 .AsMicroSummaries()
-                .ExecuteAsync();
-
-            return _apiResponseHelper.SimpleQueryResponse(results);
+                .ExecuteAsync()
+                );
         }
 
         /// <remarks>
@@ -37,14 +36,13 @@ namespace Cofoundry.Web.Admin
         [AllowAnonymous]
         public async Task<JsonResult> GetPasswordPolicy(string userAreaCode)
         {
-            var results = await _contentRepository
+            return await _apiResponseHelper.RunWithResultAsync(() => _contentRepository
                 .UserAreas()
                 .PasswordPolicies()
                 .GetByCode(userAreaCode)
                 .AsDescription()
-                .ExecuteAsync();
-
-            return _apiResponseHelper.SimpleQueryResponse(results);
+                .ExecuteAsync()
+                );
         }
     }
 }

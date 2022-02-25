@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
     public class PageTemplatesApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
 
         public PageTemplatesApiController(
-            IQueryExecutor queryExecutor,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
         }
 
@@ -27,16 +20,13 @@ namespace Cofoundry.Web.Admin
             if (query == null) query = new SearchPageTemplateSummariesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
-            var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public async Task<JsonResult> GetById(int id)
         {
             var query = new GetPageTemplateDetailsByIdQuery(id);
-            var result = await _queryExecutor.ExecuteAsync(query);
-
-            return _apiResponseHelper.SimpleQueryResponse(result);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
     }
 }

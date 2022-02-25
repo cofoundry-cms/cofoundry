@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -7,17 +6,14 @@ namespace Cofoundry.Web.Admin
 {
     public class UsersApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
         public UsersApiController(
-            IQueryExecutor queryExecutor,
             IApiResponseHelper apiResponseHelper,
             IUserAreaDefinitionRepository userAreaDefinitionRepository
             )
         {
-            _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
         }
@@ -27,16 +23,13 @@ namespace Cofoundry.Web.Admin
             if (query == null) query = new SearchUserSummariesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
-            var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public async Task<JsonResult> GetById(int userId)
         {
             var query = new GetUserDetailsByIdQuery(userId);
-            var result = await _queryExecutor.ExecuteAsync(query);
-
-            return _apiResponseHelper.SimpleQueryResponse(result);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public async Task<JsonResult> Post([FromBody] AddUserCommand command)

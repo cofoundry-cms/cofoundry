@@ -1,13 +1,10 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
@@ -23,7 +20,7 @@ namespace Cofoundry.Web.Admin
             IDomainRepository domainRepository,
             IApiResponseHelper apiResponseHelper,
             IModelValidationService modelValidationService,
-            DynamicDataModelJsonSerializerSettingsCache dynamicDataModelSchemaJsonSerializerSettingsCache 
+            DynamicDataModelJsonSerializerSettingsCache dynamicDataModelSchemaJsonSerializerSettingsCache
             )
         {
             _domainRepository = domainRepository;
@@ -38,25 +35,23 @@ namespace Cofoundry.Web.Admin
             {
                 return _apiResponseHelper.SimpleQueryResponse(Enumerable.Empty<CustomEntityDataModelSchema>());
             }
-            var result = await _domainRepository
-                .WithQuery(rangeQuery)
-                .FilterAndOrderByKeys(rangeQuery.Names)
-                .ExecuteAsync();
 
-            var settings = _dynamicDataModelSchemaJsonSerializerSettingsCache.GetInstance();
-            var jsonResponse = _apiResponseHelper.SimpleQueryResponse(result);
-            jsonResponse.SerializerSettings = settings;
+            var jsonResponse = await _apiResponseHelper.RunWithResultAsync(async () =>
+            {
+                return await _domainRepository
+                    .WithQuery(rangeQuery)
+                    .FilterAndOrderByKeys(rangeQuery.Names)
+                    .ExecuteAsync();
+            });
+            jsonResponse.SerializerSettings = _dynamicDataModelSchemaJsonSerializerSettingsCache.GetInstance();
 
             return jsonResponse;
         }
-        
+
         public async Task<JsonResult> GetByName(string dataModelName)
         {
-            var result = await _domainRepository.ExecuteQueryAsync(new GetNestedDataModelSchemaByNameQuery(dataModelName));
-
-            var settings = _dynamicDataModelSchemaJsonSerializerSettingsCache.GetInstance();
-            var jsonResponse = _apiResponseHelper.SimpleQueryResponse(result);
-            jsonResponse.SerializerSettings = settings;
+            var jsonResponse = await _apiResponseHelper.RunQueryAsync(new GetNestedDataModelSchemaByNameQuery(dataModelName));
+            jsonResponse.SerializerSettings = _dynamicDataModelSchemaJsonSerializerSettingsCache.GetInstance();
 
             return jsonResponse;
         }

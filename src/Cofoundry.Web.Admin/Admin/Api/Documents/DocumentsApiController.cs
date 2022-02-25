@@ -12,15 +12,15 @@ namespace Cofoundry.Web.Admin
 {
     public class DocumentsApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
+        private readonly IDomainRepository _domainRepository;
         private readonly IApiResponseHelper _apiResponseHelper;
 
         public DocumentsApiController(
-            IQueryExecutor queryExecutor,
+            IDomainRepository domainRepository,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
+            _domainRepository = domainRepository;
             _apiResponseHelper = apiResponseHelper;
         }
 
@@ -31,23 +31,25 @@ namespace Cofoundry.Web.Admin
         {
             if (rangeQuery != null && rangeQuery.DocumentAssetIds != null)
             {
-                var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
-                return _apiResponseHelper.SimpleQueryResponse(rangeResults.FilterAndOrderByKeys(rangeQuery.DocumentAssetIds));
+                return await _apiResponseHelper.RunWithResultAsync(async () => 
+                {
+                    return await _domainRepository
+                        .WithQuery(rangeQuery)
+                        .FilterAndOrderByKeys(rangeQuery.DocumentAssetIds)
+                        .ExecuteAsync();
+                });
             }
 
             if (query == null) query = new SearchDocumentAssetSummariesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
-            var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public async Task<JsonResult> GetById(int documentAssetId)
         {
             var query = new GetDocumentAssetDetailsByIdQuery(documentAssetId);
-            var result = await _queryExecutor.ExecuteAsync(query);
-
-            return _apiResponseHelper.SimpleQueryResponse(result);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public Task<JsonResult> Post(AddDocumentAssetCommand command, IFormFile file)

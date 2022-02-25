@@ -1,28 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
     public class CustomEntityVersionsApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
 
         public CustomEntityVersionsApiController(
-            IQueryExecutor queryExecutor,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
         }
-
-        #region queries
 
         public async Task<JsonResult> Get(int customEntityId, GetCustomEntityVersionSummariesByCustomEntityIdQuery query)
         {
@@ -31,13 +22,8 @@ namespace Cofoundry.Web.Admin
             query.CustomEntityId = customEntityId;
             ApiPagingHelper.SetDefaultBounds(query);
 
-            var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
-
-        #endregion
-
-        #region commands
 
         public Task<JsonResult> Post([FromBody] AddCustomEntityDraftVersionCommand command)
         {
@@ -67,7 +53,5 @@ namespace Cofoundry.Web.Admin
             var command = new UnPublishCustomEntityCommand() { CustomEntityId = customEntityId };
             return _apiResponseHelper.RunCommandAsync(command);
         }
-
-        #endregion
     }
 }

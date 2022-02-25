@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin
 {
@@ -24,8 +19,10 @@ namespace Cofoundry.Web.Admin
 
         public async Task<JsonResult> Get()
         {
-            var result = await _dashboardContentService.GetAsync();
-            return _apiResponseHelper.SimpleQueryResponse(result);
+            return await _apiResponseHelper.RunWithResultAsync(async () =>
+            {
+                return await _dashboardContentService.GetAsync();
+            });
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Cofoundry.Core;
 using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -9,17 +8,17 @@ namespace Cofoundry.Web.Admin
 {
     public class ImagesApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
+        private readonly IDomainRepository _domainRepository;
         private readonly IApiResponseHelper _apiResponseHelper;
         private readonly ImageAssetsSettings _imageAssetsSettings;
 
         public ImagesApiController(
-            IQueryExecutor queryExecutor,
+            IDomainRepository domainRepository,
             IApiResponseHelper apiResponseHelper,
             ImageAssetsSettings imageAssetsSettings
             )
         {
-            _queryExecutor = queryExecutor;
+            _domainRepository = domainRepository;
             _apiResponseHelper = apiResponseHelper;
             _imageAssetsSettings = imageAssetsSettings;
         }
@@ -31,23 +30,25 @@ namespace Cofoundry.Web.Admin
         {
             if (rangeQuery != null && rangeQuery.ImageAssetIds != null)
             {
-                var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
-                return _apiResponseHelper.SimpleQueryResponse(rangeResults.FilterAndOrderByKeys(rangeQuery.ImageAssetIds));
+                return await _apiResponseHelper.RunWithResultAsync(async () =>
+                {
+                    return await _domainRepository
+                        .WithQuery(rangeQuery)
+                        .FilterAndOrderByKeys(rangeQuery.ImageAssetIds)
+                        .ExecuteAsync();
+                });
             }
 
             if (query == null) query = new SearchImageAssetSummariesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
-            var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public async Task<JsonResult> GetById(int imageAssetId)
         {
             var query = new GetImageAssetDetailsByIdQuery(imageAssetId);
-            var result = await _queryExecutor.ExecuteAsync(query);
-
-            return _apiResponseHelper.SimpleQueryResponse(result);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public JsonResult GetSettings()

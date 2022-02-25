@@ -36,16 +36,17 @@ namespace Cofoundry.Samples.SPASite
         [HttpGet("session")]
         public async Task<JsonResult> GetAuthSession()
         {
-            var member = await _domainRepository.ExecuteQueryAsync(new GetCurrentMemberSummaryQuery());
-            var token = _antiforgery.GetAndStoreTokens(HttpContext);
-
-            var sessionInfo = new
+            return await _apiResponseHelper.RunWithResultAsync(async () =>
             {
-                Member = member,
-                AntiForgeryToken = token.RequestToken
-            };
+                var member = await _domainRepository.ExecuteQueryAsync(new GetCurrentMemberSummaryQuery());
+                var token = _antiforgery.GetAndStoreTokens(HttpContext);
 
-            return _apiResponseHelper.SimpleQueryResponse(sessionInfo);
+                return new
+                {
+                    Member = member,
+                    AntiForgeryToken = token.RequestToken
+                };
+            });
         }
 
         [HttpPost("register")]

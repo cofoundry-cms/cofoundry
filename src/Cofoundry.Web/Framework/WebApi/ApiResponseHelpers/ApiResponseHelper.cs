@@ -35,7 +35,24 @@ namespace Cofoundry.Web.Internal
 
         public JsonResult SimpleQueryResponse<T>(T result)
         {
-            var response = new SimpleResponseData<T>() { Data = result };
+            var response = new ApiResponseHelperResult<T>() { Data = result };
+
+            var jsonResult = CreateJsonResult(response);
+
+            if (result == null)
+            {
+                jsonResult.StatusCode = 404;
+            }
+
+            return jsonResult;
+        }
+
+        public JsonResult SimpleQueryResponse<T>(IEnumerable<ValidationError> validationErrors, T result)
+        {
+            var response = new ApiResponseHelperResult<T>();
+            response.Errors = FormatValidationErrors(validationErrors);
+            response.IsValid = !response.Errors.Any();
+            response.Data = result;
 
             var jsonResult = CreateJsonResult(response);
 
@@ -49,7 +66,7 @@ namespace Cofoundry.Web.Internal
 
         public JsonResult SimpleCommandResponse<T>(IEnumerable<ValidationError> validationErrors, T returnData)
         {
-            var response = new SimpleCommandResponseData<T>();
+            var response = new ApiResponseHelperResult<T>();
             response.Errors = FormatValidationErrors(validationErrors);
             response.IsValid = !response.Errors.Any();
             response.Data = returnData;
@@ -59,7 +76,7 @@ namespace Cofoundry.Web.Internal
 
         public JsonResult SimpleCommandResponse(IEnumerable<ValidationError> validationErrors)
         {
-            var response = new SimpleCommandResponseData();
+            var response = new ApiResponseHelperResult();
             response.Errors = FormatValidationErrors(validationErrors);
             response.IsValid = !response.Errors.Any();
 
@@ -68,7 +85,7 @@ namespace Cofoundry.Web.Internal
 
         public JsonResult NotPermittedResponse(NotPermittedException ex)
         {
-            var response = new SimpleCommandResponseData();
+            var response = new ApiResponseHelperResult();
             response.Errors = new ValidationError[] { new ValidationError(ex.Message) };
             response.IsValid = false;
 
@@ -77,26 +94,9 @@ namespace Cofoundry.Web.Internal
             return jsonResult;
         }
 
-        private ICollection<ValidationError> FormatValidationErrors(IEnumerable<ValidationError> validationErrors)
+        public Task<JsonResult> RunQueryAsync<TResult>(IQuery<TResult> query)
         {
-            if (validationErrors == null) return Array.Empty<ValidationError>();
-
-            // De-dup and order by prop name.
-            return validationErrors
-                .GroupBy(e =>
-                {
-                    string propKey = string.Empty;
-                    if (e.Properties != null)
-                    {
-                        propKey = string.Join("+", e.Properties);
-                    }
-
-                    return new { e.Message, propKey };
-                })
-                .OrderBy(g => g.Key.propKey)
-                .Select(g => g.FirstOrDefault())
-                .ToArray();
-
+            return RunWithResultAsync(() => _queryExecutor.ExecuteAsync(query));
         }
 
         public async Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta) 
@@ -153,6 +153,7 @@ namespace Cofoundry.Web.Internal
             {
                 return SimpleCommandResponse(errors, outputValue);
             }
+
             return SimpleCommandResponse(errors);
         }
 
@@ -200,10 +201,10 @@ namespace Cofoundry.Web.Internal
                 }
             }
 
-            return SimpleCommandResponse(errors, result);
+            return SimpleQueryResponse(errors, result);
         }
 
-        private JsonResult GetCommandResponse<T>(T response) where T : SimpleCommandResponseData
+        private JsonResult GetCommandResponse<T>(T response) where T : ApiResponseHelperResult
         {
             var jsonResult = CreateJsonResult(response);
 
@@ -213,6 +214,28 @@ namespace Cofoundry.Web.Internal
             }
 
             return jsonResult;
+        }
+
+        private ICollection<ValidationError> FormatValidationErrors(IEnumerable<ValidationError> validationErrors)
+        {
+            if (validationErrors == null) return Array.Empty<ValidationError>();
+
+            // De-dup and order by prop name.
+            return validationErrors
+                .GroupBy(e =>
+                {
+                    string propKey = string.Empty;
+                    if (e.Properties != null)
+                    {
+                        propKey = string.Join("+", e.Properties);
+                    }
+
+                    return new { e.Message, propKey };
+                })
+                .OrderBy(g => g.Key.propKey)
+                .Select(g => g.FirstOrDefault())
+                .ToArray();
+
         }
 
         private object GetCommandOutputValue<TCommand>(TCommand command) where TCommand : ICommand

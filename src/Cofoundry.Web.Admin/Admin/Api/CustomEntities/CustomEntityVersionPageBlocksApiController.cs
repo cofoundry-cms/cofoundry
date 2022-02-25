@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -14,39 +11,26 @@ namespace Cofoundry.Web.Admin
     /// </summary>
     public class CustomEntityVersionPageBlocksApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
 
         public CustomEntityVersionPageBlocksApiController(
-            IQueryExecutor queryExecutor,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
         }
-
-        #region queries
 
         public async Task<JsonResult> Get(int customEntityVersionPageBlockId, CustomEntityVersionPageBlocksActionDataType dataType = CustomEntityVersionPageBlocksActionDataType.RenderDetails)
         {
             if (dataType == CustomEntityVersionPageBlocksActionDataType.UpdateCommand)
             {
                 var updateCommandQuery = new GetPatchableCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>(customEntityVersionPageBlockId);
-                var updateCommandResult = await _queryExecutor.ExecuteAsync(updateCommandQuery);
-
-                return _apiResponseHelper.SimpleQueryResponse(updateCommandResult);
+                return await _apiResponseHelper.RunQueryAsync(updateCommandQuery);
             }
 
             var query = new GetCustomEntityVersionPageBlockRenderDetailsByIdQuery() { CustomEntityVersionPageBlockId = customEntityVersionPageBlockId, PublishStatus = PublishStatusQuery.Latest };
-            var results = await _queryExecutor.ExecuteAsync(query);
-
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
-        
-        #endregion
-
-        #region commands
 
         public Task<JsonResult> Post([ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] AddCustomEntityVersionPageBlockCommand command)
         {
@@ -83,7 +67,5 @@ namespace Cofoundry.Web.Admin
 
             return _apiResponseHelper.RunCommandAsync(command);
         }
-        
-        #endregion
     }
 }

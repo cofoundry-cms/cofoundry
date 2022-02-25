@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
     public class PagesApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
+        private readonly IDomainRepository _domainRepository;
 
         public PagesApiController(
-            IQueryExecutor queryExecutor,
+            IDomainRepository domainRepository,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
+            _domainRepository = domainRepository;
             _apiResponseHelper = apiResponseHelper;
         }
-
-        #region queries
 
         public async Task<JsonResult> Get(
             [FromQuery] SearchPageSummariesQuery query,
@@ -32,29 +26,26 @@ namespace Cofoundry.Web.Admin
         {
             if (rangeQuery != null && rangeQuery.PageIds != null)
             {
-                var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
-                return _apiResponseHelper.SimpleQueryResponse(rangeResults.FilterAndOrderByKeys(rangeQuery.PageIds));
+                return await _apiResponseHelper.RunWithResultAsync(async () =>
+                {
+                    return _domainRepository
+                        .WithQuery(rangeQuery)
+                        .FilterAndOrderByKeys(rangeQuery.PageIds)
+                        .ExecuteAsync();
+                });
             }
 
             if (query == null) query = new SearchPageSummariesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
-            var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public async Task<JsonResult> GetById(int pageId)
         {
             var query = new GetPageDetailsByIdQuery(pageId);
-            var result = await _queryExecutor.ExecuteAsync(query);
-
-            return _apiResponseHelper.SimpleQueryResponse(result);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
-        
-
-        #endregion
-
-        #region commands
 
         public Task<JsonResult> Post([FromBody] AddPageCommand command)
         {
@@ -83,7 +74,5 @@ namespace Cofoundry.Web.Admin
         {
             return await _apiResponseHelper.RunCommandAsync(command);
         }
-
-        #endregion
     }
 }

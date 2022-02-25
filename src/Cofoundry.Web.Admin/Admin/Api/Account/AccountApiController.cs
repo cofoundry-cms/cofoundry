@@ -1,38 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
     public class AccountApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-        private readonly IUserContextService _userContextService;
 
         public AccountApiController(
-            IQueryExecutor queryExecutor,
-            IApiResponseHelper apiResponseHelper,
-            IUserContextService userContextService
+            IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
-            _userContextService = userContextService;
         }
 
         public async Task<JsonResult> Get()
         {
             var query = new GetCurrentUserDetailsQuery();
-
-            var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
-        
+
         public async Task<JsonResult> Patch([FromBody] IDelta<UpdateCurrentUserCommand> delta)
         {
             return await _apiResponseHelper.RunCommandAsync(delta);

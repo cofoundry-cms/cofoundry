@@ -1,44 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
     public class SettingsApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
 
         public SettingsApiController(
-            IQueryExecutor queryExecutor,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
         }
 
-        #region queries
-
         public async Task<IActionResult> GetGeneralSiteSettings()
         {
-            var results = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<GeneralSiteSettings>());
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            var query = new GetSettingsQuery<GeneralSiteSettings>();
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public async Task<IActionResult> GetSeoSettings()
         {
-            var results = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>());
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            var query = new GetSettingsQuery<SeoSettings>();
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
-
-        #endregion
-
-        #region commands
 
         public Task<JsonResult> PatchGeneralSiteSettings([FromBody] IDelta<UpdateGeneralSiteSettingsCommand> delta)
         {
@@ -49,7 +36,5 @@ namespace Cofoundry.Web.Admin
         {
             return _apiResponseHelper.RunCommandAsync(delta);
         }
-        
-        #endregion
     }
 }

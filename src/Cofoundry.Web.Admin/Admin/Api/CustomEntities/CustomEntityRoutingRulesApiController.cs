@@ -10,22 +10,18 @@ namespace Cofoundry.Web.Admin
 {
     public class CustomEntityRoutingRulesApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
 
         public CustomEntityRoutingRulesApiController(
-            IQueryExecutor queryExecutor,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
         }
 
         public async Task<JsonResult> Get()
         {
-            var results = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityRoutingRulesQuery());
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(new GetAllCustomEntityRoutingRulesQuery());
         }
     }
 }

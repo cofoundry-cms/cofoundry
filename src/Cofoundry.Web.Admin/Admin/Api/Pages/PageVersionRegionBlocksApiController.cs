@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -16,42 +13,30 @@ namespace Cofoundry.Web.Admin
     /// </remarks>
     public class PageVersionRegionBlocksApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
-        private readonly ICommandExecutor _commandExecutor;
 
         public PageVersionRegionBlocksApiController(
-            IQueryExecutor queryExecutor,
-            ICommandExecutor commandExecutor,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
-            _commandExecutor = commandExecutor;
         }
-
-        #region queries
 
         public async Task<JsonResult> Get(int pageVersionBlockId, PageVersionRegionBlocksActionDataType dataType = PageVersionRegionBlocksActionDataType.RenderDetails)
         {
             if (dataType == PageVersionRegionBlocksActionDataType.UpdateCommand)
             {
                 var updateCommandQuery = new GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand>(pageVersionBlockId);
-                var updateCommandResult = await _queryExecutor.ExecuteAsync(updateCommandQuery);
-
-                return _apiResponseHelper.SimpleQueryResponse(updateCommandResult);
+                return await _apiResponseHelper.RunQueryAsync(updateCommandQuery);
             }
-            
-            var query = new GetPageVersionBlockRenderDetailsByIdQuery() { PageVersionBlockId = pageVersionBlockId, PublishStatus = PublishStatusQuery.Latest };
-            var results = await _queryExecutor.ExecuteAsync(query);
-            
-            return _apiResponseHelper.SimpleQueryResponse(results);
+
+            var query = new GetPageVersionBlockRenderDetailsByIdQuery()
+            {
+                PageVersionBlockId = pageVersionBlockId,
+                PublishStatus = PublishStatusQuery.Latest
+            };
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
-
-        #endregion
-
-        #region commands
 
         public Task<JsonResult> Post([ModelBinder(BinderType = typeof(PageVersionBlockDataModelCommandModelBinder))] AddPageVersionBlockCommand command)
         {
@@ -87,7 +72,5 @@ namespace Cofoundry.Web.Admin
 
             return _apiResponseHelper.RunCommandAsync(command);
         }
-        
-        #endregion
     }
 }

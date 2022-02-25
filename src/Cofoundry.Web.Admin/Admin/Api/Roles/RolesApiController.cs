@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -22,8 +19,6 @@ namespace Cofoundry.Web.Admin
             _apiResponseHelper = apiResponseHelper;
         }
 
-        #region queries
-
         public async Task<JsonResult> Get([FromQuery] SearchRolesQuery query)
         {
             if (query == null) query = new SearchRolesQuery();
@@ -32,16 +27,12 @@ namespace Cofoundry.Web.Admin
             var results = await _queryExecutor.ExecuteAsync(query);
             return _apiResponseHelper.SimpleQueryResponse(results);
         }
-        
+
         public async Task<JsonResult> GetById(int roleId)
         {
-            var result = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(roleId));
-            return _apiResponseHelper.SimpleQueryResponse(result);
+            var query = new GetRoleDetailsByIdQuery(roleId);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
-
-        #endregion
-
-        #region commands
 
         public Task<JsonResult> Post([FromBody] AddRoleCommand command)
         {
@@ -60,7 +51,5 @@ namespace Cofoundry.Web.Admin
 
             return _apiResponseHelper.RunCommandAsync(command);
         }
-
-        #endregion
     }
 }

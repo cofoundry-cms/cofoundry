@@ -1,31 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Domain;
+﻿using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
     public class PageVersionsApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
+        private readonly IDomainRepository _domainRepository;
         private readonly IApiResponseHelper _apiResponseHelper;
-        private readonly ICommandExecutor _commandExecutor;
 
         public PageVersionsApiController(
-            IQueryExecutor queryExecutor,
-            ICommandExecutor commandExecutor,
+            IDomainRepository domainRepository,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
+            _domainRepository = domainRepository;
             _apiResponseHelper = apiResponseHelper;
-            _commandExecutor = commandExecutor;
         }
-
-        #region queries
 
         public async Task<JsonResult> Get(int pageId, GetPageVersionSummariesByPageIdQuery query)
         {
@@ -33,13 +25,8 @@ namespace Cofoundry.Web.Admin
             query.PageId = pageId;
             ApiPagingHelper.SetDefaultBounds(query);
 
-            var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
-
-        #endregion
-
-        #region commands
 
         public Task<JsonResult> Post([FromBody] AddPageDraftVersionCommand command)
         {
@@ -50,14 +37,14 @@ namespace Cofoundry.Web.Admin
         {
             // Custom patching because we may need to create a draft version first
             var query = new GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand>(pageId);
-            var command = await _queryExecutor.ExecuteAsync(query);
+            var command = await _domainRepository.ExecuteQueryAsync(query);
 
             if (command == null)
             {
                 var createDraftCommand = new AddPageDraftVersionCommand();
                 createDraftCommand.PageId = pageId;
-                await _commandExecutor.ExecuteAsync(createDraftCommand);
-                command = await _queryExecutor.ExecuteAsync(query);
+                await _domainRepository.ExecuteCommandAsync(createDraftCommand);
+                command = await _domainRepository.ExecuteQueryAsync(query);
             }
 
             delta.Patch(command);
@@ -68,7 +55,6 @@ namespace Cofoundry.Web.Admin
         public Task<JsonResult> DeleteDraft(int pageId)
         {
             var command = new DeletePageDraftVersionCommand() { PageId = pageId };
-
             return _apiResponseHelper.RunCommandAsync(command);
         }
 
@@ -83,7 +69,5 @@ namespace Cofoundry.Web.Admin
             var command = new UnPublishPageCommand() { PageId = pageId };
             return _apiResponseHelper.RunCommandAsync(command);
         }
-
-        #endregion
     }
 }

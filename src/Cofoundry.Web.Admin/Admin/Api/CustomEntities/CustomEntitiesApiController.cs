@@ -1,56 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
     public class CustomEntitiesApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
+        private readonly IDomainRepository _domainRepository;
         private readonly IApiResponseHelper _apiResponseHelper;
 
         public CustomEntitiesApiController(
-            IQueryExecutor queryExecutor,
+            IDomainRepository domainRepository,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
+            _domainRepository = domainRepository;
             _apiResponseHelper = apiResponseHelper;
         }
-
-        #region queries
 
         public async Task<JsonResult> Get([FromQuery] SearchCustomEntitySummariesQuery query, [FromQuery] GetCustomEntitySummariesByIdRangeQuery rangeQuery)
         {
             if (rangeQuery != null && rangeQuery.CustomEntityIds != null)
             {
-                var rangeResults = await _queryExecutor.ExecuteAsync(rangeQuery);
-                return _apiResponseHelper.SimpleQueryResponse(rangeResults.FilterAndOrderByKeys(rangeQuery.CustomEntityIds));
+                return await _apiResponseHelper.RunWithResultAsync(async () =>
+                {
+                    return await _domainRepository
+                        .WithQuery(rangeQuery)
+                        .FilterAndOrderByKeys(rangeQuery.CustomEntityIds)
+                        .ExecuteAsync();
+                });
             }
 
             if (query == null) query = new SearchCustomEntitySummariesQuery();
             ApiPagingHelper.SetDefaultBounds(query);
 
-            var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public async Task<JsonResult> GetById(int customEntityId)
         {
             var query = new GetCustomEntityDetailsByIdQuery(customEntityId);
-            var result = await _queryExecutor.ExecuteAsync(query);
-
-            return _apiResponseHelper.SimpleQueryResponse(result);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
-
-        #endregion
-
-        #region commands
 
         public Task<JsonResult> Post([ModelBinder(BinderType = typeof(CustomEntityDataModelCommandModelBinder))] AddCustomEntityCommand command)
         {
@@ -79,7 +72,5 @@ namespace Cofoundry.Web.Admin
         {
             return _apiResponseHelper.RunCommandAsync(command);
         }
-
-        #endregion
     }
 }

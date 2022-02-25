@@ -10,35 +10,31 @@ namespace Cofoundry.Web.Admin
 {
     public class PageDirectoriesApiController : BaseAdminApiController
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IApiResponseHelper _apiResponseHelper;
 
         public PageDirectoriesApiController(
-            IQueryExecutor queryExecutor,
             IApiResponseHelper apiResponseHelper
             )
         {
-            _queryExecutor = queryExecutor;
             _apiResponseHelper = apiResponseHelper;
         }
 
         public async Task<JsonResult> Get()
         {
-            var results = await _queryExecutor.ExecuteAsync(new GetAllPageDirectoryRoutesQuery());
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            var query = new GetAllPageDirectoryRoutesQuery();
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public async Task<JsonResult> GetTree()
         {
             var query = new GetPageDirectoryTreeQuery();
-            var results = await _queryExecutor.ExecuteAsync(query);
-            return _apiResponseHelper.SimpleQueryResponse(results);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
-        
+
         public async Task<JsonResult> GetById(int pageDirectoryId)
         {
-            var result = await _queryExecutor.ExecuteAsync(new GetPageDirectoryNodeByIdQuery(pageDirectoryId));
-            return _apiResponseHelper.SimpleQueryResponse(result);
+            var query = new GetPageDirectoryNodeByIdQuery(pageDirectoryId);
+            return await _apiResponseHelper.RunQueryAsync(query);
         }
 
         public Task<JsonResult> Post([FromBody] AddPageDirectoryCommand command)
