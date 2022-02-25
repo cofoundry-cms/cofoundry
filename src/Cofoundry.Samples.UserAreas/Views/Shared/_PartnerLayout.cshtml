@@ -19,7 +19,7 @@
                     <a class="nav-link" href="/partners/exclusive">Exclusive Offers</a>
                 </li>
             }
-            @if (user.IsLoggedIn)
+            @if (user.IsSignedIn)
             {
                 <li class="nav-item">
                     <a class="nav-link" href="@UrlLibrary.PartnerSignOut()">Logout</a>

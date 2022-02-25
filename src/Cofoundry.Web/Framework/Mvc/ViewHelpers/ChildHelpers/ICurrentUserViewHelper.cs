@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain;
+﻿using System.Threading.Tasks;
 
 namespace Cofoundry.Web
 {
@@ -18,7 +14,7 @@ namespace Cofoundry.Web
         /// loaded it is cached so you don't have to worry about calling this 
         /// multiple times.
         /// </summary>
-        Task<CurrentUserViewHelperContext> GetAsync();
+        Task<ICurrentUserViewHelperContext> GetAsync();
 
         /// <summary>
         /// Returns information about the currently logged in user for a 
@@ -30,6 +26,6 @@ namespace Cofoundry.Web
         /// <param name="userAreaCode">
         /// The unique 3 letter identifier code for the user area to check for.
         /// </param>
-        Task<CurrentUserViewHelperContext> GetAsync(string userAreaCode);
+        Task<ICurrentUserViewHelperContext> GetAsync(string userAreaCode);
     }
 }

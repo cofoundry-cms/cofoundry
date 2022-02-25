@@ -4,15 +4,15 @@ using Cofoundry.Domain.CQS;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web.Internal
 {
     /// <summary>
     /// A view helper for providing information about the currently logged in user
     /// </summary>
     public class CurrentUserViewHelper : ICurrentUserViewHelper
     {
-        private CurrentUserViewHelperContext _helperContext = null;
-        private Dictionary<string, CurrentUserViewHelperContext> _alternativeHelperContextCache = new Dictionary<string, CurrentUserViewHelperContext>();
+        private ICurrentUserViewHelperContext _helperContext = null;
+        private Dictionary<string, ICurrentUserViewHelperContext> _alternativeHelperContextCache = new Dictionary<string, ICurrentUserViewHelperContext>();
 
         private readonly IUserContextService _userContextService;
         private readonly IQueryExecutor _queryExecutor;
@@ -33,7 +33,7 @@ namespace Cofoundry.Web
         /// loaded it is cached so you don't have to worry about calling this 
         /// multiple times.
         /// </summary>
-        public async Task<CurrentUserViewHelperContext> GetAsync()
+        public async Task<ICurrentUserViewHelperContext> GetAsync()
         {
             // since this only runs in views it shouldn't need to be threadsafe
             if (_helperContext == null)
@@ -55,11 +55,11 @@ namespace Cofoundry.Web
         /// <param name="userAreaCode">
         /// The unique 3 letter identifier code for the user area to check for.
         /// </param>
-        public async Task<CurrentUserViewHelperContext> GetAsync(string userAreaCode)
+        public async Task<ICurrentUserViewHelperContext> GetAsync(string userAreaCode)
         {
             if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
 
-            if (_helperContext?.User?.UserArea?.UserAreaCode == userAreaCode)
+            if (_helperContext?.Data?.UserArea?.UserAreaCode == userAreaCode)
             {
                 return _helperContext;
             }
@@ -79,17 +79,16 @@ namespace Cofoundry.Web
             return helperContext;
         }
 
-
-        private async Task<CurrentUserViewHelperContext> GetHelperContextAsync(IUserContext userContext)
+        private async Task<ICurrentUserViewHelperContext> GetHelperContextAsync(IUserContext userContext)
         {
             var context = new CurrentUserViewHelperContext();
             context.Role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(userContext.RoleId), userContext);
 
             if (userContext.UserId.HasValue)
             {
-                var query = new GetUserMicroSummaryByIdQuery(userContext.UserId.Value);
-                context.User = await _queryExecutor.ExecuteAsync(query, userContext);
-                context.IsLoggedIn = true;
+                var query = new GetUserSummaryByIdQuery(userContext.UserId.Value);
+                context.Data = await _queryExecutor.ExecuteAsync(query, userContext);
+                context.IsSignedIn = true;
             }
 
             return context;

@@ -1,5 +1,6 @@
 using Cofoundry.Domain;
 using Cofoundry.Domain.CQS;
+using Cofoundry.Web.Internal;
 using Moq;
 using System.Threading.Tasks;
 using Xunit;
@@ -24,8 +25,10 @@ namespace Cofoundry.Web.Tests
             var cachedResult = await currentUserViewHelper.GetAsync();
 
             Assert.False(result.IsLoggedIn);
+            Assert.False(result.IsSignedIn);
             Assert.True(result.Role.IsAnonymousRole);
             Assert.Null(result.User);
+            Assert.Null(result.Data);
             Assert.Equal(result, cachedResult);
         }
 
@@ -43,10 +46,11 @@ namespace Cofoundry.Web.Tests
             var result = await currentUserViewHelper.GetAsync();
             var cachedResult = await currentUserViewHelper.GetAsync();
 
-            Assert.True(result.IsLoggedIn);
+            Assert.True(result.IsSignedIn);
             Assert.False(result.Role.IsAnonymousRole);
             Assert.Equal(userContext.RoleId, result.Role.RoleId);
             Assert.Equal(userContext.UserId, result.User.UserId);
+            Assert.Equal(userContext.UserId, result.Data.UserId);
             Assert.Equal(result, cachedResult);
         }
 
@@ -59,10 +63,11 @@ namespace Cofoundry.Web.Tests
             var result = await currentUserViewHelper.GetAsync(_userAreaContext.UserArea.UserAreaCode);
             var cachedResult = await currentUserViewHelper.GetAsync(_userAreaContext.UserArea.UserAreaCode);
 
-            Assert.True(result.IsLoggedIn);
+            Assert.True(result.IsSignedIn);
             Assert.False(result.Role.IsAnonymousRole);
             Assert.Equal(_userAreaContext.RoleId, result.Role.RoleId);
             Assert.Equal(_userAreaContext.UserId, result.User.UserId);
+            Assert.Equal(_userAreaContext.UserId, result.Data.UserId);
             Assert.Equal(result, cachedResult);
         }
 
@@ -109,8 +114,8 @@ namespace Cofoundry.Web.Tests
                 });
 
             queryExecutor
-                .Setup(r => r.ExecuteAsync(It.Is<GetUserMicroSummaryByIdQuery>(m => m.UserId == _userAreaContext.UserId), It.Is<IUserContext>(m => m == _userAreaContext)))
-                .ReturnsAsync(() => new UserMicroSummary()
+                .Setup(r => r.ExecuteAsync(It.Is<GetUserSummaryByIdQuery>(m => m.UserId == _userAreaContext.UserId), It.Is<IUserContext>(m => m == _userAreaContext)))
+                .ReturnsAsync(() => new UserSummary()
                 {
                     UserId = _userAreaContext.UserId.Value
                 });
@@ -126,8 +131,8 @@ namespace Cofoundry.Web.Tests
                     });
 
                 queryExecutor
-                    .Setup(r => r.ExecuteAsync(It.Is<GetUserMicroSummaryByIdQuery>(m => m.UserId == defaultUserContext.UserId.Value), It.Is<IUserContext>(m => m == defaultUserContext)))
-                    .ReturnsAsync(new UserMicroSummary()
+                    .Setup(r => r.ExecuteAsync(It.Is<GetUserSummaryByIdQuery>(m => m.UserId == defaultUserContext.UserId.Value), It.Is<IUserContext>(m => m == defaultUserContext)))
+                    .ReturnsAsync(new UserSummary()
                     {
                         UserId = defaultUserContext.UserId.Value
                     });

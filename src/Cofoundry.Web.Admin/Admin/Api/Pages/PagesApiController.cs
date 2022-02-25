@@ -28,7 +28,7 @@ namespace Cofoundry.Web.Admin
             {
                 return await _apiResponseHelper.RunWithResultAsync(async () =>
                 {
-                    return _domainRepository
+                    return await _domainRepository
                         .WithQuery(rangeQuery)
                         .FilterAndOrderByKeys(rangeQuery.PageIds)
                         .ExecuteAsync();

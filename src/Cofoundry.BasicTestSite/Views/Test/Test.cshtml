@@ -1,1 +1,14 @@
-﻿<h1>Test</h1>
+﻿@inject ICofoundryHelper Cofoundry
+@{
+    var user = await Cofoundry.CurrentUser.GetAsync();
+}
+
+@if (user.IsSignedIn)
+{
+    <p>Welcome @user.Data.Username</p>
+}
+else
+{
+    <p>IsAnonymousRole will be true: @user.Role.IsAnonymousRole.</p>
+    <p>Data will be null: @user.Data.</p>
+}
