@@ -13,7 +13,9 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// Maps the result of the query using the specified mapper function. The 
-        /// mapping takes place after the original query has been executed.
+        /// mapping takes place after the original query has been executed. If the query
+        /// result is <see langword="null"/> then mapping is skipped and the default value
+        /// of <typeparamref name="TOutput"/> is returned.
         /// </summary>
         /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
         /// <typeparam name="TInput">The input type to map from.</typeparam>
@@ -31,13 +33,17 @@ namespace Cofoundry.Domain
                 async () =>
                 {
                     var result = await innerMutator.ExecuteAsync();
+                    if (result == null) return default(TOutput);
+
                     return mapper(result);
                 });
         }
 
         /// <summary>
         /// Maps the result of the query using the specified mapper function. The 
-        /// mapping takes place after the original query has been executed.
+        /// mapping takes place after the original query has been executed. If the query
+        /// result is <see langword="null"/> then mapping is skipped and the default value
+        /// of <typeparamref name="TOutput"/> is returned.
         /// </summary>
         /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
         /// <typeparam name="TInput">The input type to map from.</typeparam>
@@ -55,6 +61,8 @@ namespace Cofoundry.Domain
                 async () =>
                 {
                     var result = await innerMutator.ExecuteAsync();
+                    if (result == null) return default(TOutput);
+
                     return await mapper(result);
                 });
         }
@@ -62,13 +70,19 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Maps each item in the collection result of a query using the specified
         /// mapper function, returning a new collection of mapped items. The mapping 
-        /// takes place after the original query has been executed.
+        /// takes place after the original query has been executed. If the query
+        /// result is <see langword="null"/> then mapping is skipped and <see langword="null"/>
+        /// is returned.
         /// </summary>
         /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
         /// <typeparam name="TInputValue">The type of collection item to map from.</typeparam>
         /// <typeparam name="TOutputValue">The result item type after the mutation has been applied.</typeparam>
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
-        /// <param name="mapper">A mapper function to run on each item in the query result.</param>
+        /// <param name="mapper">
+        /// A mapper function to run on each item in the query result. If the item is <see langword="null"/>
+        /// then mapping is skipped for that item and the <see langword="default"/> value of <typeparamref name="TOutputValue"/> 
+        /// is returned instead.
+        /// </param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
         public static IDomainRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
             this IDomainRepositoryQueryMutator<TQueryResult, ICollection<TInputValue>> innerMutator,
@@ -80,21 +94,28 @@ namespace Cofoundry.Domain
                 async () =>
                 {
                     var result = await innerMutator.ExecuteAsync();
+                    if (result == null) return null;
 
-                    return result.Select(i => mapper(i)).ToList();
+                    return result.Select(i => i == null ? default(TOutputValue) : mapper(i)).ToList();
                 });
         }
 
         /// <summary>
         /// Maps each item in the collection result of a query using the specified
         /// mapper function, returning a new collection of mapped items. The mapping 
-        /// takes place after the original query has been executed.
+        /// takes place after the original query has been executed. If the query
+        /// result is <see langword="null"/> then mapping is skipped and <see langword="null"/>
+        /// is returned.
         /// </summary>
         /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
         /// <typeparam name="TInputValue">The type of collection item to map from.</typeparam>
         /// <typeparam name="TOutputValue">The result item type after the mutation has been applied.</typeparam>
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
-        /// <param name="mapper">A mapper function to run on each item in the query result.</param>
+        /// <param name="mapper">
+        /// A mapper function to run on each item in the query result. If the item is <see langword="null"/>
+        /// then mapping is skipped for that item and the <see langword="default"/> value of <typeparamref name="TOutputValue"/> 
+        /// is returned instead.
+        /// </param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
         public static IDomainRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
             this IDomainRepositoryQueryMutator<TQueryResult, IEnumerable<TInputValue>> innerMutator,
@@ -106,21 +127,28 @@ namespace Cofoundry.Domain
                 async () =>
                 {
                     var result = await innerMutator.ExecuteAsync();
+                    if (result == null) return null;
 
-                    return result.Select(i => mapper(i)).ToList();
+                    return result.Select(i => i == null ? default(TOutputValue) : mapper(i)).ToList();
                 });
         }
 
         /// <summary>
         /// Maps each item in the collection result of a query using the specified
         /// mapper function, returning a new collection of mapped items. The mapping 
-        /// takes place after the original query has been executed.
+        /// takes place after the original query has been executed. If the query
+        /// result is <see langword="null"/> then mapping is skipped and <see langword="null"/>
+        /// is returned.
         /// </summary>
         /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
         /// <typeparam name="TInputValue">The type of collection item to map from.</typeparam>
         /// <typeparam name="TOutputValue">The result item type after the mutation has been applied.</typeparam>
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
-        /// <param name="mapper">An async mapper function to run on each item in the query result.</param>
+        /// <param name="mapper">
+        /// An async mapper function to run on each item in the query result. If the item is <see langword="null"/>
+        /// then mapping is skipped for that item and the <see langword="default"/> value of <typeparamref name="TOutputValue"/> 
+        /// is returned instead.
+        /// </param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
         public static IDomainRepositoryQueryMutator<TQueryResult, ICollection<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
             this IDomainRepositoryQueryMutator<TQueryResult, IEnumerable<TInputValue>> innerMutator,
@@ -132,13 +160,21 @@ namespace Cofoundry.Domain
                 async () =>
                 {
                     var innerResult = await innerMutator.ExecuteAsync();
+                    if (innerResult == null) return null;
 
                     var result = new List<TOutputValue>();
 
                     foreach (var innerItem in innerResult)
                     {
-                        var value = await mapper(innerItem);
-                        result.Add(value);
+                        if (innerItem == null)
+                        {
+                            result.Add(default(TOutputValue));
+                        }
+                        else
+                        {
+                            var value = await mapper(innerItem);
+                            result.Add(value);
+                        }
                     }
 
                     return result;
@@ -148,7 +184,9 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Maps each item in the dictionary result of a query using the specified
         /// mapper function, returning a new dictionary of mapped items. The mapping 
-        /// takes place after the original query has been executed.
+        /// takes place after the original query has been executed. If the query
+        /// result is <see langword="null"/> then mapping is skipped and <see langword="null"/>
+        /// is returned.
         /// 
         /// Be careful using per-item mapping with async tasks, as running async tasks
         /// per-item can affect performance. Always prefer mapping in batch to avoid
@@ -162,7 +200,9 @@ namespace Cofoundry.Domain
         /// <param name="mapper">
         /// A mapper function to run on each value in the query result. Always prefer
         /// mapping in batch rather than per item if mapping requires data access or other
-        /// time consuming tasks.
+        /// time consuming tasks. If the item is <see langword="null"/>  then mapping is skipped for 
+        /// that item and the <see langword="default"/> value of <typeparamref name="TOutputValue"/> 
+        /// is returned instead.
         /// </param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
         public static IDomainRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TOutputValue>> MapItem<TQueryResult, TKey, TInputValue, TOutputValue>(
@@ -175,12 +215,13 @@ namespace Cofoundry.Domain
                 async () =>
                 {
                     var result = await innerMutator.ExecuteAsync();
+                    if (result == null) return null;
 
                     return result
                         .Select(i => new
                         {
                             Key = i.Key,
-                            Value = mapper(i.Value)
+                            Value = i.Value == null ? default(TOutputValue) : mapper(i.Value)
                         }).ToDictionary(i => i.Key, i => i.Value);
                 });
         }
@@ -188,14 +229,20 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Maps each item in the dictionary result of a query using the specified
         /// mapper function, returning a new dictionary of mapped items. The mapping 
-        /// takes place after the original query has been executed.
+        /// takes place after the original query has been executed. If the query
+        /// result is <see langword="null"/> then mapping is skipped and <see langword="null"/>
+        /// is returned.
         /// </summary>
         /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
         /// <typeparam name="TKey">The dictionary key type.</typeparam>
         /// <typeparam name="TInputValue">The type of value in the dictionary to map from.</typeparam>
         /// <typeparam name="TOutputValue">The type to map each value in the dictionary to.</typeparam>
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
-        /// <param name="mapper">An async mapper function to run on each value in the query result.</param>
+        /// <param name="mapper">
+        /// An async mapper function to run on each item in the query result. If the item is <see langword="null"/>
+        /// then mapping is skipped for that item and the <see langword="default"/> value of <typeparamref name="TOutputValue"/> 
+        /// is returned instead.
+        /// </param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
         public static IDomainRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TOutputValue>> MapItem<TQueryResult, TKey, TInputValue, TOutputValue>(
             this IDomainRepositoryQueryMutator<TQueryResult, IDictionary<TKey, TInputValue>> innerMutator,
@@ -207,13 +254,21 @@ namespace Cofoundry.Domain
                 async () =>
                 {
                     var innerResult = await innerMutator.ExecuteAsync();
+                    if (innerResult == null) return null;
 
                     var result = new Dictionary<TKey, TOutputValue>(innerResult.Count);
 
                     foreach (var innerItem in innerResult)
                     {
-                        var value = await mapper(innerItem.Value);
-                        result.Add(innerItem.Key, value);
+                        if (innerItem.Value == null)
+                        {
+                            result.Add(innerItem.Key, default(TOutputValue));
+                        }
+                        else
+                        {
+                            var value = await mapper(innerItem.Value);
+                            result.Add(innerItem.Key, value);
+                        }
                     }
 
                     return result;
@@ -246,6 +301,8 @@ namespace Cofoundry.Domain
                 async () =>
                 {
                     var result = await innerMutator.ExecuteAsync();
+                    if (result == null) return null;
+
                     return result
                         .FilterAndOrderByKeys(orderedKeys)
                         .ToList();
@@ -255,13 +312,19 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Maps each item in the paged result of a query using the specified
         /// mapper function, returning a new PagedQueryResult of mapped items. The mapping 
-        /// takes place after the original query has been executed.
+        /// takes place after the original query has been executed. If the query
+        /// result is <see langword="null"/> then mapping is skipped and <see langword="null"/>
+        /// is returned.
         /// </summary>
         /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
         /// <typeparam name="TInputValue">The type of item to map from.</typeparam>
         /// <typeparam name="TOutputValue">The result item type after the mutation has been applied.</typeparam>
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
-        /// <param name="mapper">A mapper function to run on each item in the query result.</param>
+        /// <param name="mapper">
+        /// A mapper function to run on each item in the query result. If the item is <see langword="null"/>
+        /// then mapping is skipped for that item and the <see langword="default"/> value of <typeparamref name="TOutputValue"/> 
+        /// is returned instead.
+        /// </param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
         public static IDomainRepositoryQueryMutator<TQueryResult, PagedQueryResult<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
             this IDomainRepositoryQueryMutator<TQueryResult, PagedQueryResult<TInputValue>> innerMutator,
@@ -273,10 +336,11 @@ namespace Cofoundry.Domain
                 async () =>
                 {
                     var result = await innerMutator.ExecuteAsync();
+                    if (result == null) return null;
 
                     var mappedItems = result
                         .Items
-                        .Select(i => mapper(i))
+                        .Select(i => i == null ? default(TOutputValue) : mapper(i))
                         .ToList();
 
                     return result.ChangeType(mappedItems);
@@ -286,13 +350,19 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Maps each item in the paged result of a query using the specified
         /// mapper function, returning a new PagedQueryResult of mapped items. The mapping 
-        /// takes place after the original query has been executed.
+        /// takes place after the original query has been executed. If the query
+        /// result is <see langword="null"/> then mapping is skipped and <see langword="null"/>
+        /// is returned.
         /// </summary>
         /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
         /// <typeparam name="TInputValue">The type of item to map from.</typeparam>
         /// <typeparam name="TOutputValue">The result item type after the mutation has been applied.</typeparam>
         /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
-        /// <param name="mapper">An async mapper function to run on each item in the query result.</param>
+        /// <param name="mapper">
+        /// An async mapper function to run on each item in the query result. If the item is <see langword="null"/>
+        /// then mapping is skipped for that item and the <see langword="default"/> value of <typeparamref name="TOutputValue"/> 
+        /// is returned instead.
+        /// </param>
         /// <returns>A new query mutator instance that allows for method chaining.</returns>
         public static IDomainRepositoryQueryMutator<TQueryResult, PagedQueryResult<TOutputValue>> MapItem<TQueryResult, TInputValue, TOutputValue>(
             this IDomainRepositoryQueryMutator<TQueryResult, PagedQueryResult<TInputValue>> innerMutator,
@@ -304,13 +374,21 @@ namespace Cofoundry.Domain
                 async () =>
                 {
                     var innerResult = await innerMutator.ExecuteAsync();
+                    if (innerResult == null) return null;
 
                     var mappedItems = new List<TOutputValue>(innerResult.Items.Count);
 
                     foreach (var item in innerResult.Items)
                     {
-                        var mappedItem = await mapper(item);
-                        mappedItems.Add(mappedItem);
+                        if (item == null)
+                        {
+                            mappedItems.Add(default(TOutputValue));
+                        }
+                        else
+                        {
+                            var mappedItem = await mapper(item);
+                            mappedItems.Add(mappedItem);
+                        }
                     }
 
                     return innerResult.ChangeType(mappedItems);
