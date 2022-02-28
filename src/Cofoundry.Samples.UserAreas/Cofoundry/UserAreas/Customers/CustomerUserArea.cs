@@ -57,8 +57,8 @@ namespace Cofoundry.Samples.UserAreas
         public string SignInPath => "/customers/login/";
 
         /// <summary>
-        /// Setting this to true means that this user area will be used as the default login
-        /// schema which means the HttpContext.User property will be set to this identity.
+        /// Setting this to true means that this user area will be used as the default sign in
+        /// scheme which means the HttpContext.User property will be set to this identity.
         /// </summary>
         public bool IsDefaultAuthScheme => true;
 

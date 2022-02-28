@@ -55,7 +55,7 @@
         /// default. In an application with multiple user areas a client can be signed in
         /// to multiple users at the same time, so the default scheme dictates which user
         /// area is authenticated by default when querying the "current user" and is therefore
-        /// also use for checking permissions. It's rare that a site would implement more 
+        /// also used for checking permissions. It's rare that a site would implement more 
         /// than one custom user area, so in most cases this should be set to <see langword="true"/>.
         /// </summary>
         bool IsDefaultAuthScheme { get; }

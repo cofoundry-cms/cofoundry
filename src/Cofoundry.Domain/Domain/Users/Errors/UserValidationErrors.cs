@@ -36,7 +36,7 @@ namespace Cofoundry.Domain
                 );
 
             /// <summary>
-            /// Too many failed authentication attempts have occured either for the
+            /// Too many failed authentication attempts have occurred either for the
             /// username or IP address.
             /// </summary>
             public static readonly ValidationErrorTemplate TooManyFailedAttempts = new ValidationErrorTemplate(
@@ -57,7 +57,7 @@ namespace Cofoundry.Domain
 
             /// <summary>
             /// The credentials are valid but a password change is required before sign in is permitted.
-            /// This error isn't expected to be shown to the user but is instead excpected to be intercepted 
+            /// This error isn't expected to be shown to the user but is instead expected to be intercepted 
             /// and handled in the UI.
             /// </summary>
             public static readonly ValidationErrorTemplate PasswordChangeRequired = new ValidationErrorTemplate(
@@ -67,7 +67,7 @@ namespace Cofoundry.Domain
                 );
 
             /// <summary>
-            /// The credentials are valid but the acount has not been verified, and the user are is configured to
+            /// The credentials are valid but the account has not been verified, and the user area is configured to
             /// not allow sign ins for unverified users.
             /// </summary>
             public static readonly ValidationErrorTemplate AccountNotVerified = new ValidationErrorTemplate(

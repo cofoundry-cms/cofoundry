@@ -37,14 +37,29 @@ namespace Cofoundry.Domain.Internal
 
         public IUserAreaDefinition GetRequiredByCode(string userAreaCode)
         {
-            var area = GetByCode(userAreaCode);
+            var definition = GetByCode(userAreaCode);
+            ValidateDefinitionExists(definition, userAreaCode);
 
-            if (area == null)
+            return definition;
+        }
+
+        public IUserAreaDefinition GetRequired<TDefinition>()
+            where TDefinition : IUserAreaDefinition
+        {
+            var definition = _userAreas
+                .Select(p => p.Value)
+                .FirstOrDefault(p => p is TDefinition);
+            ValidateDefinitionExists(definition, typeof(TDefinition).Name);
+
+            return definition;
+        }
+
+        private static void ValidateDefinitionExists(IUserAreaDefinition definition, string identifier)
+        {
+            if (definition == null)
             {
-                throw new EntityNotFoundException<IUserAreaDefinition>(userAreaCode, $"UserArea '{userAreaCode}' is not registered. but has been requested.");
+                throw new EntityNotFoundException<IUserAreaDefinition>($"IUserAreaDefinition '{identifier}' is not registered. but has been requested.", identifier);
             }
-
-            return area;
         }
 
         public IEnumerable<IUserAreaDefinition> GetAll()
