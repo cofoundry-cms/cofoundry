@@ -24,7 +24,12 @@ namespace Cofoundry.Domain.Internal
 
         public IDomainRepositoryQueryContext<UserMicroSummary> AsMicroSummary()
         {
-            var query = new GetUserMicroSummaryByEmailQuery(_userAreaCode, _emailAddress);
+            var query = new GetUserMicroSummaryByEmailQuery()
+            {
+                UserAreaCode = _userAreaCode,
+                Email = _emailAddress
+            };
+
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }

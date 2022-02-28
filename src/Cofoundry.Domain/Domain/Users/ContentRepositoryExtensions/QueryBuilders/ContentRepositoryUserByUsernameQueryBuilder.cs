@@ -24,7 +24,12 @@ namespace Cofoundry.Domain.Internal
 
         public IDomainRepositoryQueryContext<UserMicroSummary> AsMicroSummary()
         {
-            var query = new GetUserMicroSummaryByUsernameQuery(_userAreaCode, _username);
+            var query = new GetUserMicroSummaryByUsernameQuery()
+            {
+                UserAreaCode = _userAreaCode,
+                Username = _username
+            };
+
             return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
         }
     }
