@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Determines if an email-based account recovery request is valid. The result is returned as a 
-    /// <see cref="ValidationQueryResult"/> which describes any errors that have occured.
+    /// <see cref="ValidationQueryResult"/> which describes any errors that have occurred.
     /// </summary>
     public class ValidateUserAccountVerificationByEmailQueryHandler
         : IQueryHandler<ValidateUserAccountVerificationByEmailQuery, AuthorizedTaskTokenValidationResult>

@@ -32,7 +32,7 @@ namespace Cofoundry.Web
         Complete,
 
         /// <summary>
-        /// An error has occured in the auto-updater task and the will be attempted again soon.
+        /// An error has occurred in the auto-updater task and the will be attempted again soon.
         /// </summary>
         Error
     }

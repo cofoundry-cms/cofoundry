@@ -59,7 +59,7 @@ namespace Cofoundry.Web.Tests.Integration.Controllers
             var content = await result.Content.ReadAsStringAsync();
 
             result.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-            content.Should().Match("*an error has occured*");
+            content.Should().Match("*an error has occurred*");
         }
 
         [Fact]

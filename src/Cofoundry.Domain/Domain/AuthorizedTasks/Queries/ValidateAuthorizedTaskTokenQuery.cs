@@ -5,7 +5,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Determines if an authorized task token is valid. The result is returned as a 
-    /// <see cref="AuthorizedTaskTokenValidationResult"/> which describes any errors that have occured.
+    /// <see cref="AuthorizedTaskTokenValidationResult"/> which describes any errors that have occurred.
     /// </summary>
     public class ValidateAuthorizedTaskTokenQuery : IQuery<AuthorizedTaskTokenValidationResult>
     {

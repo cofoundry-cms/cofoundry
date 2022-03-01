@@ -135,7 +135,7 @@ namespace Cofoundry.Domain
                 /// <summary>
                 /// The request has been invalidated, likely because the
                 /// password has already been updated, or a valid sign in
-                /// has occured.
+                /// has occurred.
                 /// </summary>
                 public static readonly ValidationErrorTemplate Invalidated = new ValidationErrorTemplate(
                     AddRequestValidationNamespace("invalidated"),
@@ -246,7 +246,7 @@ namespace Cofoundry.Domain
                 /// <summary>
                 /// The request has been invalidated, likely because the
                 /// password has already been updated, or a valid sign in
-                /// has occured.
+                /// has occurred.
                 /// </summary>
                 public static readonly ValidationErrorTemplate Invalidated = new ValidationErrorTemplate(
                     AddRequestValidationNamespace("invalidated"),

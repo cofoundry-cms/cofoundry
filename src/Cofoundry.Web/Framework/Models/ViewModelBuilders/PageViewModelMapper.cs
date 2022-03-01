@@ -130,7 +130,7 @@ namespace Cofoundry.Web
             viewModel.StatusCode = mappingParameters.StatusCode;
             viewModel.StatusCodeDescription = GetStatusCodeDescription(viewModel.StatusCode);
             viewModel.PageTitle = "Error: " + viewModel.StatusCodeDescription;
-            viewModel.MetaDescription = "Sorry, an error has occured";
+            viewModel.MetaDescription = "Sorry, an error has occurred";
             viewModel.Path = mappingParameters.Path;
             viewModel.PathBase = mappingParameters.PathBase;
             viewModel.QueryString = mappingParameters.QueryString;

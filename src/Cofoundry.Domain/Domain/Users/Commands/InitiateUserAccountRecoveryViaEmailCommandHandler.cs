@@ -109,11 +109,6 @@ namespace Cofoundry.Domain.Internal
             {
                 throw new InvalidOperationException($"Cannot reset the password because the {userArea.Name} user area does not allow password sign in.");
             }
-
-            if (!userArea.UseEmailAsUsername)
-            {
-                throw new InvalidOperationException($"Cannot reset the password because the {userArea.Name} user area does not require email addresses.");
-            }
         }
 
         private async Task<UserSummary> GetUserAsync(InitiateUserAccountRecoveryViaEmailCommand command)

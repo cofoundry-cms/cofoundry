@@ -9,7 +9,7 @@ namespace Cofoundry.Domain.Data
     /// </summary>
     public class UnexpectedStoredProcedureResultException : Exception
     {
-        const string DEFAULT_MESSAGE = "An error occured calling stored procedure {0}. {1}";
+        const string DEFAULT_MESSAGE = "An error occurred calling stored procedure {0}. {1}";
 
         public UnexpectedStoredProcedureResultException(string storedProcedureName)
             : base(string.Format(DEFAULT_MESSAGE, storedProcedureName, "An unexpected result was returned."))

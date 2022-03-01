@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Internal
 {
     /// <summary>
     /// Writes a log entry to the FailedAuthenticationAttempt table indicating
-    /// an unsuccessful login attempt occured.
+    /// an unsuccessful login attempt occurred.
     /// </summary>
     public class LogFailedAuthenticationAttemptCommandHandler
         : ICommandHandler<LogFailedAuthenticationAttemptCommand>

@@ -26,7 +26,7 @@ namespace Cofoundry.Web.Internal
 
         /// <summary>
         /// HttpContext.User does not clear out the claims principal which causes
-        /// issues if the user is requested after sign out has occured (e.g. in 
+        /// issues if the user is requested after sign out has occurred (e.g. in 
         /// view rendering). This is used to track sign-outs and prevent this occuring.
         /// </summary>
         private HashSet<string> _signedOutUserAreas = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

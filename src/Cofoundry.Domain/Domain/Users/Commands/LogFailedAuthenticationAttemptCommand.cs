@@ -5,7 +5,7 @@ namespace Cofoundry.Domain
 {
     /// <summary>
     /// Writes a log entry to the FailedAuthenticationAttempt table indicating
-    /// an unsuccessful login attempt occured.
+    /// an unsuccessful login attempt occurred.
     /// </summary>
     public class LogFailedAuthenticationAttemptCommand : ICommand
     {

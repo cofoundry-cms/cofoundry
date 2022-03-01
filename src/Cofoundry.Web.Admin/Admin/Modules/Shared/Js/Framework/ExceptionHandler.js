@@ -17,7 +17,7 @@
 //            modalDialogService
 //                .alert({
 //                    title: 'Error',
-//                    message: 'An unexpected error has occured.'
+//                    message: 'An unexpected error has occurred.'
 //                })
 //                .then(function () {
 //                    isErrorDisplayed = false;

@@ -7,7 +7,7 @@ export default {
             return Promise.reject(response.data.errors);
         }
         else {
-            alert('An unhandled error has occured');
+            alert('An unhandled error has occurred');
             return Promise.reject(error);
         }
     },

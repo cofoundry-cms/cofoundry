@@ -8,7 +8,7 @@ namespace Cofoundry.Web
     {
         /// <summary>
         /// Completes the transaction scope only if the <paramref name="modelState"/> is
-        /// valid, indicating that no handled or unhandled errors occured udring execution.
+        /// valid, indicating that no handled or unhandled errors occurred udring execution.
         /// </summary>
         /// <param name="modelState">
         /// The <see cref="ModelStateDictionary"/> to check for validity, usually accessed via

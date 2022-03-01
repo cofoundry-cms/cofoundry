@@ -11,7 +11,7 @@ namespace Cofoundry.Web
     /// </summary>
     public class AutoUpdateFailedException : Exception
     {
-        const string DEFAULT_MESSAGE = "An error has occured while updating the system. See the logs for more details.";
+        const string DEFAULT_MESSAGE = "An error has occurred while updating the system. See the logs for more details.";
 
         public AutoUpdateFailedException()
             : base(DEFAULT_MESSAGE)

@@ -33,7 +33,7 @@ namespace Cofoundry.Domain.Data.Internal
 
         /// <summary>
         /// Writes a log entry to the FailedAuthenticationAttempt table indicating
-        /// an unsuccessful login attempt occured.
+        /// an unsuccessful login attempt occurred.
         /// </summary>
         /// <param name="userAreaCode">
         /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area 

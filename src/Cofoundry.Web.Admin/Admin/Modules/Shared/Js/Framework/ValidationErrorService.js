@@ -79,7 +79,7 @@ function (
 
     function unhandledValidationErrorHandler(errors) {
         // TODO: Display a friendly validation error popup
-        throw new Error('An unhandled validation exception has occured');
+        throw new Error('An unhandled validation exception has occurred');
     }
 
     function executeHandlers(handlers, errors) {

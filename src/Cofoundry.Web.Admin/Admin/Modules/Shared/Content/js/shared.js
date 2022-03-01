@@ -7959,7 +7959,7 @@ angular.module('cms.shared').factory('shared.errorService', function () {
 //            modalDialogService
 //                .alert({
 //                    title: 'Error',
-//                    message: 'An unexpected error has occured.'
+//                    message: 'An unexpected error has occurred.'
 //                })
 //                .then(function () {
 //                    isErrorDisplayed = false;
@@ -8049,7 +8049,7 @@ function (
                     if (response.status != 404 || response.config.method !== 'GET') {
                         error = {
                             title: response.statusText,
-                            message: 'An unexpected server error has occured.',
+                            message: 'An unexpected server error has occurred.',
                             response: response
                         };
 
@@ -8253,7 +8253,7 @@ function (
 
     function unhandledValidationErrorHandler(errors) {
         // TODO: Display a friendly validation error popup
-        throw new Error('An unhandled validation exception has occured');
+        throw new Error('An unhandled validation exception has occurred');
     }
 
     function executeHandlers(handlers, errors) {

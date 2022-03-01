@@ -62,7 +62,7 @@ function (
                     if (response.status != 404 || response.config.method !== 'GET') {
                         error = {
                             title: response.statusText,
-                            message: 'An unexpected server error has occured.',
+                            message: 'An unexpected server error has occurred.',
                             response: response
                         };
 

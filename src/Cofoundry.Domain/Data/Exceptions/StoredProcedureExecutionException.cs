@@ -5,7 +5,7 @@ namespace Cofoundry.Domain.Data
 {
     /// <summary>
     /// <para>
-    /// Indicates that a known error occured during the execution of a 
+    /// Indicates that a known error occurred during the execution of a 
     /// stored procedure. An <see cref="ErrorNumber"/> reference should
     /// be provided to indicate the error type, with known errors documented in 
     /// <see cref="StoredProcedureErrorNumbers"/>
@@ -18,7 +18,7 @@ namespace Cofoundry.Domain.Data
     /// </summary>
     public class StoredProcedureExecutionException : Exception
     {
-        const string DEFAULT_MESSAGE = "Error {1} occured calling stored procedure {0}.";
+        const string DEFAULT_MESSAGE = "Error {1} occurred calling stored procedure {0}.";
 
         /// <summary>
         /// Creates a new instance using the default message.

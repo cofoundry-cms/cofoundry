@@ -9,7 +9,7 @@ namespace Cofoundry.Domain
     {
         /// <summary>
         /// Determines if an account recovery request is valid. The result is returned as a 
-        /// <see cref="AuthorizedTaskTokenValidationResult"/> which describes any errors that have occured.
+        /// <see cref="AuthorizedTaskTokenValidationResult"/> which describes any errors that have occurred.
         /// </summary>
         /// <param name="query">Query parameters.</param>
         IDomainRepositoryQueryContext<AuthorizedTaskTokenValidationResult> Validate(ValidateUserAccountRecoveryByEmailQuery query);
