@@ -40,7 +40,7 @@ namespace Cofoundry.Domain
             /// username or IP address.
             /// </summary>
             public static readonly ValidationErrorTemplate TooManyFailedAttempts = new ValidationErrorTemplate(
-                AddAuthenticationNamespace("max-attempts-exceeded"),
+                AddAuthenticationNamespace("rate-limit-exceeded"),
                 "Too many failed authentication attempts have been detected, please try again later."
                 );
 
@@ -245,8 +245,7 @@ namespace Cofoundry.Domain
 
                 /// <summary>
                 /// The request has been invalidated, likely because the
-                /// password has already been updated, or a valid sign in
-                /// has occurred.
+                /// account has already been verified by another request.
                 /// </summary>
                 public static readonly ValidationErrorTemplate Invalidated = new ValidationErrorTemplate(
                     AddRequestValidationNamespace("invalidated"),

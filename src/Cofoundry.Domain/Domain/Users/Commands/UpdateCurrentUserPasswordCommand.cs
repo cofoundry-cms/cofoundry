@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Cofoundry.Domain
 {
     /// <summary>
-    /// Updates the password of the currently logged in user, using the
+    /// Updates the password of the currently signed in user, using the
     /// <see cref="UpdateCurrentUserPasswordCommand.OldPassword"/> field 
     /// to authenticate the request.
     /// </summary>
