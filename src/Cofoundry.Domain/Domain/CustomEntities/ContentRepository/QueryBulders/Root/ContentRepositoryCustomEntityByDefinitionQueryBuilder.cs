@@ -23,7 +23,7 @@ namespace Cofoundry.Domain.Internal
 
         public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummary(PublishStatusQuery? publishStatusQuery = null)
+        public IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null)
         {
             var query = new GetCustomEntityRenderSummariesByDefinitionCodeQuery(_customEntityDefinitionCode);
 

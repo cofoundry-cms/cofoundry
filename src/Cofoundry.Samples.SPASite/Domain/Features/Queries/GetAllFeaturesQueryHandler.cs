@@ -27,7 +27,7 @@ namespace Cofoundry.Samples.SPASite.Domain
             var features = await _contentRepository
                 .CustomEntities()
                 .GetByDefinition<FeatureCustomEntityDefinition>()
-                .AsRenderSummary()
+                .AsRenderSummaries()
                 .MapItem(MapFeature)
                 .ExecuteAsync();
 

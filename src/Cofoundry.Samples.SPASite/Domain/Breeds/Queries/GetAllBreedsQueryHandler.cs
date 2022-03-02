@@ -30,7 +30,7 @@ namespace Cofoundry.Samples.SPASite.Domain
             var breeds = await _contentRepository
                 .CustomEntities()
                 .GetByDefinition<BreedCustomEntityDefinition>()
-                .AsRenderSummary()
+                .AsRenderSummaries()
                 .MapItem(MapBreed)
                 .ExecuteAsync();
 
