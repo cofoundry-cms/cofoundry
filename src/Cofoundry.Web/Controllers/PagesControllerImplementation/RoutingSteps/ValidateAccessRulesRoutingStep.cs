@@ -65,7 +65,7 @@ namespace Cofoundry.Web
 
         private async Task<EntityAccessRuleSet> FindAccessRuleViolation(PageActionRoutingState state)
         {
-            var accessRuleViolation = state.PageRoutingInfo.CanAccess(state.AmbientUserContext);
+            var accessRuleViolation = state.PageRoutingInfo.ValidateAccess(state.AmbientUserContext);
 
             // If the user associated with the ambient context is not authorized, then we need to check
             // to see if the user is logged into any other user areas that are permitted to access the route.
@@ -87,7 +87,7 @@ namespace Cofoundry.Web
                 foreach (var userAreaCode in userAreaCodesToCheck)
                 {
                     var context = await _userContextService.GetCurrentContextByUserAreaAsync(userAreaCode);
-                    var ruleViolation = state.PageRoutingInfo.CanAccess(context);
+                    var ruleViolation = state.PageRoutingInfo.ValidateAccess(context);
                     if (ruleViolation == null)
                     {
                         _logger.LogDebug(

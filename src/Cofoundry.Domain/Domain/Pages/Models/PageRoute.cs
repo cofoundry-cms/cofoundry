@@ -107,7 +107,7 @@ namespace Cofoundry.Domain
         /// Optional set of rules that can be used to restrict access to this page.
         /// These rules are for this page only, and does not include rules
         /// associated with any parent directories. To check he full directory tree 
-        /// use the <see cref="CanAccess"/> method. If there are no rules associated 
+        /// use the <see cref="ValidateAccess"/> method. If there are no rules associated 
         /// with the page then this will be null.
         /// </summary>
         public EntityAccessRuleSet AccessRuleSet { get; set; }
@@ -137,19 +137,30 @@ namespace Cofoundry.Domain
         }
 
         /// <summary>
+        /// Determines if the <paramref name="user"/> can access the page by checking
+        /// the access rules for the page and any parent directories.
+        /// </summary>
+        /// <param name="user">The <see cref="IUserContext"/> to check against access rules.</param>
+        /// <returns><see langword="true"/> if the user is permitted access; <see langword="false"/> if access rule violations were found.</returns>
+        public bool CanAccess(IUserContext user)
+        {
+            return ValidateAccess(user) == null;
+        }
+
+        /// <summary>
         /// Determines if the <paramref name="user"/> violates any access rules
         /// for this page or any parent directories. If the user cannot access the 
-        /// page then the rule viloation is returned. The user may violate several 
-        /// rules in the page and directory tree but only the most specific rule is 
+        /// page then the violated <see cref="EntityAccessRuleSet"/> is returned. The user may 
+        /// violate several rules in the page and directory tree but only the most specific rule set is 
         /// returned, starting with the page and then working back up through the 
         /// directory tree. 
         /// </summary>
         /// <param name="user">The <see cref="IUserContext"/> to check against access rules.</param>
         /// <returns>
-        /// If any rules are violated, then the most specific rule is returned; 
+        /// If any rules are violated, then the most specific <see cref="EntityAccessRuleSet"/> is returned; 
         /// otherwise <see langword="null"/>.
         /// </returns>
-        public EntityAccessRuleSet CanAccess(IUserContext user)
+        public EntityAccessRuleSet ValidateAccess(IUserContext user)
         {
             if (user == null) throw new ArgumentNullException(nameof(user));
             EntityInvalidOperationException.ThrowIfNull(this, r => r.PageDirectory);
