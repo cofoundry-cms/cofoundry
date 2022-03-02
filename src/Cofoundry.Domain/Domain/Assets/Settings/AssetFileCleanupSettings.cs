@@ -1,7 +1,6 @@
 ﻿using Cofoundry.Core.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
@@ -20,6 +19,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// How often the background task should run, measured in minutes.
         /// </summary>
+        [Range(1, 1439)]
         public int BackgroundTaskFrequencyInMinutes { get; set; } = 60;
 
         /// <summary>

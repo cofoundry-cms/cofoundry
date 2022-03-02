@@ -20,7 +20,7 @@ namespace Cofoundry.Core.ExecutionDurationRandomizer
 
         /// <summary>
         /// The inclusive upper bound of the randomized duration, measured in 
-        /// milliseconds (1000ms = 1s). Set to zero or <see langword="null"/> to disable the feature.
+        /// milliseconds (2000ms = 2s). Set to zero or <see langword="null"/> to disable the feature.
         /// </summary>
         public int? MaxInMilliseconds { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Configuration;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain
 {
@@ -14,11 +15,12 @@ namespace Cofoundry.Domain
         public bool Enabled { get; set; } = true;
 
         /// <summary>
-        /// How often the background task should run, measured in hours. Defaults
+        /// How often the background task should run, measured in minutes. Defaults
         /// to 11 hours and 27 minutes. Note that the background task processed all
         /// user areas and so customizing this setting for a specific user area has 
         /// no effect.
         /// </summary>
+        [Range(1, 1439)]
         public int BackgroundTaskFrequencyInMinutes { get; set; } = 687;
 
         /// <summary>
