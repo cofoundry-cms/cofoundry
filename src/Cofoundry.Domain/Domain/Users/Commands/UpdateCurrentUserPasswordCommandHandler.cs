@@ -56,7 +56,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(UpdateCurrentUserPasswordCommand command, IExecutionContext executionContext)
         {
-            _permissionValidationService.EnforceIsLoggedIn(executionContext.UserContext);
+            _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
 
             var user = await GetUser(executionContext);
             EntityNotFoundException.ThrowIfNull(user, executionContext.UserContext.UserId);

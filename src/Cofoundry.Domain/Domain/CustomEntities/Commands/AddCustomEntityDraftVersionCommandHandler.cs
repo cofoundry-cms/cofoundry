@@ -57,7 +57,7 @@ namespace Cofoundry.Domain.Internal
             var definitionCode = await QueryVersionAndGetDefinitionCode(command).FirstOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(definitionCode, command.CustomEntityId);
 
-            _permissionValidationService.EnforceIsLoggedIn(executionContext.UserContext);
+            _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
             _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(definitionCode, executionContext.UserContext);
 
             var newVersionId = await _customEntityStoredProcedures.AddDraftAsync(

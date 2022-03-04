@@ -26,11 +26,6 @@ namespace Cofoundry.BasicTestSite
         {
             var visualEditorState = await _visualEditorStateService.GetCurrentAsync();
 
-            var query = new SearchCustomEntityRenderSummariesQuery();
-            query.CustomEntityDefinitionCode = BlogPostCustomEntityDefinition.DefinitionCode;
-            query.PublishStatus = visualEditorState.GetAmbientEntityPublishStatusQuery();
-            query.PageSize = 3;
-
             var entities = await _contentRepository
                 .CustomEntities()
                 .Search()

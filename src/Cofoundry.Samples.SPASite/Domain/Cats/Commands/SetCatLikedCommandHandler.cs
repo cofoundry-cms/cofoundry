@@ -23,7 +23,7 @@ namespace Cofoundry.Samples.SPASite.Domain
     /// </summary>
     public class SetCatLikedCommandHandler
         : ICommandHandler<SetCatLikedCommand>
-        , ILoggedInPermissionCheckHandler
+        , ISignedInPermissionCheckHandler
     {
         private readonly IEntityFrameworkSqlExecutor _entityFrameworkSqlExecutor;
         private readonly SPASiteDbContext _spaSiteDbContext;

@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Internal
 {
     public class GetUpdateUserCommandByIdQueryHandler
         : IQueryHandler<GetPatchableCommandByIdQuery<UpdateUserCommand>, UpdateUserCommand>
-        , ILoggedInPermissionCheckHandler
+        , ISignedInPermissionCheckHandler
     {
         private readonly CofoundryDbContext _dbContext;
         private readonly IPermissionValidationService _permissionValidationService;

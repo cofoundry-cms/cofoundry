@@ -29,7 +29,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(DeleteCurrentUserCommand command, IExecutionContext executionContext)
         {
-            _permissionValidationService.EnforceIsLoggedIn(executionContext.UserContext);
+            _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
             var userId = executionContext.UserContext.UserId.Value;
 
             using (var scope = _domainRepository.Transactions().CreateScope())

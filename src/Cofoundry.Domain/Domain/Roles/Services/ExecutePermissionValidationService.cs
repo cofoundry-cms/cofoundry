@@ -82,9 +82,9 @@ namespace Cofoundry.Domain.Internal
         protected void CheckAdditionalPermissionHandlers<TCommandHandler>(TCommandHandler _commandHandler, IExecutionContext executionContext, IPermissionValidationService _permissionValidationService)
         {
             // Hardcoded checking of a few additional handlers, but could use DI here to make this more flexible.
-            if (_commandHandler is ILoggedInPermissionCheckHandler)
+            if (_commandHandler is ISignedInPermissionCheckHandler)
             {
-                _permissionValidationService.EnforceIsLoggedIn(executionContext.UserContext);
+                _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
             }
 
             if (_commandHandler is ICofoundryUserPermissionCheckHandler)

@@ -13,7 +13,7 @@ namespace Cofoundry.Samples.SPASite.Domain
 {
     public class GetCatSummariesByMemberLikedQueryHandler
         : IQueryHandler<GetCatSummariesByMemberLikedQuery, ICollection<CatSummary>>
-        , ILoggedInPermissionCheckHandler
+        , ISignedInPermissionCheckHandler
     {
         private readonly IContentRepository _contentRepository;
         private readonly SPASiteDbContext _dbContext;

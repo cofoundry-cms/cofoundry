@@ -59,16 +59,16 @@ namespace Cofoundry.Domain.Internal
         /// <summary>
         /// Checks to see if the user if logged in and throws a NotPermittedException if not.
         /// </summary>
-        public virtual async Task EnforceIsLoggedInAsync()
+        public virtual async Task EnforceIsSignedInAsync()
         {
             var userContext = await _userContextService.GetCurrentContextAsync();
-            EnforceIsLoggedIn(userContext);
+            EnforceIsSignedIn(userContext);
         }
 
         /// <summary>
         /// Checks to see if the specified user context is logged in and throws a NotPermittedException if not.
         /// </summary>
-        public virtual void EnforceIsLoggedIn(IUserContext userContext)
+        public virtual void EnforceIsSignedIn(IUserContext userContext)
         {
             ThrowExceptionIfNotLoggedIn(userContext);
         }

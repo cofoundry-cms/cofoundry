@@ -7,7 +7,7 @@ namespace Cofoundry.Domain
         /// <summary>
         /// Execute queries or commands using the user context associated with the
         /// specified user area. This is useful when implementing multiple user areas
-        /// whereby a client can be logged into multiple user accounts belonging to 
+        /// whereby a client can be signed into multiple user accounts belonging to 
         /// different user areas. Use this to force execution to use the context
         /// of a specific user area rather than relying on the "ambient" or default.
         /// </summary>

@@ -40,7 +40,7 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(UpdateCurrentUserCommand command, IExecutionContext executionContext)
         {
-            _permissionValidationService.EnforceIsLoggedIn(executionContext.UserContext);
+            _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
             var userId = executionContext.UserContext.UserId.Value;
 
             var user = await _dbContext

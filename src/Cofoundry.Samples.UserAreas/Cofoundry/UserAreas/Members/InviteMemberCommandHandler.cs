@@ -7,7 +7,7 @@ namespace Cofoundry.Samples.UserAreas
 {
     public class InviteMemberCommandHandler
     : ICommandHandler<InviteMemberCommand>
-    , ILoggedInPermissionCheckHandler
+    , ISignedInPermissionCheckHandler
     {
         private readonly IAdvancedContentRepository _contentRepository;
         private readonly IAuthorizedTaskTokenUrlHelper _authorizedTaskTokenUrlHelper;
