@@ -40,14 +40,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <EmbeddedResource Include="MailTemplates\AdminMailTemplates\**\*.cshtml;MailTemplates\AdminMailTemplates\*\content\**\*.*" />
-    <EmbeddedResource Include="MailTemplates\DefaultMailTemplates\**\*.cshtml;MailTemplates\DefaultMailTemplates\*\content\**\*.*" />
+    <EmbeddedResource Include="MailTemplates\Templates\**\*.cshtml" />
     <EmbeddedResource Include="Install\**\*.sql" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultAccountVerificationMailTemplate_html.cshtml" />
-    <None Remove="MailTemplates\DefaultMailTemplates\Templates\DefaultAccountVerificationMailTemplate_text.cshtml" />
   </ItemGroup>
 	
 </Project>

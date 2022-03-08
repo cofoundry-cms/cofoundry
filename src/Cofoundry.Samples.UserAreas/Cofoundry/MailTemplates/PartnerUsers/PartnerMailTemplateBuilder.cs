@@ -26,7 +26,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             _siteUrlResolver = siteUrlResolver;
         }
 
-        public Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
+        public Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(INewUserWithTemporaryPasswordTemplateBuilderContext context)
         {
             var template = new NewUserWithTemporaryPasswordMailTemplate()
             {
@@ -38,7 +38,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             return Task.FromResult<IMailTemplate>(template);
         }
 
-        public Task<IMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context)
+        public Task<IMailTemplate> BuildPasswordResetTemplateAsync(IPasswordResetTemplateBuilderContext context)
         {
             var template = new PasswordResetMailTemplate()
             {
@@ -50,7 +50,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             return Task.FromResult<IMailTemplate>(template);
         }
 
-        public Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context)
+        public Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(IAccountRecoveryTemplateBuilderContext context)
         {
             var template = new AccountRecoveryMailTemplate()
             {
@@ -61,7 +61,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             return Task.FromResult<IMailTemplate>(template);
         }
 
-        public Task<IMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)
+        public Task<IMailTemplate> BuildPasswordChangedTemplateAsync(IPasswordChangedTemplateBuilderContext context)
         {
             var template = new PasswordChangedMailTemplate()
             {
@@ -72,7 +72,7 @@ namespace Cofoundry.Samples.UserAreas.PartnerMailTemplates
             return Task.FromResult<IMailTemplate>(template);
         }
 
-        public Task<IMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context)
+        public Task<IMailTemplate> BuildAccountVerificationTemplateAsync(IAccountVerificationTemplateBuilderContext context)
         {
             // Partner accounts don't require verification
             throw new NotSupportedException();

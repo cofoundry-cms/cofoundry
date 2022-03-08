@@ -21,7 +21,7 @@ namespace Cofoundry.Domain.MailTemplates
         /// Key data that can be used in the template such as user data
         /// and the temporary password.
         /// </param>
-        Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context);
+        Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(INewUserWithTemporaryPasswordTemplateBuilderContext context);
 
         /// <summary>
         /// Creates a mail template that is used when a user has their
@@ -31,7 +31,7 @@ namespace Cofoundry.Domain.MailTemplates
         /// Key data that can be used in the template such as user data
         /// and the temporary password.
         /// </param>
-        Task<IMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context);
+        Task<IMailTemplate> BuildPasswordResetTemplateAsync(IPasswordResetTemplateBuilderContext context);
 
         /// <summary>
         /// Creates a mail template that is used when a user initiates an account
@@ -41,7 +41,7 @@ namespace Cofoundry.Domain.MailTemplates
         /// Key data that can be used in the template such as user data
         /// and the recovery URL.
         /// </param>
-        Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context);
+        Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(IAccountRecoveryTemplateBuilderContext context);
 
         /// <summary>
         /// Creates a mail template that is used when the account verification flow
@@ -51,7 +51,7 @@ namespace Cofoundry.Domain.MailTemplates
         /// Key data that can be used in the template such as user data
         /// and the verification URL.
         /// </param>
-        Task<IMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context);
+        Task<IMailTemplate> BuildAccountVerificationTemplateAsync(IAccountVerificationTemplateBuilderContext context);
 
         /// <summary>
         /// Creates a mail template that is used to send a notification
@@ -60,7 +60,7 @@ namespace Cofoundry.Domain.MailTemplates
         /// <param name="context">
         /// Key data that can be used in the template such as user data.
         /// </param>
-        Task<IMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context);
+        Task<IMailTemplate> BuildPasswordChangedTemplateAsync(IPasswordChangedTemplateBuilderContext context);
     }
 
     /// <summary>

@@ -3,8 +3,7 @@ using Cofoundry.Core.Mail;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.MailTemplates;
-using Microsoft.AspNetCore.Html;
+using Cofoundry.Domain.MailTemplates.Internal;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -26,6 +25,7 @@ namespace Cofoundry.Domain.Internal
         private readonly CofoundryDbContext _dbContext;
         private readonly IMailService _mailService;
         private readonly IDomainRepository _domainRepository;
+        private readonly IUserMailTemplateBuilderContextFactory _userMailTemplateBuilderContextFactory;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly UserCommandPermissionsHelper _userCommandPermissionsHelper;
@@ -34,12 +34,14 @@ namespace Cofoundry.Domain.Internal
         private readonly IPasswordGenerationService _passwordGenerationService;
         private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
         private readonly IUserContextCache _userContextCache;
+        private readonly IUserSummaryMapper _userSummaryMapper;
         private readonly IMessageAggregator _messageAggregator;
 
         public ResetUserPasswordCommandHandler(
             CofoundryDbContext dbContext,
             IMailService mailService,
             IDomainRepository domainRepository,
+            IUserMailTemplateBuilderContextFactory userMailTemplateBuilderContextFactory,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IPermissionValidationService permissionValidationService,
             UserCommandPermissionsHelper userCommandPermissionsHelper,
@@ -48,12 +50,14 @@ namespace Cofoundry.Domain.Internal
             IPasswordGenerationService passwordGenerationService,
             IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper,
             IUserContextCache userContextCache,
+            IUserSummaryMapper userSummaryMapper,
             IMessageAggregator messageAggregator
             )
         {
             _dbContext = dbContext;
             _mailService = mailService;
             _domainRepository = domainRepository;
+            _userMailTemplateBuilderContextFactory = userMailTemplateBuilderContextFactory;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _permissionValidationService = permissionValidationService;
             _userCommandPermissionsHelper = userCommandPermissionsHelper;
@@ -62,6 +66,7 @@ namespace Cofoundry.Domain.Internal
             _passwordGenerationService = passwordGenerationService;
             _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
             _userContextCache = userContextCache;
+            _userSummaryMapper = userSummaryMapper;
             _messageAggregator = messageAggregator;
         }
 
@@ -108,6 +113,7 @@ namespace Cofoundry.Domain.Internal
         {
             var user = _dbContext
                 .Users
+                .IncludeForSummary()
                 .FilterById(userId)
                 .FilterCanSignIn()
                 .SingleOrDefaultAsync();
@@ -134,37 +140,15 @@ namespace Cofoundry.Domain.Internal
 
         private async Task SendNotificationAsync(User user, string temporaryPassword, IExecutionContext executionContext)
         {
-            // Send mail notification
+            var userSummary = _userSummaryMapper.Map(user);
+            var context = _userMailTemplateBuilderContextFactory.CreatePasswordResetContext(userSummary, temporaryPassword);
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserAreaCode);
-
-            var context = await CreateMailTemplateContextAsync(user, temporaryPassword, executionContext);
             var mailTemplate = await mailTemplateBuilder.BuildPasswordResetTemplateAsync(context);
 
             // Null template means don't send a notification
             if (mailTemplate == null) return;
 
             await _mailService.SendAsync(user.Email, mailTemplate);
-        }
-
-        private async Task<PasswordResetTemplateBuilderContext> CreateMailTemplateContextAsync(
-            User user,
-            string temporaryPassword,
-            IExecutionContext executionContext
-            )
-        {
-            var query = new GetUserSummaryByIdQuery(user.UserId);
-            var userSummary = await _domainRepository
-                .WithContext(executionContext)
-                .ExecuteQueryAsync(query);
-            EntityNotFoundException.ThrowIfNull(userSummary, user.UserId);
-
-            var context = new PasswordResetTemplateBuilderContext()
-            {
-                User = userSummary,
-                TemporaryPassword = new HtmlString(temporaryPassword)
-            };
-
-            return context;
         }
 
         public async Task ValidatePermissionsAsync(User user, IExecutionContext executionContext)

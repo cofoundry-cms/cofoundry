@@ -4,7 +4,7 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.MailTemplates;
+using Cofoundry.Domain.MailTemplates.Internal;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -30,9 +30,9 @@ namespace Cofoundry.Domain.Internal
         private readonly IDomainRepository _domainRepository;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IUserSummaryMapper _userSummaryMapper;
+        private readonly IUserMailTemplateBuilderContextFactory _userMailTemplateBuilderContextFactory;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IMailService _mailService;
-        private readonly IAuthorizedTaskTokenUrlHelper _authorizedTaskTokenUrlHelper;
         private readonly IMessageAggregator _messageAggregator;
 
         public InitiateUserAccountVerificationViaEmailCommandHandler(
@@ -40,9 +40,9 @@ namespace Cofoundry.Domain.Internal
             IDomainRepository domainRepository,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IUserSummaryMapper userSummaryMapper,
+            IUserMailTemplateBuilderContextFactory userMailTemplateBuilderContextFactory,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IMailService mailService,
-            IAuthorizedTaskTokenUrlHelper authorizedTaskTokenUrlHelper,
             IMessageAggregator messageAggregator
             )
         {
@@ -50,9 +50,9 @@ namespace Cofoundry.Domain.Internal
             _domainRepository = domainRepository;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _userSummaryMapper = userSummaryMapper;
+            _userMailTemplateBuilderContextFactory = userMailTemplateBuilderContextFactory;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _mailService = mailService;
-            _authorizedTaskTokenUrlHelper = authorizedTaskTokenUrlHelper;
             _messageAggregator = messageAggregator;
         }
 
@@ -64,7 +64,7 @@ namespace Cofoundry.Domain.Internal
             using (var scope = _domainRepository.Transactions().CreateScope())
             {
                 var addAuthorizedTaskCommand = await GenerateTokenAsync(user, options, executionContext);
-                await SendNotificationAsync(addAuthorizedTaskCommand, user, options);
+                await SendNotificationAsync(addAuthorizedTaskCommand, user);
 
                 scope.QueueCompletionTask(() => OnTransactionComplete(user, addAuthorizedTaskCommand));
                 await scope.CompleteAsync();
@@ -124,14 +124,11 @@ namespace Cofoundry.Domain.Internal
 
         private async Task<string> SendNotificationAsync(
             AddAuthorizedTaskCommand addAuthorizedTaskCommand,
-            UserSummary user,
-            AccountVerificationOptions options
+            UserSummary user
             )
         {
-            // Send mail notification
+            var context = _userMailTemplateBuilderContextFactory.CreateAccountVerificationContext(user, addAuthorizedTaskCommand.OutputToken);
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserArea.UserAreaCode);
-
-            var context = CreateMailTemplateContext(addAuthorizedTaskCommand.OutputToken, user, options);
             var mailTemplate = await mailTemplateBuilder.BuildAccountVerificationTemplateAsync(context);
 
             // Null template means don't send a notification
@@ -141,30 +138,6 @@ namespace Cofoundry.Domain.Internal
             }
 
             return context.Token;
-        }
-
-        private AccountVerificationTemplateBuilderContext CreateMailTemplateContext(
-            string token,
-            UserSummary user,
-            AccountVerificationOptions options
-            )
-        {
-            string url = null;
-
-            // Can only be null if a custom IDefaultMailTemplateBuilder implementation to set the path explicitly
-            if (options.VerificationUrlBase != null)
-            {
-                url = _authorizedTaskTokenUrlHelper.MakeUrl(options.VerificationUrlBase, token);
-            }
-
-            var context = new AccountVerificationTemplateBuilderContext()
-            {
-                User = user,
-                Token = token,
-                VerificationUrlPath = url
-            };
-
-            return context;
         }
 
         private async Task<UserSummary> GetUserAndVerifyAsync(InitiateUserAccountVerificationViaEmailCommand command)

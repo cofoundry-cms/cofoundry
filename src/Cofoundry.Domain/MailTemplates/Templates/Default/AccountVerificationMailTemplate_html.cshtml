@@ -1,0 +1,13 @@
+﻿@model AccountVerificationMailTemplate
+@{
+    Layout = Model.GetLayoutFilePathForHtmlTemplate();
+}
+<h2>Hello,</h2>
+
+<p>
+    Please verify your account on the @Model.ApplicationName site by following this link:
+</p>
+
+<p>
+    <a href="@Model.VerificationUrl">@Model.VerificationUrl</a>
+</p>

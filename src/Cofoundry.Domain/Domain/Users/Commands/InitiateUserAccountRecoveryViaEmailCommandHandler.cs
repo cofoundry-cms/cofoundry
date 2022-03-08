@@ -4,7 +4,7 @@ using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Validation;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.MailTemplates;
+using Cofoundry.Domain.MailTemplates.Internal;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -31,10 +31,10 @@ namespace Cofoundry.Domain.Internal
         private readonly IDomainRepository _domainRepository;
         private readonly IMailService _mailService;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
+        private readonly IUserMailTemplateBuilderContextFactory _userMailTemplateBuilderContextFactory;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IUserDataFormatter _userDataFormatter;
         private readonly IMessageAggregator _messageAggregator;
-        private readonly IAuthorizedTaskTokenUrlHelper _authorizedTaskTokenUrlHelper;
         private readonly IExecutionDurationRandomizerScopeManager _executionDurationRandomizerScopeManager;
         private readonly IUserSummaryMapper _userSummaryMapper;
 
@@ -43,10 +43,10 @@ namespace Cofoundry.Domain.Internal
             IDomainRepository domainRepository,
             IMailService mailService,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
+            IUserMailTemplateBuilderContextFactory userMailTemplateBuilderContextFactory,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IUserDataFormatter userDataFormatter,
             IMessageAggregator messageAggregator,
-            IAuthorizedTaskTokenUrlHelper authorizedTaskTokenUrlHelper,
             IExecutionDurationRandomizerScopeManager taskDurationRandomizerScopeManager,
             IUserSummaryMapper userSummaryMapper
             )
@@ -55,10 +55,10 @@ namespace Cofoundry.Domain.Internal
             _domainRepository = domainRepository;
             _mailService = mailService;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
+            _userMailTemplateBuilderContextFactory = userMailTemplateBuilderContextFactory;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _userDataFormatter = userDataFormatter;
             _messageAggregator = messageAggregator;
-            _authorizedTaskTokenUrlHelper = authorizedTaskTokenUrlHelper;
             _executionDurationRandomizerScopeManager = taskDurationRandomizerScopeManager;
             _userSummaryMapper = userSummaryMapper;
         }
@@ -83,7 +83,7 @@ namespace Cofoundry.Domain.Internal
             using (var scope = _domainRepository.Transactions().CreateScope())
             {
                 var addAuthorizedTaskCommand = await GenerateTokenAsync(user, options, executionContext);
-                await SendNotificationAsync(addAuthorizedTaskCommand, user, options);
+                await SendNotificationAsync(addAuthorizedTaskCommand, user);
 
                 scope.QueueCompletionTask(() => OnTransactionComplete(user, addAuthorizedTaskCommand));
                 await scope.CompleteAsync();
@@ -173,14 +173,11 @@ namespace Cofoundry.Domain.Internal
 
         private async Task<string> SendNotificationAsync(
             AddAuthorizedTaskCommand addAuthorizedTaskCommand,
-            UserSummary user,
-            AccountRecoveryOptions options
+            UserSummary user
             )
         {
-            // Send mail notification
+            var context = _userMailTemplateBuilderContextFactory.CreateAccountRecoveryContext(user, addAuthorizedTaskCommand.OutputToken);
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserArea.UserAreaCode);
-
-            var context = CreateMailTemplateContext(addAuthorizedTaskCommand.OutputToken, user, options);
             var mailTemplate = await mailTemplateBuilder.BuildAccountRecoveryTemplateAsync(context);
 
             // Null template means don't send a notification
@@ -190,30 +187,6 @@ namespace Cofoundry.Domain.Internal
             }
 
             return context.Token;
-        }
-
-        private AccountRecoveryTemplateBuilderContext CreateMailTemplateContext(
-            string token,
-            UserSummary user,
-            AccountRecoveryOptions options
-            )
-        {
-            string url = null;
-
-            // Can only be null if a custom IDefaultMailTemplateBuilder implementation to set the path explicitly
-            if (options.RecoveryUrlBase != null)
-            {
-                url = _authorizedTaskTokenUrlHelper.MakeUrl(options.RecoveryUrlBase, token);
-            }
-
-            var context = new AccountRecoveryTemplateBuilderContext()
-            {
-                User = user,
-                Token = token,
-                RecoveryUrlPath = url
-            };
-
-            return context;
         }
     }
 }

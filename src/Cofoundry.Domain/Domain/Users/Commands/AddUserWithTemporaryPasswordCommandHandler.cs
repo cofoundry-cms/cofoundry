@@ -3,8 +3,7 @@ using Cofoundry.Core.Data;
 using Cofoundry.Core.Mail;
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.MailTemplates;
-using Microsoft.AspNetCore.Html;
+using Cofoundry.Domain.MailTemplates.Internal;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,6 +23,7 @@ namespace Cofoundry.Domain.Internal
         private readonly IPasswordGenerationService _passwordGenerationService;
         private readonly IMailService _mailService;
         private readonly IQueryExecutor _queryExecutor;
+        private readonly IUserMailTemplateBuilderContextFactory _userMailTemplateBuilderContextFactory;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly ITransactionScopeManager _transactionScopeFactory;
@@ -36,6 +36,7 @@ namespace Cofoundry.Domain.Internal
             IPasswordGenerationService passwordGenerationService,
             IMailService mailService,
             IQueryExecutor queryExecutor,
+            IUserMailTemplateBuilderContextFactory userMailTemplateBuilderContextFactory,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             ITransactionScopeManager transactionScopeFactory,
@@ -48,6 +49,7 @@ namespace Cofoundry.Domain.Internal
             _passwordGenerationService = passwordGenerationService;
             _mailService = mailService;
             _queryExecutor = queryExecutor;
+            _userMailTemplateBuilderContextFactory = userMailTemplateBuilderContextFactory;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _transactionScopeFactory = transactionScopeFactory;
@@ -74,20 +76,6 @@ namespace Cofoundry.Domain.Internal
         private void Normalize(AddUserWithTemporaryPasswordCommand command)
         {
             command.Email = _userDataFormatter.NormalizeEmail(command.UserAreaCode, command.Email);
-        }
-
-        private async Task SendNotificationAsync(AddUserCommand newUserCommand, IExecutionContext executionContext)
-        {
-            // Send mail notification
-            var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(newUserCommand.UserAreaCode);
-
-            var context = await CreateMailTemplateContextAsync(newUserCommand, executionContext);
-            var mailTemplate = await mailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
-
-            // Null template means don't send a notification
-            if (mailTemplate == null) return;
-
-            await _mailService.SendAsync(newUserCommand.Email, mailTemplate);
         }
 
         private void ValidateUserArea(AddUserWithTemporaryPasswordCommand command)
@@ -125,19 +113,21 @@ namespace Cofoundry.Domain.Internal
             return newUserCommand;
         }
 
-        private async Task<NewUserWithTemporaryPasswordTemplateBuilderContext> CreateMailTemplateContextAsync(AddUserCommand newUserCommand, IExecutionContext executionContext)
+        private async Task SendNotificationAsync(AddUserCommand newUserCommand, IExecutionContext executionContext)
         {
             var query = new GetUserSummaryByIdQuery(newUserCommand.OutputUserId);
             var user = await _queryExecutor.ExecuteAsync(query, executionContext);
             EntityNotFoundException.ThrowIfNull(user, newUserCommand.OutputUserId);
 
-            var context = new NewUserWithTemporaryPasswordTemplateBuilderContext()
-            {
-                User = user,
-                TemporaryPassword = new HtmlString(newUserCommand.Password)
-            };
+            // Send mail notification
+            var context = _userMailTemplateBuilderContextFactory.CreateNewUserWithTemporaryPasswordContext(user, newUserCommand.Password);
+            var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(newUserCommand.UserAreaCode);
+            var mailTemplate = await mailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
 
-            return context;
+            // Null template means don't send a notification
+            if (mailTemplate == null) return;
+
+            await _mailService.SendAsync(newUserCommand.Email, mailTemplate);
         }
 
         public IEnumerable<IPermissionApplication> GetPermissions(AddUserWithTemporaryPasswordCommand command)

@@ -1,6 +1,5 @@
 ﻿using Cofoundry.Core.Mail;
 using Cofoundry.Domain.MailTemplates;
-using Cofoundry.Domain.MailTemplates.DefaultMailTemplates;
 using System.Threading.Tasks;
 
 namespace Cofoundry.Samples.UserAreas
@@ -12,19 +11,10 @@ namespace Cofoundry.Samples.UserAreas
     /// </summary>
     public class CustomerMailTemplateBuilder : IUserMailTemplateBuilder<CustomerUserArea>
     {
-        private readonly IDefaultMailTemplateBuilder<CustomerUserArea> _defaultMailTemplateBuilder;
-
-        public CustomerMailTemplateBuilder(
-            IDefaultMailTemplateBuilder<CustomerUserArea> defaultMailTemplateBuilder
-            )
-        {
-            _defaultMailTemplateBuilder = defaultMailTemplateBuilder;
-        }
-
-        public async Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(INewUserWithTemporaryPasswordTemplateBuilderContext context)
         {
             // build the default template
-            var template = await _defaultMailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
+            var template = await context.BuildDefaultTemplateAsync();
 
             // customize the subject, the {0} token is replaced with the application name
             template.SubjectFormat = "A new account has been created for you on {0}";
@@ -32,10 +22,10 @@ namespace Cofoundry.Samples.UserAreas
             return template;
         }
 
-        public async Task<IMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildPasswordChangedTemplateAsync(IPasswordChangedTemplateBuilderContext context)
         {
             // build the default template
-            var template = await _defaultMailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
+            var template = await context.BuildDefaultTemplateAsync();
 
             // customise the subject, you don't need to include the "{0}" token
             template.SubjectFormat = "Your password has been changed";
@@ -43,19 +33,19 @@ namespace Cofoundry.Samples.UserAreas
             return template;
         }
 
-        public async Task<IMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildPasswordResetTemplateAsync(IPasswordResetTemplateBuilderContext context)
         {
             // build the default template
-            var template = await _defaultMailTemplateBuilder.BuildPasswordResetTemplateAsync(context);
+            var template = await context.BuildDefaultTemplateAsync();
 
             // return unmodified
             return template;
         }
 
-        public async Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(IAccountRecoveryTemplateBuilderContext context)
         {
             // build the default template
-            var template = await _defaultMailTemplateBuilder.BuildAccountRecoveryTemplateAsync(context);
+            var template = await context.BuildDefaultTemplateAsync();
 
             // customize the view file
             template.ViewFile = "~/Cofoundry/MailTemplates/CustomerUsers/Templates/AccountRecoveryMailTemplate";
@@ -63,10 +53,10 @@ namespace Cofoundry.Samples.UserAreas
             return template;
         }
 
-        public async Task<IMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildAccountVerificationTemplateAsync(IAccountVerificationTemplateBuilderContext context)
         {
             // build the default template
-            var template = await _defaultMailTemplateBuilder.BuildAccountVerificationTemplateAsync(context);
+            var template = await context.BuildDefaultTemplateAsync();
 
             // customize the subject, the {0} token is replaced with the application name
             template.SubjectFormat = "Verify your account for {0}";

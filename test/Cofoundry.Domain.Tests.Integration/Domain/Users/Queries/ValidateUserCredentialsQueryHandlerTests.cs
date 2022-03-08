@@ -260,7 +260,8 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Queries
                 result.User.RequirePasswordChange.Should().BeTrue();
             }
         }
-        
+
+        [Fact]
         public async Task WhenOldPasswordHash_PasswordRehashed()
         {
             var username = "WhenOldPasswordHash_PasswordRehashed" + TEST_DOMAIN;

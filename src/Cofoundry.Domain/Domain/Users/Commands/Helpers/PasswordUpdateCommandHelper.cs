@@ -2,7 +2,7 @@
 using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Internal;
-using Cofoundry.Domain.MailTemplates;
+using Cofoundry.Domain.MailTemplates.Internal;
 using System;
 using System.Threading.Tasks;
 
@@ -11,29 +11,29 @@ namespace Cofoundry.Domain
     /// <inheritdoc/>
     public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
     {
-        private readonly IQueryExecutor _queryExecutor;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IPermissionValidationService _permissionValidationService;
         private readonly IPasswordCryptographyService _passwordCryptographyService;
         private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
+        private readonly IUserMailTemplateBuilderContextFactory _userMailTemplateBuilderContextFactory;
         private readonly IUserSummaryMapper _userSummaryMapper;
         private readonly IMailService _mailService;
 
         public PasswordUpdateCommandHelper(
-            IQueryExecutor queryExecutor,
             IUserAreaDefinitionRepository userAreaDefinitionRepository,
             IPermissionValidationService permissionValidationService,
             IPasswordCryptographyService passwordCryptographyService,
             IMailService mailService,
+            IUserMailTemplateBuilderContextFactory userMailTemplateBuilderContextFactory,
             IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
             IUserSummaryMapper userSummaryMapper
             )
         {
-            _queryExecutor = queryExecutor;
             _userAreaDefinitionRepository = userAreaDefinitionRepository;
             _passwordCryptographyService = passwordCryptographyService;
             _permissionValidationService = permissionValidationService;
             _mailService = mailService;
+            _userMailTemplateBuilderContextFactory = userMailTemplateBuilderContextFactory;
             _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
             _userSummaryMapper = userSummaryMapper;
         }
@@ -80,10 +80,9 @@ namespace Cofoundry.Domain
             var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserAreaCode).Password;
             if (!options.SendNotificationOnUpdate) return;
 
+            var userSummary = _userSummaryMapper.Map(user);
+            var context = _userMailTemplateBuilderContextFactory.CreatePasswordChangedContext(userSummary);
             var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserAreaCode);
-
-            var context = new PasswordChangedTemplateBuilderContext();
-            context.User = _userSummaryMapper.Map(user);
             var mailTemplate = await mailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
 
             // Null template means don't send a notification

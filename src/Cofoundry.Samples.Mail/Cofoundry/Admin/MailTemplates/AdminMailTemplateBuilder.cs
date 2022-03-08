@@ -2,7 +2,6 @@
 using Cofoundry.Core.Web;
 using Cofoundry.Domain;
 using Cofoundry.Domain.MailTemplates;
-using Cofoundry.Domain.MailTemplates.AdminMailTemplates;
 using System;
 using System.Threading.Tasks;
 
@@ -20,19 +19,12 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
     public class AdminMailTemplateBuilder : IUserMailTemplateBuilder<CofoundryAdminUserArea>
     {
         const string LAYOUT_PATH = "~/Cofoundry/Admin/MailTemplates/Layouts/_ExampleAdminMailLayout";
-        private readonly ICofoundryAdminMailTemplateBuilder _cofoundryAdminMailTemplateBuilder;
         private readonly ISiteUrlResolver _siteUrlResolver;
 
         public AdminMailTemplateBuilder(
-            ICofoundryAdminMailTemplateBuilder cofoundryAdminMailTemplateBuilder,
             ISiteUrlResolver siteUrlResolver
             )
         {
-            // Injecting ICofoundryAdminMailTemplateBuilder allows us to 
-            // create the built-in admin mail templates and alter any 
-            // properties we might want to customize rather than create
-            // a new template from scratch
-            _cofoundryAdminMailTemplateBuilder = cofoundryAdminMailTemplateBuilder;
             _siteUrlResolver = siteUrlResolver;
         }
 
@@ -40,10 +32,10 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
         /// This example simply customizes the layout file, which can be useful 
         /// for wrapping the default content with your own branding.
         /// </summary>
-        public async Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(NewUserWithTemporaryPasswordTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildNewUserWithTemporaryPasswordTemplateAsync(INewUserWithTemporaryPasswordTemplateBuilderContext context)
         {
             // build the default template so we can modify any properties we want to customize
-            var template = await _cofoundryAdminMailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
+            var template = await context.BuildDefaultTemplateAsync();
 
             // You can customize the layout file used by the default template by 
             // changing the LayoutFile property. A full path is required because 
@@ -57,10 +49,10 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
         /// <summary>
         /// This example shows you how to change the email subject.
         /// </summary>
-        public async Task<IMailTemplate> BuildPasswordChangedTemplateAsync(PasswordChangedTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildPasswordChangedTemplateAsync(IPasswordChangedTemplateBuilderContext context)
         {
             // build the default template
-            var template = await _cofoundryAdminMailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
+            var template = await context.BuildDefaultTemplateAsync();
 
             // customize the layout file
             template.LayoutFile = LAYOUT_PATH;
@@ -76,10 +68,10 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
         /// you want to change the wording of the email, but don't need any
         /// additional properties in the template model
         /// </summary>
-        public async Task<IMailTemplate> BuildPasswordResetTemplateAsync(PasswordResetTemplateBuilderContext context)
+        public async Task<IMailTemplate> BuildPasswordResetTemplateAsync(IPasswordResetTemplateBuilderContext context)
         {
             // build the default template
-            var template = await _cofoundryAdminMailTemplateBuilder.BuildPasswordResetTemplateAsync(context);
+            var template = await context.BuildDefaultTemplateAsync();
 
             // customize the layout file
             template.LayoutFile = LAYOUT_PATH;
@@ -93,7 +85,7 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
             return template;
         }
 
-        public Task<IMailTemplate> BuildAccountVerificationTemplateAsync(AccountVerificationTemplateBuilderContext context)
+        public Task<IMailTemplate> BuildAccountVerificationTemplateAsync(IAccountVerificationTemplateBuilderContext context)
         {
             // Admin site does not use an account verification flow
             throw new NotSupportedException();
@@ -106,7 +98,7 @@ namespace Cofoundry.Samples.Mail.AdminMailTemplates
         /// so you are free to customize the process as little or as much as you
         /// like.
         /// </summary>
-        public Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(AccountRecoveryTemplateBuilderContext context)
+        public Task<IMailTemplate> BuildAccountRecoveryTemplateAsync(IAccountRecoveryTemplateBuilderContext context)
         {
             // build a custom template instance, adding in any custom data
             var template = new ExampleAdminAccountRecoveryMailTemplate()

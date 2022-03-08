@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain.MailTemplates
 {
     /// <summary>
     /// Main helper for Cofoundry functionality on pages with a 

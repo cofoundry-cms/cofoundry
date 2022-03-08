@@ -1,10 +1,8 @@
 ﻿using Cofoundry.Core;
-using Cofoundry.Domain.MailTemplates.AdminMailTemplates;
-using Cofoundry.Domain.MailTemplates.DefaultMailTemplates;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Cofoundry.Domain.MailTemplates
+namespace Cofoundry.Domain.MailTemplates.Internal
 {
     public class UserMailTemplateBuilderFactory : IUserMailTemplateBuilderFactory
     {
@@ -32,15 +30,7 @@ namespace Cofoundry.Domain.MailTemplates
 
             if (factory != null) return (IUserMailTemplateBuilder)factory;
 
-            if (userAreaDefinition is CofoundryAdminUserArea)
-            {
-                // create the default Cofoundry admin builder
-                var cofoundryAdminMailTemplateBuilder = _serviceProvider.GetRequiredService<ICofoundryAdminMailTemplateBuilder>();
-
-                return new CofoundryAdminMailTemplateBuilderWrapper(cofoundryAdminMailTemplateBuilder);
-            }
-
-            var defaultBuilderType = typeof(DefaultMailTemplateBuilderWrapper<>).MakeGenericType(definitionType);
+            var defaultBuilderType = typeof(IDefaultUserMailTemplateBuilder<>).MakeGenericType(definitionType);
 
             // for other user areas fall back to the default builder
             return (IUserMailTemplateBuilder)_serviceProvider.GetRequiredService(defaultBuilderType);
