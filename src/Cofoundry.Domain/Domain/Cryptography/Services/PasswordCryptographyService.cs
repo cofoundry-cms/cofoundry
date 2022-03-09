@@ -1,17 +1,11 @@
 ﻿using Cofoundry.Core;
+using Cofoundry.Domain.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cofoundry.Domain.Internal
 {
-    /// <summary>
-    /// Service for hashing and verifying user passwords. Handles multiple version 
-    /// of the hashing function to maintain backwards compatibility.
-    /// </summary>
+    /// <inheritdoc/>
     public class PasswordCryptographyService : IPasswordCryptographyService
     {
         private readonly IPasswordHasher<PasswordHasherUser> _passwordHasher;
@@ -23,12 +17,6 @@ namespace Cofoundry.Domain.Internal
             _passwordHasher = passwordHasher;
         }
 
-        /// <summary>
-        /// Verifies that an unhashed password matches the specified hash.
-        /// </summary>
-        /// <param name="password">Plain text version of the password to check</param>
-        /// <param name="hash">The hash to check the password against</param>
-        /// <param name="hashVersion">The encryption version of the password hash.</param>
         public virtual PasswordVerificationResult Verify(string password, string hash, int hashVersion)
         {
             if (hash == null) throw new ArgumentNullException(nameof(hash));
@@ -57,10 +45,6 @@ namespace Cofoundry.Domain.Internal
             return isValid ? PasswordVerificationResult.SuccessRehashNeeded : PasswordVerificationResult.Failed;
         }
 
-        /// <summary>
-        /// Creates a hash from the specified password string.
-        /// </summary>
-        /// <param name="password">Password to hash.</param>
         public virtual PasswordCryptographyResult CreateHash(string password)
         {
             if (password == null) throw new ArgumentNullException(nameof(password));

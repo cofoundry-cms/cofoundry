@@ -14,12 +14,12 @@ namespace Cofoundry.Domain
         /// The randomized duration parameters when executing <see cref="AuthenticateUserCredentialsQuery"/> or
         /// any commands that authenticate credentials using this query. The lower bound of the duration should 
         /// exceed the expected execution time of the query to mitigate time-based enumeration attacks 
-        /// to discover valid usernames. Defaults to a random duration between 1 and 1.5 seconds.
+        /// to discover valid usernames. Defaults to a random duration between 1.5 and 2 seconds.
         /// </summary>
         public RandomizedExecutionDuration ExecutionDuration { get; set; } = new RandomizedExecutionDuration()
         {
-            MinInMilliseconds = 1000,
-            MaxInMilliseconds = 1500
+            MinInMilliseconds = 1500,
+            MaxInMilliseconds = 2000
         };
 
         /// <summary>

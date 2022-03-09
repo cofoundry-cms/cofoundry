@@ -1,8 +1,7 @@
-﻿using Cofoundry.Domain.Internal;
+﻿using Cofoundry.Domain.Cryptography;
+using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Cofoundry.Domain.Tests

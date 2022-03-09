@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal
+﻿namespace Cofoundry.Domain.Cryptography
 {
     /// <summary>
     /// Dummy user class to provide to the Microsoft.AspNetCore.Identity.IPasswordHasher 
