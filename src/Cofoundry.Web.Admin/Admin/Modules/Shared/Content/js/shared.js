@@ -12780,7 +12780,7 @@ angular.module('cms.shared').directive('cmsFormFieldImageAsset', [
                     vm.isRemovable = _.isObject(vm.model) && !isRequired;
 
                     vm.filter = parseFilters(attributes);
-                    vm.previewWidth = attributes['cmsPreviewWidth'] || 220;
+                    vm.previewWidth = attributes['cmsPreviewWidth'] || 450;
                     vm.previewHeight = attributes['cmsPreviewHeight'];
                     
                     scope.$watch("vm.asset", setAsset);
@@ -13144,7 +13144,7 @@ function (
 
             if (asset) {
                 vm.previewUrl = urlLibrary.getImageUrl(asset, {
-                    width: 220
+                    width: 450
                 });
                 vm.isRemovable = !vm.isRequired;
 

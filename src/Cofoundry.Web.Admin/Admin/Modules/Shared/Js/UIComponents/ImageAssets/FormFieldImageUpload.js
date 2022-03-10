@@ -92,7 +92,7 @@ function (
 
             if (asset) {
                 vm.previewUrl = urlLibrary.getImageUrl(asset, {
-                    width: 220
+                    width: 450
                 });
                 vm.isRemovable = !vm.isRequired;
 
