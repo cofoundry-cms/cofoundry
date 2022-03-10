@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["404"],{9703:function(n,e,t){"use strict";t.r(e);var o=function(){var n=this,e=n.$createElement;n._self._c;return n._m(0)},a=[function(){var n=this,e=n.$createElement,t=n._self._c||e;return t("main",{staticClass:"main"},[t("p",[n._v("\n        Page not found\n    ")])])}],u={name:"NotFound"},s=u,i=t("2877"),l=Object(i["a"])(s,o,a,!1,null,null,null);l.options.__file="NotFound.vue";e["default"]=l.exports}}]);
-//# sourceMappingURL=404.daffb0d2.js.map
