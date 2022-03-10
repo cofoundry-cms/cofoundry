@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Cofoundry.Core;
 using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
 using Microsoft.AspNetCore.Http;
-using Cofoundry.Core;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Cofoundry.Web.Admin
 {
@@ -25,13 +21,13 @@ namespace Cofoundry.Web.Admin
         }
 
         public async Task<JsonResult> Get(
-            [FromQuery] SearchDocumentAssetSummariesQuery query, 
+            [FromQuery] SearchDocumentAssetSummariesQuery query,
             [FromQuery] GetDocumentAssetRenderDetailsByIdRangeQuery rangeQuery
             )
         {
             if (rangeQuery != null && rangeQuery.DocumentAssetIds != null)
             {
-                return await _apiResponseHelper.RunWithResultAsync(async () => 
+                return await _apiResponseHelper.RunWithResultAsync(async () =>
                 {
                     return await _domainRepository
                         .WithQuery(rangeQuery)
@@ -54,13 +50,19 @@ namespace Cofoundry.Web.Admin
 
         public Task<JsonResult> Post(AddDocumentAssetCommand command, IFormFile file)
         {
-            command.File = new FormFileSource(file);
+            if (file != null)
+            {
+                command.File = new FormFileSource(file);
+            }
             return _apiResponseHelper.RunCommandAsync(command);
         }
 
         public Task<JsonResult> Put(int documentAssetId, UpdateDocumentAssetCommand command, IFormFile file)
         {
-            command.File = new FormFileSource(file);
+            if (file != null)
+            {
+                command.File = new FormFileSource(file);
+            }
 
             return _apiResponseHelper.RunCommandAsync(command);
         }

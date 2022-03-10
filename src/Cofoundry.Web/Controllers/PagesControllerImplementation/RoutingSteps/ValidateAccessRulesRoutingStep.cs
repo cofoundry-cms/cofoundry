@@ -131,13 +131,13 @@ namespace Cofoundry.Web
         {
             if (!state.AmbientUserContext.IsSignedIn() && accessRuleViolation.ShouldTryRedirect())
             {
-                _logger.LogInformation("User not authenticated, redirecting to sign in page for user area {UserAreaCodeForLoginRedirect}.", accessRuleViolation.UserAreaCodeForSignInRedirect);
+                _logger.LogDebug("User not authenticated, redirecting to sign in page for user area {UserAreaCodeForLoginRedirect}.", accessRuleViolation.UserAreaCodeForSignInRedirect);
                 var challengeScheme = AuthenticationSchemeNames.UserArea(accessRuleViolation.UserAreaCodeForSignInRedirect);
                 state.Result = new ChallengeResult(challengeScheme);
                 return;
             }
 
-            _logger.LogInformation("Processing violation action {ViolationAction}.", accessRuleViolation.ViolationAction);
+            _logger.LogDebug("Processing violation action {ViolationAction}.", accessRuleViolation.ViolationAction);
             switch (accessRuleViolation.ViolationAction)
             {
                 case AccessRuleViolationAction.NotFound:

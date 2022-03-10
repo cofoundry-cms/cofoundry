@@ -62,13 +62,21 @@ namespace Cofoundry.Web.Admin
 
         public Task<JsonResult> Post(AddImageAssetCommand command, IFormFile file)
         {
-            command.File = new FormFileSource(file);
+            if (file != null)
+            {
+                command.File = new FormFileSource(file);
+            }
+
             return _apiResponseHelper.RunCommandAsync(command);
         }
 
         public Task<JsonResult> Put(int imageAssetId, UpdateImageAssetCommand command, IFormFile file)
         {
-            command.File = new FormFileSource(file);
+            if (file != null)
+            {
+                command.File = new FormFileSource(file);
+            }
+
             return _apiResponseHelper.RunCommandAsync(command);
         }
 

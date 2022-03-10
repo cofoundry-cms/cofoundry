@@ -71,12 +71,12 @@ namespace Cofoundry.Web
             // Run through the pipline in order
             foreach (var method in _pageActionRoutingStepFactory.Create())
             {
-                _logger.LogInformation("Executing step {StepType}", method.GetType());
+                _logger.LogDebug("Executing step {StepType}", method.GetType());
                 await method.ExecuteAsync(this, state);
                 // If we get an action result, do an early return
                 if (state.Result != null)
                 {
-                    _logger.LogInformation("Step {StepType} returned a result.", method.GetType());
+                    _logger.LogDebug("Step {StepType} returned a result.", method.GetType());
                     return state.Result;
                 }
             }
@@ -90,11 +90,11 @@ namespace Cofoundry.Web
             var activeLocale = await _queryExecutor.ExecuteAsync(new GetCurrentActiveLocaleQuery());
             if (activeLocale != null)
             {
-                _logger.LogInformation("Found locale {Locale}",activeLocale.IETFLanguageTag);
+                _logger.LogDebug("Found locale {Locale}", activeLocale.IETFLanguageTag);
             }
             else
             {
-                _logger.LogInformation("No locale detected");
+                _logger.LogDebug("No locale detected");
             }
 
             return activeLocale;
