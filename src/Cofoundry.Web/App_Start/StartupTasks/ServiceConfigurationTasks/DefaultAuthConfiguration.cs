@@ -46,13 +46,18 @@ namespace Cofoundry.Web.Extendable
             _authCookieNamespaceProvider = authCookieNamespaceProvider;
         }
 
-        public void Configure(IMvcBuilder mvcBuilder)
+        public virtual void Configure(IMvcBuilder mvcBuilder)
         {
-            var services = mvcBuilder.Services;
-            var allUserAreas = _userAreaDefinitionRepository.GetAll();
             var defaultScheme = GetDefaultScheme();
-
             var authBuilder = mvcBuilder.Services.AddAuthentication(defaultScheme);
+            ConfigureAuthBuilder(authBuilder);
+
+            mvcBuilder.Services.AddAuthorization(ConfigurePolicies);
+        }
+
+        protected virtual void ConfigureAuthBuilder(AuthenticationBuilder authBuilder)
+        {
+            var allUserAreas = _userAreaDefinitionRepository.GetAll();
 
             foreach (var userArea in allUserAreas)
             {
@@ -62,8 +67,6 @@ namespace Cofoundry.Web.Extendable
 
                 ConfigureUserAreaScheme(authBuilder, options);
             }
-
-            mvcBuilder.Services.AddAuthorization(ConfigurePolicies);
         }
 
         /// <summary>
