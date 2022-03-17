@@ -1,263 +1,254 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Core.Data;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core.Validation;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <summary>
+/// Adds a new custom entity with a draft version and optionally publishes it.
+/// </summary>
+public class AddCustomEntityCommandHandler
+    : ICommandHandler<AddCustomEntityCommand>
+    , IPermissionRestrictedCommandHandler<AddCustomEntityCommand>
 {
-    /// <summary>
-    /// Adds a new custom entity with a draft version and optionally publishes it.
-    /// </summary>
-    public class AddCustomEntityCommandHandler
-        : ICommandHandler<AddCustomEntityCommand>
-        , IPermissionRestrictedCommandHandler<AddCustomEntityCommand>
+    private readonly IQueryExecutor _queryExecutor;
+    private readonly ICommandExecutor _commandExecutor;
+    private readonly CofoundryDbContext _dbContext;
+    private readonly EntityAuditHelper _entityAuditHelper;
+    private readonly ICustomEntityCache _customEntityCache;
+    private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
+    private readonly IMessageAggregator _messageAggregator;
+    private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
+    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
+
+    public AddCustomEntityCommandHandler(
+        IQueryExecutor queryExecutor,
+        ICommandExecutor commandExecutor,
+        CofoundryDbContext dbContext,
+        EntityAuditHelper entityAuditHelper,
+        ICustomEntityCache customEntityCache,
+        IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
+        IMessageAggregator messageAggregator,
+        ICustomEntityDefinitionRepository customEntityDefinitionRepository,
+        ITransactionScopeManager transactionScopeFactory,
+        ICustomEntityStoredProcedures customEntityStoredProcedures
+        )
     {
-        private readonly IQueryExecutor _queryExecutor;
-        private readonly ICommandExecutor _commandExecutor;
-        private readonly CofoundryDbContext _dbContext;
-        private readonly EntityAuditHelper _entityAuditHelper;
-        private readonly ICustomEntityCache _customEntityCache;
-        private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
-        private readonly IMessageAggregator _messageAggregator;
-        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
-        private readonly ITransactionScopeManager _transactionScopeFactory;
-        private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
+        _queryExecutor = queryExecutor;
+        _commandExecutor = commandExecutor;
+        _dbContext = dbContext;
+        _entityAuditHelper = entityAuditHelper;
+        _customEntityCache = customEntityCache;
+        _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
+        _messageAggregator = messageAggregator;
+        _customEntityDefinitionRepository = customEntityDefinitionRepository;
+        _transactionScopeFactory = transactionScopeFactory;
+        _customEntityStoredProcedures = customEntityStoredProcedures;
+    }
 
-        public AddCustomEntityCommandHandler(
-            IQueryExecutor queryExecutor,
-            ICommandExecutor commandExecutor,
-            CofoundryDbContext dbContext,
-            EntityAuditHelper entityAuditHelper,
-            ICustomEntityCache customEntityCache,
-            IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
-            IMessageAggregator messageAggregator,
-            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-            ITransactionScopeManager transactionScopeFactory,
-            ICustomEntityStoredProcedures customEntityStoredProcedures
-            )
+    public async Task ExecuteAsync(AddCustomEntityCommand command, IExecutionContext executionContext)
+    {
+        var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(command.CustomEntityDefinitionCode);
+        var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
+        EntityNotFoundException.ThrowIfNull(definition, command.CustomEntityDefinitionCode);
+
+        await _commandExecutor.ExecuteAsync(new EnsureCustomEntityDefinitionExistsCommand(definition.CustomEntityDefinitionCode), executionContext);
+
+        // Custom Validation
+        ValidateCommand(command, definition);
+        await ValidateIsUniqueAsync(command, definition, executionContext);
+
+        var entity = MapEntity(command, definition, executionContext);
+
+        await SetOrdering(entity, definition);
+
+        _dbContext.CustomEntities.Add(entity);
+
+        using (var scope = _transactionScopeFactory.Create(_dbContext))
         {
-            _queryExecutor = queryExecutor;
-            _commandExecutor = commandExecutor;
-            _dbContext = dbContext;
-            _entityAuditHelper = entityAuditHelper;
-            _customEntityCache = customEntityCache;
-            _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
-            _messageAggregator = messageAggregator;
-            _customEntityDefinitionRepository = customEntityDefinitionRepository;
-            _transactionScopeFactory = transactionScopeFactory;
-            _customEntityStoredProcedures = customEntityStoredProcedures;
+            await _dbContext.SaveChangesAsync();
+
+            var dependencyCommand = new UpdateUnstructuredDataDependenciesCommand(
+                CustomEntityVersionEntityDefinition.DefinitionCode,
+                entity.CustomEntityVersions.First().CustomEntityVersionId,
+                command.Model);
+
+            await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
+            await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(entity.CustomEntityId);
+
+            scope.QueueCompletionTask(() => OnTransactionComplete(command, entity));
+
+            await scope.CompleteAsync();
         }
 
-        public async Task ExecuteAsync(AddCustomEntityCommand command, IExecutionContext executionContext)
+        // Set Ouput
+        command.OutputCustomEntityId = entity.CustomEntityId;
+    }
+
+    private Task OnTransactionComplete(
+        AddCustomEntityCommand command,
+        CustomEntity entity
+        )
+    {
+        _customEntityCache.ClearRoutes(entity.CustomEntityDefinitionCode);
+
+        return _messageAggregator.PublishAsync(new CustomEntityAddedMessage()
         {
-            var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(command.CustomEntityDefinitionCode);
-            var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
-            EntityNotFoundException.ThrowIfNull(definition, command.CustomEntityDefinitionCode);
+            CustomEntityId = entity.CustomEntityId,
+            CustomEntityDefinitionCode = entity.CustomEntityDefinitionCode,
+            HasPublishedVersionChanged = command.Publish
+        });
+    }
 
-            await _commandExecutor.ExecuteAsync(new EnsureCustomEntityDefinitionExistsCommand(definition.CustomEntityDefinitionCode), executionContext);
+    private void ValidateCommand(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
+    {
+        if (definition.AutoGenerateUrlSlug)
+        {
+            command.UrlSlug = SlugFormatter.ToSlug(command.Title);
+        }
+        else
+        {
+            command.UrlSlug = SlugFormatter.ToSlug(command.UrlSlug);
+        }
 
-            // Custom Validation
-            ValidateCommand(command, definition);
-            await ValidateIsUniqueAsync(command, definition, executionContext);
+        if (command.LocaleId.HasValue && !definition.HasLocale)
+        {
+            throw ValidationErrorException.CreateWithProperties(definition.NamePlural + " cannot be assigned locales", "LocaleId");
+        }
+    }
 
-            var entity = MapEntity(command, definition, executionContext);
+    private Locale GetLocale(int? localeId)
+    {
+        if (!localeId.HasValue) return null;
 
-            await SetOrdering(entity, definition);
+        var locale = _dbContext
+            .Locales
+            .SingleOrDefault(l => l.LocaleId == localeId);
 
-            _dbContext.CustomEntities.Add(entity);
+        if (locale == null)
+        {
+            throw ValidationErrorException.CreateWithProperties("The selected locale does not exist.", "LocaleId");
+        }
+        if (!locale.IsActive)
+        {
+            throw ValidationErrorException.CreateWithProperties("The selected locale is not active and cannot be used.", "LocaleId");
+        }
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+        return locale;
+    }
+
+    private async Task SetOrdering(CustomEntity customEntity, CustomEntityDefinitionSummary definition)
+    {
+        if (definition.Ordering == CustomEntityOrdering.Full)
+        {
+            var maxOrdering = await _dbContext
+                .CustomEntities
+                .MaxAsync(e => e.Ordering);
+
+            if (maxOrdering.HasValue)
             {
-                await _dbContext.SaveChangesAsync();
-
-                var dependencyCommand = new UpdateUnstructuredDataDependenciesCommand(
-                    CustomEntityVersionEntityDefinition.DefinitionCode,
-                    entity.CustomEntityVersions.First().CustomEntityVersionId,
-                    command.Model);
-
-                await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
-                await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(entity.CustomEntityId);
-
-                scope.QueueCompletionTask(() => OnTransactionComplete(command, entity));
-
-                await scope.CompleteAsync();
+                // don't worry too much about race conditons here
+                // if two entities are added at the same time it's no
+                // big deal if the ordering is tied
+                customEntity.Ordering = maxOrdering.Value + 1;
             }
-
-            // Set Ouput
-            command.OutputCustomEntityId = entity.CustomEntityId;
-        }
-
-        private Task OnTransactionComplete(
-            AddCustomEntityCommand command,
-            CustomEntity entity
-            )
-        {
-            _customEntityCache.ClearRoutes(entity.CustomEntityDefinitionCode);
-
-            return _messageAggregator.PublishAsync(new CustomEntityAddedMessage()
+            else
             {
-                CustomEntityId = entity.CustomEntityId,
-                CustomEntityDefinitionCode = entity.CustomEntityDefinitionCode,
-                HasPublishedVersionChanged = command.Publish
-            });
+                customEntity.Ordering = 0;
+            }
+        }
+    }
+
+    private CustomEntity MapEntity(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition, IExecutionContext executionContext)
+    {
+        var entity = new CustomEntity();
+        _entityAuditHelper.SetCreated(entity, executionContext);
+
+        entity.Locale = GetLocale(command.LocaleId);
+        entity.UrlSlug = command.UrlSlug;
+        entity.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
+
+        var version = new CustomEntityVersion();
+        version.Title = command.Title.Trim();
+        version.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.Model);
+        version.DisplayVersion = 1;
+
+        if (command.Publish)
+        {
+            entity.SetPublished(executionContext.ExecutionDate, command.PublishDate);
+            version.WorkFlowStatusId = (int)WorkFlowStatus.Published;
+        }
+        else
+        {
+            entity.PublishStatusCode = PublishStatusCode.Unpublished;
+            version.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
         }
 
-        private void ValidateCommand(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
+        _entityAuditHelper.SetCreated(version, executionContext);
+        entity.CustomEntityVersions.Add(version);
+
+        return entity;
+    }
+
+    private async Task ValidateIsUniqueAsync(
+        AddCustomEntityCommand command,
+        CustomEntityDefinitionSummary definition,
+        IExecutionContext executionContext
+        )
+    {
+        if (!definition.ForceUrlSlugUniqueness) return;
+
+        var query = GetUniquenessQuery(command, definition);
+        var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
+        EnforceUniquenessResult(isUnique, command, definition);
+    }
+
+    private IsCustomEntityUrlSlugUniqueQuery GetUniquenessQuery(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
+    {
+        var query = new IsCustomEntityUrlSlugUniqueQuery();
+        query.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
+        query.LocaleId = command.LocaleId;
+        query.UrlSlug = command.UrlSlug;
+
+        return query;
+    }
+
+    private void EnforceUniquenessResult(bool isUnique, AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
+    {
+        if (!isUnique)
         {
+            string message;
+            string prop;
+
             if (definition.AutoGenerateUrlSlug)
             {
-                command.UrlSlug = SlugFormatter.ToSlug(command.Title);
+                // If the slug is autogenerated then we should show the error with the title
+                message = string.Format("The {1} '{0}' must be unique (symbols and spaces are ignored in the uniqueness check)",
+                    command.Title,
+                    definition.Terms.GetOrDefault(CustomizableCustomEntityTermKeys.Title, "title").ToLower());
+                prop = "Title";
             }
             else
             {
-                command.UrlSlug = SlugFormatter.ToSlug(command.UrlSlug);
+                message = string.Format("The {1} '{0}' must be unique",
+                    command.UrlSlug,
+                    definition.Terms.GetOrDefault(CustomizableCustomEntityTermKeys.UrlSlug, "url slug").ToLower());
+                prop = "UrlSlug";
             }
 
-            if (command.LocaleId.HasValue && !definition.HasLocale)
-            {
-                throw ValidationErrorException.CreateWithProperties(definition.NamePlural + " cannot be assigned locales", "LocaleId");
-            }
+            throw new UniqueConstraintViolationException(message, prop, command.UrlSlug);
         }
+    }
 
-        private Locale GetLocale(int? localeId)
+    public IEnumerable<IPermissionApplication> GetPermissions(AddCustomEntityCommand command)
+    {
+        var definition = _customEntityDefinitionRepository.GetRequiredByCode(command.CustomEntityDefinitionCode);
+        yield return new CustomEntityCreatePermission(definition);
+
+        if (command.Publish)
         {
-            if (!localeId.HasValue) return null;
-
-            var locale = _dbContext
-                .Locales
-                .SingleOrDefault(l => l.LocaleId == localeId);
-
-            if (locale == null)
-            {
-                throw ValidationErrorException.CreateWithProperties("The selected locale does not exist.", "LocaleId");
-            }
-            if (!locale.IsActive)
-            {
-                throw ValidationErrorException.CreateWithProperties("The selected locale is not active and cannot be used.", "LocaleId");
-            }
-
-            return locale;
-        }
-
-        private async Task SetOrdering(CustomEntity customEntity, CustomEntityDefinitionSummary definition)
-        {
-            if (definition.Ordering == CustomEntityOrdering.Full)
-            {
-                var maxOrdering = await _dbContext
-                    .CustomEntities
-                    .MaxAsync(e => e.Ordering);
-
-                if (maxOrdering.HasValue)
-                {
-                    // don't worry too much about race conditons here
-                    // if two entities are added at the same time it's no
-                    // big deal if the ordering is tied
-                    customEntity.Ordering = maxOrdering.Value + 1;
-                }
-                else
-                {
-                    customEntity.Ordering = 0;
-                }
-            }
-        }
-
-        private CustomEntity MapEntity(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition, IExecutionContext executionContext)
-        {
-            var entity = new CustomEntity();
-            _entityAuditHelper.SetCreated(entity, executionContext);
-
-            entity.Locale = GetLocale(command.LocaleId);
-            entity.UrlSlug = command.UrlSlug;
-            entity.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
-
-            var version = new CustomEntityVersion();
-            version.Title = command.Title.Trim();
-            version.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.Model);
-            version.DisplayVersion = 1;
-
-            if (command.Publish)
-            {
-                entity.SetPublished(executionContext.ExecutionDate, command.PublishDate);
-                version.WorkFlowStatusId = (int)WorkFlowStatus.Published;
-            }
-            else
-            {
-                entity.PublishStatusCode = PublishStatusCode.Unpublished;
-                version.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
-            }
-
-            _entityAuditHelper.SetCreated(version, executionContext);
-            entity.CustomEntityVersions.Add(version);
-
-            return entity;
-        }
-
-        private async Task ValidateIsUniqueAsync(
-            AddCustomEntityCommand command,
-            CustomEntityDefinitionSummary definition,
-            IExecutionContext executionContext
-            )
-        {
-            if (!definition.ForceUrlSlugUniqueness) return;
-
-            var query = GetUniquenessQuery(command, definition);
-            var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
-            EnforceUniquenessResult(isUnique, command, definition);
-        }
-
-        private IsCustomEntityUrlSlugUniqueQuery GetUniquenessQuery(AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
-        {
-            var query = new IsCustomEntityUrlSlugUniqueQuery();
-            query.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
-            query.LocaleId = command.LocaleId;
-            query.UrlSlug = command.UrlSlug;
-
-            return query;
-        }
-
-        private void EnforceUniquenessResult(bool isUnique, AddCustomEntityCommand command, CustomEntityDefinitionSummary definition)
-        {
-            if (!isUnique)
-            {
-                string message;
-                string prop;
-
-                if (definition.AutoGenerateUrlSlug)
-                {
-                    // If the slug is autogenerated then we should show the error with the title
-                    message = string.Format("The {1} '{0}' must be unique (symbols and spaces are ignored in the uniqueness check)",
-                        command.Title,
-                        definition.Terms.GetOrDefault(CustomizableCustomEntityTermKeys.Title, "title").ToLower());
-                    prop = "Title";
-                }
-                else
-                {
-                    message = string.Format("The {1} '{0}' must be unique",
-                        command.UrlSlug,
-                        definition.Terms.GetOrDefault(CustomizableCustomEntityTermKeys.UrlSlug, "url slug").ToLower());
-                    prop = "UrlSlug";
-                }
-
-                throw new UniqueConstraintViolationException(message, prop, command.UrlSlug);
-            }
-        }
-
-        public IEnumerable<IPermissionApplication> GetPermissions(AddCustomEntityCommand command)
-        {
-            var definition = _customEntityDefinitionRepository.GetRequiredByCode(command.CustomEntityDefinitionCode);
-            yield return new CustomEntityCreatePermission(definition);
-
-            if (command.Publish)
-            {
-                yield return new CustomEntityPublishPermission(definition);
-            }
+            yield return new CustomEntityPublishPermission(definition);
         }
     }
 }

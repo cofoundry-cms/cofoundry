@@ -1,65 +1,62 @@
 ﻿using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
-using System.IO;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Tests.Shared.Mocks
+namespace Cofoundry.Domain.Tests.Shared.Mocks;
+
+public class MockImageAssetFileService : IImageAssetFileService
 {
-    public class MockImageAssetFileService : IImageAssetFileService
+    private const string ASSET_FILE_CONTAINER_NAME = "Images";
+
+    private readonly CofoundryDbContext _dbContext;
+    private readonly IFileStoreService _fileStoreService;
+    private readonly ITransactionScopeManager _transactionScopeManager;
+
+    public MockImageAssetFileService(
+        CofoundryDbContext dbContext,
+        IFileStoreService fileStoreService,
+        ITransactionScopeManager transactionScopeManager
+        )
     {
-        private const string ASSET_FILE_CONTAINER_NAME = "Images";
+        _dbContext = dbContext;
+        _fileStoreService = fileStoreService;
+        _transactionScopeManager = transactionScopeManager;
+    }
 
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IFileStoreService _fileStoreService;
-        private readonly ITransactionScopeManager _transactionScopeManager;
+    public bool SaveFile { get; set; } = true;
 
-        public MockImageAssetFileService(
-            CofoundryDbContext dbContext,
-            IFileStoreService fileStoreService,
-            ITransactionScopeManager transactionScopeManager
-            )
+    public int? WidthInPixels { get; set; }
+
+    public int? HeightInPixels { get; set; }
+
+    public async Task SaveAsync(IFileSource fileToSave, ImageAsset imageAsset, string validationErrorPropertyName)
+    {
+        var fileExtension = Path.GetExtension(fileToSave.FileName);
+
+        if (WidthInPixels.HasValue)
         {
-            _dbContext = dbContext;
-            _fileStoreService = fileStoreService;
-            _transactionScopeManager = transactionScopeManager;
+            imageAsset.WidthInPixels = WidthInPixels.Value;
         }
 
-        public bool SaveFile { get; set; } = true;
-
-        public int? WidthInPixels { get; set; }
-
-        public int? HeightInPixels { get; set; }
-
-        public async Task SaveAsync(IFileSource fileToSave, ImageAsset imageAsset, string validationErrorPropertyName)
+        if (HeightInPixels.HasValue)
         {
-            var fileExtension = Path.GetExtension(fileToSave.FileName);
+            imageAsset.HeightInPixels = HeightInPixels.Value;
+        }
 
-            if (WidthInPixels.HasValue)
+        imageAsset.FileExtension = fileExtension;
+
+        using var inputSteam = await fileToSave.OpenReadStreamAsync();
+        imageAsset.FileSizeInBytes = inputSteam.Length;
+        var fileName = Path.ChangeExtension(imageAsset.FileNameOnDisk, imageAsset.FileExtension);
+
+        using (var scope = _transactionScopeManager.Create(_dbContext))
+        {
+            if (SaveFile)
             {
-                imageAsset.WidthInPixels = WidthInPixels.Value;
+                await _fileStoreService.CreateAsync(ASSET_FILE_CONTAINER_NAME, fileName, inputSteam);
             }
 
-            if (HeightInPixels.HasValue)
-            {
-                imageAsset.HeightInPixels = HeightInPixels.Value;
-            }
-
-            imageAsset.FileExtension = fileExtension;
-
-            using var inputSteam = await fileToSave.OpenReadStreamAsync();
-            imageAsset.FileSizeInBytes = inputSteam.Length;
-            var fileName = Path.ChangeExtension(imageAsset.FileNameOnDisk, imageAsset.FileExtension);
-
-            using (var scope = _transactionScopeManager.Create(_dbContext))
-            {
-                if (SaveFile)
-                {
-                    await _fileStoreService.CreateAsync(ASSET_FILE_CONTAINER_NAME, fileName, inputSteam);
-                }
-
-                await _dbContext.SaveChangesAsync();
-                await scope.CompleteAsync();
-            }
+            await _dbContext.SaveChangesAsync();
+            await scope.CompleteAsync();
         }
     }
 }

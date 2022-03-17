@@ -1,16 +1,15 @@
 ﻿using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.Registration
+namespace Cofoundry.Domain.Registration;
+
+public class RewriteRuleDependencyRegistration : IDependencyRegistration
 {
-    public class RewriteRuleDependencyRegistration : IDependencyRegistration
+    public void Register(IContainerRegister container)
     {
-        public void Register(IContainerRegister container)
-        {
-            container
-                .Register<IRewriteRuleCache, RewriteRuleCache>()
-                .Register<IRewriteRuleSummaryMapper, RewriteRuleSummaryMapper>()
-                ;
-        }
+        container
+            .Register<IRewriteRuleCache, RewriteRuleCache>()
+            .Register<IRewriteRuleSummaryMapper, RewriteRuleSummaryMapper>()
+            ;
     }
 }

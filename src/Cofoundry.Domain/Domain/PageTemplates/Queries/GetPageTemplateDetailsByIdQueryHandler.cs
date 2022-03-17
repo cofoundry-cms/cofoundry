@@ -1,76 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
+﻿using Cofoundry.Domain.Data;
 using Cofoundry.Domain.QueryModels;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class GetPageTemplateDetailsByIdQueryHandler
+    : IQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
+    , IPermissionRestrictedQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
 {
-    public class GetPageTemplateDetailsByIdQueryHandler 
-        : IQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
-        , IPermissionRestrictedQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
+    private readonly CofoundryDbContext _dbContext;
+    private readonly IQueryExecutor _queryExecutor;
+    private readonly IPageTemplateDetailsMapper _pageTemplateDetailsMapper;
+
+    public GetPageTemplateDetailsByIdQueryHandler(
+        CofoundryDbContext dbContext,
+        IQueryExecutor queryExecutor,
+        IPageTemplateDetailsMapper pageTemplateDetailsMapper
+        )
     {
-        #region constructor
+        _queryExecutor = queryExecutor;
+        _dbContext = dbContext;
+        _pageTemplateDetailsMapper = pageTemplateDetailsMapper;
+    }
 
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IQueryExecutor _queryExecutor;
-        private readonly IPageTemplateDetailsMapper _pageTemplateDetailsMapper;
+    public async Task<PageTemplateDetails> ExecuteAsync(GetPageTemplateDetailsByIdQuery query, IExecutionContext executionContext)
+    {
+        var queryModel = new PageTemplateDetailsQueryModel();
 
-        public GetPageTemplateDetailsByIdQueryHandler(
-            CofoundryDbContext dbContext,
-            IQueryExecutor queryExecutor,
-            IPageTemplateDetailsMapper pageTemplateDetailsMapper
-            )
+        queryModel.PageTemplate = await _dbContext
+            .PageTemplates
+            .AsNoTracking()
+            .Include(t => t.PageTemplateRegions)
+            .Where(l => l.PageTemplateId == query.PageTemplateId)
+            .SingleOrDefaultAsync();
+
+        if (queryModel.PageTemplate == null) return null;
+
+        if (!string.IsNullOrEmpty(queryModel.PageTemplate.CustomEntityDefinitionCode))
         {
-            _queryExecutor = queryExecutor;
-            _dbContext = dbContext;
-            _pageTemplateDetailsMapper = pageTemplateDetailsMapper;
+            var definitionQuery = new GetCustomEntityDefinitionMicroSummaryByCodeQuery(queryModel.PageTemplate.CustomEntityDefinitionCode);
+            queryModel.CustomEntityDefinition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
         }
 
-        #endregion
+        queryModel.NumPages = await _dbContext
+            .PageVersions
+            .AsNoTracking()
+            .Where(v => v.PageTemplateId == query.PageTemplateId)
+            .Select(v => v.Page)
+            .Distinct()
+            .CountAsync();
 
-        public async Task<PageTemplateDetails> ExecuteAsync(GetPageTemplateDetailsByIdQuery query, IExecutionContext executionContext)
-        {
-            var queryModel = new PageTemplateDetailsQueryModel();
+        var template = _pageTemplateDetailsMapper.Map(queryModel);
 
-            queryModel.PageTemplate = await _dbContext
-                .PageTemplates
-                .AsNoTracking()
-                .Include(t => t.PageTemplateRegions)
-                .Where(l => l.PageTemplateId == query.PageTemplateId)
-                .SingleOrDefaultAsync();
+        return template;
+    }
 
-            if (queryModel.PageTemplate == null) return null;
-
-            if (!string.IsNullOrEmpty(queryModel.PageTemplate.CustomEntityDefinitionCode))
-            {
-                var definitionQuery = new GetCustomEntityDefinitionMicroSummaryByCodeQuery(queryModel.PageTemplate.CustomEntityDefinitionCode);
-                queryModel.CustomEntityDefinition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
-            }
-
-            queryModel.NumPages = await _dbContext
-                .PageVersions
-                .AsNoTracking()
-                .Where(v => v.PageTemplateId == query.PageTemplateId)
-                .Select(v => v.Page)
-                .Distinct()
-                .CountAsync();
-
-            var template = _pageTemplateDetailsMapper.Map(queryModel);
-
-            return template;
-        }
-
-        #region Permission
-
-        public IEnumerable<IPermissionApplication> GetPermissions(GetPageTemplateDetailsByIdQuery query)
-        {
-            yield return new PageTemplateReadPermission();
-        }
-
-        #endregion
+    public IEnumerable<IPermissionApplication> GetPermissions(GetPageTemplateDetailsByIdQuery query)
+    {
+        yield return new PageTemplateReadPermission();
     }
 }

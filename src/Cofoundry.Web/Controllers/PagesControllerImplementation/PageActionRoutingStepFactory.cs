@@ -1,62 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Web;
 
-namespace Cofoundry.Web
+/// <summary>
+/// A factory that creates a collection of ordered IPageActionRoutingStep to
+/// be executed in order during the PageController's Page Action. This determines
+/// the routing of dynamic page content in the site.
+/// </summary>
+public class PageActionRoutingStepFactory : IPageActionRoutingStepFactory
 {
-    /// <summary>
-    /// A factory that creates a collection of ordered IPageActionRoutingStep to
-    /// be executed in order during the PageController's Page Action. This determines
-    /// the routing of dynamic page content in the site.
-    /// </summary>
-    public class PageActionRoutingStepFactory : IPageActionRoutingStepFactory
+    private readonly IEnumerable<IPageActionRoutingStep> _routingSteps;
+
+    public PageActionRoutingStepFactory(
+        ICheckSiteIsSetupRoutingStep checkSiteIsSetupRoutingStep,
+        IInitVisualEditorStateRoutingStep initStateRoutingStep,
+        ITryFindPageRoutingInfoRoutingStep tryFindPageRoutingInfoRoutingStep,
+        IInitUserContextRoutingStep initUserContextRoutingStep,
+        IValidateAccessRulesRoutingStep validateAccessRulesRoutingStep,
+        IValidateEntityEditModeRoutingStep validateEntityEditModeRoutingStep,
+        IValidateEditPermissionsRoutingStep validateEditPermissionsRoutingStep,
+        IValidateDraftVersionRoutingStep validateDraftVersionRoutingStep,
+        IValidateSpecificVersionRoutingRoutingStep validateSpecificVersionRoutingRoutingStep,
+        IGetNotFoundRouteRoutingStep getNotFoundRouteRoutingStep,
+        IGetPageRenderDataRoutingStep getPageRenderDataRoutingStep,
+        ISetCachePolicyRoutingStep setCachePolicyRoutingStep,
+        IGetFinalResultRoutingStep getFinalResultRoutingStep
+        )
     {
-        private readonly IEnumerable<IPageActionRoutingStep> _routingSteps;
+        // Here we set the default routing steps, which are run in the order they are 
+        // declared. Each step can be overridden using the DI system if you need to debug it
+        // in an implemenetation.
 
-        public PageActionRoutingStepFactory(
-            ICheckSiteIsSetupRoutingStep checkSiteIsSetupRoutingStep,
-            IInitVisualEditorStateRoutingStep initStateRoutingStep,
-            ITryFindPageRoutingInfoRoutingStep tryFindPageRoutingInfoRoutingStep,
-            IInitUserContextRoutingStep initUserContextRoutingStep,
-            IValidateAccessRulesRoutingStep validateAccessRulesRoutingStep,
-            IValidateEntityEditModeRoutingStep validateEntityEditModeRoutingStep,
-            IValidateEditPermissionsRoutingStep validateEditPermissionsRoutingStep,
-            IValidateDraftVersionRoutingStep validateDraftVersionRoutingStep,
-            IValidateSpecificVersionRoutingRoutingStep validateSpecificVersionRoutingRoutingStep,
-            IGetNotFoundRouteRoutingStep getNotFoundRouteRoutingStep,
-            IGetPageRenderDataRoutingStep getPageRenderDataRoutingStep,
-            ISetCachePolicyRoutingStep setCachePolicyRoutingStep,
-            IGetFinalResultRoutingStep getFinalResultRoutingStep
-            )
+        var routingSteps = new List<IPageActionRoutingStep>()
         {
-            // Here we set the default routing steps, which are run in the order they are 
-            // declared. Each step can be overridden using the DI system if you need to debug it
-            // in an implemenetation.
+            checkSiteIsSetupRoutingStep,
+            initStateRoutingStep,
+            tryFindPageRoutingInfoRoutingStep,
+            initUserContextRoutingStep,
+            validateAccessRulesRoutingStep,
+            validateEntityEditModeRoutingStep,
+            validateEditPermissionsRoutingStep,
+            validateDraftVersionRoutingStep,
+            validateSpecificVersionRoutingRoutingStep,
+            getNotFoundRouteRoutingStep,
+            getPageRenderDataRoutingStep,
+            setCachePolicyRoutingStep,
+            getFinalResultRoutingStep
+        };
 
-            var routingSteps = new List<IPageActionRoutingStep>()
-            {
-                checkSiteIsSetupRoutingStep,
-                initStateRoutingStep,
-                tryFindPageRoutingInfoRoutingStep,
-                initUserContextRoutingStep,
-                validateAccessRulesRoutingStep,
-                validateEntityEditModeRoutingStep,
-                validateEditPermissionsRoutingStep,
-                validateDraftVersionRoutingStep,
-                validateSpecificVersionRoutingRoutingStep,
-                getNotFoundRouteRoutingStep,
-                getPageRenderDataRoutingStep,
-                setCachePolicyRoutingStep,
-                getFinalResultRoutingStep
-            };
+        _routingSteps = routingSteps;
+    }
 
-            _routingSteps = routingSteps;
-        }
-
-        public IEnumerable<IPageActionRoutingStep> Create()
-        {
-            return _routingSteps;
-        }
+    public IEnumerable<IPageActionRoutingStep> Create()
+    {
+        return _routingSteps;
     }
 }

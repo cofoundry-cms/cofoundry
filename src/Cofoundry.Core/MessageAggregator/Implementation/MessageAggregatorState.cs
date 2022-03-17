@@ -1,36 +1,30 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
 
-namespace Cofoundry.Core.MessageAggregator.Internal
+namespace Cofoundry.Core.MessageAggregator.Internal;
+
+/// <summary>
+/// State object to keep track of subscriptions to a message aggregator
+/// </summary>
+public class MessageAggregatorState : IMessageAggregatorState
 {
+    private readonly ConcurrentBag<IMessageSubscription> _subscriptions = new ConcurrentBag<IMessageSubscription>();
+
     /// <summary>
-    /// State object to keep track of subscriptions to a message aggregator
+    /// Gets a collection of subscriptions for the specified message
     /// </summary>
-    public class MessageAggregatorState : IMessageAggregatorState
+    /// <typeparam name="TMessage">Type of message to get</typeparam>
+    public IEnumerable<IMessageSubscription> GetSubscriptionsFor<TMessage>()
     {
-        private readonly ConcurrentBag<IMessageSubscription> _subscriptions = new ConcurrentBag<IMessageSubscription>();
+        return _subscriptions
+            .Where(s => s.CanDeliver<TMessage>());
+    }
 
-        /// <summary>
-        /// Gets a collection of subscriptions for the specified message
-        /// </summary>
-        /// <typeparam name="TMessage">Type of message to get</typeparam>
-        public IEnumerable<IMessageSubscription> GetSubscriptionsFor<TMessage>()
-        {
-            return _subscriptions
-                .Where(s => s.CanDeliver<TMessage>());
-        }
-
-        /// <summary>
-        /// Adds a new message subscription to the state
-        /// </summary>
-        /// <param name="subscription">the message subscription to add to the state</param>
-        public void Subscribe(IMessageSubscription subscription)
-        {
-            _subscriptions.Add(subscription);
-        }
+    /// <summary>
+    /// Adds a new message subscription to the state
+    /// </summary>
+    /// <param name="subscription">the message subscription to add to the state</param>
+    public void Subscribe(IMessageSubscription subscription)
+    {
+        _subscriptions.Add(subscription);
     }
 }

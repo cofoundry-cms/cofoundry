@@ -1,38 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Core.AutoUpdate;
 
-namespace Cofoundry.Core.AutoUpdate
+public class CreateDirectoriesUpdateCommandHandler : ISyncVersionedUpdateCommandHandler<CreateDirectoriesUpdateCommand>
 {
-    public class CreateDirectoriesUpdateCommandHandler : ISyncVersionedUpdateCommandHandler<CreateDirectoriesUpdateCommand>
+    IPathResolver _pathResolver;
+
+    public CreateDirectoriesUpdateCommandHandler(
+        IPathResolver pathResolver
+        )
     {
-        IPathResolver _pathResolver;
+        _pathResolver = pathResolver;
+    }
 
-        public CreateDirectoriesUpdateCommandHandler(
-            IPathResolver pathResolver
-            )
+    public void Execute(CreateDirectoriesUpdateCommand command)
+    {
+        foreach (var path in command.Directories)
         {
-            _pathResolver = pathResolver;
+            CreateDirectory(path);
         }
-        
-        public void Execute(CreateDirectoriesUpdateCommand command)
-        {
-            foreach (var path in command.Directories)
-            {
-                CreateDirectory(path);
-            }
-        }
+    }
 
-        private void CreateDirectory(string directory)
+    private void CreateDirectory(string directory)
+    {
+        var path = _pathResolver.MapPath(directory);
+        if (!Directory.Exists(path))
         {
-            var path = _pathResolver.MapPath(directory);
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+            Directory.CreateDirectory(path);
         }
     }
 }

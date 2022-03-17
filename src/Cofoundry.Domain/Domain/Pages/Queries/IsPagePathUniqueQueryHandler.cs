@@ -1,47 +1,41 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <summary>
+/// Determines if a page path already exists. Page paths are made
+/// up of a locale, directory and url slug; duplicates are not permitted.
+/// </summary>
+public class IsPagePathUniqueQueryHandler
+    : IQueryHandler<IsPagePathUniqueQuery, bool>
+    , IPermissionRestrictedQueryHandler<IsPagePathUniqueQuery, bool>
 {
-    /// <summary>
-    /// Determines if a page path already exists. Page paths are made
-    /// up of a locale, directory and url slug; duplicates are not permitted.
-    /// </summary>
-    public class IsPagePathUniqueQueryHandler
-        : IQueryHandler<IsPagePathUniqueQuery, bool>
-        , IPermissionRestrictedQueryHandler<IsPagePathUniqueQuery, bool>
+    private readonly CofoundryDbContext _dbContext;
+
+    public IsPagePathUniqueQueryHandler(
+        CofoundryDbContext dbContext
+        )
     {
-        private readonly CofoundryDbContext _dbContext;
-
-        public IsPagePathUniqueQueryHandler(
-            CofoundryDbContext dbContext
-            )
-        {
-            _dbContext = dbContext;
-        }
-
-        public async Task<bool> ExecuteAsync(IsPagePathUniqueQuery query, IExecutionContext executionContext)
-        {
-            var exists = await _dbContext
-                .Pages
-                .AsNoTracking()
-                .Where(d => d.PageId != query.PageId
-                    && d.UrlPath == query.UrlPath
-                    && d.LocaleId == query.LocaleId
-                    && d.PageDirectoryId == query.PageDirectoryId
-                    ).AnyAsync();
-
-            return !exists;
-        }
-
-        public IEnumerable<IPermissionApplication> GetPermissions(IsPagePathUniqueQuery query)
-        {
-            yield return new PageReadPermission();
-        }
+        _dbContext = dbContext;
     }
 
+    public async Task<bool> ExecuteAsync(IsPagePathUniqueQuery query, IExecutionContext executionContext)
+    {
+        var exists = await _dbContext
+            .Pages
+            .AsNoTracking()
+            .Where(d => d.PageId != query.PageId
+                && d.UrlPath == query.UrlPath
+                && d.LocaleId == query.LocaleId
+                && d.PageDirectoryId == query.PageDirectoryId
+                ).AnyAsync();
+
+        return !exists;
+    }
+
+    public IEnumerable<IPermissionApplication> GetPermissions(IsPagePathUniqueQuery query)
+    {
+        yield return new PageReadPermission();
+    }
 }
+

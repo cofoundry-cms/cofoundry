@@ -1,34 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
+﻿namespace Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.Internal
+public class GetUpdateSeoSiteSettingsCommandQueryHandler
+    : IQueryHandler<GetPatchableCommandQuery<UpdateSeoSettingsCommand>, UpdateSeoSettingsCommand>
+    , IIgnorePermissionCheckHandler
 {
-    public class GetUpdateSeoSiteSettingsCommandQueryHandler 
-        : IQueryHandler<GetPatchableCommandQuery<UpdateSeoSettingsCommand>, UpdateSeoSettingsCommand>
-        , IIgnorePermissionCheckHandler
+    private readonly IQueryExecutor _queryExecutor;
+
+    public GetUpdateSeoSiteSettingsCommandQueryHandler(
+        IQueryExecutor queryExecutor
+        )
     {
-        private readonly IQueryExecutor _queryExecutor;
+        _queryExecutor = queryExecutor;
+    }
 
-        public GetUpdateSeoSiteSettingsCommandQueryHandler(
-            IQueryExecutor queryExecutor
-            )
+    public async Task<UpdateSeoSettingsCommand> ExecuteAsync(GetPatchableCommandQuery<UpdateSeoSettingsCommand> query, IExecutionContext executionContext)
+    {
+        var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>(), executionContext);
+
+        return new UpdateSeoSettingsCommand()
         {
-            _queryExecutor = queryExecutor;
-        }
-
-        public async Task<UpdateSeoSettingsCommand> ExecuteAsync(GetPatchableCommandQuery<UpdateSeoSettingsCommand> query, IExecutionContext executionContext)
-        {
-            var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>(), executionContext);
-
-            return new UpdateSeoSettingsCommand()
-            {
-                HumansTxt = settings.HumansTxt,
-                RobotsTxt = settings.RobotsTxt
-            };
-        }
+            HumansTxt = settings.HumansTxt,
+            RobotsTxt = settings.RobotsTxt
+        };
     }
 }

@@ -1,140 +1,134 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class UpdateUnstructuredDataDependenciesCommandHandler
+    : ICommandHandler<UpdateUnstructuredDataDependenciesCommand>
+    , IPermissionRestrictedCommandHandler<UpdateUnstructuredDataDependenciesCommand>
 {
-    public class UpdateUnstructuredDataDependenciesCommandHandler
-        : ICommandHandler<UpdateUnstructuredDataDependenciesCommand>
-        , IPermissionRestrictedCommandHandler<UpdateUnstructuredDataDependenciesCommand>
+    private readonly CofoundryDbContext _dbContext;
+    private readonly IEntityDefinitionRepository _entityDefinitionRepository;
+    private readonly IPermissionRepository _permissionRepository;
+    private readonly ICommandExecutor _commandExecutor;
+
+    public UpdateUnstructuredDataDependenciesCommandHandler(
+        CofoundryDbContext dbContext,
+        IEntityDefinitionRepository entityDefinitionRepository,
+        IPermissionRepository permissionRepository,
+        ICommandExecutor commandExecutor
+        )
     {
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IEntityDefinitionRepository _entityDefinitionRepository;
-        private readonly IPermissionRepository _permissionRepository;
-        private readonly ICommandExecutor _commandExecutor;
+        _dbContext = dbContext;
+        _entityDefinitionRepository = entityDefinitionRepository;
+        _permissionRepository = permissionRepository;
+        _commandExecutor = commandExecutor;
+    }
 
-        public UpdateUnstructuredDataDependenciesCommandHandler(
-            CofoundryDbContext dbContext,
-            IEntityDefinitionRepository entityDefinitionRepository,
-            IPermissionRepository permissionRepository,
-            ICommandExecutor commandExecutor
-            )
+    public async Task ExecuteAsync(UpdateUnstructuredDataDependenciesCommand command, IExecutionContext executionContext)
+    {
+        var existingDependencies = await QueryDepenencies(command).ToListAsync();
+        var relations = GetDistinctRelations(command.Model).ToList();
+        var ensureEntityDefinitionExistsCommands = GetEntityCheckCommands(command, existingDependencies, relations);
+
+        foreach (var ensureEntityDefinitionExistsCommand in ensureEntityDefinitionExistsCommands)
         {
-            _dbContext = dbContext;
-            _entityDefinitionRepository = entityDefinitionRepository;
-            _permissionRepository = permissionRepository;
-            _commandExecutor = commandExecutor;
+            await _commandExecutor.ExecuteAsync(ensureEntityDefinitionExistsCommand, executionContext);
         }
 
-        public async Task ExecuteAsync(UpdateUnstructuredDataDependenciesCommand command, IExecutionContext executionContext)
-        {
-            var existingDependencies = await QueryDepenencies(command).ToListAsync();
-            var relations = GetDistinctRelations(command.Model).ToList();
-            var ensureEntityDefinitionExistsCommands = GetEntityCheckCommands(command, existingDependencies, relations);
+        ApplyChanges(command, existingDependencies, relations);
+        await _dbContext.SaveChangesAsync();
+    }
 
-            foreach (var ensureEntityDefinitionExistsCommand in ensureEntityDefinitionExistsCommands)
+    private IQueryable<UnstructuredDataDependency> QueryDepenencies(UpdateUnstructuredDataDependenciesCommand command)
+    {
+        return _dbContext
+            .UnstructuredDataDependencies
+            .Where(d => d.RootEntityDefinitionCode == command.RootEntityDefinitionCode && d.RootEntityId == command.RootEntityId);
+    }
+
+    private IEnumerable<EntityDependency> GetDistinctRelations(object model)
+    {
+        var relations = EntityRelationAttributeHelper.GetRelations(model);
+
+        foreach (var relationGroup in relations.GroupBy(r => new { r.EntityDefinitionCode, r.EntityId }))
+        {
+            if (relationGroup.Count() == 1)
             {
-                await _commandExecutor.ExecuteAsync(ensureEntityDefinitionExistsCommand, executionContext);
+                yield return relationGroup.First();
             }
-
-            ApplyChanges(command, existingDependencies, relations);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        private IQueryable<UnstructuredDataDependency> QueryDepenencies(UpdateUnstructuredDataDependenciesCommand command)
-        {
-            return _dbContext
-                .UnstructuredDataDependencies
-                .Where(d => d.RootEntityDefinitionCode == command.RootEntityDefinitionCode && d.RootEntityId == command.RootEntityId);
-        }
-
-        private IEnumerable<EntityDependency> GetDistinctRelations(object model)
-        {
-            var relations = EntityRelationAttributeHelper.GetRelations(model);
-
-            foreach (var relationGroup in relations.GroupBy(r => new { r.EntityDefinitionCode, r.EntityId }))
+            else
             {
-                if (relationGroup.Count() == 1)
-                {
-                    yield return relationGroup.First();
-                }
-                else
-                {
-                    // In the case of multiple relations of the same entity we take the most harmful first, prefering a warning.
-                    var relation = relationGroup
-                        //.OrderByDescending(r => r.RootEntityCascadeAction == RootEntityCascadeAction.WarnAndCascade)
-                        //.ThenByDescending(r => r.RootEntityCascadeAction == RootEntityCascadeAction.Cascade)
-                        .First();
+                // In the case of multiple relations of the same entity we take the most harmful first, prefering a warning.
+                var relation = relationGroup
+                    //.OrderByDescending(r => r.RootEntityCascadeAction == RootEntityCascadeAction.WarnAndCascade)
+                    //.ThenByDescending(r => r.RootEntityCascadeAction == RootEntityCascadeAction.Cascade)
+                    .First();
 
-                    // Here we take the most restrictive first, which is to prevent deletion.
-                    relation.RelatedEntityCascadeAction = relationGroup
-                        .Select(r => r.RelatedEntityCascadeAction)
-                        .OrderByDescending(r => r == RelatedEntityCascadeAction.None)
-                        .ThenByDescending(r => r == RelatedEntityCascadeAction.Cascade)
-                        //.OrderByDescending(r => r == RelatedEntityCascadeAction.WarnAndCascadeEntity)
-                        .First();
+                // Here we take the most restrictive first, which is to prevent deletion.
+                relation.RelatedEntityCascadeAction = relationGroup
+                    .Select(r => r.RelatedEntityCascadeAction)
+                    .OrderByDescending(r => r == RelatedEntityCascadeAction.None)
+                    .ThenByDescending(r => r == RelatedEntityCascadeAction.Cascade)
+                    //.OrderByDescending(r => r == RelatedEntityCascadeAction.WarnAndCascadeEntity)
+                    .First();
 
-                    yield return relation;
-                }
+                yield return relation;
             }
         }
+    }
 
-        private IEnumerable<EnsureEntityDefinitionExistsCommand> GetEntityCheckCommands(UpdateUnstructuredDataDependenciesCommand command, List<UnstructuredDataDependency> existingDependencies, IEnumerable<EntityDependency> relations)
+    private IEnumerable<EnsureEntityDefinitionExistsCommand> GetEntityCheckCommands(UpdateUnstructuredDataDependenciesCommand command, List<UnstructuredDataDependency> existingDependencies, IEnumerable<EntityDependency> relations)
+    {
+        var commands = relations
+            .Select(r => r.EntityDefinitionCode)
+            .Union(new string[] { command.RootEntityDefinitionCode })
+            .Except(existingDependencies.Select(r => r.RelatedEntityDefinitionCode))
+            .Distinct()
+            .Select(c => new EnsureEntityDefinitionExistsCommand(c));
+
+        return commands;
+    }
+
+    private void ApplyChanges(UpdateUnstructuredDataDependenciesCommand command, List<UnstructuredDataDependency> existingDependencies, ICollection<EntityDependency> relations)
+    {
+        foreach (var existingDependency in existingDependencies)
         {
-            var commands = relations
-                .Select(r => r.EntityDefinitionCode)
-                .Union(new string[] { command.RootEntityDefinitionCode })
-                .Except(existingDependencies.Select(r => r.RelatedEntityDefinitionCode))
-                .Distinct()
-                .Select(c => new EnsureEntityDefinitionExistsCommand(c));
+            var updatedRelation = relations.SingleOrDefault(r => r.EntityDefinitionCode == existingDependency.RelatedEntityDefinitionCode && r.EntityId == existingDependency.RelatedEntityId);
 
-            return commands;
+            if (updatedRelation == null)
+            {
+                _dbContext.UnstructuredDataDependencies.Remove(existingDependency);
+            }
+            else
+            {
+                existingDependency.RelatedEntityCascadeActionId = (int)updatedRelation.RelatedEntityCascadeAction;
+            }
+            relations.Remove(updatedRelation);
         }
 
-        private void ApplyChanges(UpdateUnstructuredDataDependenciesCommand command, List<UnstructuredDataDependency> existingDependencies, ICollection<EntityDependency> relations)
+        foreach (var newRelation in relations)
         {
-            foreach (var existingDependency in existingDependencies)
+            _dbContext.UnstructuredDataDependencies.Add(new UnstructuredDataDependency()
             {
-                var updatedRelation = relations.SingleOrDefault(r => r.EntityDefinitionCode == existingDependency.RelatedEntityDefinitionCode && r.EntityId == existingDependency.RelatedEntityId);
-
-                if (updatedRelation == null)
-                {
-                    _dbContext.UnstructuredDataDependencies.Remove(existingDependency);
-                }
-                else
-                {
-                    existingDependency.RelatedEntityCascadeActionId = (int)updatedRelation.RelatedEntityCascadeAction;
-                }
-                relations.Remove(updatedRelation);
-            }
-
-            foreach (var newRelation in relations)
-            {
-                _dbContext.UnstructuredDataDependencies.Add(new UnstructuredDataDependency()
-                {
-                    RootEntityDefinitionCode = command.RootEntityDefinitionCode,
-                    RootEntityId = command.RootEntityId,
-                    RelatedEntityDefinitionCode = newRelation.EntityDefinitionCode,
-                    RelatedEntityId = newRelation.EntityId,
-                    RelatedEntityCascadeActionId = (int)newRelation.RelatedEntityCascadeAction
-                });
-            }
+                RootEntityDefinitionCode = command.RootEntityDefinitionCode,
+                RootEntityId = command.RootEntityId,
+                RelatedEntityDefinitionCode = newRelation.EntityDefinitionCode,
+                RelatedEntityId = newRelation.EntityId,
+                RelatedEntityCascadeActionId = (int)newRelation.RelatedEntityCascadeAction
+            });
         }
+    }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(UpdateUnstructuredDataDependenciesCommand command)
+    public IEnumerable<IPermissionApplication> GetPermissions(UpdateUnstructuredDataDependenciesCommand command)
+    {
+        var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(command.RootEntityDefinitionCode);
+
+        // Try and get a delete permission for the root entity.
+        var permission = _permissionRepository.GetByEntityAndPermissionType(entityDefinition, CommonPermissionTypes.Update("Entity"));
+
+        if (permission != null)
         {
-            var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(command.RootEntityDefinitionCode);
-
-            // Try and get a delete permission for the root entity.
-            var permission = _permissionRepository.GetByEntityAndPermissionType(entityDefinition, CommonPermissionTypes.Update("Entity"));
-
-            if (permission != null)
-            {
-                yield return permission;
-            }
+            yield return permission;
         }
     }
 }

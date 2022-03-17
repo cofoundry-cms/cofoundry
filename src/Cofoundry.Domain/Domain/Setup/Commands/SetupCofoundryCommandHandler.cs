@@ -1,68 +1,64 @@
 ﻿using Cofoundry.Core.Caching;
-using Cofoundry.Domain.CQS;
-using System;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class SetupCofoundryCommandHandler
+    : ICommandHandler<SetupCofoundryCommand>
+    , IIgnorePermissionCheckHandler
 {
-    public class SetupCofoundryCommandHandler
-        : ICommandHandler<SetupCofoundryCommand>
-        , IIgnorePermissionCheckHandler
+    private readonly IDomainRepository _domainRepository;
+    private readonly IObjectCacheFactory _objectCacheFactory;
+
+    public SetupCofoundryCommandHandler(
+        IDomainRepository domainRepository,
+        IObjectCacheFactory objectCacheFactory
+        )
     {
-        private readonly IDomainRepository _domainRepository;
-        private readonly IObjectCacheFactory _objectCacheFactory;
+        _domainRepository = domainRepository.WithElevatedPermissions();
+        _objectCacheFactory = objectCacheFactory;
+    }
 
-        public SetupCofoundryCommandHandler(
-            IDomainRepository domainRepository,
-            IObjectCacheFactory objectCacheFactory
-            )
+    public async Task ExecuteAsync(SetupCofoundryCommand command, IExecutionContext executionContext)
+    {
+        var settings = await _domainRepository.ExecuteQueryAsync(new GetSettingsQuery<InternalSettings>());
+
+        if (settings.IsSetup)
         {
-            _domainRepository = domainRepository.WithElevatedPermissions();
-            _objectCacheFactory = objectCacheFactory;
+            throw new InvalidOperationException("Site is already set up.");
         }
 
-        public async Task ExecuteAsync(SetupCofoundryCommand command, IExecutionContext executionContext)
+        using (var scope = _domainRepository.Transactions().CreateScope())
         {
-            var settings = await _domainRepository.ExecuteQueryAsync(new GetSettingsQuery<InternalSettings>());
+            var userId = await CreateAdminUser(command);
 
-            if (settings.IsSetup)
-            {
-                throw new InvalidOperationException("Site is already set up.");
-            }
+            var settingsCommand = await _domainRepository.ExecuteQueryAsync(new GetPatchableCommandQuery<UpdateGeneralSiteSettingsCommand>());
+            settingsCommand.ApplicationName = command.ApplicationName;
+            await _domainRepository.ExecuteCommandAsync(settingsCommand);
 
-            using (var scope = _domainRepository.Transactions().CreateScope())
-            {
-                var userId = await CreateAdminUser(command);
+            // Take the opportunity to break the cache in case any additional install scripts have been run since initialization
+            _objectCacheFactory.Clear();
 
-                var settingsCommand = await _domainRepository.ExecuteQueryAsync(new GetPatchableCommandQuery<UpdateGeneralSiteSettingsCommand>());
-                settingsCommand.ApplicationName = command.ApplicationName;
-                await _domainRepository.ExecuteCommandAsync(settingsCommand);
+            // Setup Complete
+            await _domainRepository.ExecuteCommandAsync(new MarkAsSetUpCommand());
 
-                // Take the opportunity to break the cache in case any additional install scripts have been run since initialization
-                _objectCacheFactory.Clear();
-
-                // Setup Complete
-                await _domainRepository.ExecuteCommandAsync(new MarkAsSetUpCommand());
-
-                await scope.CompleteAsync();
-            }
+            await scope.CompleteAsync();
         }
+    }
 
-        private async Task<int> CreateAdminUser(SetupCofoundryCommand command)
+    private async Task<int> CreateAdminUser(SetupCofoundryCommand command)
+    {
+        var newUserCommand = new AddUserCommand()
         {
-            var newUserCommand = new AddUserCommand()
-            {
-                Email = command.Email,
-                DisplayName = command.DisplayName,
-                Password = command.Password,
-                RequirePasswordChange = command.RequirePasswordChange,
-                UserAreaCode = CofoundryAdminUserArea.Code,
-                RoleCode = SuperAdminRole.Code
-            };
+            Email = command.Email,
+            DisplayName = command.DisplayName,
+            Password = command.Password,
+            RequirePasswordChange = command.RequirePasswordChange,
+            UserAreaCode = CofoundryAdminUserArea.Code,
+            RoleCode = SuperAdminRole.Code
+        };
 
-            await _domainRepository.ExecuteCommandAsync(newUserCommand);
+        await _domainRepository.ExecuteCommandAsync(newUserCommand);
 
-            return newUserCommand.OutputUserId;
-        }
+        return newUserCommand.OutputUserId;
     }
 }

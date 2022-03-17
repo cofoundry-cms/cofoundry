@@ -1,45 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
+﻿namespace Cofoundry.Web.Admin;
 
-namespace Cofoundry.Web.Admin
+public class ImagesModuleRegistration : IInternalAngularModuleRegistration
 {
-    public class ImagesModuleRegistration: IInternalAngularModuleRegistration
+    private readonly IAdminRouteLibrary _adminRouteLibrary;
+    private readonly ImageAssetsSettings _imageAssetsSettings;
+
+    public ImagesModuleRegistration(
+        IAdminRouteLibrary adminRouteLibrary,
+        ImageAssetsSettings imageAssetsSettings
+        )
     {
-        private readonly IAdminRouteLibrary _adminRouteLibrary;
-        private readonly ImageAssetsSettings _imageAssetsSettings;
+        _adminRouteLibrary = adminRouteLibrary;
+        _imageAssetsSettings = imageAssetsSettings;
+    }
 
-        public ImagesModuleRegistration(
-            IAdminRouteLibrary adminRouteLibrary,
-            ImageAssetsSettings imageAssetsSettings
-            )
+    public AdminModule GetModule()
+    {
+        if (_imageAssetsSettings.Disabled) return null;
+
+        var module = new AdminModule()
         {
-            _adminRouteLibrary = adminRouteLibrary;
-            _imageAssetsSettings = imageAssetsSettings;
-        }
+            AdminModuleCode = "COFIMG",
+            Title = "Images",
+            Description = "Manage the images in your site.",
+            MenuCategory = AdminModuleMenuCategory.ManageSite,
+            PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
+            Url = _adminRouteLibrary.Images.List(),
+            RestrictedToPermission = new ImageAssetAdminModulePermission()
+        };
 
-        public AdminModule GetModule()
-        {
-            if (_imageAssetsSettings.Disabled) return null;
+        return module;
+    }
 
-            var module = new AdminModule()
-            {
-                AdminModuleCode = "COFIMG",
-                Title = "Images",
-                Description = "Manage the images in your site.",
-                MenuCategory = AdminModuleMenuCategory.ManageSite,
-                PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Secondry,
-                Url = _adminRouteLibrary.Images.List(),
-                RestrictedToPermission = new ImageAssetAdminModulePermission()
-            };
-
-            return module;
-        }
-
-        public string RoutePrefix
-        {
-            get { return ImagesModuleRouteLibrary.RoutePrefix; }
-        }
+    public string RoutePrefix
+    {
+        get { return ImagesModuleRouteLibrary.RoutePrefix; }
     }
 }

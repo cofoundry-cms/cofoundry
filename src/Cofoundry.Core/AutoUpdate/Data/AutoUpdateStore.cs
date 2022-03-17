@@ -1,27 +1,23 @@
 ﻿using Cofoundry.Core.Data.SimpleDatabase;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Core.AutoUpdate.Internal
+namespace Cofoundry.Core.AutoUpdate.Internal;
+
+/// <inheritdoc/>
+public class AutoUpdateStore : IAutoUpdateStore
 {
-    /// <inheritdoc/>
-    public class AutoUpdateStore : IAutoUpdateStore
+    private readonly ICofoundryDatabase _db;
+
+    public AutoUpdateStore(
+        ICofoundryDatabase db
+        )
     {
-        private readonly ICofoundryDatabase _db;
+        _db = db;
+    }
 
-        public AutoUpdateStore(
-            ICofoundryDatabase db
-            )
-        {
-            _db = db;
-        }
-
-        public async Task<ICollection<ModuleVersion>> GetVersionHistoryAsync()
-        {
-            var query = @"
+    public async Task<ICollection<ModuleVersion>> GetVersionHistoryAsync()
+    {
+        var query = @"
                 if (exists (select * 
                     from information_schema.tables 
                     where table_schema = 'Cofoundry' 
@@ -33,22 +29,22 @@ namespace Cofoundry.Core.AutoUpdate.Internal
 	                order by Module
                 end";
 
-            var moduleVersions = await _db.ReadAsync(query, r =>
-            {
-                var moduleVersion = new ModuleVersion();
-                moduleVersion.Module = (string)r["Module"];
-                moduleVersion.Version = (int)r["Version"];
-
-                return moduleVersion;
-            });
-
-            return moduleVersions;
-        }
-
-        public async Task<bool> IsDatabaseLockedAsync()
+        var moduleVersions = await _db.ReadAsync(query, r =>
         {
-            // else this option can also be set in the db
-            var query = @"
+            var moduleVersion = new ModuleVersion();
+            moduleVersion.Module = (string)r["Module"];
+            moduleVersion.Version = (int)r["Version"];
+
+            return moduleVersion;
+        });
+
+        return moduleVersions;
+    }
+
+    public async Task<bool> IsDatabaseLockedAsync()
+    {
+        // else this option can also be set in the db
+        var query = @"
                 if (exists (select * 
                     from information_schema.tables 
                     where table_schema = 'Cofoundry' 
@@ -57,47 +53,46 @@ namespace Cofoundry.Core.AutoUpdate.Internal
                     select IsLocked from Cofoundry.AutoUpdateLock;
                 end";
 
-            var isLocked = await _db.ReadAsync(query, (r) =>
-            {
-                return (bool)r["IsLocked"];
-            });
-
-            return isLocked.FirstOrDefault();
-        }
-
-        public Task SetDatabaseLockedAsync(bool isLocked)
+        var isLocked = await _db.ReadAsync(query, (r) =>
         {
-            var cmd = "update Cofoundry.AutoUpdateLock set IsLocked = @IsLocked";
-            return _db.ExecuteAsync(cmd, new SqlParameter("@IsLocked", isLocked));
-        }
+            return (bool)r["IsLocked"];
+        });
 
-        public Task LogSuccessAsync(string module, int version, string description)
-        {
-            var sql = @"
+        return isLocked.FirstOrDefault();
+    }
+
+    public Task SetDatabaseLockedAsync(bool isLocked)
+    {
+        var cmd = "update Cofoundry.AutoUpdateLock set IsLocked = @IsLocked";
+        return _db.ExecuteAsync(cmd, new SqlParameter("@IsLocked", isLocked));
+    }
+
+    public Task LogSuccessAsync(string module, int version, string description)
+    {
+        var sql = @"
 	                insert into Cofoundry.ModuleUpdate (Module, [Version], [Description], ExecutionDate) 
 	                values (@Module, @Version, @Description, @ExecutionDate)";
 
-            return _db.ExecuteAsync(sql,
-                new SqlParameter("Module", module),
-                new SqlParameter("Version", version),
-                new SqlParameter("Description", description),
-                new SqlParameter("ExecutionDate", DateTime.UtcNow)
-                );
-        }
+        return _db.ExecuteAsync(sql,
+            new SqlParameter("Module", module),
+            new SqlParameter("Version", version),
+            new SqlParameter("Description", description),
+            new SqlParameter("ExecutionDate", DateTime.UtcNow)
+            );
+    }
 
-        public Task LogErrorAsync(string module, int version, string description, Exception ex)
-        {
-            var sql = @"
+    public Task LogErrorAsync(string module, int version, string description, Exception ex)
+    {
+        var sql = @"
                 insert into Cofoundry.ModuleUpdateError (Module, [Version], [Description], ExecutionDate, ExceptionMessage) 
 	            values (@Module, @Version, @Description, @ExecutionDate, @ExceptionMessage)";
 
-            return _db.ExecuteAsync(sql,
-                new SqlParameter("Module", module),
-                new SqlParameter("Version", version),
-                new SqlParameter("Description", description),
-                new SqlParameter("ExecutionDate", DateTime.UtcNow),
-                new SqlParameter("ExceptionMessage", ex.ToString())
-                );
-        }
+        return _db.ExecuteAsync(sql,
+            new SqlParameter("Module", module),
+            new SqlParameter("Version", version),
+            new SqlParameter("Description", description),
+            new SqlParameter("ExecutionDate", DateTime.UtcNow),
+            new SqlParameter("ExceptionMessage", ex.ToString())
+            );
     }
 }

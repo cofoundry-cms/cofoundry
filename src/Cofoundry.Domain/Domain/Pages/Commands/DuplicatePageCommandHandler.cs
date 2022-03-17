@@ -1,114 +1,107 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Core.Data;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class DuplicatePageCommandHandler
+    : ICommandHandler<DuplicatePageCommand>
+    , IPermissionRestrictedCommandHandler<DuplicatePageCommand>
 {
-    public class DuplicatePageCommandHandler
-        : ICommandHandler<DuplicatePageCommand>
-        , IPermissionRestrictedCommandHandler<DuplicatePageCommand>
+    private readonly ICommandExecutor _commandExecutor;
+    private readonly CofoundryDbContext _dbContext;
+    private readonly IPageStoredProcedures _pageStoredProcedures;
+    private readonly ITransactionScopeManager _transactionScopeFactory;
+
+    public DuplicatePageCommandHandler(
+        ICommandExecutor commandExecutor,
+        CofoundryDbContext dbContext,
+        IPageStoredProcedures pageStoredProcedures,
+        ITransactionScopeManager transactionScopeFactory
+        )
     {
-        private readonly ICommandExecutor _commandExecutor;
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IPageStoredProcedures _pageStoredProcedures;
-        private readonly ITransactionScopeManager _transactionScopeFactory;
+        _commandExecutor = commandExecutor;
+        _dbContext = dbContext;
+        _pageStoredProcedures = pageStoredProcedures;
+        _transactionScopeFactory = transactionScopeFactory;
+    }
 
-        public DuplicatePageCommandHandler(
-            ICommandExecutor commandExecutor,
-            CofoundryDbContext dbContext,
-            IPageStoredProcedures pageStoredProcedures,
-            ITransactionScopeManager transactionScopeFactory
-            )
+    public async Task ExecuteAsync(DuplicatePageCommand command, IExecutionContext executionContext)
+    {
+        var pageToDuplicate = await GetPageToDuplicateAsync(command);
+        var addPageCommand = MapCommand(command, pageToDuplicate);
+
+        using (var scope = _transactionScopeFactory.Create(_dbContext))
         {
-            _commandExecutor = commandExecutor;
-            _dbContext = dbContext;
-            _pageStoredProcedures = pageStoredProcedures;
-            _transactionScopeFactory = transactionScopeFactory;
+            await _commandExecutor.ExecuteAsync(addPageCommand, executionContext);
+
+            await _pageStoredProcedures.CopyBlocksToDraftAsync(
+                addPageCommand.OutputPageId,
+                pageToDuplicate.Version.PageVersionId,
+                executionContext.ExecutionDate,
+                executionContext.UserContext.UserId.Value);
+
+            await scope.CompleteAsync();
         }
 
-        public async Task ExecuteAsync(DuplicatePageCommand command, IExecutionContext executionContext)
-        {
-            var pageToDuplicate = await GetPageToDuplicateAsync(command);
-            var addPageCommand = MapCommand(command, pageToDuplicate);
+        // Set Ouput
+        command.OutputPageId = addPageCommand.OutputPageId;
+    }
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+    private class PageQuery
+    {
+        public int PageTypeId { get; set; }
+        public PageVersion Version { get; set; }
+        public ICollection<string> Tags { get; set; }
+    }
+
+    private Task<PageQuery> GetPageToDuplicateAsync(DuplicatePageCommand command)
+    {
+        return _dbContext
+            .PageVersions
+            .AsNoTracking()
+            .FilterActive()
+            .FilterByPageId(command.PageToDuplicateId)
+            .OrderByLatest()
+            .Select(v => new PageQuery
             {
-                await _commandExecutor.ExecuteAsync(addPageCommand, executionContext);
+                PageTypeId = v.Page.PageTypeId,
+                Version = v,
+                Tags = v
+                    .Page
+                    .PageTags
+                    .Select(t => t.Tag.TagText)
+                    .ToList()
+            })
+            .FirstOrDefaultAsync();
+    }
 
-                await _pageStoredProcedures.CopyBlocksToDraftAsync(
-                    addPageCommand.OutputPageId,
-                    pageToDuplicate.Version.PageVersionId,
-                    executionContext.ExecutionDate,
-                    executionContext.UserContext.UserId.Value);
+    private AddPageCommand MapCommand(DuplicatePageCommand command, PageQuery toDup)
+    {
+        EntityNotFoundException.ThrowIfNull(toDup, command.PageToDuplicateId);
 
-                await scope.CompleteAsync();
-            }
+        var addPageCommand = new AddPageCommand();
+        addPageCommand.ShowInSiteMap = !toDup.Version.ExcludeFromSitemap;
+        addPageCommand.PageTemplateId = toDup.Version.PageTemplateId;
+        addPageCommand.MetaDescription = toDup.Version.MetaDescription;
+        addPageCommand.OpenGraphDescription = toDup.Version.OpenGraphDescription;
+        addPageCommand.OpenGraphImageId = toDup.Version.OpenGraphImageId;
+        addPageCommand.OpenGraphTitle = toDup.Version.OpenGraphTitle;
+        addPageCommand.PageType = (PageType)toDup.PageTypeId;
 
-            // Set Ouput
-            command.OutputPageId = addPageCommand.OutputPageId;
-        }
+        addPageCommand.Title = command.Title;
+        addPageCommand.LocaleId = command.LocaleId;
+        addPageCommand.UrlPath = command.UrlPath;
+        addPageCommand.CustomEntityRoutingRule = command.CustomEntityRoutingRule;
+        addPageCommand.PageDirectoryId = command.PageDirectoryId;
 
-        private class PageQuery
-        {
-            public int PageTypeId { get; set; }
-            public PageVersion Version { get; set; }
-            public ICollection<string> Tags { get; set; }
-        }
+        addPageCommand.Tags = toDup.Tags.ToArray();
 
-        private Task<PageQuery> GetPageToDuplicateAsync(DuplicatePageCommand command)
-        {
-            return _dbContext
-                .PageVersions
-                .AsNoTracking()
-                .FilterActive()
-                .FilterByPageId(command.PageToDuplicateId)
-                .OrderByLatest()
-                .Select(v => new PageQuery
-                {
-                    PageTypeId = v.Page.PageTypeId,
-                    Version = v,
-                    Tags = v
-                        .Page
-                        .PageTags
-                        .Select(t => t.Tag.TagText)
-                        .ToList()
-                })
-                .FirstOrDefaultAsync();
-        }
+        return addPageCommand;
+    }
 
-        private AddPageCommand MapCommand(DuplicatePageCommand command, PageQuery toDup)
-        {
-            EntityNotFoundException.ThrowIfNull(toDup, command.PageToDuplicateId);
-
-            var addPageCommand = new AddPageCommand();
-            addPageCommand.ShowInSiteMap = !toDup.Version.ExcludeFromSitemap;
-            addPageCommand.PageTemplateId = toDup.Version.PageTemplateId;
-            addPageCommand.MetaDescription = toDup.Version.MetaDescription;
-            addPageCommand.OpenGraphDescription = toDup.Version.OpenGraphDescription;
-            addPageCommand.OpenGraphImageId = toDup.Version.OpenGraphImageId;
-            addPageCommand.OpenGraphTitle = toDup.Version.OpenGraphTitle;
-            addPageCommand.PageType = (PageType)toDup.PageTypeId;
-
-            addPageCommand.Title = command.Title;
-            addPageCommand.LocaleId = command.LocaleId;
-            addPageCommand.UrlPath = command.UrlPath;
-            addPageCommand.CustomEntityRoutingRule = command.CustomEntityRoutingRule;
-            addPageCommand.PageDirectoryId = command.PageDirectoryId;
-
-            addPageCommand.Tags = toDup.Tags.ToArray();
-
-            return addPageCommand;
-        }
-
-        public IEnumerable<IPermissionApplication> GetPermissions(DuplicatePageCommand command)
-        {
-            yield return new PageCreatePermission();
-        }
+    public IEnumerable<IPermissionApplication> GetPermissions(DuplicatePageCommand command)
+    {
+        yield return new PageCreatePermission();
     }
 }

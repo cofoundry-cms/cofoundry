@@ -1,31 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Cofoundry.Domain;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Routing;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin;
+
+public class VisualEditorRouteRegistration : IOrderedRouteRegistration
 {
-    public class VisualEditorRouteRegistration : IOrderedRouteRegistration
+    private readonly PagesSettings _pagesSettings;
+
+    public VisualEditorRouteRegistration(
+        PagesSettings pagesSettings
+        )
     {
-        private readonly PagesSettings _pagesSettings;
+        _pagesSettings = pagesSettings;
+    }
 
-        public VisualEditorRouteRegistration(
-            PagesSettings pagesSettings
-            )
-        {
-            _pagesSettings = pagesSettings;
-        }
+    public int Ordering => (int)RouteRegistrationOrdering.Early;
 
-        public int Ordering => (int)RouteRegistrationOrdering.Early;
+    public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
+    {
+        if (_pagesSettings.Disabled) return;
 
-        public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
-        {
-            if (_pagesSettings.Disabled) return;
-
-            routeBuilder
-                .ForAdminController<VisualEditorController>(VisualEditorRouteLibrary.RoutePrefix)
-                .MapRoute("Frame");
-        }
+        routeBuilder
+            .ForAdminController<VisualEditorController>(VisualEditorRouteLibrary.RoutePrefix)
+            .MapRoute("Frame");
     }
 }

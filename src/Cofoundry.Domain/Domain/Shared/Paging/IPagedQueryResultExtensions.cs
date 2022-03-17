@@ -1,25 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Domain;
 
-namespace Cofoundry.Domain
+public static class IPagedQueryResultExtensions
 {
-    public static class IPagedQueryResultExtensions
+    public static bool IsFirstPage(this IPagedQueryResult source)
     {
-        #region IPagedQueryResult
+        return source.PageNumber <= 1;
+    }
 
-        public static bool IsFirstPage(this IPagedQueryResult source)
-        {
-            return source.PageNumber <= 1;
-        }
-
-        public static bool IsLastPage(this IPagedQueryResult source)
-        {
-            return source.PageCount <= source.PageNumber;
-        }
-
-        #endregion
+    public static bool IsLastPage(this IPagedQueryResult source)
+    {
+        return source.PageCount <= source.PageNumber;
     }
 }

@@ -1,42 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class UserContextMapper
 {
-    public class UserContextMapper
+    private readonly IUserAreaDefinitionRepository _userAreaRepository;
+
+    public UserContextMapper(
+        IUserAreaDefinitionRepository userAreaRepository
+        )
     {
-        private readonly IUserAreaDefinitionRepository _userAreaRepository;
+        _userAreaRepository = userAreaRepository;
+    }
 
-        public UserContextMapper(
-            IUserAreaDefinitionRepository userAreaRepository
-            )
+    public UserContext Map(User dbUser)
+    {
+        if (dbUser == null) return null;
+
+        if (dbUser.Role == null)
         {
-            _userAreaRepository = userAreaRepository;
+            throw new ArgumentException("User role is null. Ensure this has been included in the query.", nameof(dbUser));
         }
 
-        public UserContext Map(User dbUser)
-        {
-            if (dbUser == null) return null;
+        var cx = new UserContext();
 
-            if (dbUser.Role == null)
-            {
-                throw new ArgumentException("User role is null. Ensure this has been included in the query.", nameof(dbUser));
-            }
+        cx.IsPasswordChangeRequired = dbUser.RequirePasswordChange;
+        cx.IsAccountVerified = dbUser.AccountVerifiedDate.HasValue;
+        cx.RoleId = dbUser.RoleId;
+        cx.RoleCode = dbUser.Role.RoleCode;
+        cx.UserId = dbUser.UserId;
+        cx.UserArea = _userAreaRepository.GetRequiredByCode(dbUser.UserAreaCode);
 
-            var cx = new UserContext();
-
-            cx.IsPasswordChangeRequired = dbUser.RequirePasswordChange;
-            cx.IsAccountVerified = dbUser.AccountVerifiedDate.HasValue;
-            cx.RoleId = dbUser.RoleId;
-            cx.RoleCode = dbUser.Role.RoleCode;
-            cx.UserId = dbUser.UserId;
-            cx.UserArea = _userAreaRepository.GetRequiredByCode(dbUser.UserAreaCode);
-
-            return cx;
-        }
+        return cx;
     }
 }

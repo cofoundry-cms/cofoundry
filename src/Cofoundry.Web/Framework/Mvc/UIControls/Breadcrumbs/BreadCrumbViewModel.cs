@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿namespace Cofoundry.Web;
 
-namespace Cofoundry.Web
+/// <summary>
+/// View model for an individual breadcrumb URL
+/// </summary>
+public class BreadcrumbViewModel
 {
-    /// <summary>
-    /// View model for an individual breadcrumb URL
-    /// </summary>
-    public class BreadcrumbViewModel
+    public string Title { get; set; }
+
+    public string Href { get; set; }
+
+    public bool HasHref
     {
-        public string Title { get; set; }
-
-        public string Href { get; set; }
-
-        public bool HasHref
+        get
         {
-            get
-            {
-                return !string.IsNullOrEmpty(Href);
-            }
+            return !string.IsNullOrEmpty(Href);
         }
     }
 }

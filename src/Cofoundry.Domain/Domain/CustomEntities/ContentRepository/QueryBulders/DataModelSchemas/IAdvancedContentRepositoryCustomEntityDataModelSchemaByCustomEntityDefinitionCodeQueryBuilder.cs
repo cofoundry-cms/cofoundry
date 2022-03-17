@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Domain;
 
-namespace Cofoundry.Domain
+/// <summary>
+/// Queries to extract and return meta data information about a custom 
+/// entity data model for a specific custom entity definition.
+/// </summary>
+public interface IAdvancedContentRepositoryCustomEntityDataModelSchemaByCustomEntityDefinitionCodeQueryBuilder
 {
     /// <summary>
-    /// Queries to extract and return meta data information about a custom 
+    /// Extracts and return meta data information about a custom 
     /// entity data model for a specific custom entity definition.
     /// </summary>
-    public interface IAdvancedContentRepositoryCustomEntityDataModelSchemaByCustomEntityDefinitionCodeQueryBuilder
-    {
-        /// <summary>
-        /// Extracts and return meta data information about a custom 
-        /// entity data model for a specific custom entity definition.
-        /// </summary>
-        IDomainRepositoryQueryContext<CustomEntityDataModelSchema> AsDetails();
-    }
+    IDomainRepositoryQueryContext<CustomEntityDataModelSchema> AsDetails();
 }

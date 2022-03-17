@@ -1,31 +1,30 @@
-﻿namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain;
+
+/// <summary>
+/// Permission to create new custom entities.
+/// </summary>
+public class CustomEntityCreatePermission : ICustomEntityPermissionTemplate
 {
     /// <summary>
-    /// Permission to create new custom entities.
+    /// Constructor used internally by AuthorizePermissionAttribute.
     /// </summary>
-    public class CustomEntityCreatePermission : ICustomEntityPermissionTemplate
+    public CustomEntityCreatePermission()
     {
-        /// <summary>
-        /// Constructor used internally by AuthorizePermissionAttribute.
-        /// </summary>
-        public CustomEntityCreatePermission()
-        {
-            PermissionType = CommonPermissionTypes.Create("Not Set");
-        }
+        PermissionType = CommonPermissionTypes.Create("Not Set");
+    }
 
-        public CustomEntityCreatePermission(ICustomEntityDefinition customEntityDefinition)
-        {
-            EntityDefinition = new CustomEntityDynamicEntityDefinition(customEntityDefinition);
-            PermissionType = CommonPermissionTypes.Create(customEntityDefinition.NamePlural);
-        }
+    public CustomEntityCreatePermission(ICustomEntityDefinition customEntityDefinition)
+    {
+        EntityDefinition = new CustomEntityDynamicEntityDefinition(customEntityDefinition);
+        PermissionType = CommonPermissionTypes.Create(customEntityDefinition.NamePlural);
+    }
 
-        public IEntityDefinition EntityDefinition { get; private set; }
-        public PermissionType PermissionType { get; private set; }
+    public IEntityDefinition EntityDefinition { get; private set; }
+    public PermissionType PermissionType { get; private set; }
 
-        public ICustomEntityPermissionTemplate CreateImplemention(ICustomEntityDefinition customEntityDefinition)
-        {
-            var implementedPermission = new CustomEntityCreatePermission(customEntityDefinition);
-            return implementedPermission;
-        }
+    public ICustomEntityPermissionTemplate CreateImplemention(ICustomEntityDefinition customEntityDefinition)
+    {
+        var implementedPermission = new CustomEntityCreatePermission(customEntityDefinition);
+        return implementedPermission;
     }
 }

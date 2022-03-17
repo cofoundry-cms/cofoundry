@@ -1,57 +1,51 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class GetDocumentAssetEntityMicroSummariesByIdRangeQueryHandler
+    : IQueryHandler<GetDocumentAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+    , IPermissionRestrictedQueryHandler<GetDocumentAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
 {
-    public class GetDocumentAssetEntityMicroSummariesByIdRangeQueryHandler
-        : IQueryHandler<GetDocumentAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
-        , IPermissionRestrictedQueryHandler<GetDocumentAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+    private readonly CofoundryDbContext _dbContext;
+    private readonly IEntityDefinitionRepository _entityDefinitionRepository;
+
+    public GetDocumentAssetEntityMicroSummariesByIdRangeQueryHandler(
+        CofoundryDbContext dbContext,
+        IEntityDefinitionRepository entityDefinitionRepository
+        )
     {
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IEntityDefinitionRepository _entityDefinitionRepository;
+        _dbContext = dbContext;
+        _entityDefinitionRepository = entityDefinitionRepository;
+    }
 
-        public GetDocumentAssetEntityMicroSummariesByIdRangeQueryHandler(
-            CofoundryDbContext dbContext,
-            IEntityDefinitionRepository entityDefinitionRepository
-            )
-        {
-            _dbContext = dbContext;
-            _entityDefinitionRepository = entityDefinitionRepository;
-        }
+    public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetDocumentAssetEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    {
+        var results = await Query(query).ToDictionaryAsync(e => e.RootEntityId);
 
-        public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetDocumentAssetEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
-        {
-            var results = await Query(query).ToDictionaryAsync(e => e.RootEntityId);
+        return results;
+    }
 
-            return results;
-        }
+    private IQueryable<RootEntityMicroSummary> Query(GetDocumentAssetEntityMicroSummariesByIdRangeQuery query)
+    {
+        var definition = _entityDefinitionRepository.GetRequiredByCode(DocumentAssetEntityDefinition.DefinitionCode);
 
-        private IQueryable<RootEntityMicroSummary> Query(GetDocumentAssetEntityMicroSummariesByIdRangeQuery query)
-        {
-            var definition = _entityDefinitionRepository.GetRequiredByCode(DocumentAssetEntityDefinition.DefinitionCode);
+        var dbQuery = _dbContext
+            .DocumentAssets
+            .AsNoTracking()
+            .FilterByIds(query.DocumentAssetIds)
+            .Select(a => new RootEntityMicroSummary()
+            {
+                RootEntityId = a.DocumentAssetId,
+                RootEntityTitle = a.Title,
+                EntityDefinitionCode = definition.EntityDefinitionCode,
+                EntityDefinitionName = definition.Name
+            });
 
-            var dbQuery = _dbContext
-                .DocumentAssets
-                .AsNoTracking()
-                .FilterByIds(query.DocumentAssetIds)
-                .Select(a => new RootEntityMicroSummary()
-                {
-                    RootEntityId = a.DocumentAssetId,
-                    RootEntityTitle = a.Title,
-                    EntityDefinitionCode = definition.EntityDefinitionCode,
-                    EntityDefinitionName = definition.Name
-                });
+        return dbQuery;
+    }
 
-            return dbQuery;
-        }
-
-        public IEnumerable<IPermissionApplication> GetPermissions(GetDocumentAssetEntityMicroSummariesByIdRangeQuery query)
-        {
-            yield return new DocumentAssetReadPermission();
-        }
+    public IEnumerable<IPermissionApplication> GetPermissions(GetDocumentAssetEntityMicroSummariesByIdRangeQuery query)
+    {
+        yield return new DocumentAssetReadPermission();
     }
 }

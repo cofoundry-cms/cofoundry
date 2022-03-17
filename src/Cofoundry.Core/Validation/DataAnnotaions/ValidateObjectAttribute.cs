@@ -1,55 +1,52 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.ComponentModel.DataAnnotations;
 
-namespace Cofoundry.Core.Validation
+namespace Cofoundry.Core.Validation;
+
+/// <summary>
+/// Validates a child object property
+/// </summary>
+/// <remarks>
+/// Adapted from http://www.technofattie.com/2011/10/05/recursive-validation-using-dataannotations.html
+/// </remarks>
+public class ValidateObjectAttribute : ValidationAttribute
 {
-    /// <summary>
-    /// Validates a child object property
-    /// </summary>
-    /// <remarks>
-    /// Adapted from http://www.technofattie.com/2011/10/05/recursive-validation-using-dataannotations.html
-    /// </remarks>
-    public class ValidateObjectAttribute : ValidationAttribute
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        var results = new List<ValidationResult>();
+
+        // if this a collection, validate each item.
+        if (value is IEnumerable)
         {
-            var results = new List<ValidationResult>();
-
-            // if this a collection, validate each item.
-            if (value is IEnumerable)
+            foreach (object collectionValue in (IEnumerable)value)
             {
-                foreach (object collectionValue in (IEnumerable)value)
-                {
-                    ValidateValue(collectionValue, results);
-                }
+                ValidateValue(collectionValue, results);
             }
-            else
-            {
-                ValidateValue(value, results);
-            }
-
-            if (results.Count != 0)
-            {
-                var msg = String.Format("{0} validation failed", validationContext.DisplayName);
-                var compositeResults = new CompositeValidationResult(msg, new string[] { validationContext.MemberName });
-                results.ForEach(compositeResults.AddResult);
-
-                return compositeResults;
-            }
-
-            return ValidationResult.Success;
+        }
+        else
+        {
+            ValidateValue(value, results);
         }
 
-        private void ValidateValue(object value, List<ValidationResult> results)
+        if (results.Count != 0)
         {
-            // ValidationContext constructor requires value to not be null.
-            if (value == null) return;
+            var msg = String.Format("{0} validation failed", validationContext.DisplayName);
+            var compositeResults = new CompositeValidationResult(msg, new string[] { validationContext.MemberName });
+            results.ForEach(compositeResults.AddResult);
 
-            var context = new ValidationContext(value, null, null);
-
-            Validator.TryValidateObject(value, context, results, true);
+            return compositeResults;
         }
+
+        return ValidationResult.Success;
+    }
+
+    private void ValidateValue(object value, List<ValidationResult> results)
+    {
+        // ValidationContext constructor requires value to not be null.
+        if (value == null) return;
+
+        var context = new ValidationContext(value, null, null);
+
+        Validator.TryValidateObject(value, context, results, true);
     }
 }

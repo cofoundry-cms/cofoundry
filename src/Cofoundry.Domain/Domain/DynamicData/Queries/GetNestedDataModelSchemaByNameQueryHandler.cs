@@ -1,44 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
+﻿namespace Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.Internal
+public class GetNestedDataModelSchemaByNameQueryHandler
+    : IQueryHandler<GetNestedDataModelSchemaByNameQuery, NestedDataModelSchema>
+    , IIgnorePermissionCheckHandler
 {
-    public class GetNestedDataModelSchemaByNameQueryHandler
-        : IQueryHandler<GetNestedDataModelSchemaByNameQuery, NestedDataModelSchema>
-        , IIgnorePermissionCheckHandler
+    private readonly INestedDataModelSchemaMapper _nestedDataModelSchemaMapper;
+    private readonly INestedDataModelTypeRepository _nestedDataModelRepository;
+
+    public GetNestedDataModelSchemaByNameQueryHandler(
+        INestedDataModelSchemaMapper nestedDataModelSchemaMapper,
+        INestedDataModelTypeRepository nestedDataModelRepository
+        )
     {
-        #region constructor
+        _nestedDataModelSchemaMapper = nestedDataModelSchemaMapper;
+        _nestedDataModelRepository = nestedDataModelRepository;
+    }
 
-        private readonly INestedDataModelSchemaMapper _nestedDataModelSchemaMapper;
-        private readonly INestedDataModelTypeRepository _nestedDataModelRepository;
+    public Task<NestedDataModelSchema> ExecuteAsync(GetNestedDataModelSchemaByNameQuery query, IExecutionContext executionContext)
+    {
+        NestedDataModelSchema result = null;
 
-        public GetNestedDataModelSchemaByNameQueryHandler(
-            INestedDataModelSchemaMapper nestedDataModelSchemaMapper,
-            INestedDataModelTypeRepository nestedDataModelRepository
-            )
-        {
-            _nestedDataModelSchemaMapper = nestedDataModelSchemaMapper;
-            _nestedDataModelRepository = nestedDataModelRepository;
-        }
+        if (string.IsNullOrWhiteSpace(query.Name)) return Task.FromResult(result);
 
-        #endregion
+        var dataModelType = _nestedDataModelRepository.GetByName(query.Name);
 
-        public Task<NestedDataModelSchema> ExecuteAsync(GetNestedDataModelSchemaByNameQuery query, IExecutionContext executionContext)
-        {
-            NestedDataModelSchema result = null;
+        if (dataModelType == null) return Task.FromResult(result);
 
-            if (string.IsNullOrWhiteSpace(query.Name)) return Task.FromResult(result);
-            
-            var dataModelType = _nestedDataModelRepository.GetByName(query.Name);
+        result = _nestedDataModelSchemaMapper.Map(dataModelType);
 
-            if (dataModelType == null) return Task.FromResult(result);
-
-            result = _nestedDataModelSchemaMapper.Map(dataModelType);
-
-            return Task.FromResult(result);
-        }
+        return Task.FromResult(result);
     }
 }

@@ -1,42 +1,37 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class GetUpdateCurrentUserCommandByIdQueryHandler
+    : IQueryHandler<GetPatchableCommandQuery<UpdateCurrentUserCommand>, UpdateCurrentUserCommand>
+    , IIgnorePermissionCheckHandler
 {
-    public class GetUpdateCurrentUserCommandByIdQueryHandler
-        : IQueryHandler<GetPatchableCommandQuery<UpdateCurrentUserCommand>, UpdateCurrentUserCommand>
-        , IIgnorePermissionCheckHandler
+    private readonly CofoundryDbContext _dbContext;
+
+    public GetUpdateCurrentUserCommandByIdQueryHandler(
+        CofoundryDbContext dbContext
+        )
     {
-        private readonly CofoundryDbContext _dbContext;
+        _dbContext = dbContext;
+    }
 
-        public GetUpdateCurrentUserCommandByIdQueryHandler(
-            CofoundryDbContext dbContext
-            )
-        {
-            _dbContext = dbContext;
-        }
+    public async Task<UpdateCurrentUserCommand> ExecuteAsync(GetPatchableCommandQuery<UpdateCurrentUserCommand> query, IExecutionContext executionContext)
+    {
+        if (!executionContext.UserContext.UserId.HasValue) return null;
 
-        public async Task<UpdateCurrentUserCommand> ExecuteAsync(GetPatchableCommandQuery<UpdateCurrentUserCommand> query, IExecutionContext executionContext)
-        {
-            if (!executionContext.UserContext.UserId.HasValue) return null;
+        var user = await _dbContext
+            .Users
+            .AsNoTracking()
+            .FilterCanSignIn()
+            .FilterById(executionContext.UserContext.UserId.Value)
+            .Select(u => new UpdateCurrentUserCommand()
+            {
+                Email = u.Email,
+                FirstName = u.FirstName,
+                LastName = u.LastName
+            })
+            .SingleOrDefaultAsync();
 
-            var user = await _dbContext
-                .Users
-                .AsNoTracking()
-                .FilterCanSignIn()
-                .FilterById(executionContext.UserContext.UserId.Value)
-                .Select(u => new UpdateCurrentUserCommand()
-                {
-                    Email = u.Email,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName
-                })
-                .SingleOrDefaultAsync();
-
-            return user;
-        }
+        return user;
     }
 }

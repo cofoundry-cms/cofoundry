@@ -1,106 +1,102 @@
-﻿using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web;
+
+/// <summary>
+/// Use this in your controllers to return a 404 result using the Cofoundry custom 404 page system. This 
+/// has the added benefit of checking for Rewrite Rules and automatically redirecting.
+/// </summary>
+public class NotFoundViewHelper : INotFoundViewHelper
 {
+    private readonly IQueryExecutor _queryExecutor;
+    private readonly IPageViewModelBuilder _pageViewModelBuilder;
+    private readonly IRazorViewEngine _razorViewEngine;
+
+    public NotFoundViewHelper(
+        IQueryExecutor queryExecutor,
+        IPageViewModelBuilder pageViewModelBuilder,
+        IRazorViewEngine razorViewEngine
+        )
+    {
+        _queryExecutor = queryExecutor;
+        _pageViewModelBuilder = pageViewModelBuilder;
+        _razorViewEngine = razorViewEngine;
+    }
+
     /// <summary>
     /// Use this in your controllers to return a 404 result using the Cofoundry custom 404 page system. This 
     /// has the added benefit of checking for Rewrite Rules and automatically redirecting.
     /// </summary>
-    public class NotFoundViewHelper : INotFoundViewHelper
+    public async Task<ActionResult> GetViewAsync(Controller controller)
     {
-        private readonly IQueryExecutor _queryExecutor;
-        private readonly IPageViewModelBuilder _pageViewModelBuilder;
-        private readonly IRazorViewEngine _razorViewEngine;
+        var vmParameters = GetViewModelBuilderParameters(controller);
 
-        public NotFoundViewHelper(
-            IQueryExecutor queryExecutor,
-            IPageViewModelBuilder pageViewModelBuilder,
-            IRazorViewEngine razorViewEngine
-            )
+        var result = await GetRewriteResultAsync(vmParameters);
+        if (result != null) return result;
+
+        var vm = await _pageViewModelBuilder.BuildNotFoundPageViewModelAsync(vmParameters);
+
+        // in some situations the status code may not be set, so make sure it is.
+        if (controller.Response.StatusCode != vm.StatusCode)
         {
-            _queryExecutor = queryExecutor;
-            _pageViewModelBuilder = pageViewModelBuilder;
-            _razorViewEngine = razorViewEngine;
+            controller.Response.StatusCode = vm.StatusCode;
         }
 
-        /// <summary>
-        /// Use this in your controllers to return a 404 result using the Cofoundry custom 404 page system. This 
-        /// has the added benefit of checking for Rewrite Rules and automatically redirecting.
-        /// </summary>
-        public async Task<ActionResult> GetViewAsync(Controller controller)
+        var viewName = FindView();
+        return controller.View(viewName, vm);
+    }
+
+    private static NotFoundPageViewModelBuilderParameters GetViewModelBuilderParameters(Controller controller)
+    {
+        var request = controller.Request;
+        var feature = controller.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+
+        var vmParams = new NotFoundPageViewModelBuilderParameters()
         {
-            var vmParameters = GetViewModelBuilderParameters(controller);
+            Path = feature?.OriginalPath ?? request.Path,
+            PathBase = feature?.OriginalPathBase ?? request.PathBase,
+            QueryString = feature?.OriginalQueryString ?? request.QueryString.Value
+        };
 
-            var result = await GetRewriteResultAsync(vmParameters);
-            if (result != null) return result;
+        return vmParams;
+    }
 
-            var vm = await _pageViewModelBuilder.BuildNotFoundPageViewModelAsync(vmParameters);
+    /// <summary>
+    /// If a page isnt found, check to see if we have a redirection rule
+    /// in place for the url.
+    /// </summary>
+    private async Task<ActionResult> GetRewriteResultAsync(NotFoundPageViewModelBuilderParameters vmParameters)
+    {
+        var query = new GetRewriteRuleSummaryByPathQuery() { Path = vmParameters.Path };
+        var rewriteRule = await _queryExecutor.ExecuteAsync(query);
 
-            // in some situations the status code may not be set, so make sure it is.
-            if (controller.Response.StatusCode != vm.StatusCode)
-            {
-                controller.Response.StatusCode = vm.StatusCode;
-            }
-            
-            var viewName = FindView();
-            return controller.View(viewName, vm);
+        if (rewriteRule != null)
+        {
+            return new RedirectResult(rewriteRule.WriteTo, true);
         }
 
-        private static NotFoundPageViewModelBuilderParameters GetViewModelBuilderParameters(Controller controller)
-        {
-            var request = controller.Request;
-            var feature = controller.HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
+        return null;
+    }
 
-            var vmParams = new NotFoundPageViewModelBuilderParameters()
-            {
-                Path = feature?.OriginalPath ?? request.Path,
-                PathBase = feature?.OriginalPathBase ?? request.PathBase,
-                QueryString = feature?.OriginalQueryString ?? request.QueryString.Value
-            };
+    private string FindView()
+    {
+        const string GENERIC_404_VIEW = "~/Views/Shared/404.cshtml";
+        const string GENERIC_NOTFOUND_VIEW = "~/Views/Shared/NotFound.cshtml";
+        const string GENERIC_ERROR_VIEW = "~/Views/Shared/Error.cshtml";
 
-            return vmParams;
-        }
+        if (DoesViewExist(GENERIC_404_VIEW)) return GENERIC_404_VIEW;
+        if (DoesViewExist(GENERIC_NOTFOUND_VIEW)) return GENERIC_NOTFOUND_VIEW;
 
-        /// <summary>
-        /// If a page isnt found, check to see if we have a redirection rule
-        /// in place for the url.
-        /// </summary>
-        private async Task<ActionResult> GetRewriteResultAsync(NotFoundPageViewModelBuilderParameters vmParameters)
-        {
-            var query = new GetRewriteRuleSummaryByPathQuery() { Path = vmParameters.Path };
-            var rewriteRule = await _queryExecutor.ExecuteAsync(query);
+        // Fall back to generic error, i.e. "Error.cshtml"
+        return GENERIC_ERROR_VIEW;
+    }
 
-            if (rewriteRule != null)
-            {
-                return new RedirectResult(rewriteRule.WriteTo, true);
-            }
+    private bool DoesViewExist(string viewName)
+    {
+        var result = _razorViewEngine.GetView(null, viewName, false);
 
-            return null;
-        }
-
-        private string FindView()
-        {
-            const string GENERIC_404_VIEW = "~/Views/Shared/404.cshtml";
-            const string GENERIC_NOTFOUND_VIEW = "~/Views/Shared/NotFound.cshtml";
-            const string GENERIC_ERROR_VIEW = "~/Views/Shared/Error.cshtml";
-
-            if (DoesViewExist(GENERIC_404_VIEW)) return GENERIC_404_VIEW;
-            if (DoesViewExist(GENERIC_NOTFOUND_VIEW)) return GENERIC_NOTFOUND_VIEW;
-
-            // Fall back to generic error, i.e. "Error.cshtml"
-            return GENERIC_ERROR_VIEW;
-        }
-
-        private bool DoesViewExist(string viewName)
-        {
-            var result = _razorViewEngine.GetView(null, viewName, false);
-
-            return result.Success;
-        }
+        return result.Success;
     }
 }

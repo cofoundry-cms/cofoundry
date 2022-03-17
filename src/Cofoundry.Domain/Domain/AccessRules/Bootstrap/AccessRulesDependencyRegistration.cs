@@ -1,17 +1,16 @@
 ﻿using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.Registration
+namespace Cofoundry.Domain.Registration;
+
+public class AccessRulesDependencyRegistration : IDependencyRegistration
 {
-    public class AccessRulesDependencyRegistration : IDependencyRegistration
+    public void Register(IContainerRegister container)
     {
-        public void Register(IContainerRegister container)
-        {
-            container
-                .Register<IUpdateAccessRuleSetCommandHelper, UpdateAccessRuleSetCommandHelper>()
-                .Register<IEntityAccessRuleSetDetailsMapper, EntityAccessRuleSetDetailsMapper>()
-                .Register<IEntityAccessRuleSetMapper, EntityAccessRuleSetMapper>()
-                ;
-        }
+        container
+            .Register<IUpdateAccessRuleSetCommandHelper, UpdateAccessRuleSetCommandHelper>()
+            .Register<IEntityAccessRuleSetDetailsMapper, EntityAccessRuleSetDetailsMapper>()
+            .Register<IEntityAccessRuleSetMapper, EntityAccessRuleSetMapper>()
+            ;
     }
 }

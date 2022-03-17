@@ -1,23 +1,20 @@
-﻿using System.Threading.Tasks;
+﻿namespace Cofoundry.Domain.Tests.Integration;
 
-namespace Cofoundry.Domain.Tests.Integration
+public class TestCustomEntityDisplayModelMapper
+    : ICustomEntityDisplayModelMapper<TestCustomEntityDataModel, TestCustomEntityPageDisplayModel>
 {
-    public class TestCustomEntityDisplayModelMapper
-        : ICustomEntityDisplayModelMapper<TestCustomEntityDataModel, TestCustomEntityPageDisplayModel>
+    public Task<TestCustomEntityPageDisplayModel> MapDisplayModelAsync(
+        CustomEntityRenderDetails renderDetails,
+        TestCustomEntityDataModel dataModel,
+        PublishStatusQuery publishStatusQuery
+        )
     {
-        public Task<TestCustomEntityPageDisplayModel> MapDisplayModelAsync(
-            CustomEntityRenderDetails renderDetails,
-            TestCustomEntityDataModel dataModel,
-            PublishStatusQuery publishStatusQuery
-            )
+        var displayModel = new TestCustomEntityPageDisplayModel()
         {
-            var displayModel = new TestCustomEntityPageDisplayModel()
-            {
-                PageTitle = renderDetails.Title,
-                MetaDescription = "Test Meta Description"
-            };
+            PageTitle = renderDetails.Title,
+            MetaDescription = "Test Meta Description"
+        };
 
-            return Task.FromResult(displayModel);
-        }
+        return Task.FromResult(displayModel);
     }
 }

@@ -1,32 +1,26 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Extendable;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.Extendable;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain;
+
+public class DomainRepositoryQueryContext<TResult> : IDomainRepositoryQueryContext<TResult>
 {
-    public class DomainRepositoryQueryContext<TResult> : IDomainRepositoryQueryContext<TResult>
+    public DomainRepositoryQueryContext(
+        IQuery<TResult> query,
+        IExtendableContentRepository extendableRepository
+        )
     {
-        public DomainRepositoryQueryContext(
-            IQuery<TResult> query,
-            IExtendableContentRepository extendableRepository
-            )
-        {
-            Query = query;
-            ExtendableContentRepository = extendableRepository;
-        }
+        Query = query;
+        ExtendableContentRepository = extendableRepository;
+    }
 
-        public IExtendableContentRepository ExtendableContentRepository { get; }
+    public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IQuery<TResult> Query { get; }
+    public IQuery<TResult> Query { get; }
 
-        public async Task<TResult> ExecuteAsync()
-        {
-            var result = await ExtendableContentRepository.ExecuteQueryAsync(Query);
+    public async Task<TResult> ExecuteAsync()
+    {
+        var result = await ExtendableContentRepository.ExecuteQueryAsync(Query);
 
-            return result;
-        }
+        return result;
     }
 }

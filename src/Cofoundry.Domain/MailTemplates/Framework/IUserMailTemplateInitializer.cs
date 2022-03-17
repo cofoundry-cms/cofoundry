@@ -1,18 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿namespace Cofoundry.Domain.MailTemplates.Internal;
 
-namespace Cofoundry.Domain.MailTemplates.Internal
+/// <summary>
+/// Used to intialize common properties on a template that 
+/// inherits from <see cref="UserMailTemplateBase"/>.
+/// </summary>
+public interface IUserMailTemplateInitializer
 {
     /// <summary>
-    /// Used to intialize common properties on a template that 
-    /// inherits from <see cref="UserMailTemplateBase"/>.
+    /// Intializes common properties on the <paramref name="mailTemplate"/>
+    /// instance.
     /// </summary>
-    public interface IUserMailTemplateInitializer
-    {
-        /// <summary>
-        /// Intializes common properties on the <paramref name="mailTemplate"/>
-        /// instance.
-        /// </summary>
-        Task Initialize<TTemplate>(UserSummary user, TTemplate mailTemplate)
-            where TTemplate : UserMailTemplateBase;
-    }
+    Task Initialize<TTemplate>(UserSummary user, TTemplate mailTemplate)
+        where TTemplate : UserMailTemplateBase;
 }

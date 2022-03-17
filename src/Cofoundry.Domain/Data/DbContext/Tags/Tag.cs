@@ -1,11 +1,8 @@
-using System;
+namespace Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Data
+public class Tag
 {
-    public class Tag
-    {
-        public int TagId { get; set; }
-        public string TagText { get; set; }
-        public DateTime CreateDate { get; set; }
-    }
+    public int TagId { get; set; }
+    public string TagText { get; set; }
+    public DateTime CreateDate { get; set; }
 }

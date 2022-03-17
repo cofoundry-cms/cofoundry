@@ -1,54 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.Internal
+/// <summary>
+/// Simple mapper for mapping to CustomEntityDefinitionMicroSummary objects.
+/// </summary>
+public class CustomEntityDefinitionMicroSummaryMapper : ICustomEntityDefinitionMicroSummaryMapper
 {
     /// <summary>
-    /// Simple mapper for mapping to CustomEntityDefinitionMicroSummary objects.
+    /// Maps a code base custom entity definition into a CustomEntityDefinitionMicroSummary object.
     /// </summary>
-    public class CustomEntityDefinitionMicroSummaryMapper : ICustomEntityDefinitionMicroSummaryMapper
+    /// <param name="codeDefinition">Code based definition to map.</param>
+    public CustomEntityDefinitionMicroSummary Map(ICustomEntityDefinition codeDefinition)
     {
-        /// <summary>
-        /// Maps a code base custom entity definition into a CustomEntityDefinitionMicroSummary object.
-        /// </summary>
-        /// <param name="codeDefinition">Code based definition to map.</param>
-        public CustomEntityDefinitionMicroSummary Map(ICustomEntityDefinition codeDefinition)
+        if (codeDefinition == null) throw new ArgumentNullException(nameof(codeDefinition));
+
+        var result = new CustomEntityDefinitionMicroSummary()
         {
-            if (codeDefinition == null) throw new ArgumentNullException(nameof(codeDefinition));
+            CustomEntityDefinitionCode = codeDefinition.CustomEntityDefinitionCode,
+            Description = codeDefinition.Description,
+            ForceUrlSlugUniqueness = codeDefinition.ForceUrlSlugUniqueness,
+            Name = codeDefinition.Name,
+            NamePlural = codeDefinition.NamePlural
+        };
 
-            var result = new CustomEntityDefinitionMicroSummary()
-            {
-                CustomEntityDefinitionCode = codeDefinition.CustomEntityDefinitionCode,
-                Description = codeDefinition.Description,
-                ForceUrlSlugUniqueness = codeDefinition.ForceUrlSlugUniqueness,
-                Name = codeDefinition.Name,
-                NamePlural = codeDefinition.NamePlural
-            };
+        return result;
+    }
 
-            return result;
-        }
+    /// <summary>
+    /// Maps a CustomEntityDefinitionSummary into a CustomEntityDefinitionMicroSummary object.
+    /// </summary>
+    /// <param name="summary">Instance to map.</param>
+    public CustomEntityDefinitionMicroSummary Map(CustomEntityDefinitionSummary summary)
+    {
+        if (summary == null) throw new ArgumentNullException(nameof(summary));
 
-        /// <summary>
-        /// Maps a CustomEntityDefinitionSummary into a CustomEntityDefinitionMicroSummary object.
-        /// </summary>
-        /// <param name="summary">Instance to map.</param>
-        public CustomEntityDefinitionMicroSummary Map(CustomEntityDefinitionSummary summary)
+        var result = new CustomEntityDefinitionMicroSummary()
         {
-            if (summary == null) throw new ArgumentNullException(nameof(summary));
+            CustomEntityDefinitionCode = summary.CustomEntityDefinitionCode,
+            Description = summary.Description,
+            ForceUrlSlugUniqueness = summary.ForceUrlSlugUniqueness,
+            Name = summary.Name,
+            NamePlural = summary.NamePlural
+        };
 
-            var result = new CustomEntityDefinitionMicroSummary()
-            {
-                CustomEntityDefinitionCode = summary.CustomEntityDefinitionCode,
-                Description = summary.Description,
-                ForceUrlSlugUniqueness = summary.ForceUrlSlugUniqueness,
-                Name = summary.Name,
-                NamePlural = summary.NamePlural
-            };
-
-            return result;
-        }
+        return result;
     }
 }

@@ -1,46 +1,39 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain;
-using Microsoft.AspNetCore.Html;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Html;
 
-namespace Cofoundry.BasicTestSite
+namespace Cofoundry.BasicTestSite;
+
+public class ContentSplitSectionDisplayModelMapper : IPageBlockTypeDisplayModelMapper<ContentSplitSectionDataModel>
 {
-    public class ContentSplitSectionDisplayModelMapper : IPageBlockTypeDisplayModelMapper<ContentSplitSectionDataModel>
+    private readonly IContentRepository _contentRepository;
+
+    public ContentSplitSectionDisplayModelMapper(
+        IContentRepository contentRepository
+        )
     {
-        private readonly IContentRepository _contentRepository;
+        _contentRepository = contentRepository;
+    }
 
-        public ContentSplitSectionDisplayModelMapper(
-            IContentRepository contentRepository
-            )
+    public async Task MapAsync(
+        PageBlockTypeDisplayModelMapperContext<ContentSplitSectionDataModel> context,
+        PageBlockTypeDisplayModelMapperResult<ContentSplitSectionDataModel> result
+        )
+    {
+        var imageAssetIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.ImageAssetId);
+        var imageAssets = await _contentRepository
+            .WithContext(context.ExecutionContext)
+            .ImageAssets()
+            .GetByIdRange(imageAssetIds)
+            .AsRenderDetails()
+            .ExecuteAsync();
+
+        foreach (var item in context.Items)
         {
-            _contentRepository = contentRepository;
-        }
+            var displayModel = new ContentSplitSectionDisplayModel();
+            displayModel.HtmlText = new HtmlString(item.DataModel.HtmlText);
+            displayModel.Title = item.DataModel.Title;
+            displayModel.Image = imageAssets.GetOrDefault(item.DataModel.ImageAssetId);
 
-        public async Task MapAsync(
-            PageBlockTypeDisplayModelMapperContext<ContentSplitSectionDataModel> context,
-            PageBlockTypeDisplayModelMapperResult<ContentSplitSectionDataModel> result
-            )
-        {
-            var imageAssetIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.ImageAssetId);
-            var imageAssets = await _contentRepository
-                .WithContext(context.ExecutionContext)
-                .ImageAssets()
-                .GetByIdRange(imageAssetIds)
-                .AsRenderDetails()
-                .ExecuteAsync();
-
-            foreach (var item in context.Items)
-            {
-                var displayModel = new ContentSplitSectionDisplayModel();
-                displayModel.HtmlText = new HtmlString(item.DataModel.HtmlText);
-                displayModel.Title = item.DataModel.Title;
-                displayModel.Image = imageAssets.GetOrDefault(item.DataModel.ImageAssetId);
-
-                result.Add(item, displayModel);
-            }
+            result.Add(item, displayModel);
         }
     }
 }

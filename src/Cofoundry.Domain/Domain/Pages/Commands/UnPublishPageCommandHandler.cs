@@ -1,113 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core;
-using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data.Internal;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <summary>
+/// Sets the status of a page to un-published, but does not
+/// remove the publish date, which is preserved so that it
+/// can be used as a default when the user chooses to publish
+/// again.
+/// </summary>
+public class UnPublishPageCommandHandler
+    : ICommandHandler<UnPublishPageCommand>
+    , IPermissionRestrictedCommandHandler<UnPublishPageCommand>
 {
-    /// <summary>
-    /// Sets the status of a page to un-published, but does not
-    /// remove the publish date, which is preserved so that it
-    /// can be used as a default when the user chooses to publish
-    /// again.
-    /// </summary>
-    public class UnPublishPageCommandHandler 
-        : ICommandHandler<UnPublishPageCommand>
-        , IPermissionRestrictedCommandHandler<UnPublishPageCommand>
+    private readonly CofoundryDbContext _dbContext;
+    private readonly IPageCache _pageCache;
+    private readonly IMessageAggregator _messageAggregator;
+    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly IPageStoredProcedures _pageStoredProcedures;
+
+    public UnPublishPageCommandHandler(
+        CofoundryDbContext dbContext,
+        IPageCache pageCache,
+        IMessageAggregator messageAggregator,
+        ITransactionScopeManager transactionScopeFactory,
+        IPageStoredProcedures pageStoredProcedures
+        )
     {
-        #region constructor
-        
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IPageCache _pageCache;
-        private readonly IMessageAggregator _messageAggregator;
-        private readonly ITransactionScopeManager _transactionScopeFactory;
-        private readonly IPageStoredProcedures _pageStoredProcedures;
+        _dbContext = dbContext;
+        _pageCache = pageCache;
+        _messageAggregator = messageAggregator;
+        _pageStoredProcedures = pageStoredProcedures;
+        _transactionScopeFactory = transactionScopeFactory;
+    }
 
-        public UnPublishPageCommandHandler(
-            CofoundryDbContext dbContext,
-            IPageCache pageCache,
-            IMessageAggregator messageAggregator,
-            ITransactionScopeManager transactionScopeFactory,
-            IPageStoredProcedures pageStoredProcedures
-            )
+    public async Task ExecuteAsync(UnPublishPageCommand command, IExecutionContext executionContext)
+    {
+        var page = await _dbContext
+            .Pages
+            .FilterActive()
+            .FilterById(command.PageId)
+            .SingleOrDefaultAsync();
+
+        EntityNotFoundException.ThrowIfNull(page, command.PageId);
+
+        if (page.PublishStatusCode == PublishStatusCode.Unpublished)
         {
-            _dbContext = dbContext;
-            _pageCache = pageCache;
-            _messageAggregator = messageAggregator;
-            _pageStoredProcedures = pageStoredProcedures;
-            _transactionScopeFactory = transactionScopeFactory;
+            // No action
+            return;
         }
 
-        #endregion
+        var version = await _dbContext
+            .PageVersions
+            .Include(p => p.Page)
+            .FilterActive()
+            .FilterByPageId(command.PageId)
+            .OrderByLatest()
+            .FirstOrDefaultAsync();
+        EntityNotFoundException.ThrowIfNull(version, command.PageId);
 
-        #region execution
+        page.PublishStatusCode = PublishStatusCode.Unpublished;
+        version.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
 
-        public async Task ExecuteAsync(UnPublishPageCommand command, IExecutionContext executionContext)
+        using (var scope = _transactionScopeFactory.Create(_dbContext))
         {
-            var page = await _dbContext
-                .Pages
-                .FilterActive()
-                .FilterById(command.PageId)
-                .SingleOrDefaultAsync();
+            await _dbContext.SaveChangesAsync();
+            await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
 
-            EntityNotFoundException.ThrowIfNull(page, command.PageId);
+            scope.QueueCompletionTask(() => OnTransactionComplete(command));
 
-            if (page.PublishStatusCode == PublishStatusCode.Unpublished)
-            {
-                // No action
-                return;
-            }
-
-            var version = await _dbContext
-                .PageVersions
-                .Include(p => p.Page)
-                .FilterActive()
-                .FilterByPageId(command.PageId)
-                .OrderByLatest()
-                .FirstOrDefaultAsync();
-            EntityNotFoundException.ThrowIfNull(version, command.PageId);
-
-            page.PublishStatusCode = PublishStatusCode.Unpublished;
-            version.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
-
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
-            {
-                await _dbContext.SaveChangesAsync();
-                await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
-
-                scope.QueueCompletionTask(() => OnTransactionComplete(command));
-
-                await scope.CompleteAsync();
-            }
+            await scope.CompleteAsync();
         }
+    }
 
-        private Task OnTransactionComplete(UnPublishPageCommand command)
+    private Task OnTransactionComplete(UnPublishPageCommand command)
+    {
+        _pageCache.Clear();
+
+        return _messageAggregator.PublishAsync(new PageUnPublishedMessage()
         {
-            _pageCache.Clear();
+            PageId = command.PageId
+        });
+    }
 
-            return _messageAggregator.PublishAsync(new PageUnPublishedMessage()
-            {
-                PageId = command.PageId
-            });
-        }
-
-        #endregion
-
-        #region Permission
-
-        public IEnumerable<IPermissionApplication> GetPermissions(UnPublishPageCommand command)
-        {
-            yield return new PagePublishPermission();
-        }
-
-        #endregion
+    public IEnumerable<IPermissionApplication> GetPermissions(UnPublishPageCommand command)
+    {
+        yield return new PagePublishPermission();
     }
 }

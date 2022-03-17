@@ -1,54 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Cofoundry.Domain.Data;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class SettingQueryHelper
 {
-    public class SettingQueryHelper
+    private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
+
+    public SettingQueryHelper(
+        IDbUnstructuredDataSerializer dbUnstructuredDataSerializer
+        )
     {
-        #region constructor
+        _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
+    }
 
-        private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
+    public T FindSetting<T>(string key, Dictionary<string, string> allSettings)
+    {
+        if (!allSettings.ContainsKey(key)) return default(T);
+        var setting = allSettings[key];
 
-        public SettingQueryHelper(
-            IDbUnstructuredDataSerializer dbUnstructuredDataSerializer
-            )
-        {
-            _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
-        }
+        if (string.IsNullOrWhiteSpace(setting)) return default(T);
 
-        #endregion
+        var value = _dbUnstructuredDataSerializer.Deserialize<T>(setting);
 
-        public T FindSetting<T>(string key, Dictionary<string, string> allSettings)
-        {
-            if (!allSettings.ContainsKey(key)) return default(T);
-            var setting = allSettings[key];
+        return value;
+    }
 
-            if (string.IsNullOrWhiteSpace(setting)) return default(T);
+    public void SetSettingProperty<TSource, TProperty>(
+        TSource source,
+        Expression<Func<TSource, TProperty>> propertyLambda,
+        Dictionary<string, string> allSettings)
+    {
+        Type type = typeof(TSource);
 
-            var value = _dbUnstructuredDataSerializer.Deserialize<T>(setting);
+        var member = propertyLambda.Body as MemberExpression;
+        var propInfo = member.Member as PropertyInfo;
 
-            return value;
-        }
-
-        public void SetSettingProperty<TSource, TProperty>(
-            TSource source,
-            Expression<Func<TSource, TProperty>> propertyLambda,
-            Dictionary<string, string> allSettings)
-        {
-            Type type = typeof(TSource);
-
-            var member = propertyLambda.Body as MemberExpression;
-            var propInfo = member.Member as PropertyInfo;
-
-            var value = FindSetting<TProperty>(propInfo.Name, allSettings);
-            propInfo.SetValue(source, value);
-        }
+        var value = FindSetting<TProperty>(propInfo.Name, allSettings);
+        propInfo.SetValue(source, value);
     }
 }

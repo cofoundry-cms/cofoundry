@@ -1,26 +1,25 @@
 ﻿using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain
+namespace Cofoundry.Domain;
+
+/// <inheritdoc/>
+public class UserContext : IUserContext
 {
-    /// <inheritdoc/>
-    public class UserContext : IUserContext
-    {
-        public int? UserId { get; set; }
+    public int? UserId { get; set; }
 
-        public IUserAreaDefinition UserArea { get; set; }
+    public IUserAreaDefinition UserArea { get; set; }
 
-        public bool IsPasswordChangeRequired { get; set; }
+    public bool IsPasswordChangeRequired { get; set; }
 
-        public bool IsAccountVerified { get; set; }
+    public bool IsAccountVerified { get; set; }
 
-        public int? RoleId { get; set; }
+    public int? RoleId { get; set; }
 
-        public string RoleCode { get; set; }
+    public string RoleCode { get; set; }
 
-        /// <summary>
-        /// An empty read-only <see cref="IUserContext"/> instance which can
-        /// be used to represent a user that is not logged in.
-        /// </summary>
-        public static readonly IUserContext Empty = new EmptyUserContext();
-    }
+    /// <summary>
+    /// An empty read-only <see cref="IUserContext"/> instance which can
+    /// be used to represent a user that is not logged in.
+    /// </summary>
+    public static readonly IUserContext Empty = new EmptyUserContext();
 }

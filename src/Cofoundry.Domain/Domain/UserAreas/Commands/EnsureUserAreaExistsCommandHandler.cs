@@ -1,44 +1,39 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class EnsureUserAreaExistsCommandHandler
+    : ICommandHandler<EnsureUserAreaExistsCommand>
+    , IIgnorePermissionCheckHandler
 {
-    public class EnsureUserAreaExistsCommandHandler
-        : ICommandHandler<EnsureUserAreaExistsCommand>
-        , IIgnorePermissionCheckHandler
+    private readonly CofoundryDbContext _dbContext;
+    private readonly IUserAreaDefinitionRepository _userAreaRepository;
+
+    public EnsureUserAreaExistsCommandHandler(
+        CofoundryDbContext dbContext,
+        IUserAreaDefinitionRepository userAreaRepository
+        )
     {
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IUserAreaDefinitionRepository _userAreaRepository;
+        _dbContext = dbContext;
+        _userAreaRepository = userAreaRepository;
+    }
 
-        public EnsureUserAreaExistsCommandHandler(
-            CofoundryDbContext dbContext,
-            IUserAreaDefinitionRepository userAreaRepository
-            )
+    public async Task ExecuteAsync(EnsureUserAreaExistsCommand command, IExecutionContext executionContext)
+    {
+        var userArea = _userAreaRepository.GetRequiredByCode(command.UserAreaCode);
+        EntityNotFoundException.ThrowIfNull(userArea, command.UserAreaCode);
+
+        var dbUserArea = await _dbContext
+            .UserAreas
+            .SingleOrDefaultAsync(a => a.UserAreaCode == userArea.UserAreaCode);
+
+        if (dbUserArea == null)
         {
-            _dbContext = dbContext;
-            _userAreaRepository = userAreaRepository;
-        }
+            dbUserArea = new UserArea();
+            dbUserArea.UserAreaCode = userArea.UserAreaCode;
+            dbUserArea.Name = userArea.Name;
 
-        public async Task ExecuteAsync(EnsureUserAreaExistsCommand command, IExecutionContext executionContext)
-        {
-            var userArea = _userAreaRepository.GetRequiredByCode(command.UserAreaCode);
-            EntityNotFoundException.ThrowIfNull(userArea, command.UserAreaCode);
-
-            var dbUserArea = await _dbContext
-                .UserAreas
-                .SingleOrDefaultAsync(a => a.UserAreaCode == userArea.UserAreaCode);
-
-            if (dbUserArea == null)
-            {
-                dbUserArea = new UserArea();
-                dbUserArea.UserAreaCode = userArea.UserAreaCode;
-                dbUserArea.Name = userArea.Name;
-
-                _dbContext.UserAreas.Add(dbUserArea);
-            }
+            _dbContext.UserAreas.Add(dbUserArea);
         }
     }
 }

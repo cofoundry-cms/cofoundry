@@ -1,49 +1,48 @@
 ﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <inheritdoc/>
+public class RoleMicroSummaryMapper : IRoleMicroSummaryMapper
 {
-    /// <inheritdoc/>
-    public class RoleMicroSummaryMapper : IRoleMicroSummaryMapper
+    private readonly IUserAreaDefinitionRepository _userAreaRepository;
+
+    public RoleMicroSummaryMapper(
+        IUserAreaDefinitionRepository userAreaRepository
+        )
     {
-        private readonly IUserAreaDefinitionRepository _userAreaRepository;
+        _userAreaRepository = userAreaRepository;
+    }
 
-        public RoleMicroSummaryMapper(
-            IUserAreaDefinitionRepository userAreaRepository
-            )
+    public virtual RoleMicroSummary Map(Role dbRole)
+    {
+        if (dbRole == null) return null;
+
+        var role = new RoleMicroSummary()
         {
-            _userAreaRepository = userAreaRepository;
-        }
+            RoleId = dbRole.RoleId,
+            Title = dbRole.Title
+        };
 
-        public virtual RoleMicroSummary Map(Role dbRole)
+        var userArea = _userAreaRepository.GetRequiredByCode(dbRole.UserAreaCode);
+        role.UserArea = new UserAreaMicroSummary()
         {
-            if (dbRole == null) return null;
+            UserAreaCode = dbRole.UserAreaCode,
+            Name = userArea.Name
+        };
 
-            var role = new RoleMicroSummary()
-            {
-                RoleId = dbRole.RoleId,
-                Title = dbRole.Title
-            };
+        return role;
+    }
 
-            var userArea = _userAreaRepository.GetRequiredByCode(dbRole.UserAreaCode);
-            role.UserArea = new UserAreaMicroSummary()
-            {
-                UserAreaCode = dbRole.UserAreaCode,
-                Name = userArea.Name
-            };
+    public RoleMicroSummary Map(RoleDetails roleDetails)
+    {
+        if (roleDetails == null) return null;
 
-            return role;
-        }
-
-        public RoleMicroSummary Map(RoleDetails roleDetails)
+        return new RoleMicroSummary()
         {
-            if (roleDetails == null) return null;
-
-            return new RoleMicroSummary()
-            {
-                RoleId = roleDetails.RoleId,
-                Title = roleDetails.Title,
-                UserArea = roleDetails.UserArea
-            };
-        }
+            RoleId = roleDetails.RoleId,
+            Title = roleDetails.Title,
+            UserArea = roleDetails.UserArea
+        };
     }
 }

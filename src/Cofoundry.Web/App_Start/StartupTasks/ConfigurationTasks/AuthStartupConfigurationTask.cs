@@ -1,30 +1,24 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web;
+
+/// <summary>
+/// Adds the asp.net auth middleware into the pipeline.
+/// </summary>
+public class AuthStartupConfigurationTask
+    : IStartupConfigurationTask
+    , IRunAfterStartupConfigurationTask
 {
-    /// <summary>
-    /// Adds the asp.net auth middleware into the pipeline.
-    /// </summary>
-    public class AuthStartupConfigurationTask 
-        : IStartupConfigurationTask
-        , IRunAfterStartupConfigurationTask
+    public int Ordering
     {
-        public int Ordering
-        {
-            get { return (int)StartupTaskOrdering.Early; }
-        }
+        get { return (int)StartupTaskOrdering.Early; }
+    }
 
-        public ICollection<Type> RunAfter => new Type[] { typeof(UseRoutingStartupConfigurationTask) };
+    public ICollection<Type> RunAfter => new Type[] { typeof(UseRoutingStartupConfigurationTask) };
 
-        public void Configure(IApplicationBuilder app)
-        {
-            app.UseAuthentication();
-            app.UseAuthorization();
-        }
+    public void Configure(IApplicationBuilder app)
+    {
+        app.UseAuthentication();
+        app.UseAuthorization();
     }
 }

@@ -1,33 +1,30 @@
-﻿using Cofoundry.Domain;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin;
+
+[Area(RouteConstants.AdminAreaName)]
+[AutoValidateAntiforgeryToken]
+public class SetupApiController : Controller
 {
-    [Area(RouteConstants.AdminAreaName)]
-    [AutoValidateAntiforgeryToken]
-    public class SetupApiController : Controller
+    private readonly IApiResponseHelper _apiResponseHelper;
+
+    public SetupApiController(
+        IApiResponseHelper apiResponseHelper
+        )
     {
-        private readonly IApiResponseHelper _apiResponseHelper;
+        _apiResponseHelper = apiResponseHelper;
+    }
 
-        public SetupApiController(
-            IApiResponseHelper apiResponseHelper
-            )
+    public Task<JsonResult> Post([FromBody] SetupCofoundryCommandDto dto)
+    {
+        var command = new SetupCofoundryCommand()
         {
-            _apiResponseHelper = apiResponseHelper;
-        }
+            ApplicationName = dto.ApplicationName,
+            Email = dto.Email,
+            DisplayName = dto.DisplayName,
+            Password = dto.Password
+        };
 
-        public Task<JsonResult> Post([FromBody] SetupCofoundryCommandDto dto)
-        {
-            var command = new SetupCofoundryCommand()
-            {
-                ApplicationName = dto.ApplicationName,
-                Email = dto.Email,
-                DisplayName = dto.DisplayName,
-                Password = dto.Password
-            };
-
-            return _apiResponseHelper.RunCommandAsync(command);
-        }
+        return _apiResponseHelper.RunCommandAsync(command);
     }
 }

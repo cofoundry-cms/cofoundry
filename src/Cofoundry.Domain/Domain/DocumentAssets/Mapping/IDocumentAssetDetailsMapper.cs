@@ -1,21 +1,16 @@
 ﻿using Cofoundry.Domain.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <summary>
+/// Simple mapper for mapping to DocumentAssetDetails objects.
+/// </summary>
+public interface IDocumentAssetDetailsMapper
 {
     /// <summary>
-    /// Simple mapper for mapping to DocumentAssetDetails objects.
+    /// Maps an EF DocumentAsset record from the db into a DocumentAssetDetails 
+    /// object. If the db record is null then null is returned.
     /// </summary>
-    public interface IDocumentAssetDetailsMapper
-    {
-        /// <summary>
-        /// Maps an EF DocumentAsset record from the db into a DocumentAssetDetails 
-        /// object. If the db record is null then null is returned.
-        /// </summary>
-        /// <param name="dbDocument">DocumentAsset record from the database.</param>
-        DocumentAssetDetails Map(DocumentAsset dbDocument);
-    }
+    /// <param name="dbDocument">DocumentAsset record from the database.</param>
+    DocumentAssetDetails Map(DocumentAsset dbDocument);
 }

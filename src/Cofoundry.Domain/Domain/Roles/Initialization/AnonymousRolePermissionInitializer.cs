@@ -1,47 +1,42 @@
-﻿using Cofoundry.Core;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <inheritdoc/>
+public class AnonymousRolePermissionInitializer : IRolePermissionInitializer
 {
-    /// <inheritdoc/>
-    public class AnonymousRolePermissionInitializer : IRolePermissionInitializer
+    private readonly IServiceProvider _serviceProvider;
+
+    public AnonymousRolePermissionInitializer(
+        IServiceProvider serviceProvider
+        )
     {
-        private readonly IServiceProvider _serviceProvider;
+        if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
 
-        public AnonymousRolePermissionInitializer(
-            IServiceProvider serviceProvider
-            )
+        _serviceProvider = serviceProvider;
+    }
+
+    public void Initialize(IPermissionSetBuilder permissionSetBuilder)
+    {
+        if (permissionSetBuilder == null) throw new ArgumentNullException(nameof(permissionSetBuilder));
+
+        // A custom IAnonymousRolePermissionConfiguration implementation can optionally be defined
+        // which overrides the base implementation in the definition.
+        var anonymousRolePermissionConfiguration = _serviceProvider.GetService<IEnumerable<IAnonymousRolePermissionConfiguration>>();
+        if (EnumerableHelper.IsNullOrEmpty(anonymousRolePermissionConfiguration))
         {
-            if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
-
-            _serviceProvider = serviceProvider;
+            var anonymousRole = new AnonymousRole();
+            anonymousRole.ConfigurePermissions(permissionSetBuilder);
         }
-
-        public void Initialize(IPermissionSetBuilder permissionSetBuilder)
+        else if (anonymousRolePermissionConfiguration.Count() > 1)
         {
-            if (permissionSetBuilder == null) throw new ArgumentNullException(nameof(permissionSetBuilder));
-
-            // A custom IAnonymousRolePermissionConfiguration implementation can optionally be defined
-            // which overrides the base implementation in the definition.
-            var anonymousRolePermissionConfiguration = _serviceProvider.GetService<IEnumerable<IAnonymousRolePermissionConfiguration>>();
-            if (EnumerableHelper.IsNullOrEmpty(anonymousRolePermissionConfiguration))
-            {
-                var anonymousRole = new AnonymousRole();
-                anonymousRole.ConfigurePermissions(permissionSetBuilder);
-            }
-            else if (anonymousRolePermissionConfiguration.Count() > 1)
-            {
-                throw new InvalidOperationException($"Expected a single implementation of {nameof(IAnonymousRolePermissionConfiguration)} but encountered {anonymousRolePermissionConfiguration.Count()}. Only one implementation is permitted.");
-            }
-            else
-            {
-                anonymousRolePermissionConfiguration
-                    .First()
-                    .ConfigurePermissions(permissionSetBuilder);
-            }
+            throw new InvalidOperationException($"Expected a single implementation of {nameof(IAnonymousRolePermissionConfiguration)} but encountered {anonymousRolePermissionConfiguration.Count()}. Only one implementation is permitted.");
+        }
+        else
+        {
+            anonymousRolePermissionConfiguration
+                .First()
+                .ConfigurePermissions(permissionSetBuilder);
         }
     }
 }

@@ -1,13 +1,12 @@
-﻿namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain;
+
+/// <summary>
+/// Message published when an image is deleted.
+/// </summary>
+public class ImageAssetDeletedMessage
 {
     /// <summary>
-    /// Message published when an image is deleted.
+    /// Id of the image asset that has been deleted.
     /// </summary>
-    public class ImageAssetDeletedMessage
-    {
-        /// <summary>
-        /// Id of the image asset that has been deleted.
-        /// </summary>
-        public int ImageAssetId { get; set; }
-    }
+    public int ImageAssetId { get; set; }
 }

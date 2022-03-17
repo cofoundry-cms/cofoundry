@@ -2,44 +2,40 @@
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Cofoundry.Plugins.Imaging.ImageSharp
+namespace Cofoundry.Plugins.Imaging.ImageSharp;
+
+public class DefaultImageSharpInitializer : IImageSharpInitializer
 {
-    public class DefaultImageSharpInitializer : IImageSharpInitializer
+    private readonly ImageSharpSettings _imageSharpSettings;
+
+    public DefaultImageSharpInitializer(
+        ImageSharpSettings imageSharpSettings
+        )
     {
-        private readonly ImageSharpSettings _imageSharpSettings;
+        _imageSharpSettings = imageSharpSettings;
+    }
 
-        public DefaultImageSharpInitializer(
-            ImageSharpSettings imageSharpSettings
-            )
+    public void Initialize(Configuration configuration)
+    {
+        configuration.ImageFormatsManager.SetDecoder(JpegFormat.Instance, new JpegDecoder()
         {
-            _imageSharpSettings = imageSharpSettings;
-        }
+            IgnoreMetadata = _imageSharpSettings.IgnoreMetadata
+        });
 
-        public void Initialize(Configuration configuration)
+        configuration.ImageFormatsManager.SetEncoder(JpegFormat.Instance, new JpegEncoder()
         {
-            configuration.ImageFormatsManager.SetDecoder(JpegFormat.Instance, new JpegDecoder()
-            {
-                IgnoreMetadata = _imageSharpSettings.IgnoreMetadata
-            });
+            Quality = _imageSharpSettings.JpegQuality
+        });
 
-            configuration.ImageFormatsManager.SetEncoder(JpegFormat.Instance, new JpegEncoder()
-            {
-                Quality = _imageSharpSettings.JpegQuality
-            });
+        configuration.ImageFormatsManager.SetDecoder(GifFormat.Instance, new GifDecoder()
+        {
+            IgnoreMetadata = _imageSharpSettings.IgnoreMetadata
+        });
 
-            configuration.ImageFormatsManager.SetDecoder(GifFormat.Instance, new GifDecoder()
-            {
-                IgnoreMetadata = _imageSharpSettings.IgnoreMetadata
-            });
-
-            configuration.ImageFormatsManager.SetDecoder(PngFormat.Instance, new PngDecoder()
-            {
-                IgnoreMetadata = _imageSharpSettings.IgnoreMetadata
-            });
-        }
+        configuration.ImageFormatsManager.SetDecoder(PngFormat.Instance, new PngDecoder()
+        {
+            IgnoreMetadata = _imageSharpSettings.IgnoreMetadata
+        });
     }
 }

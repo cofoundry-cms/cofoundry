@@ -1,59 +1,52 @@
 ﻿using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared;
-using Cofoundry.Domain.Tests.Shared.Assertions;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
-using Xunit;
 
-namespace Cofoundry.Domain.Tests.Integration.Users.Commands
+namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
+
+[Collection(nameof(DbDependentFixtureCollection))]
+public class LogFailedAuthenticationAttemptCommandHandlerTests
 {
-    [Collection(nameof(DbDependentFixtureCollection))]
-    public class LogFailedAuthenticationAttemptCommandHandlerTests
+    const string UNIQUE_PREFIX = "LogFauthCHT-";
+
+    private readonly DbDependentTestApplicationFactory _appFactory;
+
+    public LogFailedAuthenticationAttemptCommandHandlerTests(
+        DbDependentTestApplicationFactory appFactory
+        )
     {
-        const string UNIQUE_PREFIX = "LogFauthCHT-";
+        _appFactory = appFactory;
+    }
 
-        private readonly DbDependentTestApplicationFactory _appFactory;
+    [Fact]
+    public async Task CanLog()
+    {
+        var uniqueData = UNIQUE_PREFIX + "CanLog";
 
-        public LogFailedAuthenticationAttemptCommandHandlerTests(
-            DbDependentTestApplicationFactory appFactory
-            )
+        using var app = _appFactory.Create();
+        var contentRepository = app.Services.GetContentRepository();
+        var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+        app.Mocks.MockIPAddress(uniqueData);
+
+        await contentRepository.ExecuteCommandAsync(new LogFailedAuthenticationAttemptCommand(TestUserArea1.Code, uniqueData));
+
+        var log = await dbContext
+            .UserAuthenticationFailLogs
+            .AsNoTracking()
+            .Include(i => i.IPAddress)
+            .SingleOrDefaultAsync(l => l.Username == uniqueData);
+
+        using (new AssertionScope())
         {
-            _appFactory = appFactory;
-        }
+            log.Should().NotBeNull();
+            log.IPAddress.Address.Should().Be(uniqueData);
 
-        [Fact]
-        public async Task CanLog()
-        {
-            var uniqueData = UNIQUE_PREFIX + "CanLog";
-
-            using var app = _appFactory.Create();
-            var contentRepository = app.Services.GetContentRepository();
-            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
-            app.Mocks.MockIPAddress(uniqueData);
-
-            await contentRepository.ExecuteCommandAsync(new LogFailedAuthenticationAttemptCommand(TestUserArea1.Code, uniqueData));
-
-            var log = await dbContext
-                .UserAuthenticationFailLogs
-                .AsNoTracking()
-                .Include(i => i.IPAddress)
-                .SingleOrDefaultAsync(l => l.Username == uniqueData);
-
-            using (new AssertionScope())
-            {
-                log.Should().NotBeNull();
-                log.IPAddress.Address.Should().Be(uniqueData);
-
-                app.Mocks
-                    .CountMessagesPublished<UserAuthenticationFailedMessage>(m =>
-                    {
-                        return m.UserAreaCode == TestUserArea1.Code && m.Username == uniqueData;
-                    })
-                    .Should().Be(1);
-            }
+            app.Mocks
+                .CountMessagesPublished<UserAuthenticationFailedMessage>(m =>
+                {
+                    return m.UserAreaCode == TestUserArea1.Code && m.Username == uniqueData;
+                })
+                .Should().Be(1);
         }
     }
 }

@@ -1,27 +1,22 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class ContentRepositoryPageVersionsByPageIdQueryBuilder
+    : IAdvancedContentRepositoryPageVersionsByPageIdQueryBuilder
+    , IExtendableContentRepositoryPart
 {
-    public class ContentRepositoryPageVersionsByPageIdQueryBuilder
-        : IAdvancedContentRepositoryPageVersionsByPageIdQueryBuilder
-        , IExtendableContentRepositoryPart
+    public ContentRepositoryPageVersionsByPageIdQueryBuilder(
+        IExtendableContentRepository contentRepository
+        )
     {
-        public ContentRepositoryPageVersionsByPageIdQueryBuilder(
-            IExtendableContentRepository contentRepository
-            )
-        {
-            ExtendableContentRepository = contentRepository;
-        }
+        ExtendableContentRepository = contentRepository;
+    }
 
-        public IExtendableContentRepository ExtendableContentRepository { get; }
+    public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IDomainRepositoryQueryContext<PagedQueryResult<PageVersionSummary>> AsVersionSummaries(GetPageVersionSummariesByPageIdQuery query)
-        {
-            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
-        }
+    public IDomainRepositoryQueryContext<PagedQueryResult<PageVersionSummary>> AsVersionSummaries(GetPageVersionSummariesByPageIdQuery query)
+    {
+        return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 }

@@ -1,31 +1,29 @@
 ﻿using Cofoundry.Core.DependencyInjection;
-using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.Registration
+namespace Cofoundry.Domain.Registration;
+
+public class RolesDependencyRegistration : IDependencyRegistration
 {
-    public class RolesDependencyRegistration : IDependencyRegistration
+    public void Register(IContainerRegister container)
     {
-        public void Register(IContainerRegister container)
-        {
-            var singletonOptions = RegistrationOptions.SingletonScope();
+        var singletonOptions = RegistrationOptions.SingletonScope();
 
-            container
-                .Register<IPermissionValidationService, PermissionValidationService>()
-                .Register<IExecutePermissionValidationService, ExecutePermissionValidationService>()
-                .Register<IRoleCache, RoleCache>()
-                .Register<IInternalRoleRepository, InternalRoleRepository>()
-                .Register<IRoleDetailsMapper, RoleDetailsMapper>()
-                .Register<IRoleMicroSummaryMapper, RoleMicroSummaryMapper>()
-                .Register<IRoleDefinitionRepository, RoleDefinitionRepository>()
-                .RegisterAll<IPermission>(singletonOptions)
-                .RegisterSingleton<IPermissionRepository, PermissionRepository>()
+        container
+            .Register<IPermissionValidationService, PermissionValidationService>()
+            .Register<IExecutePermissionValidationService, ExecutePermissionValidationService>()
+            .Register<IRoleCache, RoleCache>()
+            .Register<IInternalRoleRepository, InternalRoleRepository>()
+            .Register<IRoleDetailsMapper, RoleDetailsMapper>()
+            .Register<IRoleMicroSummaryMapper, RoleMicroSummaryMapper>()
+            .Register<IRoleDefinitionRepository, RoleDefinitionRepository>()
+            .RegisterAll<IPermission>(singletonOptions)
+            .RegisterSingleton<IPermissionRepository, PermissionRepository>()
 
-                .RegisterAll<IRoleDefinition>(singletonOptions)
-                .RegisterAll<IAnonymousRolePermissionConfiguration>()
-                .Register<IRolePermissionInitializerFactory, RolePermissionInitializerFactory>()
-                .Register<IPermissionSetBuilderFactory, PermissionSetBuilderFactory>()
-                ;
-        }
+            .RegisterAll<IRoleDefinition>(singletonOptions)
+            .RegisterAll<IAnonymousRolePermissionConfiguration>()
+            .Register<IRolePermissionInitializerFactory, RolePermissionInitializerFactory>()
+            .Register<IPermissionSetBuilderFactory, PermissionSetBuilderFactory>()
+            ;
     }
 }

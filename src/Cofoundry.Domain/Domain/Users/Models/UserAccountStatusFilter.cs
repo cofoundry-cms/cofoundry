@@ -1,25 +1,24 @@
-﻿namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain;
+
+/// <summary>
+/// A three way option for the user account status filter. 
+/// Note that deleted accounts are never returned from the search
+/// and so are not included in the filter.
+/// </summary>
+public enum UserAccountStatusFilter
 {
     /// <summary>
-    /// A three way option for the user account status filter. 
-    /// Note that deleted accounts are never returned from the search
-    /// and so are not included in the filter.
+    /// Does not filter.
     /// </summary>
-    public enum UserAccountStatusFilter
-    {
-        /// <summary>
-        /// Does not filter.
-        /// </summary>
-        Any,
+    Any,
 
-        /// <summary>
-        /// Only users that are active.
-        /// </summary>
-        Active,
+    /// <summary>
+    /// Only users that are active.
+    /// </summary>
+    Active,
 
-        /// <summary>
-        /// Only users that are inactive
-        /// </summary>
-        Deactivated
-    }
+    /// <summary>
+    /// Only users that are inactive
+    /// </summary>
+    Deactivated
 }

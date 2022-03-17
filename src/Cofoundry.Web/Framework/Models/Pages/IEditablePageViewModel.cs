@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
+﻿namespace Cofoundry.Web;
 
-namespace Cofoundry.Web
+public interface IEditablePageViewModel
 {
-    public interface IEditablePageViewModel
-    {
-        PageRenderDetails Page { get; set; }
+    PageRenderDetails Page { get; set; }
 
-        bool IsPageEditMode { get; set; }
-    }
+    bool IsPageEditMode { get; set; }
 }

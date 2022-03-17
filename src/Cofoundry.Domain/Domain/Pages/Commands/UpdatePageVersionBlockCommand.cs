@@ -1,42 +1,37 @@
-﻿using Cofoundry.Core.Validation;
-using Cofoundry.Domain.CQS;
-using System.ComponentModel.DataAnnotations;
+﻿namespace Cofoundry.Domain;
 
-namespace Cofoundry.Domain
+/// <summary>
+/// Updates an existing block within a template region 
+/// of a page.
+/// </summary>
+public class UpdatePageVersionBlockCommand : IPatchableByIdCommand, ILoggableCommand, IPageVersionBlockDataModelCommand
 {
     /// <summary>
-    /// Updates an existing block within a template region 
-    /// of a page.
+    /// Id of the block to update.
     /// </summary>
-    public class UpdatePageVersionBlockCommand : IPatchableByIdCommand, ILoggableCommand, IPageVersionBlockDataModelCommand
-    {
-        /// <summary>
-        /// Id of the block to update.
-        /// </summary>
-        [Required]
-        [PositiveInteger]
-        public int PageVersionBlockId { get; set; }
+    [Required]
+    [PositiveInteger]
+    public int PageVersionBlockId { get; set; }
 
-        /// <summary>
-        /// The id of the block type to use.
-        /// </summary>
-        [Required]
-        [PositiveInteger]
-        public int PageBlockTypeId { get; set; }
+    /// <summary>
+    /// The id of the block type to use.
+    /// </summary>
+    [Required]
+    [PositiveInteger]
+    public int PageBlockTypeId { get; set; }
 
-        /// <summary>
-        /// Optional id of the block type template to render the 
-        /// block data into. Some block types have multiple rendering 
-        /// templates to choose from.
-        /// </summary>
-        [PositiveInteger]
-        public int? PageBlockTypeTemplateId { get; set; }
+    /// <summary>
+    /// Optional id of the block type template to render the 
+    /// block data into. Some block types have multiple rendering 
+    /// templates to choose from.
+    /// </summary>
+    [PositiveInteger]
+    public int? PageBlockTypeTemplateId { get; set; }
 
-        /// <summary>
-        /// The block type model data to save against the block.
-        /// </summary>
-        [Required]
-        [ValidateObject]
-        public IPageBlockTypeDataModel DataModel { get; set; }
-    }
+    /// <summary>
+    /// The block type model data to save against the block.
+    /// </summary>
+    [Required]
+    [ValidateObject]
+    public IPageBlockTypeDataModel DataModel { get; set; }
 }

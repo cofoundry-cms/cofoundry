@@ -1,66 +1,53 @@
-﻿using Cofoundry.Domain;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web;
+
+/// <summary>
+/// Configures Cofoundry routing.
+/// </summary>
+public class AddEndpointRoutesStartupConfigurationTask : IStartupConfigurationTask
 {
-    /// <summary>
-    /// Configures Cofoundry routing.
-    /// </summary>
-    public class AddEndpointRoutesStartupConfigurationTask : IStartupConfigurationTask
+    private readonly IRouteInitializer _routeInitializer;
+    private readonly PagesSettings _pagesSettings;
+
+    public AddEndpointRoutesStartupConfigurationTask(
+        IRouteInitializer routeInitializer,
+        PagesSettings pagesSettings
+        )
     {
-        #region constructor
+        _routeInitializer = routeInitializer;
+        _pagesSettings = pagesSettings;
+    }
 
-        private readonly IRouteInitializer _routeInitializer;
-        private readonly PagesSettings _pagesSettings;
-
-        public AddEndpointRoutesStartupConfigurationTask(
-            IRouteInitializer routeInitializer,
-            PagesSettings pagesSettings
-            )
+    public int Ordering
+    {
+        get
         {
-            _routeInitializer = routeInitializer;
-            _pagesSettings = pagesSettings;
+            return (int)StartupTaskOrdering.Normal;
         }
+    }
 
-        #endregion
+    public void Configure(IApplicationBuilder app)
+    {
+        app.UseEndpoints(GetRoutes);
+    }
 
-        public int Ordering
+    private void GetRoutes(IEndpointRouteBuilder routes)
+    {
+        RegisterInjectedRoutes(routes);
+
+        if (!_pagesSettings.Disabled)
         {
-            get
-            {
-                return (int)StartupTaskOrdering.Normal;
-            }
+            routes.MapControllerRoute(
+                "Cofoundry_Page",
+                "{**path}",
+                new { controller = "CofoundryPages", action = "Page" });
         }
+    }
 
-        public void Configure(IApplicationBuilder app)
-        {
-            app.UseEndpoints(GetRoutes);
-        }
-
-        #region helpers
-
-        private void GetRoutes(IEndpointRouteBuilder routes)
-        {
-            RegisterInjectedRoutes(routes);
-
-            if (!_pagesSettings.Disabled)
-            {
-                routes.MapControllerRoute(
-                    "Cofoundry_Page",
-                    "{**path}",
-                    new { controller = "CofoundryPages", action = "Page" });
-            }
-        }
-
-        private void RegisterInjectedRoutes(IEndpointRouteBuilder routes)
-        {
-            _routeInitializer.Initialize(routes);
-        }
-
-        #endregion
+    private void RegisterInjectedRoutes(IEndpointRouteBuilder routes)
+    {
+        _routeInitializer.Initialize(routes);
     }
 }

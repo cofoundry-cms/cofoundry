@@ -1,18 +1,17 @@
-﻿namespace Cofoundry.Domain.Data
+﻿namespace Cofoundry.Domain.Data;
+
+/// <summary>
+/// The single characters codes used as the keys for PublishStatus identifiers.
+/// </summary>
+public static class PublishStatusCode
 {
     /// <summary>
-    /// The single characters codes used as the keys for PublishStatus identifiers.
+    /// Unpublished 'U'.
     /// </summary>
-    public static class PublishStatusCode
-    {
-        /// <summary>
-        /// Unpublished 'U'.
-        /// </summary>
-        public const string Unpublished = "U";
+    public const string Unpublished = "U";
 
-        /// <summary>
-        /// Published 'P'.
-        /// </summary>
-        public const string Published = "P";
-    }
+    /// <summary>
+    /// Published 'P'.
+    /// </summary>
+    public const string Published = "P";
 }

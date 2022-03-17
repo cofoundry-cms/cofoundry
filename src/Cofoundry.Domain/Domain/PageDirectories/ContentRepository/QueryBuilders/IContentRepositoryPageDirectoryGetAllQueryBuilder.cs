@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Domain;
 
-namespace Cofoundry.Domain
+/// <summary>
+/// Queries for returning all page directories.
+/// </summary>
+public interface IContentRepositoryPageDirectoryGetAllQueryBuilder
 {
     /// <summary>
-    /// Queries for returning all page directories.
+    /// The PageDirectoryRoute projection is used in dynamic page routing and is designed to
+    /// be lightweight and cacheable.
     /// </summary>
-    public interface IContentRepositoryPageDirectoryGetAllQueryBuilder
-    {
-        /// <summary>
-        /// The PageDirectoryRoute projection is used in dynamic page routing and is designed to
-        /// be lightweight and cacheable.
-        /// </summary>
-        IDomainRepositoryQueryContext<ICollection<PageDirectoryRoute>> AsRoutes();
-    }
+    IDomainRepositoryQueryContext<ICollection<PageDirectoryRoute>> AsRoutes();
 }

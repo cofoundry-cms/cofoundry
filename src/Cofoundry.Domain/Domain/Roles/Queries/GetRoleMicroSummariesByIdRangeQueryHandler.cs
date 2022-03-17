@@ -1,55 +1,48 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.Internal
+/// <summary>
+/// <para>
+/// Finds a set of roles using a collection of database ids, returning them as a 
+/// <see cref="RoleMicroSummary"/> projection.
+/// </para>
+/// <para>
+/// Roles are cached, so repeat uses of this query is inexpensive.
+/// </para>
+/// </summary>
+public class GetRoleMicroSummariesByIdRangeQueryHandler
+    : IQueryHandler<GetRoleMicroSummariesByIdRangeQuery, IDictionary<int, RoleMicroSummary>>
+    , IPermissionRestrictedQueryHandler<GetRoleMicroSummariesByIdRangeQuery, IDictionary<int, RoleMicroSummary>>
 {
-    /// <summary>
-    /// <para>
-    /// Finds a set of roles using a collection of database ids, returning them as a 
-    /// <see cref="RoleMicroSummary"/> projection.
-    /// </para>
-    /// <para>
-    /// Roles are cached, so repeat uses of this query is inexpensive.
-    /// </para>
-    /// </summary>
-    public class GetRoleMicroSummariesByIdRangeQueryHandler
-        : IQueryHandler<GetRoleMicroSummariesByIdRangeQuery, IDictionary<int, RoleMicroSummary>>
-        , IPermissionRestrictedQueryHandler<GetRoleMicroSummariesByIdRangeQuery, IDictionary<int, RoleMicroSummary>>
+    private readonly IInternalRoleRepository _internalRoleRepository;
+    private readonly IRoleMicroSummaryMapper _roleMicroSummaryMapper;
+
+    public GetRoleMicroSummariesByIdRangeQueryHandler(
+        IInternalRoleRepository internalRoleRepository,
+        IRoleMicroSummaryMapper roleMicroSummaryMapper
+        )
     {
-        private readonly IInternalRoleRepository _internalRoleRepository;
-        private readonly IRoleMicroSummaryMapper _roleMicroSummaryMapper;
+        _internalRoleRepository = internalRoleRepository;
+        _roleMicroSummaryMapper = roleMicroSummaryMapper;
+    }
 
-        public GetRoleMicroSummariesByIdRangeQueryHandler(
-            IInternalRoleRepository internalRoleRepository,
-            IRoleMicroSummaryMapper roleMicroSummaryMapper
-            )
+    public async Task<IDictionary<int, RoleMicroSummary>> ExecuteAsync(GetRoleMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    {
+        if (EnumerableHelper.IsNullOrEmpty(query.RoleIds))
         {
-            _internalRoleRepository = internalRoleRepository;
-            _roleMicroSummaryMapper = roleMicroSummaryMapper;
+            return new Dictionary<int, RoleMicroSummary>();
         }
 
-        public async Task<IDictionary<int, RoleMicroSummary>> ExecuteAsync(GetRoleMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
-        {
-            if (EnumerableHelper.IsNullOrEmpty(query.RoleIds))
-            {
-                return new Dictionary<int, RoleMicroSummary>();
-            }
+        var roleDetails = await _internalRoleRepository.GetByIdRangeAsync(query.RoleIds);
 
-            var roleDetails = await _internalRoleRepository.GetByIdRangeAsync(query.RoleIds);
+        var result = roleDetails
+            .Select(d => _roleMicroSummaryMapper.Map(d.Value))
+            .ToDictionary(k => k.RoleId);
 
-            var result = roleDetails
-                .Select(d => _roleMicroSummaryMapper.Map(d.Value))
-                .ToDictionary(k => k.RoleId);
+        return result;
+    }
 
-            return result;
-        }
-
-        public IEnumerable<IPermissionApplication> GetPermissions(GetRoleMicroSummariesByIdRangeQuery command)
-        {
-            yield return new RoleReadPermission();
-        }
+    public IEnumerable<IPermissionApplication> GetPermissions(GetRoleMicroSummariesByIdRangeQuery command)
+    {
+        yield return new RoleReadPermission();
     }
 }

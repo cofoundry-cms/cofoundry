@@ -1,48 +1,45 @@
 ﻿using Cofoundry.Domain.Internal;
-using FluentAssertions;
-using Xunit;
 
-namespace Cofoundry.Domain.Tests.UserAreas.Configuration.NewPasswordValidation.Validators
+namespace Cofoundry.Domain.Tests.UserAreas.Configuration.NewPasswordValidation.Validators;
+
+public class MinUniqueCharactersNewPasswordValidatorTests
 {
-    public class MinUniqueCharactersNewPasswordValidatorTests
+    [Theory]
+    [InlineData("abcdefghijklmnop")]
+    [InlineData("123")]
+    [InlineData("aaabbbccc")]
+    public void WhenMoreThanMin_ReturnsSuccess(string password)
     {
-        [Theory]
-        [InlineData("abcdefghijklmnop")]
-        [InlineData("123")]
-        [InlineData("aaabbbccc")]
-        public void WhenMoreThanMin_ReturnsSuccess(string password)
+        var validator = new MinUniqueCharactersNewPasswordValidator();
+        validator.Configure(3);
+
+        var context = new NewPasswordValidationContext()
         {
-            var validator = new MinUniqueCharactersNewPasswordValidator();
-            validator.Configure(3);
+            Password = password
+        };
 
-            var context = new NewPasswordValidationContext()
-            {
-                Password = password
-            };
+        var result = validator.Validate(context);
 
-            var result = validator.Validate(context);
+        result.Should().BeNull();
+    }
 
-            result.Should().BeNull();
-        }
+    [Theory]
+    [InlineData("a")]
+    [InlineData("12")]
+    [InlineData("abababababababababab")]
+    public void WhenLessThanMin_ReturnsError(string password)
+    {
+        var validator = new MinUniqueCharactersNewPasswordValidator();
+        validator.Configure(3);
 
-        [Theory]
-        [InlineData("a")]
-        [InlineData("12")]
-        [InlineData("abababababababababab")]
-        public void WhenLessThanMin_ReturnsError(string password)
+        var context = new NewPasswordValidationContext()
         {
-            var validator = new MinUniqueCharactersNewPasswordValidator();
-            validator.Configure(3);
+            Password = password
+        };
 
-            var context = new NewPasswordValidationContext()
-            {
-                Password = password
-            };
+        var result = validator.Validate(context);
 
-            var result = validator.Validate(context);
-
-            result.Should().NotBeNull();
-            result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.MinUniqueCharacters.ErrorCode);
-        }
+        result.Should().NotBeNull();
+        result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.MinUniqueCharacters.ErrorCode);
     }
 }

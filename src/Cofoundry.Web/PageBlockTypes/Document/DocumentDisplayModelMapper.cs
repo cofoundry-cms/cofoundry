@@ -1,61 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Core;
-using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Web;
 
-namespace Cofoundry.Web
+public class DocumentDisplayModelMapper : IPageBlockTypeDisplayModelMapper<DocumentDataModel>
 {
-    public class DocumentDisplayModelMapper : IPageBlockTypeDisplayModelMapper<DocumentDataModel>
+    private IQueryExecutor _queryExecutor;
+    private IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
+
+    public DocumentDisplayModelMapper(
+        IQueryExecutor queryExecutor,
+        IDocumentAssetRouteLibrary documentAssetRouteLibrary
+        )
     {
-        #region Constructor
+        _queryExecutor = queryExecutor;
+        _documentAssetRouteLibrary = documentAssetRouteLibrary;
+    }
 
-        private IQueryExecutor _queryExecutor;
-        private IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
+    public async Task MapAsync(
+        PageBlockTypeDisplayModelMapperContext<DocumentDataModel> context,
+        PageBlockTypeDisplayModelMapperResult<DocumentDataModel> result
+        )
+    {
+        var documentIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.DocumentAssetId);
+        var documentsQuery = new GetDocumentAssetRenderDetailsByIdRangeQuery(documentIds);
+        var documents = await _queryExecutor.ExecuteAsync(documentsQuery, context.ExecutionContext);
 
-        public DocumentDisplayModelMapper(
-            IQueryExecutor queryExecutor,
-            IDocumentAssetRouteLibrary documentAssetRouteLibrary
-            )
+        foreach (var item in context.Items)
         {
-            _queryExecutor = queryExecutor;
-            _documentAssetRouteLibrary = documentAssetRouteLibrary;
-        }
+            var document = documents.GetOrDefault(item.DataModel.DocumentAssetId);
 
-        #endregion
-
-        public async Task MapAsync(
-            PageBlockTypeDisplayModelMapperContext<DocumentDataModel> context, 
-            PageBlockTypeDisplayModelMapperResult<DocumentDataModel> result
-            )
-        {
-            var documentIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.DocumentAssetId);
-            var documentsQuery = new GetDocumentAssetRenderDetailsByIdRangeQuery(documentIds);
-            var documents = await _queryExecutor.ExecuteAsync(documentsQuery, context.ExecutionContext);
-
-            foreach (var item in context.Items)
+            var displayModel = new DocumentDisplayModel();
+            if (document != null)
             {
-                var document = documents.GetOrDefault(item.DataModel.DocumentAssetId);
-
-                var displayModel = new DocumentDisplayModel();
-                if (document != null)
+                displayModel.Description = document.Description;
+                displayModel.Title = document.Title;
+                if (item.DataModel.DownloadMode == DocumentDownloadMode.ForceDownload)
                 {
-                    displayModel.Description = document.Description;
-                    displayModel.Title = document.Title;
-                    if (item.DataModel.DownloadMode == DocumentDownloadMode.ForceDownload)
-                    {
-                        displayModel.Url = _documentAssetRouteLibrary.DocumentAssetDownload(document);
-                    }
-                    else
-                    {
-                        displayModel.Url = _documentAssetRouteLibrary.DocumentAsset(document);
-                    }
+                    displayModel.Url = _documentAssetRouteLibrary.DocumentAssetDownload(document);
                 }
-
-                result.Add(item, displayModel);
+                else
+                {
+                    displayModel.Url = _documentAssetRouteLibrary.DocumentAsset(document);
+                }
             }
+
+            result.Add(item, displayModel);
         }
     }
 }

@@ -1,32 +1,28 @@
 ﻿using Cofoundry.Domain.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <summary>
+/// Simple mapper for mapping to ActiveLocale objects.
+/// </summary>
+public class ActiveLocaleMapper : IActiveLocaleMapper
 {
     /// <summary>
-    /// Simple mapper for mapping to ActiveLocale objects.
+    /// Maps an EF Locale record from the db into an ActiveLocale 
+    /// object. If the db record is null then null is returned.
     /// </summary>
-    public class ActiveLocaleMapper : IActiveLocaleMapper
+    /// <param name="dbLocale">Locale record from the database.</param>
+    public ActiveLocale Map(Locale dbLocale)
     {
-        /// <summary>
-        /// Maps an EF Locale record from the db into an ActiveLocale 
-        /// object. If the db record is null then null is returned.
-        /// </summary>
-        /// <param name="dbLocale">Locale record from the database.</param>
-        public ActiveLocale Map(Locale dbLocale)
-        {
-            if (dbLocale == null) return null;
-            
-            var locale = new ActiveLocale()
-            {
-                IETFLanguageTag = dbLocale.IETFLanguageTag,
-                LocaleId = dbLocale.LocaleId,
-                Name = dbLocale.LocaleName
-            };
+        if (dbLocale == null) return null;
 
-            return locale;
-        }
+        var locale = new ActiveLocale()
+        {
+            IETFLanguageTag = dbLocale.IETFLanguageTag,
+            LocaleId = dbLocale.LocaleId,
+            Name = dbLocale.LocaleName
+        };
+
+        return locale;
     }
 }

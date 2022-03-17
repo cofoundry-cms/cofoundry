@@ -1,44 +1,41 @@
 ﻿using Cofoundry.Domain.Internal;
-using FluentAssertions;
-using Xunit;
 
-namespace Cofoundry.Domain.Tests.PasswordPolicies.Validators
+namespace Cofoundry.Domain.Tests.PasswordPolicies.Validators;
+
+public class MaxLengthNewPasswordValidatotTests
 {
-    public class MaxLengthNewPasswordValidatotTests
+    [Theory]
+    [InlineData("abc")]
+    [InlineData("12345678")]
+    public void WhenLessThanMaxLength_ReturnsSuccess(string password)
     {
-        [Theory]
-        [InlineData("abc")]
-        [InlineData("12345678")]
-        public void WhenLessThanMaxLength_ReturnsSuccess(string password)
+        var validator = new MaxLengthNewPasswordValidator();
+        validator.Configure(8);
+
+        var context = new NewPasswordValidationContext()
         {
-            var validator = new MaxLengthNewPasswordValidator();
-            validator.Configure(8);
+            Password = password
+        };
 
-            var context = new NewPasswordValidationContext()
-            {
-                Password = password
-            };
+        var result = validator.Validate(context);
 
-            var result = validator.Validate(context);
+        result.Should().BeNull();
+    }
 
-            result.Should().BeNull();
-        }
+    [Fact]
+    public void WhenMoreThanMaxLength_ReturnsError()
+    {
+        var validator = new MaxLengthNewPasswordValidator();
+        validator.Configure(8);
 
-        [Fact]
-        public void WhenMoreThanMaxLength_ReturnsError()
+        var context = new NewPasswordValidationContext()
         {
-            var validator = new MaxLengthNewPasswordValidator();
-            validator.Configure(8);
+            Password = "123456789"
+        };
 
-            var context = new NewPasswordValidationContext()
-            {
-                Password = "123456789"
-            };
+        var result = validator.Validate(context);
 
-            var result = validator.Validate(context);
-
-            result.Should().NotBeNull();
-            result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.MaxLengthExceeded.ErrorCode);
-        }
+        result.Should().NotBeNull();
+        result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.MaxLengthExceeded.ErrorCode);
     }
 }

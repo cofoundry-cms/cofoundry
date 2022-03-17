@@ -1,36 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Core.ResourceFiles;
-using Cofoundry.Domain;
+﻿using Cofoundry.Core.ResourceFiles;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin;
+
+public class CustomEntitiesResourceRouteRegistration : IEmbeddedResourceRouteRegistration
 {
-    public class CustomEntitiesResourceRouteRegistration : IEmbeddedResourceRouteRegistration
+    private readonly IAdminRouteLibrary _adminRouteLibrary;
+    private readonly AdminSettings _adminSettings;
+
+    public CustomEntitiesResourceRouteRegistration(
+        IAdminRouteLibrary adminRouteLibrary,
+        AdminSettings adminSettings
+        )
     {
-        private readonly IAdminRouteLibrary _adminRouteLibrary;
-        private readonly AdminSettings _adminSettings;
+        _adminRouteLibrary = adminRouteLibrary;
+        _adminSettings = adminSettings;
+    }
 
-        public CustomEntitiesResourceRouteRegistration(
-            IAdminRouteLibrary adminRouteLibrary,
-            AdminSettings adminSettings
-            )
-        {
-            _adminRouteLibrary = adminRouteLibrary;
-            _adminSettings = adminSettings;
-        }
+    public IEnumerable<EmbeddedResourcePath> GetEmbeddedResourcePaths()
+    {
+        if (_adminSettings.Disabled) yield break;
 
-        public IEnumerable<EmbeddedResourcePath> GetEmbeddedResourcePaths()
-        {
-            if (_adminSettings.Disabled) yield break;
+        var path = new EmbeddedResourcePath(
+            GetType().Assembly,
+            _adminRouteLibrary.CustomEntities.GetStaticResourceFilePath(),
+            _adminRouteLibrary.CustomEntities.GetStaticResourceUrlPath()
+            );
 
-            var path = new EmbeddedResourcePath(
-                GetType().Assembly,
-                _adminRouteLibrary.CustomEntities.GetStaticResourceFilePath(),
-                _adminRouteLibrary.CustomEntities.GetStaticResourceUrlPath()
-                );
-
-            yield return path;
-        }
+        yield return path;
     }
 }

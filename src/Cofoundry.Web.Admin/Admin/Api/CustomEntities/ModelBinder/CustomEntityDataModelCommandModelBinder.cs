@@ -1,75 +1,70 @@
 ﻿using Cofoundry.Core.Json;
-using Cofoundry.Domain;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin;
+
+/// <summary>
+/// A custom model binder for commands like AddCustomEntityCommand which is
+/// required to resolve the child model property to a concrete type.
+/// </summary>
+public class CustomEntityDataModelCommandModelBinder : IModelBinder
 {
-    /// <summary>
-    /// A custom model binder for commands like AddCustomEntityCommand which is
-    /// required to resolve the child model property to a concrete type.
-    /// </summary>
-    public class CustomEntityDataModelCommandModelBinder : IModelBinder
+    private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
+    private readonly IEntityDataModelJsonConverterFactory _entityDataModelJsonConverterFactory;
+
+    public CustomEntityDataModelCommandModelBinder(
+        ICustomEntityDefinitionRepository customEntityDefinitionRepository,
+        IEntityDataModelJsonConverterFactory entityDataModelJsonConverterFactory
+        )
     {
-        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
-        private readonly IEntityDataModelJsonConverterFactory _entityDataModelJsonConverterFactory;
+        _customEntityDefinitionRepository = customEntityDefinitionRepository;
+        _entityDataModelJsonConverterFactory = entityDataModelJsonConverterFactory;
+    }
 
-        public CustomEntityDataModelCommandModelBinder(
-            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-            IEntityDataModelJsonConverterFactory entityDataModelJsonConverterFactory
-            )
+    public async Task BindModelAsync(ModelBindingContext bindingContext)
+    {
+        if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
+        var jsonString = await ReadBodyAsString(bindingContext);
+
+        var json = JObject.Parse(jsonString);
+        var customEntityDefinitionCodeProperty = json.GetValue("CustomEntityDefinitionCode", StringComparison.OrdinalIgnoreCase);
+        var dataModelConverter = GetDataTypeConverter(customEntityDefinitionCodeProperty?.Value<string>());
+
+        if (dataModelConverter == null)
         {
-            _customEntityDefinitionRepository = customEntityDefinitionRepository;
-            _entityDataModelJsonConverterFactory = entityDataModelJsonConverterFactory;
+            dataModelConverter = new NullModelJsonConverter<ICustomEntityDataModel>();
         }
 
-        public async Task BindModelAsync(ModelBindingContext bindingContext)
+        var result = JsonConvert.DeserializeObject(jsonString, bindingContext.ModelType, dataModelConverter);
+        bindingContext.Result = ModelBindingResult.Success(result);
+    }
+
+    private async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
+    {
+        string body;
+        using (var reader = new StreamReader(bindingContext.ActionContext.HttpContext.Request.Body, Encoding.UTF8))
         {
-            if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
-            var jsonString = await ReadBodyAsString(bindingContext);
-
-            var json = JObject.Parse(jsonString);
-            var customEntityDefinitionCodeProperty = json.GetValue("CustomEntityDefinitionCode", StringComparison.OrdinalIgnoreCase);
-            var dataModelConverter = GetDataTypeConverter(customEntityDefinitionCodeProperty?.Value<string>());
-
-            if (dataModelConverter == null)
-            {
-                dataModelConverter = new NullModelJsonConverter<ICustomEntityDataModel>();
-            }
-
-            var result = JsonConvert.DeserializeObject(jsonString, bindingContext.ModelType, dataModelConverter);
-            bindingContext.Result = ModelBindingResult.Success(result);
+            body = await reader.ReadToEndAsync();
         }
 
-        private async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
-        {
-            string body;
-            using (var reader = new StreamReader(bindingContext.ActionContext.HttpContext.Request.Body, Encoding.UTF8))
-            {
-                body = await reader.ReadToEndAsync();
-            }
+        return body;
+    }
 
-            return body;
-        }
+    private JsonConverter GetDataTypeConverter(string customEntityDefinitionCode)
+    {
+        // If there's no code then the model probably wasn't supplied and should be
+        // considered null which will cause a validation error
+        if (string.IsNullOrWhiteSpace(customEntityDefinitionCode)) return null;
 
-        private JsonConverter GetDataTypeConverter(string customEntityDefinitionCode)
-        {
-            // If there's no code then the model probably wasn't supplied and should be
-            // considered null which will cause a validation error
-            if (string.IsNullOrWhiteSpace(customEntityDefinitionCode)) return null;
+        // If there is a code but it's not registered in the system, then thats exeptional and we should throw
+        var definition = _customEntityDefinitionRepository.GetRequiredByCode(customEntityDefinitionCode);
 
-            // If there is a code but it's not registered in the system, then thats exeptional and we should throw
-            var definition = _customEntityDefinitionRepository.GetRequiredByCode(customEntityDefinitionCode);
+        var dataModelType = definition.GetDataModelType();
+        var converterType = _entityDataModelJsonConverterFactory.Create(dataModelType);
 
-            var dataModelType = definition.GetDataModelType();
-            var converterType = _entityDataModelJsonConverterFactory.Create(dataModelType);
-
-            return converterType;
-        }
+        return converterType;
     }
 }

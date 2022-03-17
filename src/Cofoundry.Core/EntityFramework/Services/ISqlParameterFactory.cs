@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
-namespace Cofoundry.Core.EntityFramework
+namespace Cofoundry.Core.EntityFramework;
+
+public interface ISqlParameterFactory
 {
-    public interface ISqlParameterFactory
-    {
-        SqlParameter CreateOutputParameterByType(string name, Type t);
-    }
+    SqlParameter CreateOutputParameterByType(string name, Type t);
 }

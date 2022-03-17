@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
-using Microsoft.AspNetCore.Html;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Html;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web;
+
+public class SingleLineTextDisplayModelMapper : IPageBlockTypeDisplayModelMapper<SingleLineTextDataModel>
 {
-    public class SingleLineTextDisplayModelMapper : IPageBlockTypeDisplayModelMapper<SingleLineTextDataModel>
+    public Task MapAsync(
+        PageBlockTypeDisplayModelMapperContext<SingleLineTextDataModel> context,
+        PageBlockTypeDisplayModelMapperResult<SingleLineTextDataModel> result
+        )
     {
-        public Task MapAsync(
-            PageBlockTypeDisplayModelMapperContext<SingleLineTextDataModel> context,
-            PageBlockTypeDisplayModelMapperResult<SingleLineTextDataModel> result
-            )
+        foreach (var item in context.Items)
         {
-            foreach (var item in context.Items)
-            {
-                var displayModel = new SingleLineTextDisplayModel();
-                displayModel.Text = new HtmlString(item.DataModel.Text);
+            var displayModel = new SingleLineTextDisplayModel();
+            displayModel.Text = new HtmlString(item.DataModel.Text);
 
-                result.Add(item, displayModel);
-            }
-
-            return Task.CompletedTask;
+            result.Add(item, displayModel);
         }
+
+        return Task.CompletedTask;
     }
 }

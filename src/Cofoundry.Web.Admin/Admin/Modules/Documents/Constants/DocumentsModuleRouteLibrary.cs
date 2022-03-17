@@ -1,36 +1,26 @@
-﻿using Cofoundry.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿namespace Cofoundry.Web.Admin;
 
-namespace Cofoundry.Web.Admin
+public class DocumentsModuleRouteLibrary : AngularModuleRouteLibrary
 {
-    public class DocumentsModuleRouteLibrary : AngularModuleRouteLibrary
+    public const string RoutePrefix = "documents";
+
+    public DocumentsModuleRouteLibrary(AdminSettings adminSettings)
+        : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
     {
-        public const string RoutePrefix = "documents";
+    }
 
-        public DocumentsModuleRouteLibrary(AdminSettings adminSettings)
-            : base(adminSettings, RoutePrefix, RouteConstants.InternalModuleResourcePathPrefix)
-        {
-        }
+    public string List()
+    {
+        return AngularRoute();
+    }
 
-        #region routes
+    public string New()
+    {
+        return AngularRoute("new");
+    }
 
-        public string List()
-        {
-            return AngularRoute();
-        }
-
-        public string New()
-        {
-            return AngularRoute("new");
-        }
-
-        public string Details(int id)
-        {
-            return AngularRoute(id.ToString());
-        }
-
-        #endregion
+    public string Details(int id)
+    {
+        return AngularRoute(id.ToString());
     }
 }

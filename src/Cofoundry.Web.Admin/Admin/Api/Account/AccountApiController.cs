@@ -1,40 +1,37 @@
-﻿using Cofoundry.Domain;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin;
+
+public class AccountApiController : BaseAdminApiController
 {
-    public class AccountApiController : BaseAdminApiController
+    private readonly IApiResponseHelper _apiResponseHelper;
+
+    public AccountApiController(
+        IApiResponseHelper apiResponseHelper
+        )
     {
-        private readonly IApiResponseHelper _apiResponseHelper;
+        _apiResponseHelper = apiResponseHelper;
+    }
 
-        public AccountApiController(
-            IApiResponseHelper apiResponseHelper
-            )
+    public async Task<JsonResult> Get()
+    {
+        var query = new GetCurrentUserDetailsQuery();
+        return await _apiResponseHelper.RunQueryAsync(query);
+    }
+
+    public async Task<JsonResult> Patch([FromBody] IDelta<UpdateCurrentUserCommand> delta)
+    {
+        return await _apiResponseHelper.RunCommandAsync(delta);
+    }
+
+    public Task<JsonResult> PutPassword([FromBody] UpdateCurrentUserPasswordCommandDto dto)
+    {
+        var command = new UpdateCurrentUserPasswordCommand()
         {
-            _apiResponseHelper = apiResponseHelper;
-        }
+            OldPassword = dto.OldPassword,
+            NewPassword = dto.NewPassword
+        };
 
-        public async Task<JsonResult> Get()
-        {
-            var query = new GetCurrentUserDetailsQuery();
-            return await _apiResponseHelper.RunQueryAsync(query);
-        }
-
-        public async Task<JsonResult> Patch([FromBody] IDelta<UpdateCurrentUserCommand> delta)
-        {
-            return await _apiResponseHelper.RunCommandAsync(delta);
-        }
-
-        public Task<JsonResult> PutPassword([FromBody] UpdateCurrentUserPasswordCommandDto dto)
-        {
-            var command = new UpdateCurrentUserPasswordCommand()
-            {
-                OldPassword = dto.OldPassword,
-                NewPassword = dto.NewPassword
-            };
-
-            return _apiResponseHelper.RunCommandAsync(command);
-        }
+        return _apiResponseHelper.RunCommandAsync(command);
     }
 }

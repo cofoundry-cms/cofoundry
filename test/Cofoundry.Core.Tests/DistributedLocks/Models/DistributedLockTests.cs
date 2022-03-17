@@ -1,83 +1,78 @@
 ﻿using Cofoundry.Core.DistributedLocks;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
 
-namespace Cofoundry.Core.Tests
+namespace Cofoundry.Core.Tests;
+
+public class DistributedLockTests
 {
-    public class DistributedLockTests
+    [Fact]
+    public void IsLocked_WhenLocked_ReturnsTrue()
     {
-        [Fact]
-        public void IsLocked_WhenLocked_ReturnsTrue()
+        // Note dates should not matter as they are retrieved from 
+        // the database as a snapshot of the state and the values are not  
+        // relevant for the check, only that they exist or not exist
+        var distributedLock = new DistributedLock()
         {
-            // Note dates should not matter as they are retrieved from 
-            // the database as a snapshot of the state and the values are not  
-            // relevant for the check, only that they exist or not exist
-            var distributedLock = new DistributedLock()
-            {
-                DistributedLockId = "TSTTST",
-                ExpiryDate = DateTime.MinValue,
-                LockDate = DateTime.MinValue,
-                LockedByLockingId = Guid.NewGuid()
-            };
+            DistributedLockId = "TSTTST",
+            ExpiryDate = DateTime.MinValue,
+            LockDate = DateTime.MinValue,
+            LockedByLockingId = Guid.NewGuid()
+        };
 
-            Assert.True(distributedLock.IsLocked());
-        }
+        Assert.True(distributedLock.IsLocked());
+    }
 
-        [Fact]
-        public void IsLocked_WhenNotLocked_ReturnsFalse()
+    [Fact]
+    public void IsLocked_WhenNotLocked_ReturnsFalse()
+    {
+        var distributedLock = new DistributedLock()
         {
-            var distributedLock = new DistributedLock()
-            {
-                DistributedLockId = "TSTTST",
-                ExpiryDate = DateTime.MinValue,
-                LockDate = DateTime.MinValue
-            };
+            DistributedLockId = "TSTTST",
+            ExpiryDate = DateTime.MinValue,
+            LockDate = DateTime.MinValue
+        };
 
-            Assert.False(distributedLock.IsLocked());
-        }
+        Assert.False(distributedLock.IsLocked());
+    }
 
-        [Fact]
-        public void IsLockedByAnotherProcess_WhenLockedBySelf_ReturnsFalse()
+    [Fact]
+    public void IsLockedByAnotherProcess_WhenLockedBySelf_ReturnsFalse()
+    {
+        var lockingId = Guid.NewGuid();
+        var distributedLock = new DistributedLock()
         {
-            var lockingId = Guid.NewGuid();
-            var distributedLock = new DistributedLock()
-            {
-                DistributedLockId = "TSTTST",
-                ExpiryDate = DateTime.MinValue,
-                LockDate = DateTime.MinValue,
-                LockedByLockingId = lockingId,
-                RequestedLockingId = lockingId
-            };
+            DistributedLockId = "TSTTST",
+            ExpiryDate = DateTime.MinValue,
+            LockDate = DateTime.MinValue,
+            LockedByLockingId = lockingId,
+            RequestedLockingId = lockingId
+        };
 
-            Assert.False(distributedLock.IsLockedByAnotherProcess());
-        }
+        Assert.False(distributedLock.IsLockedByAnotherProcess());
+    }
 
-        [Fact]
-        public void IsLockedByAnotherProcess_WhenNotLocked_ReturnsFalse()
+    [Fact]
+    public void IsLockedByAnotherProcess_WhenNotLocked_ReturnsFalse()
+    {
+        var distributedLock = new DistributedLock()
         {
-            var distributedLock = new DistributedLock()
-            {
-                DistributedLockId = "TSTTST"
-            };
+            DistributedLockId = "TSTTST"
+        };
 
-            Assert.False(distributedLock.IsLockedByAnotherProcess());
-        }
+        Assert.False(distributedLock.IsLockedByAnotherProcess());
+    }
 
-        [Fact]
-        public void IsLockedByAnotherProcess_WhenLockedByProcess_ReturnsTrue()
+    [Fact]
+    public void IsLockedByAnotherProcess_WhenLockedByProcess_ReturnsTrue()
+    {
+        var distributedLock = new DistributedLock()
         {
-            var distributedLock = new DistributedLock()
-            {
-                DistributedLockId = "TSTTST",
-                ExpiryDate = DateTime.MinValue,
-                LockDate = DateTime.MinValue,
-                LockedByLockingId = Guid.NewGuid(),
-                RequestedLockingId = Guid.NewGuid()
-            };
+            DistributedLockId = "TSTTST",
+            ExpiryDate = DateTime.MinValue,
+            LockDate = DateTime.MinValue,
+            LockedByLockingId = Guid.NewGuid(),
+            RequestedLockingId = Guid.NewGuid()
+        };
 
-            Assert.True(distributedLock.IsLockedByAnotherProcess());
-        }
+        Assert.True(distributedLock.IsLockedByAnotherProcess());
     }
 }

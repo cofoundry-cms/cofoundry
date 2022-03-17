@@ -1,11 +1,10 @@
-﻿namespace Cofoundry.Domain.Tests.Integration.SeedData
+﻿namespace Cofoundry.Domain.Tests.Integration.SeedData;
+
+public class TestUserInfo
 {
-    public class TestUserInfo
-    {
-        public int UserId { get; set; }
+    public int UserId { get; set; }
 
-        public string Username { get; set; }
+    public string Username { get; set; }
 
-        public string Password { get; set; }
-    }
+    public string Password { get; set; }
 }

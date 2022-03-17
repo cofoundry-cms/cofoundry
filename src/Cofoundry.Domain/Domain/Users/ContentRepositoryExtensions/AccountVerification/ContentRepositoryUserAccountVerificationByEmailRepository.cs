@@ -1,35 +1,33 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <inheritdoc/>
+public class ContentRepositoryUserAccountVerificationByEmailRepository
+        : IAdvancedContentRepositoryUserAccountVerificationByEmailRepository
+        , IExtendableContentRepositoryPart
 {
-    /// <inheritdoc/>
-    public class ContentRepositoryUserAccountVerificationByEmailRepository
-            : IAdvancedContentRepositoryUserAccountVerificationByEmailRepository
-            , IExtendableContentRepositoryPart
+    public ContentRepositoryUserAccountVerificationByEmailRepository(
+        IExtendableContentRepository contentRepository
+        )
     {
-        public ContentRepositoryUserAccountVerificationByEmailRepository(
-            IExtendableContentRepository contentRepository
-            )
-        {
-            ExtendableContentRepository = contentRepository;
-        }
+        ExtendableContentRepository = contentRepository;
+    }
 
-        public IExtendableContentRepository ExtendableContentRepository { get; }
+    public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public IDomainRepositoryQueryContext<AuthorizedTaskTokenValidationResult> Validate(ValidateUserAccountVerificationByEmailQuery query)
-        {
-            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
-        }
+    public IDomainRepositoryQueryContext<AuthorizedTaskTokenValidationResult> Validate(ValidateUserAccountVerificationByEmailQuery query)
+    {
+        return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+    }
 
-        public Task InitiateAsync(InitiateUserAccountVerificationViaEmailCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
+    public Task InitiateAsync(InitiateUserAccountVerificationViaEmailCommand command)
+    {
+        return ExtendableContentRepository.ExecuteCommandAsync(command);
+    }
 
-        public Task CompleteAsync(CompleteUserAccountVerificationViaEmailCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
+    public Task CompleteAsync(CompleteUserAccountVerificationViaEmailCommand command)
+    {
+        return ExtendableContentRepository.ExecuteCommandAsync(command);
     }
 }

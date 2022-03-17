@@ -1,36 +1,30 @@
-﻿using Cofoundry.Domain.CQS;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.Internal
+public class GetPageDirectoryNodeByIdQueryHandler
+    : IQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
+    , IPermissionRestrictedQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
 {
-    public class GetPageDirectoryNodeByIdQueryHandler
-        : IQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
-        , IPermissionRestrictedQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
+    private readonly IQueryExecutor _queryExecutor;
+
+    public GetPageDirectoryNodeByIdQueryHandler(
+        IQueryExecutor queryExecutor
+        )
     {
-        private readonly IQueryExecutor _queryExecutor;
+        _queryExecutor = queryExecutor;
+    }
 
-        public GetPageDirectoryNodeByIdQueryHandler(
-            IQueryExecutor queryExecutor
-            )
-        {
-            _queryExecutor = queryExecutor;
-        }
+    public async Task<PageDirectoryNode> ExecuteAsync(GetPageDirectoryNodeByIdQuery query, IExecutionContext executionContext)
+    {
+        var tree = await _queryExecutor.ExecuteAsync(new GetPageDirectoryTreeQuery(), executionContext);
+        var result = tree
+            .Flatten()
+            .SingleOrDefault(n => n.PageDirectoryId == query.PageDirectoryId);
 
-        public async Task<PageDirectoryNode> ExecuteAsync(GetPageDirectoryNodeByIdQuery query, IExecutionContext executionContext)
-        {
-            var tree = await _queryExecutor.ExecuteAsync(new GetPageDirectoryTreeQuery(), executionContext);
-            var result = tree
-                .Flatten()
-                .SingleOrDefault(n => n.PageDirectoryId == query.PageDirectoryId);
+        return result;
+    }
 
-            return result;
-        }
-
-        public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryNodeByIdQuery command)
-        {
-            yield return new PageDirectoryReadPermission();
-        }
+    public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryNodeByIdQuery command)
+    {
+        yield return new PageDirectoryReadPermission();
     }
 }

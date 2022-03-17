@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿namespace Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Data
+public static class DocumentAssetQueryExtensions
 {
-    public static class DocumentAssetQueryExtensions
+    public static IQueryable<DocumentAsset> FilterById(this IQueryable<DocumentAsset> documents, int id)
     {
-        public static IQueryable<DocumentAsset> FilterById(this IQueryable<DocumentAsset> documents, int id)
-        {
-            var result = documents
-                .Where(i => i.DocumentAssetId == id);
+        var result = documents
+            .Where(i => i.DocumentAssetId == id);
 
-            return result;
-        }
+        return result;
+    }
 
-        public static IQueryable<DocumentAsset> FilterByIds(this IQueryable<DocumentAsset> document, IEnumerable<int> ids)
-        {
-            var result = document
-                .Where(i => ids.Contains(i.DocumentAssetId));
+    public static IQueryable<DocumentAsset> FilterByIds(this IQueryable<DocumentAsset> document, IEnumerable<int> ids)
+    {
+        var result = document
+            .Where(i => ids.Contains(i.DocumentAssetId));
 
-            return result;
-        }
+        return result;
     }
 }

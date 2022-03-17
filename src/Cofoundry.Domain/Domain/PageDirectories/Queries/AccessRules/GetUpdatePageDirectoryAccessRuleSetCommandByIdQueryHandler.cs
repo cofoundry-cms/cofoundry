@@ -1,67 +1,59 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class GetUpdatePageDirectoryAccessRuleSetCommandByIdQueryHandler
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>, UpdatePageDirectoryAccessRuleSetCommand>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>, UpdatePageDirectoryAccessRuleSetCommand>
 {
-    public class GetUpdatePageDirectoryAccessRuleSetCommandByIdQueryHandler
-        : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>, UpdatePageDirectoryAccessRuleSetCommand>
-        , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>, UpdatePageDirectoryAccessRuleSetCommand>
+    private readonly CofoundryDbContext _dbContext;
+
+    public GetUpdatePageDirectoryAccessRuleSetCommandByIdQueryHandler(
+        CofoundryDbContext dbContext
+        )
     {
-        private readonly CofoundryDbContext _dbContext;
+        _dbContext = dbContext;
+    }
 
-        public GetUpdatePageDirectoryAccessRuleSetCommandByIdQueryHandler(
-            CofoundryDbContext dbContext
-            )
+    public async Task<UpdatePageDirectoryAccessRuleSetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand> query, IExecutionContext executionContext)
+    {
+        var dbPageDirectory = await _dbContext
+            .PageDirectories
+            .AsNoTracking()
+            .Include(r => r.AccessRules)
+            .FilterById(query.Id)
+            .SingleOrDefaultAsync();
+
+        if (dbPageDirectory == null) return null;
+
+        var violationAction = EnumParser.ParseOrNull<AccessRuleViolationAction>(dbPageDirectory.AccessRuleViolationActionId);
+        if (!violationAction.HasValue)
         {
-            _dbContext = dbContext;
+            throw new InvalidOperationException($"{nameof(AccessRuleViolationAction)} of value {dbPageDirectory.AccessRuleViolationActionId} could not be parsed on a page directory with an id of {dbPageDirectory.PageDirectoryId}.");
         }
 
-        public async Task<UpdatePageDirectoryAccessRuleSetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand> query, IExecutionContext executionContext)
+        var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
-            var dbPageDirectory = await _dbContext
-                .PageDirectories
-                .AsNoTracking()
-                .Include(r => r.AccessRules)
-                .FilterById(query.Id)
-                .SingleOrDefaultAsync();
+            PageDirectoryId = dbPageDirectory.PageDirectoryId,
+            UserAreaCodeForSignInRedirect = dbPageDirectory.UserAreaCodeForSignInRedirect,
+            ViolationAction = violationAction.Value
+        };
 
-            if (dbPageDirectory == null) return null;
-
-            var violationAction = EnumParser.ParseOrNull<AccessRuleViolationAction>(dbPageDirectory.AccessRuleViolationActionId);
-            if (!violationAction.HasValue)
+        command.AccessRules = dbPageDirectory
+            .AccessRules
+            .Select(r => new UpdatePageDirectoryAccessRuleSetCommand.AddOrUpdatePageDirectoryAccessRuleCommand()
             {
-                throw new InvalidOperationException($"{nameof(AccessRuleViolationAction)} of value {dbPageDirectory.AccessRuleViolationActionId} could not be parsed on a page directory with an id of {dbPageDirectory.PageDirectoryId}.");
-            }
+                PageDirectoryAccessRuleId = r.PageDirectoryAccessRuleId,
+                UserAreaCode = r.UserAreaCode,
+                RoleId = r.RoleId
+            })
+            .ToList();
 
-            var command = new UpdatePageDirectoryAccessRuleSetCommand()
-            {
-                PageDirectoryId = dbPageDirectory.PageDirectoryId,
-                UserAreaCodeForSignInRedirect = dbPageDirectory.UserAreaCodeForSignInRedirect,
-                ViolationAction = violationAction.Value
-            };
+        return command;
+    }
 
-            command.AccessRules = dbPageDirectory
-                .AccessRules
-                .Select(r => new UpdatePageDirectoryAccessRuleSetCommand.AddOrUpdatePageDirectoryAccessRuleCommand()
-                {
-                    PageDirectoryAccessRuleId = r.PageDirectoryAccessRuleId,
-                    UserAreaCode = r.UserAreaCode,
-                    RoleId = r.RoleId
-                })
-                .ToList();
-
-            return command;
-        }
-
-        public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand> query)
-        {
-            yield return new PageDirectoryReadPermission();
-        }
+    public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand> query)
+    {
+        yield return new PageDirectoryReadPermission();
     }
 }

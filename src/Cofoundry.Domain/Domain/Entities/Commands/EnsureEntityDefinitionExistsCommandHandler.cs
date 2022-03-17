@@ -1,45 +1,41 @@
-﻿using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class EnsureEntityDefinitionExistsCommandHandler
+    : ICommandHandler<EnsureEntityDefinitionExistsCommand>
+    , IIgnorePermissionCheckHandler
 {
-    public class EnsureEntityDefinitionExistsCommandHandler
-        : ICommandHandler<EnsureEntityDefinitionExistsCommand>
-        , IIgnorePermissionCheckHandler
+    private readonly CofoundryDbContext _dbContext;
+    private readonly IEntityDefinitionRepository _entityDefinitionRepository;
+
+    public EnsureEntityDefinitionExistsCommandHandler(
+        CofoundryDbContext dbContext,
+        IEntityDefinitionRepository entityDefinitionRepository
+        )
     {
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IEntityDefinitionRepository _entityDefinitionRepository;
+        _dbContext = dbContext;
+        _entityDefinitionRepository = entityDefinitionRepository;
+    }
 
-        public EnsureEntityDefinitionExistsCommandHandler(
-            CofoundryDbContext dbContext,
-            IEntityDefinitionRepository entityDefinitionRepository
-            )
+    public async Task ExecuteAsync(EnsureEntityDefinitionExistsCommand command, IExecutionContext executionContext)
+    {
+        var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(command.EntityDefinitionCode);
+
+        var dbDefinition = await _dbContext
+            .EntityDefinitions
+            .SingleOrDefaultAsync(e => e.EntityDefinitionCode == command.EntityDefinitionCode);
+
+        if (dbDefinition == null)
         {
-            _dbContext = dbContext;
-            _entityDefinitionRepository = entityDefinitionRepository;
-        }
-
-        public async Task ExecuteAsync(EnsureEntityDefinitionExistsCommand command, IExecutionContext executionContext)
-        {
-            var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(command.EntityDefinitionCode);
-
-            var dbDefinition = await _dbContext
-                .EntityDefinitions
-                .SingleOrDefaultAsync(e => e.EntityDefinitionCode == command.EntityDefinitionCode);
-
-            if (dbDefinition == null)
+            dbDefinition = new EntityDefinition()
             {
-                dbDefinition = new EntityDefinition()
-                {
-                    EntityDefinitionCode = entityDefinition.EntityDefinitionCode,
-                    Name = entityDefinition.Name
-                };
+                EntityDefinitionCode = entityDefinition.EntityDefinitionCode,
+                Name = entityDefinition.Name
+            };
 
-                _dbContext.EntityDefinitions.Add(dbDefinition);
-                await _dbContext.SaveChangesAsync();
-            }
+            _dbContext.EntityDefinitions.Add(dbDefinition);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

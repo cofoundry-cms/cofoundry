@@ -1,67 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <summary>
+/// Service for resizing and caching the resulting image.
+/// </summary>
+public class SimpleResizedImageAssetFileService : IResizedImageAssetFileService
 {
+    private readonly IFileStoreService _fileService;
+    private readonly IQueryExecutor _queryExecutor;
 
-    /// <summary>
-    /// Service for resizing and caching the resulting image.
-    /// </summary>
-    public class SimpleResizedImageAssetFileService : IResizedImageAssetFileService
+    public SimpleResizedImageAssetFileService(
+        IFileStoreService fileService,
+        IQueryExecutor queryExecutor
+        )
     {
-        #region private member variables
+        _fileService = fileService;
+        _queryExecutor = queryExecutor;
+    }
 
-        private readonly IFileStoreService _fileService;
-        private readonly IQueryExecutor _queryExecutor;
+    public Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings inputSettings)
+    {
+        // Resizing only supported via plugin
+        return GetFileStreamAsync(asset.ImageAssetId);
+    }
 
-        #endregion
+    public Task ClearAsync(string fileNameOnDisk)
+    {
+        // nothing to clear
+        return Task.CompletedTask;
+    }
 
-        #region constructor
+    private async Task<Stream> GetFileStreamAsync(int imageAssetId)
+    {
+        var getImageQuery = new GetImageAssetFileByIdQuery(imageAssetId);
+        var result = await _queryExecutor.ExecuteAsync(getImageQuery);
 
-        public SimpleResizedImageAssetFileService(
-            IFileStoreService fileService,
-            IQueryExecutor queryExecutor
-            )
+        if (result == null || result.ContentStream == null)
         {
-            _fileService = fileService;
-            _queryExecutor = queryExecutor;
+            throw new FileNotFoundException(imageAssetId.ToString());
         }
 
-        #endregion
-
-        public Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings inputSettings)
-        {
-            // Resizing only supported via plugin
-            return GetFileStreamAsync(asset.ImageAssetId);
-        }
-
-        public Task ClearAsync(string fileNameOnDisk)
-        {
-            // nothing to clear
-            return Task.CompletedTask;
-        }
-
-        #region private methods
-
-        private async Task<Stream> GetFileStreamAsync(int imageAssetId)
-        {
-            var getImageQuery = new GetImageAssetFileByIdQuery(imageAssetId);
-            var result = await _queryExecutor.ExecuteAsync(getImageQuery);
-
-            if (result == null || result.ContentStream == null)
-            {
-                throw new FileNotFoundException(imageAssetId.ToString());
-            }
-
-            return result.ContentStream;
-        }
-
-        #endregion
+        return result.ContentStream;
     }
 }

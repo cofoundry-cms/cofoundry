@@ -1,53 +1,46 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class GetUpdatePageDirectoryCommandByIdQueryHandler
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
 {
-    public class GetUpdatePageDirectoryCommandByIdQueryHandler
-        : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
-        , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
+    private readonly CofoundryDbContext _dbContext;
+
+    public GetUpdatePageDirectoryCommandByIdQueryHandler(
+        CofoundryDbContext dbContext
+        )
     {
-        private readonly CofoundryDbContext _dbContext;
+        _dbContext = dbContext;
+    }
 
-        public GetUpdatePageDirectoryCommandByIdQueryHandler(
-            CofoundryDbContext dbContext
-            )
+    public async Task<UpdatePageDirectoryCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand> query, IExecutionContext executionContext)
+    {
+        var dbResult = await _dbContext
+            .PageDirectories
+            .AsNoTracking()
+            .FilterById(query.Id)
+            .SingleOrDefaultAsync();
+
+        EntityNotFoundException.ThrowIfNull(dbResult, query.Id);
+
+        if (!dbResult.ParentPageDirectoryId.HasValue)
         {
-            _dbContext = dbContext;
+            throw new NotPermittedException("The root directory cannot be updated.");
         }
 
-        public async Task<UpdatePageDirectoryCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand> query, IExecutionContext executionContext)
+        var command = new UpdatePageDirectoryCommand()
         {
-            var dbResult = await _dbContext
-                .PageDirectories
-                .AsNoTracking()
-                .FilterById(query.Id)
-                .SingleOrDefaultAsync();
+            Name = dbResult.Name,
+            PageDirectoryId = dbResult.PageDirectoryId
+        };
 
-            EntityNotFoundException.ThrowIfNull(dbResult, query.Id);
+        return command;
+    }
 
-            if (!dbResult.ParentPageDirectoryId.HasValue)
-            {
-                throw new NotPermittedException("The root directory cannot be updated.");
-            }
-
-            var command = new UpdatePageDirectoryCommand()
-            {
-                Name = dbResult.Name,
-                PageDirectoryId = dbResult.PageDirectoryId
-            };
-
-            return command;
-        }
-
-        public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand> command)
-        {
-            yield return new PageDirectoryReadPermission();
-        }
+    public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand> command)
+    {
+        yield return new PageDirectoryReadPermission();
     }
 }

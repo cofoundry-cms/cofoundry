@@ -1,141 +1,135 @@
-﻿using Cofoundry.Core;
-using FluentAssertions;
-using System.Threading.Tasks;
-using Xunit;
+﻿namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries;
 
-namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
+[Collection(nameof(DbDependentFixtureCollection))]
+public class IsPageDirectoryPathUniqueQueryHandlerTests
 {
-    [Collection(nameof(DbDependentFixtureCollection))]
-    public class IsPageDirectoryPathUniqueQueryHandlerTests
+    const string UNIQUE_PREFIX = "IsPageDirPathUnqQHT ";
+
+    private readonly DbDependentTestApplicationFactory _appFactory;
+
+    public IsPageDirectoryPathUniqueQueryHandlerTests(
+        DbDependentTestApplicationFactory appFactory
+        )
     {
-        const string UNIQUE_PREFIX = "IsPageDirPathUnqQHT ";
+        _appFactory = appFactory;
+    }
 
-        private readonly DbDependentTestApplicationFactory _appFactory;
+    [Fact]
+    public async Task WhenPathUnique_ReturnsTrue()
+    {
+        var uniqueData = SlugFormatter.ToSlug(UNIQUE_PREFIX + nameof(WhenPathUnique_ReturnsTrue));
 
-        public IsPageDirectoryPathUniqueQueryHandlerTests(
-            DbDependentTestApplicationFactory appFactory
-            )
-        {
-            _appFactory = appFactory;
-        }
+        using var app = _appFactory.Create();
+        var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
 
-        [Fact]
-        public async Task WhenPathUnique_ReturnsTrue()
-        {
-            var uniqueData = SlugFormatter.ToSlug(UNIQUE_PREFIX + nameof(WhenPathUnique_ReturnsTrue));
+        var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+        var isUnique = await contentRepository
+            .PageDirectories()
+            .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
+            {
+                ParentPageDirectoryId = parentDirectoryId,
+                UrlPath = uniqueData + "a"
+            })
+            .ExecuteAsync();
 
-            using var app = _appFactory.Create();
-            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+        isUnique.Should().BeTrue();
+    }
 
-            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            var isUnique = await contentRepository
-                .PageDirectories()
-                .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
-                {
-                    ParentPageDirectoryId = parentDirectoryId,
-                    UrlPath = uniqueData + "a"
-                })
-                .ExecuteAsync();
+    [Fact]
+    public async Task WhenPathNotUnique_ReturnsFalse()
+    {
+        var uniqueData = SlugFormatter.ToSlug(UNIQUE_PREFIX + nameof(WhenPathNotUnique_ReturnsFalse));
 
-            isUnique.Should().BeTrue();
-        }
+        using var app = _appFactory.Create();
+        var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+        var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
 
-        [Fact]
-        public async Task WhenPathNotUnique_ReturnsFalse()
-        {
-            var uniqueData = SlugFormatter.ToSlug(UNIQUE_PREFIX + nameof(WhenPathNotUnique_ReturnsFalse));
+        var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
-            using var app = _appFactory.Create();
-            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
+        var isUnique = await contentRepository
+            .PageDirectories()
+            .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
+            {
+                ParentPageDirectoryId = parentDirectoryId,
+                UrlPath = uniqueData
+            })
+            .ExecuteAsync();
 
-            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+        isUnique.Should().BeFalse();
+    }
 
-            var isUnique = await contentRepository
-                .PageDirectories()
-                .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
-                {
-                    ParentPageDirectoryId = parentDirectoryId,
-                    UrlPath = uniqueData
-                })
-                .ExecuteAsync();
+    [Fact]
+    public async Task WhenExistingDirectoryAndPathNotUnique_ReturnsFalse()
+    {
+        var uniqueData = SlugFormatter.ToSlug(UNIQUE_PREFIX + "ExDirNotUniq_RetFalse");
 
-            isUnique.Should().BeFalse();
-        }
+        using var app = _appFactory.Create();
+        var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+        var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
+        var directory2Patg = uniqueData + "a";
+        await app.TestData.PageDirectories().AddAsync(directory2Patg, parentDirectoryId);
 
-        [Fact]
-        public async Task WhenExistingDirectoryAndPathNotUnique_ReturnsFalse()
-        {
-            var uniqueData = SlugFormatter.ToSlug(UNIQUE_PREFIX + "ExDirNotUniq_RetFalse");
+        var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
-            using var app = _appFactory.Create();
-            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
-            var directory2Patg = uniqueData + "a";
-            await app.TestData.PageDirectories().AddAsync(directory2Patg, parentDirectoryId);
+        var isUnique = await contentRepository
+            .PageDirectories()
+            .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
+            {
+                ParentPageDirectoryId = parentDirectoryId,
+                UrlPath = directory2Patg,
+                PageDirectoryId = childDirectoryId
+            })
+            .ExecuteAsync();
 
-            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+        isUnique.Should().BeFalse();
+    }
 
-            var isUnique = await contentRepository
-                .PageDirectories()
-                .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
-                {
-                    ParentPageDirectoryId = parentDirectoryId,
-                    UrlPath = directory2Patg,
-                    PageDirectoryId = childDirectoryId
-                })
-                .ExecuteAsync();
+    [Fact]
+    public async Task WhenExistingDirectoryAndUnique_ReturnsTrue()
+    {
+        var uniqueData = SlugFormatter.ToSlug(UNIQUE_PREFIX + "ExDirUniq_RetTrue");
 
-            isUnique.Should().BeFalse();
-        }
+        using var app = _appFactory.Create();
+        var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+        var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
+        await app.TestData.PageDirectories().AddAsync(uniqueData + "a", parentDirectoryId);
 
-        [Fact]
-        public async Task WhenExistingDirectoryAndUnique_ReturnsTrue()
-        {
-            var uniqueData = SlugFormatter.ToSlug(UNIQUE_PREFIX + "ExDirUniq_RetTrue");
+        var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
-            using var app = _appFactory.Create();
-            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
-            await app.TestData.PageDirectories().AddAsync(uniqueData + "a", parentDirectoryId);
+        var isUnique = await contentRepository
+            .PageDirectories()
+            .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
+            {
+                ParentPageDirectoryId = parentDirectoryId,
+                UrlPath = uniqueData + "b",
+                PageDirectoryId = childDirectoryId
+            })
+            .ExecuteAsync();
 
-            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+        isUnique.Should().BeTrue();
+    }
 
-            var isUnique = await contentRepository
-                .PageDirectories()
-                .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
-                {
-                    ParentPageDirectoryId = parentDirectoryId,
-                    UrlPath = uniqueData + "b",
-                    PageDirectoryId = childDirectoryId
-                })
-                .ExecuteAsync();
+    [Fact]
+    public async Task WhenExistingDirectoryUnchanged_ReturnsTrue()
+    {
+        var uniqueData = SlugFormatter.ToSlug(UNIQUE_PREFIX + "ExDirUnchanged_RetTrue");
 
-            isUnique.Should().BeTrue();
-        }
+        using var app = _appFactory.Create();
+        var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+        var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
 
-        [Fact]
-        public async Task WhenExistingDirectoryUnchanged_ReturnsTrue()
-        {
-            var uniqueData = SlugFormatter.ToSlug(UNIQUE_PREFIX + "ExDirUnchanged_RetTrue");
+        var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
-            using var app = _appFactory.Create();
-            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var childDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData, parentDirectoryId);
+        var isUnique = await contentRepository
+            .PageDirectories()
+            .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
+            {
+                ParentPageDirectoryId = parentDirectoryId,
+                UrlPath = uniqueData,
+                PageDirectoryId = childDirectoryId
+            })
+            .ExecuteAsync();
 
-            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-
-            var isUnique = await contentRepository
-                .PageDirectories()
-                .IsPathUnique(new IsPageDirectoryPathUniqueQuery()
-                {
-                    ParentPageDirectoryId = parentDirectoryId,
-                    UrlPath = uniqueData,
-                    PageDirectoryId = childDirectoryId
-                })
-                .ExecuteAsync();
-
-            isUnique.Should().BeTrue();
-        }
+        isUnique.Should().BeTrue();
     }
 }

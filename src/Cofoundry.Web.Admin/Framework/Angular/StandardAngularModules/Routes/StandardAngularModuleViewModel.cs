@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Cofoundry.Web.Admin;
 
-namespace Cofoundry.Web.Admin
+public class StandardAngularModuleViewModel
 {
-    public class StandardAngularModuleViewModel
-    {
-        public string Title { get; set; }
+    public string Title { get; set; }
 
-        public AngularModuleRouteLibrary RouteLibrary { get; set; }
-    }
+    public AngularModuleRouteLibrary RouteLibrary { get; set; }
 }

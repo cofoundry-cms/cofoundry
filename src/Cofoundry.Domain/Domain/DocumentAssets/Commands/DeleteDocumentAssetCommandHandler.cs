@@ -1,80 +1,73 @@
 ﻿using Cofoundry.Core.Data;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class DeleteDocumentAssetCommandHandler
+    : ICommandHandler<DeleteDocumentAssetCommand>
+    , IPermissionRestrictedCommandHandler<DeleteDocumentAssetCommand>
 {
-    public class DeleteDocumentAssetCommandHandler
-        : ICommandHandler<DeleteDocumentAssetCommand>
-        , IPermissionRestrictedCommandHandler<DeleteDocumentAssetCommand>
+    private readonly CofoundryDbContext _dbContext;
+    private readonly ICommandExecutor _commandExecutor;
+    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly IMessageAggregator _messageAggregator;
+    private readonly IDependableEntityDeleteCommandValidator _dependableEntityDeleteCommandValidator;
+
+    public DeleteDocumentAssetCommandHandler(
+        CofoundryDbContext dbContext,
+        ICommandExecutor commandExecutor,
+        ITransactionScopeManager transactionScopeFactory,
+        IMessageAggregator messageAggregator,
+        IDependableEntityDeleteCommandValidator dependableEntityDeleteCommandValidator
+        )
     {
-        private readonly CofoundryDbContext _dbContext;
-        private readonly ICommandExecutor _commandExecutor;
-        private readonly ITransactionScopeManager _transactionScopeFactory;
-        private readonly IMessageAggregator _messageAggregator;
-        private readonly IDependableEntityDeleteCommandValidator _dependableEntityDeleteCommandValidator;
+        _dbContext = dbContext;
+        _commandExecutor = commandExecutor;
+        _transactionScopeFactory = transactionScopeFactory;
+        _messageAggregator = messageAggregator;
+        _dependableEntityDeleteCommandValidator = dependableEntityDeleteCommandValidator;
+    }
 
-        public DeleteDocumentAssetCommandHandler(
-            CofoundryDbContext dbContext,
-            ICommandExecutor commandExecutor,
-            ITransactionScopeManager transactionScopeFactory,
-            IMessageAggregator messageAggregator,
-            IDependableEntityDeleteCommandValidator dependableEntityDeleteCommandValidator
-            )
+    public async Task ExecuteAsync(DeleteDocumentAssetCommand command, IExecutionContext executionContext)
+    {
+        var documentAsset = await _dbContext
+            .DocumentAssets
+            .FilterById(command.DocumentAssetId)
+            .SingleOrDefaultAsync();
+
+        if (documentAsset != null)
         {
-            _dbContext = dbContext;
-            _commandExecutor = commandExecutor;
-            _transactionScopeFactory = transactionScopeFactory;
-            _messageAggregator = messageAggregator;
-            _dependableEntityDeleteCommandValidator = dependableEntityDeleteCommandValidator;
-        }
+            await _dependableEntityDeleteCommandValidator.ValidateAsync(DocumentAssetEntityDefinition.DefinitionCode, documentAsset.DocumentAssetId, executionContext);
 
-        public async Task ExecuteAsync(DeleteDocumentAssetCommand command, IExecutionContext executionContext)
-        {
-            var documentAsset = await _dbContext
-                .DocumentAssets
-                .FilterById(command.DocumentAssetId)
-                .SingleOrDefaultAsync();
-
-            if (documentAsset != null)
+            var deleteFileCommand = new QueueAssetFileDeletionCommand()
             {
-                await _dependableEntityDeleteCommandValidator.ValidateAsync(DocumentAssetEntityDefinition.DefinitionCode, documentAsset.DocumentAssetId, executionContext);
+                EntityDefinitionCode = DocumentAssetEntityDefinition.DefinitionCode,
+                FileNameOnDisk = documentAsset.FileNameOnDisk,
+                FileExtension = documentAsset.FileExtension
+            };
+            _dbContext.DocumentAssets.Remove(documentAsset);
 
-                var deleteFileCommand = new QueueAssetFileDeletionCommand()
-                {
-                    EntityDefinitionCode = DocumentAssetEntityDefinition.DefinitionCode,
-                    FileNameOnDisk = documentAsset.FileNameOnDisk,
-                    FileExtension = documentAsset.FileExtension
-                };
-                _dbContext.DocumentAssets.Remove(documentAsset);
+            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            {
+                await _dbContext.SaveChangesAsync();
+                await _commandExecutor.ExecuteAsync(deleteFileCommand, executionContext);
 
-                using (var scope = _transactionScopeFactory.Create(_dbContext))
-                {
-                    await _dbContext.SaveChangesAsync();
-                    await _commandExecutor.ExecuteAsync(deleteFileCommand, executionContext);
-
-                    scope.QueueCompletionTask(() => OnTransactionComplete(command));
-                    await scope.CompleteAsync();
-                }
+                scope.QueueCompletionTask(() => OnTransactionComplete(command));
+                await scope.CompleteAsync();
             }
         }
+    }
 
-        private Task OnTransactionComplete(DeleteDocumentAssetCommand command)
+    private Task OnTransactionComplete(DeleteDocumentAssetCommand command)
+    {
+        return _messageAggregator.PublishAsync(new DocumentAssetAddedMessage()
         {
-            return _messageAggregator.PublishAsync(new DocumentAssetAddedMessage()
-            {
-                DocumentAssetId = command.DocumentAssetId
-            });
-        }
+            DocumentAssetId = command.DocumentAssetId
+        });
+    }
 
-        public IEnumerable<IPermissionApplication> GetPermissions(DeleteDocumentAssetCommand command)
-        {
-            yield return new DocumentAssetDeletePermission();
-        }
+    public IEnumerable<IPermissionApplication> GetPermissions(DeleteDocumentAssetCommand command)
+    {
+        yield return new DocumentAssetDeletePermission();
     }
 }

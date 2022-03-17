@@ -1,11 +1,7 @@
 ﻿using Cofoundry.Core.DependencyInjection;
-using Cofoundry.Web;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Cofoundry.BasicTestSite.Cofoundry.Registration
-{
+namespace Cofoundry.BasicTestSite.Cofoundry.Registration;
+
 public class ExampleDependencyRegistration : IDependencyRegistration
 {
     public void Register(IContainerRegister container)
@@ -17,5 +13,4 @@ public class ExampleDependencyRegistration : IDependencyRegistration
             .Register<IPageViewModelBuilder, ExamplePageViewModelBuilder>(overrideOptions)
             ;
     }
-}
 }

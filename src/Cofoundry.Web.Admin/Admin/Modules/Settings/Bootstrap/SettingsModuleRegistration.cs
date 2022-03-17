@@ -1,40 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
+﻿namespace Cofoundry.Web.Admin;
 
-namespace Cofoundry.Web.Admin
+public class SettingsModuleRegistration : IInternalAngularModuleRegistration
 {
-    public class SettingsModuleRegistration: IInternalAngularModuleRegistration
+    private readonly IAdminRouteLibrary _adminRouteLibrary;
+
+    public SettingsModuleRegistration(
+        IAdminRouteLibrary adminRouteLibrary
+        )
     {
-        private readonly IAdminRouteLibrary _adminRouteLibrary;
+        _adminRouteLibrary = adminRouteLibrary;
+    }
 
-        public SettingsModuleRegistration(
-            IAdminRouteLibrary adminRouteLibrary
-            )
+    public AdminModule GetModule()
+    {
+        var module = new AdminModule()
         {
-            _adminRouteLibrary = adminRouteLibrary;
-        }
+            AdminModuleCode = "COFSET",
+            Title = "Site Settings",
+            Description = "Manage site settings.",
+            MenuCategory = AdminModuleMenuCategory.Settings,
+            PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Primary,
+            Url = _adminRouteLibrary.Settings.Details(),
+            RestrictedToPermission = new SettingsAdminModulePermission()
+        };
 
-        public AdminModule GetModule()
-        {
-            var module = new AdminModule()
-            {
-                AdminModuleCode = "COFSET",
-                Title = "Site Settings",
-                Description = "Manage site settings.",
-                MenuCategory = AdminModuleMenuCategory.Settings,
-                PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Primary,
-                Url = _adminRouteLibrary.Settings.Details(),
-                RestrictedToPermission = new SettingsAdminModulePermission()
-            };
+        return module;
+    }
 
-            return module;
-        }
-
-        public string RoutePrefix
-        {
-            get { return SettingsRouteLibrary.RoutePrefix; }
-        }
+    public string RoutePrefix
+    {
+        get { return SettingsRouteLibrary.RoutePrefix; }
     }
 }

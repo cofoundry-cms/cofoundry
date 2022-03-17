@@ -1,29 +1,26 @@
-﻿using Cofoundry.Domain;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin;
+
+public class PageAccessRulesApiController : BaseAdminApiController
 {
-    public class PageAccessRulesApiController : BaseAdminApiController
+    private readonly IApiResponseHelper _apiResponseHelper;
+
+    public PageAccessRulesApiController(
+        IApiResponseHelper apiResponseHelper
+        )
     {
-        private readonly IApiResponseHelper _apiResponseHelper;
+        _apiResponseHelper = apiResponseHelper;
+    }
 
-        public PageAccessRulesApiController(
-            IApiResponseHelper apiResponseHelper
-            )
-        {
-            _apiResponseHelper = apiResponseHelper;
-        }
+    public async Task<JsonResult> Get(int pageId)
+    {
+        var query = new GetPageAccessRuleSetDetailsByPageIdQuery(pageId);
+        return await _apiResponseHelper.RunQueryAsync(query);
+    }
 
-        public async Task<JsonResult> Get(int pageId)
-        {
-            var query = new GetPageAccessRuleSetDetailsByPageIdQuery(pageId);
-            return await _apiResponseHelper.RunQueryAsync(query);
-        }
-
-        public Task<JsonResult> Patch(int pageId, [FromBody] IDelta<UpdatePageAccessRuleSetCommand> delta)
-        {
-            return _apiResponseHelper.RunCommandAsync(pageId, delta);
-        }
+    public Task<JsonResult> Patch(int pageId, [FromBody] IDelta<UpdatePageAccessRuleSetCommand> delta)
+    {
+        return _apiResponseHelper.RunCommandAsync(pageId, delta);
     }
 }

@@ -1,78 +1,74 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin;
+
+public class PagesApiController : BaseAdminApiController
 {
-    public class PagesApiController : BaseAdminApiController
+    private readonly IApiResponseHelper _apiResponseHelper;
+    private readonly IDomainRepository _domainRepository;
+
+    public PagesApiController(
+        IDomainRepository domainRepository,
+        IApiResponseHelper apiResponseHelper
+        )
     {
-        private readonly IApiResponseHelper _apiResponseHelper;
-        private readonly IDomainRepository _domainRepository;
+        _domainRepository = domainRepository;
+        _apiResponseHelper = apiResponseHelper;
+    }
 
-        public PagesApiController(
-            IDomainRepository domainRepository,
-            IApiResponseHelper apiResponseHelper
-            )
+    public async Task<JsonResult> Get(
+        [FromQuery] SearchPageSummariesQuery query,
+        [FromQuery] GetPageSummariesByIdRangeQuery rangeQuery
+        )
+    {
+        if (rangeQuery != null && rangeQuery.PageIds != null)
         {
-            _domainRepository = domainRepository;
-            _apiResponseHelper = apiResponseHelper;
-        }
-
-        public async Task<JsonResult> Get(
-            [FromQuery] SearchPageSummariesQuery query,
-            [FromQuery] GetPageSummariesByIdRangeQuery rangeQuery
-            )
-        {
-            if (rangeQuery != null && rangeQuery.PageIds != null)
+            return await _apiResponseHelper.RunWithResultAsync(async () =>
             {
-                return await _apiResponseHelper.RunWithResultAsync(async () =>
-                {
-                    return await _domainRepository
-                        .WithQuery(rangeQuery)
-                        .FilterAndOrderByKeys(rangeQuery.PageIds)
-                        .ExecuteAsync();
-                });
-            }
-
-            if (query == null) query = new SearchPageSummariesQuery();
-            ApiPagingHelper.SetDefaultBounds(query);
-
-            return await _apiResponseHelper.RunQueryAsync(query);
+                return await _domainRepository
+                    .WithQuery(rangeQuery)
+                    .FilterAndOrderByKeys(rangeQuery.PageIds)
+                    .ExecuteAsync();
+            });
         }
 
-        public async Task<JsonResult> GetById(int pageId)
-        {
-            var query = new GetPageDetailsByIdQuery(pageId);
-            return await _apiResponseHelper.RunQueryAsync(query);
-        }
+        if (query == null) query = new SearchPageSummariesQuery();
+        ApiPagingHelper.SetDefaultBounds(query);
 
-        public Task<JsonResult> Post([FromBody] AddPageCommand command)
-        {
-            return _apiResponseHelper.RunCommandAsync(command);
-        }
+        return await _apiResponseHelper.RunQueryAsync(query);
+    }
 
-        public Task<JsonResult> Patch(int pageId, [FromBody] IDelta<UpdatePageCommand> delta)
-        {
-            return _apiResponseHelper.RunCommandAsync(pageId, delta);
-        }
+    public async Task<JsonResult> GetById(int pageId)
+    {
+        var query = new GetPageDetailsByIdQuery(pageId);
+        return await _apiResponseHelper.RunQueryAsync(query);
+    }
 
-        public Task<JsonResult> PutPageUrl(int pageId, [FromBody] UpdatePageUrlCommand command)
-        {
-            return _apiResponseHelper.RunCommandAsync(command);
-        }
+    public Task<JsonResult> Post([FromBody] AddPageCommand command)
+    {
+        return _apiResponseHelper.RunCommandAsync(command);
+    }
 
-        public Task<JsonResult> Delete(int pageId)
-        {
-            var command = new DeletePageCommand();
-            command.PageId = pageId;
+    public Task<JsonResult> Patch(int pageId, [FromBody] IDelta<UpdatePageCommand> delta)
+    {
+        return _apiResponseHelper.RunCommandAsync(pageId, delta);
+    }
 
-            return _apiResponseHelper.RunCommandAsync(command);
-        }
+    public Task<JsonResult> PutPageUrl(int pageId, [FromBody] UpdatePageUrlCommand command)
+    {
+        return _apiResponseHelper.RunCommandAsync(command);
+    }
 
-        public async Task<JsonResult> PostDuplicate([FromBody] DuplicatePageCommand command)
-        {
-            return await _apiResponseHelper.RunCommandAsync(command);
-        }
+    public Task<JsonResult> Delete(int pageId)
+    {
+        var command = new DeletePageCommand();
+        command.PageId = pageId;
+
+        return _apiResponseHelper.RunCommandAsync(command);
+    }
+
+    public async Task<JsonResult> PostDuplicate([FromBody] DuplicatePageCommand command)
+    {
+        return await _apiResponseHelper.RunCommandAsync(command);
     }
 }

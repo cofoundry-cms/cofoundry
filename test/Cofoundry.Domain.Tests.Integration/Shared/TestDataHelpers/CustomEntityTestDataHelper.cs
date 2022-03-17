@@ -1,75 +1,69 @@
-﻿using Cofoundry.Core;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Domain.Tests.Integration;
 
-namespace Cofoundry.Domain.Tests.Integration
+/// <summary>
+/// Used to make it easier to create custom entities in test fixtures.
+/// </summary>
+public class CustomEntityTestDataHelper
 {
-    /// <summary>
-    /// Used to make it easier to create custom entities in test fixtures.
-    /// </summary>
-    public class CustomEntityTestDataHelper
+    private readonly IServiceProvider _serviceProvider;
+
+    public CustomEntityTestDataHelper(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
+        _serviceProvider = serviceProvider;
+    }
 
-        public CustomEntityTestDataHelper(IServiceProvider serviceProvider)
+    /// <summary>
+    /// Adds an unpublished custom entity for the 
+    /// <see cref="TestCustomEntityDefinition"/>.
+    /// </summary>
+    /// <param name="uniqueData">
+    /// Unique data to use in creating the Title and UrlSlug property. 
+    /// </param>
+    /// <param name="configration">
+    /// Optional additional configuration action to run before the
+    /// command is executed.
+    /// </param>
+    /// <returns>The CustomEntityId of the newly created custom entity.</returns>
+    public async Task<int> AddAsync(
+        string uniqueData,
+        Action<AddCustomEntityCommand> configration = null
+        )
+    {
+        var command = CreateAddCommand(uniqueData);
+
+        if (configration != null)
         {
-            _serviceProvider = serviceProvider;
+            configration(command);
         }
 
-        /// <summary>
-        /// Adds an unpublished custom entity for the 
-        /// <see cref="TestCustomEntityDefinition"/>.
-        /// </summary>
-        /// <param name="uniqueData">
-        /// Unique data to use in creating the Title and UrlSlug property. 
-        /// </param>
-        /// <param name="configration">
-        /// Optional additional configuration action to run before the
-        /// command is executed.
-        /// </param>
-        /// <returns>The CustomEntityId of the newly created custom entity.</returns>
-        public async Task<int> AddAsync(
-            string uniqueData,
-            Action<AddCustomEntityCommand> configration = null
-            )
+        using var scope = _serviceProvider.CreateScope();
+        var contentRepository = scope
+            .ServiceProvider
+            .GetRequiredService<IAdvancedContentRepository>()
+            .WithElevatedPermissions();
+
+        return await contentRepository
+            .CustomEntities()
+            .AddAsync(command);
+    }
+
+    /// <summary>
+    /// Creates a valid <see cref="AddCustomEntityCommand"/> for the 
+    /// <see cref="TestCustomEntityDefinition"/> without the option to publish.
+    /// </summary>
+    /// <param name="uniqueData">
+    /// Unique data to use in creating the Title and UrlSlug property. 
+    /// </param>
+    public AddCustomEntityCommand CreateAddCommand(string uniqueData)
+    {
+        var command = new AddCustomEntityCommand()
         {
-            var command = CreateAddCommand(uniqueData);
+            Title = uniqueData,
+            CustomEntityDefinitionCode = TestCustomEntityDefinition.Code,
+            Model = new TestCustomEntityDataModel(),
+            UrlSlug = SlugFormatter.ToSlug(uniqueData)
+        };
 
-            if (configration != null)
-            {
-                configration(command);
-            }
-
-            using var scope = _serviceProvider.CreateScope();
-            var contentRepository = scope
-                .ServiceProvider
-                .GetRequiredService<IAdvancedContentRepository>()
-                .WithElevatedPermissions();
-
-            return await contentRepository
-                .CustomEntities()
-                .AddAsync(command);
-        }
-
-        /// <summary>
-        /// Creates a valid <see cref="AddCustomEntityCommand"/> for the 
-        /// <see cref="TestCustomEntityDefinition"/> without the option to publish.
-        /// </summary>
-        /// <param name="uniqueData">
-        /// Unique data to use in creating the Title and UrlSlug property. 
-        /// </param>
-        public AddCustomEntityCommand CreateAddCommand(string uniqueData)
-        {
-            var command = new AddCustomEntityCommand()
-            {
-                Title = uniqueData,
-                CustomEntityDefinitionCode = TestCustomEntityDefinition.Code,
-                Model = new TestCustomEntityDataModel(),
-                UrlSlug = SlugFormatter.ToSlug(uniqueData)
-            };
-
-            return command;
-        }
+        return command;
     }
 }

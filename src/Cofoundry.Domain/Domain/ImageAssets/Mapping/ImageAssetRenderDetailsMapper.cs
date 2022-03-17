@@ -1,52 +1,47 @@
 ﻿using Cofoundry.Domain.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <summary>
+/// Simple mapper for mapping to ImageAssetRenderDetails objects.
+/// </summary>
+public class ImageAssetRenderDetailsMapper : IImageAssetRenderDetailsMapper
 {
-    /// <summary>
-    /// Simple mapper for mapping to ImageAssetRenderDetails objects.
-    /// </summary>
-    public class ImageAssetRenderDetailsMapper : IImageAssetRenderDetailsMapper
+    private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
+
+    public ImageAssetRenderDetailsMapper(
+        IImageAssetRouteLibrary imageAssetRouteLibrary
+        )
     {
-        private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
+        _imageAssetRouteLibrary = imageAssetRouteLibrary;
+    }
 
-        public ImageAssetRenderDetailsMapper(
-            IImageAssetRouteLibrary imageAssetRouteLibrary
-            )
+    /// <summary>
+    /// Maps an EF ImageAsset record from the db into a ImageAssetDetails 
+    /// object. If the db record is null then null is returned.
+    /// </summary>
+    /// <param name="dbImage">ImageAsset record from the database.</param>
+    public ImageAssetRenderDetails Map(ImageAsset dbImage)
+    {
+        if (dbImage == null) return null;
+
+        var image = new ImageAssetRenderDetails()
         {
-            _imageAssetRouteLibrary = imageAssetRouteLibrary;
-        }
+            ImageAssetId = dbImage.ImageAssetId,
+            FileExtension = dbImage.FileExtension,
+            FileName = dbImage.FileName,
+            FileNameOnDisk = dbImage.FileNameOnDisk,
+            Height = dbImage.HeightInPixels,
+            Width = dbImage.WidthInPixels,
+            Title = dbImage.Title,
+            DefaultAnchorLocation = dbImage.DefaultAnchorLocation,
+            FileUpdateDate = dbImage.FileUpdateDate,
+            VerificationToken = dbImage.VerificationToken
+        };
 
-        /// <summary>
-        /// Maps an EF ImageAsset record from the db into a ImageAssetDetails 
-        /// object. If the db record is null then null is returned.
-        /// </summary>
-        /// <param name="dbImage">ImageAsset record from the database.</param>
-        public ImageAssetRenderDetails Map(ImageAsset dbImage)
-        {
-            if (dbImage == null) return null;
+        image.FileStamp = AssetFileStampHelper.ToFileStamp(dbImage.FileUpdateDate);
+        image.Url = _imageAssetRouteLibrary.ImageAsset(image);
 
-            var image = new ImageAssetRenderDetails()
-            {
-                ImageAssetId = dbImage.ImageAssetId,
-                FileExtension = dbImage.FileExtension,
-                FileName = dbImage.FileName,
-                FileNameOnDisk = dbImage.FileNameOnDisk,
-                Height = dbImage.HeightInPixels,
-                Width = dbImage.WidthInPixels,
-                Title = dbImage.Title,
-                DefaultAnchorLocation = dbImage.DefaultAnchorLocation,
-                FileUpdateDate = dbImage.FileUpdateDate,
-                VerificationToken = dbImage.VerificationToken
-            };
-
-            image.FileStamp = AssetFileStampHelper.ToFileStamp(dbImage.FileUpdateDate);
-            image.Url = _imageAssetRouteLibrary.ImageAsset(image);
-
-            return image;
-        }
+        return image;
     }
 }

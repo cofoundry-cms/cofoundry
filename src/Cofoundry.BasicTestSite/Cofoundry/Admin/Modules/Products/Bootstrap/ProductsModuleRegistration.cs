@@ -1,41 +1,35 @@
-﻿using Cofoundry.Domain;
-using Cofoundry.Web.Admin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cofoundry.Web.Admin;
 
-namespace Cofoundry.BasicTestSite
+namespace Cofoundry.BasicTestSite;
+
+public class ProductsModuleRegistration : IStandardAngularModuleRegistration
 {
-    public class ProductsModuleRegistration : IStandardAngularModuleRegistration
+    private readonly AdminSettings _adminSettings;
+
+    public ProductsModuleRegistration(
+        AdminSettings adminSettings
+        )
     {
-        private readonly AdminSettings _adminSettings;
+        _adminSettings = adminSettings;
+    }
 
-        public ProductsModuleRegistration(
-            AdminSettings adminSettings
-            )
+    public AdminModule GetModule()
+    {
+        var module = new AdminModule()
         {
-            _adminSettings = adminSettings;
-        }
+            AdminModuleCode = "BTPPRD",
+            Title = "Products",
+            Description = "Testing module.",
+            MenuCategory = AdminModuleMenuCategory.ManageSite,
+            PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Tertiary,
+            Url = "/" + _adminSettings.DirectoryName + "/" + RoutePrefix
+        };
 
-        public AdminModule GetModule()
-        {
-            var module = new AdminModule()
-            {
-                AdminModuleCode = "BTPPRD",
-                Title = "Products",
-                Description = "Testing module.",
-                MenuCategory = AdminModuleMenuCategory.ManageSite,
-                PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Tertiary,
-                Url = "/" + _adminSettings.DirectoryName + "/" + RoutePrefix
-            };
+        return module;
+    }
 
-            return module;
-        }
-
-        public string RoutePrefix
-        {
-            get { return "products"; }
-        }
+    public string RoutePrefix
+    {
+        get { return "products"; }
     }
 }

@@ -1,31 +1,30 @@
-﻿namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain;
+
+/// <summary>
+/// Permission to delete a custom entity.
+/// </summary>
+public class CustomEntityDeletePermission : ICustomEntityPermissionTemplate
 {
     /// <summary>
-    /// Permission to delete a custom entity.
+    /// Constructor used internally by AuthorizePermissionAttribute.
     /// </summary>
-    public class CustomEntityDeletePermission : ICustomEntityPermissionTemplate
+    public CustomEntityDeletePermission()
     {
-        /// <summary>
-        /// Constructor used internally by AuthorizePermissionAttribute.
-        /// </summary>
-        public CustomEntityDeletePermission()
-        {
-            PermissionType = CommonPermissionTypes.Delete("Not Set");
-        }
+        PermissionType = CommonPermissionTypes.Delete("Not Set");
+    }
 
-        public CustomEntityDeletePermission(ICustomEntityDefinition customEntityDefinition)
-        {
-            EntityDefinition = new CustomEntityDynamicEntityDefinition(customEntityDefinition);
-            PermissionType = CommonPermissionTypes.Delete(customEntityDefinition.NamePlural);
-        }
+    public CustomEntityDeletePermission(ICustomEntityDefinition customEntityDefinition)
+    {
+        EntityDefinition = new CustomEntityDynamicEntityDefinition(customEntityDefinition);
+        PermissionType = CommonPermissionTypes.Delete(customEntityDefinition.NamePlural);
+    }
 
-        public IEntityDefinition EntityDefinition { get; private set; }
-        public PermissionType PermissionType { get; private set; }
+    public IEntityDefinition EntityDefinition { get; private set; }
+    public PermissionType PermissionType { get; private set; }
 
-        public ICustomEntityPermissionTemplate CreateImplemention(ICustomEntityDefinition customEntityDefinition)
-        {
-            var implementedPermission = new CustomEntityDeletePermission(customEntityDefinition);
-            return implementedPermission;
-        }
+    public ICustomEntityPermissionTemplate CreateImplemention(ICustomEntityDefinition customEntityDefinition)
+    {
+        var implementedPermission = new CustomEntityDeletePermission(customEntityDefinition);
+        return implementedPermission;
     }
 }

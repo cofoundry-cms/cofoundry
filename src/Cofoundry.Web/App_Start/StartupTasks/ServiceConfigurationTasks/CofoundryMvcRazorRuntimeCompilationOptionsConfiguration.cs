@@ -1,33 +1,26 @@
-﻿using Cofoundry.Core;
-using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web;
+
+/// <summary>
+/// Extends the MvcRazorRuntimeCompilationOptions configuration adding Cofoundry specific
+/// settings such as extending the FileProviders collection using IResourceFileProviderFactory.
+/// </summary>
+public class CofoundryMvcRazorRuntimeCompilationOptionsConfiguration : IMvcRazorRuntimeCompilationOptionsConfiguration
 {
-    /// <summary>
-    /// Extends the MvcRazorRuntimeCompilationOptions configuration adding Cofoundry specific
-    /// settings such as extending the FileProviders collection using IResourceFileProviderFactory.
-    /// </summary>
-    public class CofoundryMvcRazorRuntimeCompilationOptionsConfiguration : IMvcRazorRuntimeCompilationOptionsConfiguration
+    private readonly IResourceFileProviderFactory _resourceFileProviderFactory;
+
+    public CofoundryMvcRazorRuntimeCompilationOptionsConfiguration(
+        IResourceFileProviderFactory resourceFileProviderFactory
+        )
     {
-        private readonly IResourceFileProviderFactory _resourceFileProviderFactory;
+        _resourceFileProviderFactory = resourceFileProviderFactory;
+    }
 
-        public CofoundryMvcRazorRuntimeCompilationOptionsConfiguration(
-            IResourceFileProviderFactory resourceFileProviderFactory
-            )
-        {
-            _resourceFileProviderFactory = resourceFileProviderFactory;
-        }
+    public void Configure(MvcRazorRuntimeCompilationOptions options)
+    {
+        if (options == null) throw new ArgumentNullException(nameof(options));
 
-        public void Configure(MvcRazorRuntimeCompilationOptions options)
-        {
-            if (options == null) throw new ArgumentNullException(nameof(options));
-
-            options.FileProviders.Add(_resourceFileProviderFactory.Create());
-        }
+        options.FileProviders.Add(_resourceFileProviderFactory.Create());
     }
 }

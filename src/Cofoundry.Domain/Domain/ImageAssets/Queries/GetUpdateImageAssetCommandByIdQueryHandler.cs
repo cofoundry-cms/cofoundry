@@ -1,58 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Microsoft.EntityFrameworkCore;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class GetUpdateImageAssetCommandByIdQueryHandler
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
 {
-    public class GetUpdateImageAssetCommandByIdQueryHandler 
-        : IQueryHandler<GetPatchableCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
-        , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
+    private readonly CofoundryDbContext _dbContext;
+
+    public GetUpdateImageAssetCommandByIdQueryHandler(
+        CofoundryDbContext dbContext
+        )
     {
-        private readonly CofoundryDbContext _dbContext;
+        _dbContext = dbContext;
+    }
 
-        public GetUpdateImageAssetCommandByIdQueryHandler(
-            CofoundryDbContext dbContext
-            )
+    public async Task<UpdateImageAssetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateImageAssetCommand> query, IExecutionContext executionContext)
+    {
+        var dbResult = await _dbContext
+            .ImageAssets
+            .Include(a => a.ImageAssetTags)
+            .ThenInclude(a => a.Tag)
+            .AsNoTracking()
+            .FilterById(query.Id)
+            .SingleOrDefaultAsync();
+
+        if (dbResult == null) return null;
+
+        var result = new UpdateImageAssetCommand()
         {
-            _dbContext = dbContext;
-        }
+            ImageAssetId = dbResult.ImageAssetId,
+            DefaultAnchorLocation = dbResult.DefaultAnchorLocation,
+            Title = dbResult.Title
+        };
 
-        public async Task<UpdateImageAssetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateImageAssetCommand> query, IExecutionContext executionContext)
-        {
-            var dbResult = await _dbContext
-                .ImageAssets
-                .Include(a => a.ImageAssetTags)
-                .ThenInclude(a => a.Tag)
-                .AsNoTracking()
-                .FilterById(query.Id)
-                .SingleOrDefaultAsync();
+        result.Tags = dbResult
+                .ImageAssetTags
+                .Select(t => t.Tag.TagText)
+                .OrderBy(t => t)
+                .ToArray();
 
-            if (dbResult == null) return null;
+        return result;
+    }
 
-            var result = new UpdateImageAssetCommand()
-            {
-                ImageAssetId = dbResult.ImageAssetId,
-                DefaultAnchorLocation = dbResult.DefaultAnchorLocation,
-                Title = dbResult.Title
-            };
-
-            result.Tags = dbResult
-                    .ImageAssetTags
-                    .Select(t => t.Tag.TagText)
-                    .OrderBy(t => t)
-                    .ToArray();
-
-            return result;
-        }
-
-        public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdateImageAssetCommand> query)
-        {
-            yield return new ImageAssetUpdatePermission();
-        }
+    public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdateImageAssetCommand> query)
+    {
+        yield return new ImageAssetUpdatePermission();
     }
 }

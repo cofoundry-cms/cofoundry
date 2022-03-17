@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin;
+
+public class CustomEntityRoutingRulesApiController : BaseAdminApiController
 {
-    public class CustomEntityRoutingRulesApiController : BaseAdminApiController
+    private readonly IApiResponseHelper _apiResponseHelper;
+
+    public CustomEntityRoutingRulesApiController(
+        IApiResponseHelper apiResponseHelper
+        )
     {
-        private readonly IApiResponseHelper _apiResponseHelper;
+        _apiResponseHelper = apiResponseHelper;
+    }
 
-        public CustomEntityRoutingRulesApiController(
-            IApiResponseHelper apiResponseHelper
-            )
-        {
-            _apiResponseHelper = apiResponseHelper;
-        }
-
-        public async Task<JsonResult> Get()
-        {
-            return await _apiResponseHelper.RunQueryAsync(new GetAllCustomEntityRoutingRulesQuery());
-        }
+    public async Task<JsonResult> Get()
+    {
+        return await _apiResponseHelper.RunQueryAsync(new GetAllCustomEntityRoutingRulesQuery());
     }
 }

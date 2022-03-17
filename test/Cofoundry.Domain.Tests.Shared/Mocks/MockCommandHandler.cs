@@ -1,33 +1,30 @@
 ﻿using Cofoundry.Domain.CQS;
-using System;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Tests.Shared.Mocks
+namespace Cofoundry.Domain.Tests.Shared.Mocks;
+
+public class MockCommandHandler<TCommand>
+    : ICommandHandler<TCommand>
+    , IIgnorePermissionCheckHandler
+    where TCommand : ICommand
 {
-    public class MockCommandHandler<TCommand>
-        : ICommandHandler<TCommand>
-        , IIgnorePermissionCheckHandler
-        where TCommand : ICommand
+    private readonly Func<TCommand, Task> _handlerDelegate;
+
+    public MockCommandHandler(Action<TCommand> handlerDelegate)
     {
-        private readonly Func<TCommand, Task> _handlerDelegate;
-
-        public MockCommandHandler(Action<TCommand> handlerDelegate)
+        _handlerDelegate = command =>
         {
-            _handlerDelegate = command =>
-            {
-                handlerDelegate(command);
-                return Task.CompletedTask;
-            };
-        }
+            handlerDelegate(command);
+            return Task.CompletedTask;
+        };
+    }
 
-        public MockCommandHandler(Func<TCommand, Task> asyncHandlerDelegate)
-        {
-            _handlerDelegate = asyncHandlerDelegate;
-        }
+    public MockCommandHandler(Func<TCommand, Task> asyncHandlerDelegate)
+    {
+        _handlerDelegate = asyncHandlerDelegate;
+    }
 
-        public Task ExecuteAsync(TCommand command, IExecutionContext executionContext)
-        {
-            return _handlerDelegate.Invoke(command);
-        }
+    public Task ExecuteAsync(TCommand command, IExecutionContext executionContext)
+    {
+        return _handlerDelegate.Invoke(command);
     }
 }

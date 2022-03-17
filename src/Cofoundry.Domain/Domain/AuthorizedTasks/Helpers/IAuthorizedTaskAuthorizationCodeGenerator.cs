@@ -1,7 +1,6 @@
-﻿namespace Cofoundry.Domain.Internal
+﻿namespace Cofoundry.Domain.Internal;
+
+public interface IAuthorizedTaskAuthorizationCodeGenerator
 {
-    public interface IAuthorizedTaskAuthorizationCodeGenerator
-    {
-        string Generate();
-    }
+    string Generate();
 }

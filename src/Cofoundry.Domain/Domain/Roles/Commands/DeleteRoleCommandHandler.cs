@@ -1,91 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Data;
-using Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <summary>
+/// Deletes a role with the specified database id. Roles cannot be
+/// deleted if assigned to users.
+/// </summary>
+public class DeleteRoleCommandHandler
+    : ICommandHandler<DeleteRoleCommand>
+    , IPermissionRestrictedCommandHandler<DeleteRoleCommand>
 {
-    /// <summary>
-    /// Deletes a role with the specified database id. Roles cannot be
-    /// deleted if assigned to users.
-    /// </summary>
-    public class DeleteRoleCommandHandler 
-        : ICommandHandler<DeleteRoleCommand>
-        , IPermissionRestrictedCommandHandler<DeleteRoleCommand>
+    private readonly CofoundryDbContext _dbContext;
+    private readonly IRoleCache _roleCache;
+    private readonly ITransactionScopeManager _transactionScopeFactory;
+
+    public DeleteRoleCommandHandler(
+        CofoundryDbContext dbContext,
+        UserCommandPermissionsHelper userCommandPermissionsHelper,
+        IRoleCache roleCache,
+        ITransactionScopeManager transactionScopeFactory
+        )
     {
-        #region constructor
+        _dbContext = dbContext;
+        _roleCache = roleCache;
+        _transactionScopeFactory = transactionScopeFactory;
+    }
 
-        private readonly CofoundryDbContext _dbContext;
-        private readonly IRoleCache _roleCache;
-        private readonly ITransactionScopeManager _transactionScopeFactory;
+    public async Task ExecuteAsync(DeleteRoleCommand command, IExecutionContext executionContext)
+    {
+        var role = await _dbContext
+            .Roles
+            .FilterById(command.RoleId)
+            .SingleOrDefaultAsync();
 
-        public DeleteRoleCommandHandler(
-            CofoundryDbContext dbContext,
-            UserCommandPermissionsHelper userCommandPermissionsHelper,
-            IRoleCache roleCache,
-            ITransactionScopeManager transactionScopeFactory
-            )
+        if (role != null)
         {
-            _dbContext = dbContext;
-            _roleCache = roleCache;
-            _transactionScopeFactory = transactionScopeFactory;
+            ValidateCanDelete(role, command);
+
+            _dbContext.Roles.Remove(role);
+
+            await _dbContext.SaveChangesAsync();
+            _transactionScopeFactory.QueueCompletionTask(_dbContext, () => _roleCache.Clear(command.RoleId));
+        }
+    }
+
+    private void ValidateCanDelete(Role role, DeleteRoleCommand command)
+    {
+        if (role.RoleCode == AnonymousRole.Code)
+        {
+            throw new ValidationException("The anonymous role cannot be deleted.");
         }
 
-        #endregion
-
-        public async Task ExecuteAsync(DeleteRoleCommand command, IExecutionContext executionContext)
+        if (role.RoleCode == SuperAdminRole.Code)
         {
-            var role = await _dbContext
-                .Roles
-                .FilterById(command.RoleId)
-                .SingleOrDefaultAsync();
-
-            if (role != null)
-            {
-                ValidateCanDelete(role, command);
-
-                _dbContext.Roles.Remove(role);
-
-                await _dbContext.SaveChangesAsync();
-                _transactionScopeFactory.QueueCompletionTask(_dbContext, () => _roleCache.Clear(command.RoleId));
-            }
+            throw new ValidationException("The super administrator role cannot be deleted.");
         }
 
-        private void ValidateCanDelete(Role role, DeleteRoleCommand command)
+        var isInUse = _dbContext
+            .Users
+            .Any(u => u.RoleId == command.RoleId);
+
+        if (isInUse)
         {
-            if (role.RoleCode == AnonymousRole.Code)
-            {
-                throw new ValidationException("The anonymous role cannot be deleted.");
-            }
-
-            if (role.RoleCode == SuperAdminRole.Code)
-            {
-                throw new ValidationException("The super administrator role cannot be deleted.");
-            }
-
-            var isInUse = _dbContext
-                .Users
-                .Any(u => u.RoleId == command.RoleId);
-
-            if (isInUse)
-            {
-                throw new ValidationException("Role is in use and cannot be deleted.");
-            }
+            throw new ValidationException("Role is in use and cannot be deleted.");
         }
+    }
 
-        #region Permission
-
-        public IEnumerable<IPermissionApplication> GetPermissions(DeleteRoleCommand command)
-        {
-            yield return new RoleDeletePermission();
-        }
-
-        #endregion
+    public IEnumerable<IPermissionApplication> GetPermissions(DeleteRoleCommand command)
+    {
+        yield return new RoleDeletePermission();
     }
 }

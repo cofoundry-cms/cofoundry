@@ -1,57 +1,54 @@
-﻿using Cofoundry.Domain;
-using Cofoundry.Domain.Extendable;
+﻿using Cofoundry.Domain.Extendable;
 using Cofoundry.Web.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web;
+
+public static class IDomainRepositoryExtensions
 {
-    public static class IDomainRepositoryExtensions
+    /// <summary>
+    /// Wraps query and command execution with error handling code that pipes validation
+    /// exceptions and validation query results into model state. Additionally if the
+    /// model state is invalid prior to execution, then execution will be skipped.
+    /// </summary>
+    /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
+    public static TRepository WithModelState<TRepository>(this TRepository repository, ControllerBase controller)
+        where TRepository : IDomainRepository
     {
-        /// <summary>
-        /// Wraps query and command execution with error handling code that pipes validation
-        /// exceptions and validation query results into model state. Additionally if the
-        /// model state is invalid prior to execution, then execution will be skipped.
-        /// </summary>
-        /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
-        public static TRepository WithModelState<TRepository>(this TRepository repository, ControllerBase controller)
-            where TRepository : IDomainRepository
-        {
-            if (controller == null) throw new ArgumentNullException(nameof(controller));
+        if (controller == null) throw new ArgumentNullException(nameof(controller));
 
-            var extendedContentRepositry = repository.AsExtendableContentRepository();
-            return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithModelState(executor, controller.ModelState, null));
-        }
+        var extendedContentRepositry = repository.AsExtendableContentRepository();
+        return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithModelState(executor, controller.ModelState, null));
+    }
 
-        /// <summary>
-        /// Wraps query and command execution with error handling code that pipes validation
-        /// exceptions and validation query results into model state. Additionally if the
-        /// model state is invalid prior to execution, then execution will be skipped.
-        /// </summary>
-        /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
-        public static TRepository WithModelState<TRepository>(this TRepository repository, Controller controller)
-            where TRepository : IDomainRepository
-        {
-            if (controller == null) throw new ArgumentNullException(nameof(controller));
+    /// <summary>
+    /// Wraps query and command execution with error handling code that pipes validation
+    /// exceptions and validation query results into model state. Additionally if the
+    /// model state is invalid prior to execution, then execution will be skipped.
+    /// </summary>
+    /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
+    public static TRepository WithModelState<TRepository>(this TRepository repository, Controller controller)
+        where TRepository : IDomainRepository
+    {
+        if (controller == null) throw new ArgumentNullException(nameof(controller));
 
-            var extendedContentRepositry = repository.AsExtendableContentRepository();
-            return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithModelState(executor, controller.ModelState, controller.ViewData.TemplateInfo));
-        }
+        var extendedContentRepositry = repository.AsExtendableContentRepository();
+        return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithModelState(executor, controller.ModelState, controller.ViewData.TemplateInfo));
+    }
 
-        /// <summary>
-        /// Wraps query and command execution with error handling code that pipes validation
-        /// exceptions and validation query results into model state. Additionally if the
-        /// model state is invalid prior to execution, then execution will be skipped.
-        /// </summary>
-        /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
-        public static TRepository WithModelState<TRepository>(this TRepository repository, PageModel pageModel)
-            where TRepository : IDomainRepository
-        {
-            if (pageModel == null) throw new ArgumentNullException(nameof(pageModel));
+    /// <summary>
+    /// Wraps query and command execution with error handling code that pipes validation
+    /// exceptions and validation query results into model state. Additionally if the
+    /// model state is invalid prior to execution, then execution will be skipped.
+    /// </summary>
+    /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
+    public static TRepository WithModelState<TRepository>(this TRepository repository, PageModel pageModel)
+        where TRepository : IDomainRepository
+    {
+        if (pageModel == null) throw new ArgumentNullException(nameof(pageModel));
 
-            var extendedContentRepositry = repository.AsExtendableContentRepository();
-            return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithModelState(executor, pageModel.ModelState, pageModel.ViewData.TemplateInfo));
-        }
+        var extendedContentRepositry = repository.AsExtendableContentRepository();
+        return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithModelState(executor, pageModel.ModelState, pageModel.ViewData.TemplateInfo));
     }
 }

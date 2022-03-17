@@ -1,14 +1,6 @@
-﻿using Cofoundry.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Cofoundry.Web
-{
+﻿namespace Cofoundry.Web;
 //    public static class BreadcrumbUIControlExtension
 //    {
-//        #region public methods
-
 //        /// <summary>
 //        /// Renders a list of breadcrumb links using the default template.
 //        /// </summary>
@@ -62,10 +54,6 @@ namespace Cofoundry.Web
 //            return helper.HtmlHelper.Partial(partialViewName, GetBreadCrumbsViewModel(helper));
 //        }
 
-//        #endregion
-
-//        #region private helpers
-
 //        private static BreadcrumbsViewModel GetBreadCrumbsViewModel(IUIViewHelper helper)
 //        {
 //            var pageViewModel = helper.HtmlHelper.ViewData.Model as IPageRoutableViewModel;
@@ -110,7 +98,4 @@ namespace Cofoundry.Web
 //        {
 //            return pageRouting.PageDirectoryRoutes.SingleOrDefault(d => d.PageDirectoryId == currentDirectory.ParentWebDirectoryId);
 //        }
-
-//        #endregion
 //    }
-}

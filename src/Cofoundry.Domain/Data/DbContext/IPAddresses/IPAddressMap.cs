@@ -1,22 +1,19 @@
-using Cofoundry.Core;
 using Cofoundry.Core.EntityFramework;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Cofoundry.Domain.Data
+namespace Cofoundry.Domain.Data;
+
+public class IPAddressMap : IEntityTypeConfiguration<IPAddress>
 {
-    public class IPAddressMap : IEntityTypeConfiguration<IPAddress>
+    public void Configure(EntityTypeBuilder<IPAddress> builder)
     {
-        public void Configure(EntityTypeBuilder<IPAddress> builder)
-        {
-            builder.ToTable(nameof(IPAddress), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(IPAddress), DbConstants.CofoundrySchema);
 
-            builder.Property(s => s.Address)
-                .IsUnicode(false)
-                .HasMaxLength(45)
-                .IsRequired(true);
+        builder.Property(s => s.Address)
+            .IsUnicode(false)
+            .HasMaxLength(45)
+            .IsRequired(true);
 
-            builder.Property(s => s.CreateDate).IsUtc();
-        }
+        builder.Property(s => s.CreateDate).IsUtc();
     }
 }

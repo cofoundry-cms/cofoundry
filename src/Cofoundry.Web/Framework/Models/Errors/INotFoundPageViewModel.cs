@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
+﻿namespace Cofoundry.Web;
 
-namespace Cofoundry.Web
+public interface INotFoundPageViewModel : IErrorPageViewModel
 {
-    public interface INotFoundPageViewModel : IErrorPageViewModel
-    {
-    }
 }

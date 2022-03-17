@@ -1,88 +1,82 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.Data;
+﻿using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Internal;
 using Cofoundry.Domain.Tests.Integration.Mocks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Tests.Integration
+namespace Cofoundry.Domain.Tests.Integration;
+
+/// <summary>
+/// Used to make it easier to create or reference page 
+/// directories in test fixtures.
+/// </summary>
+public class PageTemplateTestDataHelper
 {
-    /// <summary>
-    /// Used to make it easier to create or reference page 
-    /// directories in test fixtures.
-    /// </summary>
-    public class PageTemplateTestDataHelper
+    private readonly IServiceProvider _serviceProvider;
+
+    public PageTemplateTestDataHelper(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
+        _serviceProvider = serviceProvider;
+    }
 
-        public PageTemplateTestDataHelper(IServiceProvider serviceProvider)
+    /// <summary>
+    /// Adds a unique page template that references the "ArchivableTemplate" file
+    /// using the provided <paramref name="uniqueData"/> as the template name.
+    /// </summary>
+    /// <param name="uniqueData">
+    /// Unique data to use as the template file name in place of the real file name.
+    /// </param>
+    /// <returns>The PageTemplateId of the newly created page template.</returns>
+    public async Task<int> AddMockTemplateAsync(string uniqueData)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var pageTemplateViewFileLocator = scope.ServiceProvider.GetService<IPageTemplateViewFileLocator>() as TestPageTemplateViewFileLocator;
+        var dbContext = scope.ServiceProvider.GetRequiredService<CofoundryDbContext>();
+        var contentRepository = scope
+            .ServiceProvider
+            .GetRequiredService<IAdvancedContentRepository>()
+            .WithElevatedPermissions();
+
+        if (pageTemplateViewFileLocator == null)
         {
-            _serviceProvider = serviceProvider;
+            throw new InvalidOperationException($"In testing, {nameof(IPageTemplateViewFileLocator)} should be an instance of {nameof(TestPageTemplateViewFileLocator)}");
         }
 
-        /// <summary>
-        /// Adds a unique page template that references the "ArchivableTemplate" file
-        /// using the provided <paramref name="uniqueData"/> as the template name.
-        /// </summary>
-        /// <param name="uniqueData">
-        /// Unique data to use as the template file name in place of the real file name.
-        /// </param>
-        /// <returns>The PageTemplateId of the newly created page template.</returns>
-        public async Task<int> AddMockTemplateAsync(string uniqueData)
+        pageTemplateViewFileLocator.AddMockTemplateFile(new PageTemplateFile()
         {
-            using var scope = _serviceProvider.CreateScope();
-            var pageTemplateViewFileLocator = scope.ServiceProvider.GetService<IPageTemplateViewFileLocator>() as TestPageTemplateViewFileLocator;
-            var dbContext = scope.ServiceProvider.GetRequiredService<CofoundryDbContext>();
-            var contentRepository = scope
-                .ServiceProvider
-                .GetRequiredService<IAdvancedContentRepository>()
-                .WithElevatedPermissions();
+            FileName = uniqueData,
+            VirtualPath = "/Shared/SeedData/PageTemplates/MockTemplate.cshtml"
+        });
 
-            if (pageTemplateViewFileLocator == null)
-            {
-                throw new InvalidOperationException($"In testing, {nameof(IPageTemplateViewFileLocator)} should be an instance of {nameof(TestPageTemplateViewFileLocator)}");
-            }
+        await contentRepository.ExecuteCommandAsync(new RegisterPageTemplatesCommand());
 
-            pageTemplateViewFileLocator.AddMockTemplateFile(new PageTemplateFile()
-            {
-                FileName = uniqueData,
-                VirtualPath = "/Shared/SeedData/PageTemplates/MockTemplate.cshtml"
-            });
+        var templateId = await dbContext
+            .PageTemplates
+            .Where(t => t.FileName == uniqueData)
+            .Select(t => t.PageTemplateId)
+            .SingleAsync();
 
-            await contentRepository.ExecuteCommandAsync(new RegisterPageTemplatesCommand());
+        return templateId;
+    }
 
-            var templateId = await dbContext
-                .PageTemplates
-                .Where(t => t.FileName == uniqueData)
-                .Select(t => t.PageTemplateId)
-                .SingleAsync();
+    /// <summary>
+    /// Forces a template to be set as archived directly in the database, which
+    /// is usually only done if the template file is deleted. Only use this for
+    /// mock templates created for specific tests.
+    /// </summary>
+    public async Task ArchiveTemplateAsync(int pageTemplateId)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<CofoundryDbContext>();
 
-            return templateId;
-        }
+        var template = await dbContext
+            .PageTemplates
+            .FilterByPageTemplateId(pageTemplateId)
+            .SingleAsync();
 
-        /// <summary>
-        /// Forces a template to be set as archived directly in the database, which
-        /// is usually only done if the template file is deleted. Only use this for
-        /// mock templates created for specific tests.
-        /// </summary>
-        public async Task ArchiveTemplateAsync(int pageTemplateId)
-        {
-            using var scope = _serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<CofoundryDbContext>();
+        EntityNotFoundException.ThrowIfNull(template, pageTemplateId);
 
-            var template = await dbContext
-                .PageTemplates
-                .FilterByPageTemplateId(pageTemplateId)
-                .SingleAsync();
+        template.IsArchived = true;
 
-            EntityNotFoundException.ThrowIfNull(template, pageTemplateId);
-
-            template.IsArchived = true;
-
-            await dbContext.SaveChangesAsync();
-        }
+        await dbContext.SaveChangesAsync();
     }
 }

@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿namespace Cofoundry.Domain;
 
-namespace Cofoundry.Domain
+public static class EntityAccessRuleSetCollectionExtensions
 {
-    public static class EntityAccessRuleSetCollectionExtensions
+    /// <summary>
+    /// Filters the collection to include only rule sets not authorized to
+    /// be accessed by the <paramref name="user"/>.
+    /// </summary>
+    /// <param name="accessRules">The <see cref="EntityAccessRule"/> collection to filer.</param>
+    /// <param name="user">The <see cref="IUserContext"/> to filter on. Cannot be null.</param>
+    /// <returns>A collection of rules that don't match the specified user account.</returns>
+    public static IEnumerable<EntityAccessRuleSet> GetRuleViolations(this IEnumerable<EntityAccessRuleSet> accessRules, IUserContext user)
     {
-        /// <summary>
-        /// Filters the collection to include only rule sets not authorized to
-        /// be accessed by the <paramref name="user"/>.
-        /// </summary>
-        /// <param name="accessRules">The <see cref="EntityAccessRule"/> collection to filer.</param>
-        /// <param name="user">The <see cref="IUserContext"/> to filter on. Cannot be null.</param>
-        /// <returns>A collection of rules that don't match the specified user account.</returns>
-        public static IEnumerable<EntityAccessRuleSet> GetRuleViolations(this IEnumerable<EntityAccessRuleSet> accessRules, IUserContext user)
-        {
-            if (user == null) throw new ArgumentNullException(nameof(user));
+        if (user == null) throw new ArgumentNullException(nameof(user));
 
-            return accessRules.Where(r => !r.IsAuthorized(user));
-        }
+        return accessRules.Where(r => !r.IsAuthorized(user));
     }
 }

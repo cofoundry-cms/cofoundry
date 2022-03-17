@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
-using Microsoft.AspNetCore.Html;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Html;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web;
+
+public class RichTextDisplayModelMapper : IPageBlockTypeDisplayModelMapper<RichTextDataModel>
 {
-    public class RichTextDisplayModelMapper : IPageBlockTypeDisplayModelMapper<RichTextDataModel>
+    public Task MapAsync(
+        PageBlockTypeDisplayModelMapperContext<RichTextDataModel> context,
+        PageBlockTypeDisplayModelMapperResult<RichTextDataModel> result
+        )
     {
-        public Task MapAsync(
-            PageBlockTypeDisplayModelMapperContext<RichTextDataModel> context,
-            PageBlockTypeDisplayModelMapperResult<RichTextDataModel> result
-            )
+        foreach (var item in context.Items)
         {
-            foreach (var item in context.Items)
-            {
-                var displayModel = new RichTextDisplayModel();
-                displayModel.RawHtml = new HtmlString(item.DataModel.RawHtml);
+            var displayModel = new RichTextDisplayModel();
+            displayModel.RawHtml = new HtmlString(item.DataModel.RawHtml);
 
-                result.Add(item, displayModel);
-            }
-
-            return Task.CompletedTask;
+            result.Add(item, displayModel);
         }
+
+        return Task.CompletedTask;
     }
 }

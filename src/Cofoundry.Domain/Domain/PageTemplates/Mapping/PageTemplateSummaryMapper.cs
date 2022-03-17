@@ -1,44 +1,38 @@
 ﻿using Cofoundry.Domain.QueryModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <inheritdoc/>
+public class PageTemplateSummaryMapper : IPageTemplateSummaryMapper
 {
-    /// <inheritdoc/>
-    public class PageTemplateSummaryMapper : IPageTemplateSummaryMapper
+    private readonly IPageTemplateCustomEntityTypeMapper _pageTemplateCustomEntityTypeMapper;
+
+    public PageTemplateSummaryMapper(
+        IPageTemplateCustomEntityTypeMapper pageTemplateCustomEntityTypeMapper
+        )
     {
-        private readonly IPageTemplateCustomEntityTypeMapper _pageTemplateCustomEntityTypeMapper;
+        _pageTemplateCustomEntityTypeMapper = pageTemplateCustomEntityTypeMapper;
+    }
 
-        public PageTemplateSummaryMapper(
-            IPageTemplateCustomEntityTypeMapper pageTemplateCustomEntityTypeMapper
-            )
+    public virtual PageTemplateSummary Map(PageTemplateSummaryQueryModel queryModel)
+    {
+        var dbPageTemplate = queryModel?.PageTemplate;
+        if (dbPageTemplate == null) return null;
+
+        var pageTemplate = new PageTemplateSummary()
         {
-            _pageTemplateCustomEntityTypeMapper = pageTemplateCustomEntityTypeMapper;
-        }
+            IsArchived = dbPageTemplate.IsArchived,
+            Name = dbPageTemplate.Name,
+            PageTemplateId = dbPageTemplate.PageTemplateId,
+            CreateDate = dbPageTemplate.CreateDate,
+            Description = dbPageTemplate.Description,
+            FileName = dbPageTemplate.FileName,
+            PageType = (PageType)dbPageTemplate.PageTypeId,
+            UpdateDate = dbPageTemplate.UpdateDate,
+            NumPages = queryModel.NumPages,
+            NumRegions = queryModel.NumRegions
+        };
 
-        public virtual PageTemplateSummary Map(PageTemplateSummaryQueryModel queryModel)
-        {
-            var dbPageTemplate = queryModel?.PageTemplate;
-            if (dbPageTemplate == null) return null;
-            
-            var pageTemplate = new PageTemplateSummary()
-            {
-                IsArchived = dbPageTemplate.IsArchived,
-                Name = dbPageTemplate.Name,
-                PageTemplateId = dbPageTemplate.PageTemplateId,
-                CreateDate = dbPageTemplate.CreateDate,
-                Description = dbPageTemplate.Description,
-                FileName = dbPageTemplate.FileName,
-                PageType = (PageType)dbPageTemplate.PageTypeId,
-                UpdateDate = dbPageTemplate.UpdateDate,
-                NumPages = queryModel.NumPages,
-                NumRegions = queryModel.NumRegions
-            };
-
-            return pageTemplate;
-        }
+        return pageTemplate;
     }
 }

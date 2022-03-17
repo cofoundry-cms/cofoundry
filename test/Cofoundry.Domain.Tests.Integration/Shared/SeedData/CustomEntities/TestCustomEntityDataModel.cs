@@ -1,8 +1,7 @@
-﻿namespace Cofoundry.Domain.Tests.Integration
+﻿namespace Cofoundry.Domain.Tests.Integration;
+
+public class TestCustomEntityDataModel
+    : ICustomEntityDataModel
+    , ICustomEntityDisplayModel
 {
-    public class TestCustomEntityDataModel 
-        : ICustomEntityDataModel
-        , ICustomEntityDisplayModel
-    {
-    }
 }

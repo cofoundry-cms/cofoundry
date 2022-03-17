@@ -1,30 +1,28 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <inheritdoc/>
+public class ContentRepositoryUserAccountVerificationRepository
+        : IAdvancedContentRepositoryUserAccountVerificationRepository
+        , IExtendableContentRepositoryPart
 {
-    /// <inheritdoc/>
-    public class ContentRepositoryUserAccountVerificationRepository
-            : IAdvancedContentRepositoryUserAccountVerificationRepository
-            , IExtendableContentRepositoryPart
+    public ContentRepositoryUserAccountVerificationRepository(
+        IExtendableContentRepository contentRepository
+        )
     {
-        public ContentRepositoryUserAccountVerificationRepository(
-            IExtendableContentRepository contentRepository
-            )
-        {
-            ExtendableContentRepository = contentRepository;
-        }
+        ExtendableContentRepository = contentRepository;
+    }
 
-        public IExtendableContentRepository ExtendableContentRepository { get; }
+    public IExtendableContentRepository ExtendableContentRepository { get; }
 
-        public Task UpdateStatusAsync(UpdateUserAccountVerificationStatusCommand command)
-        {
-            return ExtendableContentRepository.ExecuteCommandAsync(command);
-        }
+    public Task UpdateStatusAsync(UpdateUserAccountVerificationStatusCommand command)
+    {
+        return ExtendableContentRepository.ExecuteCommandAsync(command);
+    }
 
-        public IAdvancedContentRepositoryUserAccountVerificationByEmailRepository EmailFlow()
-        {
-            return new ContentRepositoryUserAccountVerificationByEmailRepository(ExtendableContentRepository);
-        }
+    public IAdvancedContentRepositoryUserAccountVerificationByEmailRepository EmailFlow()
+    {
+        return new ContentRepositoryUserAccountVerificationByEmailRepository(ExtendableContentRepository);
     }
 }

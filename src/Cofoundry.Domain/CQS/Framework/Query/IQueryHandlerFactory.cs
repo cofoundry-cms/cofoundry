@@ -1,14 +1,13 @@
-﻿namespace Cofoundry.Domain.CQS.Internal
+﻿namespace Cofoundry.Domain.CQS.Internal;
+
+/// <summary>
+/// Factory to create IQueryHandler instances. This factory allows you to override
+/// or wrap the existing IQueryHandler implementation
+/// </summary>
+public interface IQueryHandlerFactory
 {
     /// <summary>
-    /// Factory to create IQueryHandler instances. This factory allows you to override
-    /// or wrap the existing IQueryHandler implementation
+    /// Creates a new IAsyncQueryHandler instance with the specified type signature.
     /// </summary>
-    public interface IQueryHandlerFactory
-    {
-        /// <summary>
-        /// Creates a new IAsyncQueryHandler instance with the specified type signature.
-        /// </summary>
-        IQueryHandler<TQuery, TResult> CreateAsyncHandler<TQuery, TResult>() where TQuery : IQuery<TResult>;
-    }
+    IQueryHandler<TQuery, TResult> CreateAsyncHandler<TQuery, TResult>() where TQuery : IQuery<TResult>;
 }

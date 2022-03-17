@@ -1,54 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core;
-using System.Threading.Tasks;
+﻿namespace Cofoundry.Web;
 
-namespace Cofoundry.Web
+public class ImageDisplayModelMapper : IPageBlockTypeDisplayModelMapper<ImageDataModel>
 {
-    public class ImageDisplayModelMapper : IPageBlockTypeDisplayModelMapper<ImageDataModel>
+    private IQueryExecutor _queryExecutor;
+    private IImageAssetRouteLibrary _imageAssetRouteLibrary;
+
+    public ImageDisplayModelMapper(
+        IQueryExecutor queryExecutor,
+        IImageAssetRouteLibrary imageAssetRouteLibrary
+        )
     {
-        #region Constructor
+        _queryExecutor = queryExecutor;
+        _imageAssetRouteLibrary = imageAssetRouteLibrary;
+    }
 
-        private IQueryExecutor _queryExecutor;
-        private IImageAssetRouteLibrary _imageAssetRouteLibrary;
+    public async Task MapAsync(
+        PageBlockTypeDisplayModelMapperContext<ImageDataModel> context,
+        PageBlockTypeDisplayModelMapperResult<ImageDataModel> result
+        )
+    {
+        var imageAssetIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.ImageId);
+        var imagesQuery = new GetImageAssetRenderDetailsByIdRangeQuery(imageAssetIds);
+        var images = await _queryExecutor.ExecuteAsync(imagesQuery, context.ExecutionContext);
 
-        public ImageDisplayModelMapper(
-            IQueryExecutor queryExecutor,
-            IImageAssetRouteLibrary imageAssetRouteLibrary
-            )
+        foreach (var item in context.Items)
         {
-            _queryExecutor = queryExecutor;
-            _imageAssetRouteLibrary = imageAssetRouteLibrary;
-        }
-
-        #endregion
-
-        public async Task MapAsync(
-            PageBlockTypeDisplayModelMapperContext<ImageDataModel> context, 
-            PageBlockTypeDisplayModelMapperResult<ImageDataModel> result
-            )
-        {
-            var imageAssetIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.ImageId);
-            var imagesQuery = new GetImageAssetRenderDetailsByIdRangeQuery(imageAssetIds);
-            var images = await _queryExecutor.ExecuteAsync(imagesQuery, context.ExecutionContext);
-
-            foreach (var item in context.Items)
+            var displayModel = new ImageDisplayModel()
             {
-                var displayModel = new ImageDisplayModel()
-                {
-                    AltText = item.DataModel.AltText,
-                    LinkPath = item.DataModel.LinkPath,
-                    LinkTarget = item.DataModel.LinkTarget
-                };
+                AltText = item.DataModel.AltText,
+                LinkPath = item.DataModel.LinkPath,
+                LinkTarget = item.DataModel.LinkTarget
+            };
 
-                var image = images.GetOrDefault(item.DataModel.ImageId);
-                displayModel.Source = _imageAssetRouteLibrary.ImageAsset(image);
+            var image = images.GetOrDefault(item.DataModel.ImageId);
+            displayModel.Source = _imageAssetRouteLibrary.ImageAsset(image);
 
-                result.Add(item, displayModel);
-            }
+            result.Add(item, displayModel);
         }
     }
 }

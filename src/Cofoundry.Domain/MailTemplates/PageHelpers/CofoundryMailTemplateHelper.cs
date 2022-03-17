@@ -1,19 +1,18 @@
-﻿namespace Cofoundry.Domain.MailTemplates.Internal
+﻿namespace Cofoundry.Domain.MailTemplates.Internal;
+
+/// <inheritdoc/>
+public class CofoundryMailTemplateHelper : ICofoundryMailTemplateHelper
 {
-    /// <inheritdoc/>
-    public class CofoundryMailTemplateHelper : ICofoundryMailTemplateHelper
+    public CofoundryMailTemplateHelper(
+        IContentRouteLibrary contentRouteLibrary,
+        IHtmlSanitizerHelper htmlSanitizerHelper
+        )
     {
-        public CofoundryMailTemplateHelper(
-            IContentRouteLibrary contentRouteLibrary,
-            IHtmlSanitizerHelper htmlSanitizerHelper
-            )
-        {
-            Routing = contentRouteLibrary;
-            Sanitizer = htmlSanitizerHelper;
-        }
-
-        public IContentRouteLibrary Routing { get; private set; }
-
-        public IHtmlSanitizerHelper Sanitizer { get; private set; }
+        Routing = contentRouteLibrary;
+        Sanitizer = htmlSanitizerHelper;
     }
+
+    public IContentRouteLibrary Routing { get; private set; }
+
+    public IHtmlSanitizerHelper Sanitizer { get; private set; }
 }

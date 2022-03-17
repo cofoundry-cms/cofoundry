@@ -1,44 +1,40 @@
-﻿using Cofoundry.Domain;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Linq;
+﻿using Microsoft.Extensions.Hosting;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web;
+
+/// <inheritdoc/>
+public class AuthCookieNamespaceProvider : IAuthCookieNamespaceProvider
 {
-    /// <inheritdoc/>
-    public class AuthCookieNamespaceProvider : IAuthCookieNamespaceProvider
+    private readonly IHostEnvironment _hostingEnvironment;
+    private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
+
+    public AuthCookieNamespaceProvider(
+        IHostEnvironment hostingEnvironment,
+        IUserAreaDefinitionRepository userAreaDefinitionRepository
+        )
     {
-        private readonly IHostEnvironment _hostingEnvironment;
-        private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
+        _hostingEnvironment = hostingEnvironment;
+        _userAreaDefinitionRepository = userAreaDefinitionRepository;
+    }
 
-        public AuthCookieNamespaceProvider(
-            IHostEnvironment hostingEnvironment,
-            IUserAreaDefinitionRepository userAreaDefinitionRepository
-            )
+    public string GetNamespace(string userAreaCode)
+    {
+        var options = _userAreaDefinitionRepository.GetOptionsByCode(userAreaCode).Cookies;
+
+        if (!string.IsNullOrWhiteSpace(options.Namespace))
         {
-            _hostingEnvironment = hostingEnvironment;
-            _userAreaDefinitionRepository = userAreaDefinitionRepository;
+            return options.Namespace;
         }
 
-        public string GetNamespace(string userAreaCode)
-        {
-            var options = _userAreaDefinitionRepository.GetOptionsByCode(userAreaCode).Cookies;
+        // Try and build a short and somewhat unique name using the 
+        // application name, which should suffice for most scenarios. 
+        var appName = _hostingEnvironment.ApplicationName;
 
-            if (!string.IsNullOrWhiteSpace(options.Namespace))
-            {
-                return options.Namespace;
-            }
+        var reasonablyUniqueName = appName
+            .Take(3)
+            .Union(appName.Reverse())
+            .Take(6);
 
-            // Try and build a short and somewhat unique name using the 
-            // application name, which should suffice for most scenarios. 
-            var appName = _hostingEnvironment.ApplicationName;
-
-            var reasonablyUniqueName = appName
-                .Take(3)
-                .Union(appName.Reverse())
-                .Take(6);
-
-            return "CFA_" + string.Concat(reasonablyUniqueName);
-        }
+        return "CFA_" + string.Concat(reasonablyUniqueName);
     }
 }

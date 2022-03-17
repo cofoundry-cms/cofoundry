@@ -1,87 +1,75 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Core.Time;
+﻿using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
-using Cofoundry.Domain;
-using Cofoundry.Domain.Tests.Integration;
-using Cofoundry.Domain.Tests.Shared;
-using Cofoundry.Web.Tests.Integration.TestWebApp;
-using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Xunit;
 
-namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Claims
+namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Claims;
+
+[Collection(nameof(DbDependentTestApplicationFactory))]
+public class ClaimsPrincipalValidatorTests
 {
-    [Collection(nameof(DbDependentTestApplicationFactory))]
-    public class ClaimsPrincipalValidatorTests
+    const string UNIQUE_PREFIX = "ClaimsPrincipalValT";
+
+    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly TestWebApplicationFactory _webApplicationFactory;
+
+    public ClaimsPrincipalValidatorTests(
+        DbDependentTestApplicationFactory appFactory,
+        TestWebApplicationFactory webApplicationFactory
+        )
     {
-        const string UNIQUE_PREFIX = "ClaimsPrincipalValT";
+        _appFactory = appFactory;
+        _webApplicationFactory = webApplicationFactory;
+    }
 
-        private readonly DbDependentTestApplicationFactory _appFactory;
-        private readonly TestWebApplicationFactory _webApplicationFactory;
+    [Fact]
+    public async Task WhenNoChange_Validates()
+    {
+        var seedDate = DateTimeOffset.UtcNow;
+        var dateTimeService = new MockDateTimeService(seedDate);
 
-        public ClaimsPrincipalValidatorTests(
-            DbDependentTestApplicationFactory appFactory,
-            TestWebApplicationFactory webApplicationFactory
-            )
-        {
-            _appFactory = appFactory;
-            _webApplicationFactory = webApplicationFactory;
-        }
+        using var app = _webApplicationFactory.CreateApp();
+        using var client = _webApplicationFactory.CreateClientWithServices(s => s.AddSingleton<IDateTimeService>(dateTimeService));
+        var user = app.SeededEntities.TestUserArea1.RoleA.User;
 
-        [Fact]
-        public async Task WhenNoChange_Validates()
-        {
-            var seedDate = DateTimeOffset.UtcNow;
-            var dateTimeService = new MockDateTimeService(seedDate);
+        await client.ImpersonateUserAsync(user);
+        dateTimeService.MockDateTime = seedDate.AddMinutes(35);
+        var userId = await GetCurrentlySignedInUserId(client);
 
-            using var app = _webApplicationFactory.CreateApp();
-            using var client = _webApplicationFactory.CreateClientWithServices(s => s.AddSingleton<IDateTimeService>(dateTimeService));
-            var user = app.SeededEntities.TestUserArea1.RoleA.User;
+        userId.Should().Be(user.UserId);
+    }
 
-            await client.ImpersonateUserAsync(user);
-            dateTimeService.MockDateTime = seedDate.AddMinutes(35);
-            var userId = await GetCurrentlySignedInUserId(client);
+    [Fact]
+    public async Task WhenSecurityStampUpdated_Invalidates()
+    {
+        var uniqueData = "SecurityStampUpd_Inval";
 
-            userId.Should().Be(user.UserId);
-        }
+        var seedDate = DateTimeOffset.UtcNow;
+        var dateTimeService = new MockDateTimeService(seedDate);
 
-        [Fact]
-        public async Task WhenSecurityStampUpdated_Invalidates()
-        {
-            var uniqueData = "SecurityStampUpd_Inval";
+        using var app = _webApplicationFactory.CreateApp();
+        using var client1 = _webApplicationFactory.CreateClientWithServices(s => s.AddSingleton<IDateTimeService>(dateTimeService));
+        using var client2 = _webApplicationFactory.CreateClientWithServices(s => s.AddSingleton<IDateTimeService>(dateTimeService));
+        var userId = await app.TestData.Users().AddAsync(uniqueData, UNIQUE_PREFIX);
 
-            var seedDate = DateTimeOffset.UtcNow;
-            var dateTimeService = new MockDateTimeService(seedDate);
+        await client1.ImpersonateUserAsync(userId);
+        await client2.ImpersonateUserAsync(userId);
 
-            using var app = _webApplicationFactory.CreateApp();
-            using var client1 = _webApplicationFactory.CreateClientWithServices(s => s.AddSingleton<IDateTimeService>(dateTimeService));
-            using var client2 = _webApplicationFactory.CreateClientWithServices(s => s.AddSingleton<IDateTimeService>(dateTimeService));
-            var userId = await app.TestData.Users().AddAsync(uniqueData, UNIQUE_PREFIX);
+        var response = await client1.PutAsync($"/tests/users/password/{userId}", null);
+        response.EnsureSuccessStatusCode();
 
-            await client1.ImpersonateUserAsync(userId);
-            await client2.ImpersonateUserAsync(userId);
+        dateTimeService.MockDateTime = seedDate.AddMinutes(35);
+        var client1UserId = await GetCurrentlySignedInUserId(client1);
+        var client2UserId = await GetCurrentlySignedInUserId(client2);
 
-            var response = await client1.PutAsync($"/tests/users/password/{userId}", null);
-            response.EnsureSuccessStatusCode();
+        client1UserId.Should().Be(userId);
+        client2UserId.Should().BeNull();
+    }
 
-            dateTimeService.MockDateTime = seedDate.AddMinutes(35);
-            var client1UserId = await GetCurrentlySignedInUserId(client1);
-            var client2UserId = await GetCurrentlySignedInUserId(client2);
+    private async Task<int?> GetCurrentlySignedInUserId(HttpClient client)
+    {
+        var response = await client.GetAsync("/tests/users/current");
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadAsStringAsync();
 
-            client1UserId.Should().Be(userId);
-            client2UserId.Should().BeNull();
-        }
-
-        private async Task<int?> GetCurrentlySignedInUserId(HttpClient client)
-        {
-            var response = await client.GetAsync("/tests/users/current");
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-
-            return IntParser.ParseOrNull(result);
-        }
+        return IntParser.ParseOrNull(result);
     }
 }

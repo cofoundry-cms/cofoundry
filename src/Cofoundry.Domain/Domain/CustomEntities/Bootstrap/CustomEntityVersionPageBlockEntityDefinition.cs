@@ -1,23 +1,19 @@
-﻿using Cofoundry.Domain.CQS;
-using System.Collections.Generic;
+﻿namespace Cofoundry.Domain;
 
-namespace Cofoundry.Domain
+/// <summary>
+/// Page block data for a specific custom entity version on a custom entity
+/// details page.
+/// </summary>
+public sealed class CustomEntityVersionPageBlockEntityDefinition : IDependableEntityDefinition
 {
-    /// <summary>
-    /// Page block data for a specific custom entity version on a custom entity
-    /// details page.
-    /// </summary>
-    public sealed class CustomEntityVersionPageBlockEntityDefinition : IDependableEntityDefinition
+    public static string DefinitionCode = "COFCEB";
+
+    public string EntityDefinitionCode => DefinitionCode;
+
+    public string Name => "Custom Entity Version Page Block";
+
+    public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
     {
-        public static string DefinitionCode = "COFCEB";
-
-        public string EntityDefinitionCode => DefinitionCode;
-
-        public string Name => "Custom Entity Version Page Block";
-
-        public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
-        {
-            return new GetCustomEntityVersionPageBlockEntityMicroSummariesByIdRangeQuery(ids);
-        }
+        return new GetCustomEntityVersionPageBlockEntityMicroSummariesByIdRangeQuery(ids);
     }
 }

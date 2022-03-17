@@ -1,19 +1,18 @@
-﻿namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain;
+
+/// <summary>
+/// Message published when a user is added.
+/// </summary>
+public class UserAddedMessage
 {
     /// <summary>
-    /// Message published when a user is added.
+    /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
+    /// the user was added to.
     /// </summary>
-    public class UserAddedMessage
-    {
-        /// <summary>
-        /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
-        /// the user was added to.
-        /// </summary>
-        public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; }
 
-        /// <summary>
-        /// Id of the newly added user.
-        /// </summary>
-        public int UserId { get; set; }
-    }
+    /// <summary>
+    /// Id of the newly added user.
+    /// </summary>
+    public int UserId { get; set; }
 }

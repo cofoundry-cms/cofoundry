@@ -1,32 +1,29 @@
-﻿using Cofoundry.Domain;
-using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Cofoundry.Web.Auth.Internal
+namespace Cofoundry.Web.Auth.Internal;
+
+/// <summary>
+/// Handles the authorization of the <see cref="UserAreaAuthorizationRequirement"/> in
+/// an authorization policy.
+/// </summary>
+public class UserAreaAuthorizationHandler : AuthorizationHandler<UserAreaAuthorizationRequirement>
 {
-    /// <summary>
-    /// Handles the authorization of the <see cref="UserAreaAuthorizationRequirement"/> in
-    /// an authorization policy.
-    /// </summary>
-    public class UserAreaAuthorizationHandler : AuthorizationHandler<UserAreaAuthorizationRequirement>
+    private readonly IUserContextService _userContextService;
+
+    public UserAreaAuthorizationHandler(
+        IUserContextService userContextService
+        )
     {
-        private readonly IUserContextService _userContextService;
+        _userContextService = userContextService;
+    }
 
-        public UserAreaAuthorizationHandler(
-            IUserContextService userContextService
-            )
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserAreaAuthorizationRequirement requirement)
+    {
+        var user = await _userContextService.GetCurrentContextAsync();
+
+        if (user.IsSignedIn() && user.UserArea.UserAreaCode == requirement.UserAreaCode)
         {
-            _userContextService = userContextService;
-        }
-
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserAreaAuthorizationRequirement requirement)
-        {
-            var user = await _userContextService.GetCurrentContextAsync();
-
-            if (user.IsSignedIn() && user.UserArea.UserAreaCode == requirement.UserAreaCode)
-            {
-                context.Succeed(requirement);
-            }
+            context.Succeed(requirement);
         }
     }
 }

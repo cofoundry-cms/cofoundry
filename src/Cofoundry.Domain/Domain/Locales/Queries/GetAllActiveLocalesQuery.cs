@@ -1,11 +1,5 @@
-﻿using Cofoundry.Domain.CQS;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Cofoundry.Domain;
 
-namespace Cofoundry.Domain
+public class GetAllActiveLocalesQuery : IQuery<ICollection<ActiveLocale>>
 {
-    public class GetAllActiveLocalesQuery : IQuery<ICollection<ActiveLocale>>
-    {
-    }
 }

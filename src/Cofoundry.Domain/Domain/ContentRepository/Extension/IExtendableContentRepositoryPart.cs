@@ -1,17 +1,16 @@
-﻿namespace Cofoundry.Domain.Extendable
+﻿namespace Cofoundry.Domain.Extendable;
+
+/// <summary>
+/// Used to mark up nested content repository parts such
+/// as query builders which allows for extension without 
+/// poluting the public api surface.
+/// </summary>
+public interface IExtendableContentRepositoryPart : IContentRepositoryPart
 {
     /// <summary>
-    /// Used to mark up nested content repository parts such
-    /// as query builders which allows for extension without 
-    /// poluting the public api surface.
+    /// The base content repository that can be leveraged in
+    /// custom extensions. Intended only to be used internally
+    /// by Cofoundry or by plugins that need to extend IContentRepository.
     /// </summary>
-    public interface IExtendableContentRepositoryPart : IContentRepositoryPart
-    {
-        /// <summary>
-        /// The base content repository that can be leveraged in
-        /// custom extensions. Intended only to be used internally
-        /// by Cofoundry or by plugins that need to extend IContentRepository.
-        /// </summary>
-        IExtendableContentRepository ExtendableContentRepository { get; }
-    }
+    IExtendableContentRepository ExtendableContentRepository { get; }
 }

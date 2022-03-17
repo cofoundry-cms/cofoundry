@@ -1,36 +1,35 @@
 ﻿using Cofoundry.Domain.Extendable;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class ContentRepositoryUserByUsernameQueryBuilder
+    : IContentRepositoryUserByUsernameQueryBuilder
+    , IExtendableContentRepositoryPart
 {
-    public class ContentRepositoryUserByUsernameQueryBuilder
-        : IContentRepositoryUserByUsernameQueryBuilder
-        , IExtendableContentRepositoryPart
+    private readonly string _userAreaCode;
+    private readonly string _username;
+
+    public ContentRepositoryUserByUsernameQueryBuilder(
+        IExtendableContentRepository contentRepository,
+        string userAreaCode,
+        string username
+        )
     {
-        private readonly string _userAreaCode;
-        private readonly string _username;
+        ExtendableContentRepository = contentRepository;
+        _userAreaCode = userAreaCode;
+        _username = username;
+    }
 
-        public ContentRepositoryUserByUsernameQueryBuilder(
-            IExtendableContentRepository contentRepository,
-            string userAreaCode,
-            string username
-            )
+    public IExtendableContentRepository ExtendableContentRepository { get; }
+
+    public IDomainRepositoryQueryContext<UserMicroSummary> AsMicroSummary()
+    {
+        var query = new GetUserMicroSummaryByUsernameQuery()
         {
-            ExtendableContentRepository = contentRepository;
-            _userAreaCode = userAreaCode;
-            _username = username;
-        }
+            UserAreaCode = _userAreaCode,
+            Username = _username
+        };
 
-        public IExtendableContentRepository ExtendableContentRepository { get; }
-
-        public IDomainRepositoryQueryContext<UserMicroSummary> AsMicroSummary()
-        {
-            var query = new GetUserMicroSummaryByUsernameQuery()
-            {
-                UserAreaCode = _userAreaCode,
-                Username = _username
-            };
-
-            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
-        }
+        return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 }

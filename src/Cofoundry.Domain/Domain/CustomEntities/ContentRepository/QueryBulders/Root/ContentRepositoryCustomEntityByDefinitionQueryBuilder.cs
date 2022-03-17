@@ -1,44 +1,39 @@
 ﻿using Cofoundry.Domain.Extendable;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+public class ContentRepositoryCustomEntityByDefinitionQueryBuilder
+    : IContentRepositoryCustomEntityByDefinitionQueryBuilder
+    , IExtendableContentRepositoryPart
 {
-    public class ContentRepositoryCustomEntityByDefinitionQueryBuilder
-        : IContentRepositoryCustomEntityByDefinitionQueryBuilder
-        , IExtendableContentRepositoryPart
+    private readonly string _customEntityDefinitionCode;
+
+    public ContentRepositoryCustomEntityByDefinitionQueryBuilder(
+        IExtendableContentRepository contentRepository,
+        string customEntityDefinitionCode
+        )
     {
-        private readonly string _customEntityDefinitionCode;
+        ExtendableContentRepository = contentRepository;
+        _customEntityDefinitionCode = customEntityDefinitionCode;
+    }
 
-        public ContentRepositoryCustomEntityByDefinitionQueryBuilder(
-            IExtendableContentRepository contentRepository,
-            string customEntityDefinitionCode
-            )
+    public IExtendableContentRepository ExtendableContentRepository { get; }
+
+    public IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null)
+    {
+        var query = new GetCustomEntityRenderSummariesByDefinitionCodeQuery(_customEntityDefinitionCode);
+
+        if (publishStatusQuery.HasValue)
         {
-            ExtendableContentRepository = contentRepository;
-            _customEntityDefinitionCode = customEntityDefinitionCode;
+            query.PublishStatus = publishStatusQuery.Value;
         }
 
-        public IExtendableContentRepository ExtendableContentRepository { get; }
+        return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
+    }
 
-        public IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null)
-        {
-            var query = new GetCustomEntityRenderSummariesByDefinitionCodeQuery(_customEntityDefinitionCode);
-
-            if (publishStatusQuery.HasValue)
-            {
-                query.PublishStatus = publishStatusQuery.Value;
-            }
-
-            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
-        }
-
-        public IDomainRepositoryQueryContext<ICollection<CustomEntityRoute>> AsRoutes()
-        {
-            var query = new GetCustomEntityRoutesByDefinitionCodeQuery(_customEntityDefinitionCode);
-            return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
-        }
+    public IDomainRepositoryQueryContext<ICollection<CustomEntityRoute>> AsRoutes()
+    {
+        var query = new GetCustomEntityRoutesByDefinitionCodeQuery(_customEntityDefinitionCode);
+        return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 }

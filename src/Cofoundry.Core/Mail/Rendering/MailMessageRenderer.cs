@@ -1,82 +1,76 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
-namespace Cofoundry.Core.Mail.Internal
+namespace Cofoundry.Core.Mail.Internal;
+
+/// <summary>
+/// Renders the contents of a mail template to html/text strings in preparation for 
+/// sending out as an email.
+/// </summary>
+public class MailMessageRenderer : IMailMessageRenderer
 {
-    /// <summary>
-    /// Renders the contents of a mail template to html/text strings in preparation for 
-    /// sending out as an email.
-    /// </summary>
-    public class MailMessageRenderer : IMailMessageRenderer
+    private readonly IMailViewRenderer _viewRenderer;
+
+    public MailMessageRenderer(
+        IMailViewRenderer viewRenderer
+        )
     {
-        private readonly IMailViewRenderer _viewRenderer;
+        _viewRenderer = viewRenderer;
+    }
 
-        public MailMessageRenderer(
-            IMailViewRenderer viewRenderer
-            )
+    /// <summary>
+    ///  Renders the contents of a mail template and formats it into a MailMessage
+    ///  object that can be used to send out an email.
+    /// </summary>
+    /// <param name="template">The mail template that describes the data and template information for the email</param>
+    /// <param name="toAddress">The address to send the email to.</param>
+    /// <returns>Formatted MailMessage</returns>
+    public async Task<MailMessage> RenderAsync(IMailTemplate template, MailAddress toAddress)
+    {
+        var message = new MailMessage();
+
+        message.Subject = template.Subject;
+        message.To = toAddress;
+        FormatFromAddress(template, message);
+
+        var textBody = await RenderViewAsync(template, "text");
+
+        if (!string.IsNullOrWhiteSpace(textBody))
         {
-            _viewRenderer = viewRenderer;
+            // Remove any html encodings created by the Razor parser
+            message.TextBody = WebUtility.HtmlDecode(textBody);
+        }
+        message.HtmlBody = await RenderViewAsync(template, "html");
+
+        if (message.HtmlBody == null && message.TextBody == null)
+        {
+            throw new InvalidOperationException($"Couldn't find a text or html mail template file for '{template.ViewFile}'");
         }
 
-        /// <summary>
-        ///  Renders the contents of a mail template and formats it into a MailMessage
-        ///  object that can be used to send out an email.
-        /// </summary>
-        /// <param name="template">The mail template that describes the data and template information for the email</param>
-        /// <param name="toAddress">The address to send the email to.</param>
-        /// <returns>Formatted MailMessage</returns>
-        public async Task<MailMessage> RenderAsync(IMailTemplate template, MailAddress toAddress)
+        return message;
+    }
+
+    private void FormatFromAddress(IMailTemplate template, MailMessage message)
+    {
+        if (template is IMailTemplateWithCustomFromAddress)
         {
-            var message = new MailMessage();
+            message.From = ((IMailTemplateWithCustomFromAddress)template).From;
+        }
+    }
 
-            message.Subject = template.Subject;
-            message.To = toAddress;
-            FormatFromAddress(template, message);
+    private async Task<string> RenderViewAsync(IMailTemplate template, string type)
+    {
+        var path = string.Format("{0}_{1}.cshtml", template.ViewFile, type);
+        string view = null;
 
-            var textBody = await RenderViewAsync(template, "text");
-
-            if (!string.IsNullOrWhiteSpace(textBody))
-            {
-                // Remove any html encodings created by the Razor parser
-                message.TextBody = WebUtility.HtmlDecode(textBody);
-            }
-            message.HtmlBody = await RenderViewAsync(template, "html");
-
-             if (message.HtmlBody == null&& message.TextBody == null)
-            {
-                throw new InvalidOperationException($"Couldn't find a text or html mail template file for '{template.ViewFile}'");
-            }
-
-            return message;
+        try
+        {
+            view = await _viewRenderer.RenderAsync(path, template);
+        }
+        catch (Exception ex)
+        {
+            throw new TemplateRenderException(path, template, ex);
         }
 
-        private void FormatFromAddress(IMailTemplate template, MailMessage message)
-        {
-            if (template is IMailTemplateWithCustomFromAddress)
-            {
-                message.From = ((IMailTemplateWithCustomFromAddress)template).From;
-            }
-        }
-
-        private async Task<string> RenderViewAsync(IMailTemplate template, string type)
-        {
-            var path = string.Format("{0}_{1}.cshtml", template.ViewFile, type);
-            string view = null;
-
-            try
-            {
-                view = await _viewRenderer.RenderAsync(path, template);
-            }
-            catch (Exception ex)
-            {
-                throw new TemplateRenderException(path, template, ex);
-            }
-
-            return view?.Trim();
-        }
+        return view?.Trim();
     }
 }

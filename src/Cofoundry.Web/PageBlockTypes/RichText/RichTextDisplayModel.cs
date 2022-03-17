@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Cofoundry.Domain;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 
-namespace Cofoundry.Web
+namespace Cofoundry.Web;
+
+public class RichTextDisplayModel : IPageBlockTypeDisplayModel
 {
-    public class RichTextDisplayModel : IPageBlockTypeDisplayModel
-    {
-        public HtmlString RawHtml { get; set; }
-    }
+    public HtmlString RawHtml { get; set; }
 }

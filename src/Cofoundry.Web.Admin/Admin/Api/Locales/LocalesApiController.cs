@@ -1,24 +1,21 @@
-﻿using Cofoundry.Domain;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Cofoundry.Web.Admin
+namespace Cofoundry.Web.Admin;
+
+public class LocalesApiController : BaseAdminApiController
 {
-    public class LocalesApiController : BaseAdminApiController
+    private readonly IApiResponseHelper _apiResponseHelper;
+
+    public LocalesApiController(
+        IApiResponseHelper apiResponseHelper
+        )
     {
-        private readonly IApiResponseHelper _apiResponseHelper;
+        _apiResponseHelper = apiResponseHelper;
+    }
 
-        public LocalesApiController(
-            IApiResponseHelper apiResponseHelper
-            )
-        {
-            _apiResponseHelper = apiResponseHelper;
-        }
-
-        public async Task<JsonResult> Get()
-        {
-            var query = new GetAllActiveLocalesQuery();
-            return await _apiResponseHelper.RunQueryAsync(query);
-        }
+    public async Task<JsonResult> Get()
+    {
+        var query = new GetAllActiveLocalesQuery();
+        return await _apiResponseHelper.RunQueryAsync(query);
     }
 }

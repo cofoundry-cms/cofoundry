@@ -1,99 +1,85 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Domain.Data;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Core.MessageAggregator;
-using Cofoundry.Core;
+﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.Internal
+namespace Cofoundry.Domain.Internal;
+
+/// <summary>
+/// Changes the order of a single custom entity. The custom entity 
+/// definition must implement IOrderableCustomEntityDefintion to be 
+/// able to set ordering.
+/// </summary>
+public class UpdateCustomEntityOrderingPositionCommandHandler
+    : ICommandHandler<UpdateCustomEntityOrderingPositionCommand>
+    , IIgnorePermissionCheckHandler
 {
-    /// <summary>
-    /// Changes the order of a single custom entity. The custom entity 
-    /// definition must implement IOrderableCustomEntityDefintion to be 
-    /// able to set ordering.
-    /// </summary>
-    public class UpdateCustomEntityOrderingPositionCommandHandler
-        : ICommandHandler<UpdateCustomEntityOrderingPositionCommand>
-        , IIgnorePermissionCheckHandler
+    private readonly CofoundryDbContext _dbContext;
+    private readonly ICustomEntityCache _customEntityCache;
+    private readonly IMessageAggregator _messageAggregator;
+    private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
+    private readonly IPermissionValidationService _permissionValidationService;
+
+    public UpdateCustomEntityOrderingPositionCommandHandler(
+        CofoundryDbContext dbContext,
+        ICustomEntityCache customEntityCache,
+        IMessageAggregator messageAggregator,
+        ICustomEntityDefinitionRepository customEntityDefinitionRepository,
+        IPermissionValidationService permissionValidationService
+        )
     {
-        #region constructor
+        _dbContext = dbContext;
+        _customEntityCache = customEntityCache;
+        _messageAggregator = messageAggregator;
+        _customEntityDefinitionRepository = customEntityDefinitionRepository;
+        _permissionValidationService = permissionValidationService;
+    }
 
-        private readonly CofoundryDbContext _dbContext;
-        private readonly ICustomEntityCache _customEntityCache;
-        private readonly IMessageAggregator _messageAggregator;
-        private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
-        private readonly IPermissionValidationService _permissionValidationService;
+    public async Task ExecuteAsync(UpdateCustomEntityOrderingPositionCommand command, IExecutionContext executionContext)
+    {
+        var customEntity = await _dbContext
+            .CustomEntities
+            .AsNoTracking()
+            .FilterByCustomEntityId(command.CustomEntityId)
+            .FirstOrDefaultAsync();
 
-        public UpdateCustomEntityOrderingPositionCommandHandler(
-            CofoundryDbContext dbContext,
-            ICustomEntityCache customEntityCache,
-            IMessageAggregator messageAggregator,
-            ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-            IPermissionValidationService permissionValidationService
-            )
+        EntityNotFoundException.ThrowIfNull(customEntity, command.CustomEntityId);
+        _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(customEntity.CustomEntityDefinitionCode, executionContext.UserContext);
+
+        if (!command.Position.HasValue)
         {
-            _dbContext = dbContext;
-            _customEntityCache = customEntityCache;
-            _messageAggregator = messageAggregator;
-            _customEntityDefinitionRepository = customEntityDefinitionRepository;
-            _permissionValidationService = permissionValidationService;
+            // The new position might be null (which means no ordering allocated)
+            await SetOrderingNull(customEntity);
         }
-
-        #endregion
-
-        public async Task ExecuteAsync(UpdateCustomEntityOrderingPositionCommand command, IExecutionContext executionContext)
+        else
         {
-            var customEntity = await _dbContext
+            var orderedIds = await _dbContext
                 .CustomEntities
-                .AsNoTracking()
-                .FilterByCustomEntityId(command.CustomEntityId)
-                .FirstOrDefaultAsync();
+                .Where(e => e.CustomEntityDefinitionCode == customEntity.CustomEntityDefinitionCode
+                    && e.CustomEntityId != command.CustomEntityId
+                    && e.Ordering.HasValue)
+                .OrderBy(e => e.Ordering)
+                .Select(e => e.CustomEntityId)
+                .ToListAsync();
 
-            EntityNotFoundException.ThrowIfNull(customEntity, command.CustomEntityId);
-            _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(customEntity.CustomEntityDefinitionCode, executionContext.UserContext);
+            var newPos = orderedIds.Count <= command.Position ? command.Position : null;
 
-            if (!command.Position.HasValue)
+            if (!newPos.HasValue)
             {
-                // The new position might be null (which means no ordering allocated)
                 await SetOrderingNull(customEntity);
-            } 
+            }
             else
             {
-                var orderedIds = await _dbContext
-                    .CustomEntities
-                    .Where(e => e.CustomEntityDefinitionCode == customEntity.CustomEntityDefinitionCode 
-                        && e.CustomEntityId != command.CustomEntityId
-                        && e.Ordering.HasValue)
-                    .OrderBy(e => e.Ordering)
-                    .Select(e => e.CustomEntityId)
-                    .ToListAsync();
+                orderedIds.Insert(newPos.Value, command.CustomEntityId);
 
-                var newPos = orderedIds.Count <= command.Position ? command.Position : null;
-
-                if (!newPos.HasValue) 
-                {
-                    await SetOrderingNull(customEntity);
-                } 
-                else
-                {
-                    orderedIds.Insert(newPos.Value, command.CustomEntityId);
-
-                    var reorderCommand = new ReOrderCustomEntitiesCommand();
-                    reorderCommand.CustomEntityDefinitionCode = customEntity.CustomEntityDefinitionCode;
-                    reorderCommand.OrderedCustomEntityIds = orderedIds.ToArray();
-                }
+                var reorderCommand = new ReOrderCustomEntitiesCommand();
+                reorderCommand.CustomEntityDefinitionCode = customEntity.CustomEntityDefinitionCode;
+                reorderCommand.OrderedCustomEntityIds = orderedIds.ToArray();
             }
-
         }
 
-        private async Task SetOrderingNull(CustomEntity customEntity)
-        {
-            customEntity.Ordering = null;
-            await _dbContext.SaveChangesAsync();
-        }
+    }
+
+    private async Task SetOrderingNull(CustomEntity customEntity)
+    {
+        customEntity.Ordering = null;
+        await _dbContext.SaveChangesAsync();
     }
 }

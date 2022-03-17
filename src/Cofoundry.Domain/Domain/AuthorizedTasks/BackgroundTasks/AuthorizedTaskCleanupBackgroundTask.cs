@@ -1,38 +1,35 @@
 ﻿using Cofoundry.Core.BackgroundTasks;
-using System;
-using System.Threading.Tasks;
 
-namespace Cofoundry.Domain.BackgroundTasks
+namespace Cofoundry.Domain.BackgroundTasks;
+
+public class AuthorizedTaskCleanupBackgroundTask : IAsyncRecurringBackgroundTask
 {
-    public class AuthorizedTaskCleanupBackgroundTask : IAsyncRecurringBackgroundTask
+    private readonly IDomainRepository _domainRepository;
+    private readonly AuthorizedTaskCleanupSettings _authorizedTaskCleanupSettings;
+
+    public AuthorizedTaskCleanupBackgroundTask(
+        IDomainRepository domainRepository,
+        AuthorizedTaskCleanupSettings authorizedTaskCleanupSettings
+        )
     {
-        private readonly IDomainRepository _domainRepository;
-        private readonly AuthorizedTaskCleanupSettings _authorizedTaskCleanupSettings;
+        _domainRepository = domainRepository;
+        _authorizedTaskCleanupSettings = authorizedTaskCleanupSettings;
+    }
 
-        public AuthorizedTaskCleanupBackgroundTask(
-            IDomainRepository domainRepository,
-            AuthorizedTaskCleanupSettings authorizedTaskCleanupSettings
-            )
+    public async Task ExecuteAsync()
+    {
+        if (!_authorizedTaskCleanupSettings.Enabled
+            || !_authorizedTaskCleanupSettings.RetentionPeriodInDays.HasValue
+            || _authorizedTaskCleanupSettings.RetentionPeriodInDays < 0)
         {
-            _domainRepository = domainRepository;
-            _authorizedTaskCleanupSettings = authorizedTaskCleanupSettings;
+            return;
         }
 
-        public async Task ExecuteAsync()
-        {
-            if (!_authorizedTaskCleanupSettings.Enabled
-                || !_authorizedTaskCleanupSettings.RetentionPeriodInDays.HasValue
-                || _authorizedTaskCleanupSettings.RetentionPeriodInDays < 0)
+        await _domainRepository
+            .WithElevatedPermissions()
+            .ExecuteCommandAsync(new CleanupAuthorizedTasksCommand()
             {
-                return;
-            }
-
-            await _domainRepository
-                .WithElevatedPermissions()
-                .ExecuteCommandAsync(new CleanupAuthorizedTasksCommand()
-                {
-                    RetentionPeriod = TimeSpan.FromDays(_authorizedTaskCleanupSettings.RetentionPeriodInDays.Value)
-                });
-        }
+                RetentionPeriod = TimeSpan.FromDays(_authorizedTaskCleanupSettings.RetentionPeriodInDays.Value)
+            });
     }
 }

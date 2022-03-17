@@ -1,11 +1,10 @@
-﻿namespace Cofoundry.Domain
+﻿namespace Cofoundry.Domain;
+
+public sealed class RewriteRuleEntityDefinition : IEntityDefinition
 {
-    public sealed class RewriteRuleEntityDefinition : IEntityDefinition
-    {
-        public const string DefinitionCode = "COFRWR";
+    public const string DefinitionCode = "COFRWR";
 
-        public string EntityDefinitionCode { get { return DefinitionCode; } }
+    public string EntityDefinitionCode { get { return DefinitionCode; } }
 
-        public string Name { get { return "Rewrite Rule"; } }
-    }
+    public string Name { get { return "Rewrite Rule"; } }
 }

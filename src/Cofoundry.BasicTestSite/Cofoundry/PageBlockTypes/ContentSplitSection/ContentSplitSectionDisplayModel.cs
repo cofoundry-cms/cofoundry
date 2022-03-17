@@ -1,18 +1,12 @@
-﻿using Cofoundry.Domain;
-using Microsoft.AspNetCore.Html;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Html;
 
-namespace Cofoundry.BasicTestSite
+namespace Cofoundry.BasicTestSite;
+
+public class ContentSplitSectionDisplayModel : IPageBlockTypeDisplayModel
 {
-    public class ContentSplitSectionDisplayModel : IPageBlockTypeDisplayModel
-    {
-        public string Title { get; set; }
+    public string Title { get; set; }
 
-        public IHtmlContent HtmlText { get; set; }
+    public IHtmlContent HtmlText { get; set; }
 
-        public ImageAssetRenderDetails Image { get; set; }
-    }
+    public ImageAssetRenderDetails Image { get; set; }
 }

@@ -2,89 +2,86 @@
 using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Identity;
 using Moq;
-using System;
-using Xunit;
 
-namespace Cofoundry.Domain.Tests.Users.Helpers
+namespace Cofoundry.Domain.Tests.Users.Helpers;
+
+public class UserAuthenticationHelperTests
 {
-    public class UserAuthenticationHelperTests
+    [Fact]
+    public void VerifyPassword_WhenUserNull_ReturnsFailure()
     {
-        [Fact]
-        public void VerifyPassword_WhenUserNull_ReturnsFailure()
+        var helper = CreateUserAuthenticationHelper();
+
+        var result = helper.VerifyPassword(null, "not required");
+
+        Assert.Equal(PasswordVerificationResult.Failed, result);
+    }
+
+    [Fact]
+    public void VerifyPassword_WhenUserAreaDoesNotAllowPasswordLogin_Throws()
+    {
+        var userAreaCode = "T01";
+        var userArea = CreateUserAreaDefinition(userAreaCode, false);
+        var helper = CreateUserAuthenticationHelper(userArea);
+        var user = new User()
         {
-            var helper = CreateUserAuthenticationHelper();
+            UserAreaCode = userAreaCode
+        };
 
-            var result = helper.VerifyPassword(null, "not required");
+        Assert.Throws<InvalidOperationException>(() => helper.VerifyPassword(user, "not required"));
+    }
 
-            Assert.Equal(PasswordVerificationResult.Failed, result);
-        }
-
-        [Fact]
-        public void VerifyPassword_WhenUserAreaDoesNotAllowPasswordLogin_Throws()
+    [Fact]
+    public void VerifyPassword_WhenUserIsMissingPassword_Throws()
+    {
+        var userAreaCode = "T01";
+        var userArea = CreateUserAreaDefinition(userAreaCode, true);
+        var helper = CreateUserAuthenticationHelper(userArea);
+        var user = new User()
         {
-            var userAreaCode = "T01";
-            var userArea = CreateUserAreaDefinition(userAreaCode, false);
-            var helper = CreateUserAuthenticationHelper(userArea);
-            var user = new User()
-            {
-                UserAreaCode = userAreaCode
-            };
+            UserAreaCode = userAreaCode,
+            PasswordHashVersion = (int)PasswordHashVersion.V3
+        };
 
-            Assert.Throws<InvalidOperationException>(() => helper.VerifyPassword(user, "not required"));
-        }
+        Assert.Throws<InvalidOperationException>(() => helper.VerifyPassword(user, "not required"));
+    }
 
-        [Fact]
-        public void VerifyPassword_WhenUserIsMissingPassword_Throws()
+    [Fact]
+    public void VerifyPassword_WhenUserIsMissingPasswordHasVersion_Throws()
+    {
+        var userAreaCode = "T01";
+        var userArea = CreateUserAreaDefinition(userAreaCode, true);
+        var helper = CreateUserAuthenticationHelper(userArea);
+        var user = new User()
         {
-            var userAreaCode = "T01";
-            var userArea = CreateUserAreaDefinition(userAreaCode, true);
-            var helper = CreateUserAuthenticationHelper(userArea);
-            var user = new User()
-            {
-                UserAreaCode = userAreaCode,
-                PasswordHashVersion = (int)PasswordHashVersion.V3
-            };
+            UserAreaCode = userAreaCode,
+            Password = "test"
+        };
 
-            Assert.Throws<InvalidOperationException>(() => helper.VerifyPassword(user, "not required"));
-        }
+        Assert.Throws<InvalidOperationException>(() => helper.VerifyPassword(user, "not required"));
+    }
 
-        [Fact]
-        public void VerifyPassword_WhenUserIsMissingPasswordHasVersion_Throws()
-        {
-            var userAreaCode = "T01";
-            var userArea = CreateUserAreaDefinition(userAreaCode, true);
-            var helper = CreateUserAuthenticationHelper(userArea);
-            var user = new User()
-            {
-                UserAreaCode = userAreaCode,
-                Password = "test"
-            };
+    private IUserAreaDefinition CreateUserAreaDefinition(string code, bool allowPasswordLogin)
+    {
+        var userAreaDefinition = new Mock<IUserAreaDefinition>();
+        userAreaDefinition.SetupGet(o => o.AllowPasswordSignIn).Returns(allowPasswordLogin);
+        userAreaDefinition.SetupGet(o => o.UserAreaCode).Returns(code);
+        userAreaDefinition.SetupGet(o => o.Name).Returns(code);
 
-            Assert.Throws<InvalidOperationException>(() => helper.VerifyPassword(user, "not required"));
-        }
+        return userAreaDefinition.Object;
+    }
 
-        private IUserAreaDefinition CreateUserAreaDefinition(string code, bool allowPasswordLogin)
-        {
-            var userAreaDefinition = new Mock<IUserAreaDefinition>();
-            userAreaDefinition.SetupGet(o => o.AllowPasswordSignIn).Returns(allowPasswordLogin);
-            userAreaDefinition.SetupGet(o => o.UserAreaCode).Returns(code);
-            userAreaDefinition.SetupGet(o => o.Name).Returns(code);
+    public UserAuthenticationHelper CreateUserAuthenticationHelper(params IUserAreaDefinition[] userAreaDefinitions)
+    {
+        var userAreaRepository = new UserAreaDefinitionRepository(userAreaDefinitions, new UsersSettings());
 
-            return userAreaDefinition.Object;
-        }
+        var passwordCryptographyServiceMock = new Mock<IPasswordCryptographyService>();
+        passwordCryptographyServiceMock
+            .Setup(c => c.Verify(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+            .Returns(PasswordVerificationResult.Success);
 
-        public UserAuthenticationHelper CreateUserAuthenticationHelper(params IUserAreaDefinition[] userAreaDefinitions)
-        {
-            var userAreaRepository = new UserAreaDefinitionRepository(userAreaDefinitions, new UsersSettings());
+        var helper = new UserAuthenticationHelper(passwordCryptographyServiceMock.Object, userAreaRepository);
 
-            var passwordCryptographyServiceMock = new Mock<IPasswordCryptographyService>();
-            passwordCryptographyServiceMock
-                .Setup(c => c.Verify(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(PasswordVerificationResult.Success);
-
-            var helper = new UserAuthenticationHelper(passwordCryptographyServiceMock.Object, userAreaRepository);
-
-            return helper;
-        }
+        return helper;
     }
 }

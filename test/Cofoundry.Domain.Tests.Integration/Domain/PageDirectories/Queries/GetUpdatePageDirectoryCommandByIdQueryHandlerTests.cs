@@ -1,65 +1,58 @@
-﻿using Cofoundry.Core;
-using Cofoundry.Domain.CQS;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Cofoundry.Domain.CQS;
 
-namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries
+namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries;
+
+[Collection(nameof(DbDependentFixtureCollection))]
+public class GetUpdatePageDirectoryCommandByIdQueryHandlerTests
 {
-    [Collection(nameof(DbDependentFixtureCollection))]
-    public class GetUpdatePageDirectoryCommandByIdQueryHandlerTests
+    const string UNIQUE_PREFIX = "GUpdPageDirCmdByIdQHT ";
+
+    private readonly DbDependentTestApplicationFactory _appFactory;
+
+    public GetUpdatePageDirectoryCommandByIdQueryHandlerTests(
+        DbDependentTestApplicationFactory appFactory
+        )
     {
-        const string UNIQUE_PREFIX = "GUpdPageDirCmdByIdQHT ";
+        _appFactory = appFactory;
+    }
 
-        private readonly DbDependentTestApplicationFactory _appFactory;
+    [Fact]
+    public async Task ReturnsMappedData()
+    {
+        var uniqueData = UNIQUE_PREFIX + nameof(ReturnsMappedData);
 
-        public GetUpdatePageDirectoryCommandByIdQueryHandlerTests(
-            DbDependentTestApplicationFactory appFactory
-            )
+        using var app = _appFactory.Create();
+        var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
+        var addDirectoryCommand = app.TestData.PageDirectories().CreateAddCommand(uniqueData, parentDirectoryId);
+
+        var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+
+        await contentRepository
+            .PageDirectories()
+            .AddAsync(addDirectoryCommand);
+
+        var query = new GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>(addDirectoryCommand.OutputPageDirectoryId);
+        var command = await contentRepository.ExecuteQueryAsync(query);
+
+        using (new AssertionScope())
         {
-            _appFactory = appFactory;
+            command.Should().NotBeNull();
+            command.Name.Should().Be(addDirectoryCommand.Name);
+            command.PageDirectoryId.Should().Be(addDirectoryCommand.OutputPageDirectoryId);
         }
+    }
 
-        [Fact]
-        public async Task ReturnsMappedData()
-        {
-            var uniqueData = UNIQUE_PREFIX + nameof(ReturnsMappedData);
+    [Fact]
+    public async Task WhenRootDirectory_Throws()
+    {
+        using var app = _appFactory.Create();
+        var rootDirectoryId = await app.TestData.PageDirectories().GetRootDirectoryIdAsync();
+        var query = new GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>(rootDirectoryId);
 
-            using var app = _appFactory.Create();
-            var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
-            var addDirectoryCommand = app.TestData.PageDirectories().CreateAddCommand(uniqueData, parentDirectoryId);
-
-            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-
-            await contentRepository
-                .PageDirectories()
-                .AddAsync(addDirectoryCommand);
-
-            var query = new GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>(addDirectoryCommand.OutputPageDirectoryId);
-            var command = await contentRepository.ExecuteQueryAsync(query);
-
-            using (new AssertionScope())
-            {
-                command.Should().NotBeNull();
-                command.Name.Should().Be(addDirectoryCommand.Name);
-                command.PageDirectoryId.Should().Be(addDirectoryCommand.OutputPageDirectoryId);
-            }
-        }
-
-        [Fact]
-        public async Task WhenRootDirectory_Throws()
-        {
-            using var app = _appFactory.Create();
-            var rootDirectoryId = await app.TestData.PageDirectories().GetRootDirectoryIdAsync();
-            var query = new GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>(rootDirectoryId);
-
-            var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-            await contentRepository
-                .Awaiting(r => r.ExecuteQueryAsync(query))
-                .Should()
-                .ThrowAsync<NotPermittedException>();
-        }
+        var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
+        await contentRepository
+            .Awaiting(r => r.ExecuteQueryAsync(query))
+            .Should()
+            .ThrowAsync<NotPermittedException>();
     }
 }

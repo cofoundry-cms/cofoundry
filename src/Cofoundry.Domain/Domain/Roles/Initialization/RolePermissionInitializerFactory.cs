@@ -1,29 +1,26 @@
-﻿using System;
+﻿namespace Cofoundry.Domain.Internal;
 
-namespace Cofoundry.Domain.Internal
+/// <inheritdoc/>
+public class RolePermissionInitializerFactory : IRolePermissionInitializerFactory
 {
-    /// <inheritdoc/>
-    public class RolePermissionInitializerFactory : IRolePermissionInitializerFactory
+    private readonly IServiceProvider _serviceProvider;
+
+    public RolePermissionInitializerFactory(
+        IServiceProvider serviceProvider
+        )
     {
-        private readonly IServiceProvider _serviceProvider;
+        _serviceProvider = serviceProvider;
+    }
 
-        public RolePermissionInitializerFactory(
-            IServiceProvider serviceProvider
-            )
+    public IRolePermissionInitializer Create(IRoleDefinition roleDefinition)
+    {
+        if (roleDefinition is AnonymousRole)
         {
-            _serviceProvider = serviceProvider;
+            return new AnonymousRolePermissionInitializer(_serviceProvider);
         }
-
-        public IRolePermissionInitializer Create(IRoleDefinition roleDefinition)
+        else
         {
-            if (roleDefinition is AnonymousRole)
-            {
-                return new AnonymousRolePermissionInitializer(_serviceProvider);
-            }
-            else
-            {
-                return new RoleDefinitionRolePermissionInitializer(roleDefinition);
-            }
+            return new RoleDefinitionRolePermissionInitializer(roleDefinition);
         }
     }
 }
