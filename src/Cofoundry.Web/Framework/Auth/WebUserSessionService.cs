@@ -30,7 +30,7 @@ namespace Cofoundry.Web.Internal
         /// view rendering). This is used to track sign-outs and prevent this occuring.
         /// </summary>
         private HashSet<string> _signedOutUserAreas = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        
+
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
         private readonly IUserContextCache _userContextCache;
@@ -83,6 +83,8 @@ namespace Cofoundry.Web.Internal
             var cachedUserId = await _inMemoryUserSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
             if (cachedUserId.HasValue) return cachedUserId;
 
+            if (_httpContextAccessor.HttpContext == null) return null;
+
             var scheme = AuthenticationSchemeNames.UserArea(userAreaCode);
             var result = await _httpContextAccessor.HttpContext.AuthenticateAsync(scheme);
             if (!result.Succeeded) return null;
@@ -105,6 +107,7 @@ namespace Cofoundry.Web.Internal
         {
             if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
             if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
+            ValidateHttpContext("sign in a user");
 
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
             var userPrincipal = await CreateUserPrincipal(userId, userArea);
@@ -134,6 +137,7 @@ namespace Cofoundry.Web.Internal
             {
                 throw new ArgumentNullException(nameof(userAreaCode));
             }
+            ValidateHttpContext("sign out a user");
 
             await _inMemoryUserSessionService.SignOutAsync(userAreaCode);
 
@@ -144,6 +148,7 @@ namespace Cofoundry.Web.Internal
 
         public async Task SignOutOfAllUserAreasAsync()
         {
+            ValidateHttpContext("sign out a user");
             await _inMemoryUserSessionService.SignOutOfAllUserAreasAsync();
 
             foreach (var userArea in _userAreaDefinitionRepository.GetAll())
@@ -171,6 +176,7 @@ namespace Cofoundry.Web.Internal
         {
             if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
             if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
+            ValidateHttpContext("refresh a user sign in");
 
             var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
             var loggedInUser = await GetUserIdByUserAreaCodeAsync(userAreaCode);
@@ -184,6 +190,14 @@ namespace Cofoundry.Web.Internal
             var isPeristent = auth?.Properties?.IsPersistent ?? false;
 
             await SignInAsync(userAreaCode, userId, isPeristent);
+        }
+
+        private void ValidateHttpContext(string actionDescription)
+        {
+            if (_httpContextAccessor.HttpContext == null)
+            {
+                throw new InvalidOperationException($"{nameof(_httpContextAccessor)}.HttpContext is null. Cannot use {nameof(WebUserSessionService)} to {actionDescription} outside of a web request.");
+            }
         }
 
         private async Task<ClaimsPrincipal> CreateUserPrincipal(int userId, IUserAreaDefinition userArea)
