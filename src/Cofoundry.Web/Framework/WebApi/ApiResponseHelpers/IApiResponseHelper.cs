@@ -68,9 +68,19 @@ namespace Cofoundry.Web
         /// and permission errors. The result of the function is returned in the response data. If the result is
         /// <see langword="null"/> then a 404 response is returned.
         /// </summary>
-        /// <typeparam name="TResult">Type of result returned from the function</typeparam>
-        /// <param name="functionToExecute">The function to execute</param>
+        /// <typeparam name="TResult">Type of result returned from the function.</typeparam>
+        /// <param name="functionToExecute">The function to execute.</param>
         Task<JsonResult> RunWithResultAsync<TResult>(Func<Task<TResult>> functionToExecute);
+
+        /// <summary>
+        /// Executes a function that returns <typeparamref name="TActionResult"/>, handling any validation 
+        /// and permission errors. If successful the result of the function is returned unaltered; otherwuse 
+        /// a standard error response is returned.
+        /// </summary>
+        /// <typeparam name="TActionResult">Type of result to return from the function.</typeparam>
+        /// <param name="functionToExecute">The function to execute.</param>
+        Task<IActionResult> RunWithActionResultAsync<TActionResult>(Func<Task<TActionResult>> functionToExecute)
+            where TActionResult : IActionResult;
 
         /// <summary>
         /// Executes a query and returns a formatted <see cref="JsonResult"/>, handling any validation 
@@ -99,7 +109,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta) 
+        Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta)
             where TCommand : class, IPatchableByIdCommand;
 
         /// <summary>
@@ -111,7 +121,7 @@ namespace Cofoundry.Web
         /// </summary>
         /// <typeparam name="TCommand">Type of the command to execute</typeparam>
         /// <param name="delta">The delta of the command to patch and execute</param>
-        Task<JsonResult> RunCommandAsync<TCommand>(IDelta<TCommand> delta) 
+        Task<JsonResult> RunCommandAsync<TCommand>(IDelta<TCommand> delta)
             where TCommand : class, IPatchableCommand;
     }
 }

@@ -208,6 +208,31 @@ namespace Cofoundry.Web.Internal
             return SimpleQueryResponse(errors, result);
         }
 
+        public async Task<IActionResult> RunWithActionResultAsync<TActionResult>(Func<Task<TActionResult>> functionToExecute)
+            where TActionResult : IActionResult
+        {
+            var errors = new List<ValidationError>();
+            IActionResult result = null;
+
+            if (!errors.Any())
+            {
+                try
+                {
+                    result = await functionToExecute();
+                }
+                catch (ValidationException ex)
+                {
+                    AddValidationExceptionToErrorList(ex, errors);
+                }
+                catch (NotPermittedException ex)
+                {
+                    return NotPermittedResponse(ex);
+                }
+            }
+
+            return result;
+        }
+
         private JsonResult GetCommandResponse<T>(T response) where T : ApiResponseHelperResult
         {
             var jsonResult = CreateJsonResult(response);
