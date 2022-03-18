@@ -56,7 +56,11 @@ namespace Cofoundry.Web.Internal
 
             var jsonResult = CreateJsonResult(response);
 
-            if (result == null)
+            if (!response.IsValid)
+            {
+                jsonResult.StatusCode = 400;
+            }
+            else if (result == null)
             {
                 jsonResult.StatusCode = 404;
             }
@@ -99,7 +103,7 @@ namespace Cofoundry.Web.Internal
             return RunWithResultAsync(() => _queryExecutor.ExecuteAsync(query));
         }
 
-        public async Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta) 
+        public async Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta)
             where TCommand : class, IPatchableByIdCommand
         {
             var query = new GetPatchableCommandByIdQuery<TCommand>(id);
@@ -113,7 +117,7 @@ namespace Cofoundry.Web.Internal
             return await RunCommandAsync(command);
         }
 
-        public async Task<JsonResult> RunCommandAsync<TCommand>(IDelta<TCommand> delta) 
+        public async Task<JsonResult> RunCommandAsync<TCommand>(IDelta<TCommand> delta)
             where TCommand : class, IPatchableCommand
         {
             var query = new GetPatchableCommandQuery<TCommand>();
