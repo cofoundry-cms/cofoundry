@@ -223,6 +223,7 @@ namespace Cofoundry.Web.Internal
                 catch (ValidationException ex)
                 {
                     AddValidationExceptionToErrorList(ex, errors);
+                    return SimpleCommandResponse(errors);
                 }
                 catch (NotPermittedException ex)
                 {
