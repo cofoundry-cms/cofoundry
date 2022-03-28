@@ -44,7 +44,6 @@ namespace Cofoundry.Domain
         /// set to <see langword="true"/>, otherwise it should be empty. The password will go through
         /// additional validation depending on the password policy configuration.
         /// </summary>
-        [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
         [DataType(DataType.Password)]
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]

@@ -19,7 +19,6 @@ namespace Cofoundry.Domain
         public string Email { get; set; }
 
         [Required]
-        [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
         [System.Text.Json.Serialization.JsonIgnore]

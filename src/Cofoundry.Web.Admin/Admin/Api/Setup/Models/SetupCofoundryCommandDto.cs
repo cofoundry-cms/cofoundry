@@ -1,5 +1,4 @@
-﻿using Cofoundry.Domain;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Web.Admin
 {
@@ -17,7 +16,6 @@ namespace Cofoundry.Web.Admin
         public string Email { get; set; }
 
         [Required]
-        [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
         public string Password { get; set; }
     }
 }

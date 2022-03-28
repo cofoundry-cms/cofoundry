@@ -25,7 +25,6 @@ namespace Cofoundry.Domain
         /// on the password policy configuration.
         /// </summary>
         [Required]
-        [StringLength(PasswordOptions.MAX_LENGTH_BOUNDARY, MinimumLength = PasswordOptions.MIN_LENGTH_BOUNDARY)]
         [DataType(DataType.Password)]
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
