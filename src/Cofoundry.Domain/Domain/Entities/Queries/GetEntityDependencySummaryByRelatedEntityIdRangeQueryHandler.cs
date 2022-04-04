@@ -87,9 +87,9 @@ namespace Cofoundry.Domain.Internal
 
             // filter out duplicates, selecting the more restrictive entity first 
             var results = allRelatedEntities
-                .GroupBy(e => 
-                    new { e.Entity.EntityDefinitionCode, e.Entity.RootEntityId }, 
-                    (k, v) => v.OrderBy(e => e.CanDelete).ThenBy(e => e.Entity).First())
+                .GroupBy(e =>
+                    new { e.Entity.EntityDefinitionCode, e.Entity.RootEntityId },
+                    (k, v) => v.OrderBy(e => e.CanDelete).First())
                 .ToList();
 
             return results;
