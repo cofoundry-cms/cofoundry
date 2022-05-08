@@ -1,18 +1,17 @@
-﻿using System;
+﻿using Cofoundry.Core;
+using Cofoundry.Core.Data;
+using Cofoundry.Core.Validation;
+using Cofoundry.Domain.CQS;
+using Cofoundry.Domain.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Cofoundry.Domain.Data;
-using Cofoundry.Domain.CQS;
-using Cofoundry.Core.Validation;
-using Cofoundry.Core;
-using Cofoundry.Core.Data;
 
 namespace Cofoundry.Domain.Internal
 {
-    public class UpdateRoleCommandHandler 
+    public class UpdateRoleCommandHandler
         : ICommandHandler<UpdateRoleCommand>
         , IPermissionRestrictedCommandHandler<UpdateRoleCommand>
     {
@@ -48,10 +47,10 @@ namespace Cofoundry.Domain.Internal
 
         public async Task ExecuteAsync(UpdateRoleCommand command, IExecutionContext executionContext)
         {
-            ValidatePermissions(command);
-
             var role = await QueryRole(command).SingleOrDefaultAsync();
             EntityNotFoundException.ThrowIfNull(role, command.RoleId);
+
+            ValidatePermissions(role, command, executionContext);
 
             var isUnique = await _queryExecutor.ExecuteAsync(GetUniqueQuery(command, role), executionContext);
             ValidateIsUnique(isUnique);
@@ -65,7 +64,10 @@ namespace Cofoundry.Domain.Internal
 
         private void MapRole(UpdateRoleCommand command, Role role)
         {
-            role.Title = command.Title.Trim();
+            if (role.RoleCode != AnonymousRole.Code)
+            {
+                role.Title = command.Title.Trim();
+            }
         }
 
         private void ValidateIsUnique(bool isUnique)
@@ -100,8 +102,8 @@ namespace Cofoundry.Domain.Internal
             // Deletions
             var permissionsToRemove = role
                 .RolePermissions
-                .Where(p => !command.Permissions.Any(cp => 
-                            cp.PermissionCode == p.Permission.PermissionCode 
+                .Where(p => !command.Permissions.Any(cp =>
+                            cp.PermissionCode == p.Permission.PermissionCode
                             && (string.IsNullOrWhiteSpace(p.Permission.EntityDefinitionCode) || cp.EntityDefinitionCode == p.Permission.EntityDefinitionCode)
                             ))
                 .ToList();
@@ -114,10 +116,10 @@ namespace Cofoundry.Domain.Internal
             // Additions
             var permissionsToAdd = command
                 .Permissions
-                .Where(p => !role.RolePermissions.Any(cp => 
-                            cp.Permission.PermissionCode == p.PermissionCode 
+                .Where(p => !role.RolePermissions.Any(cp =>
+                            cp.Permission.PermissionCode == p.PermissionCode
                             && (string.IsNullOrWhiteSpace(p.EntityDefinitionCode) || cp.Permission.EntityDefinitionCode == p.EntityDefinitionCode)));
-            
+
             if (permissionsToAdd.Any())
             {
                 // create a unique token to use for lookup
@@ -128,7 +130,7 @@ namespace Cofoundry.Domain.Internal
                 // Get permissions from the db
                 var dbPermissions = await _dbContext
                     .Permissions
-                    .Where(p => 
+                    .Where(p =>
                         permissionToAddTokens.Contains((p.EntityDefinitionCode ?? "") + p.PermissionCode))
                     .ToListAsync();
 
@@ -163,8 +165,18 @@ namespace Cofoundry.Domain.Internal
             }
         }
 
-        private void ValidatePermissions(UpdateRoleCommand command)
+        private void ValidatePermissions(Role role, UpdateRoleCommand command, IExecutionContext executionContext)
         {
+            if (role.RoleCode == SuperAdminRole.Code)
+            {
+                throw new NotPermittedException("the super admin role cannot be updated.");
+            }
+
+            if (role.RoleId == executionContext.UserContext.RoleId)
+            {
+                throw new NotPermittedException("Cannot manage permissions on the role you're assigned to.");
+            }
+
             if (!EnumerableHelper.IsNullOrEmpty(command.Permissions))
             {
                 var entityWithoutReadPermission = command.Permissions

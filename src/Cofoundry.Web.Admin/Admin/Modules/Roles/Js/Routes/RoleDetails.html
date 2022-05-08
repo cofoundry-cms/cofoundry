@@ -13,13 +13,13 @@
                     cms-text="Edit"
                     ng-if="::vm.canUpdate"
                     ng-click="vm.edit()"
-                    ng-show="!vm.editMode && !vm.role.isSuperAdminRole"
+                    ng-show="!vm.role.isSuperAdminRole && !vm.isCurrentRole"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
         <cms-button cms-text="Delete"
                     ng-if="::vm.canDelete"
                     ng-click="vm.deleteRole()"
-                    ng-disabled="vm.editMode || vm.globalLoadState.isLoading"
+                    ng-disabled="vm.globalLoadState.isLoading"
                     ng-show="!vm.role.roleCode"></cms-button>
 
     </cms-page-actions>
@@ -28,13 +28,11 @@
     <cms-page-actions ng-show="vm.editMode">
 
         <cms-button-submit cms-text="Save"
-                           ng-show="vm.editMode"
                            ng-disabled="vm.mainForm.$invalid || vm.globalLoadState.isLoading"
                            cms-loading="vm.saveLoadState.isLoading"></cms-button-submit>
 
         <cms-button cms-text="Cancel"
                     ng-click="vm.cancel()"
-                    ng-show="vm.editMode"
                     ng-disabled="vm.globalLoadState.isLoading"></cms-button>
 
     </cms-page-actions>

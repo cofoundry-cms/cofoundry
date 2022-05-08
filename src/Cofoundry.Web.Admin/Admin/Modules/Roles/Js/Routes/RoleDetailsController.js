@@ -5,6 +5,7 @@
     'shared.LoadState',
     'shared.modalDialogService',
     'shared.permissionValidationService',
+    'shared.currentUser',
     'roles.roleService',
     'roles.permissionService',
     'roles.modulePath',
@@ -15,6 +16,7 @@ function (
     LoadState,
     modalDialogService,
     permissionValidationService,
+    currentUser,
     roleService,
     permissionService,
     modulePath
@@ -102,7 +104,7 @@ function (
             .then(load);
 
         function load(role) {
-
+            vm.isCurrentRole = role.roleId == currentUser.roleId;
             vm.role = role;
             vm.command = mapUpdateCommand(role);
             vm.editMode = false;

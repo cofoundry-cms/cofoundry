@@ -136,6 +136,7 @@ namespace Cofoundry.Web.Admin
             var currentUserInfo = new
             {
                 UserId = user.UserId,
+                RoleId = user.RoleId,
                 IsSuperAdmin = user.IsSuperAdmin(),
                 PermissionCodes = role
                     .Permissions
