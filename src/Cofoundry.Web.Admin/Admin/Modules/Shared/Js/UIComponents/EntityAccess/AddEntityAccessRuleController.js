@@ -81,7 +81,7 @@ function (
             vm.userAreas = _.filter(userAreas, function(userArea) { return userArea.userAreaCode !== 'COF' });
 
             if (vm.userAreas.length == 1) {
-                vm.command.userAreaCode = vm.userArea.userAreaCode;
+                vm.command.userAreaCode = vm.userAreas[0].userAreaCode;
             }
         }
     }

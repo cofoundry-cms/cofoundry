@@ -67,8 +67,8 @@ function (
 
             return command;
         });
-
-        if (!vm.command.redirectoToSignIn) {
+        
+        if (!vm.command.redirectToSignIn) {
             vm.command.userAreaCodeForSignInRedirect = null;
         }
 
@@ -203,7 +203,7 @@ function (
         
         if (accessRuleSet.userAreaForSignInRedirect) {
             command.userAreaCodeForSignInRedirect = accessRuleSet.userAreaForSignInRedirect.userAreaCode;
-            command.redirectoToSignIn = true;
+            command.redirectToSignIn = true;
         }
 
         return command;
@@ -219,17 +219,18 @@ function (
 
         if (!vm.userAreasInRules.length) {
             // all user areas have been removed from the list
-            vm.command.redirectoToSignIn = false;
+            vm.command.redirectToSignIn = false;
             vm.command.userAreaCodeForSignInRedirect = null;
         } else if (!_.find(vm.userAreasInRules, function(userArea) { return userArea.userAreaCode === vm.command.userAreaCodeForSignInRedirect; })) {
             // the selected user area has been removed from the list
-            vm.command.redirectoToSignIn = false;
+            vm.command.redirectToSignIn = false;
             vm.command.userAreaCodeForSignInRedirect = null;
         }
         
         if (!vm.command.userAreaCodeForSignInRedirect && vm.userAreasInRules.length) {
             // set a default selection in-case the list is hidden
             vm.command.userAreaCodeForSignInRedirect = vm.userAreasInRules[0].userAreaCode;
+        console.log('setting vm.command.userAreaCodeForSignInRedirect', vm.command.userAreaCodeForSignInRedirect);
         } 
     }
 
