@@ -43,7 +43,7 @@ public class MimeTypeService : IMimeTypeService
     /// </param>
     public virtual string MapFromFileName(string fileName, string defaultMimeType)
     {
-        if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentEmptyException(fileName);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
 
         string contentType = null;
 

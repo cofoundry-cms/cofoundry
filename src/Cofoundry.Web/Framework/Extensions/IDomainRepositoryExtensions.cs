@@ -16,7 +16,7 @@ public static class IDomainRepositoryExtensions
     public static TRepository WithModelState<TRepository>(this TRepository repository, ControllerBase controller)
         where TRepository : IDomainRepository
     {
-        if (controller == null) throw new ArgumentNullException(nameof(controller));
+        ArgumentNullException.ThrowIfNull(controller);
 
         var extendedContentRepositry = repository.AsExtendableContentRepository();
         return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithModelState(executor, controller.ModelState, null));
@@ -31,7 +31,7 @@ public static class IDomainRepositoryExtensions
     public static TRepository WithModelState<TRepository>(this TRepository repository, Controller controller)
         where TRepository : IDomainRepository
     {
-        if (controller == null) throw new ArgumentNullException(nameof(controller));
+        ArgumentNullException.ThrowIfNull(controller);
 
         var extendedContentRepositry = repository.AsExtendableContentRepository();
         return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithModelState(executor, controller.ModelState, controller.ViewData.TemplateInfo));
@@ -46,7 +46,7 @@ public static class IDomainRepositoryExtensions
     public static TRepository WithModelState<TRepository>(this TRepository repository, PageModel pageModel)
         where TRepository : IDomainRepository
     {
-        if (pageModel == null) throw new ArgumentNullException(nameof(pageModel));
+        ArgumentNullException.ThrowIfNull(pageModel);
 
         var extendedContentRepositry = repository.AsExtendableContentRepository();
         return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithModelState(executor, pageModel.ModelState, pageModel.ViewData.TemplateInfo));

@@ -33,7 +33,7 @@ public class SimpleMailService : IMailService
 
     public async Task SendAsync(MailAddress address, IMailTemplate template)
     {
-        if (address == null) throw new ArgumentNullException(nameof(address));
+        ArgumentNullException.ThrowIfNull(address);
 
         await SendAsync(address.Address, address.DisplayName, template);
     }

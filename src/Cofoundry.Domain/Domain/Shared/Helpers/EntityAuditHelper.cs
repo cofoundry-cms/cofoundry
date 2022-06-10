@@ -6,8 +6,9 @@ public class EntityAuditHelper
 {
     public void SetCreated(ICreateAuditable entity, IExecutionContext executionContext)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-        if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+        ArgumentNullException.ThrowIfNull(entity);
+        ArgumentNullException.ThrowIfNull(executionContext);
+
         if (executionContext.UserContext.UserId == null)
         {
             throw new NotPermittedException("User must be logged in to update an ICreateAuditable entity");
@@ -26,8 +27,9 @@ public class EntityAuditHelper
     {
         const string msg = "Cannot set an entity as updated if it has not yet been created. Property not set: ";
 
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-        if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+        ArgumentNullException.ThrowIfNull(entity);
+        ArgumentNullException.ThrowIfNull(executionContext);
+
         if (executionContext.UserContext.UserId == null)
         {
             throw new NotPermittedException("User must be logged in to update an ICreateAuditable entity");

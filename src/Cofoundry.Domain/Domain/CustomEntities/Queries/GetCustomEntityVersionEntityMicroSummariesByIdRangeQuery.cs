@@ -17,7 +17,7 @@ public class GetCustomEntityVersionEntityMicroSummariesByIdRangeQuery : IQuery<I
         IReadOnlyCollection<int> ids
         )
     {
-        if (ids == null) throw new ArgumentNullException(nameof(ids));
+        ArgumentNullException.ThrowIfNull(ids);
 
         CustomEntityVersionIds = ids;
     }

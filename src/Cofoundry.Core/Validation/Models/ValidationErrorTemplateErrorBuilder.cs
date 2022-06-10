@@ -14,7 +14,7 @@ public class ValidationErrorTemplateErrorBuilder
         ValidationErrorTemplate validationErrorTemplate
         )
     {
-        if (validationErrorTemplate == null) throw new ArgumentNullException(nameof(validationErrorTemplate));
+        ArgumentNullException.ThrowIfNull(validationErrorTemplate);
 
         _validationError = validationErrorTemplate.Create();
     }
@@ -26,7 +26,7 @@ public class ValidationErrorTemplateErrorBuilder
     /// <param name="errorCodeSuffix">The text to add to the end of the existing error code.</param>
     public ValidationErrorTemplateErrorBuilder WithErrorCodeSuffix(string errorCodeSuffix)
     {
-        if (string.IsNullOrWhiteSpace(errorCodeSuffix)) throw new ArgumentEmptyException(nameof(errorCodeSuffix));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(errorCodeSuffix);
 
         _validationError.ErrorCode = _validationError.ErrorCode + "-" + errorCodeSuffix.TrimStart('-');
         return this;
@@ -40,7 +40,7 @@ public class ValidationErrorTemplateErrorBuilder
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithMessage(string message)
     {
-        if (string.IsNullOrWhiteSpace(message)) throw new ArgumentEmptyException(nameof(message));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(message);
 
         _validationError.Message = message;
         return this;
@@ -87,7 +87,7 @@ public class ValidationErrorTemplateErrorBuilder
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithExceptionFactory(Func<ValidationError, ValidationErrorException> exceptionFactory)
     {
-        if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+        ArgumentNullException.ThrowIfNull(exceptionFactory);
 
         _validationError.ExceptionFactory = exceptionFactory;
         return this;

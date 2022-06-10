@@ -34,7 +34,7 @@ public class GetRoleMicroSummariesByIdRangeQuery : IQuery<IDictionary<int, RoleM
         IReadOnlyCollection<int> roleIds
         )
     {
-        if (roleIds == null) throw new ArgumentNullException(nameof(roleIds));
+        ArgumentNullException.ThrowIfNull(roleIds);
 
         RoleIds = roleIds;
     }

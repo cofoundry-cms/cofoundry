@@ -29,8 +29,8 @@ public class ValidateAccessRulesRoutingStep : IValidateAccessRulesRoutingStep
 
     public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
     {
-        if (controller == null) throw new ArgumentNullException(nameof(controller));
-        if (state == null) throw new ArgumentNullException(nameof(state));
+        ArgumentNullException.ThrowIfNull(controller);
+        ArgumentNullException.ThrowIfNull(state);
         EntityInvalidOperationException.ThrowIfNull(state, r => r.AmbientUserContext);
 
         // If no page (404) skip this step - it will be handled later

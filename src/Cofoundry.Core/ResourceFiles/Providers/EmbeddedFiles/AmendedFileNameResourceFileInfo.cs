@@ -14,8 +14,8 @@ public class AmendedFileNameResourceFileInfo : IFileInfo
 
     public AmendedFileNameResourceFileInfo(string fileName, IFileInfo fileInfo)
     {
-        if (fileName == null) throw new ArgumentNullException(nameof(fileName));
-        if (fileInfo == null) throw new ArgumentNullException(nameof(fileInfo));
+        ArgumentNullException.ThrowIfNull(fileName);
+        ArgumentNullException.ThrowIfNull(fileInfo);
 
         _fileInfo = fileInfo;
         Name = fileName;

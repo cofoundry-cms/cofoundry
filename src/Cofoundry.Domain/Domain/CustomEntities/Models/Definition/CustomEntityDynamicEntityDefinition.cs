@@ -12,7 +12,7 @@ public class CustomEntityDynamicEntityDefinition : IDependableEntityDefinition
 
     public CustomEntityDynamicEntityDefinition(ICustomEntityDefinition customEntityDefinition)
     {
-        if (customEntityDefinition == null) throw new ArgumentNullException(nameof(customEntityDefinition));
+        ArgumentNullException.ThrowIfNull(customEntityDefinition);
 
         EntityDefinitionCode = customEntityDefinition.CustomEntityDefinitionCode;
         Name = customEntityDefinition.Name;

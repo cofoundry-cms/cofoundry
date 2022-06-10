@@ -10,7 +10,8 @@ public class JsonDeltaModelBinderProvider : IModelBinderProvider
 {
     public IModelBinder GetBinder(ModelBinderProviderContext context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
+
         var modelType = context.Metadata.ModelType;
 
         if (context.Metadata.IsComplexType

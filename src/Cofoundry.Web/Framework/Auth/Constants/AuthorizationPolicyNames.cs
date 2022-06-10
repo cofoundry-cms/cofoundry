@@ -14,7 +14,7 @@ public static class AuthorizationPolicyNames
     /// <returns>Namespaced policy name in the format 'Cofoundry_UserArea_{userAreaCode}'</returns>
     public static string UserArea(string userAreaCode)
     {
-        if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
 
         return $"Cofoundry_UserArea_{userAreaCode}";
     }
@@ -33,8 +33,8 @@ public static class AuthorizationPolicyNames
     /// <returns>Namespaced policy name in the format 'Cofoundry_UserArea_{userAreaCode}_Role_{roleCode}'</returns>
     public static string Role(string userAreaCode, string roleCode)
     {
-        if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
-        if (string.IsNullOrWhiteSpace(roleCode)) throw new ArgumentEmptyException(nameof(roleCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(roleCode);
 
         return UserArea(userAreaCode) + $"_Role_{roleCode}";
     }
@@ -49,7 +49,7 @@ public static class AuthorizationPolicyNames
     /// <returns>Namespaced policy name in the format 'Cofoundry_Permission_{identifier}'</returns>
     public static string Permission(IPermission permission)
     {
-        if (permission == null) throw new ArgumentEmptyException(nameof(permission));
+        ArgumentNullException.ThrowIfNull(permission);
 
         var identifier = PermissionIdentifierFormatter.GetUniqueIdentifier(permission);
         return $"Cofoundry_Permission_{identifier}";
@@ -67,7 +67,8 @@ public static class AuthorizationPolicyNames
     /// <returns>Namespaced policy name in the format 'Cofoundry_Permission_{identifier}'</returns>
     public static string Permission(string permissionTypeCode)
     {
-        if (string.IsNullOrWhiteSpace(permissionTypeCode)) throw new ArgumentEmptyException(nameof(permissionTypeCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(permissionTypeCode);
+
         if (permissionTypeCode.Length != 6)
         {
             // Ensure that this parameter isn't used for the 12 character identifier
@@ -92,8 +93,8 @@ public static class AuthorizationPolicyNames
     /// <returns>Namespaced policy name in the format 'Cofoundry_Permission_{identifier}'</returns>
     public static string Permission(string permissionTypeCode, string entityDefinitionCode)
     {
-        if (string.IsNullOrWhiteSpace(permissionTypeCode)) throw new ArgumentEmptyException(nameof(permissionTypeCode));
-        if (string.IsNullOrWhiteSpace(entityDefinitionCode)) throw new ArgumentEmptyException(nameof(entityDefinitionCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(permissionTypeCode);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(entityDefinitionCode);
 
         var identifier = PermissionIdentifierFormatter.GetUniqueIdentifier(permissionTypeCode, entityDefinitionCode);
         return $"Cofoundry_Permission_{identifier}";

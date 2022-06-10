@@ -15,10 +15,8 @@ public class PasswordCryptographyV1
 
     public bool Verify(string password, string hash)
     {
-        if (hash == null) throw new ArgumentNullException(nameof(hash));
-        if (string.IsNullOrWhiteSpace(hash)) throw new ArgumentEmptyException(nameof(hash));
-        if (password == null) throw new ArgumentNullException(nameof(password));
-        if (string.IsNullOrEmpty(password)) throw new ArgumentEmptyException(nameof(password));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(hash);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(password);
 
         // First 16 characters of the hash are the base64 encoded salt
         // BUT salt isn't always 16 characters long because the old method allowed for negative 
@@ -40,8 +38,8 @@ public class PasswordCryptographyV1
 
     public string CreateHash(string password)
     {
-        if (password == null) throw new ArgumentNullException(nameof(password));
-        if (string.IsNullOrWhiteSpace(password)) throw new ArgumentEmptyException(nameof(password));
+        ArgumentNullException.ThrowIfNull(password);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(password);
 
         var salt = GenerateSalt();
         return CreateHash(password, salt);

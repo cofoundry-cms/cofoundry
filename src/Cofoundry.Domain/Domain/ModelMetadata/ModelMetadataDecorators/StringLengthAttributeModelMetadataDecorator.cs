@@ -12,7 +12,7 @@ public class StringLengthAttributeModelMetadataDecorator : IModelMetadataDecorat
 
     public void Decorate(object attribute, DisplayMetadataProviderContext context)
     {
-        if (attribute == null) throw new ArgumentNullException(nameof(attribute));
+        ArgumentNullException.ThrowIfNull(attribute);
 
         if (!(attribute is StringLengthAttribute))
         {

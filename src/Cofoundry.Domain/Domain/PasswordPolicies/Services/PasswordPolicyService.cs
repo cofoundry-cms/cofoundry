@@ -39,7 +39,7 @@ public class PasswordPolicyService : IPasswordPolicyService
 
     private static void ValidateContext(INewPasswordValidationContext context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
         if (string.IsNullOrEmpty(context.Password))
         {

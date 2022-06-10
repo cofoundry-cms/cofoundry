@@ -13,7 +13,8 @@ public class EntityDependencyAttribute : Attribute, IEntityRelationAttribute, IM
 {
     public EntityDependencyAttribute(string entityDefinitionCode)
     {
-        if (entityDefinitionCode == null) throw new ArgumentNullException(nameof(entityDefinitionCode));
+        ArgumentNullException.ThrowIfNull(entityDefinitionCode);
+
         if (entityDefinitionCode.Length != 6)
         {
             throw new ArgumentException(nameof(entityDefinitionCode) + " must be 6 characters in length.", nameof(entityDefinitionCode));
@@ -24,8 +25,8 @@ public class EntityDependencyAttribute : Attribute, IEntityRelationAttribute, IM
 
     public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
-        if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
+        ArgumentNullException.ThrowIfNull(model);
+        ArgumentNullException.ThrowIfNull(propertyInfo);
 
         var isRequired = !(model is int?);
         var id = (int?)propertyInfo.GetValue(model);

@@ -27,10 +27,10 @@ public class EntityAccessRuleSetDetailsMapper : IEntityAccessRuleSetDetailsMappe
         where TAccessRule : IEntityAccessRule
         where TEntityAccessRuleSummary : IEntityAccessRuleSummary, new()
     {
-        if (dbEntity == null) throw new ArgumentNullException(nameof(dbEntity));
-        if (result == null) throw new ArgumentNullException(nameof(result));
-        if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
-        if (ruleMapper == null) throw new ArgumentNullException(nameof(ruleMapper));
+        ArgumentNullException.ThrowIfNull(dbEntity);
+        ArgumentNullException.ThrowIfNull(result);
+        ArgumentNullException.ThrowIfNull(executionContext);
+        ArgumentNullException.ThrowIfNull(ruleMapper);
 
         result.ViolationAction = ParseViolationAction(dbEntity);
 

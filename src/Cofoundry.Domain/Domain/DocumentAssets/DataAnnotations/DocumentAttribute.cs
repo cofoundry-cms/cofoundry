@@ -40,8 +40,8 @@ public class DocumentAttribute : RegularExpressionAttribute, IMetadataAttribute
 
     public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
-        if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
+        ArgumentNullException.ThrowIfNull(model);
+        ArgumentNullException.ThrowIfNull(propertyInfo);
 
         var isRequired = !(model is int?);
         var id = (int?)propertyInfo.GetValue(model);

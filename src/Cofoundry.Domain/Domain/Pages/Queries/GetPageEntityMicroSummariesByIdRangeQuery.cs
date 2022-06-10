@@ -17,7 +17,7 @@ public class GetPageEntityMicroSummariesByIdRangeQuery : IQuery<IDictionary<int,
         IReadOnlyCollection<int> ids
         )
     {
-        if (ids == null) throw new ArgumentNullException(nameof(ids));
+        ArgumentNullException.ThrowIfNull(ids);
 
         PageIds = ids;
     }

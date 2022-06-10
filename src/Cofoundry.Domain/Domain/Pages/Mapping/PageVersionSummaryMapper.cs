@@ -27,8 +27,8 @@ public class PageVersionSummaryMapper : IPageVersionSummaryMapper
     /// <param name="dbResult">Paged result set of records to map.</param>
     public virtual PagedQueryResult<PageVersionSummary> MapVersions(int pageId, PagedQueryResult<PageVersion> dbResult)
     {
-        if (dbResult == null) throw new ArgumentNullException(nameof(dbResult));
-        if (pageId <= 0) throw new ArgumentOutOfRangeException(nameof(pageId));
+        ArgumentNullException.ThrowIfNull(dbResult);
+        ArgumentNullException.ThrowIfNull(pageId);
 
         // We should only check for the latested published version on the first page
         // as it will only be 1st or 2nd in the list (depending on whether there is a draft)

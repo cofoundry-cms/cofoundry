@@ -36,8 +36,8 @@ public class PageRenderDetailsMapper : IPageRenderDetailsMapper
         PageRoute pageRoute
         )
     {
-        if (dbPageVersion == null) throw new ArgumentNullException(nameof(dbPageVersion));
-        if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
+        ArgumentNullException.ThrowIfNull(dbPageVersion);
+        ArgumentNullException.ThrowIfNull(pageRoute);
 
         var page = _pageRenderSummaryMapper.Map<PageRenderDetails>(dbPageVersion, pageRoute);
 
@@ -60,8 +60,8 @@ public class PageRenderDetailsMapper : IPageRenderDetailsMapper
     /// </param>
     public virtual PageRenderDetails Map(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup)
     {
-        if (dbPageVersion == null) throw new ArgumentNullException(nameof(dbPageVersion));
-        if (pageRouteLookup == null) throw new ArgumentNullException(nameof(pageRouteLookup));
+        ArgumentNullException.ThrowIfNull(dbPageVersion);
+        ArgumentNullException.ThrowIfNull(pageRouteLookup);
 
         var page = _pageRenderSummaryMapper.Map<PageRenderDetails>(dbPageVersion, pageRouteLookup);
 

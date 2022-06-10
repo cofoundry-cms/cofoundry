@@ -13,8 +13,8 @@ public class AuthorizedTaskTokenUrlHelper : IAuthorizedTaskTokenUrlHelper
         string token
         )
     {
-        if (string.IsNullOrWhiteSpace(baseUri)) throw new ArgumentEmptyException(nameof(baseUri));
-        if (string.IsNullOrWhiteSpace(token)) throw new ArgumentEmptyException(nameof(token));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(baseUri);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(token);
 
         if (!Uri.IsWellFormedUriString(baseUri, UriKind.RelativeOrAbsolute))
         {

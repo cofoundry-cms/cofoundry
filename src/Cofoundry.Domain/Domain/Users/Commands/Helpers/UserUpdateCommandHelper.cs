@@ -40,8 +40,8 @@ public class UserUpdateCommandHelper : IUserUpdateCommandHelper
         IExecutionContext executionContext
         )
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
-        if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentNullException.ThrowIfNull(executionContext);
 
         var userAreaCode = user.UserArea?.UserAreaCode ?? user.UserAreaCode;
         if (userAreaCode == null)
@@ -101,8 +101,8 @@ public class UserUpdateCommandHelper : IUserUpdateCommandHelper
         IExecutionContext executionContext
         )
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
-        if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentNullException.ThrowIfNull(executionContext);
 
         if (userArea.UseEmailAsUsername && !string.IsNullOrEmpty(username))
         {

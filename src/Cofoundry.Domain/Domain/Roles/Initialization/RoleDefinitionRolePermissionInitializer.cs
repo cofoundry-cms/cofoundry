@@ -6,14 +6,14 @@ public class RoleDefinitionRolePermissionInitializer : IRolePermissionInitialize
 
     public RoleDefinitionRolePermissionInitializer(IRoleDefinition roleDefinition)
     {
-        if (roleDefinition == null) throw new ArgumentNullException(nameof(roleDefinition));
+        ArgumentNullException.ThrowIfNull(roleDefinition);
 
         _roleDefinition = roleDefinition;
     }
 
     public void Initialize(IPermissionSetBuilder permissionSetBuilder)
     {
-        if (permissionSetBuilder == null) throw new ArgumentNullException(nameof(permissionSetBuilder));
+        ArgumentNullException.ThrowIfNull(permissionSetBuilder);
 
         _roleDefinition.ConfigurePermissions(permissionSetBuilder);
     }

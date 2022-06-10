@@ -35,7 +35,7 @@ public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery : I
         IReadOnlyCollection<string> customEntityDefinitionCodes
         )
     {
-        if (customEntityDefinitionCodes == null) throw new ArgumentNullException(nameof(customEntityDefinitionCodes));
+        ArgumentNullException.ThrowIfNull(customEntityDefinitionCodes);
 
         CustomEntityDefinitionCodes = customEntityDefinitionCodes;
     }

@@ -15,10 +15,7 @@ public class ModelValidationService : IModelValidationService
     /// <param name="modelToValidate">The command to validate.</param>
     public virtual void Validate<T>(T modelToValidate)
     {
-        if (modelToValidate == null)
-        {
-            throw new ArgumentNullException("modelToValidate");
-        }
+        ArgumentNullException.ThrowIfNull(modelToValidate);
 
         var cx = new ValidationContext(modelToValidate);
         Validator.ValidateObject(modelToValidate, cx, true);
@@ -52,10 +49,7 @@ public class ModelValidationService : IModelValidationService
     /// <returns>Enumerable collection of any errors found. Will be empty if the model is valid.</returns>
     public virtual IEnumerable<ValidationError> GetErrors<T>(T modelToValidate)
     {
-        if (modelToValidate == null)
-        {
-            throw new ArgumentNullException("modelToValidate");
-        }
+        ArgumentNullException.ThrowIfNull(modelToValidate);
 
         var validationResults = new List<ValidationResult>();
         var cx = new ValidationContext(modelToValidate);

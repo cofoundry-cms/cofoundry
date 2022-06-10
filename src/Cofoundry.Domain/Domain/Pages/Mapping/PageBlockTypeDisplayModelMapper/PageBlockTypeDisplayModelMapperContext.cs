@@ -15,8 +15,8 @@ public class PageBlockTypeDisplayModelMapperContext<TDataModel>
          IExecutionContext executionContext
          )
     {
-        if (items == null) throw new ArgumentNullException(nameof(Items));
-        if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+        ArgumentNullException.ThrowIfNull(items);
+        ArgumentNullException.ThrowIfNull(executionContext);
 
         Items = items;
         PublishStatusQuery = publishStatusQuery;

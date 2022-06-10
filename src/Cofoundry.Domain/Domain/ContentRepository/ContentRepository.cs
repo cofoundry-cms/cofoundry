@@ -41,7 +41,7 @@ public class ContentRepository
 
     private void DecorateExecutor(Func<IDomainRepositoryExecutor, IDomainRepositoryExecutor> domainRepositoryExecutorFactory)
     {
-        if (domainRepositoryExecutorFactory == null) throw new ArgumentNullException(nameof(domainRepositoryExecutorFactory));
+        ArgumentNullException.ThrowIfNull(domainRepositoryExecutorFactory);
 
         var newExecutor = domainRepositoryExecutorFactory.Invoke(_domainRepositoryExecutor);
         if (newExecutor == null) throw new InvalidOperationException(nameof(domainRepositoryExecutorFactory) + " did not return an instance.");

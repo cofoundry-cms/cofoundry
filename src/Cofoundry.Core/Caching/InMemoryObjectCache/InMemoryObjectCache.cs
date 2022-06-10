@@ -15,7 +15,7 @@ public class InMemoryObjectCache : IObjectCache
     /// <param name="cacheNamespace">Unique cache namespace to organise all cache items under.</param>
     public InMemoryObjectCache(ClearableMemoryCache cache, string cacheNamespace)
     {
-        if (cache == null) throw new ArgumentNullException(nameof(cache));
+        ArgumentNullException.ThrowIfNull(cache);
 
         _cache = cache;
         _cacheNamespace = cacheNamespace ?? string.Empty;

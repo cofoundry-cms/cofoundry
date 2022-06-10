@@ -11,7 +11,7 @@ public class CustomEntityDefinitionSummaryMapper : ICustomEntityDefinitionSummar
     /// <param name="codeDefinition">Code based definition to map.</param>
     public CustomEntityDefinitionSummary Map(ICustomEntityDefinition codeDefinition)
     {
-        if (codeDefinition == null) throw new ArgumentNullException(nameof(codeDefinition));
+        ArgumentNullException.ThrowIfNull(codeDefinition);
 
         var result = new CustomEntityDefinitionSummary()
         {

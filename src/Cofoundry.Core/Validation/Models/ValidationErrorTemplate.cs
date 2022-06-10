@@ -24,8 +24,8 @@ public class ValidationErrorTemplate
     /// </param>
     public ValidationErrorTemplate(string code, string message)
     {
-        if (string.IsNullOrWhiteSpace(code)) throw new ArgumentEmptyException(nameof(code));
-        if (string.IsNullOrWhiteSpace(message)) throw new ArgumentEmptyException(nameof(message));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(code);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(message);
 
         ErrorCode = code;
         Message = message;
@@ -45,8 +45,8 @@ public class ValidationErrorTemplate
     /// </param>
     public ValidationErrorTemplate(string errorCode, string message, Func<ValidationError, ValidationErrorException> exceptionFactory)
     {
-        if (string.IsNullOrWhiteSpace(errorCode)) throw new ArgumentEmptyException(nameof(errorCode));
-        if (string.IsNullOrWhiteSpace(message)) throw new ArgumentEmptyException(nameof(message));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(errorCode);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(message);
 
         ErrorCode = errorCode;
         Message = message;

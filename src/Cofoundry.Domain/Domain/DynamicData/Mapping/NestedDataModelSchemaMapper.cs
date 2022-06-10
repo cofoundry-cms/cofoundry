@@ -18,7 +18,7 @@ public class NestedDataModelSchemaMapper : INestedDataModelSchemaMapper
 
     public NestedDataModelSchema Map(Type modelType)
     {
-        if (modelType == null) throw new ArgumentNullException(nameof(modelType));
+        ArgumentNullException.ThrowIfNull(modelType);
 
         var schema = new NestedDataModelSchema();
         var dataModelMetaData = _modelMetadataProvider.GetMetadataForType(modelType);

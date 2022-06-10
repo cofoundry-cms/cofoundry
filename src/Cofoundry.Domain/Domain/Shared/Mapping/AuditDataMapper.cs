@@ -23,7 +23,7 @@ public class AuditDataMapper : IAuditDataMapper
     /// <param name="model">ICreateAuditable EF database record.</param>
     public virtual CreateAuditData MapCreateAuditData(ICreateAuditable model)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
+        ArgumentNullException.ThrowIfNull(model);
         ValidateUserProperty(model.Creator, nameof(model.Creator));
 
         var auditData = new CreateAuditData();
@@ -40,7 +40,7 @@ public class AuditDataMapper : IAuditDataMapper
     /// <param name="model">IUpdateAuditable EF database record.</param>
     public virtual UpdateAuditData MapUpdateAuditData(IUpdateAuditable model)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
+        ArgumentNullException.ThrowIfNull(model);
         ValidateUserProperty(model.Creator, nameof(model.Creator));
         ValidateUserProperty(model.Updater, nameof(model.Updater));
 
@@ -61,7 +61,7 @@ public class AuditDataMapper : IAuditDataMapper
     /// <param name="model">ICreateAuditable EF database record to map create data from.</param>
     public virtual UpdateAuditData MapUpdateAuditDataCreatorData(ICreateAuditable model)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
+        ArgumentNullException.ThrowIfNull(model);
         ValidateUserProperty(model.Creator, nameof(model.Creator));
 
         var auditData = new UpdateAuditData();
@@ -79,7 +79,7 @@ public class AuditDataMapper : IAuditDataMapper
     /// <param name="model">ICreateAuditable EF database record to map create data from.</param>
     public virtual void MapUpdateAuditDataUpdaterData(UpdateAuditData updateAuditDatra, ICreateAuditable model)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
+        ArgumentNullException.ThrowIfNull(model);
         ValidateUserProperty(model.Creator, nameof(model.Creator));
 
         updateAuditDatra.UpdateDate = model.CreateDate;

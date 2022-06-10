@@ -19,9 +19,9 @@ public class CustomEntityRouteDataBuilderParameter<TDataModel>
         TDataModel dataModel
         )
     {
-        if (customEntityRoute == null) throw new ArgumentNullException(nameof(customEntityRoute));
-        if (customEntityVersionRoute == null) throw new ArgumentNullException(nameof(customEntityVersionRoute));
-        if (dataModel == null) throw new ArgumentNullException(nameof(dataModel));
+        ArgumentNullException.ThrowIfNull(customEntityRoute);
+        ArgumentNullException.ThrowIfNull(customEntityVersionRoute);
+        ArgumentNullException.ThrowIfNull(dataModel);
 
         _customEntityRoute = customEntityRoute;
         _customEntityVersionRoute = customEntityVersionRoute;

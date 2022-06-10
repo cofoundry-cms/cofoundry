@@ -24,8 +24,8 @@ public class PageRenderSummaryMapper : IPageRenderSummaryMapper
     public virtual T Map<T>(PageVersion dbPageVersion, PageRoute pageRoute)
         where T : PageRenderSummary, new()
     {
-        if (dbPageVersion == null) throw new ArgumentNullException(nameof(dbPageVersion));
-        if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
+        ArgumentNullException.ThrowIfNull(dbPageVersion);
+        ArgumentNullException.ThrowIfNull(pageRoute);
 
         var page = MapInternal<T>(dbPageVersion);
         page.PageRoute = pageRoute;
@@ -41,8 +41,8 @@ public class PageRenderSummaryMapper : IPageRenderSummaryMapper
     public virtual T Map<T>(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup)
         where T : PageRenderSummary, new()
     {
-        if (dbPageVersion == null) throw new ArgumentNullException(nameof(dbPageVersion));
-        if (pageRouteLookup == null) throw new ArgumentNullException(nameof(pageRouteLookup));
+        ArgumentNullException.ThrowIfNull(dbPageVersion);
+        ArgumentNullException.ThrowIfNull(pageRouteLookup);
 
         var page = MapInternal<T>(dbPageVersion);
 

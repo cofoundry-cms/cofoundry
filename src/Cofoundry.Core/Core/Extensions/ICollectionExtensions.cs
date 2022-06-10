@@ -16,7 +16,7 @@ public static class ICollectionExtensions
     /// <returns>Returns the number of elements removed.</returns>
     public static int RemoveAll<T>(this ICollection<T> collection, Predicate<T> predicate = null)
     {
-        if (collection == null) throw new ArgumentNullException(nameof(collection));
+        ArgumentNullException.ThrowIfNull(collection);
 
         int count = 0;
 

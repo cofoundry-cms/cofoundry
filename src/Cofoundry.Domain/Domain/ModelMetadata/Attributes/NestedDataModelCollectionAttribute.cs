@@ -45,7 +45,6 @@ public class NestedDataModelCollectionAttribute : ValidateObjectAttribute, IMeta
 
     private string GetNestedModelTypeName(DisplayMetadataProviderContext context)
     {
-
         var singularType = TypeHelper.GetCollectionTypeOrNull(context.Key.ModelType);
 
         if (singularType == null)
@@ -73,8 +72,8 @@ public class NestedDataModelCollectionAttribute : ValidateObjectAttribute, IMeta
 
     public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
-        if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
+        ArgumentNullException.ThrowIfNull(model);
+        ArgumentNullException.ThrowIfNull(propertyInfo);
 
         var nestedItems = propertyInfo.GetValue(model) as IEnumerable<INestedDataModel>;
 

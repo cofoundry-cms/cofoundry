@@ -32,7 +32,7 @@ public class GetDocumentAssetRenderDetailsByIdRangeQuery : IQuery<IDictionary<in
         IReadOnlyCollection<int> documentAssetIds
         )
     {
-        if (documentAssetIds == null) throw new ArgumentNullException(nameof(documentAssetIds));
+        ArgumentNullException.ThrowIfNull(documentAssetIds);
 
         DocumentAssetIds = documentAssetIds;
     }

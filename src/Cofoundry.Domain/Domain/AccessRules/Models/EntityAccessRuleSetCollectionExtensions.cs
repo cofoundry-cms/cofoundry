@@ -11,7 +11,7 @@ public static class EntityAccessRuleSetCollectionExtensions
     /// <returns>A collection of rules that don't match the specified user account.</returns>
     public static IEnumerable<EntityAccessRuleSet> GetRuleViolations(this IEnumerable<EntityAccessRuleSet> accessRules, IUserContext user)
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
+        ArgumentNullException.ThrowIfNull(user);
 
         return accessRules.Where(r => !r.IsAuthorized(user));
     }

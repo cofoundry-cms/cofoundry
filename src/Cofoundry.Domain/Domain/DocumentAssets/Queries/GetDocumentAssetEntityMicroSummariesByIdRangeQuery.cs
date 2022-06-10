@@ -17,7 +17,7 @@ public class GetDocumentAssetEntityMicroSummariesByIdRangeQuery : IQuery<IDictio
         IReadOnlyCollection<int> ids
         )
     {
-        if (ids == null) throw new ArgumentNullException(nameof(ids));
+        ArgumentNullException.ThrowIfNull(ids);
 
         DocumentAssetIds = ids;
     }

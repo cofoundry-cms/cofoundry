@@ -28,7 +28,7 @@ public class PageDirectoryRouteMapper : IPageDirectoryRouteMapper
     {
         const string ROOT_PATH = "/";
 
-        if (dbPageDirectories == null) throw new ArgumentNullException(nameof(dbPageDirectories));
+        ArgumentNullException.ThrowIfNull(dbPageDirectories);
 
         var dbRoot = dbPageDirectories.SingleOrDefault(r => !r.ParentPageDirectoryId.HasValue);
         EntityNotFoundException.ThrowIfNull(dbRoot, "ROOT");

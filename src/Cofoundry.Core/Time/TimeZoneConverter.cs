@@ -12,8 +12,7 @@ public class TimeZoneConverter : ITimeZoneConverter
     /// <param name="timeZoneId">Timezone to convert to.</param>
     public virtual DateTimeOffset FromUtcToOffset(DateTime dateTime, string timeZoneId)
     {
-        if (timeZoneId == null) throw new ArgumentNullException(timeZoneId);
-        if (string.IsNullOrWhiteSpace(timeZoneId)) throw new ArgumentEmptyException(timeZoneId);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(timeZoneId);
 
         if (dateTime.Kind == DateTimeKind.Local)
         {

@@ -37,7 +37,7 @@ public class ExecutionContextFactory : IExecutionContextFactory
     /// <param name="executionContextToCopy">Optional execution context to base the new context on</param>
     public IExecutionContext Create(IUserContext userContext, IExecutionContext executionContextToCopy = null)
     {
-        if (userContext == null) throw new ArgumentNullException(nameof(userContext));
+        ArgumentNullException.ThrowIfNull(userContext);
 
         var newContext = new ExecutionContext();
         newContext.UserContext = userContext;

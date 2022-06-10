@@ -128,8 +128,8 @@ public class NestedDataModelMultiTypeCollectionAttribute : ValidateObjectAttribu
 
     public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
-        if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
+        ArgumentNullException.ThrowIfNull(model);
+        ArgumentNullException.ThrowIfNull(propertyInfo);
 
         var nestedItems = propertyInfo.GetValue(model) as IEnumerable<NestedDataModelMultiTypeItem>;
 

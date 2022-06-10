@@ -22,7 +22,7 @@ public class DbUpdateCommandFactory
         string scriptPath = "Install.Db."
         )
     {
-        if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+        ArgumentNullException.ThrowIfNull(assembly);
 
         var scriptFiles = GetScripts(assembly, scriptPath);
         var commands = new List<IVersionedUpdateCommand>();

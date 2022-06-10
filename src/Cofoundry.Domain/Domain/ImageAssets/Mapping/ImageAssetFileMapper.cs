@@ -15,10 +15,7 @@ public class ImageAssetFileMapper : IImageAssetFileMapper
     {
         if (renderDetails == null) return null;
 
-        if (contentStream == null)
-        {
-            throw new ArgumentNullException(nameof(contentStream));
-        }
+        ArgumentNullException.ThrowIfNull(contentStream);
 
         var image = new ImageAssetFile()
         {

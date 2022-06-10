@@ -15,7 +15,7 @@ public class ContentRepositoryCustomEntityByUrlSlugQueryBuilder
         string urlSlug
         )
     {
-        if (customEntityDefinition == null) throw new ArgumentNullException(nameof(customEntityDefinition));
+        ArgumentNullException.ThrowIfNull(customEntityDefinition);
 
         ExtendableContentRepository = contentRepository;
         _customEntityDefinition = customEntityDefinition;

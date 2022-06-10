@@ -30,7 +30,7 @@ public static class IDomainRepositoryExtensions
     public static TRepository WithContext<TRepository>(this TRepository repository, IExecutionContext executionContext)
         where TRepository : IDomainRepository
     {
-        if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+        ArgumentNullException.ThrowIfNull(executionContext);
 
         var extendedContentRepositry = repository.AsExtendableContentRepository();
         return (TRepository)extendedContentRepositry.WithExecutor(executor => new DomainRepositoryExecutorWithExecutionContext(executor, executionContext));
@@ -47,7 +47,7 @@ public static class IDomainRepositoryExtensions
     public static TRepository WithContext<TRepository>(this TRepository repository, IUserContext userContext)
         where TRepository : IDomainRepository
     {
-        if (userContext == null) throw new ArgumentNullException(nameof(userContext));
+        ArgumentNullException.ThrowIfNull(userContext);
 
         var extendedContentRepositry = repository.AsExtendableContentRepository();
         var executionContextFactory = extendedContentRepositry.ServiceProvider.GetRequiredService<IExecutionContextFactory>();

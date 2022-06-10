@@ -62,8 +62,8 @@ public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
 
     private static GetPageRoutingInfoByCustomEntityIdQuery GetPageRoutingQuery(CustomEntityVersion dbResult)
     {
-        if (dbResult == null) throw new ArgumentNullException(nameof(dbResult));
-        if (dbResult.CustomEntity == null) throw new ArgumentNullException(nameof(dbResult.CustomEntity));
+        ArgumentNullException.ThrowIfNull(dbResult);
+        ArgumentNullException.ThrowIfNull(dbResult.CustomEntity);
 
         return new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
     }

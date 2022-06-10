@@ -134,7 +134,7 @@ public class PageRoutingInfo
     /// </returns>
     public EntityAccessRuleSet ValidateAccess(IUserContext user)
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
+        ArgumentNullException.ThrowIfNull(user);
         EntityInvalidOperationException.ThrowIfNull(this, r => r.PageRoute);
 
         return PageRoute.ValidateAccess(user);

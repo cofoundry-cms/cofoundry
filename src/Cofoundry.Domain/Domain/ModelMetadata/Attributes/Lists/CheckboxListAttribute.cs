@@ -30,7 +30,7 @@ public class CheckboxListAttribute : Attribute, IMetadataAttribute
     /// </param>
     public CheckboxListAttribute(Type optionSourceType)
     {
-        if (optionSourceType == null) throw new ArgumentNullException(nameof(optionSourceType));
+        ArgumentNullException.ThrowIfNull(optionSourceType);
         OptionSource = optionSourceType;
     }
 

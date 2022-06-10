@@ -47,8 +47,8 @@ public class CofoundryDbContextInitializer : ICofoundryDbContextInitializer
     /// </returns>
     public DbContextOptionsBuilder Configure(DbContext dbContext, DbContextOptionsBuilder optionsBuilder)
     {
-        if (dbContext == null) throw new ArgumentEmptyException(nameof(dbContext));
-        if (optionsBuilder == null) throw new ArgumentEmptyException(nameof(optionsBuilder));
+        ArgumentNullException.ThrowIfNull(dbContext);
+        ArgumentNullException.ThrowIfNull(optionsBuilder);
 
         optionsBuilder.UseLoggerFactory(_loggerFactory);
 

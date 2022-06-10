@@ -11,7 +11,7 @@ public class GetPageDirectoryEntityMicroSummariesByIdRangeQuery : IQuery<IDictio
 
     public GetPageDirectoryEntityMicroSummariesByIdRangeQuery(IReadOnlyCollection<int> ids)
     {
-        if (ids == null) throw new ArgumentNullException(nameof(ids));
+        ArgumentNullException.ThrowIfNull(ids);
 
         PageDirectoryIds = ids;
     }

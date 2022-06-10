@@ -23,7 +23,7 @@ public class RoleAuthorizationRequirement : IAuthorizationRequirement
     public RoleAuthorizationRequirement(string userAreaCode, string roleCode)
         : this(userAreaCode, new string[] { roleCode })
     {
-        if (string.IsNullOrWhiteSpace(roleCode)) throw new ArgumentEmptyException(nameof(roleCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(roleCode);
     }
 
     /// <summary>
@@ -39,8 +39,8 @@ public class RoleAuthorizationRequirement : IAuthorizationRequirement
     /// </param>
     public RoleAuthorizationRequirement(string userAreaCode, IEnumerable<string> roleCodes)
     {
-        if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
-        if (roleCodes == null) throw new ArgumentNullException(nameof(roleCodes));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
+        ArgumentNullException.ThrowIfNull(roleCodes);
         if (roleCodes.Count() == 0) throw new ArgumentOutOfRangeException(nameof(roleCodes));
 
         UserAreaCode = userAreaCode;

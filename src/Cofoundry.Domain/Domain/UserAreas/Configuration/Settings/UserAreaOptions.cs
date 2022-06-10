@@ -65,7 +65,7 @@ public class UserAreaOptions
     /// </param>
     public static UserAreaOptions CopyFrom(UsersSettings settings)
     {
-        if (settings == null) throw new ArgumentNullException(nameof(settings));
+        ArgumentNullException.ThrowIfNull(settings);
         EntityInvalidOperationException.ThrowIfNull(settings, s => s.EmailAddress);
         EntityInvalidOperationException.ThrowIfNull(settings, s => s.Password);
         EntityInvalidOperationException.ThrowIfNull(settings, s => s.Username);

@@ -79,7 +79,7 @@ public static class AuthorizedTaskValidationErrors
         /// </param>
         public static string RemoveNamespace(string errorCode)
         {
-            if (errorCode == null) throw new ArgumentNullException(nameof(errorCode));
+            ArgumentNullException.ThrowIfNull(errorCode);
 
             var ns = AddRequestValidationNamespace(string.Empty);
 

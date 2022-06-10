@@ -18,7 +18,7 @@ public class AuthorizePermissionAttribute : AuthorizeAttribute
     public AuthorizePermissionAttribute(Type permissionType)
         : base()
     {
-        if (permissionType == null) throw new ArgumentNullException(nameof(permissionType));
+        ArgumentNullException.ThrowIfNull(permissionType);
 
         if (permissionType.GetConstructor(Type.EmptyTypes) == null)
         {
@@ -53,8 +53,8 @@ public class AuthorizePermissionAttribute : AuthorizeAttribute
     public AuthorizePermissionAttribute(Type customEntityPermissionTemplateType, string customEntityDefinitionCode)
         : base()
     {
-        if (customEntityPermissionTemplateType == null) throw new ArgumentNullException(nameof(customEntityPermissionTemplateType));
-        if (string.IsNullOrWhiteSpace(customEntityDefinitionCode)) throw new ArgumentEmptyException(nameof(customEntityDefinitionCode));
+        ArgumentNullException.ThrowIfNull(customEntityPermissionTemplateType);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(customEntityDefinitionCode);
 
         if (customEntityPermissionTemplateType.GetConstructor(Type.EmptyTypes) == null)
         {

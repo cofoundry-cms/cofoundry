@@ -41,8 +41,8 @@ public static class TopologicalSorter
         bool throwOnCyclicDependency
         )
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-        if (dependencySelector == null) throw new ArgumentNullException(nameof(dependencySelector));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(dependencySelector);
 
         var sorted = new List<TItem>();
         var visited = new HashSet<TItem>();

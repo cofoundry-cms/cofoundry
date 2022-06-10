@@ -15,7 +15,7 @@ public class PermissionIdentifierFormatter
     /// <returns>A string identifier that uniquely identifies this permission.</returns>
     public static string GetUniqueIdentifier(IPermission permission)
     {
-        if (permission == null) throw new ArgumentNullException(nameof(permission));
+        ArgumentNullException.ThrowIfNull(permission);
 
         if (permission is IEntityPermission customEntityPermission)
         {
@@ -37,7 +37,7 @@ public class PermissionIdentifierFormatter
     /// <returns>A string identifier that uniquely identifies this permission.</returns>
     public static string GetUniqueIdentifier(string permissionTypeCode, string entityDefinitionCode = null)
     {
-        if (string.IsNullOrWhiteSpace(permissionTypeCode)) throw new ArgumentEmptyException(nameof(permissionTypeCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(permissionTypeCode);
 
         string code;
 

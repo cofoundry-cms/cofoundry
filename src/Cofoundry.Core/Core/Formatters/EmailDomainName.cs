@@ -7,8 +7,8 @@ public class EmailDomainName
 {
     public EmailDomainName(string domain, string idnDomain)
     {
-        if (string.IsNullOrWhiteSpace(domain)) throw new ArgumentEmptyException(nameof(domain));
-        if (string.IsNullOrWhiteSpace(idnDomain)) throw new ArgumentEmptyException(nameof(idnDomain));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(domain);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(idnDomain);
 
         Name = domain;
         IdnName = idnDomain;

@@ -17,7 +17,7 @@ public class CustomEntityPermissionBuilder : EntityPermissionBuilder
         )
         : base(permissionSetBuilder, isIncludeOperation)
     {
-        if (customEntityDefinition == null) throw new ArgumentNullException(nameof(customEntityDefinition));
+        ArgumentNullException.ThrowIfNull(customEntityDefinition);
         _customEntityDefinition = customEntityDefinition;
     }
 

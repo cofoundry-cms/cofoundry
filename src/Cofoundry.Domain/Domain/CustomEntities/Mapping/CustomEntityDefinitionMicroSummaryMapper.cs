@@ -11,7 +11,7 @@ public class CustomEntityDefinitionMicroSummaryMapper : ICustomEntityDefinitionM
     /// <param name="codeDefinition">Code based definition to map.</param>
     public CustomEntityDefinitionMicroSummary Map(ICustomEntityDefinition codeDefinition)
     {
-        if (codeDefinition == null) throw new ArgumentNullException(nameof(codeDefinition));
+        ArgumentNullException.ThrowIfNull(codeDefinition);
 
         var result = new CustomEntityDefinitionMicroSummary()
         {
@@ -31,7 +31,7 @@ public class CustomEntityDefinitionMicroSummaryMapper : ICustomEntityDefinitionM
     /// <param name="summary">Instance to map.</param>
     public CustomEntityDefinitionMicroSummary Map(CustomEntityDefinitionSummary summary)
     {
-        if (summary == null) throw new ArgumentNullException(nameof(summary));
+        ArgumentNullException.ThrowIfNull(summary);
 
         var result = new CustomEntityDefinitionMicroSummary()
         {

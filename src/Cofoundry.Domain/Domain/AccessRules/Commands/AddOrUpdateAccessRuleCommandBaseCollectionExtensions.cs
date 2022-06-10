@@ -18,9 +18,8 @@ public static class AddOrUpdateAccessRuleCommandBaseCollectionExtensions
     public static ICollection<TAddOrUpdateAccessRuleCommand> AddNew<TAddOrUpdateAccessRuleCommand>(this ICollection<TAddOrUpdateAccessRuleCommand> source, string userAreaCode, int? roleId = null)
         where TAddOrUpdateAccessRuleCommand : AddOrUpdateAccessRuleCommandBase, new()
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-        if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
-        if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
 
         source.Add(new TAddOrUpdateAccessRuleCommand()
         {

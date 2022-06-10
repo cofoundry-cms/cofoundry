@@ -21,8 +21,8 @@ public static class IEntityPublishableExtensions
     public static bool SetPublished<TEntity>(this TEntity entity, DateTime currentDate, DateTime? publishDate = null)
         where TEntity : IEntityPublishable
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-        if (currentDate == DateTime.MinValue) throw new ArgumentEmptyException(nameof(currentDate));
+        ArgumentNullException.ThrowIfNull(entity);
+        ArgumentEmptyException.ThrowIfDefault(currentDate);
 
         bool hasPublishStatusChanged = false;
 

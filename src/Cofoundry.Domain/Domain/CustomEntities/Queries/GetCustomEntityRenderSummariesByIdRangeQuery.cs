@@ -51,7 +51,7 @@ public class GetCustomEntityRenderSummariesByIdRangeQuery : IQuery<IDictionary<i
         PublishStatusQuery publishStatusQuery = PublishStatusQuery.Published
         )
     {
-        if (customEntityIds == null) throw new ArgumentNullException(nameof(customEntityIds));
+        ArgumentNullException.ThrowIfNull(customEntityIds);
 
         CustomEntityIds = customEntityIds;
         PublishStatus = publishStatusQuery;

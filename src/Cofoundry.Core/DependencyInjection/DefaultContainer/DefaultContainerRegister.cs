@@ -25,10 +25,10 @@ public class DefaultContainerRegister : IContainerRegister
         IConfiguration configuration
         )
     {
-        if (discoveredTypesProvider == null) throw new ArgumentNullException(nameof(discoveredTypesProvider));
-        if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
-        if (containerBuilder == null) throw new ArgumentNullException(nameof(containerBuilder));
-        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+        ArgumentNullException.ThrowIfNull(discoveredTypesProvider);
+        ArgumentNullException.ThrowIfNull(serviceCollection);
+        ArgumentNullException.ThrowIfNull(containerBuilder);
+        ArgumentNullException.ThrowIfNull(configuration);
 
         _discoveredTypesProvider = discoveredTypesProvider;
         _serviceCollection = serviceCollection;
@@ -40,7 +40,8 @@ public class DefaultContainerRegister : IContainerRegister
 
     public IContainerRegister RegisterSingleton<TRegisterAs>(TRegisterAs instance, RegistrationOptions options = null)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        ArgumentNullException.ThrowIfNull(instance);
+
         var typeToRegister = typeof(TRegisterAs);
 
         var fn = new Action(() =>

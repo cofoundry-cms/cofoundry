@@ -19,7 +19,7 @@ public class EmailAddressValidator : IEmailAddressValidator
 
     public virtual async Task<ICollection<ValidationError>> GetErrorsAsync(IEmailAddressValidationContext context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
         var validators = new List<Func<IEmailAddressValidationContext, ValidationError>>()
         {

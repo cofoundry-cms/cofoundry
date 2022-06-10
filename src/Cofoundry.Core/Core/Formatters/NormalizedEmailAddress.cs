@@ -10,8 +10,8 @@ public class NormalizedEmailAddress
 {
     public NormalizedEmailAddress(string local, EmailDomainName domain)
     {
-        if (string.IsNullOrWhiteSpace(local)) throw new ArgumentEmptyException(nameof(local));
-        if (domain == null) throw new ArgumentNullException(nameof(domain));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(local);
+        ArgumentNullException.ThrowIfNull(domain);
 
         Local = local;
         Domain = domain;
@@ -34,7 +34,7 @@ public class NormalizedEmailAddress
     /// <returns>Returns a new <see cref="NormalizedEmailAddress"/> instance reflecting any changes.</returns>
     public NormalizedEmailAddress AlterLocal(Func<string, string> modifier)
     {
-        if (modifier == null) throw new ArgumentNullException(nameof(modifier));
+        ArgumentNullException.ThrowIfNull(modifier);
         var newLocal = modifier(Local);
 
         return new NormalizedEmailAddress(
@@ -58,8 +58,8 @@ public class NormalizedEmailAddress
     /// </returns>
     public NormalizedEmailAddress AlterLocalIf(Func<NormalizedEmailAddress, bool> predicate, Func<string, string> modifier)
     {
-        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-        if (modifier == null) throw new ArgumentNullException(nameof(modifier));
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(modifier);
 
         if (!predicate(this)) return this;
 
@@ -76,7 +76,8 @@ public class NormalizedEmailAddress
     /// <returns>Returns a new <see cref="NormalizedEmailAddress"/> instance reflecting any changes.</returns>
     public NormalizedEmailAddress AlterDomain(Func<string, string> modifier)
     {
-        if (modifier == null) throw new ArgumentNullException(nameof(modifier));
+        ArgumentNullException.ThrowIfNull(modifier);
+
         var newDomainName = modifier(Domain.Name);
         var newDomain = EmailDomainName.Parse(newDomainName);
         if (newDomain == null) throw new InvalidOperationException($"Domain name {newDomain} could not be parsed.");
@@ -99,8 +100,8 @@ public class NormalizedEmailAddress
     /// </returns>
     public NormalizedEmailAddress AlterDomainIf(Func<NormalizedEmailAddress, bool> predicate, Func<string, string> modifier)
     {
-        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-        if (modifier == null) throw new ArgumentNullException(nameof(modifier));
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(modifier);
 
         if (!predicate(this)) return this;
 
@@ -122,8 +123,8 @@ public class NormalizedEmailAddress
     /// </returns>
     public NormalizedEmailAddress AlterIf(Func<NormalizedEmailAddress, bool> predicate, Func<NormalizedEmailAddress, NormalizedEmailAddress> modifier)
     {
-        if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-        if (modifier == null) throw new ArgumentNullException(nameof(modifier));
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(modifier);
 
         if (!predicate(this)) return this;
 

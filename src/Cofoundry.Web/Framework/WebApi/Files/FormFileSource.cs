@@ -13,7 +13,7 @@ public class FormFileSource : IFileSource
 
     public FormFileSource(IFormFile formFile)
     {
-        if (formFile == null) throw new ArgumentNullException(nameof(formFile));
+        ArgumentNullException.ThrowIfNull(formFile);
 
         _formFile = formFile;
 

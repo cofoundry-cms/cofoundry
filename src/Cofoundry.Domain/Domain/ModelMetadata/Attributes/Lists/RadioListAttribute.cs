@@ -23,7 +23,7 @@ public class RadioListAttribute : Attribute, IMetadataAttribute
     /// </param>
     public RadioListAttribute(Type optionSourceType)
     {
-        if (optionSourceType == null) throw new ArgumentNullException(nameof(optionSourceType));
+        ArgumentNullException.ThrowIfNull(optionSourceType);
         OptionSource = optionSourceType;
     }
 

@@ -72,7 +72,7 @@ public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
 
     public async Task SendPasswordChangedNotification(User user)
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
+        ArgumentNullException.ThrowIfNull(user);
 
         var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserAreaCode).Password;
         if (!options.SendNotificationOnUpdate) return;

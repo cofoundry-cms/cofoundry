@@ -167,10 +167,7 @@ public class PageRouteLibrary : IPageRouteLibrary
     {
         if (route == null) return string.Empty;
 
-        if (versionRoute == null)
-        {
-            throw new ArgumentNullException(nameof(versionRoute));
-        }
+        ArgumentNullException.ThrowIfNull(versionRoute);
 
         var isEditingCustomEntity = versionRoute is CustomEntityVersionRoute;
 

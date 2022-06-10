@@ -56,14 +56,14 @@ public class PermissionSetBuilder : IExtendablePermissionSetBuilder
 
     public virtual IPermissionSetBuilder Include(IEnumerable<IPermission> permissions)
     {
-        if (permissions == null) throw new ArgumentNullException(nameof(permissions));
+        ArgumentNullException.ThrowIfNull(permissions);
 
         return Include(p => p.Intersect(permissions, _permissionEqualityComparer));
     }
 
     public virtual IPermissionSetBuilder Include(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> permissionFilter)
     {
-        if (permissionFilter == null) throw new ArgumentNullException(nameof(permissionFilter));
+        ArgumentNullException.ThrowIfNull(permissionFilter);
 
         var filteredPermissions = permissionFilter(AvailablePermissions);
         _permissions = _permissions.Union(filteredPermissions, _permissionEqualityComparer);
@@ -76,7 +76,7 @@ public class PermissionSetBuilder : IExtendablePermissionSetBuilder
         Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter
         )
     {
-        if (permissionFilter == null) throw new ArgumentNullException(nameof(permissionFilter));
+        ArgumentNullException.ThrowIfNull(permissionFilter);
 
         var filtered = permissionFilter(AvailablePermissions);
 
@@ -90,14 +90,14 @@ public class PermissionSetBuilder : IExtendablePermissionSetBuilder
 
     public virtual IPermissionSetBuilder Exclude(IEnumerable<IPermission> permissions)
     {
-        if (permissions == null) throw new ArgumentNullException(nameof(permissions));
+        ArgumentNullException.ThrowIfNull(permissions);
 
         return Exclude(p => p.Intersect(permissions, _permissionEqualityComparer));
     }
 
     public virtual IPermissionSetBuilder Exclude(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> permissionFilter)
     {
-        if (permissionFilter == null) throw new ArgumentNullException(nameof(permissionFilter));
+        ArgumentNullException.ThrowIfNull(permissionFilter);
 
         var permissionsToExclude = permissionFilter(AvailablePermissions);
         _permissions = _permissions.Except(permissionsToExclude, _permissionEqualityComparer);
@@ -110,7 +110,7 @@ public class PermissionSetBuilder : IExtendablePermissionSetBuilder
         Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter
         )
     {
-        if (permissionFilter == null) throw new ArgumentNullException(nameof(permissionFilter));
+        ArgumentNullException.ThrowIfNull(permissionFilter);
 
         var permissionsToExclude = permissionFilter(AvailablePermissions);
 

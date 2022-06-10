@@ -66,7 +66,7 @@ public class CommandExecutor : ICommandExecutor
 
     public Task ExecuteAsync(ICommand command, IUserContext userContext)
     {
-        if (userContext == null) throw new ArgumentNullException(nameof(userContext));
+        ArgumentNullException.ThrowIfNull(userContext);
 
         var executionContext = _executionContextFactory.Create(userContext);
 

@@ -17,9 +17,9 @@ public class DependableEntityDeleteCommandValidator : IDependableEntityDeleteCom
 
     public async Task ValidateAsync(string entityDefinitionCode, int entityId, IExecutionContext executionContext)
     {
-        if (string.IsNullOrWhiteSpace(entityDefinitionCode)) throw new ArgumentEmptyException(nameof(entityDefinitionCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(entityDefinitionCode);
         if (entityId < 1) throw new ArgumentOutOfRangeException(nameof(entityDefinitionCode), nameof(entityId) + "must be a positive integer.");
-        if (executionContext == null) throw new ArgumentEmptyException(nameof(executionContext));
+        ArgumentNullException.ThrowIfNull(executionContext);
 
         var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(entityDefinitionCode);
         var requiredDependencies = await _queryExecutor.ExecuteAsync(new GetEntityDependencySummaryByRelatedEntityIdQuery()

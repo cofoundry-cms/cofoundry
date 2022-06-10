@@ -18,7 +18,7 @@ public class PermissionAuthorizationRequirement : IAuthorizationRequirement
     /// </param>
     public PermissionAuthorizationRequirement(IPermission permission)
     {
-        if (permission == null) throw new ArgumentNullException(nameof(permission));
+        ArgumentNullException.ThrowIfNull(permission);
         Permission = permission;
     }
 

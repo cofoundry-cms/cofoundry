@@ -32,7 +32,7 @@ public class PasswordPolicyBuilder : IExtendablePasswordPolicyBuilder
 
     public IPasswordPolicyBuilder AddAttribute(string attribute, string value)
     {
-        if (string.IsNullOrWhiteSpace(attribute)) throw new ArgumentEmptyException(nameof(attribute));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(attribute);
 
         if (value != null)
         {
@@ -48,7 +48,7 @@ public class PasswordPolicyBuilder : IExtendablePasswordPolicyBuilder
 
     public IPasswordPolicyBuilder RemoveAttribute(string attribute)
     {
-        if (string.IsNullOrWhiteSpace(attribute)) throw new ArgumentEmptyException(nameof(attribute));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(attribute);
 
         if (_attributes.ContainsKey(attribute))
         {

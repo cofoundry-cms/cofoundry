@@ -21,7 +21,7 @@ public static class IPageableQueryExtensions
         bool allowUnbounded = false
         )
     {
-        if (query == null) throw new ArgumentNullException(nameof(query));
+        ArgumentNullException.ThrowIfNull(query);
 
         if ((allowUnbounded && query.PageSize == 0) ||
             (!allowUnbounded && query.PageSize <= 0))
@@ -48,7 +48,7 @@ public static class IPageableQueryExtensions
         int maxSize
         )
     {
-        if (query == null) throw new ArgumentNullException(nameof(query));
+        ArgumentNullException.ThrowIfNull(query);
 
         if (query.PageSize <= 0) query.PageSize = defaultSize;
         if (query.PageSize > maxSize) query.PageSize = maxSize;

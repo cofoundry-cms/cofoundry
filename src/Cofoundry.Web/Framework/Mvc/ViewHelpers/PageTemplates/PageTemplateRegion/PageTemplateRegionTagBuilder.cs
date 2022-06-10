@@ -26,9 +26,8 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
         string regionName
         )
     {
-        if (regionName == null) throw new ArgumentNullException(nameof(regionName));
-        if (string.IsNullOrWhiteSpace(regionName)) throw new ArgumentEmptyException(nameof(regionName));
-        if (pageViewModel == null) throw new ArgumentNullException(nameof(pageViewModel));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(regionName);
+        ArgumentNullException.ThrowIfNull(pageViewModel);
 
         _blockRenderer = blockRenderer;
         _pageBlockTypeDataModelTypeFactory = pageBlockTypeDataModelTypeFactory;
@@ -56,8 +55,7 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
 
     public IPageTemplateRegionTagBuilder WrapWithTag(string tagName, object htmlAttributes = null)
     {
-        if (tagName == null) throw new ArgumentNullException(nameof(tagName));
-        if (string.IsNullOrWhiteSpace(tagName)) throw new ArgumentEmptyException(nameof(tagName));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(tagName);
 
         _wrappingTagName = tagName;
         _additonalHtmlAttributes = TemplateRegionTagBuilderHelper.ParseHtmlAttributesFromAnonymousObject(htmlAttributes);

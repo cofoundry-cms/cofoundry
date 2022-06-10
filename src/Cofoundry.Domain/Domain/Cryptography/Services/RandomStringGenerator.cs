@@ -25,7 +25,7 @@ public class RandomStringGenerator : IRandomStringGenerator
     public string Generate(int length, string allowedCharacters, string untrustworthyCharacters)
     {
         if (length < 1) throw new ArgumentOutOfRangeException($"{nameof(length)} must be a positive integer.", nameof(length));
-        if (allowedCharacters == null) throw new ArgumentNullException(nameof(allowedCharacters));
+        ArgumentNullException.ThrowIfNull(allowedCharacters);
 
         if (untrustworthyCharacters == null) untrustworthyCharacters = string.Empty;
 

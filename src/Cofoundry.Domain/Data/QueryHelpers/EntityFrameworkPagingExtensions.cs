@@ -8,7 +8,7 @@ public static class EntityFrameworkPagingExtensions
     /// </summary>
     public static async Task<PagedQueryResult<T>> ToPagedResultAsync<T>(this IQueryable<T> source, IPageableQuery query)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         var result = new PagedQueryResult<T>();
         result.TotalItems = await source.CountAsync();

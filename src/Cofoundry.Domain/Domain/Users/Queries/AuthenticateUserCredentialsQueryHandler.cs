@@ -131,7 +131,7 @@ public class AuthenticateUserCredentialsQueryHandler
 
     private UserSignInInfo MapUser(PasswordVerificationResult passwordVerificationResult, User dbUser)
     {
-        if (dbUser == null) throw new ArgumentNullException(nameof(dbUser));
+        ArgumentNullException.ThrowIfNull(dbUser);
 
         if (passwordVerificationResult == PasswordVerificationResult.Failed) return null;
 
@@ -148,7 +148,7 @@ public class AuthenticateUserCredentialsQueryHandler
 
     private PasswordVerificationResult VerifyPassword(AuthenticateUserCredentialsQuery query, User dbUser)
     {
-        if (dbUser == null) throw new ArgumentNullException(nameof(dbUser));
+        ArgumentNullException.ThrowIfNull(dbUser);
         var verificationResult = _userAuthenticationHelper.VerifyPassword(dbUser, query.Password);
 
         switch (verificationResult)

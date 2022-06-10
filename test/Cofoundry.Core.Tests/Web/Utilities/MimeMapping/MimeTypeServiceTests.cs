@@ -19,7 +19,7 @@ public class MimeTypeServiceTests
         var contentTypeProvider = new Mock<IContentTypeProvider>();
         var service = new MimeTypeService(contentTypeProvider.Object);
 
-        Assert.Throws<ArgumentEmptyException>(() => service.MapFromFileName(fileName));
+        Assert.ThrowsAny<ArgumentException>(() => service.MapFromFileName(fileName));
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class MimeTypeServiceTests
         var contentTypeProvider = new Mock<IContentTypeProvider>();
         var service = new MimeTypeService(contentTypeProvider.Object);
 
-        Assert.Throws<ArgumentEmptyException>(() => service.MapFromFileName(fileName, TEST_DEFAULT_MIME_TYPE));
+        Assert.ThrowsAny<ArgumentException>(() => service.MapFromFileName(fileName, TEST_DEFAULT_MIME_TYPE));
     }
 
     [Fact]

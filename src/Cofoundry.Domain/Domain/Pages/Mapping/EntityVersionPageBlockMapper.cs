@@ -60,8 +60,8 @@ public class EntityVersionPageBlockMapper : IEntityVersionPageBlockMapper
     /// <param name="blockType">The block type associated with the block in which to look for the template.</param>
     public PageBlockTypeTemplateSummary GetCustomTemplate(IEntityVersionPageBlock pageBlock, PageBlockTypeSummary blockType)
     {
-        if (pageBlock == null) throw new ArgumentNullException(nameof(pageBlock));
-        if (blockType == null) throw new ArgumentNullException(nameof(blockType));
+        ArgumentNullException.ThrowIfNull(pageBlock);
+        ArgumentNullException.ThrowIfNull(blockType);
 
         if (!pageBlock.PageBlockTypeTemplateId.HasValue) return null;
 

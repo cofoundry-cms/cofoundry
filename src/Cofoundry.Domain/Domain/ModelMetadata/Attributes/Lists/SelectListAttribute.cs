@@ -23,7 +23,7 @@ public class SelectListAttribute : Attribute, IMetadataAttribute
     /// </param>
     public SelectListAttribute(Type optionSourceType)
     {
-        if (optionSourceType == null) throw new ArgumentNullException(nameof(optionSourceType));
+        ArgumentNullException.ThrowIfNull(optionSourceType);
         OptionSource = optionSourceType;
     }
 

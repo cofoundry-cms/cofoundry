@@ -26,7 +26,7 @@ public static class PagingQueryExtensions
     /// </summary>
     public static PagedQueryResult<T> ToPagedResult<T>(this IQueryable<T> source, IPageableQuery query)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
+        ArgumentNullException.ThrowIfNull(source);
 
         var result = new PagedQueryResult<T>();
         result.TotalItems = source.Count();

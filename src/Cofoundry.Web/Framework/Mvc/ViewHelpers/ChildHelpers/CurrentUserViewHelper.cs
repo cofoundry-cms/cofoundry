@@ -51,7 +51,7 @@ public class CurrentUserViewHelper : ICurrentUserViewHelper
     /// </param>
     public async Task<ICurrentUserViewHelperContext> GetAsync(string userAreaCode)
     {
-        if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
 
         if (_helperContext?.Data?.UserArea?.UserAreaCode == userAreaCode)
         {

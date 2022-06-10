@@ -17,7 +17,8 @@ public class UserAreaAuthorizationRequirement : IAuthorizationRequirement
     /// </param>
     public UserAreaAuthorizationRequirement(string userAreaCode)
     {
-        if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
+
         UserAreaCode = userAreaCode;
     }
 

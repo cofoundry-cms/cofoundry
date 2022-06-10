@@ -49,7 +49,7 @@ public class StreamFileSource : IFileSource
     public StreamFileSource(string fileName, string mimeType, Func<Stream> streamFactory)
         : this(fileName, mimeType, () => Task.FromResult(streamFactory()))
     {
-        if (streamFactory == null) throw new ArgumentNullException(nameof(streamFactory));
+        ArgumentNullException.ThrowIfNull(streamFactory);
     }
 
     /// <param name="fileName">
@@ -65,10 +65,8 @@ public class StreamFileSource : IFileSource
     /// </param>
     public StreamFileSource(string fileName, string mimeType, Func<Task<Stream>> streamFactory)
     {
-        if (fileName == null) throw new ArgumentNullException(nameof(fileName));
-        if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentEmptyException(nameof(fileName));
-
-        if (streamFactory == null) throw new ArgumentNullException(nameof(streamFactory));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
+        ArgumentNullException.ThrowIfNull(streamFactory);
 
         FileName = fileName;
         MimeType = mimeType;

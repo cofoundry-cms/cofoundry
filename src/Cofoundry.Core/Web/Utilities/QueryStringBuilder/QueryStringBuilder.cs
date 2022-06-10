@@ -41,8 +41,7 @@ public class QueryStringBuilder
     /// <returns>QueryStringBuilder instance for method chaining.</returns>
     public QueryStringBuilder Add(string key, string value)
     {
-        if (key == null) throw new ArgumentNullException(nameof(key));
-        if (string.IsNullOrWhiteSpace(key)) throw new ArgumentEmptyException(nameof(key));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(key);
 
         if (!string.IsNullOrWhiteSpace(value))
         {

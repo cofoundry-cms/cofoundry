@@ -35,7 +35,7 @@ public class GetNestedDataModelSchemaByNameRangeQuery : IQuery<IDictionary<strin
         IReadOnlyCollection<string> names
         )
     {
-        if (names == null) throw new ArgumentNullException(nameof(names));
+        ArgumentNullException.ThrowIfNull(names);
 
         Names = names;
     }

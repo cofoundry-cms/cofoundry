@@ -13,7 +13,7 @@ public class GetPageVersionEntityMicroSummariesByIdRangeQuery : IQuery<IDictiona
 
     public GetPageVersionEntityMicroSummariesByIdRangeQuery(IReadOnlyCollection<int> pageVersionIds)
     {
-        if (pageVersionIds == null) throw new ArgumentNullException(nameof(pageVersionIds));
+        ArgumentNullException.ThrowIfNull(pageVersionIds);
 
         PageVersionIds = pageVersionIds;
     }

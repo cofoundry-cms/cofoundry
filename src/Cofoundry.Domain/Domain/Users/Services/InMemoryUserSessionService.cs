@@ -39,17 +39,14 @@ public class InMemoryUserSessionService : IUserSessionService
 
     public int? GetUserIdByUserAreaCode(string userAreaCode)
     {
-        if (userAreaCode == null)
-        {
-            throw new ArgumentNullException(nameof(userAreaCode));
-        }
+        ArgumentNullException.ThrowIfNull(userAreaCode);
 
         return _userIdCache.GetValueOrDefault(userAreaCode);
     }
 
     public Task SignInAsync(string userAreaCode, int userId, bool rememberUser)
     {
-        if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
+        ArgumentNullException.ThrowIfNull(userAreaCode);
         if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
 
         var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
@@ -71,10 +68,7 @@ public class InMemoryUserSessionService : IUserSessionService
 
     public Task SignOutAsync(string userAreaCode)
     {
-        if (userAreaCode == null)
-        {
-            throw new ArgumentNullException(nameof(userAreaCode));
-        }
+        ArgumentNullException.ThrowIfNull(userAreaCode);
 
         var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
         EntityNotFoundException.ThrowIfNull(userArea, userAreaCode);
@@ -123,7 +117,8 @@ public class InMemoryUserSessionService : IUserSessionService
 
     public Task SetAmbientUserAreaAsync(string userAreaCode)
     {
-        if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
+
         if (_ambientUserAreaCode == userAreaCode) return Task.CompletedTask;
 
         lock (_lock)

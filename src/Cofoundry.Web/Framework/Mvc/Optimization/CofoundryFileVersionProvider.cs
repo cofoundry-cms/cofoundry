@@ -38,15 +38,8 @@ public class CofoundryFileVersionProvider : IFileVersionProvider
         IMemoryCache memoryCache
         )
     {
-        if (fileProvider == null)
-        {
-            throw new ArgumentNullException(nameof(fileProvider));
-        }
-
-        if (memoryCache == null)
-        {
-            throw new ArgumentNullException(nameof(memoryCache));
-        }
+        ArgumentNullException.ThrowIfNull(fileProvider);
+        ArgumentNullException.ThrowIfNull(memoryCache);
 
         _fileProvider = fileProvider;
         _cache = memoryCache;
@@ -57,10 +50,7 @@ public class CofoundryFileVersionProvider : IFileVersionProvider
     /// </remarks>
     public string AddFileVersionToPath(PathString requestPathBase, string path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         var resolvedPath = path;
 

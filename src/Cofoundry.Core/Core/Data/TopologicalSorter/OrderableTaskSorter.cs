@@ -28,7 +28,7 @@ public static class OrderableTaskSorter
     /// </param>
     public static ICollection<TTask> Sort<TTask>(IEnumerable<TTask> tasks)
     {
-        if (tasks == null) throw new ArgumentNullException(nameof(tasks));
+        ArgumentNullException.ThrowIfNull(tasks);
 
         var orderedTask = tasks
             .OrderBy(r => GetOrdering(r))

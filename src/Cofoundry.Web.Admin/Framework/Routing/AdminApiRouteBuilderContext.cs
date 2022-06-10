@@ -70,7 +70,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// </param>
     public AdminApiRouteBuilderContext<TController> MapGet(string path, string actionName = null)
     {
-        if (string.IsNullOrWhiteSpace(path)) throw new ArgumentEmptyException(nameof(path));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
 
         AddGetRoute(_basePath + "/" + path, actionName);
 
@@ -103,7 +103,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// </param>
     public AdminApiRouteBuilderContext<TController> MapPost(string path, string actionName = null)
     {
-        if (string.IsNullOrWhiteSpace(path)) throw new ArgumentEmptyException(nameof(path));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
 
         AddPostRoute(_basePath + "/" + path, actionName);
 
@@ -136,7 +136,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// </param>
     public AdminApiRouteBuilderContext<TController> MapPut(string path, string actionName = null)
     {
-        if (string.IsNullOrWhiteSpace(path)) throw new ArgumentEmptyException(nameof(path));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
 
         AddPutRoute(_basePath + "/" + path, actionName);
 
@@ -169,7 +169,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// </param>
     public AdminApiRouteBuilderContext<TController> MapPatch(string path, string actionName = null)
     {
-        if (string.IsNullOrWhiteSpace(path)) throw new ArgumentEmptyException(nameof(path));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
 
         AddPatchRoute(_basePath + "/" + path, actionName);
 
@@ -202,7 +202,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// </param>
     public AdminApiRouteBuilderContext<TController> MapDelete(string path, string actionName = null)
     {
-        if (string.IsNullOrWhiteSpace(path)) throw new ArgumentEmptyException(nameof(path));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
 
         AddDeleteRoute(_basePath + "/" + path, actionName);
 

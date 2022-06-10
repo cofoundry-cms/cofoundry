@@ -9,7 +9,7 @@ public static class ApiPagingHelper
     /// <param name="query">Query to set bounds for.</param>
     public static void SetDefaultBounds(IPageableQuery query)
     {
-        if (query == null) throw new ArgumentNullException(nameof(query));
+        ArgumentNullException.ThrowIfNull(query);
 
         query.SetBounds(40, 100);
     }

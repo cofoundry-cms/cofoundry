@@ -26,7 +26,8 @@ public class CustomEntityDataModelCommandModelBinder : IModelBinder
 
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
-        if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
+        ArgumentNullException.ThrowIfNull(bindingContext);
+
         var jsonString = await ReadBodyAsString(bindingContext);
 
         var json = JObject.Parse(jsonString);

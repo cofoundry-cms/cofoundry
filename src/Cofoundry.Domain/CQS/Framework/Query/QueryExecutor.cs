@@ -60,7 +60,7 @@ public class QueryExecutor : IQueryExecutor
 
     public Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IUserContext userContext)
     {
-        if (userContext == null) throw new ArgumentNullException(nameof(userContext));
+        ArgumentNullException.ThrowIfNull(userContext);
 
         var executionContext = _executionContextFactory.Create(userContext);
         return ExecuteAsync(query, executionContext);

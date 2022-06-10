@@ -48,7 +48,7 @@ public abstract class SiteUrlResolverBase : ISiteUrlResolver
 
     private string CleanPath(string siteRoot)
     {
-        if (string.IsNullOrWhiteSpace(siteRoot)) throw new ArgumentNullException(siteRoot);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(siteRoot);
 
         siteRoot = siteRoot.Trim();
         if (!siteRoot.EndsWith("/"))

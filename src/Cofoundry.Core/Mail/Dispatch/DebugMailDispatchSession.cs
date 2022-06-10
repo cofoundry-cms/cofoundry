@@ -67,7 +67,8 @@ public class DebugMailDispatchSession : IMailDispatchSession
 
     private string FormatMessage(MailMessage message)
     {
-        if (message == null) throw new ArgumentNullException(nameof(message));
+        ArgumentNullException.ThrowIfNull(message);
+
         ValidateMessageBody(message);
 
         var messageToSend = new StringBuilder();

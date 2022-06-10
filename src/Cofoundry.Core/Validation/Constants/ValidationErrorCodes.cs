@@ -24,7 +24,7 @@ public class ValidationErrorCodes
     /// <returns></returns>
     public static string AddNamespace(string errorCode, string category = null)
     {
-        if (string.IsNullOrWhiteSpace(errorCode)) throw new ArgumentEmptyException();
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(errorCode);
 
         if (!string.IsNullOrWhiteSpace(category))
         {

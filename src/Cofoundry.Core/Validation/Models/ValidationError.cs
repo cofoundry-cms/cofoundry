@@ -22,10 +22,7 @@ public class ValidationError
     /// <param name="property">Optional property that the validation message applies to.</param>
     public ValidationError(string message, string property = null)
     {
-        if (string.IsNullOrWhiteSpace(message))
-        {
-            throw new ArgumentNullException("message");
-        }
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(message);
 
         Message = message;
         if (string.IsNullOrWhiteSpace(property))

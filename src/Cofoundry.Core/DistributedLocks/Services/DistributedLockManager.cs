@@ -104,7 +104,7 @@ public class DistributedLockManager : IDistributedLockManager
     /// </param>
     public Task UnlockAsync(DistributedLock distributedLock)
     {
-        if (distributedLock == null) throw new ArgumentNullException(nameof(distributedLock));
+        ArgumentNullException.ThrowIfNull(distributedLock);
 
         var sql = @"
                 update Cofoundry.DistributedLock 

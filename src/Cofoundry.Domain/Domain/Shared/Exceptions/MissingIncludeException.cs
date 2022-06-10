@@ -61,7 +61,7 @@ public class MissingIncludeException : Exception
     /// </param>
     public static void ThrowIfNull<TEntity, TIncludedEntity>(TEntity entity, Expression<Func<TEntity, TIncludedEntity>> includeEntitySelector) where TEntity : class
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         var memberExpression = GetAsMemberExpression(includeEntitySelector, nameof(includeEntitySelector));
         var value = includeEntitySelector.Compile().Invoke(entity);
@@ -104,7 +104,7 @@ public class MissingIncludeException : Exception
         where TIncludedEntity : class
         where TIncludedEntityId : struct
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         var includeMemberExpression = GetAsMemberExpression(includeEntitySelector, nameof(includeEntitySelector));
         var includeValue = includeEntitySelector.Compile().Invoke(entity);
@@ -148,7 +148,7 @@ public class MissingIncludeException : Exception
         where TIncludedEntity : class
         where TIncludedEntityId : IEquatable<TIncludedEntityId>
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         var includeMemberExpression = GetAsMemberExpression(includeMemberSelector, nameof(includeMemberSelector));
         var includeValue = includeMemberSelector.Compile().Invoke(entity);

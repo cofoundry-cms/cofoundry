@@ -24,7 +24,7 @@ public class CustomEntityVersionSummaryMapper : ICustomEntityVersionSummaryMappe
     /// <param name="dbResult">Paged result set of records to map.</param>
     public PagedQueryResult<CustomEntityVersionSummary> MapVersions(int customEntityId, PagedQueryResult<CustomEntityVersion> dbResult)
     {
-        if (dbResult == null) throw new ArgumentNullException(nameof(dbResult));
+        ArgumentNullException.ThrowIfNull(dbResult);
         if (customEntityId <= 0) throw new ArgumentOutOfRangeException(nameof(customEntityId));
 
         // We should only check for the latested published version on the first page

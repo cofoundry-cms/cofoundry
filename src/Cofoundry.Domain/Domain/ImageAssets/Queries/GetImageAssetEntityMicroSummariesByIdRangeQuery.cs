@@ -17,7 +17,7 @@ public class GetImageAssetEntityMicroSummariesByIdRangeQuery : IQuery<IDictionar
         IReadOnlyCollection<int> ids
         )
     {
-        if (ids == null) throw new ArgumentNullException(nameof(ids));
+        ArgumentNullException.ThrowIfNull(ids);
 
         ImageAssetIds = ids;
     }

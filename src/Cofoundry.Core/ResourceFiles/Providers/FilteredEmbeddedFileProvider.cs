@@ -41,9 +41,8 @@ public class FilteredEmbeddedFileProvider : IFileProvider
         IFileProvider overrideProvider = null
         )
     {
-        if (assemblyProvider == null) throw new ArgumentNullException(nameof(assemblyProvider));
-        if (filterToPath == null) throw new ArgumentNullException(nameof(filterToPath));
-        if (string.IsNullOrWhiteSpace(filterToPath)) throw new ArgumentEmptyException(nameof(filterToPath));
+        ArgumentNullException.ThrowIfNull(assemblyProvider);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(filterToPath);
 
         _restrictToPath = ValidatePath(filterToPath, nameof(filterToPath));
 

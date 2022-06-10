@@ -38,8 +38,8 @@ public class DocumentCollectionAttribute : Attribute, IMetadataAttribute
 
     public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)
     {
-        if (model == null) throw new ArgumentNullException(nameof(model));
-        if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
+        ArgumentNullException.ThrowIfNull(model);
+        ArgumentNullException.ThrowIfNull(propertyInfo);
 
         var ids = propertyInfo.GetValue(model) as ICollection<int>;
 

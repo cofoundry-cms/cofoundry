@@ -48,7 +48,7 @@ public class EntityAccessRuleSet
     /// <returns>true if the user is authorized to access this resource; otherwise false.</returns>
     public bool IsAuthorized(IUserContext user)
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
+        ArgumentNullException.ThrowIfNull(user);
 
         if (EnumerableHelper.IsNullOrEmpty(AccessRules))
         {

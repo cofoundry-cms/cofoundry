@@ -36,13 +36,9 @@ public class EmbeddedResourceFileSource : IFileSource
         string fileName
         )
     {
-        if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-
-        if (path == null) throw new ArgumentNullException(nameof(path));
-        if (string.IsNullOrWhiteSpace(path)) throw new ArgumentEmptyException(nameof(path));
-
-        if (fileName == null) throw new ArgumentNullException(nameof(fileName));
-        if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentEmptyException(nameof(fileName));
+        ArgumentNullException.ThrowIfNull(assembly);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
 
         Assembly = assembly;
         FileName = fileName;
@@ -63,13 +59,9 @@ public class EmbeddedResourceFileSource : IFileSource
         string mimeType
         )
     {
-        if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-
-        if (fileName == null) throw new ArgumentNullException(nameof(fileName));
-        if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentEmptyException(nameof(fileName));
-
-        if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
-        if (string.IsNullOrWhiteSpace(fullPath)) throw new ArgumentEmptyException(nameof(fullPath));
+        ArgumentNullException.ThrowIfNull(assembly);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
 
         Assembly = assembly;
         FileName = fileName;

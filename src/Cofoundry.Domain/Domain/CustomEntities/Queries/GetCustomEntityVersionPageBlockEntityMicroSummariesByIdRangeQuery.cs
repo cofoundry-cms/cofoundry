@@ -13,7 +13,7 @@ public class GetCustomEntityVersionPageBlockEntityMicroSummariesByIdRangeQuery :
 
     public GetCustomEntityVersionPageBlockEntityMicroSummariesByIdRangeQuery(IReadOnlyCollection<int> ids)
     {
-        if (ids == null) throw new ArgumentNullException(nameof(ids));
+        ArgumentNullException.ThrowIfNull(ids);
 
         CustomEntityVersionPageBlockIds = ids;
     }

@@ -16,8 +16,8 @@ public static class EmailAddressCharacterValidator
     /// <returns>Enumerable collection of invalid characters.</returns>
     public static IEnumerable<char> GetInvalidCharacters(string emailAddress, EmailAddressOptions options)
     {
-        if (emailAddress == null) throw new ArgumentNullException(nameof(emailAddress));
-        if (options == null) throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(emailAddress);
+        ArgumentNullException.ThrowIfNull(options);
 
         if (options.AllowAnyCharacter) return Array.Empty<char>();
 

@@ -157,7 +157,7 @@ public class PageRoute : IPageRoute, IPublishableEntity
     /// </returns>
     public EntityAccessRuleSet ValidateAccess(IUserContext user)
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
+        ArgumentNullException.ThrowIfNull(user);
         EntityInvalidOperationException.ThrowIfNull(this, r => r.PageDirectory);
 
         if (AccessRuleSet != null && !AccessRuleSet.IsAuthorized(user))

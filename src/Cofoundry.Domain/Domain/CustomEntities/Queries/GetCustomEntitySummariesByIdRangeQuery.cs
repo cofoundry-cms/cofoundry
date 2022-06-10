@@ -53,7 +53,7 @@ public class GetCustomEntitySummariesByIdRangeQuery : IQuery<IDictionary<int, Cu
         IReadOnlyCollection<int> customEntityIds
         )
     {
-        if (customEntityIds == null) throw new ArgumentNullException(nameof(customEntityIds));
+        ArgumentNullException.ThrowIfNull(customEntityIds);
 
         CustomEntityIds = customEntityIds;
     }

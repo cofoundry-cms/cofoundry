@@ -14,7 +14,7 @@ public static class IEmailAddressNormalizerExtensions
     /// </param>
     public static string Normalize(this IEmailAddressNormalizer normalizer, string emailAddress)
     {
-        if (normalizer == null) throw new ArgumentNullException(nameof(normalizer));
+        ArgumentNullException.ThrowIfNull(normalizer);
 
         var parts = normalizer.NormalizeAsParts(emailAddress);
         return parts?.ToEmailAddress();

@@ -11,7 +11,7 @@ public static class AngleSharpHelper
     /// <param name="wrapperElement">The element to wrap the child elements in.</param>
     public static void WrapChildren(IElement parentElement, IElement wrapperElement)
     {
-        if (wrapperElement == null) throw new ArgumentNullException(nameof(wrapperElement));
+        ArgumentNullException.ThrowIfNull(wrapperElement);
 
         // The parent element could be null if the result of a query
         if (parentElement == null) return;

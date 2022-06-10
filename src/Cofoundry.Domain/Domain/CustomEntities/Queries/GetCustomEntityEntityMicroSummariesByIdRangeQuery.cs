@@ -17,7 +17,7 @@ public class GetCustomEntityEntityMicroSummariesByIdRangeQuery : IQuery<IDiction
         IReadOnlyCollection<int> customEntityIds
         )
     {
-        if (customEntityIds == null) throw new ArgumentNullException(nameof(customEntityIds));
+        ArgumentNullException.ThrowIfNull(customEntityIds);
 
         CustomEntityIds = customEntityIds;
     }

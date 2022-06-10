@@ -56,7 +56,7 @@ public class PageTemplateHelper<TModel>
     /// <param name="description">A plain text description about this template</param>
     public IHtmlContent UseDescription(string description)
     {
-        if (description == null) throw new ArgumentNullException(nameof(description));
+        ArgumentNullException.ThrowIfNull(description);
 
         // nothing is rendered here, this is just used as a convention for adding template meta data
         return HtmlString.Empty;

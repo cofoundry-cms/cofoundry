@@ -30,7 +30,7 @@ public class EntityTagHelper
     /// <param name="executionContext">The execution context that captures the state of the command being executed.</param>
     public void UpdateTags<TEntityTag>(ICollection<TEntityTag> existingTagCollection, IEnumerable<string> updatedTags, IExecutionContext executionContext) where TEntityTag : class, IEntityTag, new()
     {
-        if (existingTagCollection == null) throw new ArgumentNullException(nameof(existingTagCollection));
+        ArgumentNullException.ThrowIfNull(existingTagCollection);
 
         updatedTags = CleanTags(updatedTags ?? Enumerable.Empty<string>());
 

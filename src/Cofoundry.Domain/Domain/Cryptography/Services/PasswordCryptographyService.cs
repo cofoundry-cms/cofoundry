@@ -17,8 +17,7 @@ public class PasswordCryptographyService : IPasswordCryptographyService
 
     public virtual PasswordVerificationResult Verify(string password, string hash, int hashVersion)
     {
-        if (hash == null) throw new ArgumentNullException(nameof(hash));
-        if (string.IsNullOrWhiteSpace(hash)) throw new ArgumentEmptyException(nameof(hash));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(hash);
 
         if (string.IsNullOrWhiteSpace(password)) return PasswordVerificationResult.Failed;
 
@@ -45,8 +44,7 @@ public class PasswordCryptographyService : IPasswordCryptographyService
 
     public virtual PasswordCryptographyResult CreateHash(string password)
     {
-        if (password == null) throw new ArgumentNullException(nameof(password));
-        if (string.IsNullOrWhiteSpace(password)) throw new ArgumentEmptyException(nameof(password));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(password);
 
         var result = new PasswordCryptographyResult();
         result.Hash = _passwordHasher.HashPassword(new PasswordHasherUser(), password);

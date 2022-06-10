@@ -10,8 +10,8 @@ public class CustomEntityRouteMapper : ICustomEntityRouteMapper
         ActiveLocale locale
         )
     {
-        if (dbCustomEntity == null) throw new ArgumentNullException(nameof(dbCustomEntity));
-        if (dbCustomEntity.CustomEntityVersions == null) throw new ArgumentNullException(nameof(dbCustomEntity.CustomEntityVersions));
+        ArgumentNullException.ThrowIfNull(dbCustomEntity);
+        ArgumentNullException.ThrowIfNull(dbCustomEntity.CustomEntityVersions);
 
         var route = new CustomEntityRoute()
         {

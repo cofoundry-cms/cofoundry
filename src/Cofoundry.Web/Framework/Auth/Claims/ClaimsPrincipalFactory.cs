@@ -7,7 +7,7 @@ public class ClaimsPrincipalFactory : IClaimsPrincipalFactory
 {
     public Task<ClaimsPrincipal> CreateAsync(IClaimsPrincipalBuilderContext context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
         var scheme = AuthenticationSchemeNames.UserArea(context.UserAreaCode);
         var claims = new[]

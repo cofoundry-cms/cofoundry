@@ -51,7 +51,7 @@ public class RequiredDependencyConstaintViolationException : ValidationErrorExce
     /// <param name="dependencies">Collection of dependencies to check.</param>
     public static void ThrowIfCannotDelete(IEntityDefinition definitionOfEntityBeingDeleted, ICollection<EntityDependencySummary> dependencies)
     {
-        if (definitionOfEntityBeingDeleted == null) throw new ArgumentNullException(nameof(definitionOfEntityBeingDeleted));
+        ArgumentNullException.ThrowIfNull(definitionOfEntityBeingDeleted);
 
         var invalidDependencies = EnumerableHelper
             .Enumerate(dependencies)

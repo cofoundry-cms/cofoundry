@@ -11,7 +11,7 @@ public class UserContextCache : IUserContextCache
 
     public async Task<IUserContext> GetOrAddAsync(int userId, Func<Task<IUserContext>> getter)
     {
-        if (getter == null) throw new ArgumentNullException(nameof(getter));
+        ArgumentNullException.ThrowIfNull(getter);
         if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId), nameof(userId) + " must be positive.");
 
         var userContext = _userContextCache.GetValueOrDefault(userId);
@@ -27,7 +27,7 @@ public class UserContextCache : IUserContextCache
 
     public async Task<IUserContext> GetOrAddSystemContextAsync(Func<Task<IUserContext>> getter)
     {
-        if (getter == null) throw new ArgumentNullException(nameof(getter));
+        ArgumentNullException.ThrowIfNull(getter);
 
         var userContext = _userContextCache.GetValueOrDefault(SYSTEM_CACHE_KEY);
 

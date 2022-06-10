@@ -42,9 +42,8 @@ public class IdCustomEntityRoutingRule : ICustomEntityRoutingRule
     /// <param name="pageRoute">The page route already matched to this url.</param>
     public bool MatchesRule(string url, PageRoute pageRoute)
     {
-        if (url == null) throw new ArgumentNullException(nameof(url));
-        if (string.IsNullOrWhiteSpace(url)) throw new ArgumentEmptyException(nameof(url));
-        if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(url);
+        ArgumentNullException.ThrowIfNull(pageRoute);
 
         var routingPart = GetRoutingPart(url, pageRoute);
         if (string.IsNullOrEmpty(routingPart)) return false;
@@ -64,9 +63,8 @@ public class IdCustomEntityRoutingRule : ICustomEntityRoutingRule
     /// <returns>An IQuery object that can used to query for the CustomEntityRoute</returns>
     public IQuery<CustomEntityRoute> ExtractRoutingQuery(string url, PageRoute pageRoute)
     {
-        if (url == null) throw new ArgumentNullException(nameof(url));
-        if (string.IsNullOrWhiteSpace(url)) throw new ArgumentEmptyException(nameof(url));
-        if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(url);
+        ArgumentNullException.ThrowIfNull(pageRoute);
 
         if (!MatchesRule(url, pageRoute))
         {
@@ -96,8 +94,8 @@ public class IdCustomEntityRoutingRule : ICustomEntityRoutingRule
     /// <returns>Full, relative url</returns>
     public string MakeUrl(PageRoute pageRoute, CustomEntityRoute entityRoute)
     {
-        if (pageRoute == null) throw new ArgumentNullException(nameof(pageRoute));
-        if (entityRoute == null) throw new ArgumentNullException(nameof(entityRoute));
+        ArgumentNullException.ThrowIfNull(pageRoute);
+        ArgumentNullException.ThrowIfNull(entityRoute);
 
         return pageRoute
             .FullUrlPath

@@ -15,7 +15,7 @@ public static class EnumListOptionHelper
     /// </summary>
     public static ICollection<ListOption> ConvertToOptions(Type type)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
         if (!type.IsEnum)
         {
             throw new ArgumentException("Enum type expected.", nameof(type));

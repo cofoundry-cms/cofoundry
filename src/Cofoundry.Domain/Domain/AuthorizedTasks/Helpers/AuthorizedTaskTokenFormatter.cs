@@ -5,15 +5,10 @@ public class AuthorizedTaskTokenFormatter : IAuthorizedTaskTokenFormatter
 {
     public string Format(AuthorizedTaskTokenParts parts)
     {
-        if (parts == null) throw new ArgumentNullException(nameof(parts));
-        if (parts.AuthorizedTaskId == Guid.Empty)
-        {
-            throw new ArgumentNullException("parts.AuthorizedTaskId");
-        }
-        if (string.IsNullOrWhiteSpace(parts.AuthorizationCode))
-        {
-            throw new ArgumentEmptyException("parts.AuthorizationCode");
-        }
+        ArgumentNullException.ThrowIfNull(parts);
+        ArgumentEmptyException.ThrowIfDefault(parts.AuthorizedTaskId);
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(parts.AuthorizationCode);
+
 
         return parts.AuthorizedTaskId.ToString("N") + "-" + parts.AuthorizationCode;
     }

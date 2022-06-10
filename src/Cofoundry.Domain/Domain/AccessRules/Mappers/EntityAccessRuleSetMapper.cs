@@ -23,7 +23,7 @@ public class EntityAccessRuleSetMapper : IEntityAccessRuleSetMapper
     public EntityAccessRuleSet Map<TAccessRule>(IEntityAccessRestrictable<TAccessRule> entity)
         where TAccessRule : IEntityAccessRule
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
         MissingIncludeException.ThrowIfNull(entity, e => e.AccessRules);
 
         if (!entity.AccessRules.Any())

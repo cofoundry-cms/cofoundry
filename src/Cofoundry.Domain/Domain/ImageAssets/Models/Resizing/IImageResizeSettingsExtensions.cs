@@ -12,15 +12,8 @@ public static class IImageResizeSettingsExtensions
     /// <param name="asset">The asset to check. Cannot be null.</param>
     public static bool RequiresResizing(this IImageResizeSettings settings, IImageAssetRenderable asset)
     {
-        if (settings == null)
-        {
-            throw new ArgumentNullException(nameof(settings));
-        }
-
-        if (asset == null)
-        {
-            throw new ArgumentNullException(nameof(asset));
-        }
+        ArgumentNullException.ThrowIfNull(settings);
+        ArgumentNullException.ThrowIfNull(asset);
 
         if ((settings.Width < 1 && settings.Height < 1)
             || (settings.Width == asset.Width && settings.Height == asset.Height))

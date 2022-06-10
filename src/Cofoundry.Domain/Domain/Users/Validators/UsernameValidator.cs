@@ -19,7 +19,7 @@ public class UsernameValidator : IUsernameValidator
 
     public async virtual Task<ICollection<ValidationError>> GetErrorsAsync(IUsernameValidationContext context)
     {
-        if (context == null) throw new ArgumentNullException(nameof(context));
+        ArgumentNullException.ThrowIfNull(context);
 
         var validators = new List<Func<IUsernameValidationContext, ValidationError>>()
         {

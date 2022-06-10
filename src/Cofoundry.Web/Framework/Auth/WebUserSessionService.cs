@@ -69,10 +69,7 @@ public class WebUserSessionService : IUserSessionService
 
     public async Task<int?> GetUserIdByUserAreaCodeAsync(string userAreaCode)
     {
-        if (userAreaCode == null)
-        {
-            throw new ArgumentNullException(nameof(userAreaCode));
-        }
+        ArgumentNullException.ThrowIfNull(userAreaCode);
 
         if (_signedOutUserAreas.Contains(userAreaCode)) return null;
         var cachedUserId = await _inMemoryUserSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
@@ -100,7 +97,7 @@ public class WebUserSessionService : IUserSessionService
 
     public async Task SignInAsync(string userAreaCode, int userId, bool rememberUser)
     {
-        if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
+        ArgumentNullException.ThrowIfNull(userAreaCode);
         if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
         ValidateHttpContext("sign in a user");
 
@@ -128,10 +125,7 @@ public class WebUserSessionService : IUserSessionService
 
     public async Task SignOutAsync(string userAreaCode)
     {
-        if (userAreaCode == null)
-        {
-            throw new ArgumentNullException(nameof(userAreaCode));
-        }
+        ArgumentNullException.ThrowIfNull(userAreaCode);
         ValidateHttpContext("sign out a user");
 
         await _inMemoryUserSessionService.SignOutAsync(userAreaCode);
@@ -156,7 +150,7 @@ public class WebUserSessionService : IUserSessionService
 
     public async Task SetAmbientUserAreaAsync(string userAreaCode)
     {
-        if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
 
         // Ensure that if the user is logged into the area that it is in 
         // the cache before we make the switch. This is because in
@@ -169,7 +163,7 @@ public class WebUserSessionService : IUserSessionService
 
     public async Task RefreshAsync(string userAreaCode, int userId)
     {
-        if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
+        ArgumentNullException.ThrowIfNull(userAreaCode);
         if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
         ValidateHttpContext("refresh a user sign in");
 

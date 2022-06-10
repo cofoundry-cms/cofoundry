@@ -21,7 +21,8 @@ public class JsonDeltaModelBinder : IModelBinder
 
     public async Task BindModelAsync(ModelBindingContext bindingContext)
     {
-        if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
+        ArgumentNullException.ThrowIfNull(bindingContext);
+
         var jsonString = await ReadBodyAsString(bindingContext);
 
         var genericArguments = bindingContext
@@ -31,7 +32,7 @@ public class JsonDeltaModelBinder : IModelBinder
 
         if (genericArguments.Count() != 1)
         {
-            throw new InvalidOperationException($"JsonDeltaModelBinder can only act on a type of IDelta<TModel>. Incorrect number of generic arguments found on type '{ bindingContext.ModelType.FullName }' ({ genericArguments.Count() })");
+            throw new InvalidOperationException($"JsonDeltaModelBinder can only act on a type of IDelta<TModel>. Incorrect number of generic arguments found on type '{bindingContext.ModelType.FullName}' ({genericArguments.Count()})");
         }
 
         var deltaType = typeof(JsonDelta<>).MakeGenericType(genericArguments.Single());

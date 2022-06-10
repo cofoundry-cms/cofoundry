@@ -15,7 +15,7 @@ public class PageBlockHelper<TModel> : IPageBlockHelper<TModel>
     /// <param name="description">A plain text description about this block type or block type template</param>
     public IPageBlockHelper<TModel> UseDescription(string description)
     {
-        if (description == null) throw new ArgumentNullException(nameof(description));
+        ArgumentNullException.ThrowIfNull(description);
         // nothing is rendered here, this is just used as a convention for adding template meta data
         return this;
     }
@@ -28,10 +28,7 @@ public class PageBlockHelper<TModel> : IPageBlockHelper<TModel>
     /// <param name="name">The text to use as the display name (max 50 characters)</param>
     public IPageBlockHelper<TModel> UseDisplayName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new ArgumentEmptyException(nameof(name));
-        }
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(name);
 
         if (name.Length > 50)
         {

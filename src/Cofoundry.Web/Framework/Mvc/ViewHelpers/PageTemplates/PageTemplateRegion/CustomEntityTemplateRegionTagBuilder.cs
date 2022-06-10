@@ -28,9 +28,8 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
         string regionName
         )
     {
-        if (regionName == null) throw new ArgumentNullException(nameof(regionName));
-        if (string.IsNullOrWhiteSpace(regionName)) throw new ArgumentEmptyException(nameof(regionName));
-        if (customEntityViewModel == null) throw new ArgumentNullException(nameof(customEntityViewModel));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(regionName);
+        ArgumentNullException.ThrowIfNull(customEntityViewModel);
 
         _blockRenderer = blockRenderer;
         _pageBlockDataModelTypeFactory = pageBlockDataModelTypeFactory;
@@ -58,8 +57,7 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
 
     public ICustomEntityTemplateRegionTagBuilder<TModel> WrapWithTag(string tagName, object htmlAttributes = null)
     {
-        if (tagName == null) throw new ArgumentNullException(nameof(tagName));
-        if (string.IsNullOrWhiteSpace(tagName)) throw new ArgumentEmptyException(nameof(tagName));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(tagName);
 
         _wrappingTagName = tagName;
         _additonalHtmlAttributes = TemplateRegionTagBuilderHelper.ParseHtmlAttributesFromAnonymousObject(htmlAttributes);

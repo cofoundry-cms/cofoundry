@@ -32,7 +32,7 @@ public class PageViewModelMapper : IPageViewModelMapper
     {
         await MapAsync(viewModel, mappingParameters);
 
-        if (mappingParameters.CustomEntityModel == null) throw new ArgumentNullException(nameof(mappingParameters.CustomEntityModel));
+        ArgumentNullException.ThrowIfNull(mappingParameters.CustomEntityModel);
 
         var customEntityRenderDetails = mappingParameters.CustomEntityModel;
         var publishStatusQuery = mappingParameters.VisualEditorMode.ToPublishStatusQuery();
@@ -60,8 +60,8 @@ public class PageViewModelMapper : IPageViewModelMapper
         NotFoundPageViewModelBuilderParameters mappingParameters
         )
     {
-        if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
-        if (mappingParameters == null) throw new ArgumentNullException(nameof(mappingParameters));
+        ArgumentNullException.ThrowIfNull(viewModel);
+        ArgumentNullException.ThrowIfNull(mappingParameters);
 
         viewModel.PageTitle = "Not found";
         viewModel.MetaDescription = "Sorry, that page could not be found";
@@ -79,8 +79,8 @@ public class PageViewModelMapper : IPageViewModelMapper
         ErrorPageViewModelBuilderParameters mappingParameters
         )
     {
-        if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
-        if (mappingParameters == null) throw new ArgumentNullException(nameof(mappingParameters));
+        ArgumentNullException.ThrowIfNull(viewModel);
+        ArgumentNullException.ThrowIfNull(mappingParameters);
         if (mappingParameters.StatusCode < 100) throw new ArgumentOutOfRangeException(nameof(mappingParameters.StatusCode));
 
         viewModel.StatusCode = mappingParameters.StatusCode;
@@ -113,8 +113,8 @@ public class PageViewModelMapper : IPageViewModelMapper
         )
         where T : IEditablePageViewModel, IPageRoutableViewModel
     {
-        if (mappingParameters == null) throw new ArgumentNullException(nameof(mappingParameters));
-        if (mappingParameters.PageModel == null) throw new ArgumentNullException(nameof(mappingParameters.PageModel));
+        ArgumentNullException.ThrowIfNull(mappingParameters);
+        ArgumentNullException.ThrowIfNull(mappingParameters.PageModel);
 
         vm.Page = mappingParameters.PageModel;
         vm.PageRoutingHelper = await CreatePageRoutingHelperAsync(mappingParameters);

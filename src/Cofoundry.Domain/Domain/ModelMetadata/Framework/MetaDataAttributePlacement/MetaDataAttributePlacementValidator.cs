@@ -32,9 +32,9 @@ public static class MetaDataAttributePlacementValidator
         params Type[] validParamTypes
         )
     {
-        if (attribute == null) throw new ArgumentNullException(nameof(attribute));
-        if (context == null) throw new ArgumentNullException(nameof(context));
-        if (validParamTypes == null) throw new ArgumentNullException(nameof(validParamTypes));
+        ArgumentNullException.ThrowIfNull(attribute);
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(validParamTypes);
         if (!validParamTypes.Any()) throw new ArgumentEmptyException(nameof(validParamTypes));
 
         var propertyModelType = context.Key.ModelType;
@@ -67,7 +67,7 @@ public static class MetaDataAttributePlacementValidator
         params Type[] validParamTypes
         )
     {
-        if (attribute == null) throw new ArgumentNullException(nameof(attribute));
+        ArgumentNullException.ThrowIfNull(attribute);
         if (context == null) throw new ArgumentNullException(nameof(context));
         if (validParamTypes == null) throw new ArgumentNullException(nameof(validParamTypes));
         if (!validParamTypes.Any()) throw new ArgumentEmptyException(nameof(validParamTypes));

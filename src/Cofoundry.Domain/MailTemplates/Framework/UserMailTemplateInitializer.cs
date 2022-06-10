@@ -26,8 +26,8 @@ public class UserMailTemplateInitializer : IUserMailTemplateInitializer
     public async Task Initialize<TTemplate>(UserSummary user, TTemplate mailTemplate)
         where TTemplate : UserMailTemplateBase
     {
-        if (mailTemplate == null) throw new ArgumentNullException(nameof(mailTemplate));
-        if (user == null) throw new ArgumentNullException(nameof(user));
+        ArgumentNullException.ThrowIfNull(mailTemplate);
+        ArgumentNullException.ThrowIfNull(user);
 
         mailTemplate.User = user;
         mailTemplate.ApplicationName = await GetApplicationNameAsync();

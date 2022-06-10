@@ -37,7 +37,7 @@ public class UserContextService : IUserContextService
 
     public virtual async Task<IUserContext> GetCurrentContextByUserAreaAsync(string userAreaCode)
     {
-        if (string.IsNullOrWhiteSpace(userAreaCode)) throw new ArgumentEmptyException(nameof(userAreaCode));
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
 
         var userId = await _userSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
         var userContext = await GetUserContextByIdAsync(userId);

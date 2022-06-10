@@ -43,9 +43,9 @@ public class UserCommandPermissionsHelper
 
     public async Task ValidateNewRoleAsync(Role newRole, int? oldRoleId, string userAreaCode, IExecutionContext executionContext)
     {
-        if (newRole == null) throw new ArgumentNullException(nameof(newRole));
-        if (userAreaCode == null) throw new ArgumentNullException(nameof(userAreaCode));
-        if (executionContext == null) throw new ArgumentNullException(nameof(executionContext));
+        ArgumentNullException.ThrowIfNull(newRole);
+        ArgumentNullException.ThrowIfNull(userAreaCode);
+        ArgumentNullException.ThrowIfNull(executionContext);
 
         var executorRole = await GetExecutorRoleAsync(executionContext);
 

@@ -117,8 +117,8 @@ public class DefaultTransactionScopeManager : IDefaultTransactionScopeManager
     /// <returns>ITransactionScope, which is IDisposable and must be disposed.</returns>
     public ITransactionScope Create(DbConnection dbConnection, Func<System.Transactions.TransactionScope> transactionScopeFactory)
     {
-        if (dbConnection == null) throw new ArgumentNullException(nameof(dbConnection));
-        if (transactionScopeFactory == null) throw new ArgumentNullException(nameof(transactionScopeFactory));
+        ArgumentNullException.ThrowIfNull(dbConnection);
+        ArgumentNullException.ThrowIfNull(transactionScopeFactory);
 
         ITransactionScope scope;
         var connectionHash = dbConnection.GetHashCode();
@@ -328,7 +328,7 @@ public class DefaultTransactionScopeManager : IDefaultTransactionScopeManager
 
     internal void DeregisterTransaction(PrimaryTransactionScope scope)
     {
-        if (scope == null) throw new ArgumentNullException(nameof(scope));
+        ArgumentNullException.ThrowIfNull(scope);
 
         var scopeToRemoveKey = _primaryTransactionScopes
             .Where(s => s.Value == scope)

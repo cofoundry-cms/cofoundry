@@ -20,10 +20,11 @@ public class MessageSubscription<TMessageSubscribedTo, TMessageHandler>
 
     public async Task DeliverAsync(IServiceProvider serviceProvider, object message)
     {
-        if (message == null) throw new ArgumentNullException(nameof(message));
+        ArgumentNullException.ThrowIfNull(message);
+
         if (!(message is TMessageSubscribedTo))
         {
-            throw new ArgumentException($"{ nameof(message) } must be of type '{typeof(TMessageSubscribedTo).FullName}'");
+            throw new ArgumentException($"{nameof(message)} must be of type '{typeof(TMessageSubscribedTo).FullName}'");
         }
 
         var handler = serviceProvider.GetRequiredService<TMessageHandler>();

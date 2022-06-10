@@ -17,7 +17,7 @@ public class PageBlockTypeFileNameFormatter : IPageBlockTypeFileNameFormatter
     /// <param name="dataModelType">Data model type to get the formatted name for</param>
     public string FormatFromDataModelType(Type dataModelType)
     {
-        if (dataModelType == null) throw new ArgumentNullException(nameof(dataModelType));
+        ArgumentNullException.ThrowIfNull(dataModelType);
 
         return FormatFromDataModelName(dataModelType.Name);
     }
@@ -31,7 +31,8 @@ public class PageBlockTypeFileNameFormatter : IPageBlockTypeFileNameFormatter
     /// <param name="dataModelName">Type name without namespace of the block data model</param>
     public string FormatFromDataModelName(string dataModelName)
     {
-        if (dataModelName == null) throw new ArgumentNullException(nameof(dataModelName));
+        ArgumentNullException.ThrowIfNull(dataModelName);
+
         var fileName = dataModelName;
 
         if (dataModelName.EndsWith(DATAMODEL_SUFFIX, StringComparison.OrdinalIgnoreCase))

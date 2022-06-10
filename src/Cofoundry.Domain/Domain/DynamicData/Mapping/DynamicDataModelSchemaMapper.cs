@@ -15,8 +15,8 @@ public class DynamicDataModelSchemaMapper : IDynamicDataModelSchemaMapper
 
     public void Map(IDynamicDataModelSchema details, Type modelType)
     {
-        if (details == null) throw new ArgumentNullException(nameof(details));
-        if (modelType == null) throw new ArgumentNullException(nameof(modelType));
+        ArgumentNullException.ThrowIfNull(details);
+        ArgumentNullException.ThrowIfNull(modelType);
 
         var dataModelMetaData = _modelMetadataProvider.GetMetadataForType(modelType);
 

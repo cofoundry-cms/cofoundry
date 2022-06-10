@@ -21,14 +21,14 @@ public class UserSecurityStampUpdateHelper : IUserSecurityStampUpdateHelper
 
     public void Update(User user)
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
+        ArgumentNullException.ThrowIfNull(user);
 
         user.SecurityStamp = _securityStampGenerator.Generate();
     }
 
     public async Task OnTransactionCompleteAsync(User user)
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
+        ArgumentNullException.ThrowIfNull(user);
 
         var userAreaCode = user.UserArea != null ? user.UserArea.UserAreaCode : user.UserAreaCode;
 

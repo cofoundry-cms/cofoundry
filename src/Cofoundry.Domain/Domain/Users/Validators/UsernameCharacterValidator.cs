@@ -16,8 +16,8 @@ public static class UsernameCharacterValidator
     /// <returns>Enumerable collection of invalid characters.</returns>
     public static IEnumerable<char> GetInvalidCharacters(string username, UsernameOptions options)
     {
-        if (username == null) throw new ArgumentNullException(nameof(username));
-        if (options == null) throw new ArgumentNullException(nameof(options));
+        ArgumentNullException.ThrowIfNull(username);
+        ArgumentNullException.ThrowIfNull(options);
 
         if (options.AllowAnyCharacter) return Array.Empty<char>();
 

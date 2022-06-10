@@ -39,7 +39,7 @@ public class UserDataFormatter : IUserDataFormatter
 
     public UsernameFormattingResult FormatUsername(IUserAreaDefinition userAreaDefinition, EmailAddressFormattingResult emailAddress)
     {
-        if (userAreaDefinition == null) throw new ArgumentNullException(nameof(userAreaDefinition));
+        ArgumentNullException.ThrowIfNull(userAreaDefinition);
         if (!userAreaDefinition.UseEmailAsUsername)
         {
             throw new InvalidOperationException($"{nameof(FormatUsername)} can only be called with an email address if the user area supports using an email as a username.");
@@ -179,7 +179,7 @@ public class UserDataFormatter : IUserDataFormatter
 
     private T CreateServiceForUserArea<T>(IUserAreaDefinition userAreaDefinition, Type genericServiceType)
     {
-        if (userAreaDefinition == null) throw new ArgumentNullException(nameof(userAreaDefinition));
+        ArgumentNullException.ThrowIfNull(userAreaDefinition);
 
 
         // Try and find a factory registered for the specific user area

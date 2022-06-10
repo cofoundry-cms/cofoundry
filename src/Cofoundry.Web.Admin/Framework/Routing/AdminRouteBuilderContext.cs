@@ -72,7 +72,8 @@ public class AdminRouteBuilderContext<TController>
         object dataTokens = null
         )
     {
-        if (string.IsNullOrWhiteSpace(action)) throw new ArgumentEmptyException();
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(action);
+
         return MapRoute(action, SlugFormatter.CamelCaseToSlug(action), dataTokens);
     }
 
@@ -94,7 +95,7 @@ public class AdminRouteBuilderContext<TController>
         object dataTokens = null
         )
     {
-        if (string.IsNullOrWhiteSpace(action)) throw new ArgumentEmptyException();
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(action);
 
         if (_adminSettings.Disabled) return this;
 

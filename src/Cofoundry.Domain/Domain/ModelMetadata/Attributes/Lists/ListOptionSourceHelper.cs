@@ -11,7 +11,7 @@ public static class ListOptionSourceMetadataHelper
 {
     public static void AddToMetadata(DisplayMetadata modelMetaData, Type optionSourceType)
     {
-        if (optionSourceType == null) throw new ArgumentNullException(nameof(optionSourceType));
+        ArgumentNullException.ThrowIfNull(optionSourceType);
 
         ICollection<ListOption> options = null;
 

@@ -26,7 +26,7 @@ public class DefaultJsonSerializerSettingsFactory : IJsonSerializerSettingsFacto
     /// <param name="settings">An existing settings instance to apply updated settings to.</param>
     public virtual JsonSerializerSettings Configure(JsonSerializerSettings settings)
     {
-        if (settings == null) throw new ArgumentNullException(nameof(settings));
+        ArgumentNullException.ThrowIfNull(settings);
 
         // Force dates to include the miliseconds portion, which fixes issues with Angular date field validation.
         settings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fffK";

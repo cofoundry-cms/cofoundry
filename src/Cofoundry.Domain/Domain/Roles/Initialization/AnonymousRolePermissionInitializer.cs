@@ -11,14 +11,14 @@ public class AnonymousRolePermissionInitializer : IRolePermissionInitializer
         IServiceProvider serviceProvider
         )
     {
-        if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
+        ArgumentNullException.ThrowIfNull(serviceProvider);
 
         _serviceProvider = serviceProvider;
     }
 
     public void Initialize(IPermissionSetBuilder permissionSetBuilder)
     {
-        if (permissionSetBuilder == null) throw new ArgumentNullException(nameof(permissionSetBuilder));
+        ArgumentNullException.ThrowIfNull(permissionSetBuilder);
 
         // A custom IAnonymousRolePermissionConfiguration implementation can optionally be defined
         // which overrides the base implementation in the definition.
