@@ -1,20 +1,18 @@
-﻿namespace Cofoundry.BasicTestSite;
+﻿var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+builder.WebHost.UseLocalConfigFile();
+builder.Services
+    .AddControllersWithViews()
+    .AddCofoundry(builder.Configuration);
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
 {
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(ConfigureWebHost);
-
-    public static void ConfigureWebHost(IWebHostBuilder webBuilder)
-    {
-        webBuilder
-            .UseStartup<Startup>()
-            .UseLocalConfigFile();
-    }
+    app.UseExceptionHandler("/Error");
 }
+
+app.UseHttpsRedirection();
+app.UseCofoundry();
+
+app.Run();

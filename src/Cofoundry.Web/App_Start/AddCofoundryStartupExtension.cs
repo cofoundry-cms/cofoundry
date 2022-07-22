@@ -1,8 +1,10 @@
 ﻿using Cofoundry.Core.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 
 namespace Cofoundry.Web;
 
@@ -51,6 +53,9 @@ public static class AddCofoundryStartupExtension
         // Ensure IHttpContextAccessor is added, because it isn't by default
         // see https://github.com/aspnet/Hosting/issues/793
         mvcBuilder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+        // In the new hosting model, IHostEnvironment is no longer registered with the service container
+        mvcBuilder.Services.TryAddTransient<IHostEnvironment>(s => s.GetRequiredService<IWebHostEnvironment>());
     }
 
     private static void DiscoverAdditionalApplicationParts(IMvcBuilder mvcBuilder, AddCofoundryStartupConfiguration cofoundryConfig)
