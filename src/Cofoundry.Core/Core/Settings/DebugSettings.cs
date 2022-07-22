@@ -43,7 +43,7 @@ public partial class DebugSettings : CofoundryConfigurationSettingsBase
     public string EmbeddedContentPhysicalPathRootOverride { get; set; }
 
     /// <summary>
-    /// USe to determine if we should show the developer exception page,
+    /// Use to determine if we should show the developer exception page,
     /// taking the current environment into consideration.
     /// </summary>
     /// <param name="env">The current hosting environment.</param>

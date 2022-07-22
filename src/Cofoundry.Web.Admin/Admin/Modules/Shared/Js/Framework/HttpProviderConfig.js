@@ -27,5 +27,6 @@ function (
     });
 
     headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
+    headers.common['Accept'] = 'application/json, text/html, text/plain, */*'
+    
 }]);

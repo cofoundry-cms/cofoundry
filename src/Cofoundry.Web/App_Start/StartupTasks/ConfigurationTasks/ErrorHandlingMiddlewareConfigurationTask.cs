@@ -29,7 +29,6 @@ public class ErrorHandlingMiddlewareConfigurationTask : IStartupConfigurationTas
         if (_debugSettings.CanShowDeveloperExceptionPage(env))
         {
             app.UseDeveloperExceptionPage();
-            app.UseDatabaseErrorPage();
         }
         else
         {
