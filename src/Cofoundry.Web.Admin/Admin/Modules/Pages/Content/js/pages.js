@@ -339,6 +339,12 @@ function (
             loadState = vm.saveLoadState;
         }
 
+        if (vm.command.pageType == 'CustomEntityDetails') {
+            vm.command.urlPath = undefined;
+        } else {
+            vm.command.customEntityRoutingRule = undefined;
+        }
+
         setLoadingOn(loadState);
 
         pageService

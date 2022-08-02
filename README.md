@@ -4,7 +4,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Cofoundry.Web.Admin.svg)](https://www.nuget.org/packages/Cofoundry.Web.Admin/)
 [![Gitter](https://img.shields.io/gitter/room/cofoundry-cms/cofoundry.svg)](https://gitter.im/cofoundry-cms/cofoundry)
 
-Cofoundry is an open source .Net Core CMS and application framework focusing on:
+Cofoundry is an open source .NET Core CMS and application framework focusing on:
 
 - Code first development
 - Unobtrusive integration into your application

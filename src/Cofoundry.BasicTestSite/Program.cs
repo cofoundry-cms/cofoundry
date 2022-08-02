@@ -7,11 +7,6 @@ builder.Services
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-}
-
 app.UseHttpsRedirection();
 app.UseCofoundry();
 
