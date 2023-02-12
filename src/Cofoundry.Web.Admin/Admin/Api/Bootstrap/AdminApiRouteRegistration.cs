@@ -239,6 +239,10 @@ public class AdminApiRouteRegistration : IOrderedRouteRegistration
             .MapGet()
             .MapGetById("{id:int}")
             ;
+        routeBuilder
+            .ForAdminApiController<PageTemplateExtensionDataModelSchemaApiController>("page-templates/{pageTemplateId:int}/extension-data-model-schemas")
+            .MapGet()
+            ;
     }
 
     private static void MapRolesApiRoutes(IEndpointRouteBuilder routeBuilder)

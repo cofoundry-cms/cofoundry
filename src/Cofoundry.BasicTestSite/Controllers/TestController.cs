@@ -38,6 +38,15 @@ public class TestController : Controller
             .AsRenderSummaries()
             .ExecuteAsync();
 
+        //var user = await _contentRepository
+        //    .Users()
+        //    .Current()
+        //    .Get()
+        //    .AsDetails()
+        //    .ExecuteAsync();
+
+        //var preferences = user.Extensions.Get<UserDetails.UserPreferencesModel>();
+
         return Json(entity);
     }
 }

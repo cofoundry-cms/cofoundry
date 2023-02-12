@@ -17,13 +17,17 @@ public class GetPageDetailsByIdQueryHandler
     private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
     private readonly IAuditDataMapper _auditDataMapper;
     private readonly IOpenGraphDataMapper _openGraphDataMapper;
+    private readonly IPageModelExtensionConfigurationRepository _pageModelExtensionConfigurationRepository;
+    private readonly IEntityExtensionDataModelDictionaryMapper _entityExtensionDataModelDictionaryMapper;
 
     public GetPageDetailsByIdQueryHandler(
         CofoundryDbContext dbContext,
         IQueryExecutor queryExecutor,
         IPageTemplateMicroSummaryMapper pageTemplateMapper,
         IAuditDataMapper auditDataMapper,
-        IOpenGraphDataMapper openGraphDataMapper
+        IOpenGraphDataMapper openGraphDataMapper,
+        IPageModelExtensionConfigurationRepository pageModelExtensionConfigurationRepository,
+        IEntityExtensionDataModelDictionaryMapper entityExtensionDataModelDictionaryMapper
         )
     {
         _dbContext = dbContext;
@@ -31,6 +35,8 @@ public class GetPageDetailsByIdQueryHandler
         _pageTemplateMapper = pageTemplateMapper;
         _auditDataMapper = auditDataMapper;
         _openGraphDataMapper = openGraphDataMapper;
+        _pageModelExtensionConfigurationRepository = pageModelExtensionConfigurationRepository;
+        _entityExtensionDataModelDictionaryMapper = entityExtensionDataModelDictionaryMapper;
     }
 
     public async Task<PageDetails> ExecuteAsync(GetPageDetailsByIdQuery query, IExecutionContext executionContext)
@@ -85,6 +91,9 @@ public class GetPageDetailsByIdQueryHandler
         page.LatestVersion.OpenGraph = _openGraphDataMapper.Map(dbPageVersion);
         page.LatestVersion.Template = _pageTemplateMapper.Map(dbPageVersion.PageTemplate);
         page.LatestVersion.Regions = regions;
+
+        var modelExtensionOptions = _pageModelExtensionConfigurationRepository.GetByTemplateId(dbPageVersion.PageTemplate.PageTemplateId);
+        page.ExtensionData = _entityExtensionDataModelDictionaryMapper.Map(dbPageVersion, EntityExtensionLoadProfile.Details, modelExtensionOptions);
 
         return page;
     }

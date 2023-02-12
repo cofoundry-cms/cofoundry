@@ -98,6 +98,44 @@ public static class StringHelper
     }
 
     /// <summary>
+    /// Removes text if it appears at the start of a string. Case sensitive
+    /// by default.
+    /// </summary>
+    /// <param name="source">String to modify.</param>
+    /// <param name="prefix">The prefix to test for. Case sensitive.</param>
+    /// <returns>If the string starts with the <paramref name="prefix"/>, the modified string is returned; otherwise the original string is returned.</returns>
+    public static string RemovePrefix(string source, string prefix)
+    {
+        if (source == null) return source;
+
+        if (source.StartsWith(prefix))
+        {
+            return source.Substring(prefix.Length);
+        }
+
+        return source;
+    }
+
+    /// <summary>
+    /// Removes text if it appears at the start of a string using the specified StringComparison options.
+    /// </summary>
+    /// <param name="source">String to modify.</param>
+    /// <param name="prefix">The prefix to test for.</param>
+    /// <param name="stringComparison">StringComparison options to use when testing for the suffix.</param>
+    /// <returns>If the string starts with the <paramref name="prefix"/>, the modified string is returned; otherwise the original string is returned.</returns>
+    public static string RemovePrefix(string source, string prefix, StringComparison stringComparison)
+    {
+        if (source == null) return source;
+
+        if (source.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        {
+            return source.Substring(prefix.Length);
+        }
+
+        return source;
+    }
+
+    /// <summary>
     /// Removes text if it appears at the end of a string. Case sensitive
     /// by default.
     /// </summary>

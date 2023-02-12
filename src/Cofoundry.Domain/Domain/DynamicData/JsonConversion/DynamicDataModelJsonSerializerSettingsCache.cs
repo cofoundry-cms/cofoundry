@@ -15,10 +15,12 @@ public class DynamicDataModelJsonSerializerSettingsCache
     private readonly ILogger<DynamicDataModelJsonSerializerSettingsCache> _logger;
 
     public DynamicDataModelJsonSerializerSettingsCache(
+        ILogger<DynamicDataModelJsonSerializerSettingsCache> _logger,
         IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
         INestedDataModelTypeRepository nestedDataModelTypeRepository
         )
     {
+        this._logger = _logger;
         _nestedDataModelTypeRepository = nestedDataModelTypeRepository;
 
         var settings = jsonSerializerSettingsFactory.Create();

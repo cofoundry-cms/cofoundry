@@ -44,5 +44,9 @@
     <EmbeddedResource Include="MailTemplates\Templates\**\*.cshtml" />
     <EmbeddedResource Include="Install\**\*.sql" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="Install\Db\Schema\00010.sql" />
+  </ItemGroup>
 	
 </Project>

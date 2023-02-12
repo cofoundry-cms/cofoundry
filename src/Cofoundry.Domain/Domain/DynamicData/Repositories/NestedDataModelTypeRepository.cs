@@ -41,11 +41,11 @@ public class NestedDataModelTypeRepository : INestedDataModelTypeRepository
 
     /// <summary>
     /// Gets a specific INestedDataModel type by it's name. The "DataModel"
-    /// suffix is options e.g. "CarouselItemDataModel" and "CarouselItem"
+    /// suffix is optional e.g. "CarouselItemDataModel" and "CarouselItem"
     /// both match the same type.
     /// </summary>
     /// <param name="name">
-    /// The name of the model to get. The "DataModel" suffix is options e.g. 
+    /// The name of the model to get. The "DataModel" suffix is optional e.g. 
     /// "CarouselItemDataModel" and "CarouselItem" both match the same type.
     /// </param>
     public Type GetByName(string name)

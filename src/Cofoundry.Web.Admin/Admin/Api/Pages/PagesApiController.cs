@@ -44,7 +44,7 @@ public class PagesApiController : BaseAdminApiController
         return await _apiResponseHelper.RunQueryAsync(query);
     }
 
-    public Task<JsonResult> Post([FromBody] AddPageCommand command)
+    public Task<JsonResult> Post([ModelBinder(BinderType = typeof(PageExtensionDataModelCommandModelBinder))] AddPageCommand command)
     {
         return _apiResponseHelper.RunCommandAsync(command);
     }

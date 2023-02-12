@@ -65,4 +65,6 @@ public class UserDetails : UserMicroSummary, ICreateAudited
     /// Data detailing who created the user and when.
     /// </summary>
     public CreateAuditData AuditData { get; set; }
+
+    public EntityExtensionDataModelDictionary ExtensionData { get; set; }
 }

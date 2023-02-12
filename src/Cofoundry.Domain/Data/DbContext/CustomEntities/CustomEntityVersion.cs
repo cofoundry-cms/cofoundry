@@ -58,8 +58,8 @@ public class CustomEntityVersion : ICreateAuditable, IEntityVersion
 
     /// <summary>
     /// The custom entity data model serialized into string data by
-    /// IDbUnstructuredDataSerializer, which used JSON serlialization
-    /// by default.
+    /// <see cref="IDbUnstructuredDataSerializer"/>, which used JSON 
+    /// serlialization by default.
     /// </summary>
     public string SerializedData { get; set; }
 

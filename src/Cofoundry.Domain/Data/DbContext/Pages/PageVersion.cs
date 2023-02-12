@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Data;
 /// the one that is rendered when the page is published. 
 /// </summary>
 /// <inheritdoc/>
-public class PageVersion : ICreateAuditable, IEntityVersion
+public class PageVersion : ICreateAuditable, IEntityVersion, IDataExtendable
 {
     /// <summary>
     /// Auto-incrementing primary key of the page version record 
@@ -82,6 +82,8 @@ public class PageVersion : ICreateAuditable, IEntityVersion
     /// graph meta tags.
     /// </summary>
     public ImageAsset OpenGraphImageAsset { get; set; }
+
+    public string SerializedExtensionData { get; set; }
 
     /// <summary>
     /// The template used to render this version.

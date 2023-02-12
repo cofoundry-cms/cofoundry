@@ -21,6 +21,10 @@ function (
 
         return def.promise;
     }
+
+    service.getExtensionDataModelSchemas = function (pageTemplateId) {
+        return $http.get(pageTemplateServiceBase + '/' + pageTemplateId + '/extension-data-model-schemas');;
+    }
     
     /* COMMANDS */
 

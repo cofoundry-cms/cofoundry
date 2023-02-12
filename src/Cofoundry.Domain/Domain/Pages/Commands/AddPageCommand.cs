@@ -123,6 +123,13 @@ public class AddPageCommand : ICommand, ILoggableCommand, IValidatableObject
     public int? OpenGraphImageId { get; set; }
 
     /// <summary>
+    /// Entity extension data model data to be validated and serialized 
+    /// into the database.
+    /// </summary>
+    [ValidateObject]
+    public EntityExtensionDataModelDictionary ExtensionData { get; set; }
+
+    /// <summary>
     /// The database id of the newly created page. This is set after the 
     /// command has been run.
     /// </summary>

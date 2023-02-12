@@ -40,6 +40,7 @@ public class AddPageCommandHandler
 
     public async Task ExecuteAsync(AddPageCommand command, IExecutionContext executionContext)
     {
+        // TODO: YAH: The data is now in the command, time to save it!
         Normalize(command);
         await ValidateIsPageUniqueAsync(command, executionContext);
 

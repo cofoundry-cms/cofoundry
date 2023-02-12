@@ -50,6 +50,7 @@
                                      cms-option-name="name"
                                      cms-option-value="pageTemplateId"
                                      cms-model="vm.command.pageTemplateId"
+                                     cms-change="vm.onPageTemplateChanged()"
                                      required></cms-form-field-dropdown>
 
             <cms-form-field-tags cms-title="CMS Tags"
@@ -82,6 +83,14 @@
                                      required></cms-form-field-dropdown>
         </cms-form-section>
 
+        <div ng-repeat="extensionDataSource in vm.extensionDataSources">
+            <cms-form-section cms-title="{{extensionDataSource.modelMetaData.groupName}}">
+                <cms-form-dynamic-field-set cms-data-source="extensionDataSource"
+                                            cms-additional-parameters="vm.additionalParameters">
+                </cms-form-dynamic-field-set>
+            </cms-form-section>
+        </div>
+        
         <!--META DATA-->
         <cms-form-section cms-title="SEO">
 

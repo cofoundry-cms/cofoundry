@@ -79,6 +79,10 @@ function (
 
         return def.promise;
     }
+
+    service.getExtensionDataModelSchemas = function (pageTemplateId) {
+        return $http.get(pageTemplateServiceBase + '/' + pageTemplateId + '/extension-data-model-schemas');;
+    }
     
     /* COMMANDS */
 
@@ -277,6 +281,7 @@ function (
 }]);
 angular.module('cms.pages').controller('AddPageController', [
     '_',
+    '$scope',
     '$q',
     '$location',
     '$window',
@@ -288,6 +293,7 @@ angular.module('cms.pages').controller('AddPageController', [
     'pages.customEntityService',
 function (
     _,
+    $scope,
     $q,
     $location,
     $window,
@@ -315,6 +321,7 @@ function (
         vm.cancel = cancel;
         vm.onNameChanged = onNameChanged;
         vm.onPageTypeChanged = onPageTypeChanged;
+        vm.onPageTemplateChanged = onPageTemplateChanged;
 
         vm.globalLoadState = new LoadState();
         vm.saveLoadState = new LoadState();
@@ -380,6 +387,30 @@ function (
         vm.pageTemplates = _.where(vm.allPageTemplates, { pageType: filterBy });
     }
 
+    function onPageTemplateChanged() {
+       pageTemplateService
+            .getExtensionDataModelSchemas(vm.command.pageTemplateId)
+            .then(function (schemas) {
+                vm.command.extensionData = vm.command.extensionData || {};
+                vm.extensionDataSources = [];
+                _.each(schemas, mapSchema);
+            });
+            
+        function mapSchema(modelMetaData) {
+            var dataModel = vm.command.extensionData[modelMetaData.name] || {};
+            if (modelMetaData.defaultValue && modelMetaData.defaultValue.value) {
+                vm.command.extensionData[modelMetaData.name] = _.extend(angular.copy(modelMetaData.defaultValue.value), dataModel);
+            } else {
+                vm.command.extensionData[modelMetaData.name]  = dataModel;
+            }
+
+            vm.extensionDataSources.push({
+                model: vm.command.extensionData[modelMetaData.name],
+                modelMetaData: modelMetaData
+            });
+        }
+    }
+
     /* PRIVATE FUNCS */
 
     function cancel() {
@@ -414,6 +445,17 @@ function (
                 loadRoutingRulesDeferred
                 )
             .then(onPageTypeChanged);
+        
+        $scope.$watch('vm.command.localeId', function (localeId) {
+
+            if (localeId) {
+                vm.additionalParameters = {
+                    localeId: localeId
+                };
+            } else {
+                vm.additionalParameters = {};
+            }
+        });
     }
 
     function setLoadingOn(loadState) {
