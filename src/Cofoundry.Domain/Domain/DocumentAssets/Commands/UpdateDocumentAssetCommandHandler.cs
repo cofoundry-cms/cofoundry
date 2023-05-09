@@ -68,7 +68,7 @@ public class UpdateDocumentAssetCommandHandler
                     FileExtension = documentAsset.FileExtension
                 };
 
-                await _commandExecutor.ExecuteAsync(deleteOldFileCommand);
+                await _commandExecutor.ExecuteAsync(deleteOldFileCommand, executionContext);
                 await _documentAssetCommandHelper.SaveFile(command.File, documentAsset);
                 documentAsset.FileUpdateDate = executionContext.ExecutionDate;
             }
