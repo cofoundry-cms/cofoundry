@@ -58,6 +58,8 @@ public class PageVersionDetails : ICreateAudited
     /// </summary>
     public ICollection<PageRegionDetails> Regions { get; set; }
 
+    public EntityExtensionDataModelDictionary ExtensionData { get; set; }
+
     /// <inheritdoc/>
     public CreateAuditData AuditData { get; set; }
 }

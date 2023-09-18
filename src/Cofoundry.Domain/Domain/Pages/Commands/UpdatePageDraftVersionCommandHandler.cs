@@ -19,15 +19,16 @@ public class UpdatePageDraftVersionCommandHandler
     private readonly IMessageAggregator _messageAggregator;
     private readonly ITransactionScopeManager _transactionScopeFactory;
     private readonly IPageStoredProcedures _pageStoredProcedures;
+    private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
 
     public UpdatePageDraftVersionCommandHandler(
-        IQueryExecutor queryExecutor,
         ICommandExecutor commandExecutor,
         CofoundryDbContext dbContext,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
         ITransactionScopeManager transactionScopeFactory,
-        IPageStoredProcedures pageStoredProcedures
+        IPageStoredProcedures pageStoredProcedures,
+        IDbUnstructuredDataSerializer dbUnstructuredDataSerializer
         )
     {
         _commandExecutor = commandExecutor;
@@ -36,13 +37,14 @@ public class UpdatePageDraftVersionCommandHandler
         _messageAggregator = messageAggregator;
         _transactionScopeFactory = transactionScopeFactory;
         _pageStoredProcedures = pageStoredProcedures;
+        _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
     }
 
     public async Task ExecuteAsync(UpdatePageDraftVersionCommand command, IExecutionContext executionContext)
     {
         Normalize(command);
 
-        var draft = await GetDraftVersion(command.PageId).SingleOrDefaultAsync();
+        var draft = await GetDraftVersionAsync(command.PageId);
 
         using (var scope = _transactionScopeFactory.Create(_dbContext))
         {
@@ -51,6 +53,12 @@ public class UpdatePageDraftVersionCommandHandler
 
             await _dbContext.SaveChangesAsync();
             await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);
+
+            var dependencyCommand = new UpdateUnstructuredDataDependenciesCommand(
+                PageVersionEntityDefinition.DefinitionCode,
+                draft.PageVersionId,
+                command.ExtensionData
+                );
 
             scope.QueueCompletionTask(() => OnTransactionComplete(draft));
 
@@ -82,11 +90,12 @@ public class UpdatePageDraftVersionCommandHandler
         command.OpenGraphDescription = command.OpenGraphDescription?.Trim();
     }
 
-    private IQueryable<PageVersion> GetDraftVersion(int pageId)
+    private Task<PageVersion> GetDraftVersionAsync(int pageId)
     {
         return _dbContext
             .PageVersions
-            .Where(p => p.PageId == pageId && p.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
+            .Where(p => p.PageId == pageId && p.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
+            .SingleOrDefaultAsync();
     }
 
     private async Task<PageVersion> CreateDraftIfRequiredAsync(int pageId, PageVersion draft)
@@ -97,7 +106,7 @@ public class UpdatePageDraftVersionCommandHandler
         command.PageId = pageId;
         await _commandExecutor.ExecuteAsync(command);
 
-        return await GetDraftVersion(pageId).SingleOrDefaultAsync();
+        return await GetDraftVersionAsync(pageId);
     }
 
     private void UpdateDraft(UpdatePageDraftVersionCommand command, PageVersion draft)
@@ -110,6 +119,7 @@ public class UpdatePageDraftVersionCommandHandler
         draft.OpenGraphTitle = command.OpenGraphTitle;
         draft.OpenGraphDescription = command.OpenGraphDescription;
         draft.OpenGraphImageId = command.OpenGraphImageId;
+        draft.SerializedExtensionData = _dbUnstructuredDataSerializer.Serialize(command.ExtensionData);
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(UpdatePageDraftVersionCommand command)

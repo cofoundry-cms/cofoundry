@@ -26,7 +26,6 @@ public class AddCustomEntityVersionPageBlockCommandHandler
         ICustomEntityCache customEntityCache,
         IPageBlockCommandHelper pageBlockCommandHelper,
         IMessageAggregator messageAggregator,
-        ICustomEntityDefinitionRepository customEntityDefinitionRepository,
         IPermissionValidationService permissionValidationService,
         ITransactionScopeManager transactionScopeFactory
         )

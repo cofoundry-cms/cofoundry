@@ -72,4 +72,11 @@ public class UpdatePageDraftVersionCommand : IPatchableByIdCommand, ILoggableCom
     /// Set a value to alter the publish date, otherwise the existing or current date is used.
     /// </summary>
     public DateTime? PublishDate { get; set; }
+
+    /// <summary>
+    /// Entity extension data model data to be validated and serialized 
+    /// into the database.
+    /// </summary>
+    [ValidateObject]
+    public EntityExtensionDataModelDictionary ExtensionData { get; set; }
 }

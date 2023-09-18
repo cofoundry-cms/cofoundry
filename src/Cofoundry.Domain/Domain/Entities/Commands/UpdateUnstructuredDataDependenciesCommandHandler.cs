@@ -46,11 +46,13 @@ public class UpdateUnstructuredDataDependenciesCommandHandler
             .Where(d => d.RootEntityDefinitionCode == command.RootEntityDefinitionCode && d.RootEntityId == command.RootEntityId);
     }
 
-    private IEnumerable<EntityDependency> GetDistinctRelations(object model)
+    private IEnumerable<EntityDependency> GetDistinctRelations(ICollection<object> models)
     {
-        var relations = EntityRelationAttributeHelper.GetRelations(model);
+        var groupedRelations = models
+            .SelectMany(EntityRelationAttributeHelper.GetRelations)
+            .GroupBy(r => new { r.EntityDefinitionCode, r.EntityId });
 
-        foreach (var relationGroup in relations.GroupBy(r => new { r.EntityDefinitionCode, r.EntityId }))
+        foreach (var relationGroup in groupedRelations)
         {
             if (relationGroup.Count() == 1)
             {

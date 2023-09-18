@@ -2,11 +2,11 @@
 
 public class UpdateUnstructuredDataDependenciesCommand : ICommand
 {
-    public UpdateUnstructuredDataDependenciesCommand(string rootEntityDefinitionCode, int rootEntityId, object model)
+    public UpdateUnstructuredDataDependenciesCommand(string rootEntityDefinitionCode, int rootEntityId, params object[] models)
     {
         RootEntityDefinitionCode = rootEntityDefinitionCode;
         RootEntityId = rootEntityId;
-        Model = model;
+        Model = models;
     }
 
     [Required]
@@ -17,5 +17,5 @@ public class UpdateUnstructuredDataDependenciesCommand : ICommand
     public int RootEntityId { get; set; }
 
     [Required]
-    public object Model { get; set; }
+    public ICollection<object> Model { get; set; }
 }

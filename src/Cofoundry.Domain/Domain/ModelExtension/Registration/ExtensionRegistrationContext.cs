@@ -28,13 +28,13 @@ public class ExtensionRegistrationContext
 
         var options = new ExtensionRegistrationOptions(type)
         {
-            Name = typeName,
+            Name = TextFormatter.Camelize(typeName),
             GroupName = TextFormatter.PascalCaseToSentence(typeName),
             LoadProfile = EntityExtensionLoadProfile.Details,
         };
 
         optionsConfiguration?.Invoke(options);
-
+        options.Name = TextFormatter.Camelize(typeName);
         _registrations.Add(options.Type, options);
 
         return this;

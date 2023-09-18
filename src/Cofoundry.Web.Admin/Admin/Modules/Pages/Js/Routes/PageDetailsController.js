@@ -12,6 +12,7 @@
     'shared.permissionValidationService',
     'shared.userAreaService',
     'shared.internalModulePath',
+    'pages.pageTemplateService',
     'pages.modulePath',
 function (
     $routeParams,
@@ -27,6 +28,7 @@ function (
     permissionValidationService,
     userAreaService,
     sharedModulePath,
+    pageTemplateService,
     modulePath
     ) {
 
@@ -237,6 +239,7 @@ function (
             .all([getPage(), getVersions(), getUserAreas()])
             .then(function (results) {
                 mapVersions(results[1]);
+                return getExtensionMetaData(results[0]);
             })
             .then(setLoadingOff.bind(null, loadStateToTurnOff));
            
@@ -251,6 +254,13 @@ function (
                 vm.isMarkedPublished = vm.page.pageRoute.publishStatus == 'Published';
                 vm.publishStatusLabel = getPublishStatusLabel(page.pageRoute);
 
+                if (vm.page.pageRoute.locale) {
+                    vm.additionalParameters = {
+                        localeId: vm.page.pageRoute.locale.localeId
+                    };
+                } else {
+                    vm.additionalParameters = {};
+                }
                 return page;
             });
         }
@@ -259,6 +269,22 @@ function (
             return userAreaService.getAll().then(function (userAreas) {
                 vm.accessRulesEnabled = userAreas.length > 1;
             });
+        }
+        
+        function getExtensionMetaData(page) {
+            return pageTemplateService
+                .getExtensionDataModelSchemas(page.latestVersion.template.pageTemplateId)
+                .then(function (schemas) {
+                    vm.extensionDataSources = [];
+                    _.each(schemas, mapSchema);
+                });
+                
+            function mapSchema(modelMetaData) {
+                vm.extensionDataSources.push({
+                    model: vm.updateDraftCommand.extensionData[modelMetaData.name],
+                    modelMetaData: modelMetaData
+                });
+            }
         }
     }
 
@@ -326,7 +352,8 @@ function (
             openGraphTitle: ogData.title,
             openGraphDescription: ogData.description,
             openGraphImageId: ogData.image ? ogData.image.ImageAssetId : undefined,
-            showInSiteMap: version.showInSiteMap
+            showInSiteMap: version.showInSiteMap,
+            extensionData: version.extensionData
         }
     }
 

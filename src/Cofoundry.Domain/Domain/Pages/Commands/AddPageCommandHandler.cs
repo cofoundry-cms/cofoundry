@@ -10,37 +10,42 @@ public class AddPageCommandHandler
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
+    private readonly ICommandExecutor _commandExecutor;
     private readonly EntityAuditHelper _entityAuditHelper;
     private readonly EntityTagHelper _entityTagHelper;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPageStoredProcedures _pageStoredProcedures;
     private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
 
     public AddPageCommandHandler(
         CofoundryDbContext dbContext,
         IQueryExecutor queryExecutor,
+        ICommandExecutor commandExecutor,
         EntityAuditHelper entityAuditHelper,
         EntityTagHelper entityTagHelper,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
         IPageStoredProcedures pageStoredProcedures,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeFactory,
+        IDbUnstructuredDataSerializer dbUnstructuredDataSerializer
         )
     {
         _dbContext = dbContext;
         _queryExecutor = queryExecutor;
+        _commandExecutor = commandExecutor;
         _entityAuditHelper = entityAuditHelper;
         _entityTagHelper = entityTagHelper;
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
         _pageStoredProcedures = pageStoredProcedures;
         _transactionScopeFactory = transactionScopeFactory;
+        _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
     }
 
     public async Task ExecuteAsync(AddPageCommand command, IExecutionContext executionContext)
     {
-        // TODO: YAH: The data is now in the command, time to save it!
         Normalize(command);
         await ValidateIsPageUniqueAsync(command, executionContext);
 
@@ -51,6 +56,14 @@ public class AddPageCommandHandler
         {
             await _dbContext.SaveChangesAsync();
             await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(page.PageId);
+
+            var dependencyCommand = new UpdateUnstructuredDataDependenciesCommand(
+                PageVersionEntityDefinition.DefinitionCode,
+                page.PageVersions.First().PageVersionId,
+                command.ExtensionData
+                );
+
+            await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
 
             scope.QueueCompletionTask(() => OnTransactionComplete(command, page));
 
@@ -151,6 +164,7 @@ public class AddPageCommandHandler
         pageVersion.OpenGraphImageId = command.OpenGraphImageId;
         pageVersion.PageTemplate = pageTemplate;
         pageVersion.DisplayVersion = 1;
+        pageVersion.SerializedExtensionData = _dbUnstructuredDataSerializer.Serialize(command.ExtensionData);
 
         if (command.Publish)
         {

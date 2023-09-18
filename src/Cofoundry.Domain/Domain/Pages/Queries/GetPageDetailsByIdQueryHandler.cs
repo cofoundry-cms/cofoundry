@@ -87,13 +87,13 @@ public class GetPageDetailsByIdQueryHandler
             WorkFlowStatus = (WorkFlowStatus)dbPageVersion.WorkFlowStatusId
         };
 
+        var modelExtensionOptions = _pageModelExtensionConfigurationRepository.GetByTemplateId(dbPageVersion.PageTemplate.PageTemplateId);
+        page.LatestVersion.ExtensionData = _entityExtensionDataModelDictionaryMapper.Map(dbPageVersion, EntityExtensionLoadProfile.Details, modelExtensionOptions);
+
         page.LatestVersion.AuditData = _auditDataMapper.MapCreateAuditData(dbPageVersion);
         page.LatestVersion.OpenGraph = _openGraphDataMapper.Map(dbPageVersion);
         page.LatestVersion.Template = _pageTemplateMapper.Map(dbPageVersion.PageTemplate);
         page.LatestVersion.Regions = regions;
-
-        var modelExtensionOptions = _pageModelExtensionConfigurationRepository.GetByTemplateId(dbPageVersion.PageTemplate.PageTemplateId);
-        page.ExtensionData = _entityExtensionDataModelDictionaryMapper.Map(dbPageVersion, EntityExtensionLoadProfile.Details, modelExtensionOptions);
 
         return page;
     }
