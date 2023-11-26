@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using Ganss.Xss;
+using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Core.Web.Internal;
 
@@ -10,7 +11,7 @@ namespace Cofoundry.Core.Web.Internal;
 /// </summary>
 public class HtmlSanitizer : IHtmlSanitizer
 {
-    private Ganss.XSS.HtmlSanitizer _defaultSanitizer;
+    private Ganss.Xss.HtmlSanitizer _defaultSanitizer;
     private readonly string _defaultBaseUrl = null;
 
     public HtmlSanitizer(
@@ -109,16 +110,20 @@ public class HtmlSanitizer : IHtmlSanitizer
         return ganssRuleSet.BaseUrl;
     }
 
-    protected Ganss.XSS.HtmlSanitizer CreateSanitizer(IHtmlSanitizationRuleSet ruleSet)
+    protected Ganss.Xss.HtmlSanitizer CreateSanitizer(IHtmlSanitizationRuleSet ruleSet)
     {
-        var sanitizer = new Ganss.XSS.HtmlSanitizer(
-            ruleSet.PermittedTags,
-            ruleSet.PermittedSchemes,
-            ruleSet.PermittedAttributes,
-            ruleSet.PermittedUriAttributes,
-            ruleSet.PermittedCssProperties
-            );
+        var options = new HtmlSanitizerOptions()
+        {
+            AllowedAtRules = ruleSet.PermittedAtRules,
+            AllowedAttributes = ruleSet.PermittedAttributes,
+            AllowedCssClasses = ruleSet.PermittedAttributes,
+            AllowedCssProperties = ruleSet.PermittedCssProperties,
+            AllowedSchemes = ruleSet.PermittedSchemes,
+            AllowedTags = ruleSet.PermittedTags,
+            UriAttributes = ruleSet.PermittedUriAttributes
+        };
 
+        var sanitizer = new Ganss.Xss.HtmlSanitizer(options);
         var gnassRuleSet = ruleSet as IGanssHtmlSanitizationRuleSet;
 
         if (gnassRuleSet != null)

@@ -12,7 +12,7 @@ public interface IGanssHtmlSanitizationRuleSet : IHtmlSanitizationRuleSet
     /// been created.
     /// </summary>
     /// <param name="htmlSanitizer">Sanitizer to initialize.</param>
-    void Initialize(Ganss.XSS.HtmlSanitizer htmlSanitizer);
+    void Initialize(Ganss.Xss.HtmlSanitizer htmlSanitizer);
 
     /// <summary>
     /// The base URL relative URLs are resolved against. No resolution if empty.

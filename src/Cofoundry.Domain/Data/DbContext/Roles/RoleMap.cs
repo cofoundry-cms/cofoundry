@@ -7,7 +7,10 @@ public class RoleMap : IEntityTypeConfiguration<Role>
 {
     public void Configure(EntityTypeBuilder<Role> builder)
     {
-        builder.ToTable(nameof(Role), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(Role), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.Role_CascadeDelete");
+        });
 
         builder.Property(s => s.Title)
             .IsRequired()

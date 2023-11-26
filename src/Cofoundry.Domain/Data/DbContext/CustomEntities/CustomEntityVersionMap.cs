@@ -6,7 +6,10 @@ public class CustomEntityVersionMap : IEntityTypeConfiguration<CustomEntityVersi
 {
     public void Configure(EntityTypeBuilder<CustomEntityVersion> builder)
     {
-        builder.ToTable(nameof(CustomEntityVersion), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(CustomEntityVersion), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.CustomEntityVersion_CascadeDelete");
+        });
 
         builder.Property(s => s.SerializedData)
             .IsRequired();

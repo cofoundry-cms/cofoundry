@@ -7,7 +7,10 @@ public class PermissionMap : IEntityTypeConfiguration<Permission>
 {
     public void Configure(EntityTypeBuilder<Permission> builder)
     {
-        builder.ToTable(nameof(Permission), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(Permission), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.Permission_CascadeDelete");
+        });
 
         builder.Property(s => s.PermissionCode)
             .IsRequired()

@@ -7,7 +7,10 @@ public class CustomEntityMap : IEntityTypeConfiguration<CustomEntity>
 {
     public void Configure(EntityTypeBuilder<CustomEntity> builder)
     {
-        builder.ToTable(nameof(CustomEntity), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(CustomEntity), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.CustomEntity_CascadeDelete");
+        });
 
         builder.Property(s => s.CustomEntityDefinitionCode)
             .IsRequired()

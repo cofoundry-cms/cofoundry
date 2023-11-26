@@ -1,10 +1,13 @@
-﻿namespace Cofoundry.Core.Web;
+﻿using Ganss.Xss;
+using System.Collections.Immutable;
+
+namespace Cofoundry.Core.Web;
 
 /// <summary>
 /// Factory to create the default ruleset for the sanitizer. This uses the 
 /// default settings from Ganss.XSS.HtmlSanitizer, but with the addition
-/// of the class attribute. See https://github.com/mganss/HtmlSanitizer
-/// for more info.
+/// of the class attribute and the mailto scheme. See 
+/// <see cref="https://github.com/mganss/HtmlSanitizer"/> for more info.
 /// </summary>
 public class DefaultHtmlSanitizationRuleSetFactory : IDefaultHtmlSanitizationRuleSetFactory
 {
@@ -19,13 +22,35 @@ public class DefaultHtmlSanitizationRuleSetFactory : IDefaultHtmlSanitizationRul
     {
         var ruleSet = new HtmlSanitizationRuleSet();
 
-        ruleSet.PermittedAttributes = Ganss.XSS.HtmlSanitizer.DefaultAllowedAttributes;
-        ruleSet.PermittedCssProperties = Ganss.XSS.HtmlSanitizer.DefaultAllowedCssProperties;
-        ruleSet.PermittedSchemes = Ganss.XSS.HtmlSanitizer.DefaultAllowedSchemes;
-        ruleSet.PermittedTags = Ganss.XSS.HtmlSanitizer.DefaultAllowedTags;
-        ruleSet.PermittedUriAttributes = Ganss.XSS.HtmlSanitizer.DefaultUriAttributes;
-        ruleSet.PermittedAttributes.Add("class");
-        ruleSet.PermittedSchemes.Add("mailto");
+        ruleSet.PermittedAtRules = HtmlSanitizerDefaults
+            .AllowedAtRules
+            .ToImmutableHashSet();
+
+        ruleSet.PermittedAttributes = HtmlSanitizerDefaults
+            .AllowedAttributes
+            .Append("class")
+            .ToImmutableHashSet();
+
+        ruleSet.PermittedCssClasses = HtmlSanitizerDefaults
+            .AllowedClasses
+            .ToImmutableHashSet();
+
+        ruleSet.PermittedCssProperties = HtmlSanitizerDefaults
+            .AllowedCssProperties
+            .ToImmutableHashSet();
+
+        ruleSet.PermittedSchemes = HtmlSanitizerDefaults
+            .AllowedSchemes
+            .Append("mailto")
+            .ToImmutableHashSet();
+
+        ruleSet.PermittedTags = HtmlSanitizerDefaults
+            .AllowedTags
+            .ToImmutableHashSet();
+
+        ruleSet.PermittedUriAttributes = HtmlSanitizerDefaults
+            .UriAttributes
+            .ToImmutableHashSet();
 
         return ruleSet;
     }

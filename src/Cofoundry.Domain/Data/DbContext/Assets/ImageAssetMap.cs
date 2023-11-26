@@ -7,7 +7,10 @@ public class ImageAssetMap : IEntityTypeConfiguration<ImageAsset>
 {
     public void Configure(EntityTypeBuilder<ImageAsset> builder)
     {
-        builder.ToTable(nameof(ImageAsset), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(ImageAsset), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.ImageAsset_CascadeDelete");
+        });
 
         builder.Property(s => s.FileName)
             .IsRequired()

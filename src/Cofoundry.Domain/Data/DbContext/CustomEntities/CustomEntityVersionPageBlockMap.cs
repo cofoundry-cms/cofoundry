@@ -7,7 +7,10 @@ public class CustomEntityVersionPageBlockMap : IEntityTypeConfiguration<CustomEn
 {
     public void Configure(EntityTypeBuilder<CustomEntityVersionPageBlock> builder)
     {
-        builder.ToTable(nameof(CustomEntityVersionPageBlock), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(CustomEntityVersionPageBlock), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.CustomEntityVersionPageBlock_CascadeDelete");
+        });
 
         builder.Property(s => s.SerializedData)
             .IsRequired()

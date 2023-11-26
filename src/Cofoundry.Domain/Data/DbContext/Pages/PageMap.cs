@@ -7,7 +7,10 @@ public class PageMap : IEntityTypeConfiguration<Page>
 {
     public void Configure(EntityTypeBuilder<Page> builder)
     {
-        builder.ToTable(nameof(Page), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(Page), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.Page_CascadeDelete");
+        });
 
         builder.Property(s => s.UrlPath)
             .IsRequired()

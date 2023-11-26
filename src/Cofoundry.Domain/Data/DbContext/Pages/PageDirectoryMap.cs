@@ -6,7 +6,10 @@ public class PageDirectoryMap : IEntityTypeConfiguration<PageDirectory>
 {
     public void Configure(EntityTypeBuilder<PageDirectory> builder)
     {
-        builder.ToTable(nameof(PageDirectory), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(PageDirectory), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.PageDirectory_CascadeDelete");
+        });
         builder.HasKey(s => s.PageDirectoryId);
 
         builder.Property(s => s.Name)

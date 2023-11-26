@@ -6,7 +6,10 @@ public class PageVersionMap : IEntityTypeConfiguration<PageVersion>
 {
     public void Configure(EntityTypeBuilder<PageVersion> builder)
     {
-        builder.ToTable(nameof(PageVersion), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(PageVersion), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.PageVersion_CascadeDelete");
+        });
 
         builder.Property(s => s.Title)
             .IsRequired()

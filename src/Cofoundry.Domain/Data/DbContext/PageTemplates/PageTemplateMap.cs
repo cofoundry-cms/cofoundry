@@ -7,7 +7,10 @@ public class PageTemplateMap : IEntityTypeConfiguration<PageTemplate>
 {
     public void Configure(EntityTypeBuilder<PageTemplate> builder)
     {
-        builder.ToTable(nameof(PageTemplate), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(PageTemplate), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.PageTemplate_CascadeDelete");
+        });
 
         builder.Property(s => s.FileName)
             .HasMaxLength(100)

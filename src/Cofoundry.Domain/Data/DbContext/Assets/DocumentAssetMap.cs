@@ -7,7 +7,10 @@ public class DocumentAssetMap : IEntityTypeConfiguration<DocumentAsset>
 {
     public void Configure(EntityTypeBuilder<DocumentAsset> builder)
     {
-        builder.ToTable(nameof(DocumentAsset), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(DocumentAsset), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.DocumentAsset_CascadeDelete");
+        });
 
         builder.Property(s => s.FileName)
             .IsRequired()

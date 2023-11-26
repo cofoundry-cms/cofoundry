@@ -7,7 +7,10 @@ public class UserMap : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable(nameof(User), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(User), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.User_CascadeDelete");
+        });
 
         builder.Property(s => s.FirstName)
             .HasMaxLength(32);

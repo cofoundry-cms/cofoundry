@@ -7,7 +7,10 @@ public class PageTemplateRegionMap : IEntityTypeConfiguration<PageTemplateRegion
 {
     public void Configure(EntityTypeBuilder<PageTemplateRegion> builder)
     {
-        builder.ToTable(nameof(PageTemplateRegion), DbConstants.CofoundrySchema);
+        builder.ToTable(nameof(PageTemplateRegion), DbConstants.CofoundrySchema, t =>
+        {
+            t.HasTrigger("Cofoundry.PageTemplateRegion_CascadeDelete");
+        });
 
         builder.Property(s => s.Name)
             .IsRequired()
