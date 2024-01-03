@@ -14,10 +14,10 @@ public class CreateDirectoriesUpdateCommand : IVersionedUpdateCommand
     /// <summary>
     /// A collection of directory paths to create. Resolved using IPathResolver.
     /// </summary>
-    public ICollection<string> Directories { get; set; }
+    public required ICollection<string> Directories { get; set; }
 
     /// <summary>
     /// Short description of the command being run, used for log record identification purposes.
     /// </summary>
-    public string Description { get; set; }
+    public required string Description { get; set; }
 }

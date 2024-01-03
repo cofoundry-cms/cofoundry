@@ -9,7 +9,7 @@ namespace Cofoundry.Core.Validation;
 public class PositiveIntegerAttribute : RangeAttribute
 {
     public PositiveIntegerAttribute() :
-        base(1, Int32.MaxValue)
+        base(1, int.MaxValue)
     {
         ErrorMessage = "The {0} field must be a positive integer value.";
     }

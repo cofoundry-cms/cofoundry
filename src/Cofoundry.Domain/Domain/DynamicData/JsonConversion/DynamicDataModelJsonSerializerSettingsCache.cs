@@ -15,10 +15,12 @@ public class DynamicDataModelJsonSerializerSettingsCache
     private readonly ILogger<DynamicDataModelJsonSerializerSettingsCache> _logger;
 
     public DynamicDataModelJsonSerializerSettingsCache(
+        ILogger<DynamicDataModelJsonSerializerSettingsCache> logger,
         IJsonSerializerSettingsFactory jsonSerializerSettingsFactory,
         INestedDataModelTypeRepository nestedDataModelTypeRepository
         )
     {
+        _logger = logger;
         _nestedDataModelTypeRepository = nestedDataModelTypeRepository;
 
         var settings = jsonSerializerSettingsFactory.Create();
@@ -42,7 +44,7 @@ public class DynamicDataModelJsonSerializerSettingsCache
     /// </summary>
     private void HandleDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
     {
-        _logger.LogWarning(0, errorArgs.ErrorContext.Error, errorArgs.ErrorContext.Error.Message);
+        _logger.LogWarning(errorArgs.ErrorContext.Error, "Error deserializing dynamic data model data");
         errorArgs.ErrorContext.Handled = true;
     }
 }

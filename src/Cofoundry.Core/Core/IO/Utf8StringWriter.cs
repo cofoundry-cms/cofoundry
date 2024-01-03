@@ -6,6 +6,7 @@ namespace Cofoundry.Core.IO;
  * The default implementation of StringWriter doesn't allow you to specify the
  * encoding and uses UTF-16 by default
  */
+[Obsolete("Does not appear to be referenced and was added pre-migration to Cofoundry. This will be removed in a later version")]
 public class Utf8StringWriter : StringWriter
 {
     public Utf8StringWriter() : base()

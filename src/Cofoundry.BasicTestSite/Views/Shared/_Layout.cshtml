@@ -15,7 +15,7 @@
         description = "Develop With Cofoundry";
     }
 
-    title = StringHelper.FirstNonEmpty(title, "Develop With Cofoundry");
+    title = StringHelper.FirstNotNullOrWhitespace(title, "Develop With Cofoundry");
     title += " | Basic Test Site";
 }
 

@@ -293,8 +293,10 @@ public class ApiResponseHelper : IApiResponseHelper
             }
             else
             {
-                error = new ValidationError();
-                error.Message = ex.Message;
+                error = new ValidationError()
+                {
+                    Message = ex.Message
+                };
             }
 
             if (ex is ValidationErrorException exceptionWithCode)
@@ -308,10 +310,11 @@ public class ApiResponseHelper : IApiResponseHelper
 
     private ValidationError ToValidationError(ValidationResult result)
     {
-        var error = new ValidationError();
-
-        error.Message = result.ErrorMessage;
-        error.Properties = result.MemberNames.ToArray();
+        var error = new ValidationError()
+        {
+            Message = result.ErrorMessage,
+            Properties = result.MemberNames.ToArray()
+        };
 
         return error;
     }

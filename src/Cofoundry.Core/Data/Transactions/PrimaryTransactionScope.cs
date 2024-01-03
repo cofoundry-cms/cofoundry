@@ -8,7 +8,7 @@ public class PrimaryTransactionScope : ITransactionScope, IDisposable
 {
     private readonly DefaultTransactionScopeManager _transactionScopeManager;
     private Queue<Func<Task>> _runOnCompleteActions = new Queue<Func<Task>>();
-    private System.Transactions.TransactionScope _innerScope;
+    private System.Transactions.TransactionScope? _innerScope;
 
     public PrimaryTransactionScope(
         DefaultTransactionScopeManager transactionScopeManager,
@@ -25,6 +25,11 @@ public class PrimaryTransactionScope : ITransactionScope, IDisposable
     /// </summary>
     public async Task CompleteAsync()
     {
+        if (_innerScope == null)
+        {
+            throw new InvalidOperationException("Scope has already been completed or disposed.");
+        }
+
         _innerScope.Complete();
 
         // Dispose of the inner scope so transactions are freed up for

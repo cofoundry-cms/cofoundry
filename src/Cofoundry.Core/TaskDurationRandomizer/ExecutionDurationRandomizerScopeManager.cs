@@ -12,7 +12,7 @@ public class ExecutionDurationRandomizerScopeManager : IExecutionDurationRandomi
         _executionDurationRandomizerSettings = executionDurationRandomizerSettings;
     }
 
-    private ExecutionDurationRandomizerScope _executionDurationRandomizerScope = null;
+    private ExecutionDurationRandomizerScope? _executionDurationRandomizerScope = null;
 
     public IExecutionDurationRandomizerScope Create(
         int minDurationInMilliseconds,

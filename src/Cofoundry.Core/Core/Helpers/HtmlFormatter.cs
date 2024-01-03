@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Html;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace Cofoundry.Core;
@@ -8,8 +9,14 @@ public static class HtmlFormatter
     /// <summary>
     /// Converts line breaks from a textarea to html br tags
     /// </summary>
-    public static string ConvertLineBreaksToBrTags(string stIn)
+    [return: NotNullIfNotNull(nameof(stIn))]
+    public static string? ConvertLineBreaksToBrTags(string? stIn)
     {
+        if (stIn == null)
+        {
+            return null;
+        }
+
         return stIn
                .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
                .Aggregate((a, b) => a + "<br/>" + b);
@@ -23,8 +30,14 @@ public static class HtmlFormatter
     /// Options used to describe how you want the links to be 
     /// formatted e.g. new window or no-follow.
     /// </param>
-    public static string ConvertUrlsToLinks(string text, BasicHtmlFormatOption formatOptions = BasicHtmlFormatOption.None)
+    [return: NotNullIfNotNull(nameof(text))]
+    public static string? ConvertUrlsToLinks(string? text, BasicHtmlFormatOption formatOptions = BasicHtmlFormatOption.None)
     {
+        if (text == null)
+        {
+            return null;
+        }
+
         var reg = new Regex(@"[""'=]?(http://|ftp://|https://|www\.|ftp\.[\w]+)([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
@@ -83,7 +96,7 @@ public static class HtmlFormatter
     /// formatted e.g. new window or no-follow.
     /// </param>
     /// <returns>HtmlString version of the input string formatted to basic html.</returns>
-    public static IHtmlContent ConvertToBasicHtml(string s, BasicHtmlFormatOption formatOptions = BasicHtmlFormatOption.None)
+    public static IHtmlContent ConvertToBasicHtml(string? s, BasicHtmlFormatOption formatOptions = BasicHtmlFormatOption.None)
     {
         if (string.IsNullOrEmpty(s)) return new HtmlString(string.Empty);
         var html = ConvertLineBreaksToBrTags(s);
@@ -98,8 +111,13 @@ public static class HtmlFormatter
     /// <remarks>
     /// See http://stackoverflow.com/a/204664.
     /// </remarks>
-    public static bool ContainsHtml(string source)
+    public static bool ContainsHtml(string? source)
     {
+        if (source == null)
+        {
+            return false;
+        }
+
         var tagRegex = new Regex(@"<[^>]+>");
         return tagRegex.IsMatch(source);
     }

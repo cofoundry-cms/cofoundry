@@ -24,10 +24,14 @@ public class PasswordCryptographyService : IPasswordCryptographyService
         switch (hashVersion)
         {
             case (int)PasswordHashVersion.V1:
+#pragma warning disable CS0618 // For backwards compatibility only
                 var isV1Valid = new PasswordCryptographyV1().Verify(password, hash);
+#pragma warning restore CS0618 // For backwards compatibility only
                 return FormatOldPasswordVersionResult(isV1Valid);
             case (int)PasswordHashVersion.V2:
-                var isV2Valid = Defuse.PasswordCryptographyV2.VerifyPassword(password, hash);
+#pragma warning disable CS0618 // For backwards compatibility only
+                var isV2Valid = Defuse.Obsolete.PasswordCryptographyV2.VerifyPassword(password, hash);
+#pragma warning restore CS0618 // For backwards compatibility only
                 return FormatOldPasswordVersionResult(isV2Valid);
             case (int)PasswordHashVersion.V3:
                 var v3Result = _passwordHasher.VerifyHashedPassword(new PasswordHasherUser(), hash, password);
@@ -37,7 +41,7 @@ public class PasswordCryptographyService : IPasswordCryptographyService
         }
     }
 
-    private PasswordVerificationResult FormatOldPasswordVersionResult(bool isValid)
+    private static PasswordVerificationResult FormatOldPasswordVersionResult(bool isValid)
     {
         return isValid ? PasswordVerificationResult.SuccessRehashNeeded : PasswordVerificationResult.Failed;
     }

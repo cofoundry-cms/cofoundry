@@ -14,7 +14,7 @@ public static class ICollectionExtensions
     /// The match predicate is a null reference.
     /// </exception>
     /// <returns>Returns the number of elements removed.</returns>
-    public static int RemoveAll<T>(this ICollection<T> collection, Predicate<T> predicate = null)
+    public static int RemoveAll<T>(this ICollection<T> collection, Predicate<T>? predicate = null)
     {
         ArgumentNullException.ThrowIfNull(collection);
 

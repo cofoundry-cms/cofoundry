@@ -26,21 +26,11 @@ public static class IListExtensions
     /// </summary>
     /// <param name="list">List to add the whitespace to</param>
     /// <param name="value">The value to add to the list</param>
-    public static void AddIfNotEmpty(this IList<string> list, string value)
+    public static void AddIfNotEmpty(this IList<string> list, string? value)
     {
         if (!string.IsNullOrWhiteSpace(value))
         {
             list.Add(value);
         }
-    }
-
-    /// <summary>
-    /// Filters out empty/null/whitespace values from the collection and removed duplicates.
-    /// </summary>
-    /// <param name="list">List to filter</param>
-    /// <returns>Filtered collection of strings.</returns>
-    public static IEnumerable<string> RemoveEmptyAndDuplicates(this IEnumerable<string> list)
-    {
-        return list.Where(s => !string.IsNullOrWhiteSpace(s)).Distinct();
     }
 }

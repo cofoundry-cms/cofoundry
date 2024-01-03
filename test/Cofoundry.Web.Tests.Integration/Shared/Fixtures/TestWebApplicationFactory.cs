@@ -72,16 +72,15 @@ public class TestWebApplicationFactory<TEntryPoint>
     /// <returns></returns>
     public virtual async Task InitializeAsync()
     {
-        using (var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider())
-        {
-            var dbInitializer = new TestDatabaseInitializer(serviceProvider);
-            await dbInitializer.InitializeCofoundry();
-            await dbInitializer.DeleteTestData();
-            _seededEntities = await dbInitializer.SeedGlobalEntities();
-        }
+        using var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
+        var dbInitializer = new TestDatabaseInitializer(serviceProvider);
+
+        await dbInitializer.InitializeCofoundry();
+        await dbInitializer.DeleteTestData();
+        _seededEntities = await dbInitializer.SeedGlobalEntities();
     }
 
-    public Task DisposeAsync()
+    public new Task DisposeAsync()
     {
         base.Dispose();
         return Task.CompletedTask;

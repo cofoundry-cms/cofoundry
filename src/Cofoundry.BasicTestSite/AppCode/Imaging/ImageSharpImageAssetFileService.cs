@@ -11,7 +11,7 @@ public class ImageSharpImageAssetFileService : IImageAssetFileService
 {
     private const string ASSET_FILE_CONTAINER_NAME = "Images";
 
-    private static readonly HashSet<string> _permittedImageFileExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
+    private static readonly HashSet<string> _permittedImageFileExtensions = new(StringComparer.OrdinalIgnoreCase) {
         "jpg",
         "jpeg",
         "png",
@@ -51,7 +51,7 @@ public class ImageSharpImageAssetFileService : IImageAssetFileService
             {
                 imageFile = Image.Load(inputSteam, out imageFormat);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 // We'll get an argument exception if the image file is invalid
                 // so lets check to see if we can identify if it is an invalid file type and show that error

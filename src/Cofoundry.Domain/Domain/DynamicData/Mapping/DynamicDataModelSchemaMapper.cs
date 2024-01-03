@@ -20,10 +20,10 @@ public class DynamicDataModelSchemaMapper : IDynamicDataModelSchemaMapper
 
         var dataModelMetaData = _modelMetadataProvider.GetMetadataForType(modelType);
 
-        details.DataTemplateName = StringHelper.FirstNonEmpty(
+        details.DataTemplateName = StringHelper.FirstNotNullOrWhitespace(
             dataModelMetaData.TemplateHint,
             dataModelMetaData.DataTypeName
-            );
+            ) ?? string.Empty;
 
         var properiesMetaData = _modelMetadataProvider.GetMetadataForProperties(modelType);
 
@@ -36,11 +36,11 @@ public class DynamicDataModelSchemaMapper : IDynamicDataModelSchemaMapper
             property.Description = propertyMetaData.Description;
             property.IsRequired = propertyMetaData.IsRequired;
 
-            property.DataTemplateName = StringHelper.FirstNonEmpty(
+            property.DataTemplateName = StringHelper.FirstNotNullOrWhitespace(
                 propertyMetaData.TemplateHint,
                 propertyMetaData.DataTypeName,
                 propertyMetaData.IsNullableValueType ? propertyMetaData.ModelType.GenericTypeArguments[0].Name : propertyMetaData.ModelType.Name
-                );
+                ) ?? string.Empty;
 
             // Not sure why the keys here could be objects, but we're not interested in 
             // them if they are.

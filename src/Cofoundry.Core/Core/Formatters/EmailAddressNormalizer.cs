@@ -3,7 +3,7 @@
 /// <inheritdoc/>
 public class EmailAddressNormalizer : IEmailAddressNormalizer
 {
-    public virtual NormalizedEmailAddress NormalizeAsParts(string emailAddress)
+    public virtual NormalizedEmailAddress? NormalizeAsParts(string? emailAddress)
     {
         if (string.IsNullOrWhiteSpace(emailAddress)) return null;
 
@@ -20,6 +20,10 @@ public class EmailAddressNormalizer : IEmailAddressNormalizer
         var local = parts[0];
 
         var domain = EmailDomainName.Parse(parts[1]);
+        if (domain == null)
+        {
+            return null;
+        }
         var result = new NormalizedEmailAddress(local, domain);
 
         return result;

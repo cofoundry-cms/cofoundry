@@ -2,13 +2,13 @@
 
 public class MailMessage
 {
-    public MailAddress To { get; set; }
+    public required MailAddress To { get; set; }
 
-    public MailAddress From { get; set; }
+    public MailAddress? From { get; set; }
 
-    public string Subject { get; set; }
+    public required string Subject { get; set; }
 
-    public string HtmlBody { get; set; }
+    public string? HtmlBody { get; set; }
 
-    public string TextBody { get; set; }
+    public string? TextBody { get; set; }
 }

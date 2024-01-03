@@ -17,21 +17,24 @@ public class InvalidDistributedLockDefinitionException : Exception
     public InvalidDistributedLockDefinitionException(
         string message,
         IDistributedLockDefinition invalidDefinition,
-        IEnumerable<IDistributedLockDefinition> allDefinitions = null
+        IEnumerable<IDistributedLockDefinition>? allDefinitions = null
         )
         : base(message)
     {
         InvalidDefinition = invalidDefinition;
-        AllDefinitions = allDefinitions?.ToArray();
+        if (allDefinitions != null)
+        {
+            AllDefinitions = allDefinitions.ToArray();
+        }
     }
 
     /// <summary>
     /// The definition that caused the exception.
     /// </summary>
-    public IDistributedLockDefinition InvalidDefinition { get; private set; }
+    public IDistributedLockDefinition? InvalidDefinition { get; private set; }
 
     /// <summary>
     /// Optional collection of all the definitions when available.
     /// </summary>
-    public IReadOnlyCollection<IDistributedLockDefinition> AllDefinitions { get; private set; }
+    public IReadOnlyCollection<IDistributedLockDefinition> AllDefinitions { get; private set; } = Array.Empty<IDistributedLockDefinition>();
 }

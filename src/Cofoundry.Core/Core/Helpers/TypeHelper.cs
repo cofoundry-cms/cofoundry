@@ -9,11 +9,12 @@ public static class TypeHelper
 {
     /// <summary>
     /// Attempts to get the type argument for a generic collection type 
-    /// or array e.g. string in IEnumerable&lt;string&gt; or string[]. 
-    /// If the specified type isn't a singler collection type then null 
+    /// or array e.g. <see langword="string"/> in <see cref="IEnumerable&lt;string&gt;"/> 
+    /// or <see cref="string[]"/>. If the specified type isn't a singler collection 
+    /// type then <see langword="null"/> 
     /// is returned.
     /// </summary>
-    public static Type GetCollectionTypeOrNull(Type collectionType)
+    public static Type? GetCollectionTypeOrNull(Type? collectionType)
     {
         if (collectionType == null) return null;
 
@@ -22,7 +23,7 @@ public static class TypeHelper
             return null;
         }
 
-        Type singularType = null;
+        Type? singularType = null;
         if (collectionType.IsGenericType)
         {
             var genericParameters = collectionType.GetGenericArguments();

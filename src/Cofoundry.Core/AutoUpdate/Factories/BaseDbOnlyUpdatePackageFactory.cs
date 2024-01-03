@@ -26,11 +26,14 @@ public abstract class BaseDbOnlyUpdatePackageFactory : IUpdatePackageFactory
     {
         var moduleVersion = versionHistory.SingleOrDefault(m => m.Module == ModuleIdentifier);
 
-        var package = new UpdatePackage();
+        var package = new UpdatePackage()
+        {
+            ModuleIdentifier = ModuleIdentifier,
+            DependentModules = DependentModules
+        };
         var dbCommandFactory = new DbUpdateCommandFactory();
 
         package.VersionedCommands = dbCommandFactory.Create(GetType().GetTypeInfo().Assembly, moduleVersion, ScriptPath);
-        package.ModuleIdentifier = ModuleIdentifier;
         package.DependentModules = DependentModules;
 
         yield return package;

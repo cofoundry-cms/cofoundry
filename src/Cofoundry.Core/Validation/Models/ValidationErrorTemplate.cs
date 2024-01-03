@@ -71,7 +71,7 @@ public class ValidationErrorTemplate
     /// more specific exception to throw when <see cref="Throw"/> is called. If <see langword="null"/>
     /// then <see cref="Throw"/> will throw an <see cref="ValidationErrorException"/>.
     /// </summary>
-    public Func<ValidationError, ValidationErrorException> ExceptionFactory { get; set; }
+    public Func<ValidationError, ValidationErrorException>? ExceptionFactory { get; set; }
 
     /// <summary>
     /// Creates a new <see cref="ValidationError"/> instance from the template,

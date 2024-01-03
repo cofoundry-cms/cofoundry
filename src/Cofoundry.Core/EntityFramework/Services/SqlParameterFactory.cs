@@ -5,7 +5,7 @@ namespace Cofoundry.Core.EntityFramework.Internal;
 
 public class SqlParameterFactory : ISqlParameterFactory
 {
-    private static readonly Dictionary<Type, SqlDbType> _dbTypeMap = new Dictionary<Type, SqlDbType>()
+    private static readonly Dictionary<Type, SqlDbType> _dbTypeMap = new()
     {
         { typeof(string),  SqlDbType.NVarChar },
         { typeof(int),  SqlDbType.Int },
@@ -19,15 +19,17 @@ public class SqlParameterFactory : ISqlParameterFactory
 
     public SqlParameter CreateOutputParameterByType(string name, Type t)
     {
-        var outputParam = new SqlParameter(name, DBNull.Value);
-        outputParam.Direction = ParameterDirection.Output;
+        var outputParam = new SqlParameter(name, DBNull.Value)
+        {
+            Direction = ParameterDirection.Output
+        };
 
         // If this is a non-null value nullable type, return the converted base type
         var type = Nullable.GetUnderlyingType(t) ?? t;
 
-        if (_dbTypeMap.ContainsKey(type))
+        if (_dbTypeMap.TryGetValue(type, out SqlDbType value))
         {
-            outputParam.SqlDbType = _dbTypeMap[type];
+            outputParam.SqlDbType = value;
         }
 
         switch (outputParam.SqlDbType)

@@ -118,15 +118,18 @@ public class DistributedLockManager : IDistributedLockManager
             );
     }
 
-    private DistributedLock MapDistributedLock(SqlDataReader reader)
+    private DistributedLock? MapDistributedLock(SqlDataReader reader)
     {
-        var result = new DistributedLock();
-        if (reader[nameof(result.DistributedLockId)] == null) return null;
+        var distributedLockId = reader[nameof(DistributedLock.DistributedLockId)] as string;
+        if (distributedLockId == null) return null;
 
-        result.DistributedLockId = reader["DistributedLockId"] as string;
-        result.LockedByLockingId = reader["LockingId"] as Guid?;
-        result.LockDate = reader["LockDate"] as DateTime?;
-        result.ExpiryDate = reader["ExpiryDate"] as DateTime?;
+        var result = new DistributedLock()
+        {
+            DistributedLockId = distributedLockId,
+            LockedByLockingId = reader["LockingId"] as Guid?,
+            LockDate = reader["LockDate"] as DateTime?,
+            ExpiryDate = reader["ExpiryDate"] as DateTime?
+        };
 
         return result;
     }

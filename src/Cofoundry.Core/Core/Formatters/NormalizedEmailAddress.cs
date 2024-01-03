@@ -231,7 +231,7 @@ public class NormalizedEmailAddress
         return ToEmailAddress();
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is NormalizedEmailAddress parts &&
                Local == parts.Local &&

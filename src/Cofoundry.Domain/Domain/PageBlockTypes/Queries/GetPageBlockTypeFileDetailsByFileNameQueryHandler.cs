@@ -41,7 +41,7 @@ public class GetPageBlockTypeFileDetailsByFileNameQueryHandler
         var parsedData = ParseViewFile(view);
         var pageTemplateFileInfo = new PageBlockTypeFileDetails();
 
-        pageTemplateFileInfo.Name = StringHelper.FirstNonEmpty(parsedData.Name, TextFormatter.PascalCaseToSentence(query.FileName));
+        pageTemplateFileInfo.Name = StringHelper.FirstNotNullOrWhitespace(parsedData.Name, TextFormatter.PascalCaseToSentence(query.FileName)) ?? string.Empty;
         pageTemplateFileInfo.Description = parsedData.Description;
         pageTemplateFileInfo.Templates = await MapChildTemplates(query.FileName);
 

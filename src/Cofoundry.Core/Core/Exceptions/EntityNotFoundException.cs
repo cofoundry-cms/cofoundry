@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Core;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Cofoundry.Core;
 
 /// <summary>
 /// <para>
@@ -54,7 +56,7 @@ public class EntityNotFoundException : Exception
     /// <typeparam name="TEntity">Type of entity to check.</typeparam>
     /// <param name="entity">The entity to check for a <see langword="null"/> reference.</param>
     /// <param name="id">The unique identifier for the entity that could not be found.</param>
-    public static void ThrowIfNull<TEntity>(TEntity entity, object id)
+    public static void ThrowIfNull<TEntity>([NotNull] TEntity? entity, object id)
     {
         if (entity == null)
         {
@@ -108,7 +110,7 @@ public class EntityNotFoundException<TEntity> : EntityNotFoundException
     /// The exception that is the cause of the current exception, or a 
     /// <see langword="null"/> reference if no inner exception is specified.
     /// </param>
-    public EntityNotFoundException(string message, Exception innerException)
+    public EntityNotFoundException(string? message, Exception innerException)
         : base(FormatDefaultMessage(message), innerException)
     {
     }
@@ -124,7 +126,7 @@ public class EntityNotFoundException<TEntity> : EntityNotFoundException
     /// the <see cref="TEntity"/> type name and {1} for the <paramref name="id"/>.
     /// </param>
     /// <param name="id">The id of the entity that could not be found.</param>
-    public EntityNotFoundException(string message, object id)
+    public EntityNotFoundException(string? message, object id)
         : base(FormatMessageWithId(message, id))
     {
         Id = id;
@@ -133,14 +135,14 @@ public class EntityNotFoundException<TEntity> : EntityNotFoundException
     /// <summary>
     /// The id of the entity that could not be found.
     /// </summary>
-    public object Id { get; private set; }
+    public object? Id { get; private set; }
 
-    private static string FormatDefaultMessage(string message)
+    private static string FormatDefaultMessage(string? message)
     {
         return string.Format(message ?? DEFAULT_MESSAGE, typeof(TEntity));
     }
 
-    private static string FormatMessageWithId(string message, object id)
+    private static string FormatMessageWithId(string? message, object id)
     {
         return string.Format(message ?? MESSAGE_WITH_ID, typeof(TEntity), id);
     }

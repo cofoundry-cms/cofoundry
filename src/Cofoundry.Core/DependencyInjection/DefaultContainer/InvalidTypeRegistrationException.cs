@@ -9,19 +9,19 @@ public class InvalidTypeRegistrationException : Exception
     public InvalidTypeRegistrationException(Type type)
         : base(MakeDefaultMessage(type))
     {
-        this.RegisteredType = type;
+        RegisteredType = type;
     }
 
     public InvalidTypeRegistrationException(Type type, string message)
         : base(message)
     {
-        this.RegisteredType = type;
+        RegisteredType = type;
     }
 
     public InvalidTypeRegistrationException(Type type, string message, Exception innerException)
         : base(message, innerException)
     {
-        this.RegisteredType = type;
+        RegisteredType = type;
     }
 
     private static string MakeDefaultMessage(Type type)

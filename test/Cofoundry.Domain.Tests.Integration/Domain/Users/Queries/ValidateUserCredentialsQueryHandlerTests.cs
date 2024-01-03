@@ -268,7 +268,7 @@ public class ValidateUserCredentialsQueryHandlerTests
                 .Users
                 .SingleAsync(u => u.UserId == userId);
 
-            user.Password = Defuse.PasswordCryptographyV2.CreateHash(VALID_PASSWORD);
+            user.Password = Defuse.Obsolete.PasswordCryptographyV2.CreateHash(VALID_PASSWORD);
             user.PasswordHashVersion = (int)PasswordHashVersion.V2;
             oldHash = user.Password;
 

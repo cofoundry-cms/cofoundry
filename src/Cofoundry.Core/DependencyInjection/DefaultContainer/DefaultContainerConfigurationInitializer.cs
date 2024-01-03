@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Core.Configuration;
+using Cofoundry.Core.Reflection.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -11,7 +12,7 @@ namespace Cofoundry.Core.DependencyInjection;
 /// </summary>
 public class DefaultContainerConfigurationInitializer
 {
-    private static readonly MethodInfo _registerOptionsWithServiceMethod = typeof(DefaultContainerConfigurationInitializer).GetMethod(nameof(RegisterOptionsWithService), BindingFlags.NonPublic | BindingFlags.Instance);
+    private static readonly MethodInfo _registerOptionsWithServiceMethod = MethodReferenceHelper.GetPrivateInstanceMethod<DefaultContainerConfigurationInitializer>(nameof(RegisterOptionsWithService));
 
     private readonly IServiceCollection _serviceCollection;
     private readonly IDiscoveredTypesProvider _discoveredTypesProvider;
@@ -47,7 +48,7 @@ public class DefaultContainerConfigurationInitializer
         _serviceCollection.Configure<TOptions>(section);
     }
 
-    private string GetSettingsSectionName(TypeInfo settingsType)
+    private static string GetSettingsSectionName(TypeInfo settingsType)
     {
         const string SETTINGS_SUFFIX = "Settings";
 

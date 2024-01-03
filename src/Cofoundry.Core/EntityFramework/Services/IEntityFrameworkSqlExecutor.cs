@@ -30,7 +30,7 @@ public interface IEntityFrameworkSqlExecutor
     /// <returns>
     /// The result of the query. Throws an exception if more than one result is returned.
     /// </returns>
-    Task<T> ExecuteScalarAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams);
+    Task<T?> ExecuteScalarAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams);
 
     /// <summary>
     /// Executes a stored procedure or function returning either the number of rows affected or 
@@ -44,7 +44,7 @@ public interface IEntityFrameworkSqlExecutor
     /// Either the number of rows affected or optionally returning the value of the 
     /// first output parameter passed in the parameters collection.
     /// </returns>
-    Task<object> ExecuteCommandAsync(DbContext dbContext, string spName, params SqlParameter[] sqlParams);
+    Task<object?> ExecuteCommandAsync(DbContext dbContext, string spName, params SqlParameter[] sqlParams);
 
     /// <summary>
     /// Executes a stored procedure or function returning the value of the 
@@ -62,5 +62,5 @@ public interface IEntityFrameworkSqlExecutor
     /// <returns>
     /// The value of the first output parameter in the executed query.
     /// </returns>
-    Task<T> ExecuteCommandWithOutputAsync<T>(DbContext dbContext, string spName, string outputParameterName, params SqlParameter[] sqlParams);
+    Task<T?> ExecuteCommandWithOutputAsync<T>(DbContext dbContext, string spName, string outputParameterName, params SqlParameter[] sqlParams);
 }

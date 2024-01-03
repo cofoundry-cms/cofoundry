@@ -7,11 +7,11 @@ public static class IDictionaryExtensions
     /// </summary>
     /// <param name="source">The dictionary to act on</param>
     /// <param name="key">Key of the dictionary item to get</param>
-    public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
+    public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
     {
-        if (key == null) return default(TValue);
-        TValue value;
-        return source.TryGetValue(key, out value) ? value : default(TValue);
+        if (key == null) return default;
+        TValue? value;
+        return source.TryGetValue(key, out value) ? value : default;
     }
 
     /// <summary>
@@ -20,12 +20,12 @@ public static class IDictionaryExtensions
     /// </summary>
     /// <param name="source">The dictionary to act on.</param>
     /// <param name="key">Key of the dictionary item to get. If null, then a default TValue is returned without checking the dictionary.</param>
-    public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey? key)
+    public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey? key)
         where TKey : struct
     {
-        if (!key.HasValue) return default(TValue);
-        TValue value;
-        return source.TryGetValue(key.Value, out value) ? value : default(TValue);
+        if (!key.HasValue) return default;
+        TValue? value;
+        return source.TryGetValue(key.Value, out value) ? value : default;
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public static class IDictionaryExtensions
     public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue def)
     {
         if (key == null) return def;
-        TValue value;
+        TValue? value;
         return source.TryGetValue(key, out value) ? value : def;
     }
 
@@ -52,7 +52,7 @@ public static class IDictionaryExtensions
         where TKey : struct
     {
         if (!key.HasValue) return def;
-        TValue value;
+        TValue? value;
         return source.TryGetValue(key.Value, out value) ? value : def;
     }
 
@@ -83,7 +83,7 @@ public static class IDictionaryExtensions
     public static IEnumerable<TValue> FilterAndOrderByKeys<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> orderedKeys)
     {
         if (orderedKeys == null) yield break;
-        TValue value;
+        TValue? value;
 
         foreach (var key in orderedKeys)
         {

@@ -16,16 +16,13 @@ public class AutoUpdateDistributedLockManager : IAutoUpdateDistributedLockManage
 {
     private readonly IDistributedLockManager _distributedLockManager;
     private readonly ICofoundryDatabase _db;
-    private readonly AutoUpdateSettings _autoUpdateSettings;
 
     public AutoUpdateDistributedLockManager(
         IDistributedLockManager distributedLockManager,
-        AutoUpdateSettings autoUpdateSettings,
         ICofoundryDatabase db
         )
     {
         _distributedLockManager = distributedLockManager;
-        _autoUpdateSettings = autoUpdateSettings;
         _db = db;
     }
 

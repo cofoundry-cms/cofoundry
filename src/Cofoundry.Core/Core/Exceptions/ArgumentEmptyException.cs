@@ -13,7 +13,7 @@ public class ArgumentEmptyException : ArgumentException
     {
     }
 
-    public ArgumentEmptyException(string argumentName)
+    public ArgumentEmptyException(string? argumentName)
         : base($"Argument '{argumentName ?? "not specified"}' cannot be empty.", argumentName)
     {
     }
@@ -25,7 +25,7 @@ public class ArgumentEmptyException : ArgumentException
     /// </summary>
     /// <param name="argument">Argument to validate.</param>
     /// <param name="paramName">The name of the parameter with which argument corresponds.</param>
-    public static void ThrowIfNullOrWhitespace(string argument, [CallerArgumentExpression("argument")] string paramName = null)
+    public static void ThrowIfNullOrWhitespace(string? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
     {
         if (argument == null)
         {
@@ -45,7 +45,7 @@ public class ArgumentEmptyException : ArgumentException
     /// </summary>
     /// <param name="argument">Argument to validate.</param>
     /// <param name="paramName">The name of the parameter with which argument corresponds.</param>
-    public static void ThrowIfDefault<T>(T argument, [CallerArgumentExpression("argument")] string paramName = null)
+    public static void ThrowIfDefault<T>(T argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
         where T : struct
     {
         if (argument.Equals(default(T)))

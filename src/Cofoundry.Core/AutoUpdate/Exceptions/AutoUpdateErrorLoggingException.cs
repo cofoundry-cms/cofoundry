@@ -23,5 +23,5 @@ public class AutoUpdateErrorLoggingException : Exception
         return $"Error logging AutoUpdate exception. Logging exception: {wrappedException?.Message}, Original exception = {wrappedException?.Message}";
     }
 
-    public Exception LoggingException { get; private set; }
+    public Exception? LoggingException { get; }
 }

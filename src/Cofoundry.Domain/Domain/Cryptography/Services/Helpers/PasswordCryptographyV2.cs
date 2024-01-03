@@ -26,7 +26,7 @@
 
 using System.Security.Cryptography;
 
-namespace Defuse;
+namespace Defuse.Obsolete;
 
 class InvalidHashException : Exception
 {
@@ -46,6 +46,8 @@ class CannotPerformOperationException : Exception
         : base(message, inner) { }
 }
 
+
+[Obsolete("Provided for backwards compatibility only and will be removed in a later version.")]
 public class PasswordCryptographyV2
 {
     // These constants may be changed without breaking existing hashes.
@@ -313,11 +315,13 @@ public class PasswordCryptographyV2
 
     private static byte[] PBKDF2(string password, byte[] salt, int iterations, int outputBytes)
     {
+#pragma warning disable SYSLIB0041 // Class is obsolete and provided for backwards compatibility only
         using (Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(password, salt))
         {
             pbkdf2.IterationCount = iterations;
             return pbkdf2.GetBytes(outputBytes);
         }
+#pragma warning restore SYSLIB0041 // Class is obsolete and provided for backwards compatibility only
     }
 }
 

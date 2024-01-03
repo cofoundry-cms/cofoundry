@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Core.ResourceFiles;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Cofoundry.Core.ResourceFiles;
 
 /// <summary>
 /// Utilities for working with embedded resource paths.
@@ -32,7 +34,8 @@ public static class EmbeddedResourcePathFormatter
     /// A formatted embedded resource path without leading or trailing path 
     /// delimiters. If path is null, then null is returned.
     /// </returns>
-    public static string ConvertFromVirtualDirectory(string path)
+    [return: NotNullIfNotNull(nameof(path))]
+    public static string? ConvertFromVirtualDirectory(string? path)
     {
         if (path == null) return null;
         var result = path;
@@ -74,7 +77,7 @@ public static class EmbeddedResourcePathFormatter
     /// The resulting valid embedded resource path. If path is null, 
     /// then null is returned.
     /// </returns>
-    public static string CleanPath(string path)
+    public static string? CleanPath(string? path)
     {
         if (path == null) return null;
 

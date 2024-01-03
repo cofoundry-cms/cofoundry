@@ -15,7 +15,7 @@ public class DebugTextWriter : System.IO.TextWriter
         Write(new String(buffer, index, count));
     }
 
-    public override void Write(string value)
+    public override void Write(string? value)
     {
         System.Diagnostics.Debug.Write(value);
     }

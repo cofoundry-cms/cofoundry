@@ -45,8 +45,8 @@ public class UniqueConstraintViolationException : ValidationException
     /// <param name="message">The message to assign to the exception</param>
     /// <param name="property">The property that failed validation.</param>
     /// <param name="value">Optionally value of the object/properties that caused the attribute to trigger validation error.</param>
-    public UniqueConstraintViolationException(string message, string property, object value = null)
-        : base(GetValidationResult(message, new string[] { property }), null, value)
+    public UniqueConstraintViolationException(string message, string? property, object? value = null)
+        : base(GetValidationResult(message, [property]), null, value)
     {
     }
 
@@ -65,10 +65,13 @@ public class UniqueConstraintViolationException : ValidationException
         }
     }
 
-    private static ValidationResult GetValidationResult(string message, IEnumerable<string> properties)
+    private static ValidationResult GetValidationResult(string message, IEnumerable<string?> properties)
     {
-        var vr = new ValidationResult(message, properties);
-        return vr;
+        var filteredProperties = properties
+            .WhereNotNullOrEmpty()
+            .ToArray();
+        var validationResult = new ValidationResult(message, filteredProperties);
+        return validationResult;
     }
 }
 
@@ -120,12 +123,12 @@ public class UniqueConstraintViolationException<TEntity> : UniqueConstraintViola
     /// <param name="message">The message to assign to the exception.</param>
     /// <param name="property">The property that failed validation.</param>
     /// <param name="value">Optionally value of the object/properties that caused the attribute to trigger validation error.</param>
-    public UniqueConstraintViolationException(string message, string property, object value = null)
+    public UniqueConstraintViolationException(string? message, string? property, object? value = null)
         : base(FormatMessage(message, property, value), property, value)
     {
     }
 
-    private static string FormatMessage(string message, string property, object value)
+    private static string FormatMessage(string? message, string? property, object? value)
     {
         if (!string.IsNullOrWhiteSpace(message)) return message;
         if (string.IsNullOrWhiteSpace(property)) return MESSAGE_WITHOUT_PROPERTY;

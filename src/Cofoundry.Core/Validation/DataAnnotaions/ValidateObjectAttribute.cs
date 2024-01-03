@@ -11,7 +11,7 @@ namespace Cofoundry.Core.Validation;
 /// </remarks>
 public class ValidateObjectAttribute : ValidationAttribute
 {
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         var results = new List<ValidationResult>();
 
@@ -30,8 +30,10 @@ public class ValidateObjectAttribute : ValidationAttribute
 
         if (results.Count != 0)
         {
-            var msg = String.Format("{0} validation failed", validationContext.DisplayName);
-            var compositeResults = new CompositeValidationResult(msg, new string[] { validationContext.MemberName });
+            var msg = string.Format("{0} validation failed", validationContext.DisplayName);
+            var memberNames = string.IsNullOrEmpty(validationContext.MemberName) ? Array.Empty<string>() : [validationContext.MemberName];
+            var compositeResults = new CompositeValidationResult(msg, memberNames);
+
             results.ForEach(compositeResults.AddResult);
 
             return compositeResults;
@@ -40,7 +42,7 @@ public class ValidateObjectAttribute : ValidationAttribute
         return ValidationResult.Success;
     }
 
-    private void ValidateValue(object value, List<ValidationResult> results)
+    private void ValidateValue(object? value, List<ValidationResult> results)
     {
         // ValidationContext constructor requires value to not be null.
         if (value == null) return;

@@ -22,7 +22,7 @@ public class ValidationErrorCodes
     /// or "page".
     /// </param>
     /// <returns></returns>
-    public static string AddNamespace(string errorCode, string category = null)
+    public static string AddNamespace(string errorCode, string? category = null)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(errorCode);
 

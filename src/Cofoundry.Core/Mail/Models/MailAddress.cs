@@ -5,16 +5,12 @@
 /// </summary>
 public class MailAddress
 {
-    public MailAddress()
-    {
-    }
-
     public MailAddress(string address)
     {
         Address = address;
     }
 
-    public MailAddress(string address, string displayName)
+    public MailAddress(string address, string? displayName)
     {
         Address = address;
         DisplayName = displayName;
@@ -28,7 +24,7 @@ public class MailAddress
     /// <summary>
     /// User friendly display name e.g. 'John Smith'
     /// </summary>
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 
     public override string ToString()
     {

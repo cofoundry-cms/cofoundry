@@ -26,5 +26,5 @@ public interface IUsernameUniquifier
     /// The username string to format. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
     /// </param>
-    string Uniquify(string username);
+    string? Uniquify(string? username);
 }

@@ -20,9 +20,9 @@ public class RequestBasedSiteUrlResolver : SiteUrlResolverBase
 
     protected override string GetSiteRoot()
     {
-        if (!CanResolve())
+        if (_httpContextAccessor?.HttpContext?.Request == null)
         {
-            throw new InvalidOperationException($"HttpContext is not available, if you are trying to resolve a Uri outside of an request please use { typeof(ConfigBasedSiteUrlResolver).FullName } instead");
+            throw new InvalidOperationException($"HttpContext is not available, if you are trying to resolve a Uri outside of an request please use {typeof(ConfigBasedSiteUrlResolver).FullName} instead");
         }
 
         var request = _httpContextAccessor.HttpContext.Request;
@@ -48,7 +48,6 @@ public class RequestBasedSiteUrlResolver : SiteUrlResolverBase
 
     private string GetPortUrlPart(HttpRequest request)
     {
-
         if (!request.Host.Port.HasValue
             || request.Host.Port == 80
             || (request.Host.Port == 443 && request.IsHttps))

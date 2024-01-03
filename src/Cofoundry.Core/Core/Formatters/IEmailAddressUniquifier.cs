@@ -28,7 +28,7 @@ public interface IEmailAddressUniquifier
     /// The email address to uniquify. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
     /// </param>
-    NormalizedEmailAddress UniquifyAsParts(string emailAddress);
+    NormalizedEmailAddress? UniquifyAsParts(string? emailAddress);
 
     /// <summary>
     /// Format an email address into a value that can be used for
@@ -40,5 +40,5 @@ public interface IEmailAddressUniquifier
     /// The pre-normalized email address to uniquify. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
     /// </param>
-    NormalizedEmailAddress UniquifyAsParts(NormalizedEmailAddress emailAddressParts);
+    NormalizedEmailAddress? UniquifyAsParts(NormalizedEmailAddress? emailAddressParts);
 }

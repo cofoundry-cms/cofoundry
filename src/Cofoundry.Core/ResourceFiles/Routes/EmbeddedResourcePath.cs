@@ -11,7 +11,7 @@ public class EmbeddedResourcePath
     public EmbeddedResourcePath(
         Assembly assembly,
         string path,
-        string rewriteFrom = null
+        string? rewriteFrom = null
         )
     {
         Assembly = assembly;
@@ -32,5 +32,5 @@ public class EmbeddedResourcePath
     /// <summary>
     /// Optional inbound url route to rewrite the path from e.g. /virtual/path/to/content
     /// </summary>
-    public string RewriteFrom { get; set; }
+    public string? RewriteFrom { get; set; }
 }

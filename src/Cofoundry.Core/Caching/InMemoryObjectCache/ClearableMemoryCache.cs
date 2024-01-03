@@ -8,12 +8,14 @@ namespace Cofoundry.Core.Caching.Internal;
 /// well as sub-sets e.g. by cache namespace.
 /// </summary>
 /// <remarks>
-/// Hopefully this will be addressed in the framework at some point, see 
-/// https://github.com/aspnet/Caching/issues/96
+/// Originally this  was intended to temporarily replace <see cref="MemoryCache"/> 
+/// which did  not support clearing, see https://github.com/aspnet/Caching/issues/96.
+/// Although clearing is now supported, this class is still useful for clearing based
+/// on namespaces.
 /// </remarks>
 public class ClearableMemoryCache : IDisposable
 {
-    private readonly MemoryCache _memoryCache = null;
+    private readonly MemoryCache _memoryCache;
     private readonly HashSet<string> _keys = new HashSet<string>();
     private readonly object _lock = new object();
 
@@ -24,17 +26,17 @@ public class ClearableMemoryCache : IDisposable
         _memoryCache = new MemoryCache(optionsAccessor);
     }
 
-    public T Get<T>(string key)
+    public T? Get<T>(string key)
     {
         var entry = _memoryCache.Get<T>(key);
         return entry;
     }
 
-    public T GetOrAdd<T>(string key, Func<T> getter, DateTimeOffset? expiry = null)
+    public T? GetOrAdd<T>(string key, Func<T> getter, DateTimeOffset? expiry = null)
     {
-        T entry;
+        T? entry;
 
-        if (_memoryCache.TryGetValue<T>(key, out entry))
+        if (_memoryCache.TryGetValue(key, out entry))
         {
             return entry;
         }
@@ -60,17 +62,15 @@ public class ClearableMemoryCache : IDisposable
         }
     }
 
-    public Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiry = null)
+    public Task<T?> GetOrAddAsync<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiry = null)
     {
-        T existingEntry;
-
-        if (_memoryCache.TryGetValue<T>(key, out existingEntry))
+        if (_memoryCache.TryGetValue(key, out T? existingEntry))
         {
             return Task.FromResult(existingEntry);
         }
         else
         {
-            Task<T> newEntry;
+            Task<T?> newEntry;
 
             lock (_lock)
             {
@@ -90,22 +90,20 @@ public class ClearableMemoryCache : IDisposable
         }
     }
 
-    public void ClearAll(string cacheNamespace = null)
+    public void ClearAll(string? cacheNamespace = null)
     {
-        List<string> listToClear;
-
         lock (_lock)
         {
             if (string.IsNullOrWhiteSpace(cacheNamespace))
             {
-                listToClear = _keys.ToList();
+                _keys.Clear();
+                _memoryCache.Clear();
+                return;
             }
-            else
-            {
-                listToClear = _keys
-                    .Where(k => k.StartsWith(cacheNamespace))
-                    .ToList();
-            }
+
+            var listToClear = _keys
+                .Where(k => k.StartsWith(cacheNamespace))
+                .ToList();
 
             foreach (var key in listToClear)
             {
@@ -115,7 +113,7 @@ public class ClearableMemoryCache : IDisposable
         }
     }
 
-    public void ClearEntry(string key = null)
+    public void ClearEntry(string key)
     {
         lock (_lock)
         {
@@ -126,9 +124,6 @@ public class ClearableMemoryCache : IDisposable
 
     public void Dispose()
     {
-        if (_memoryCache != null)
-        {
-            _memoryCache.Dispose();
-        }
+        _memoryCache?.Dispose();
     }
 }

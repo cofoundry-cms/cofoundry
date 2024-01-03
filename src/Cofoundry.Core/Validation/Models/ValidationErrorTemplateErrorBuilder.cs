@@ -55,7 +55,10 @@ public class ValidationErrorTemplateErrorBuilder
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithMessageFormatParameters(params string[] messageFormatParameters)
     {
-        if (EnumerableHelper.IsNullOrEmpty(messageFormatParameters)) throw new ArgumentEmptyException(nameof(messageFormatParameters));
+        if (EnumerableHelper.IsNullOrEmpty(messageFormatParameters))
+        {
+            throw new ArgumentEmptyException(nameof(messageFormatParameters));
+        }
 
         var message = string.Format(_validationError.Message, messageFormatParameters);
         return WithMessage(message);
@@ -70,10 +73,14 @@ public class ValidationErrorTemplateErrorBuilder
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithMessageFormatParameters(params int[] messageFormatParameters)
     {
-        if (EnumerableHelper.IsNullOrEmpty(messageFormatParameters)) throw new ArgumentEmptyException(nameof(messageFormatParameters));
+        if (EnumerableHelper.IsNullOrEmpty(messageFormatParameters))
+        {
+            throw new ArgumentEmptyException(nameof(messageFormatParameters));
+        }
 
         var parameters = messageFormatParameters.Select(p => p.ToString()).ToArray();
         var message = string.Format(_validationError.Message, parameters);
+
         return WithMessage(message);
     }
 
@@ -101,7 +108,10 @@ public class ValidationErrorTemplateErrorBuilder
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithProperties(params string[] propertyNames)
     {
-        if (EnumerableHelper.IsNullOrEmpty(propertyNames)) throw new ArgumentEmptyException(nameof(propertyNames));
+        if (EnumerableHelper.IsNullOrEmpty(propertyNames))
+        {
+            throw new ArgumentEmptyException(nameof(propertyNames));
+        }
         _validationError.Properties = propertyNames;
 
         return this;

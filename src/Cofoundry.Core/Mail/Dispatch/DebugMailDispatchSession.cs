@@ -93,6 +93,11 @@ public class DebugMailDispatchSession : IMailDispatchSession
 
     private string GetMailToAddress(MailMessage message)
     {
+        if (message.To == null)
+        {
+            throw new Exception("Cannot send a message without a 'To' address.");
+        }
+
         string toAddress;
         if (_mailSettings.SendMode == MailSendMode.SendToDebugAddress)
         {
@@ -137,7 +142,7 @@ public class DebugMailDispatchSession : IMailDispatchSession
         }
     }
 
-    private string CreateMailAddress(string email, string displayName)
+    private string CreateMailAddress(string email, string? displayName)
     {
         if (string.IsNullOrWhiteSpace(displayName))
         {
@@ -155,6 +160,7 @@ public class DebugMailDispatchSession : IMailDispatchSession
         }
 
         var debugMailDropDirectory = _pathResolver.MapPath(_mailSettings.MailDropDirectory);
+
         if (!Directory.Exists(debugMailDropDirectory))
         {
             Directory.CreateDirectory(debugMailDropDirectory);

@@ -44,7 +44,7 @@ public class MimeTypeRegistrationContext : IMimeTypeRegistrationContext
         _fileExtensionContentTypeProvider.Mappings[formattedExtension] = mimeType;
     }
 
-    private string FormatFileExtension(string fileExtension)
+    private string FormatFileExtension(string? fileExtension)
     {
         var trimmedExtension = fileExtension?.Trim('.');
 

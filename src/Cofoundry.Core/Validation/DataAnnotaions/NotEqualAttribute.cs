@@ -18,7 +18,7 @@ public class NotEqualAttribute : ValidationAttribute
         ErrorMessage = "The {0} field cannot be the same value as the " + otherProperty + " field";
     }
 
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         var property = validationContext.ObjectType.GetTypeInfo().GetProperty(OtherProperty);
         if (property == null)
@@ -29,7 +29,9 @@ public class NotEqualAttribute : ValidationAttribute
         var otherValue = property.GetValue(validationContext.ObjectInstance, null);
         if (object.Equals(value, otherValue))
         {
-            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), new string[] { validationContext.MemberName });
+            var memberNames = string.IsNullOrEmpty(validationContext.MemberName) ? Array.Empty<string>() : [validationContext.MemberName];
+
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), memberNames);
         }
 
         return null;

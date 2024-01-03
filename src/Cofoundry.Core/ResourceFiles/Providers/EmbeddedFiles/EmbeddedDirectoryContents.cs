@@ -76,7 +76,7 @@ public class EmbeddedDirectoryContents : IDirectoryContents
         return name;
     }
 
-    private static string GetDirectoryName(string path)
+    private static string? GetDirectoryName(string path)
     {
         var directoryParts = path
             .Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);

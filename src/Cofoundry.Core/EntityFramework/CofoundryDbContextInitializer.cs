@@ -14,17 +14,14 @@ public class CofoundryDbContextInitializer : ICofoundryDbContextInitializer
 {
     private readonly ILoggerFactory _loggerFactory;
     private readonly ICofoundryDbConnectionManager _cofoundryDbConnectionFactory;
-    private readonly DatabaseSettings _databaseSettings;
 
     public CofoundryDbContextInitializer(
         ILoggerFactory loggerFactory,
-        ICofoundryDbConnectionManager cofoundryDbConnectionFactory,
-        DatabaseSettings databaseSettings
+        ICofoundryDbConnectionManager cofoundryDbConnectionFactory
         )
     {
         _loggerFactory = loggerFactory;
         _cofoundryDbConnectionFactory = cofoundryDbConnectionFactory;
-        _databaseSettings = databaseSettings;
     }
 
     /// <summary>

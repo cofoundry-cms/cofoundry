@@ -12,5 +12,5 @@ public class DatabaseSettings : CofoundryConfigurationSettingsBase
     /// The connection string to the Cofoundry database.
     /// </summary>
     [Required]
-    public string ConnectionString { get; set; }
+    public string? ConnectionString { get; set; }
 }

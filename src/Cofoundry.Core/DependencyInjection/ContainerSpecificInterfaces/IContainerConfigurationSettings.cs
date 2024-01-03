@@ -16,7 +16,7 @@ public interface IContainerConfigurationHelper
     /// <typeparam name="T">The type to convert the value to.</typeparam>
     /// <param name="key">The configuration key for the value to convert.</param>
     /// <returns>The type to convert the value to.</returns>
-    T GetValue<T>(string key);
+    T? GetValue<T>(string key);
 
     /// <summary>
     /// Extracts the value with the specified key and converts it to type T.

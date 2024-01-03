@@ -12,13 +12,13 @@ public class UsernameUniquifier : IUsernameUniquifier
         _usernameNormalizer = usernameNormalizer;
     }
 
-    public virtual string Uniquify(string username)
+    public virtual string? Uniquify(string? username)
     {
         if (string.IsNullOrWhiteSpace(username)) return null;
 
         var result = _usernameNormalizer
             .Normalize(username)
-            .ToLowerInvariant();
+            ?.ToLowerInvariant();
 
         return result;
     }

@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Core;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Validates fixed length strings of single-byte (non-unicode) characters that are the 
@@ -13,7 +15,7 @@ public class SqlCharValidator
     /// padding is allowed but the string cannot be all spaces.
     /// </summary>
     /// <param name="length">The fixed length of the string to validate.</param>
-    public static bool IsValid(string stringToValidate, int length)
+    public static bool IsValid([NotNullWhen(true)] string? stringToValidate, int length)
     {
         return !string.IsNullOrWhiteSpace(stringToValidate)
                         && stringToValidate.Length == length

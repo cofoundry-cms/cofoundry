@@ -12,6 +12,8 @@ internal static class SqlHelper
     /// <param name="sql">SQL Script to split.</param>
     public static IEnumerable<string> SplitIntoBatches(string sql)
     {
+        ArgumentNullException.ThrowIfNull(sql);
+
         // Remove comments
         sql = Regex.Replace(sql, "--.*", string.Empty);
 

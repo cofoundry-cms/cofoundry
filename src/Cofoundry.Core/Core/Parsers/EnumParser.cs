@@ -11,13 +11,11 @@ public static class EnumParser
     /// </summary>
     /// <param name="value"><see cref="String"/> to parse.</param>
     /// <returns><typeparamref name="TEnum"/> value if <paramref name="value"/> could be parsed; otherwise <see langword="null"/>.</returns>
-    public static TEnum? ParseOrNull<TEnum>(string value) where TEnum : struct
+    public static TEnum? ParseOrNull<TEnum>(string? value) where TEnum : struct
     {
         if (string.IsNullOrWhiteSpace(value)) return null;
 
-        TEnum e;
-
-        if (Enum.TryParse<TEnum>(value, true, out e))
+        if (Enum.TryParse(value, true, out TEnum e))
         {
             return e;
         }
@@ -53,9 +51,11 @@ public static class EnumParser
         return ParseNumericOrNull<TEnum>(value);
     }
 
-    private static TEnum? ParseNumericOrNull<TEnum>(object value)
+    private static TEnum? ParseNumericOrNull<TEnum>(object? value)
         where TEnum : struct
     {
+        if (value == null) return null;
+
         if (!Enum.IsDefined(typeof(TEnum), value))
         {
             return null;
@@ -76,9 +76,9 @@ public static class EnumParser
     /// returned instead, however the default value for an enum is 0, so this may not be a valid <typeparamref name="TEnum"/> 
     /// value.
     /// </returns>
-    public static TEnum ParseOrDefault<TEnum>(string s, TEnum? defaultValue = null) where TEnum : struct
+    public static TEnum ParseOrDefault<TEnum>(string? s, TEnum? defaultValue = null) where TEnum : struct
     {
-        return ParseOrNull<TEnum>(s) ?? defaultValue ?? default(TEnum);
+        return ParseOrNull<TEnum>(s) ?? defaultValue ?? default;
     }
 
     /// <summary>

@@ -43,7 +43,7 @@ public class DistributedLockDefinitionRepository : IDistributedLockDefinitionRep
         }
     }
 
-    public IDistributedLockDefinition Get<TDefinition>()
+    public IDistributedLockDefinition? Get<TDefinition>()
         where TDefinition : IDistributedLockDefinition
     {
         return _definitionLookup.GetOrDefault(typeof(TDefinition));

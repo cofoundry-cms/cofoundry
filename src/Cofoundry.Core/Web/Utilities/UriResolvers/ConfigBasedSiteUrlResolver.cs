@@ -1,26 +1,29 @@
-﻿namespace Cofoundry.Core.Web.Internal;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Cofoundry.Core.Web.Internal;
 
 /// <summary>
 /// A Url resolver that relies on a configuration setting to construstr a url.
 /// </summary>
 public class ConfigBasedSiteUrlResolver : SiteUrlResolverBase
 {
-    private readonly SiteUrlResolverSettings _siteUrlResolverSettings;
+    private readonly string? siteUrlRoot;
 
     public ConfigBasedSiteUrlResolver(
         SiteUrlResolverSettings siteUriResolverSettings
         )
     {
-        _siteUrlResolverSettings = siteUriResolverSettings;
+        siteUrlRoot = siteUriResolverSettings.SiteUrlRoot;
     }
 
     /// <summary>
     /// Indicates whether we have valid setting and that
     /// we are able to resolve a url
     /// </summary>
+    [MemberNotNullWhen(true, nameof(siteUrlRoot))]
     public bool CanResolve()
     {
-        return !string.IsNullOrWhiteSpace(_siteUrlResolverSettings.SiteUrlRoot);
+        return !string.IsNullOrWhiteSpace(siteUrlRoot);
     }
 
     /// <summary>
@@ -35,6 +38,6 @@ public class ConfigBasedSiteUrlResolver : SiteUrlResolverBase
             throw new InvalidOperationException("Cofoundry:SiteUrlResolver:SiteUrlRoot setting must be defined in order to resolve an absolute url outside of a web request.");
         }
 
-        return _siteUrlResolverSettings.SiteUrlRoot;
+        return siteUrlRoot;
     }
 }

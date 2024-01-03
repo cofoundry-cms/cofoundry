@@ -126,7 +126,7 @@ public class CustomEntityStoredProcedures : ICustomEntityStoredProcedures
         return affectedIds;
     }
 
-    private SqlParameter CreateNullableIntParameter(string name, int? value)
+    private static SqlParameter CreateNullableIntParameter(string name, int? value)
     {
         var parameter = new SqlParameter(name, System.Data.SqlDbType.Int);
         if (value.HasValue)

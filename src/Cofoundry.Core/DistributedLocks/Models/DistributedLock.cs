@@ -6,7 +6,7 @@
 /// </summary>
 public class DistributedLock
 {
-    public string DistributedLockId { get; set; }
+    public required string DistributedLockId { get; set; }
 
     /// <summary>
     /// The locking id that was used to attempt the lock.

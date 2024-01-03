@@ -18,7 +18,7 @@ public class EmbeddedResourceDirectoryInfo : IFileInfo
 
     public long Length => -1;
 
-    public string PhysicalPath => null;
+    public string? PhysicalPath => null;
 
     public string Name { get; private set; }
 

@@ -16,5 +16,5 @@ public class AutoUpdateDistributedLockDefinition : IDistributedLockDefinition
 
     public string Name { get; } = "Cofoundry auto-update process";
 
-    public TimeSpan Timeout { get; private set; }
+    public TimeSpan Timeout { get; }
 }

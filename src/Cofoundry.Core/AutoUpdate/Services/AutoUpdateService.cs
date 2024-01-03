@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Cofoundry.Core.Reflection.Internal;
+using Microsoft.Extensions.Logging;
 using System.Reflection;
 
 namespace Cofoundry.Core.AutoUpdate.Internal;
@@ -9,8 +10,8 @@ namespace Cofoundry.Core.AutoUpdate.Internal;
 /// </summary>
 public class AutoUpdateService : IAutoUpdateService
 {
-    private static readonly MethodInfo _runVersionedCommandMethod = typeof(AutoUpdateService).GetMethod(nameof(ExecuteGenericVersionedCommand), BindingFlags.NonPublic | BindingFlags.Instance);
-    private static readonly MethodInfo _runAlwaysRunCommandMethod = typeof(AutoUpdateService).GetMethod(nameof(ExecuteGenericAlwaysRunCommand), BindingFlags.NonPublic | BindingFlags.Instance);
+    private static readonly MethodInfo _runVersionedCommandMethod = MethodReferenceHelper.GetPrivateInstanceMethod<AutoUpdateService>(nameof(ExecuteGenericVersionedCommand));
+    private static readonly MethodInfo _runAlwaysRunCommandMethod = MethodReferenceHelper.GetPrivateInstanceMethod<AutoUpdateService>(nameof(ExecuteGenericAlwaysRunCommand));
 
     private readonly IAutoUpdateStore _autoUpdateStore;
     private readonly IEnumerable<IUpdatePackageFactory> _updatePackageFactories;
@@ -47,7 +48,7 @@ public class AutoUpdateService : IAutoUpdateService
         RunStartupValidation();
 
         var packages = await GetOrderedPackages();
-        if (!packages.Any())
+        if (packages.Count == 0)
         {
             _logger.LogTrace("No update packages found.");
             return;
@@ -138,7 +139,7 @@ public class AutoUpdateService : IAutoUpdateService
             }
             catch (Exception unlockException)
             {
-                _logger.LogError(unlockException, unlockException.Message);
+                _logger.LogError(unlockException, "Error unlocking distributed lock during handling of error {UpdateProcessException}", updateProcessException.Message);
             }
 
             throw;
@@ -195,22 +196,32 @@ public class AutoUpdateService : IAutoUpdateService
         }
     }
 
-    private Task ExecuteCommandAsync(IVersionedUpdateCommand command)
+    private async Task ExecuteCommandAsync(IVersionedUpdateCommand command)
     {
-        var task = (Task)_runVersionedCommandMethod
+        var task = _runVersionedCommandMethod
             .MakeGenericMethod(command.GetType())
-            .Invoke(this, new object[] { command });
+            .Invoke(this, new object[] { command }) as Task;
 
-        return task;
+        if (task == null)
+        {
+            throw new InvalidCastException($"Expected {_runVersionedCommandMethod.Name} to return a Task but found null.");
+        }
+
+        await task;
     }
 
-    private Task ExecuteCommandAsync(IAlwaysRunUpdateCommand command)
+    private async Task ExecuteCommandAsync(IAlwaysRunUpdateCommand command)
     {
-        var task = (Task)_runAlwaysRunCommandMethod
+        var task = _runAlwaysRunCommandMethod
             .MakeGenericMethod(command.GetType())
-            .Invoke(this, new object[] { command });
+            .Invoke(this, new object[] { command }) as Task;
 
-        return task;
+        if (task == null)
+        {
+            throw new InvalidCastException($"Expected {_runAlwaysRunCommandMethod.Name} to return a Task but found null.");
+        }
+
+        await task;
     }
 
     private Task ExecuteGenericVersionedCommand<TCommand>(TCommand command) where TCommand : IVersionedUpdateCommand

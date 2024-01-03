@@ -16,7 +16,7 @@ public class TemplateRenderException : Exception
         Template = template;
     }
 
-    public string TemplatePath { get; set; }
+    public string? TemplatePath { get; set; }
 
-    public IMailTemplate Template { get; set; }
+    public IMailTemplate? Template { get; set; }
 }

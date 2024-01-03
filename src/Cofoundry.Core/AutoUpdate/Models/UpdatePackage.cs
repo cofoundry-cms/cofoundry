@@ -5,31 +5,25 @@
 /// </summary>
 public class UpdatePackage
 {
-    public UpdatePackage()
-    {
-        VersionedCommands = new List<IVersionedUpdateCommand>();
-        DependentModules = new List<string>();
-    }
-
     /// <summary>
     /// Unique identifier for the module
     /// </summary>
-    public string ModuleIdentifier { get; set; }
+    public required string ModuleIdentifier { get; set; }
 
     /// <summary>
     /// Commands to run when updating the module to a specific version
     /// </summary>
-    public ICollection<IVersionedUpdateCommand> VersionedCommands { get; set; }
+    public ICollection<IVersionedUpdateCommand> VersionedCommands { get; set; } = new List<IVersionedUpdateCommand>();
 
     /// <summary>
     /// Commands to run after all versioned commands have been run
     /// </summary>
-    public ICollection<IAlwaysRunUpdateCommand> AlwaysUpdateCommands { get; set; }
+    public ICollection<IAlwaysRunUpdateCommand> AlwaysUpdateCommands { get; set; } = new List<IAlwaysRunUpdateCommand>();
 
     /// <summary>
     /// A collection of module identifiers that this module is dependent on
     /// </summary>
-    public ICollection<string> DependentModules { get; set; }
+    public ICollection<string> DependentModules { get; set; } = new List<string>();
 
     /// <summary>
     /// Indicates if this contains one-off versioned updates. This basically

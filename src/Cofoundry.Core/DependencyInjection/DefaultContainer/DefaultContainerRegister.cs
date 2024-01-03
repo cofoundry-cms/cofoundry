@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Cofoundry.Core.Reflection.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -10,7 +11,7 @@ namespace Cofoundry.Core.DependencyInjection;
 /// </summary>
 public class DefaultContainerRegister : IContainerRegister
 {
-    private static readonly MethodInfo _registerFactoryMethod = typeof(DefaultContainerRegister).GetMethod(nameof(RegisterFactoryReflectionDelegate), BindingFlags.NonPublic | BindingFlags.Instance);
+    private static readonly MethodInfo _registerFactoryMethod = MethodReferenceHelper.GetPrivateInstanceMethod<DefaultContainerRegister>(nameof(RegisterFactoryReflectionDelegate));
     private static InstanceLifetime DEFAULT_LIFETIME = InstanceLifetime.Transient;
 
     private readonly IDiscoveredTypesProvider _discoveredTypesProvider;
@@ -38,7 +39,7 @@ public class DefaultContainerRegister : IContainerRegister
 
     public IContainerConfigurationHelper Configuration { get => _containerConfigurationHelper; }
 
-    public IContainerRegister RegisterSingleton<TRegisterAs>(TRegisterAs instance, RegistrationOptions options = null)
+    public IContainerRegister RegisterSingleton<TRegisterAs>(TRegisterAs instance, RegistrationOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(instance);
 
@@ -56,12 +57,13 @@ public class DefaultContainerRegister : IContainerRegister
         return this;
     }
 
-    public IContainerRegister Register<TConcrete>(RegistrationOptions options = null)
+    public IContainerRegister Register<TConcrete>(RegistrationOptions? options = null)
+        where TConcrete : notnull
     {
         return Register<TConcrete, TConcrete>(options);
     }
 
-    public IContainerRegister Register<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs
+    public IContainerRegister Register<TRegisterAs, TConcrete>(RegistrationOptions? options = null) where TConcrete : notnull, TRegisterAs
     {
         var fn = new Action(() =>
         {
@@ -73,7 +75,8 @@ public class DefaultContainerRegister : IContainerRegister
         return this;
     }
 
-    public IContainerRegister Register<TConcrete>(ICollection<Type> types, RegistrationOptions options = null)
+    public IContainerRegister Register<TConcrete>(ICollection<Type> types, RegistrationOptions? options = null)
+        where TConcrete : notnull
     {
         var fn = new Action(() =>
         {
@@ -86,7 +89,7 @@ public class DefaultContainerRegister : IContainerRegister
                 .Where(t => t != concreteType)
                 )
             {
-                AddServiceWithFactory(type, x => x.GetService<TConcrete>(), options);
+                AddServiceWithFactory(type, x => x.GetRequiredService<TConcrete>(), options);
             }
         });
 
@@ -95,14 +98,14 @@ public class DefaultContainerRegister : IContainerRegister
         return this;
     }
 
-    public IContainerRegister RegisterInCollection<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs
+    public IContainerRegister RegisterInCollection<TRegisterAs, TConcrete>(RegistrationOptions? options = null) where TConcrete : notnull, TRegisterAs
     {
         AddService(typeof(TRegisterAs), typeof(TConcrete), options);
 
         return this;
     }
 
-    public IContainerRegister RegisterAll<TToRegister>(RegistrationOptions options = null)
+    public IContainerRegister RegisterAll<TToRegister>(RegistrationOptions? options = null)
     {
         var typeToRegister = typeof(TToRegister);
 
@@ -119,7 +122,7 @@ public class DefaultContainerRegister : IContainerRegister
         return this;
     }
 
-    public IContainerRegister RegisterAllGenericImplementations(Type typeDef, RegistrationOptions options = null)
+    public IContainerRegister RegisterAllGenericImplementations(Type typeDef, RegistrationOptions? options = null)
     {
         if (!typeDef.GetTypeInfo().IsGenericTypeDefinition)
         {
@@ -149,7 +152,7 @@ public class DefaultContainerRegister : IContainerRegister
     public IContainerRegister RegisterAllWithFactory(
         Type typeToRegisterImplementationsOf,
         Type genericFactoryType,
-        RegistrationOptions options = null
+        RegistrationOptions? options = null
         )
     {
         var typesToRegister = GetDiscoveredConcreteTypes()
@@ -162,7 +165,7 @@ public class DefaultContainerRegister : IContainerRegister
         {
             var factoryType = genericFactoryType.MakeGenericType(typeToRegister);
             var genericRegistrationMethod = _registerFactoryMethod.MakeGenericMethod(typeToRegister, factoryType);
-            genericRegistrationMethod.Invoke(this, new object[] { options });
+            genericRegistrationMethod.Invoke(this, [options]);
         }
 
         return this;
@@ -172,19 +175,23 @@ public class DefaultContainerRegister : IContainerRegister
     /// Private version of RegisterFactory used to prevent ambiguous
     /// matches when using reflection to get the MethodInfo
     /// </summary>
-    private IContainerRegister RegisterFactoryReflectionDelegate<TConcrete, TFactory>(RegistrationOptions options = null) where TFactory : IInjectionFactory<TConcrete>
+    private IContainerRegister RegisterFactoryReflectionDelegate<TConcrete, TFactory>(RegistrationOptions? options = null)
+        where TConcrete : notnull
+        where TFactory : IInjectionFactory<TConcrete>
     {
         return RegisterFactory<TConcrete, TFactory>(options);
     }
 
-    public IContainerRegister RegisterFactory<TToRegister, TFactory>(RegistrationOptions options = null) where TFactory : IInjectionFactory<TToRegister>
+    public IContainerRegister RegisterFactory<TToRegister, TFactory>(RegistrationOptions? options = null)
+        where TFactory : IInjectionFactory<TToRegister>
+        where TToRegister : notnull
     {
         return RegisterFactory<TToRegister, TToRegister, TFactory>(options);
     }
 
-    public IContainerRegister RegisterFactory<TRegisterAs, TConcrete, TFactory>(RegistrationOptions options = null)
+    public IContainerRegister RegisterFactory<TRegisterAs, TConcrete, TFactory>(RegistrationOptions? options = null)
         where TFactory : IInjectionFactory<TConcrete>
-        where TConcrete : TRegisterAs
+        where TConcrete : notnull, TRegisterAs
     {
         var fn = new Action(() =>
         {
@@ -204,14 +211,14 @@ public class DefaultContainerRegister : IContainerRegister
         return this;
     }
 
-    public IContainerRegister RegisterGeneric(Type registerAs, Type typeToRegister, RegistrationOptions options = null)
+    public IContainerRegister RegisterGeneric(Type registerAs, Type typeToRegister, RegistrationOptions? options = null)
     {
         AddService(registerAs, typeToRegister, options);
 
         return this;
     }
 
-    private void RegisterWithContainer<TTo>(Action register, RegistrationOptions options = null)
+    private void RegisterWithContainer<TTo>(Action register, RegistrationOptions? options = null)
     {
         if (options != null && options.ReplaceExisting)
         {
@@ -226,7 +233,7 @@ public class DefaultContainerRegister : IContainerRegister
     private void AddService(
        Type serviceType,
        Type implementationType,
-       RegistrationOptions options = null
+       RegistrationOptions? options = null
        )
     {
         var lifetime = ConvertToServiceLifetime(options);
@@ -238,7 +245,7 @@ public class DefaultContainerRegister : IContainerRegister
     private void AddServiceWithFactory(
        Type serviceType,
        Func<IServiceProvider, object> implementationFactory,
-       RegistrationOptions options = null
+       RegistrationOptions? options = null
         )
     {
         var lifetime = ConvertToServiceLifetime(options);
@@ -247,7 +254,7 @@ public class DefaultContainerRegister : IContainerRegister
         _serviceCollection.Add(descriptor);
     }
 
-    public ServiceLifetime ConvertToServiceLifetime(RegistrationOptions options)
+    public ServiceLifetime ConvertToServiceLifetime(RegistrationOptions? options)
     {
         var scope = options?.Lifetime ?? DEFAULT_LIFETIME;
 

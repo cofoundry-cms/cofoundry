@@ -8,7 +8,7 @@ public class ModuleVersion
     /// <summary>
     /// Unique Identifer for the module
     /// </summary>
-    public string Module { get; set; }
+    public string Module { get; set; } = string.Empty;
 
     /// <summary>
     /// The version number this class represents.

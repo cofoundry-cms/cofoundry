@@ -13,12 +13,15 @@ public class DbUpdateCommandFactory
     /// updates, so you need to create a schema update file if you want to force these to update.
     /// </summary>
     /// <param name="assembly">The assembly to scan for sql scripts.</param>
-    /// <param name="currentVersion">The current version of the module</param>
+    /// <param name="currentVersion">
+    /// The current version of the module. May be <see langword="null"/> if
+    /// no modules are installed.
+    /// </param>
     /// <param name="scriptPath">The folder path of the script files which defaults to 'Install.Db.' (which equates to 'Install/Db/')</param>
     /// <returns>Collecton of IUpdateCommands that represents all the required db updates</returns>
     public ICollection<IVersionedUpdateCommand> Create(
         Assembly assembly,
-        ModuleVersion currentVersion,
+        ModuleVersion? currentVersion,
         string scriptPath = "Install.Db."
         )
     {
@@ -38,14 +41,19 @@ public class DbUpdateCommandFactory
                 throw new InvalidCastException("Unable to parse version number from schema update file: " + scriptFile);
             }
 
-            if (currentVersion != null && version.Value <= currentVersion.Version) continue;
+            if (currentVersion != null && version.Value <= currentVersion.Version)
+            {
+                continue;
+            }
 
-            var command = new UpdateDbCommand();
-            command.Version = version.Value;
-            command.ScriptType = DbScriptType.Schema;
-            command.Sql = GetResource(assembly, scriptFile);
-            command.Description = scriptFile;
-            command.FileName = fileName;
+            var command = new UpdateDbCommand()
+            {
+                Version = version.Value,
+                ScriptType = DbScriptType.Schema,
+                Sql = GetResource(assembly, scriptFile),
+                Description = scriptFile,
+                FileName = fileName
+            };
             commands.Add(command);
 
             if (maxVersionNumber < version.Value)
@@ -58,12 +66,14 @@ public class DbUpdateCommandFactory
 
         foreach (var scriptFile in scriptFiles.Where(s => !s.Contains(".Schema.")))
         {
-            var command = new UpdateDbCommand();
-            command.Version = maxVersionNumber;
-            command.Sql = GetResource(assembly, scriptFile);
-            command.ScriptType = MapScriptType(scriptFile);
-            command.Description = scriptFile;
-            command.FileName = GetScriptFileName(scriptFile);
+            var command = new UpdateDbCommand()
+            {
+                Version = maxVersionNumber,
+                Sql = GetResource(assembly, scriptFile),
+                ScriptType = MapScriptType(scriptFile),
+                Description = scriptFile,
+                FileName = GetScriptFileName(scriptFile)
+            };
             commands.Add(command);
         }
 
@@ -121,12 +131,15 @@ public class DbUpdateCommandFactory
     /// </remarks>
     private string GetResource(Assembly assembly, string resourceName)
     {
-        using (var stream = assembly.GetManifestResourceStream(resourceName))
-        using (var reader = new StreamReader(stream))
+        using var stream = assembly.GetManifestResourceStream(resourceName);
+
+        if (stream == null)
         {
-            return reader.ReadToEnd();
+            throw new FileNotFoundException($"Could not read embedded resource '{resourceName}' in assembly {assembly.FullName}.");
         }
+
+        using var reader = new StreamReader(stream);
+
+        return reader.ReadToEnd();
     }
-
-
 }

@@ -21,7 +21,7 @@ public class ContainerConfigurationHelper : IContainerConfigurationHelper
     /// <typeparam name="T">The type to convert the value to.</typeparam>
     /// <param name="key">The configuration key for the value to convert.</param>
     /// <returns>The type to convert the value to.</returns>
-    public T GetValue<T>(string key)
+    public T? GetValue<T>(string key)
     {
         return _configuration.GetValue<T>(key);
     }
@@ -35,6 +35,8 @@ public class ContainerConfigurationHelper : IContainerConfigurationHelper
     /// <returns>The type to convert the value to.</returns>
     public T GetValue<T>(string key, T defaultValue)
     {
-        return _configuration.GetValue<T>(key, defaultValue);
+        var value = _configuration.GetValue(key, defaultValue);
+
+        return value ?? defaultValue;
     }
 }

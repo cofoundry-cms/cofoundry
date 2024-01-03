@@ -25,9 +25,9 @@ public class InvalidMailAddressException : Exception
         DisplayName = displayName;
     }
 
-    public string MailAddress { get; private set; }
+    public string? MailAddress { get; private set; }
 
-    public string DisplayName { get; private set; }
+    public string? DisplayName { get; private set; }
 
     private static string FormatMessage(string email, string displayName)
     {

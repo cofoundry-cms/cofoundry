@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
 	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
 
     <PackageId>Cofoundry.Core</PackageId>
     <Description>Cofoundry Core components and interfaces</Description>
@@ -25,8 +26,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     
-    <PackageReference Include="AngleSharp" Version="1.0.7" />
-    <PackageReference Include="HtmlSanitizer" Version="8.0.795" />
+    <PackageReference Include="AngleSharp" Version="0.17.1" />
+    <PackageReference Include="HtmlSanitizer" Version="8.0.811" />
 
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
 

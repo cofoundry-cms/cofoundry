@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Core;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Cofoundry.Core;
 
 /// <summary>
 /// A range of helper methods for working with strings or collections of strings
@@ -6,9 +8,18 @@
 public static class StringHelper
 {
     /// <summary>
+    /// Returns the first non empty string in an array.
+    /// </summary>
+    public static string? FirstNotNullOrWhitespace(params string?[] strings)
+    {
+        return strings.FirstOrDefault(s => !string.IsNullOrWhiteSpace(s));
+    }
+
+    /// <summary>
     /// Returns the first non empty string in an array
     /// </summary>
-    public static string FirstNonEmpty(params string[] strings)
+    [Obsolete("Use FirstNotNullOrWhitespace instead, which is better named for it's behaviour.")]
+    public static string FirstNonEmpty(params string?[] strings)
     {
         return strings.FirstOrDefault(s => !string.IsNullOrWhiteSpace(s)) ?? string.Empty;
     }
@@ -16,7 +27,7 @@ public static class StringHelper
     /// <summary>
     /// Trims whitespace from a string, returning null values as String.Empty
     /// </summary>
-    public static string NullAsEmptyAndTrim(string s)
+    public static string NullAsEmptyAndTrim(string? s)
     {
         if (s == null) return string.Empty;
 
@@ -26,7 +37,7 @@ public static class StringHelper
     /// <summary>
     /// Trims whitespace from a string if not null
     /// </summary>
-    public static string TrimOrNull(string s)
+    public static string? TrimOrNull(string? s)
     {
         if (s == null) return s;
 
@@ -36,7 +47,7 @@ public static class StringHelper
     /// <summary>
     /// Returns a string as null if it is empty or whitespace
     /// </summary>
-    public static string EmptyAsNull(string s)
+    public static string? EmptyAsNull(string? s)
     {
         if (s == null || !string.IsNullOrWhiteSpace(s)) return s;
         return null;
@@ -45,7 +56,7 @@ public static class StringHelper
     /// <summary>
     /// Returns true if any of the string parameters are null, empty or whitespace
     /// </summary>
-    public static bool IsNullOrWhiteSpace(params string[] strings)
+    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] params string?[]? strings)
     {
         if (strings == null) return true;
         return strings.Any(s => string.IsNullOrWhiteSpace(s));
@@ -61,7 +72,7 @@ public static class StringHelper
     /// A string that consists of the non-empty members of values delimited by the separator
     /// string. If values has no non-empty members, the method returns System.String.Empty.
     /// </returns>
-    public static string JoinNotEmpty(string separator, params string[] values)
+    public static string JoinNotEmpty(string separator, params string?[] values)
     {
         return string.Join(separator, values.Where(s => !string.IsNullOrWhiteSpace(s)));
     }
@@ -75,7 +86,7 @@ public static class StringHelper
     /// that contains no delimiters, or null.
     /// </param>
     /// <returns>Collection of string results.</returns>
-    public static IEnumerable<string> SplitAndTrim(string source, params char[] separator)
+    public static IEnumerable<string> SplitAndTrim(string? source, params char[] separator)
     {
         if (source == null) return Enumerable.Empty<string>();
 
@@ -91,7 +102,7 @@ public static class StringHelper
     /// </summary>
     /// <param name="s">string to compare.</param>
     /// <returns>True if the entire string is upper case; otherwise false.</returns>
-    public static bool IsUpperCase(string s)
+    public static bool IsUpperCase([NotNullWhen(true)] string? s)
     {
         if (s == null) return false;
         return !s.Any(c => !Char.IsUpper(c));
@@ -104,7 +115,8 @@ public static class StringHelper
     /// <param name="source">String to modify.</param>
     /// <param name="suffix">The suffix to test for. Case sensitive.</param>
     /// <returns>If the string ends with the suffix, the modified string is returned; otherwise the original string is returned.</returns>
-    public static string RemoveSuffix(string source, string suffix)
+    [return: NotNullIfNotNull(nameof(source))]
+    public static string? RemoveSuffix(string? source, string suffix)
     {
         if (source == null) return source;
 
@@ -123,7 +135,8 @@ public static class StringHelper
     /// <param name="suffix">The suffix to test for.</param>
     /// <param name="stringComparison">StringComparison options to use when testing for the suffix.</param>
     /// <returns>If the string ends with the suffix, the modified string is returned; otherwise the original string is returned.</returns>
-    public static string RemoveSuffix(string source, string suffix, StringComparison stringComparison)
+    [return: NotNullIfNotNull(nameof(source))]
+    public static string? RemoveSuffix(string? source, string suffix, StringComparison stringComparison)
     {
         if (source == null) return source;
 

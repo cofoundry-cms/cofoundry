@@ -33,7 +33,7 @@ public class EmailDomainName
     /// <param name="domainName">
     /// The case-insensitive domain name to parse e.g. "example.com" or "EXAMPLE.COM".
     /// </param>
-    public static EmailDomainName Parse(string domainName)
+    public static EmailDomainName? Parse(string? domainName)
     {
         if (string.IsNullOrWhiteSpace(domainName)) return null;
 

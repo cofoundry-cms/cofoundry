@@ -57,9 +57,8 @@ public class ModelValidationService : IModelValidationService
 
         foreach (var result in validationResults)
         {
-            if (result is CompositeValidationResult)
+            if (result is CompositeValidationResult compositeResult)
             {
-                var compositeResult = (CompositeValidationResult)result;
                 foreach (var childResult in compositeResult.Results)
                 {
                     yield return MapErrors(childResult);
@@ -74,9 +73,11 @@ public class ModelValidationService : IModelValidationService
 
     protected ValidationError MapErrors(ValidationResult result)
     {
-        var error = new ValidationError();
-        error.Message = result.ErrorMessage;
-        error.Properties = result.MemberNames.ToArray();
+        var error = new ValidationError()
+        {
+            Message = result.ErrorMessage ?? string.Empty,
+            Properties = result.MemberNames.ToArray()
+        };
         return error;
     }
 }

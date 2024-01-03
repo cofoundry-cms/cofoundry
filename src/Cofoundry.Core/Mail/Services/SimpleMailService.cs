@@ -18,7 +18,7 @@ public class SimpleMailService : IMailService
         _mailMessageRenderer = mailMessageRenderer;
     }
 
-    public async Task SendAsync(string toEmail, string toDisplayName, IMailTemplate template)
+    public async Task SendAsync(string toEmail, string? toDisplayName, IMailTemplate template)
     {
         var toAddress = new MailAddress(toEmail, toDisplayName);
         var message = await _mailMessageRenderer.RenderAsync(template, toAddress);

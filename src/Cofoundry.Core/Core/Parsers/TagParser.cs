@@ -15,7 +15,7 @@ public static class TagParser
     /// </summary>
     /// <param name="tags">The string of tags to split.</param>
     /// <returns>The list of separate tags</returns>
-    public static IEnumerable<string> Split(string tags)
+    public static IEnumerable<string> Split(string? tags)
     {
         List<string> tagList = new List<string>();
 

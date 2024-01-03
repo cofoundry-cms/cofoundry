@@ -13,16 +13,17 @@ public class CofoundryUpdatePackageFactory : IUpdatePackageFactory
     {
         var moduleVersion = versionHistory.SingleOrDefault(m => m.Module == CofoundryModuleInfo.ModuleIdentifier);
 
-        var package = new UpdatePackage();
         var dbCommandFactory = new DbUpdateCommandFactory();
-
         var commands = new List<IVersionedUpdateCommand>();
         commands.AddRange(dbCommandFactory.Create(GetType().GetTypeInfo().Assembly, moduleVersion));
         commands.AddRange(GetAdditionalCommands(moduleVersion));
 
-        package.VersionedCommands = commands;
-        package.AlwaysUpdateCommands = GetAlwaysUpdateCommand().ToList();
-        package.ModuleIdentifier = CofoundryModuleInfo.ModuleIdentifier;
+        var package = new UpdatePackage()
+        {
+            VersionedCommands = commands,
+            AlwaysUpdateCommands = GetAlwaysUpdateCommand().ToList(),
+            ModuleIdentifier = CofoundryModuleInfo.ModuleIdentifier
+        };
 
         yield return package;
     }

@@ -11,7 +11,7 @@ public class DefaultContainerBuilder : IContainerBuilder
 {
     bool hasBuilt = false;
 
-    private readonly Dictionary<Type, RegistrationOverride> RegistrationOverrides = new Dictionary<Type, RegistrationOverride>();
+    private readonly Dictionary<Type, RegistrationOverride> RegistrationOverrides = [];
     private readonly IServiceCollection _serviceCollection;
     private readonly IDiscoveredTypesProvider _discoveredTypesProvider;
     private readonly IConfiguration _configurationRoot;
@@ -51,9 +51,9 @@ public class DefaultContainerBuilder : IContainerBuilder
     internal void QueueRegistration<TTo>(Action registration, int priority)
     {
         var typeToRegister = typeof(TTo);
-        if (RegistrationOverrides.ContainsKey(typeToRegister))
+        if (RegistrationOverrides.TryGetValue(typeToRegister, out RegistrationOverride value))
         {
-            var existingOverride = RegistrationOverrides[typeToRegister];
+            var existingOverride = value;
 
             // Don't allow the registrations with the same priority, but do 
             // replace lower priority registrations
@@ -134,7 +134,14 @@ public class DefaultContainerBuilder : IContainerBuilder
                 throw new InvalidOperationException(registrationType.Name + " does not have a public parameterless constructor. Types that implement IDependencyRegistration do not support constructor injection.");
             }
 
-            yield return (IDependencyRegistration)Activator.CreateInstance(registrationType.AsType());
+            var registration = Activator.CreateInstance(registrationType.AsType()) as IDependencyRegistration;
+
+            if (registration == null)
+            {
+                throw new Exception($"Error instantiating dependency registration type {registrationType.FullName}");
+            }
+
+            yield return registration;
         }
     }
 }

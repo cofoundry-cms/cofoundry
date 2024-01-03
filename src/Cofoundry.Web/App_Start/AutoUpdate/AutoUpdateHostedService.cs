@@ -14,7 +14,7 @@ namespace Cofoundry.Web;
 public class AutoUpdateHostedService : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    private ILogger _logger;
+    private readonly ILogger _logger;
 
     public AutoUpdateHostedService(
         IServiceProvider serviceProvider,
@@ -43,7 +43,7 @@ public class AutoUpdateHostedService : BackgroundService
 
                 // Use a short re-try delay to ensure we process the update quickly
                 // without overwhelming server resources
-                _logger.LogInformation($"Process failed, retrying in {retryTimeout} seconds");
+                _logger.LogInformation("Process failed, retrying in {RetryTimeoutInSeconds} seconds", retryTimeout);
                 await Task.Delay(TimeSpan.FromSeconds(retryTimeout), stoppingToken);
 
                 numAttempts++;
@@ -51,7 +51,7 @@ public class AutoUpdateHostedService : BackgroundService
         }
     }
 
-    private int GetRetryTimeoutInSeconds(ulong numAttmpts)
+    private static int GetRetryTimeoutInSeconds(ulong numAttmpts)
     {
         if (numAttmpts > 30) return 60;
         if (numAttmpts > 20) return 30;
@@ -63,40 +63,38 @@ public class AutoUpdateHostedService : BackgroundService
 
     private async Task<bool> TryUpdate(CancellationToken stoppingToken)
     {
-        using (var scope = _serviceProvider.CreateScope())
+        using var scope = _serviceProvider.CreateScope();
+        // state is a singleton that other startup services can use to check the state o fthe process
+        var state = scope.ServiceProvider.GetRequiredService<AutoUpdateState>();
+
+        if (state.Status == AutoUpdateStatus.Complete || state.Status == AutoUpdateStatus.InProgress)
         {
-            // state is a singleton that other startup services can use to check the state o fthe process
-            var state = scope.ServiceProvider.GetRequiredService<AutoUpdateState>();
+            throw new Exception("Unexpected initial auto-update state: " + state.Status);
+        }
 
-            if (state.Status == AutoUpdateStatus.Complete || state.Status == AutoUpdateStatus.InProgress)
-            {
-                throw new Exception("Unexpected initial auto-update state: " + state.Status);
-            }
+        state.Update(AutoUpdateStatus.InProgress);
 
-            state.Update(AutoUpdateStatus.InProgress);
+        try
+        {
+            var autoUpdateService = scope.ServiceProvider.GetRequiredService<IAutoUpdateService>();
+            await autoUpdateService.UpdateAsync(stoppingToken);
 
-            try
-            {
-                var autoUpdateService = scope.ServiceProvider.GetRequiredService<IAutoUpdateService>();
-                await autoUpdateService.UpdateAsync(stoppingToken);
+            state.Update(AutoUpdateStatus.Complete);
+        }
+        catch (AutoUpdateProcessLockedException)
+        {
+            state.Update(AutoUpdateStatus.LockedByAnotherProcess);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error executing update");
+            state.Update(AutoUpdateStatus.Error, ex);
+        }
 
-                state.Update(AutoUpdateStatus.Complete);
-            }
-            catch (AutoUpdateProcessLockedException lockedException)
-            {
-                state.Update(AutoUpdateStatus.LockedByAnotherProcess);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error executing update");
-                state.Update(AutoUpdateStatus.Error, ex);
-            }
-
-            if (state.Status == AutoUpdateStatus.Complete)
-            {
-                _logger.LogInformation("Process completed");
-                return true;
-            }
+        if (state.Status == AutoUpdateStatus.Complete)
+        {
+            _logger.LogInformation("Process completed");
+            return true;
         }
 
         return false;

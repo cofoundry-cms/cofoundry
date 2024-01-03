@@ -17,5 +17,5 @@ public interface IEmailAddressNormalizer
     /// The email address string to format. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
     /// </param>
-    NormalizedEmailAddress NormalizeAsParts(string emailAddress);
+    NormalizedEmailAddress? NormalizeAsParts(string? emailAddress);
 }

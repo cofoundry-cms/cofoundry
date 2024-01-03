@@ -22,7 +22,7 @@ public static class IEmailAddressUniquifierExtensions
     /// The email address to uniquify. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
     /// </param>
-    public static string Uniquify(this IEmailAddressUniquifier uniquifier, string emailAddress)
+    public static string? Uniquify(this IEmailAddressUniquifier uniquifier, string? emailAddress)
     {
         return uniquifier
             .UniquifyAsParts(emailAddress)
@@ -39,7 +39,7 @@ public static class IEmailAddressUniquifierExtensions
     /// The pre-normalized email address to uniquify. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
     /// </param>
-    public static string Uniquify(this IEmailAddressUniquifier uniquifier, NormalizedEmailAddress emailAddressParts)
+    public static string? Uniquify(this IEmailAddressUniquifier uniquifier, NormalizedEmailAddress? emailAddressParts)
     {
         return uniquifier
             .UniquifyAsParts(emailAddressParts)

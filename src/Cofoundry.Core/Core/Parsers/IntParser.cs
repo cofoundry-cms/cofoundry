@@ -11,17 +11,15 @@ public static class IntParser
     /// </summary>
     /// <param name="s">String to parse</param>
     /// <returns>Integer value if the string could be parsed; otherwise null.</returns>
-    public static int? ParseOrNull(string s)
+    public static int? ParseOrNull(string? s)
     {
         if (string.IsNullOrWhiteSpace(s)) return null;
 
-        int i = 0;
-        decimal d = 0;
-        if (Int32.TryParse(s, out i))
+        if (int.TryParse(s, out int i))
         {
             return i;
         }
-        else if (decimal.TryParse(s, out d))
+        else if (decimal.TryParse(s, out decimal d))
         {
             return Convert.ToInt32(d);
         }
@@ -35,7 +33,7 @@ public static class IntParser
     /// </summary>
     /// <param name="o">Object to parse</param>
     /// <returns>Integer value if the object could be parsed; otherwise null.</returns>
-    public static int? ParseOrNull(object o)
+    public static int? ParseOrNull(object? o)
     {
         if (o == null) return null;
         if (o is int || o is int?)
@@ -56,7 +54,7 @@ public static class IntParser
     /// <param name="s">String to parse</param>
     /// <param name="def">Default value to use if it cannot be parsed</param>
     /// <returns>Integer value if the string could be parsed; otherwise null.</returns>
-    public static int ParseOrDefault(string s, int def = 0)
+    public static int ParseOrDefault(string? s, int def = 0)
     {
         return ParseOrNull(s) ?? def;
     }
@@ -68,7 +66,7 @@ public static class IntParser
     /// <param name="o">Object to parse</param>
     /// <param name="def">Default value to use if it cannot be parsed</param>
     /// <returns>Integer value if the object could be parsed; otherwise null.</returns>
-    public static int ParseOrDefault(object o, int def = 0)
+    public static int ParseOrDefault(object? o, int def = 0)
     {
         return ParseOrNull(o) ?? def;
     }
@@ -79,9 +77,9 @@ public static class IntParser
     /// </summary>
     /// <param name="list">String containing the list of integers</param>
     /// <returns>Collection of parsed integers (with unparsable entries removed)</returns>
-    public static IEnumerable<int> ParseFromDelimitedString(string list)
+    public static IEnumerable<int> ParseFromDelimitedString(string? list)
     {
-        return ParseFromDelimitedString(list, new char[] { ',' });
+        return ParseFromDelimitedString(list, [',']);
     }
 
     /// <summary>
@@ -90,13 +88,13 @@ public static class IntParser
     /// <param name="str">String containing the list of integers</param>
     /// <param name="delimiter">The delimiters to pass into the string.Split operation</param>
     /// <returns>Collection of parsed integers (with unparsable entries removed)</returns>
-    public static IEnumerable<int> ParseFromDelimitedString(string str, params char[] delimiter)
+    public static IEnumerable<int> ParseFromDelimitedString(string? str, params char[] delimiter)
     {
         if (string.IsNullOrEmpty(str)) return Enumerable.Empty<int>();
 
         return StringHelper
             .SplitAndTrim(str, delimiter)
-            .Select(s => IntParser.ParseOrNull(s))
-            .FilterNotNull();
+            .Select(s => ParseOrNull(s))
+            .WhereNotNull();
     }
 }

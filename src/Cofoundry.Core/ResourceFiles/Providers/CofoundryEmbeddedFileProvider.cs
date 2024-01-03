@@ -16,7 +16,7 @@ namespace Cofoundry.Core.ResourceFiles;
 public class CofoundryEmbeddedFileProvider : IFileProvider
 {
     private readonly EmbeddedFileProvider _embeddedFileProvider;
-    private readonly PhysicalFileProvider _physicalFileProvider = null;
+    private readonly PhysicalFileProvider? _physicalFileProvider = null;
 
     public CofoundryEmbeddedFileProvider(
         Assembly assembly,
@@ -35,7 +35,8 @@ public class CofoundryEmbeddedFileProvider : IFileProvider
                 basePath = pathResolver.MapPath("/");
             }
 
-            var path = Path.Combine(basePath, assembly.GetName().Name);
+            var assemblyName = assembly.GetName().Name ?? string.Empty;
+            var path = Path.Combine(basePath, assemblyName);
 
             _physicalFileProvider = new PhysicalFileProvider(path);
         }
@@ -64,7 +65,7 @@ public class CofoundryEmbeddedFileProvider : IFileProvider
 
     public IFileInfo GetFileInfo(string subpath)
     {
-        IFileInfo file = null;
+        IFileInfo? file = null;
 
         if (_physicalFileProvider != null)
         {

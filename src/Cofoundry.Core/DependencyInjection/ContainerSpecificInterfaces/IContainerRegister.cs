@@ -19,7 +19,7 @@ public interface IContainerRegister
     /// <param name="instance">The instance to register.</param>
     /// <param name="options">Optional options argument.</param>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister RegisterSingleton<TRegisterAs>(TRegisterAs instance, RegistrationOptions options = null);
+    IContainerRegister RegisterSingleton<TRegisterAs>(TRegisterAs instance, RegistrationOptions? options = null);
 
     /// <summary>
     /// Registers a service as its concrete type only, using the default 
@@ -28,7 +28,8 @@ public interface IContainerRegister
     /// <typeparam name="TConcrete">Type to register.</typeparam>
     /// <param name="options">Optional options argument.</param>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister Register<TConcrete>(RegistrationOptions options = null);
+    IContainerRegister Register<TConcrete>(RegistrationOptions? options = null)
+        where TConcrete : notnull;
 
     /// <summary>
     /// Registers the type against itself and multiple interfaces or base classes 
@@ -39,7 +40,8 @@ public interface IContainerRegister
     /// <param name="types">Types to register as.</param>
     /// <param name="options">Optional options argument.</param>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister Register<TConcrete>(ICollection<Type> types, RegistrationOptions options = null);
+    IContainerRegister Register<TConcrete>(ICollection<Type> types, RegistrationOptions? options = null)
+        where TConcrete : notnull;
 
     /// <summary>
     /// Registers a service using the default InstanceLifetime (Transient).
@@ -48,7 +50,7 @@ public interface IContainerRegister
     /// <typeparam name="TConcrete">Concrete type to register.</typeparam>
     /// <param name="options">Optional options argument.</param>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister Register<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs;
+    IContainerRegister Register<TRegisterAs, TConcrete>(RegistrationOptions? options = null) where TConcrete : notnull, TRegisterAs;
 
     /// <summary>
     /// Registers a service as part of a collection of services, so that when an array of TRegisterAs
@@ -57,14 +59,14 @@ public interface IContainerRegister
     /// <typeparam name="TRegisterAs">Type to register the service as</typeparam>
     /// <typeparam name="TConcrete">Concrete type to register.</typeparam>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister RegisterInCollection<TRegisterAs, TConcrete>(RegistrationOptions options = null) where TConcrete : TRegisterAs;
+    IContainerRegister RegisterInCollection<TRegisterAs, TConcrete>(RegistrationOptions? options = null) where TConcrete : notnull, TRegisterAs;
 
     /// <summary>
     /// Registers all services that implement TToRegister as a registered collection of services.
     /// </summary>
     /// <typeparam name="TToRegister">Type to scan for implementations</typeparam>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister RegisterAll<TToRegister>(RegistrationOptions options = null);
+    IContainerRegister RegisterAll<TToRegister>(RegistrationOptions? options = null);
 
     /// <summary>
     /// Registers all services that implement typeToRegisterImplementationsOf as their
@@ -79,7 +81,7 @@ public interface IContainerRegister
     /// </param>
     /// <param name="options">Optional options argument.</param>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister RegisterAllWithFactory(Type typeToRegisterImplementationsOf, Type genericFactoryType, RegistrationOptions options = null);
+    IContainerRegister RegisterAllWithFactory(Type typeToRegisterImplementationsOf, Type genericFactoryType, RegistrationOptions? options = null);
 
     /// <summary>
     /// Registers all services that implement a generic interface. Each service
@@ -88,7 +90,7 @@ public interface IContainerRegister
     /// <param name="typeDef">Generic interface to scan for implementations.</param>
     /// <param name="options">Optional options argument.</param>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister RegisterAllGenericImplementations(Type typeDef, RegistrationOptions options = null);
+    IContainerRegister RegisterAllGenericImplementations(Type typeDef, RegistrationOptions? options = null);
 
     /// <summary>
     /// Registers an open generic type
@@ -97,7 +99,7 @@ public interface IContainerRegister
     /// <param name="typeToRegister">Concrete type to register e.g. typeof(Repository&lt;&gt;)</param>
     /// <param name="options">Optional options argument.</param>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister RegisterGeneric(Type registerAs, Type typeToRegister, RegistrationOptions options = null);
+    IContainerRegister RegisterGeneric(Type registerAs, Type typeToRegister, RegistrationOptions? options = null);
 
     /// <summary>
     /// Registers a type with a factory that is used to construct the type when it is resolved.
@@ -106,7 +108,9 @@ public interface IContainerRegister
     /// <typeparam name="TFactory">The IInjectionFactory that should be used to construct the type.</typeparam>
     /// <param name="options">Optional options argument.</param>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister RegisterFactory<TToRegister, TFactory>(RegistrationOptions options = null) where TFactory : IInjectionFactory<TToRegister>;
+    IContainerRegister RegisterFactory<TToRegister, TFactory>(RegistrationOptions? options = null)
+        where TFactory : IInjectionFactory<TToRegister>
+        where TToRegister : notnull;
 
     /// <summary>
     /// Registers a type with a factory that is used to construct the type when it is resolved.
@@ -116,7 +120,7 @@ public interface IContainerRegister
     /// <typeparam name="TFactory">The IInjectionFactory that should be used to construct the type.</typeparam>
     /// <param name="options">Optional options argument.</param>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister RegisterFactory<TRegisterAs, TConcrete, TFactory>(RegistrationOptions options = null)
+    IContainerRegister RegisterFactory<TRegisterAs, TConcrete, TFactory>(RegistrationOptions? options = null)
         where TFactory : IInjectionFactory<TConcrete>
-        where TConcrete : TRegisterAs;
+        where TConcrete : notnull, TRegisterAs;
 }

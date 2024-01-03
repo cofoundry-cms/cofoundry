@@ -27,6 +27,7 @@ public static class OrderableTaskSorter
     /// secondary ordering.
     /// </param>
     public static ICollection<TTask> Sort<TTask>(IEnumerable<TTask> tasks)
+        where TTask : notnull
     {
         ArgumentNullException.ThrowIfNull(tasks);
 

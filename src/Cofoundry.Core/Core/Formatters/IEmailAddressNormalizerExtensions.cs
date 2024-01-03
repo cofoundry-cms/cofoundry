@@ -12,7 +12,7 @@ public static class IEmailAddressNormalizerExtensions
     /// The email address string to format. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
     /// </param>
-    public static string Normalize(this IEmailAddressNormalizer normalizer, string emailAddress)
+    public static string? Normalize(this IEmailAddressNormalizer normalizer, string? emailAddress)
     {
         ArgumentNullException.ThrowIfNull(normalizer);
 

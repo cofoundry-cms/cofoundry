@@ -25,7 +25,7 @@ public class AmendedFileNameResourceFileInfo : IFileInfo
 
     public long Length => _fileInfo.Length;
 
-    public string PhysicalPath => _fileInfo.PhysicalPath;
+    public string? PhysicalPath => _fileInfo.PhysicalPath;
 
     public string Name { get; private set; }
 

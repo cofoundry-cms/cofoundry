@@ -8,7 +8,7 @@ public class PasswordCryptographyServiceTests
 {
     const string PASSWORD = "mr goodbytes";
 
-    private PasswordCryptographyService _passwordCryptographyService;
+    private readonly PasswordCryptographyService _passwordCryptographyService;
 
     public PasswordCryptographyServiceTests()
     {
@@ -59,7 +59,7 @@ public class PasswordCryptographyServiceTests
             case PasswordHashVersion.V1:
                 return new PasswordCryptographyV1().CreateHash(password);
             case PasswordHashVersion.V2:
-                return Defuse.PasswordCryptographyV2.CreateHash(password);
+                return Defuse.Obsolete.PasswordCryptographyV2.CreateHash(password);
             case PasswordHashVersion.V3:
                 return new PasswordHasher<PasswordHasherUser>().HashPassword(new PasswordHasherUser(), password);
             default:

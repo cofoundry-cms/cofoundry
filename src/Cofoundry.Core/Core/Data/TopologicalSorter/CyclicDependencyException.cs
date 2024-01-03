@@ -21,7 +21,7 @@ public class CyclicDependencyException : Exception
     {
     }
 
-    private static string CreateMessage(string message = null)
+    private static string CreateMessage(string? message = null)
     {
         const string DEFAULT_MESSAGE = "Cyclic dependency detected.";
 

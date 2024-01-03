@@ -34,12 +34,31 @@ public class RazorMailViewRenderer : IMailViewRenderer
         _serviceProvider = serviceProvider;
     }
 
-    public Task<string> RenderAsync(string viewPath)
+    public async Task<string?> RenderAsync(string viewPath)
     {
-        return RenderAsync<dynamic>(viewPath, null);
+        var viewData = new ViewDataDictionary(
+            metadataProvider: new EmptyModelMetadataProvider(),
+            modelState: new ModelStateDictionary()
+            );
+
+        var result = await RenderInternalAsync(viewPath, viewData);
+        return result;
     }
 
-    public async Task<string> RenderAsync<TModel>(string viewPath, TModel model)
+    public async Task<string?> RenderAsync<TModel>(string viewPath, TModel model)
+    {
+        var viewData = new ViewDataDictionary<TModel>(
+            metadataProvider: new EmptyModelMetadataProvider(),
+            modelState: new ModelStateDictionary())
+        {
+            Model = model
+        };
+
+        var result = await RenderInternalAsync(viewPath, viewData);
+        return result;
+    }
+
+    private async Task<string?> RenderInternalAsync(string viewPath, ViewDataDictionary viewData)
     {
         var actionContext = GetActionContext();
 
@@ -65,12 +84,7 @@ public class RazorMailViewRenderer : IMailViewRenderer
             var viewContext = new ViewContext(
                 actionContext,
                 view,
-                new ViewDataDictionary<TModel>(
-                    metadataProvider: new EmptyModelMetadataProvider(),
-                    modelState: new ModelStateDictionary())
-                {
-                    Model = model
-                },
+                viewData,
                 new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
                 output,
                 new HtmlHelperOptions());

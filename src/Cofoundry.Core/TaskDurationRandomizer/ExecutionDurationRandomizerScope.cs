@@ -6,7 +6,7 @@ namespace Cofoundry.Core.ExecutionDurationRandomizer;
 /// <inheritdoc/>
 public class ExecutionDurationRandomizerScope : IExecutionDurationRandomizerScope
 {
-    private readonly Stopwatch _stopwatch = new Stopwatch();
+    private readonly Stopwatch _stopwatch = new();
     private readonly ExecutionDurationRandomizerSettings _executionDurationRandomizerSettings;
     private bool _isCompleteCalled = false;
 
@@ -27,7 +27,7 @@ public class ExecutionDurationRandomizerScope : IExecutionDurationRandomizerScop
         _stopwatch.Start();
     }
 
-    public RandomizedExecutionDuration Duration { get; set; }
+    public RandomizedExecutionDuration? Duration { get; private set; }
 
     public void UpdateDuration(RandomizedExecutionDuration newDuration)
     {
@@ -69,7 +69,7 @@ public class ExecutionDurationRandomizerScope : IExecutionDurationRandomizerScop
         }
     }
 
-    private int LongToInt(long olong)
+    private static int LongToInt(long olong)
     {
         if (olong > Int32.MaxValue)
         {

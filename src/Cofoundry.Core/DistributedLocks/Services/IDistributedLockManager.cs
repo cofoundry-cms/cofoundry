@@ -19,10 +19,6 @@ public interface IDistributedLockManager
     /// The definition type that conmtains the locking parameters that
     /// represent the process to be run.
     /// </typeparam>
-    /// <param name="lockingId">
-    /// A unique identifier that represents the specific instance of
-    /// the process you want lock. 
-    /// </param>
     /// <returns>
     /// Returns the current state of the lock for the specified 
     /// definition. If the lock could not be made then the state will

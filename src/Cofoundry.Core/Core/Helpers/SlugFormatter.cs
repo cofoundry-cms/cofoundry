@@ -10,7 +10,7 @@ public static class SlugFormatter
     /// </summary>
     /// <param name="s">string to slugify.</param>
     /// <returns>Empty string if the specified string is null or whitespace; otherwise the slugified string is returned.</returns>
-    public static string ToSlug(string s)
+    public static string ToSlug(string? s)
     {
         if (string.IsNullOrWhiteSpace(s)) return string.Empty;
 
@@ -32,7 +32,7 @@ public static class SlugFormatter
     /// to a dash delimited token, e.g. MyPropertyName to "my-property-name".
     /// </summary>
     /// <param name="s">String instance to format.</param>
-    public static string CamelCaseToSlug(string s)
+    public static string CamelCaseToSlug(string? s)
     {
         if (s == null) return string.Empty;
 

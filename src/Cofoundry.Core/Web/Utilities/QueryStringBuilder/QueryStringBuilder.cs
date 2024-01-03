@@ -13,7 +13,7 @@ public class QueryStringBuilder
     /// <param name="key">Key of the parameter</param>
     /// <param name="value">value  of the parameter</param>
     /// <returns>The full querystring including the leading ?</returns>
-    public static string Create(string key, string value)
+    public static string Create(string key, string? value)
     {
         var builder = new QueryStringBuilder();
         builder.Add(key, value);
@@ -39,7 +39,7 @@ public class QueryStringBuilder
     /// <param name="key">Key of the parameter</param>
     /// <param name="value">value  of the parameter</param>
     /// <returns>QueryStringBuilder instance for method chaining.</returns>
-    public QueryStringBuilder Add(string key, string value)
+    public QueryStringBuilder Add(string key, string? value)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(key);
 

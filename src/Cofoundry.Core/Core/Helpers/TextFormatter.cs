@@ -15,7 +15,7 @@ public static class TextFormatter
     /// delimited sentence, e.g. MyPropertyName to "My property name".
     /// </summary>
     /// <param name="s">String instance to format.</param>
-    public static string PascalCaseToSentence(string s)
+    public static string PascalCaseToSentence(string? s)
     {
         if (s == null) return string.Empty;
 
@@ -37,7 +37,7 @@ public static class TextFormatter
     /// whitespace and dashes.
     /// </remarks>
     /// <param name="s">String instance to format.</param>
-    public static string Pascalize(string s)
+    public static string Pascalize(string? s)
     {
         if (s == null) return string.Empty;
 
@@ -53,7 +53,7 @@ public static class TextFormatter
     /// whitespace and dashes.
     /// </remarks>
     /// <param name="s">String instance to format.</param>
-    public static string Camelize(string s)
+    public static string Camelize(string? s)
     {
         if (string.IsNullOrWhiteSpace(s)) return string.Empty;
 
@@ -70,7 +70,7 @@ public static class TextFormatter
     /// Substring with elipses but OK if shorter.
     /// </summary>
     /// <param name="s">String instance to format.</param>
-    public static string Limit(string s, int charCount)
+    public static string Limit(string? s, int charCount)
     {
         if (s == null) return string.Empty;
         if (s.Length <= charCount) return s;
@@ -81,7 +81,7 @@ public static class TextFormatter
     /// Substring with elipses but OK if shorter, will take 3 characters off character count if necessary
     /// </summary>
     /// <param name="s">String instance to format.</param>
-    public static string LimitWithElipses(string s, int characterCount)
+    public static string LimitWithElipses(string? s, int characterCount)
     {
         if (s == null) return string.Empty;
         if (characterCount < 3) return Limit(s, characterCount);       // Can’t do much with such a short limit
@@ -94,7 +94,7 @@ public static class TextFormatter
     /// tries to land on a space.
     /// </summary>
     /// <param name="s">String instance to format.</param>
-    public static string LimitWithElipsesOnWordBoundary(string s, int characterCount)
+    public static string LimitWithElipsesOnWordBoundary(string? s, int characterCount)
     {
         if (s == null) return string.Empty;
         if (characterCount < 3) return Limit(s, characterCount);       // Can’t do much with such a short limit
@@ -122,7 +122,7 @@ public static class TextFormatter
     /// then null is returned.
     /// </summary>
     /// <param name="s">String instance to format.</param>
-    public static string FirstLetterToUpperCase(string s)
+    public static string FirstLetterToUpperCase(string? s)
     {
         if (string.IsNullOrEmpty(s)) return string.Empty;
 
@@ -141,7 +141,7 @@ public static class TextFormatter
     /// Adapted from https://stackoverflow.com/a/34272324/716689
     /// </remarks>
     /// <param name="s">The string from which to remove diacratics.</param>
-    public static string RemoveDiacritics(string s)
+    public static string RemoveDiacritics(string? s)
     {
         if (s == null) return string.Empty;
 

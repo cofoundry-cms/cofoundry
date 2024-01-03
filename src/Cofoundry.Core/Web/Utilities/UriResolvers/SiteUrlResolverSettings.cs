@@ -13,5 +13,5 @@ public class SiteUrlResolverSettings : CofoundryConfigurationSettingsBase
     /// then the default implementation will fall back to using the URL from
     /// the request.
     /// </summary>
-    public string SiteUrlRoot { get; set; }
+    public string? SiteUrlRoot { get; set; }
 }

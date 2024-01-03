@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Core;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Utilities for working with file paths.
@@ -22,7 +24,7 @@ public static class FilePathHelper
     /// </summary>
     /// <param name="fileName">Filename to clean.</param>
     /// <returns>Cleaned file name, or string.Empty if the fileName is null or whitespace.</returns>
-    public static string CleanFileName(string fileName)
+    public static string CleanFileName(string? fileName)
     {
         return CleanFileName(fileName, string.Empty);
     }
@@ -36,7 +38,7 @@ public static class FilePathHelper
     /// <param name="fileName">Filename to clean.</param>
     /// <param name="emptyReplacement">String to use in place of the filename if the result is null or whitespace.</param>
     /// <returns>Cleaned file name, or the emptyReplacement value if the fileName is null or whitespace.</returns>
-    public static string CleanFileName(string fileName, string emptyReplacement)
+    public static string CleanFileName(string? fileName, string emptyReplacement)
     {
         if (string.IsNullOrWhiteSpace(fileName)) return emptyReplacement;
 
@@ -68,7 +70,7 @@ public static class FilePathHelper
     /// </para>
     /// </summary>
     /// <param name="fileExtension">The file extension, the leading dot is optional e.g. ".gif", "gif".</param>
-    public static bool FileExtensionContainsInvalidChars(string fileExtension)
+    public static bool FileExtensionContainsInvalidChars([NotNullWhen(true)] string? fileExtension)
     {
         var trimmedExtension = fileExtension?.TrimStart('.');
 

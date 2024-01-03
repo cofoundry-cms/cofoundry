@@ -24,7 +24,7 @@ public class CompositeSiteUrlResolver : ISiteUrlResolver
     /// </summary>
     /// <param name="path">Path to resolve</param>
     /// <returns>The absolute path, or an empty string if the supplied path is null or empty.</returns>
-    public string MakeAbsolute(string path)
+    public string MakeAbsolute(string? path)
     {
         return GetResolver().MakeAbsolute(path);
     }
@@ -35,7 +35,7 @@ public class CompositeSiteUrlResolver : ISiteUrlResolver
     /// <param name="path">path to resolve</param>
     /// <param name="forceSsl">whether to make the new uri https. If this is false then the scheme is not modified</param>
     /// <returns>The absolute path, or an empty string if the supplied path is null or empty.</returns>
-    public string MakeAbsolute(string path, bool forceSsl)
+    public string MakeAbsolute(string? path, bool forceSsl)
     {
         return GetResolver().MakeAbsolute(path, forceSsl);
     }

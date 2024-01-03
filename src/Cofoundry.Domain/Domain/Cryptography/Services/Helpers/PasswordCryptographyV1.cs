@@ -1,13 +1,14 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Cofoundry.Domain;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// SHA1, 4 byte salt 
-/// I'm uncertain but it looks liek this came from http://www.aspheute.com/english/20040105.asp.
+/// I'm uncertain but it looks like this came from http://www.aspheute.com/english/20040105.asp.
 /// I've modified it to prepend the encoded salt to the password hash.
 /// </summary>
+[Obsolete("Provided for backwards compatibility only and will be removed in a later version.")]
 public class PasswordCryptographyV1
 {
     const int SALT_LENGTH = 16;

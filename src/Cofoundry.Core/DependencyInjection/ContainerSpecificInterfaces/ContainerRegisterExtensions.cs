@@ -11,6 +11,7 @@ public static class ContainerRegisterExtensions
     /// <typeparam name="TConcrete">Type to register.</typeparam>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
     public static IContainerRegister RegisterScoped<TConcrete>(this IContainerRegister containerRegister)
+        where TConcrete : notnull
     {
         return containerRegister.Register<TConcrete>(SCOPED_OPTIONS);
     }
@@ -22,7 +23,7 @@ public static class ContainerRegisterExtensions
     /// <typeparam name="TConcrete">Concrete type to register.</typeparam>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
     public static IContainerRegister RegisterScoped<TRegisterAs, TConcrete>(this IContainerRegister containerRegister)
-        where TConcrete : TRegisterAs
+        where TConcrete : notnull, TRegisterAs
     {
         return containerRegister.Register<TRegisterAs, TConcrete>(SCOPED_OPTIONS);
     }
@@ -33,6 +34,7 @@ public static class ContainerRegisterExtensions
     /// <typeparam name="TConcrete">Concrete type to register.</typeparam>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
     public static IContainerRegister RegisterSingleton<TConcrete>(this IContainerRegister containerRegister)
+        where TConcrete : notnull
     {
         return containerRegister.Register<TConcrete>(SINGLETON_OPTIONS);
     }
@@ -44,7 +46,7 @@ public static class ContainerRegisterExtensions
     /// <typeparam name="TConcrete">Concrete type to register.</typeparam>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
     public static IContainerRegister RegisterSingleton<TRegisterAs, TConcrete>(this IContainerRegister containerRegister)
-        where TConcrete : TRegisterAs
+        where TConcrete : notnull, TRegisterAs
     {
         return containerRegister.Register<TRegisterAs, TConcrete>(SINGLETON_OPTIONS);
     }

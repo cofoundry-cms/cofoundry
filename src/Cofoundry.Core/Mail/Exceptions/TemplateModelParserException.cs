@@ -19,7 +19,7 @@ public class TemplateModelParserException : Exception
 
     public int MailQueueId { get; set; }
 
-    public string TemplateData { get; set; }
+    public string? TemplateData { get; set; }
 
-    public string TemplateDataType { get; set; }
+    public string? TemplateDataType { get; set; }
 }

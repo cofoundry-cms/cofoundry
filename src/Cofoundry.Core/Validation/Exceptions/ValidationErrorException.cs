@@ -45,7 +45,7 @@ public class ValidationErrorException : ValidationException
     /// to copy to the exception data.
     /// </param>
     public ValidationErrorException(ValidationError validationError)
-        : base(new ValidationResult(validationError?.Message, validationError?.Properties), null, null)
+        : base(new ValidationResult(validationError.Message, validationError.Properties), null, null)
     {
         ErrorCode = validationError.ErrorCode;
     }
@@ -54,7 +54,7 @@ public class ValidationErrorException : ValidationException
     /// Optional alphanumeric code representing the error that can be detected by the
     /// client to use in conditional UI flow.
     /// </summary>
-    public string ErrorCode { get; private set; }
+    public string? ErrorCode { get; private set; }
 
     /// <summary>
     /// Creates a new ValidationErrorException instance that applies to one or more properties.

@@ -12,13 +12,13 @@ public class EmailAddressUniquifier : IEmailAddressUniquifier
         _emailAddressNormalizer = emailAddressNormalizer;
     }
 
-    public virtual NormalizedEmailAddress UniquifyAsParts(string emailAddress)
+    public virtual NormalizedEmailAddress? UniquifyAsParts(string? emailAddress)
     {
         var parts = _emailAddressNormalizer.NormalizeAsParts(emailAddress);
         return UniquifyAsParts(parts);
     }
 
-    public virtual NormalizedEmailAddress UniquifyAsParts(NormalizedEmailAddress emailAddressParts)
+    public virtual NormalizedEmailAddress? UniquifyAsParts(NormalizedEmailAddress? emailAddressParts)
     {
         return emailAddressParts?.ToLower();
     }

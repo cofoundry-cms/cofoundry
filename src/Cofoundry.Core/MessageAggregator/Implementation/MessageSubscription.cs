@@ -22,12 +22,12 @@ public class MessageSubscription<TMessageSubscribedTo, TMessageHandler>
     {
         ArgumentNullException.ThrowIfNull(message);
 
-        if (!(message is TMessageSubscribedTo))
+        if (!(message is TMessageSubscribedTo messageSubscribedTo))
         {
             throw new ArgumentException($"{nameof(message)} must be of type '{typeof(TMessageSubscribedTo).FullName}'");
         }
 
         var handler = serviceProvider.GetRequiredService<TMessageHandler>();
-        await handler.HandleAsync((TMessageSubscribedTo)message);
+        await handler.HandleAsync(messageSubscribedTo);
     }
 }

@@ -8,7 +8,7 @@
 /// </summary>
 public interface IDistributedLockDefinitionRepository
 {
-    IDistributedLockDefinition Get<TDefinition>()
+    IDistributedLockDefinition? Get<TDefinition>()
         where TDefinition : IDistributedLockDefinition;
 
     IEnumerable<IDistributedLockDefinition> GetAll();

@@ -19,7 +19,7 @@ public class CofoundryDbConnectionManager
     , IDisposable
 {
     private readonly DatabaseSettings _databaseSettings;
-    private DbConnection _dbConntection;
+    private DbConnection? _dbConntection;
 
     public CofoundryDbConnectionManager(
         DatabaseSettings databaseSettings

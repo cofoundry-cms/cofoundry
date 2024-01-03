@@ -1,5 +1,6 @@
 ﻿using Cofoundry.Core.Configuration;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Cofoundry.Core.ExecutionDurationRandomizer;
 
@@ -27,6 +28,7 @@ public class RandomizedExecutionDuration : IValidatableObject, IFeatureEnableabl
     /// <see langword="true"/> if <see cref="Enabled"/> is <see langword="true"/>
     /// and the parameters are configured to provide a valid duration.
     /// </summary>
+    [MemberNotNullWhen(true, nameof(MinInMilliseconds), nameof(MaxInMilliseconds))]
     public bool IsEnabled()
     {
         return Enabled && MinInMilliseconds >= 0 && MaxInMilliseconds > 0;

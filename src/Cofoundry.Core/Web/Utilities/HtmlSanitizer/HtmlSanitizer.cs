@@ -1,5 +1,6 @@
 ﻿using Ganss.Xss;
 using Microsoft.AspNetCore.Html;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Cofoundry.Core.Web.Internal;
 
@@ -12,7 +13,7 @@ namespace Cofoundry.Core.Web.Internal;
 public class HtmlSanitizer : IHtmlSanitizer
 {
     private Ganss.Xss.HtmlSanitizer _defaultSanitizer;
-    private readonly string _defaultBaseUrl = null;
+    private readonly string _defaultBaseUrl = string.Empty;
 
     public HtmlSanitizer(
         IDefaultHtmlSanitizationRuleSetFactory defaultHtmlSanitizationRuleSetFactory
@@ -23,21 +24,27 @@ public class HtmlSanitizer : IHtmlSanitizer
         _defaultBaseUrl = GetBaseUrl(defaultHtmlSanitizationRuleSet);
     }
 
-    public virtual string Sanitize(IHtmlContent source)
+    [return: NotNullIfNotNull(nameof(source))]
+    public virtual string? Sanitize(IHtmlContent? source)
     {
-        if (source == null) return string.Empty;
-        IHtmlSanitizationRuleSet ruleSet = null;
+        var stringContent = source?.ToString()?.Trim();
+        if (stringContent == null) return null;
+
+        IHtmlSanitizationRuleSet? ruleSet = null;
         if (source is ICustomSanitizationHtmlString)
         {
             ruleSet = ((ICustomSanitizationHtmlString)source).SanitizationRuleSet;
         }
 
-        return Sanitize(source.ToString()?.Trim(), ruleSet);
+        return Sanitize(stringContent, ruleSet);
     }
 
-    public virtual string Sanitize(string source, IHtmlSanitizationRuleSet ruleSet = null)
+    [return: NotNullIfNotNull(nameof(source))]
+    public virtual string? Sanitize(string? source, IHtmlSanitizationRuleSet? ruleSet = null)
     {
-        if (string.IsNullOrWhiteSpace(source)) return null;
+        if (source == null) return null;
+        if (string.IsNullOrWhiteSpace(source)) return string.Empty;
+
         string result;
 
         if (ruleSet == null)
@@ -58,11 +65,12 @@ public class HtmlSanitizer : IHtmlSanitizer
     /// <summary>
     /// Remove HTML tags from string
     /// </summary>
-    public virtual string StripHtml(HtmlString content)
+    [return: NotNullIfNotNull(nameof(source))]
+    public virtual string? StripHtml(IHtmlContent? source)
     {
-        if (content == null) return null;
+        if (source == null) return null;
 
-        return StripHtml(content?.Value);
+        return StripHtml(source?.ToString());
     }
 
     /// <summary>
@@ -71,9 +79,10 @@ public class HtmlSanitizer : IHtmlSanitizer
     /// <remakrs>
     /// See http://www.dotnetperls.com/remove-html-tags
     /// </remakrs>
-    public virtual string StripHtml(string source)
+    [return: NotNullIfNotNull(nameof(source))]
+    public virtual string? StripHtml(string? source)
     {
-        if (source == null) return string.Empty;
+        if (source == null) return null;
 
         char[] array = new char[source.Length];
         int arrayIndex = 0;
@@ -105,7 +114,7 @@ public class HtmlSanitizer : IHtmlSanitizer
     protected string GetBaseUrl(IHtmlSanitizationRuleSet ruleSet)
     {
         var ganssRuleSet = ruleSet as IGanssHtmlSanitizationRuleSet;
-        if (ganssRuleSet == null) return null;
+        if (ganssRuleSet == null) return string.Empty;
 
         return ganssRuleSet.BaseUrl;
     }
@@ -116,7 +125,7 @@ public class HtmlSanitizer : IHtmlSanitizer
         {
             AllowedAtRules = ruleSet.PermittedAtRules,
             AllowedAttributes = ruleSet.PermittedAttributes,
-            AllowedCssClasses = ruleSet.PermittedAttributes,
+            AllowedCssClasses = ruleSet.PermittedCssClasses,
             AllowedCssProperties = ruleSet.PermittedCssProperties,
             AllowedSchemes = ruleSet.PermittedSchemes,
             AllowedTags = ruleSet.PermittedTags,

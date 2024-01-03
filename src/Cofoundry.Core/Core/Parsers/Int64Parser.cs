@@ -11,13 +11,13 @@ public static class Int64Parser
     /// </summary>
     /// <param name="s">String to parse</param>
     /// <returns>Int64 value if the string could be parsed; otherwise null.</returns>
-    public static long? ParseOrNull(string s)
+    public static long? ParseOrNull(string? s)
     {
         if (string.IsNullOrWhiteSpace(s)) return null;
 
         long l = 0;
         decimal d = 0;
-        if (Int64.TryParse(s, out l))
+        if (long.TryParse(s, out l))
         {
             return l;
         }
@@ -35,7 +35,7 @@ public static class Int64Parser
     /// </summary>
     /// <param name="o">Object to parse</param>
     /// <returns>Int64 value if the object could be parsed; otherwise null.</returns>
-    public static long? ParseOrNull(object o)
+    public static long? ParseOrNull(object? o)
     {
         if (o == null) return null;
         if (o is long || o is long?)
@@ -56,7 +56,7 @@ public static class Int64Parser
     /// <param name="s">String to parse</param>
     /// <param name="def">Default value to use if it cannot be parsed</param>
     /// <returns>Int64 value if the string could be parsed; otherwise the default value.</returns>
-    public static long ParseOrDefault(string s, long def = 0)
+    public static long ParseOrDefault(string? s, long def = 0)
     {
         return ParseOrNull(s) ?? def;
     }
@@ -68,7 +68,7 @@ public static class Int64Parser
     /// <param name="o">Object to parse</param>
     /// <param name="def">Default value to use if it cannot be parsed</param>
     /// <returns>Integer value if the object could be parsed; otherwise null.</returns>
-    public static long ParseOrDefault(object o, int def = 0)
+    public static long ParseOrDefault(object? o, int def = 0)
     {
         return ParseOrNull(o) ?? def;
     }

@@ -29,10 +29,12 @@ public class SqlDatabase : IDisposable, IDatabase
     /// <summary>
     /// Executes a sql command with the specified parameters.
     /// </summary>
-    /// <param name="sql">Raw SQL string to execute against the database..</param>
+    /// <param name="sql">Raw SQL string to execute against the database.</param>
     /// <param name="sqlParams">Any parameters to add to the command.</param>
-    public async Task ExecuteAsync(string sql, params SqlParameter[] sqlParams)
+    public async Task ExecuteAsync(string sql, params SqlParameter[]? sqlParams)
     {
+        ArgumentNullException.ThrowIfNull(sql);
+
         var isInitialStateClosed = IsClosed();
         if (isInitialStateClosed)
         {
@@ -66,9 +68,12 @@ public class SqlDatabase : IDisposable, IDatabase
     public async Task<ICollection<TEntity>> ReadAsync<TEntity>(
         string sql,
         Func<SqlDataReader, TEntity> mapper,
-        params SqlParameter[] sqlParams
+        params SqlParameter[]? sqlParams
         )
     {
+        ArgumentNullException.ThrowIfNull(sql);
+        ArgumentNullException.ThrowIfNull(mapper);
+
         var isInitialStateClosed = IsClosed();
         if (isInitialStateClosed)
         {

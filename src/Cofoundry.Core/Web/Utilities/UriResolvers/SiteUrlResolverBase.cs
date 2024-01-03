@@ -11,7 +11,7 @@ public abstract class SiteUrlResolverBase : ISiteUrlResolver
     /// </summary>
     /// <param name="path">Path to resolve.</param>
     /// <returns>The absolute path, or an empty string if the supplied path is null or empty.</returns>
-    public string MakeAbsolute(string path)
+    public string MakeAbsolute(string? path)
     {
         return MakeAbsolute(path, false);
     }
@@ -22,7 +22,7 @@ public abstract class SiteUrlResolverBase : ISiteUrlResolver
     /// <param name="path">path to resolve</param>
     /// <param name="forceSsl">whether to make the new uri https. If this is false then the scheme is not modified</param>
     /// <returns>The absolute path, or an empty string if the supplied path is null or empty.</returns>
-    public string MakeAbsolute(string path, bool forceSsl)
+    public string MakeAbsolute(string? path, bool forceSsl)
     {
         if (string.IsNullOrWhiteSpace(path)) return string.Empty;
 
@@ -38,7 +38,7 @@ public abstract class SiteUrlResolverBase : ISiteUrlResolver
 
     private string MakeSsl(string path, bool forceSsl)
     {
-        if (forceSsl && path != null && path.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+        if (forceSsl && path.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
         {
             path = path.Insert(4, "s");
         }

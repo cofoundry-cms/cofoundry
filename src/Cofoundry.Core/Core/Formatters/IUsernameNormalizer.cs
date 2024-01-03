@@ -27,5 +27,5 @@ public interface IUsernameNormalizer
     /// </para>
     /// </summary>
     /// <param name="username">The username string to format.</param>
-    string Normalize(string username);
+    string? Normalize(string? username);
 }

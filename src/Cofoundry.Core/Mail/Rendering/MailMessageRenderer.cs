@@ -26,10 +26,12 @@ public class MailMessageRenderer : IMailMessageRenderer
     /// <returns>Formatted MailMessage</returns>
     public async Task<MailMessage> RenderAsync(IMailTemplate template, MailAddress toAddress)
     {
-        var message = new MailMessage();
+        var message = new MailMessage()
+        {
+            Subject = template.Subject,
+            To = toAddress
+        };
 
-        message.Subject = template.Subject;
-        message.To = toAddress;
         FormatFromAddress(template, message);
 
         var textBody = await RenderViewAsync(template, "text");
@@ -51,16 +53,16 @@ public class MailMessageRenderer : IMailMessageRenderer
 
     private void FormatFromAddress(IMailTemplate template, MailMessage message)
     {
-        if (template is IMailTemplateWithCustomFromAddress)
+        if (template is IMailTemplateWithCustomFromAddress mailTemplateWithCustomFromAddress)
         {
-            message.From = ((IMailTemplateWithCustomFromAddress)template).From;
+            message.From = mailTemplateWithCustomFromAddress.From;
         }
     }
 
-    private async Task<string> RenderViewAsync(IMailTemplate template, string type)
+    private async Task<string?> RenderViewAsync(IMailTemplate template, string type)
     {
         var path = string.Format("{0}_{1}.cshtml", template.ViewFile, type);
-        string view = null;
+        string? view = null;
 
         try
         {

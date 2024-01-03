@@ -8,7 +8,7 @@ public class RelativePathHelper
     private const char VIRTUAL_PATH_SEPARATOR = '/';
     private const string VIRTUAL_PATH_SEPARATOR_AS_STRING = "/";
 
-    private static char[] ALL_PATH_SEPARATORS = new char[] { VIRTUAL_PATH_SEPARATOR, '\\' };
+    private static char[] ALL_PATH_SEPARATORS = [VIRTUAL_PATH_SEPARATOR, '\\'];
 
     /// <summary>
     /// Combines a series of path parts into a single virtual path
@@ -19,12 +19,12 @@ public class RelativePathHelper
     /// path. These may include leading or trailing path delmiters.
     /// </param>
     /// <returns>The fully combined path, which is always rooted witha forward slash.</returns>
-    public static string Combine(params string[] paths)
+    public static string Combine(params string?[] paths)
     {
         var trimmedPaths = paths
-            .Where(p => !string.IsNullOrEmpty(p))
+            .WhereNotNullOrEmpty()
             .Select(p => p.Trim(ALL_PATH_SEPARATORS))
-            .Where(p => !string.IsNullOrWhiteSpace(p));
+            .WhereNotNullOrWhitespace();
 
         var result = VIRTUAL_PATH_SEPARATOR + string.Join(VIRTUAL_PATH_SEPARATOR_AS_STRING, trimmedPaths);
         return result;
@@ -37,9 +37,10 @@ public class RelativePathHelper
     /// </summary>
     /// <param name="path1">Path to compare.</param>
     /// <param name="path2">Path to compare to.</param>
-    public static bool IsWellFormattedAndEqual(string path1, string path2)
+    public static bool IsWellFormattedAndEqual(string? path1, string? path2)
     {
-        if (StringHelper.IsNullOrWhiteSpace(path1, path2)) return false;
+        if (string.IsNullOrWhiteSpace(path1)) return false;
+        if (string.IsNullOrWhiteSpace(path2)) return false;
 
         var cleanPath1 = CleanAndRemoveQueryFromPath(path1);
         var cleanPath2 = CleanAndRemoveQueryFromPath(path2);
@@ -57,7 +58,7 @@ public class RelativePathHelper
 
     private static string CleanAndRemoveQueryFromPath(string path)
     {
-        path = path.TrimStart(new char[] { '~' });
+        path = path.TrimStart(['~']);
 
         var queryIndex = path.IndexOf('?');
         if (queryIndex != -1)

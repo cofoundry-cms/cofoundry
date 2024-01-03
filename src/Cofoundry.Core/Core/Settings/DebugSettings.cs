@@ -40,7 +40,7 @@ public partial class DebugSettings : CofoundryConfigurationSettingsBase
     /// If bypassing embedded content, MapPath will be used to determine the folder root unless this override
     /// is specified. The assembly name is added to the path to make the folder root of the project with the resource in.
     /// </summary>
-    public string EmbeddedContentPhysicalPathRootOverride { get; set; }
+    public string? EmbeddedContentPhysicalPathRootOverride { get; set; }
 
     /// <summary>
     /// Use to determine if we should show the developer exception page,

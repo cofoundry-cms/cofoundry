@@ -11,9 +11,9 @@ namespace Cofoundry.Core.ResourceFiles;
 public class FilteredEmbeddedFileProvider : IFileProvider
 {
     private readonly IFileProvider _assemblyProvider;
-    private readonly IFileProvider _overrideProvider;
+    private readonly IFileProvider? _overrideProvider;
     private readonly string _restrictToPath;
-    private readonly string _rewriteFromPath = null;
+    private readonly string? _rewriteFromPath = null;
 
     /// <summary>
     /// A file provider that wraps an EmbeddedFileProvider and restricts
@@ -37,8 +37,8 @@ public class FilteredEmbeddedFileProvider : IFileProvider
     public FilteredEmbeddedFileProvider(
         IFileProvider assemblyProvider,
         string filterToPath,
-        string rewriteFromPath,
-        IFileProvider overrideProvider = null
+        string? rewriteFromPath,
+        IFileProvider? overrideProvider = null
         )
     {
         ArgumentNullException.ThrowIfNull(assemblyProvider);

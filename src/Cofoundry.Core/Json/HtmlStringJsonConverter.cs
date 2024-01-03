@@ -11,7 +11,7 @@ public class HtmlStringJsonConverter : JsonConverter
         return typeof(HtmlString).GetTypeInfo().IsAssignableFrom(objectType);
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         var value = reader.Value as string;
 
@@ -23,7 +23,7 @@ public class HtmlStringJsonConverter : JsonConverter
         return Activator.CreateInstance(objectType, value);
     }
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
         serializer.Serialize(writer, Convert.ToString(value));
     }

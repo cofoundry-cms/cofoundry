@@ -6,13 +6,13 @@
 /// </summary>
 public class FileSystemPathResolver : IPathResolver
 {
-    public string MapPath(string path)
+    public string MapPath(string? path)
     {
         var basePath = AppContext.BaseDirectory;
 
         if (string.IsNullOrWhiteSpace(path)) return basePath;
 
-        path = path.TrimStart(new char[] { '~', '/' });
+        path = path.TrimStart(['~', '/']);
 
         return Path.Combine(basePath, path);
     }
