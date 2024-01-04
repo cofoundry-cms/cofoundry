@@ -12,6 +12,7 @@ public class CustomEntityUpdatePermission : ICustomEntityPermissionTemplate
     public CustomEntityUpdatePermission()
     {
         PermissionType = CommonPermissionTypes.Update("Not Set");
+        EntityDefinition = new CustomEntityDynamicEntityDefinition();
     }
 
     public CustomEntityUpdatePermission(ICustomEntityDefinition customEntityDefinition)

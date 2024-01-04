@@ -12,7 +12,6 @@ public class SearchPageTemplateSummariesQueryHandler
 
     public SearchPageTemplateSummariesQueryHandler(
         CofoundryDbContext dbContext,
-        IQueryExecutor queryExecutor,
         IPageTemplateSummaryMapper pageTemplateSummaryMapper
         )
     {
@@ -26,7 +25,7 @@ public class SearchPageTemplateSummariesQueryHandler
         var allPageTemplateIds = dbPagedResult
             .Items
             .Select(p => p.PageTemplate.PageTemplateId)
-            .ToList();
+            .ToArray();
 
         var templatePageCounts = await GetPageCounts(allPageTemplateIds);
         Dictionary<int, int> pageRegionCounts = await GetTemplateRegionCounts();
@@ -39,7 +38,8 @@ public class SearchPageTemplateSummariesQueryHandler
 
         var mappedResults = dbPagedResult
             .Items
-            .Select(_pageTemplateSummaryMapper.Map);
+            .Select(_pageTemplateSummaryMapper.Map)
+            .WhereNotNull();
 
         return dbPagedResult.ChangeType(mappedResults);
     }
@@ -60,15 +60,16 @@ public class SearchPageTemplateSummariesQueryHandler
                 .ToDictionary(r => r.PageTemplateId, r => r.NumRegions);
     }
 
-    private async Task<Dictionary<int, int>> GetPageCounts(List<int> allPageTemplateIds)
+    private async Task<Dictionary<int, int>> GetPageCounts(IReadOnlyCollection<int> allPageTemplateIds)
     {
+        // Presumably query was split due to issues with Group by in early EF core
         return (await _dbContext
                 .PageVersions
                 .AsNoTracking()
                 .FilterActive()
                 .Where(v => allPageTemplateIds.Contains(v.PageTemplateId))
                 .Select(v => new { v.PageId, v.PageVersionId, v.PageTemplateId })
-                .ToListAsync())
+                .ToArrayAsync())
                 .GroupBy(v => v.PageTemplateId)
                 .Select(v => new
                 {
@@ -88,7 +89,7 @@ public class SearchPageTemplateSummariesQueryHandler
         // Filter by group
         if (!string.IsNullOrWhiteSpace(query.Name))
         {
-            dbQuery = dbQuery.Where(p => p.FileName.Contains(query.Name) || p.Description.Contains(query.Name));
+            dbQuery = dbQuery.Where(p => p.FileName.Contains(query.Name) || p.Description!.Contains(query.Name));
         }
 
         return dbQuery

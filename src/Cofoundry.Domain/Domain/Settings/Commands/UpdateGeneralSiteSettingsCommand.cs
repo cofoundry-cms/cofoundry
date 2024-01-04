@@ -4,7 +4,7 @@ public class UpdateGeneralSiteSettingsCommand : IPatchableCommand, ILoggableComm
 {
     [Required]
     [MaxLength(100)]
-    public string ApplicationName { get; set; }
+    public string ApplicationName { get; set; } = string.Empty;
 
     public bool AllowAutomaticUpdates { get; set; }
 }

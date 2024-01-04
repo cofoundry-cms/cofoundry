@@ -7,7 +7,7 @@
 /// for querying lists of definitions in the admin panel.
 /// </summary>
 public class GetCustomEntityDefinitionMicroSummaryByCodeQueryHandler
-    : IQueryHandler<GetCustomEntityDefinitionMicroSummaryByCodeQuery, CustomEntityDefinitionMicroSummary>
+    : IQueryHandler<GetCustomEntityDefinitionMicroSummaryByCodeQuery, CustomEntityDefinitionMicroSummary?>
     , IIgnorePermissionCheckHandler
 {
     private readonly IEnumerable<ICustomEntityDefinition> _customEntityRegistrations;
@@ -22,10 +22,16 @@ public class GetCustomEntityDefinitionMicroSummaryByCodeQueryHandler
         _customEntityDefinitionMicroSummaryMapper = customEntityDefinitionMicroSummaryMapper;
     }
 
-    public Task<CustomEntityDefinitionMicroSummary> ExecuteAsync(GetCustomEntityDefinitionMicroSummaryByCodeQuery query, IExecutionContext executionContext)
+    public Task<CustomEntityDefinitionMicroSummary?> ExecuteAsync(GetCustomEntityDefinitionMicroSummaryByCodeQuery query, IExecutionContext executionContext)
     {
         var definition = _customEntityRegistrations.SingleOrDefault(d => d.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode);
-        var result = _customEntityDefinitionMicroSummaryMapper.Map(definition);
+
+        CustomEntityDefinitionMicroSummary? result = null;
+
+        if (definition != null)
+        {
+            result = _customEntityDefinitionMicroSummaryMapper.Map(definition);
+        }
 
         return Task.FromResult(result);
     }

@@ -94,7 +94,7 @@ public static class PageBlockTypeDisplayModelMapperInputExtensions
         var results = input
             .SelectDistinctModelValues(selector)
             .Where(v => v.HasValue && !v.Value.Equals(default(TProperty)))
-            .Select(v => v.Value);
+            .Select(v => v!.Value);
 
         return results;
     }

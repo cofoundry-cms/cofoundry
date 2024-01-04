@@ -7,6 +7,6 @@
 /// default as it's core to routing and often incorporated in more detailed
 /// page projections.
 /// </summary>
-public class GetAllPageRoutesQuery : IQuery<ICollection<PageRoute>>
+public class GetAllPageRoutesQuery : IQuery<IReadOnlyCollection<PageRoute>>
 {
 }

@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetDocumentAssetFileByIdQueryHandler
-    : IQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>
-    , IPermissionRestrictedQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile>
+    : IQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile?>
+    , IPermissionRestrictedQueryHandler<GetDocumentAssetFileByIdQuery, DocumentAssetFile?>
 {
     private readonly IFileStoreService _fileStoreService;
     private readonly CofoundryDbContext _dbContext;
@@ -18,7 +18,7 @@ public class GetDocumentAssetFileByIdQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<DocumentAssetFile> ExecuteAsync(GetDocumentAssetFileByIdQuery query, IExecutionContext executionContext)
+    public async Task<DocumentAssetFile?> ExecuteAsync(GetDocumentAssetFileByIdQuery query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .DocumentAssets
@@ -34,7 +34,10 @@ public class GetDocumentAssetFileByIdQueryHandler
             })
             .SingleOrDefaultAsync();
 
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
 
         var result = new DocumentAssetFile()
         {
@@ -44,17 +47,18 @@ public class GetDocumentAssetFileByIdQueryHandler
             FileNameOnDisk = dbResult.FileNameOnDisk,
             FileExtension = dbResult.FileExtension,
             FileUpdateDate = dbResult.FileUpdateDate,
-            VerificationToken = dbResult.VerificationToken
+            VerificationToken = dbResult.VerificationToken,
+            FileStamp = AssetFileStampHelper.ToFileStamp(dbResult.FileUpdateDate)
         };
 
-        result.FileStamp = AssetFileStampHelper.ToFileStamp(dbResult.FileUpdateDate);
         var fileName = Path.ChangeExtension(dbResult.FileNameOnDisk, dbResult.FileExtension);
-        result.ContentStream = await _fileStoreService.GetAsync(DocumentAssetConstants.FileContainerName, fileName);
+        var stream = await _fileStoreService.GetAsync(DocumentAssetConstants.FileContainerName, fileName);
 
-        if (result.ContentStream == null)
+        if (stream == null)
         {
             throw new FileNotFoundException("DocumentAsset file could not be found", fileName);
         }
+        result.ContentStream = stream;
 
         return result;
     }

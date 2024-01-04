@@ -13,7 +13,7 @@ public class InvalidAccountRecoveryRequestException : Exception
     {
     }
 
-    public InvalidAccountRecoveryRequestException(ValidateUserAccountRecoveryByEmailQuery query, string message)
+    public InvalidAccountRecoveryRequestException(ValidateUserAccountRecoveryByEmailQuery query, string? message)
         : base(message)
     {
         if (query == null) return;
@@ -22,7 +22,7 @@ public class InvalidAccountRecoveryRequestException : Exception
         UserAreaCode = query.UserAreaCode;
     }
 
-    public string Token { get; }
+    public string? Token { get; }
 
-    public string UserAreaCode { get; }
+    public string? UserAreaCode { get; }
 }

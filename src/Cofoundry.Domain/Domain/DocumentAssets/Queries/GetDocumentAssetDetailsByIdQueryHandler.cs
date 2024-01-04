@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetDocumentAssetDetailsByIdQueryHandler
-    : IQueryHandler<GetDocumentAssetDetailsByIdQuery, DocumentAssetDetails>
-    , IPermissionRestrictedQueryHandler<GetDocumentAssetDetailsByIdQuery, DocumentAssetDetails>
+    : IQueryHandler<GetDocumentAssetDetailsByIdQuery, DocumentAssetDetails?>
+    , IPermissionRestrictedQueryHandler<GetDocumentAssetDetailsByIdQuery, DocumentAssetDetails?>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IDocumentAssetDetailsMapper _documentAssetDetailsMapper;
@@ -18,7 +18,7 @@ public class GetDocumentAssetDetailsByIdQueryHandler
         _documentAssetDetailsMapper = documentAssetDetailsMapper;
     }
 
-    public async Task<DocumentAssetDetails> ExecuteAsync(GetDocumentAssetDetailsByIdQuery query, IExecutionContext executionContext)
+    public async Task<DocumentAssetDetails?> ExecuteAsync(GetDocumentAssetDetailsByIdQuery query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .DocumentAssets

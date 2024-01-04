@@ -99,9 +99,8 @@ public class UpdateCustomEntityDraftVersionCommandHandler
 
         if (!isUnique)
         {
-            var message = string.Format("Cannot publish because the {1} '{0}' is not unique (symbols and spaces are ignored in the uniqueness check)",
-                    command.Title,
-                    definition.GetTerms().GetOrDefault(CustomizableCustomEntityTermKeys.Title, "title").ToLower());
+            var term = definition.GetTerms().GetOrDefault(CustomizableCustomEntityTermKeys.Title, "title").ToLower();
+            var message = $"Cannot publish because the {command.Title} '{term}' is not unique (symbols and spaces are ignored in the uniqueness check)";
 
             throw new UniqueConstraintViolationException(message, "Title", command.Title);
         }
@@ -118,7 +117,7 @@ public class UpdateCustomEntityDraftVersionCommandHandler
         return query;
     }
 
-    private async Task<CustomEntityVersion> GetDraftVersionAsync(UpdateCustomEntityDraftVersionCommand command)
+    private async Task<CustomEntityVersion?> GetDraftVersionAsync(UpdateCustomEntityDraftVersionCommand command)
     {
         return await _dbContext
             .CustomEntityVersions
@@ -131,17 +130,23 @@ public class UpdateCustomEntityDraftVersionCommandHandler
 
     private async Task<CustomEntityVersion> CreateDraftIfRequiredAsync(
         UpdateCustomEntityDraftVersionCommand command,
-        CustomEntityVersion draft,
+        CustomEntityVersion? draft,
         IExecutionContext executionContext
         )
     {
-        if (draft != null) return draft;
+        if (draft != null)
+        {
+            return draft;
+        }
 
         var addDraftCommand = new AddCustomEntityDraftVersionCommand();
         addDraftCommand.CustomEntityId = command.CustomEntityId;
         await _commandExecutor.ExecuteAsync(addDraftCommand, executionContext);
 
-        return await GetDraftVersionAsync(command);
+        draft = await GetDraftVersionAsync(command);
+        EntityNotFoundException.ThrowIfNull(draft, addDraftCommand.OutputCustomEntityVersionId);
+
+        return draft;
     }
 
     private void UpdateDraft(UpdateCustomEntityDraftVersionCommand command, CustomEntityVersion draft)
@@ -149,12 +154,12 @@ public class UpdateCustomEntityDraftVersionCommandHandler
         EntityNotFoundException.ThrowIfNull(draft, "Draft:" + command.CustomEntityId);
 
         draft.Title = command.Title.Trim();
-        draft.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.Model);
+        draft.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.Model) ?? string.Empty;
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(UpdateCustomEntityDraftVersionCommand command)
     {
-        var definition = _customEntityDefinitionRepository.GetByCode(command.CustomEntityDefinitionCode);
+        var definition = _customEntityDefinitionRepository.GetRequiredByCode(command.CustomEntityDefinitionCode);
         yield return new CustomEntityUpdatePermission(definition);
 
         if (command.Publish)

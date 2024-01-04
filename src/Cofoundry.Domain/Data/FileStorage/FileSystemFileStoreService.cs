@@ -3,7 +3,6 @@
 /// <summary>
 /// File storage abstraction using the file system
 /// </summary>
-/// <inheritdoc/>
 public class FileSystemFileStoreService : IFileStoreService
 {
     private readonly Lazy<string> _fileRoot;
@@ -33,16 +32,18 @@ public class FileSystemFileStoreService : IFileStoreService
         return fileRoot;
     }
 
+    /// <inheritdoc/>
     public Task<bool> ExistsAsync(string containerName, string fileName)
     {
         var exists = File.Exists(Path.Combine(_fileRoot.Value, containerName, fileName));
         return Task.FromResult(exists);
     }
 
-    public Task<Stream> GetAsync(string containerName, string fileName)
+    /// <inheritdoc/>
+    public Task<Stream?> GetAsync(string containerName, string fileName)
     {
         var path = Path.Combine(_fileRoot.Value, containerName, fileName);
-        Stream fileStream = null;
+        Stream? fileStream = null;
 
         if (File.Exists(path))
         {
@@ -52,16 +53,19 @@ public class FileSystemFileStoreService : IFileStoreService
         return Task.FromResult(fileStream);
     }
 
+    /// <inheritdoc/>
     public Task CreateAsync(string containerName, string fileName, System.IO.Stream stream)
     {
         return CreateFileAsync(containerName, fileName, stream, FileMode.CreateNew);
     }
 
+    /// <inheritdoc/>
     public Task CreateOrReplaceAsync(string containerName, string fileName, Stream stream)
     {
         return CreateFileAsync(containerName, fileName, stream, FileMode.Create);
     }
 
+    /// <inheritdoc/>
     public Task CreateIfNotExistsAsync(string containerName, string fileName, System.IO.Stream stream)
     {
         var path = Path.Combine(_fileRoot.Value, containerName, fileName);
@@ -70,6 +74,7 @@ public class FileSystemFileStoreService : IFileStoreService
         return CreateFileAsync(containerName, fileName, stream, FileMode.CreateNew);
     }
 
+    /// <inheritdoc/>
     public Task DeleteAsync(string containerName, string fileName)
     {
         var path = Path.Combine(_fileRoot.Value, containerName, fileName);
@@ -81,6 +86,7 @@ public class FileSystemFileStoreService : IFileStoreService
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public Task DeleteDirectoryAsync(string containerName, string directoryName)
     {
         var dir = Path.Combine(_fileRoot.Value, containerName, directoryName);
@@ -92,6 +98,7 @@ public class FileSystemFileStoreService : IFileStoreService
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public Task ClearDirectoryAsync(string containerName, string directoryName)
     {
         var dir = Path.Combine(_fileRoot.Value, containerName, directoryName);
@@ -112,6 +119,7 @@ public class FileSystemFileStoreService : IFileStoreService
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public Task ClearContainerAsync(string containerName)
     {
         return ClearDirectoryAsync(containerName, string.Empty);
@@ -121,6 +129,12 @@ public class FileSystemFileStoreService : IFileStoreService
     {
         var path = Path.Combine(_fileRoot.Value, containerName, fileName);
         var dir = Path.GetDirectoryName(path);
+
+        if (dir == null)
+        {
+            throw new InvalidOperationException($"Could not make a valid directory path from {path}");
+        }
+
         if (!Directory.Exists(dir))
         {
             Directory.CreateDirectory(dir);

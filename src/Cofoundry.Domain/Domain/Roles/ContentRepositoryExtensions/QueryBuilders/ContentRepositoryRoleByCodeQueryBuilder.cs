@@ -19,7 +19,7 @@ public class ContentRepositoryRoleByCodeQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<RoleDetails> AsDetails()
+    public IDomainRepositoryQueryContext<RoleDetails?> AsDetails()
     {
         var query = new GetRoleDetailsByRoleCodeQuery(_roleCodeId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

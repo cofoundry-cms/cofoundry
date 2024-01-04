@@ -13,5 +13,5 @@ public interface IAdvancedContentRepositoryPageByIdRangeQueryBuilder
     /// objects. Note that this query does not account for WorkFlowStatus and so
     /// pages will be returned irrecpective of whether they aree published or not.
     /// </summary>
-    IDomainRepositoryQueryContext<IDictionary<int, PageSummary>> AsSummaries();
+    IDomainRepositoryQueryContext<IReadOnlyDictionary<int, PageSummary>> AsSummaries();
 }

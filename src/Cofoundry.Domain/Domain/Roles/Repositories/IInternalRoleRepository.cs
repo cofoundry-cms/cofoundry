@@ -20,7 +20,7 @@ public interface IInternalRoleRepository
     /// </para>
     /// </summary>
     /// <param name="roleId">Database id of the role, or <see langword="null"/> to return the anonymous role.</param>
-    RoleDetails GetById(int? roleId);
+    RoleDetails? GetById(int? roleId);
 
     /// <summary>
     /// <para>
@@ -33,7 +33,7 @@ public interface IInternalRoleRepository
     /// </para>
     /// </summary>
     /// <param name="roleId">Database id of the role, or <see langword="null"/> to return the anonymous role.</param>
-    Task<RoleDetails> GetByIdAsync(int? roleId);
+    Task<RoleDetails?> GetByIdAsync(int? roleId);
 
     /// <summary>
     /// <para>

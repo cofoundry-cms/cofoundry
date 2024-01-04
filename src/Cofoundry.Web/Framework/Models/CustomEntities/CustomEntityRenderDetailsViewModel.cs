@@ -20,7 +20,7 @@ public class CustomEntityRenderDetailsViewModel<TDisplayModel> : ICustomEntityRo
 
     public TDisplayModel Model { get; set; }
 
-    public ICollection<CustomEntityPageRegionRenderDetails> Regions { get; set; }
+    public IReadOnlyCollection<CustomEntityPageRegionRenderDetails> Regions { get; set; }
 
     /// <summary>
     /// WorkFlowStatus of the version that this instance represents. The version
@@ -48,5 +48,5 @@ public class CustomEntityRenderDetailsViewModel<TDisplayModel> : ICustomEntityRo
     /// single page on a site to be associated with a custom entitiy 
     /// details, but it's technically possible to have many.
     /// </summary>
-    public ICollection<string> PageUrls { get; set; }
+    public IReadOnlyCollection<string> PageUrls { get; set; }
 }

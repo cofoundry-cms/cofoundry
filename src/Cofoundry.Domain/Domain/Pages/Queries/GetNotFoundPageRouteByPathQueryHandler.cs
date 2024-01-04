@@ -5,9 +5,11 @@
 /// for a 'Not Found' page up the directory tree of a specific path.
 /// </summary>
 public class GetNotFoundPageRouteByPathQueryHandler
-    : IQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
-    , IPermissionRestrictedQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute>
+    : IQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute?>
+    , IPermissionRestrictedQueryHandler<GetNotFoundPageRouteByPathQuery, PageRoute?>
 {
+    private static readonly char[] PATH_SEPARATOR = ['/'];
+
     private readonly IQueryExecutor _queryExecutor;
     private readonly IPagePathHelper _pathHelper;
 
@@ -20,9 +22,12 @@ public class GetNotFoundPageRouteByPathQueryHandler
         _pathHelper = pathHelper;
     }
 
-    public async Task<PageRoute> ExecuteAsync(GetNotFoundPageRouteByPathQuery query, IExecutionContext executionContext)
+    public async Task<PageRoute?> ExecuteAsync(GetNotFoundPageRouteByPathQuery query, IExecutionContext executionContext)
     {
-        if (!string.IsNullOrWhiteSpace(query.Path) && !Uri.IsWellFormedUriString(query.Path, UriKind.Relative)) return null;
+        if (!string.IsNullOrWhiteSpace(query.Path) && !Uri.IsWellFormedUriString(query.Path, UriKind.Relative))
+        {
+            return null;
+        }
 
         var path = _pathHelper.StandardizePath(query.Path);
 
@@ -32,10 +37,10 @@ public class GetNotFoundPageRouteByPathQueryHandler
             .Where(r => r.PageType == PageType.NotFound);
 
         var paths = path
-            .Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
+            .Split(PATH_SEPARATOR, StringSplitOptions.RemoveEmptyEntries)
             .ToList();
 
-        PageRoute notFoundRoute = null;
+        PageRoute? notFoundRoute = null;
 
         // Work backwards through the path to find a 404 page
         while (notFoundRoute == null)
@@ -65,7 +70,7 @@ public class GetNotFoundPageRouteByPathQueryHandler
         return notFoundRoute;
     }
 
-    private bool MatchesLocale(ActiveLocale locale, int? localeId)
+    private static bool MatchesLocale(ActiveLocale? locale, int? localeId)
     {
         var localeIdToCheck = locale == null ? (int?)null : locale.LocaleId;
         return localeId == localeIdToCheck;

@@ -48,7 +48,7 @@ public class GetPageBlockTypeFileDetailsByFileNameQueryHandler
         return pageTemplateFileInfo;
     }
 
-    private async Task<ICollection<PageBlockTypeTemplateFileDetails>> MapChildTemplates(string blockTypeFileName)
+    private async Task<IReadOnlyCollection<PageBlockTypeTemplateFileDetails>> MapChildTemplates(string blockTypeFileName)
     {
         var templatePaths = _viewLocator.GetAllTemplatePathsByFileName(blockTypeFileName);
 
@@ -62,7 +62,10 @@ public class GetPageBlockTypeFileDetailsByFileNameQueryHandler
         foreach (var templatePath in templatePaths)
         {
             var templateView = await _viewFileReader.ReadViewFileAsync(templatePath);
-            if (templateView == null) continue;
+            if (templateView == null)
+            {
+                continue;
+            }
 
             var templateViewData = ParseViewFile(templateView);
             templateViewData.FileName = Path.GetFileNameWithoutExtension(templatePath);
@@ -77,36 +80,34 @@ public class GetPageBlockTypeFileDetailsByFileNameQueryHandler
         return templateFileDetails;
     }
 
-    private PageBlockTypeTemplateFileDetails ParseViewFile(string viewFile)
+    private static PageBlockTypeTemplateFileDetails ParseViewFile(string viewFile)
     {
         var fileDetails = new PageBlockTypeTemplateFileDetails();
 
-        using (var sr = new StringReader(viewFile))
+        using var sr = new StringReader(viewFile);
+        string? line;
+
+        while ((line = sr.ReadLine()) != null)
         {
-            string line;
-
-            while ((line = sr.ReadLine()) != null)
+            if (line.Contains(TEMPLATE_NAME_FUNC))
             {
-                if (line.Contains(TEMPLATE_NAME_FUNC))
-                {
-                    fileDetails.Name = ParseFunctionParameter(line, TEMPLATE_NAME_FUNC);
-                }
-                else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC))
-                {
-                    fileDetails.Description = ParseFunctionParameter(line, TEMPLATE_DESCRIPTION_FUNC);
-                }
+                fileDetails.Name = ParseFunctionParameter(line, TEMPLATE_NAME_FUNC);
+            }
+            else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC))
+            {
+                fileDetails.Description = ParseFunctionParameter(line, TEMPLATE_DESCRIPTION_FUNC);
+            }
 
-                if (fileDetails.Name != null && fileDetails.Description != null)
-                {
-                    break;
-                }
+            if (fileDetails.Name != null && fileDetails.Description != null)
+            {
+                break;
             }
         }
 
         return fileDetails;
     }
 
-    private string ParseFunctionParameter(string textLine, string functionName)
+    private static string ParseFunctionParameter(string textLine, string functionName)
     {
         var startFunc = functionName + "(\"";
 

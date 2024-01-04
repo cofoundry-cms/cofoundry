@@ -22,13 +22,13 @@ public class DomainRepositoryExecutorWithElevatedPermissions : IDomainRepository
         _innerDomainRepositoryExecutor = innerDomainRepositoryExecutor;
     }
 
-    public async Task ExecuteAsync(ICommand command, IExecutionContext executionContext)
+    public async Task ExecuteAsync(ICommand command, IExecutionContext? executionContext)
     {
         var newExecutionContext = await _executionContextFactory.CreateSystemUserExecutionContextAsync(executionContext);
         await _innerDomainRepositoryExecutor.ExecuteAsync(command, newExecutionContext);
     }
 
-    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext)
+    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext? executionContext)
     {
         var newExecutionContext = await _executionContextFactory.CreateSystemUserExecutionContextAsync(executionContext);
 

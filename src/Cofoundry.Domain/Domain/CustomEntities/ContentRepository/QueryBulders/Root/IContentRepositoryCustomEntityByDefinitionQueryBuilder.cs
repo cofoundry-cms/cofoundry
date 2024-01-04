@@ -16,12 +16,12 @@ public interface IContentRepositoryCustomEntityByDefinitionQueryBuilder
     /// Used to determine which version of the custom entities to include data for. This 
     /// defaults to Published, meaning that only published custom entities will be returned.
     /// </param>
-    IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null);
+    IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null);
 
     /// <summary>
     /// Queries <see cref="CustomEntityRoute"/> data for all custom entities of a 
     /// specific type. These route objects are small and cached which
     /// makes them good for quick lookups.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<CustomEntityRoute>> AsRoutes();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityRoute>> AsRoutes();
 }

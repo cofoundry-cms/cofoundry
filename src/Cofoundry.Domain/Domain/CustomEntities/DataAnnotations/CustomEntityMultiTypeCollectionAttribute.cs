@@ -50,25 +50,25 @@ public class CustomEntityMultiTypeCollectionAttribute : Attribute, IMetadataAttr
     /// The text to use in the column header for the title field. Defaults
     /// to "Title".
     /// </summary>
-    public string TitleColumnHeader { get; set; }
+    public string? TitleColumnHeader { get; set; }
 
     /// <summary>
     /// The text to use in the column header for the description field. Defaults
     /// to "Description".
     /// </summary>
-    public string DescriptionColumnHeader { get; set; }
+    public string? DescriptionColumnHeader { get; set; }
 
     /// <summary>
     /// The text to use in the column header for the image field. Defaults
     /// to empty string.
     /// </summary>
-    public string ImageColumnHeader { get; set; }
+    public string? ImageColumnHeader { get; set; }
 
     /// <summary>
     /// The text to use in the column header for the model type field. Defaults
     /// to "Type".
     /// </summary>
-    public string TypeColumnHeader { get; set; }
+    public string? TypeColumnHeader { get; set; }
 
     public IEnumerable<EntityDependency> GetRelations(object model, PropertyInfo propertyInfo)
     {

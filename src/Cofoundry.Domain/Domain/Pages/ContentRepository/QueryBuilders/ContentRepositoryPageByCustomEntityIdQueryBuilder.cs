@@ -19,7 +19,7 @@ public class ContentRepositoryPageByCustomEntityIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<PageRoutingInfo>> AsRoutingInfo()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<PageRoutingInfo>> AsRoutingInfo()
     {
         var query = new GetPageRoutingInfoByCustomEntityIdQuery(_customEntityId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

@@ -8,7 +8,7 @@
 /// versions only, but this behavior can be controlled by the 
 /// publishStatus query property.
 /// </summary>
-public class GetCustomEntityRenderSummaryByIdQuery : IQuery<CustomEntityRenderSummary>, IValidatableObject
+public class GetCustomEntityRenderSummaryByIdQuery : IQuery<CustomEntityRenderSummary?>, IValidatableObject
 {
     /// <summary>
     /// Gets a custom entity by it's database id, returning a 

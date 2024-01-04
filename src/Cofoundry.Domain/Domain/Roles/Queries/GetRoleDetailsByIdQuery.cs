@@ -10,7 +10,7 @@
 /// Roles are cached, so repeat uses of this query is inexpensive.
 /// </para>
 /// </summary>
-public class GetRoleDetailsByIdQuery : IQuery<RoleDetails>
+public class GetRoleDetailsByIdQuery : IQuery<RoleDetails?>
 {
     public GetRoleDetailsByIdQuery()
     {

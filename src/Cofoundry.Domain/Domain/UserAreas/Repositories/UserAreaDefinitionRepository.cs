@@ -15,16 +15,24 @@ public class UserAreaDefinitionRepository : IUserAreaDefinitionRepository
         DetectInvalidDefinitions(userAreas);
         _userAreas = userAreas.ToDictionary(k => k.UserAreaCode);
         _options = ConfigureOptions(userAreas, identitySettings);
-        _defaultUserArea = userAreas
+
+        var defaultUserArea = userAreas
             .OrderByDescending(u => u.IsDefaultAuthScheme)
             .ThenByDescending(u => u is CofoundryAdminUserArea)
             .ThenBy(u => u.Name)
             .FirstOrDefault();
-
+        // The CofoundryAdminUserArea should always be defined, so defaultUserArea should never be null
+        EntityNotFoundException.ThrowIfNull(defaultUserArea, "default");
+        _defaultUserArea = defaultUserArea;
     }
 
-    public IUserAreaDefinition GetByCode(string userAreaCode)
+    public IUserAreaDefinition? GetByCode(string? userAreaCode)
     {
+        if (userAreaCode == null)
+        {
+            return null;
+        }
+
         var area = _userAreas.GetOrDefault(userAreaCode);
 
         return area;
@@ -49,7 +57,7 @@ public class UserAreaDefinitionRepository : IUserAreaDefinitionRepository
         return definition;
     }
 
-    private static void ValidateDefinitionExists(IUserAreaDefinition definition, string identifier)
+    private static void ValidateDefinitionExists([NotNull] IUserAreaDefinition? definition, string identifier)
     {
         if (definition == null)
         {
@@ -80,7 +88,7 @@ public class UserAreaDefinitionRepository : IUserAreaDefinitionRepository
         return options;
     }
 
-    private void DetectInvalidDefinitions(IEnumerable<IUserAreaDefinition> definitions)
+    private static void DetectInvalidDefinitions(IEnumerable<IUserAreaDefinition> definitions)
     {
         var nullCode = definitions
             .Where(d => string.IsNullOrWhiteSpace(d.UserAreaCode))

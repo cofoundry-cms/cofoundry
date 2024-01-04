@@ -15,7 +15,7 @@ public class ContentRepositoryGetAllPermissionsQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<IPermission>> AsIPermission()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<IPermission>> AsIPermission()
     {
         var query = new GetAllPermissionsQuery();
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

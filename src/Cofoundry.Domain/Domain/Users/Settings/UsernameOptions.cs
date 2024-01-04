@@ -77,7 +77,7 @@ public class UsernameOptions : IValidatableObject
     /// the configured <see cref="EmailAddressOptions"/>.
     /// </para>
     /// </summary>
-    public string AdditionalAllowedCharacters { get; set; } = "-._' ";
+    public string? AdditionalAllowedCharacters { get; set; } = "-._' ";
 
     /// <summary>
     /// The minimum length of a username. Defaults to 1. Must be between 1 and 

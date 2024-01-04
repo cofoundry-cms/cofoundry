@@ -18,11 +18,11 @@ public class AccountVerificationMailTemplate : UserMailTemplateBase
     /// <summary>
     /// The user verifying their account.
     /// </summary>
-    public override UserSummary User { get; set; }
+    public override UserSummary User { get; set; } = UserSummary.Uninitialized;
 
     /// <summary>
     /// The absolute url for the account verification page e.g.
     /// "https://example.com/auth/verify-acount?t={token}".
     /// </summary>
-    public string VerificationUrl { get; set; }
+    public string VerificationUrl { get; set; } = string.Empty;
 }

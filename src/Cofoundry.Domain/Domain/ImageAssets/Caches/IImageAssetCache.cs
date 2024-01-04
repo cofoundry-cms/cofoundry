@@ -10,7 +10,7 @@ public interface IImageAssetCache
     /// Gets an image if it's already cached, otherwise returns <see langword="null"/>.
     /// </summary>
     /// <param name="imageAssetId">Id of the image asset to return.</param>
-    ImageAssetRenderDetails GetImageAssetRenderDetailsIfCached(int imageAssetId);
+    ImageAssetRenderDetails? GetImageAssetRenderDetailsIfCached(int imageAssetId);
 
     /// <summary>
     /// Gets an image if it's already cached, otherwise the <paramref name="getter"/> is invoked
@@ -18,7 +18,7 @@ public interface IImageAssetCache
     /// </summary>
     /// <param name="imageAssetId">Id of the image asset to return.</param>
     /// <param name="getter">Function to invoke if the image isn't in the cache.</param>
-    Task<ImageAssetRenderDetails> GetOrAddAsync(int imageAssetId, Func<Task<ImageAssetRenderDetails>> getter);
+    Task<ImageAssetRenderDetails?> GetOrAddAsync(int imageAssetId, Func<Task<ImageAssetRenderDetails?>> getter);
 
     /// <summary>
     /// Gets an image if it's already cached, otherwise the <paramref name="getter"/> is invoked
@@ -26,7 +26,7 @@ public interface IImageAssetCache
     /// </summary>
     /// <param name="imageAssetId">Id of the image asset to return.</param>
     /// <param name="getter">Function to invoke if the image isn't in the cache.</param>
-    ImageAssetRenderDetails GetOrAdd(int imageAssetId, Func<ImageAssetRenderDetails> getter);
+    ImageAssetRenderDetails? GetOrAdd(int imageAssetId, Func<ImageAssetRenderDetails?> getter);
 
     /// <summary>
     /// Clears all items in the image cache.

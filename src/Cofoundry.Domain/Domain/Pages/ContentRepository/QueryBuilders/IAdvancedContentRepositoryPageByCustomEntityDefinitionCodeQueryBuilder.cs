@@ -12,5 +12,5 @@ public interface IAdvancedContentRepositoryPageByCustomEntityDefinitionCodeQuery
     /// be a single page for a custom entity (e.g. blog post details)
     /// but it is possible to have multiple.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<PageRoute>> AsRoutes();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<PageRoute>> AsRoutes();
 }

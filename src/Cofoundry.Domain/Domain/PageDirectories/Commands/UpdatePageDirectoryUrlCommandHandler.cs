@@ -53,7 +53,10 @@ public class UpdatePageDirectoryUrlCommandHandler
 
         command.UrlPath = command.UrlPath.ToLowerInvariant();
         var changedPathProps = GetChangedPathProperties(command, pageDirectory).ToArray();
-        if (!changedPathProps.Any()) return;
+        if (changedPathProps.Length == 0)
+        {
+            return;
+        }
 
         await ValidateIsUniqueAsync(command, executionContext);
         var affectedDirectories = await GetAffectedDirectoriesAsync(command);
@@ -89,12 +92,12 @@ public class UpdatePageDirectoryUrlCommandHandler
         await _messageAggregator.PublishBatchAsync(pageMessages);
     }
 
-    private void Normalize(UpdatePageDirectoryUrlCommand command)
+    private static void Normalize(UpdatePageDirectoryUrlCommand command)
     {
         command.UrlPath = command.UrlPath.ToLowerInvariant();
     }
 
-    private void ValidateParentDirectory(UpdatePageDirectoryUrlCommand command, ICollection<int> affectedDirectoryIds)
+    private static void ValidateParentDirectory(UpdatePageDirectoryUrlCommand command, IReadOnlyCollection<int> affectedDirectoryIds)
     {
         if (affectedDirectoryIds.Contains(command.ParentPageDirectoryId))
         {
@@ -102,18 +105,26 @@ public class UpdatePageDirectoryUrlCommandHandler
         }
     }
 
-    private IEnumerable<string> GetChangedPathProperties(UpdatePageDirectoryUrlCommand command, PageDirectory pageDirectory)
+    private static IEnumerable<string> GetChangedPathProperties(UpdatePageDirectoryUrlCommand command, PageDirectory pageDirectory)
     {
-        if (command.UrlPath != pageDirectory.UrlPath) yield return nameof(pageDirectory.UrlPath);
-        if (command.ParentPageDirectoryId != pageDirectory.ParentPageDirectoryId) yield return nameof(pageDirectory.ParentPageDirectoryId);
+        if (command.UrlPath != pageDirectory.UrlPath)
+        {
+            yield return nameof(pageDirectory.UrlPath);
+        }
+        if (command.ParentPageDirectoryId != pageDirectory.ParentPageDirectoryId)
+        {
+            yield return nameof(pageDirectory.ParentPageDirectoryId);
+        }
     }
 
     private async Task ValidateIsUniqueAsync(UpdatePageDirectoryUrlCommand command, IExecutionContext executionContext)
     {
-        var query = new IsPageDirectoryPathUniqueQuery();
-        query.ParentPageDirectoryId = command.ParentPageDirectoryId;
-        query.UrlPath = command.UrlPath;
-        query.PageDirectoryId = command.PageDirectoryId;
+        var query = new IsPageDirectoryPathUniqueQuery
+        {
+            ParentPageDirectoryId = command.ParentPageDirectoryId,
+            UrlPath = command.UrlPath,
+            PageDirectoryId = command.PageDirectoryId
+        };
 
         var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
 
@@ -138,16 +149,19 @@ public class UpdatePageDirectoryUrlCommandHandler
             .ToDictionaryAsync(k => k.PageDirectoryId);
     }
 
-    private async Task<List<PageUrlChangedMessage>> GetAffectedPagesAndValidatePermissionsAsync(ICollection<int> affectedPageDirectoryIds, IExecutionContext executionContext)
+    private async Task<List<PageUrlChangedMessage>> GetAffectedPagesAndValidatePermissionsAsync(
+        IReadOnlyCollection<int> affectedPageDirectoryIds,
+        IExecutionContext executionContext
+        )
     {
         var pageIds = await _dbContext
             .Pages
             .AsNoTracking()
             .Where(p => affectedPageDirectoryIds.Contains(p.PageDirectoryId))
             .Select(p => p.PageId)
-            .ToListAsync();
+            .ToArrayAsync();
 
-        if (pageIds.Any())
+        if (pageIds.Length != 0)
         {
             _permissionValidationService.EnforcePermission<PageUpdateUrlPermission>(executionContext.UserContext);
         }

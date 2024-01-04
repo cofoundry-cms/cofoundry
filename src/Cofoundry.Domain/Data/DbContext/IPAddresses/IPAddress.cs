@@ -16,7 +16,7 @@ public class IPAddress
     /// length to support IP4 and IP6 addresses. If IP hashing is enabled then
     /// this value could be a hash.
     /// </summary>
-    public string Address { get; set; }
+    public string Address { get; set; } = string.Empty;
 
     /// <summary>
     /// The date the IP address was first logged.

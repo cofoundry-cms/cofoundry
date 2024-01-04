@@ -9,7 +9,7 @@ public class UserAddedMessage
     /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
     /// the user was added to.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Id of the newly added user.

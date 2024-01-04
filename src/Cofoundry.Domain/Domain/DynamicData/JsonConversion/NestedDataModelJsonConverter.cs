@@ -16,13 +16,13 @@ public class NestedDataModelJsonConverter<TDataModel> : JsonConverter where TDat
         return typeof(INestedDataModel).IsAssignableFrom(objectType);
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         var newSerializer = JsonSerializer.CreateDefault();
         return newSerializer.Deserialize<TDataModel>(reader);
     }
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
         throw new NotImplementedException();
     }

@@ -3,8 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Cache for locale data, which is frequently requested to 
-/// work out routing
+/// Default implementation of <see cref="ILocaleCache"/>.
 /// </summary>
 public class LocaleCache : ILocaleCache
 {
@@ -17,23 +16,16 @@ public class LocaleCache : ILocaleCache
         _cache = cacheFactory.Get(CACHEKEY);
     }
 
-    /// <summary>
-    /// Gets all active locales if they are already cached, otherwise the 
-    /// getter is invoked and the result is cached and returned
-    /// </summary>
-    /// <param name="getter">Function to invoke if the locales aren't in the cache</param>
-    public ICollection<ActiveLocale> GetOrAdd(Func<ICollection<ActiveLocale>> getter)
+    /// <inheritdoc/>
+    public async Task<IReadOnlyCollection<ActiveLocale>> GetOrAddAsync(Func<Task<IReadOnlyCollection<ActiveLocale>>> getter)
     {
-        return _cache.GetOrAdd(ACTIVELOCALE_CACHEKEY, getter);
-    }
+        var result = await _cache.GetOrAddAsync(ACTIVELOCALE_CACHEKEY, getter);
 
-    /// <summary>
-    /// Gets all active locales if they are already cached, otherwise the 
-    /// getter is invoked and the result is cached and returned
-    /// </summary>
-    /// <param name="getter">Function to invoke if the locales aren't in the cache</param>
-    public async Task<ICollection<ActiveLocale>> GetOrAddAsync(Func<Task<ICollection<ActiveLocale>>> getter)
-    {
-        return await _cache.GetOrAddAsync(ACTIVELOCALE_CACHEKEY, getter);
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Result of {nameof(_cache.GetOrAddAsync)} with key {ACTIVELOCALE_CACHEKEY} should never be null.");
+        }
+
+        return result;
     }
 }

@@ -13,7 +13,17 @@ public class PageBlockTypeTemplateSummary
     /// </summary>
     public int PageBlockTypeTemplateId { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly PageBlockTypeTemplateSummary Uninitialized = new()
+    {
+        PageBlockTypeTemplateId = int.MinValue
+    };
 }

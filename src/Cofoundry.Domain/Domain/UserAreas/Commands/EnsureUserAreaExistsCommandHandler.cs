@@ -29,9 +29,11 @@ public class EnsureUserAreaExistsCommandHandler
 
         if (dbUserArea == null)
         {
-            dbUserArea = new UserArea();
-            dbUserArea.UserAreaCode = userArea.UserAreaCode;
-            dbUserArea.Name = userArea.Name;
+            dbUserArea = new UserArea
+            {
+                UserAreaCode = userArea.UserAreaCode,
+                Name = userArea.Name
+            };
 
             _dbContext.UserAreas.Add(dbUserArea);
         }

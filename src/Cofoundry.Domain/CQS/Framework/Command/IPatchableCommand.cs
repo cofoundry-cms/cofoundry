@@ -2,7 +2,7 @@
 
 /// <summary>
 /// A command that can be patched, indicating that it has an
-/// accompanying <see cref="GetPatchableCommandQuery"/> to hydrate
+/// accompanying <see cref="GetPatchableCommandQuery{TCommand}"/> to hydrate
 /// the command with existing data.
 /// </summary>
 public interface IPatchableCommand : ICommand

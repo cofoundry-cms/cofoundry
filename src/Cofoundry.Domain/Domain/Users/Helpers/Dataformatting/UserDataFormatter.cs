@@ -17,7 +17,7 @@ public class UserDataFormatter : IUserDataFormatter
         _userAreaDefinitionRepository = userAreaDefinitionRepository;
     }
 
-    public EmailAddressFormattingResult FormatEmailAddress(IUserAreaDefinition userAreaDefinition, string emailAddress)
+    public EmailAddressFormattingResult? FormatEmailAddress(IUserAreaDefinition userAreaDefinition, string? emailAddress)
     {
         var emailAddressNormalizer = CreateServiceForUserArea<IEmailAddressNormalizer>(userAreaDefinition, typeof(IEmailAddressNormalizer<>));
         var normalized = emailAddressNormalizer.NormalizeAsParts(emailAddress);
@@ -37,7 +37,7 @@ public class UserDataFormatter : IUserDataFormatter
         return result;
     }
 
-    public UsernameFormattingResult FormatUsername(IUserAreaDefinition userAreaDefinition, EmailAddressFormattingResult emailAddress)
+    public UsernameFormattingResult? FormatUsername(IUserAreaDefinition userAreaDefinition, EmailAddressFormattingResult? emailAddress)
     {
         ArgumentNullException.ThrowIfNull(userAreaDefinition);
         if (!userAreaDefinition.UseEmailAsUsername)
@@ -50,17 +50,22 @@ public class UserDataFormatter : IUserDataFormatter
         var usernameNormalizer = CreateServiceForUserArea<IUsernameNormalizer>(userAreaDefinition, typeof(IUsernameNormalizer<>));
         var usernameUniquifier = CreateServiceForUserArea<IUsernameUniquifier>(userAreaDefinition, typeof(IUsernameUniquifier<>));
 
-        var result = new UsernameFormattingResult();
-        result.NormalizedUsername = usernameNormalizer.Normalize(emailAddress.NormalizedEmailAddress);
-        if (result.NormalizedUsername == null) return null;
+        var normalizedUsername = usernameNormalizer.Normalize(emailAddress.NormalizedEmailAddress);
+        if (normalizedUsername == null) return null;
 
-        result.UniqueUsername = usernameUniquifier.Uniquify(emailAddress.NormalizedEmailAddress);
-        if (result.UniqueUsername == null) return null;
+        var uniqueUsername = usernameUniquifier.Uniquify(emailAddress.NormalizedEmailAddress);
+        if (uniqueUsername == null) return null;
+
+        var result = new UsernameFormattingResult()
+        {
+            NormalizedUsername = normalizedUsername,
+            UniqueUsername = uniqueUsername
+        };
 
         return result;
     }
 
-    public UsernameFormattingResult FormatUsername(IUserAreaDefinition userAreaDefinition, string username)
+    public UsernameFormattingResult? FormatUsername(IUserAreaDefinition userAreaDefinition, string? username)
     {
         var usernameNormalizer = CreateServiceForUserArea<IUsernameNormalizer>(userAreaDefinition, typeof(IUsernameNormalizer<>));
         var usernameUniquifier = CreateServiceForUserArea<IUsernameUniquifier>(userAreaDefinition, typeof(IUsernameUniquifier<>));
@@ -71,17 +76,22 @@ public class UserDataFormatter : IUserDataFormatter
             username = emailAddressNormalizer.Normalize(username);
         }
 
-        var result = new UsernameFormattingResult();
-        result.NormalizedUsername = usernameNormalizer.Normalize(username);
-        if (result.NormalizedUsername == null) return null;
+        var normalizedUsername = usernameNormalizer.Normalize(username);
+        if (normalizedUsername == null) return null;
 
-        result.UniqueUsername = usernameUniquifier.Uniquify(username);
-        if (result.UniqueUsername == null) return null;
+        var uniqueUsername = usernameUniquifier.Uniquify(username);
+        if (uniqueUsername == null) return null;
+
+        var result = new UsernameFormattingResult()
+        {
+            NormalizedUsername = normalizedUsername,
+            UniqueUsername = uniqueUsername
+        };
 
         return result;
     }
 
-    public string FormatUsernameForLookup(string userAreaCode, string username)
+    public string? FormatUsernameForLookup(string userAreaCode, string? username)
     {
         var userAreaDefinition = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
         var usernameUniquifier = CreateServiceForUserArea<IUsernameUniquifier>(userAreaCode, typeof(IUsernameUniquifier<>));
@@ -97,7 +107,7 @@ public class UserDataFormatter : IUserDataFormatter
         return result;
     }
 
-    public string FormatEmailAddressForLookup(string userAreaCode, string emailAddress)
+    public string? FormatEmailAddressForLookup(string userAreaCode, string? emailAddress)
     {
         var emailUniquifier = CreateServiceForUserArea<IUsernameUniquifier>(userAreaCode, typeof(IUsernameUniquifier<>));
         var result = emailUniquifier.Uniquify(emailAddress);
@@ -105,7 +115,7 @@ public class UserDataFormatter : IUserDataFormatter
         return result;
     }
 
-    public virtual string NormalizeEmail(string userAreaDefinitionCode, string emailAddress)
+    public virtual string? NormalizeEmail(string userAreaDefinitionCode, string? emailAddress)
     {
         var service = CreateServiceForUserArea<IEmailAddressNormalizer>(userAreaDefinitionCode, typeof(IEmailAddressNormalizer<>));
         return service.Normalize(emailAddress);
@@ -123,7 +133,7 @@ public class UserDataFormatter : IUserDataFormatter
     //    return service.Uniquify(emailAddress);
     //}
 
-    public virtual string UniquifyEmail(string userAreaDefinitionCode, string emailAddress)
+    public virtual string? UniquifyEmail(string userAreaDefinitionCode, string? emailAddress)
     {
         var service = CreateServiceForUserArea<IEmailAddressUniquifier>(userAreaDefinitionCode, typeof(IEmailAddressUniquifier<>));
         return service.Uniquify(emailAddress);
@@ -165,7 +175,7 @@ public class UserDataFormatter : IUserDataFormatter
     //    return service.Normalize(username);
     //}
 
-    public virtual string UniquifyUsername(string userAreaDefinitionCode, string username)
+    public virtual string? UniquifyUsername(string userAreaDefinitionCode, string? username)
     {
         var service = CreateServiceForUserArea<IUsernameUniquifier>(userAreaDefinitionCode, typeof(IUsernameUniquifier<>));
         return service.Uniquify(username);
@@ -178,9 +188,9 @@ public class UserDataFormatter : IUserDataFormatter
     //}
 
     private T CreateServiceForUserArea<T>(IUserAreaDefinition userAreaDefinition, Type genericServiceType)
+        where T : notnull
     {
         ArgumentNullException.ThrowIfNull(userAreaDefinition);
-
 
         // Try and find a factory registered for the specific user area
         var definitionType = userAreaDefinition.GetType();
@@ -193,6 +203,7 @@ public class UserDataFormatter : IUserDataFormatter
     }
 
     private T CreateServiceForUserArea<T>(string userAreaDefinitionCode, Type genericServiceType)
+        where T : notnull
     {
         var userAreaDefinition = _userAreaDefinitionRepository.GetRequiredByCode(userAreaDefinitionCode);
 

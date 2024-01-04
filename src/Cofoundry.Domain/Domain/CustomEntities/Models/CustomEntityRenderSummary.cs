@@ -22,7 +22,7 @@ public class CustomEntityRenderSummary : ICustomEntityRoutable
     /// entity e.g. Blog Post, Project, Product. The definition code is defined
     /// in a class that inherits from ICustomEntityDefinition.
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The database identifier for the version that this instance
@@ -45,12 +45,12 @@ public class CustomEntityRenderSummary : ICustomEntityRoutable
     /// Optional locale assigned to the custom entity
     /// if used in a localized site.
     /// </summary>
-    public ActiveLocale Locale { get; set; }
+    public ActiveLocale? Locale { get; set; }
 
     /// <summary>
     /// The descriptive human-readable title of the custom entity.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The string identifier slug which can
@@ -58,7 +58,7 @@ public class CustomEntityRenderSummary : ICustomEntityRoutable
     /// of the custom entity page. Can be forced to be unique
     /// by a setting on the custom entity definition.
     /// </summary>
-    public string UrlSlug { get; set; }
+    public string UrlSlug { get; set; } = string.Empty;
 
     /// <summary>
     /// WorkFlowStatus of the version that this instance represents. The version
@@ -92,7 +92,7 @@ public class CustomEntityRenderSummary : ICustomEntityRoutable
     /// The deserialized data model object containing any custom
     /// data properties stored against this entity.
     /// </summary>
-    public ICustomEntityDataModel Model { get; set; }
+    public ICustomEntityDataModel Model { get; set; } = UninitializedCustomEntityDataModel.Instance;
 
     /// <summary>
     /// The date the custom entity was created.
@@ -105,5 +105,5 @@ public class CustomEntityRenderSummary : ICustomEntityRoutable
     /// single page on a site to be associated with a custom entitiy 
     /// details, but it's technically possible to have many.
     /// </summary>
-    public ICollection<string> PageUrls { get; set; }
+    public IReadOnlyCollection<string> PageUrls { get; set; } = Array.Empty<string>();
 }

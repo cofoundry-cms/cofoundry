@@ -4,12 +4,36 @@ namespace Cofoundry.Domain.Data;
 public class PageGroupItem : ICreateAuditable
 {
     public int PageId { get; set; }
-    public int PageGroupId { get; set; }
-    public int Ordering { get; set; }
-    public virtual PageGroup PageGroup { get; set; }
-    public virtual Page Page { get; set; }
 
-    public System.DateTime CreateDate { get; set; }
+    private Page? _page;
+    public Page Page
+    {
+        get => _page ?? throw NavigationPropertyNotInitializedException.Create<PageGroupItem>(nameof(Page));
+        set => _page = value;
+    }
+
+    public int PageGroupId { get; set; }
+
+    private PageGroup? _pageGroup;
+    public PageGroup PageGroup
+    {
+        get => _pageGroup ?? throw NavigationPropertyNotInitializedException.Create<PageGroupItem>(nameof(PageGroup));
+        set => _pageGroup = value;
+    }
+
+    public int Ordering { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime CreateDate { get; set; }
+
+    /// <inheritdoc/>
     public int CreatorId { get; set; }
-    public virtual User Creator { get; set; }
+
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageGroupItem>(nameof(Creator));
+        set => _creator = value;
+    }
 }

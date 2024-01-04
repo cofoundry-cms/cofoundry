@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdatePageDirectoryCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
-    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand?>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand>, UpdatePageDirectoryCommand?>
 {
     private readonly CofoundryDbContext _dbContext;
 
@@ -15,7 +15,7 @@ public class GetUpdatePageDirectoryCommandByIdQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<UpdatePageDirectoryCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand> query, IExecutionContext executionContext)
+    public async Task<UpdatePageDirectoryCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand> query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .PageDirectories

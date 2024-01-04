@@ -14,7 +14,7 @@ public abstract class AddOrUpdateAccessRuleCommandBase : IValidatableObject
     /// </summary>
     [Required]
     [MaxLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Optionally restrict access to a specific role within the selected 

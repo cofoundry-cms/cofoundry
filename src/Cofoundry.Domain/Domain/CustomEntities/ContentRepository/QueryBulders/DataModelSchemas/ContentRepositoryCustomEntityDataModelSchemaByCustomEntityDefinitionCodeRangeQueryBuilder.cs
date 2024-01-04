@@ -19,7 +19,7 @@ public class ContentRepositoryCustomEntityDataModelSchemaByCustomEntityDefinitio
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<IDictionary<string, CustomEntityDataModelSchema>> AsDetails()
+    public IDomainRepositoryQueryContext<IReadOnlyDictionary<string, CustomEntityDataModelSchema>> AsDetails()
     {
         var query = new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery(_customEntityDefinitionCodes);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

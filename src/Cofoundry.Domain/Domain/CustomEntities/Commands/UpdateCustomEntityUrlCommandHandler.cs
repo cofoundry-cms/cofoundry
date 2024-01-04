@@ -53,7 +53,7 @@ public class UpdateCustomEntityUrlCommandHandler
 
         await ValidateIsUniqueAsync(command, definition, executionContext);
 
-        Map(command, entity, definition);
+        Map(command, entity);
 
         await _dbContext.SaveChangesAsync();
 
@@ -89,15 +89,13 @@ public class UpdateCustomEntityUrlCommandHandler
         var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
         if (!isUnique)
         {
-            var message = string.Format("A {0} already exists with the {2} '{1}'",
-                definition.Name,
-                command.UrlSlug,
-                definition.Terms.GetOrDefault(CustomizableCustomEntityTermKeys.UrlSlug, "url slug").ToLower());
-            throw new UniqueConstraintViolationException(message, "UrlSlug", command.UrlSlug);
+            var term = definition.Terms.GetValueOrDefault(CustomizableCustomEntityTermKeys.UrlSlug, "url slug").ToLower();
+            var message = $"A {definition.Name} already exists with the {term} '{command.UrlSlug}'";
+            throw new UniqueConstraintViolationException(message, nameof(command.UrlSlug), command.UrlSlug);
         }
     }
 
-    private void Map(UpdateCustomEntityUrlCommand command, CustomEntity entity, CustomEntityDefinitionSummary definition)
+    private void Map(UpdateCustomEntityUrlCommand command, CustomEntity entity)
     {
         entity.UrlSlug = command.UrlSlug;
         entity.LocaleId = command.LocaleId;

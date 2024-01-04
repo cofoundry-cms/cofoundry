@@ -12,7 +12,7 @@ public class UpdateCustomEntityDraftVersionCommand : ICustomEntityDataModelComma
     /// </summary>
     [Required]
     [MaxLength(6)]
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Database id of the custom enitity to update the draft version
@@ -38,7 +38,7 @@ public class UpdateCustomEntityDraftVersionCommand : ICustomEntityDataModelComma
     /// </summary>
     [MaxLength(200)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// If set to true, the version will be published after it has been updated.
@@ -56,5 +56,5 @@ public class UpdateCustomEntityDraftVersionCommand : ICustomEntityDataModelComma
     /// </summary>
     [Required]
     [ValidateObject]
-    public ICustomEntityDataModel Model { get; set; }
+    public ICustomEntityDataModel Model { get; set; } = null!;
 }

@@ -18,5 +18,5 @@ public class BlogPostDisplayModel : ICustomEntityPageDisplayModel<BlogPostDataMo
 
     public string FullPath { get; set; }
 
-    public ICollection<CategorySummary> Categories { get; set; }
+    public IReadOnlyCollection<CategorySummary> Categories { get; set; }
 }

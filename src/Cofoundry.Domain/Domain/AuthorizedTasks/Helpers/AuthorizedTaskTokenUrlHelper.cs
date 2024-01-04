@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -21,7 +22,7 @@ public class AuthorizedTaskTokenUrlHelper : IAuthorizedTaskTokenUrlHelper
             throw new ArgumentException("Url is not a well formatted url: " + baseUri, nameof(baseUri));
         }
 
-        var queryParams = new Dictionary<string, string>()
+        var queryParams = new Dictionary<string, string?>()
         {
             { TOKEN_PARAM_NAME, token }
         };
@@ -33,11 +34,11 @@ public class AuthorizedTaskTokenUrlHelper : IAuthorizedTaskTokenUrlHelper
         return url;
     }
 
-    public string ParseTokenFromQuery(IQueryCollection queryCollection)
+    public string? ParseTokenFromQuery(IQueryCollection queryCollection)
     {
-        if (queryCollection.ContainsKey(TOKEN_PARAM_NAME))
+        if (queryCollection.TryGetValue(TOKEN_PARAM_NAME, out StringValues value))
         {
-            var result = Uri.UnescapeDataString(queryCollection[TOKEN_PARAM_NAME]);
+            var result = Uri.UnescapeDataString(value.ToString());
 
             if (!string.IsNullOrWhiteSpace(result))
             {

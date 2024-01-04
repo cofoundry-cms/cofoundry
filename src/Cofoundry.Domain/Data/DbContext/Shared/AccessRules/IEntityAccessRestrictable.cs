@@ -23,14 +23,14 @@ public interface IEntityAccessRestrictable<TAccessRule>
     /// a sign in page to redirect to when a user does not meet the criteria of 
     /// the access rules directly associated with this entity.
     /// </summary>
-    string UserAreaCodeForSignInRedirect { get; set; }
+    string? UserAreaCodeForSignInRedirect { get; set; }
 
     /// <summary>
     /// The <see cref="UserAreaForSignInRedirect"/> with a sign in page to redirect to when a user 
     /// does not meet the criteria of the access rules directly associated with 
     /// this entity.
     /// </summary>
-    UserArea UserAreaForSignInRedirect { get; set; }
+    UserArea? UserAreaForSignInRedirect { get; set; }
 
     /// <summary>
     /// <para>

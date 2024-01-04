@@ -6,6 +6,8 @@ namespace Cofoundry.Domain;
 
 public class DocumentAssetCommandHelper
 {
+    private static readonly string[] VALIDATION_MEMBER_FILE = ["File"];
+
     private readonly CofoundryDbContext _dbContext;
     private readonly IFileStoreService _fileStoreService;
     private readonly ITransactionScopeManager _transactionScopeFactory;
@@ -37,39 +39,37 @@ public class DocumentAssetCommandHelper
 
         var fileStamp = AssetFileStampHelper.ToFileStamp(documentAsset.FileUpdateDate);
 
-        using (var inputSteam = await uploadedFile.OpenReadStreamAsync())
+        using var inputSteam = await uploadedFile.OpenReadStreamAsync();
+        bool isNew = documentAsset.DocumentAssetId < 1;
+
+        documentAsset.FileSizeInBytes = inputSteam.Length;
+
+        using (var scope = _transactionScopeFactory.Create(_dbContext))
         {
-            bool isNew = documentAsset.DocumentAssetId < 1;
-
-            documentAsset.FileSizeInBytes = inputSteam.Length;
-
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            // Save at this point if it's a new file
+            if (isNew)
             {
-                // Save at this point if it's a new file
-                if (isNew)
-                {
-                    await _dbContext.SaveChangesAsync();
-                }
-
-                // update the filename
-                documentAsset.FileNameOnDisk = $"{documentAsset.DocumentAssetId}-{fileStamp}";
-                var fileName = Path.ChangeExtension(documentAsset.FileNameOnDisk, documentAsset.FileExtension);
-
-                // Save the raw file directly
-                await CreateFileAsync(isNew, fileName, inputSteam);
-
-                // Update the filename
                 await _dbContext.SaveChangesAsync();
-
-                await scope.CompleteAsync();
             }
+
+            // update the filename
+            documentAsset.FileNameOnDisk = $"{documentAsset.DocumentAssetId}-{fileStamp}";
+            var fileName = Path.ChangeExtension(documentAsset.FileNameOnDisk, documentAsset.FileExtension);
+
+            // Save the raw file directly
+            await CreateFileAsync(isNew, fileName, inputSteam);
+
+            // Update the filename
+            await _dbContext.SaveChangesAsync();
+
+            await scope.CompleteAsync();
         }
     }
 
     /// <summary>
     /// Some shared validation to prevent image asset types from being added to documents.
     /// </summary>
-    public static IEnumerable<ValidationResult> Validate(IFileSource file)
+    public static IEnumerable<ValidationResult> Validate(IFileSource? file)
     {
         if (file != null && !string.IsNullOrWhiteSpace(file.FileName))
         {
@@ -79,27 +79,27 @@ public class DocumentAssetCommandHelper
 
             if (string.IsNullOrWhiteSpace(ext))
             {
-                yield return new ValidationResult("The file you're uploading has no file extension.", new string[] { "File" });
+                yield return new ValidationResult("The file you're uploading has no file extension.", VALIDATION_MEMBER_FILE);
             }
             else if (FilePathHelper.FileExtensionContainsInvalidChars(ext))
             {
-                yield return new ValidationResult("The file you're uploading uses an extension containing invalid characters.", new string[] { "File" });
+                yield return new ValidationResult("The file you're uploading uses an extension containing invalid characters.", VALIDATION_MEMBER_FILE);
             }
             else if ((ImageAssetConstants.PermittedImageTypes.ContainsKey(ext))
             || (!string.IsNullOrEmpty(file.MimeType) && ImageAssetConstants.PermittedImageTypes.ContainsValue(file.MimeType)))
             {
-                yield return new ValidationResult("Image files shoud be uploaded in the image assets section.", new string[] { "File" });
+                yield return new ValidationResult("Image files shoud be uploaded in the image assets section.", VALIDATION_MEMBER_FILE);
             }
 
             // Validate filename
 
             if (string.IsNullOrWhiteSpace(file.FileName))
             {
-                yield return new ValidationResult("The file you're uploading has no file name.", new string[] { "File" });
+                yield return new ValidationResult("The file you're uploading has no file name.", VALIDATION_MEMBER_FILE);
             }
             else if (string.IsNullOrWhiteSpace(FilePathHelper.CleanFileName(file.FileName)))
             {
-                yield return new ValidationResult("The file you're uploading has an invalid file name.", new string[] { "File" });
+                yield return new ValidationResult("The file you're uploading has an invalid file name.", VALIDATION_MEMBER_FILE);
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 public class GetNestedDataModelSchemaByNameQueryHandler
-    : IQueryHandler<GetNestedDataModelSchemaByNameQuery, NestedDataModelSchema>
+    : IQueryHandler<GetNestedDataModelSchemaByNameQuery, NestedDataModelSchema?>
     , IIgnorePermissionCheckHandler
 {
     private readonly INestedDataModelSchemaMapper _nestedDataModelSchemaMapper;
@@ -16,18 +16,23 @@ public class GetNestedDataModelSchemaByNameQueryHandler
         _nestedDataModelRepository = nestedDataModelRepository;
     }
 
-    public Task<NestedDataModelSchema> ExecuteAsync(GetNestedDataModelSchemaByNameQuery query, IExecutionContext executionContext)
+    public Task<NestedDataModelSchema?> ExecuteAsync(GetNestedDataModelSchemaByNameQuery query, IExecutionContext executionContext)
     {
-        NestedDataModelSchema result = null;
+        NestedDataModelSchema? result = null;
 
-        if (string.IsNullOrWhiteSpace(query.Name)) return Task.FromResult(result);
+        if (string.IsNullOrWhiteSpace(query.Name))
+        {
+            return Task.FromResult(result);
+        }
 
         var dataModelType = _nestedDataModelRepository.GetByName(query.Name);
-
-        if (dataModelType == null) return Task.FromResult(result);
+        if (dataModelType == null)
+        {
+            return Task.FromResult(result);
+        }
 
         result = _nestedDataModelSchemaMapper.Map(dataModelType);
 
-        return Task.FromResult(result);
+        return Task.FromResult<NestedDataModelSchema?>(result);
     }
 }

@@ -9,5 +9,5 @@ public interface IContentRepositoryRewriteRuleGetAllQueryBuilder
     /// The RewriteRuleSummary projection is small and designed to be cacheable.
     /// This result set is cached by default and is quick to access.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<RewriteRuleSummary>> AsSummaries();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<RewriteRuleSummary>> AsSummaries();
 }

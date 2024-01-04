@@ -13,7 +13,7 @@ public interface IRoleDefinitionRepository
     /// <param name="userAreaCode">The unique 3 character code that identifies the user area the role belongs to.</param>
     /// <param name="roleCode">The unique 3 character code that identifies the role definition.</param>
     /// <returns>Returns the matching <see cref="IRoleDefinition"/> instance if one is found; otherwise <see langword="null"/>.</returns>
-    IRoleDefinition GetByCode(string userAreaCode, string roleCode);
+    IRoleDefinition? GetByCode(string userAreaCode, string roleCode);
 
     /// <summary>
     /// Returns a role definition by it's unique <see cref="IRoleDefinition.RoleCode"/>. 

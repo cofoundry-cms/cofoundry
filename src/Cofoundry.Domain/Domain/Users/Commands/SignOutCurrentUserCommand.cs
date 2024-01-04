@@ -12,5 +12,5 @@ public class SignOutCurrentUserCommand : ICommand, ILoggableCommand
     /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area to sign
     /// the user out of. If <see langword="null"/> then the ambient user area is used.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string? UserAreaCode { get; set; }
 }

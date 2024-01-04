@@ -6,9 +6,9 @@ namespace Cofoundry.Domain.Internal;
 /// <inheritdoc/>
 public class PasswordPolicyBuilder : IExtendablePasswordPolicyBuilder
 {
-    Dictionary<Type, OptionsConfigurationAction> _descriptors = new Dictionary<Type, OptionsConfigurationAction>();
-    Dictionary<string, string> _attributes = new Dictionary<string, string>();
-    private string _description = null;
+    private readonly Dictionary<Type, OptionsConfigurationAction?> _descriptors = [];
+    private readonly Dictionary<string, string> _attributes = [];
+    private string? _description = null;
 
     public PasswordPolicyBuilder(
         IServiceProvider serviceProvider,
@@ -38,7 +38,7 @@ public class PasswordPolicyBuilder : IExtendablePasswordPolicyBuilder
         {
             _attributes[attribute] = value;
         }
-        else if (_attributes.ContainsKey(attribute))
+        else
         {
             _attributes.Remove(attribute);
         }
@@ -50,10 +50,7 @@ public class PasswordPolicyBuilder : IExtendablePasswordPolicyBuilder
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(attribute);
 
-        if (_attributes.ContainsKey(attribute))
-        {
-            _attributes.Remove(attribute);
-        }
+        _attributes.Remove(attribute);
 
         return this;
     }
@@ -68,10 +65,7 @@ public class PasswordPolicyBuilder : IExtendablePasswordPolicyBuilder
     public IPasswordPolicyBuilder RemoveValidator<TValidator>() where TValidator : INewPasswordValidatorBase
     {
         var type = typeof(TValidator);
-        if (_descriptors.ContainsKey(type))
-        {
-            _descriptors.Remove(type);
-        }
+        _descriptors.Remove(type);
 
         return this;
     }
@@ -98,9 +92,14 @@ public class PasswordPolicyBuilder : IExtendablePasswordPolicyBuilder
         return new PasswordPolicy(_description, validators, _attributes);
     }
 
-    private INewPasswordValidatorBase CreateValidator(Type validatorType, OptionsConfigurationAction options)
+    private INewPasswordValidatorBase CreateValidator(Type validatorType, OptionsConfigurationAction? options)
     {
         var instance = ServiceProvider.GetRequiredService(validatorType) as INewPasswordValidatorBase;
+        if (instance == null)
+        {
+            throw new InvalidOperationException($"Password validator type {validatorType.FullName} should inherit from {nameof(INewPasswordValidatorBase)}");
+        }
+
         options?.Configure(instance);
 
         return instance;

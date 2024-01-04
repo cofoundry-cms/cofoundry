@@ -24,7 +24,7 @@ public interface IPasswordCryptographyService
     /// A result that indicates if the password is valid and if it needs rehashing
     /// to a newer hash version.
     /// </returns>
-    PasswordVerificationResult Verify(string password, string hash, int hashVersion);
+    PasswordVerificationResult Verify(string? password, string hash, int hashVersion);
 
     /// <summary>
     /// Creates a hash from the specified password string.

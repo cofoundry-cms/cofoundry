@@ -16,6 +16,6 @@ public interface IEntityAccessRuleSetMapper
     /// The entity to map from. Cannot be null. The AccessRules collection must be included in the 
     /// <paramref name="entity"/> EF query.
     /// </param>
-    EntityAccessRuleSet Map<TAccessRule>(IEntityAccessRestrictable<TAccessRule> entity)
+    EntityAccessRuleSet? Map<TAccessRule>(IEntityAccessRestrictable<TAccessRule> entity)
         where TAccessRule : IEntityAccessRule;
 }

@@ -21,7 +21,7 @@ public class ContentRepositoryPageAccessByPageIdQueryBuilder
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
 
-    public IDomainRepositoryQueryContext<PageAccessRuleSetDetails> AsDetails()
+    public IDomainRepositoryQueryContext<PageAccessRuleSetDetails?> AsDetails()
     {
         var query = new GetPageAccessRuleSetDetailsByPageIdQuery(_pageId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

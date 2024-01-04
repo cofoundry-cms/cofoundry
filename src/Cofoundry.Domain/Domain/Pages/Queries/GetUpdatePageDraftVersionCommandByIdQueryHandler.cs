@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdatePageDraftVersionCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
-    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand?>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand>, UpdatePageDraftVersionCommand?>
 {
     private readonly CofoundryDbContext _dbContext;
 
@@ -15,7 +15,7 @@ public class GetUpdatePageDraftVersionCommandByIdQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<UpdatePageDraftVersionCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand> query, IExecutionContext executionContext)
+    public async Task<UpdatePageDraftVersionCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDraftVersionCommand> query, IExecutionContext executionContext)
     {
         var command = await _dbContext
             .PageVersions

@@ -5,7 +5,7 @@
 /// projected as a <see cref="UserAreaMicroSummary"/> model. If the definition does not exist 
 /// then <see langword="null"/> is returned.
 /// </summary>
-public class GetUserAreaMicroSummaryByCodeQuery : IQuery<UserAreaMicroSummary>
+public class GetUserAreaMicroSummaryByCodeQuery : IQuery<UserAreaMicroSummary?>
 {
     /// <summary>
     /// Initislized a new <see cref="GetUserAreaMicroSummaryByCodeQuery"/> instance.
@@ -28,5 +28,5 @@ public class GetUserAreaMicroSummaryByCodeQuery : IQuery<UserAreaMicroSummary>
     /// </summary>
     [Required]
     [StringLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 }

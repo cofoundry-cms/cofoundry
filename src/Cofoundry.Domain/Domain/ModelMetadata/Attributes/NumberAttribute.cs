@@ -16,7 +16,7 @@ public class NumberAttribute : Attribute, IMetadataAttribute
     /// uses integer level precision. A special value of 'any' can be used to allow
     /// any number type.
     /// </summary>
-    public string Step { get; set; }
+    public string? Step { get; set; }
 
     public void Process(DisplayMetadataProviderContext context)
     {

@@ -9,5 +9,5 @@ public interface IContentRepositoryPageDirectoryGetAllQueryBuilder
     /// The PageDirectoryRoute projection is used in dynamic page routing and is designed to
     /// be lightweight and cacheable.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<PageDirectoryRoute>> AsRoutes();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<PageDirectoryRoute>> AsRoutes();
 }

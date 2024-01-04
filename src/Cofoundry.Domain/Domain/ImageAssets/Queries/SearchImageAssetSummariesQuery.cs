@@ -9,7 +9,7 @@ public class SearchImageAssetSummariesQuery : SimplePageableQuery, IQuery<PagedQ
     /// <summary>
     /// Restrict result to images labelled with these tags.
     /// </summary>
-    public string Tags { get; set; }
+    public string? Tags { get; set; }
 
     /// <summary>
     /// Restrict result to images with exactly this width.

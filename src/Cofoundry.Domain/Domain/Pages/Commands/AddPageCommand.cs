@@ -8,12 +8,13 @@ public class AddPageCommand : ICommand, ILoggableCommand, IValidatableObject
     /// <summary>
     /// The path of the page within the directory. This must be
     /// unique within the directory the page is parented to.
-    /// E.g. 'about-the-team'
+    /// E.g. 'about-the-team'. This can be <see langword="null"/>
+    /// for <see cref="PageType.CustomEntityDetails"/>.
     /// </summary>
     [Display(Name = "Url path", Description = "Lower case and containing only letter, numbers, underscores and hyphens. E.g. 'about-the-team'")]
     [StringLength(200)]
     [Slug]
-    public string UrlPath { get; set; }
+    public string? UrlPath { get; set; }
 
     /// <summary>
     /// The id of the directory the page should be added to.
@@ -46,13 +47,13 @@ public class AddPageCommand : ICommand, ILoggableCommand, IValidatableObject
     [Display(Description = "A few words descriptive page title, e.g. 'About the team'. Google <a href=\"http://en.wikipedia.org/wiki/Search_engine_results_page\" target=\"_blank\">SERP</a> typically shows 50-60 characters")]
     [StringLength(300)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// Tags can be used to categorize an entity.
     /// </summary>
     [Display(Name = "Tags", Description = "Separate each tag with a space: dog animal canine. Or to join 2 words together in one tag, use double quotes: \"golden retriever\". Used internally for searching for things.")]
-    public ICollection<string> Tags { get; set; } = new List<string>();
+    public IReadOnlyCollection<string> Tags { get; set; } = Array.Empty<string>();
 
     /// <summary>
     /// The description of the content of the page. This is intended to
@@ -60,7 +61,7 @@ public class AddPageCommand : ICommand, ILoggableCommand, IValidatableObject
     /// </summary>
     [Display(Name = "Meta description", Description = "Ideally 25-250 characters. The Google <a href=\"http://en.wikipedia.org/wiki/Search_engine_results_page\" target=\"_blank\">SERP</a> shows only the first 150 characters")]
     [StringLength(300)]
-    public string MetaDescription { get; set; }
+    public string? MetaDescription { get; set; }
 
     /// <summary>
     /// Indicates whether the page should show in the auto-generated site map
@@ -91,12 +92,12 @@ public class AddPageCommand : ICommand, ILoggableCommand, IValidatableObject
     public PageType PageType { get; set; }
 
     /// <summary>
-    /// If creating a CustomEntityDetails page, this will need to be set
-    /// to a value that matches the RouteFormat of an existing
-    /// ICustomEntityRoutingRule e.g. "{Id}/{UrlSlug}".
+    /// If creating a <see cref="PageType.CustomEntityDetails"/> page, this 
+    /// will need to be set to a value that matches the RouteFormat of an existing
+    /// <see cref="ICustomEntityRoutingRule"/> e.g. "{Id}/{UrlSlug}".
     /// </summary>
     [StringLength(200)]
-    public string CustomEntityRoutingRule { get; set; }
+    public string? CustomEntityRoutingRule { get; set; }
 
     /// <summary>
     /// A title that can be used to share on social media via open 
@@ -104,14 +105,14 @@ public class AddPageCommand : ICommand, ILoggableCommand, IValidatableObject
     /// </summary>
     [Display(Name = "Open graph title", Description = "Optional. The title that shows up when sharing the page on social media")]
     [StringLength(300)]
-    public string OpenGraphTitle { get; set; }
+    public string? OpenGraphTitle { get; set; }
 
     /// <summary>
     /// A description that can be used to share on social media via open 
     /// graph meta tags.
     /// </summary>
     [Display(Name = "Open graph description", Description = "Optional. The description that shows up when sharing the page on social media")]
-    public string OpenGraphDescription { get; set; }
+    public string? OpenGraphDescription { get; set; }
 
     /// <summary>
     /// An image that can be used to share on social media via open 

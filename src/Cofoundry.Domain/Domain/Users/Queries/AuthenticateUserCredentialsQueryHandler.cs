@@ -67,7 +67,10 @@ public class AuthenticateUserCredentialsQueryHandler
         }
 
         var maxAttemptsValidationResult = await ValidateMaxAuthenticationAttemptsAsync(query, uniqueUsername, executionContext);
-        if (maxAttemptsValidationResult != null) return maxAttemptsValidationResult;
+        if (maxAttemptsValidationResult != null)
+        {
+            return maxAttemptsValidationResult;
+        }
 
         var dbUser = await GetUserAsync(query.UserAreaCode, uniqueUsername);
         if (dbUser == null)
@@ -92,13 +95,15 @@ public class AuthenticateUserCredentialsQueryHandler
     {
         _logger.LogDebug("Authentication failed for unknown user in user area {UserAreaCode}", query.UserAreaCode);
 
-        var result = new UserCredentialsAuthenticationResult();
-        result.Error = UserValidationErrors.Authentication.InvalidCredentials.Create(query.PropertyToValidate);
+        var result = new UserCredentialsAuthenticationResult
+        {
+            Error = UserValidationErrors.Authentication.InvalidCredentials.Create(query.PropertyToValidate)
+        };
 
         return result;
     }
 
-    private async Task<UserCredentialsAuthenticationResult> ValidateMaxAuthenticationAttemptsAsync(AuthenticateUserCredentialsQuery query, string uniqueUsername, IExecutionContext executionContext)
+    private async Task<UserCredentialsAuthenticationResult?> ValidateMaxAuthenticationAttemptsAsync(AuthenticateUserCredentialsQuery query, string uniqueUsername, IExecutionContext executionContext)
     {
         ;
         var hasExceededMaxAuthenticationAttempts = await _domainRepository
@@ -119,21 +124,26 @@ public class AuthenticateUserCredentialsQueryHandler
         };
     }
 
-    private Task<User> GetUserAsync(string userAreaCode, string uniqueUsername)
+    private async Task<User?> GetUserAsync(string userAreaCode, string uniqueUsername)
     {
-        return _dbContext
+        var user = await _dbContext
             .Users
             .FilterByUserArea(userAreaCode)
             .FilterCanSignIn()
             .Where(u => u.UniqueUsername == uniqueUsername)
             .FirstOrDefaultAsync();
+
+        return user;
     }
 
-    private UserSignInInfo MapUser(PasswordVerificationResult passwordVerificationResult, User dbUser)
+    private static UserSignInInfo? MapUser(PasswordVerificationResult passwordVerificationResult, User dbUser)
     {
         ArgumentNullException.ThrowIfNull(dbUser);
 
-        if (passwordVerificationResult == PasswordVerificationResult.Failed) return null;
+        if (passwordVerificationResult == PasswordVerificationResult.Failed)
+        {
+            return null;
+        }
 
         var userSignInInfo = new UserSignInInfo()
         {
@@ -176,6 +186,11 @@ public class AuthenticateUserCredentialsQueryHandler
         // This breaks CQS principle somewhat but we need to ensure that we rehash the 
         // password at first opportunity irrespective of how the API is used
         _logger.LogDebug("Rehashing password for user {UserId}", user.UserId);
+
+        if (query.Password == null)
+        {
+            throw new InvalidOperationException($"Code should not be reachable with a null {nameof(query)}.{nameof(query.Password)}");
+        }
         _passwordUpdateCommandHelper.UpdatePasswordHash(query.Password, user);
 
         await _dbContext.SaveChangesAsync();
@@ -184,8 +199,8 @@ public class AuthenticateUserCredentialsQueryHandler
     /// <summary>
     /// The user has been mapped, so complete the mapping of the outer result.
     /// </summary>
-    private UserCredentialsAuthenticationResult MapResult(
-        UserSignInInfo user,
+    private static UserCredentialsAuthenticationResult MapResult(
+        UserSignInInfo? user,
         AuthenticateUserCredentialsQuery query
         )
     {

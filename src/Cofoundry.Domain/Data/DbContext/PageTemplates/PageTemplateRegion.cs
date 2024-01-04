@@ -18,13 +18,23 @@ public class PageTemplateRegion
     /// </summary>
     public int PageTemplateId { get; set; }
 
+    private PageTemplate? _pageTemplate;
+    /// <summary>
+    /// The page tmeplate this region is parented to
+    /// </summary>
+    public PageTemplate PageTemplate
+    {
+        get => _pageTemplate ?? throw NavigationPropertyNotInitializedException.Create<PageTemplateRegion>(nameof(PageTemplate));
+        set => _pageTemplate = value;
+    }
+
     /// <summary>
     /// Region names can be any text string but will likely be 
     /// alpha-numerical human readable names like 'Heading' or 'Main Content'.
     /// Region names should be unique (non-case sensitive) irrespective of
     /// whether they are custom entity regions or not.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates whether this region should apply to the Page (false) or
@@ -32,11 +42,6 @@ public class PageTemplateRegion
     /// a type of PageType.CustomEntityDetails
     /// </summary>
     public bool IsCustomEntityRegion { get; set; }
-
-    /// <summary>
-    /// The page tmeplate this region is parented to
-    /// </summary>
-    public virtual PageTemplate PageTemplate { get; set; }
 
     /// <summary>
     /// The date the template was created
@@ -53,5 +58,5 @@ public class PageTemplateRegion
     /// blocks, these contain the dynamic content that gets rendered into
     /// the template.
     /// </summary>
-    public virtual ICollection<PageVersionBlock> PageVersionBlocks { get; set; } = new List<PageVersionBlock>();
+    public ICollection<PageVersionBlock> PageVersionBlocks { get; set; } = new List<PageVersionBlock>();
 }

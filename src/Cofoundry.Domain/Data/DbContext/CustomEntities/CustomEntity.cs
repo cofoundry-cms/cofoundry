@@ -15,7 +15,6 @@
 /// UnstructuredDataDependency table.
 /// </para>
 /// </summary>
-/// <inheritdoc/>
 public class CustomEntity : ICreateAuditable, IEntityPublishable
 {
     /// <summary>
@@ -26,12 +25,17 @@ public class CustomEntity : ICreateAuditable, IEntityPublishable
     /// <summary>
     /// Unique 6 character code representing the type of custom entity.
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
+    private CustomEntityDefinition? _customEntityDefinition;
     /// <summary>
     /// Definition representing the type of custom entity.
     /// </summary>
-    public virtual CustomEntityDefinition CustomEntityDefinition { get; set; }
+    public CustomEntityDefinition CustomEntityDefinition
+    {
+        get => _customEntityDefinition ?? throw NavigationPropertyNotInitializedException.Create<CustomEntity>(nameof(CustomEntityDefinition));
+        set => _customEntityDefinition = value;
+    }
 
     /// <summary>
     /// The string identifier slug which can
@@ -39,7 +43,7 @@ public class CustomEntity : ICreateAuditable, IEntityPublishable
     /// of the custom entity page. Can be forced to be unique
     /// by a setting on the custom entity definition.
     /// </summary>
-    public string UrlSlug { get; set; }
+    public string UrlSlug { get; set; } = string.Empty;
 
     /// <summary>
     /// Optional locale id assigned to the custom entity
@@ -51,7 +55,7 @@ public class CustomEntity : ICreateAuditable, IEntityPublishable
     /// Optional locale assigned to the custom entity
     /// if used in a localized site.
     /// </summary>
-    public virtual Locale Locale { get; set; }
+    public Locale? Locale { get; set; }
 
     /// <summary>
     /// Optional ordering value applied to the custom entity 
@@ -59,11 +63,28 @@ public class CustomEntity : ICreateAuditable, IEntityPublishable
     /// </summary>
     public int? Ordering { get; set; }
 
-    public string PublishStatusCode { get; set; }
+    /// <inheritdoc/>
+    public string PublishStatusCode { get; set; } = string.Empty;
 
+    /// <inheritdoc/>
     public DateTime? PublishDate { get; set; }
 
+    /// <inheritdoc/>
     public DateTime? LastPublishDate { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime CreateDate { get; set; }
+
+    /// <inheritdoc/>
+    public int CreatorId { get; set; }
+
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<CustomEntity>(nameof(Creator));
+        set => _creator = value;
+    }
 
     /// <summary>
     /// <para>
@@ -85,18 +106,12 @@ public class CustomEntity : ICreateAuditable, IEntityPublishable
     /// states.
     /// </param>
     /// </summary>
-    public virtual ICollection<CustomEntityVersion> CustomEntityVersions { get; set; } = new List<CustomEntityVersion>();
+    public ICollection<CustomEntityVersion> CustomEntityVersions { get; set; } = new List<CustomEntityVersion>();
 
     /// <summary>
     /// Lookup cache used for quickly finding the correct version for a
     /// specific publish status query e.g. 'Latest', 'Published', 
     /// 'PreferPublished'.
     /// </summary>
-    public virtual ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; set; } = new List<CustomEntityPublishStatusQuery>();
-
-    public int CreatorId { get; set; }
-
-    public User Creator { get; set; }
-
-    public DateTime CreateDate { get; set; }
+    public ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; set; } = new List<CustomEntityPublishStatusQuery>();
 }

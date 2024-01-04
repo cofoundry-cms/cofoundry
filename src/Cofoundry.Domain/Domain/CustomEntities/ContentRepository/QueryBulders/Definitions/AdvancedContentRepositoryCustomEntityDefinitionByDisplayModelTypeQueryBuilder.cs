@@ -19,7 +19,7 @@ public class AdvancedContentRepositoryCustomEntityDefinitionByDisplayModelTypeQu
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<CustomEntityDefinitionMicroSummary> AsMicroSummary()
+    public IDomainRepositoryQueryContext<CustomEntityDefinitionMicroSummary?> AsMicroSummary()
     {
         var query = new GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery()
         {

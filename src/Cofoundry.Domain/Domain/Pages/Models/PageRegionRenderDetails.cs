@@ -17,10 +17,10 @@ public class PageRegionRenderDetails : IEntityRegionRenderDetails<PageVersionBlo
     /// 'Main Content'. Region names are unique (non-case sensitive) for the 
     /// template they belong to.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Collection of fully mapped and ordered blocks including display models.
     /// </summary>
-    public ICollection<PageVersionBlockRenderDetails> Blocks { get; set; }
+    public IReadOnlyCollection<PageVersionBlockRenderDetails> Blocks { get; set; } = Array.Empty<PageVersionBlockRenderDetails>();
 }

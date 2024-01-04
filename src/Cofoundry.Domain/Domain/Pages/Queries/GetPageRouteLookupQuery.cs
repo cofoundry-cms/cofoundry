@@ -7,6 +7,6 @@
 /// default as it's core to routing and often incorporated in more detailed
 /// page projections.
 /// </summary>
-public class GetPageRouteLookupQuery : IQuery<IDictionary<int, PageRoute>>
+public class GetPageRouteLookupQuery : IQuery<IReadOnlyDictionary<int, PageRoute>>
 {
 }

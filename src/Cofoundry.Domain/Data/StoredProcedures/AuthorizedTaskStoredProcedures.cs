@@ -20,11 +20,11 @@ public class AuthorizedTaskStoredProcedures : IAuthorizedTaskStoredProcedures
 
     public async Task InvalidateUserAccountRecoveryRequestsAsync(
         int userId,
-        string[] authorizedTaskTypeCodes,
+        string[]? authorizedTaskTypeCodes,
         DateTime dateNow
         )
     {
-        string authorizedTaskTypeCodesParameterValue = null;
+        string? authorizedTaskTypeCodesParameterValue = null;
 
         if (!EnumerableHelper.IsNullOrEmpty(authorizedTaskTypeCodes))
         {

@@ -112,13 +112,18 @@ public class GetAllPageDirectoryRoutesQueryHandlerTests
         {
             PageDirectoryId = directory2Id,
             ViolationAction = AccessRuleViolationAction.NotFound,
-            UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea2.UserAreaCode
+            UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea2.UserAreaCode,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode,
+                    RoleId = app.SeededEntities.TestUserArea1.RoleA.RoleId
+                },
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode
+                }]
         };
-
-        addRuleToDirectory2Command
-            .AccessRules
-            .AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleA.RoleId)
-            .AddNew(app.SeededEntities.TestUserArea2.UserAreaCode);
 
         await contentRepository
             .PageDirectories()

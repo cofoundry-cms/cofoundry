@@ -19,10 +19,10 @@ public class PasswordChangedMailTemplate : UserMailTemplateBase, IMailTemplateWi
     /// <summary>
     /// The user that has had their password changed.
     /// </summary>
-    public override UserSummary User { get; set; }
+    public override UserSummary User { get; set; } = UserSummary.Uninitialized;
 
     /// <summary>
     /// The absolute sign in page url e.g. "https://www.example.com/members/sign-in".
     /// </summary>
-    public string SignInUrl { get; set; }
+    public string SignInUrl { get; set; } = string.Empty;
 }

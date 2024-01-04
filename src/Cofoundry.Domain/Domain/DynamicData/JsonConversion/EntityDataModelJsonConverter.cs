@@ -38,14 +38,14 @@ public class EntityDataModelJsonConverter : JsonConverter
         return typeof(IEntityDataModel).IsAssignableFrom(objectType);
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         var settings = _dynamicDataModelJsonSerializerSettingsCache.GetInstance();
         var newSerializer = JsonSerializer.Create(settings);
         return newSerializer.Deserialize(reader, _dataModelType);
     }
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
         throw new NotImplementedException();
     }

@@ -34,6 +34,7 @@ public class UserCommandPermissionsHelper
         if (userContext.IsSuperAdmin()) return;
 
         var userRole = await _internalRoleRepository.GetByIdAsync(user.RoleId);
+        EntityNotFoundException.ThrowIfNull(userRole, user.RoleId);
 
         if (userRole.IsSuperAdminRole)
         {
@@ -57,6 +58,7 @@ public class UserCommandPermissionsHelper
     public async Task<RoleDetails> GetExecutorRoleAsync(IExecutionContext executionContext)
     {
         var executorRole = await _internalRoleRepository.GetByIdAsync(executionContext.UserContext.RoleId);
+        EntityNotFoundException.ThrowIfNull(executorRole, executionContext.UserContext.RoleId);
 
         return executorRole;
     }
@@ -97,6 +99,7 @@ public class UserCommandPermissionsHelper
                 .Roles
                 .FilterById(oldRoleId.Value)
                 .SingleOrDefaultAsync();
+            EntityNotFoundException.ThrowIfNull(oldRole, oldRoleId);
 
             if (oldRole.RoleCode == SuperAdminRole.Code)
             {

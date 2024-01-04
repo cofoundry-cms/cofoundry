@@ -3,8 +3,7 @@
 namespace Cofoundry.Domain;
 
 /// <summary>
-/// Cache for web directories, which are frequently requested to 
-/// work out routing.
+/// Default implementation of <see cref="IPageDirectoryCache"/>.
 /// </summary>
 public class PageDirectoryCache : IPageDirectoryCache
 {
@@ -23,20 +22,20 @@ public class PageDirectoryCache : IPageDirectoryCache
         _pageCache = pageCache;
     }
 
-    /// <summary>
-    /// Gets a collection of page directory routes, if the collection is already cached it 
-    /// is returned, otherwise the getter is invoked and the result is cached and returned
-    /// </summary>
-    /// <param name="getter">Function to invoke if the rewrite rules are not in the cache</param>
-    public ICollection<PageDirectoryRoute> GetOrAdd(Func<ICollection<PageDirectoryRoute>> getter)
+    /// <inheritdoc/>
+    public IReadOnlyCollection<PageDirectoryRoute> GetOrAdd(Func<IReadOnlyCollection<PageDirectoryRoute>> getter)
     {
-        return _cache.GetOrAdd(PAGEDIRECTORYROUTES_CACHEKEY, getter);
+        var result = _cache.GetOrAdd(PAGEDIRECTORYROUTES_CACHEKEY, getter);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Result of {nameof(_cache.GetOrAdd)} with key {PAGEDIRECTORYROUTES_CACHEKEY} should never be null.");
+        }
+
+        return result;
     }
 
-    /// <summary>
-    /// Clears all items in the page directory cache. This also clears out
-    /// the pages cache because page routes are dependent on page directories.
-    /// </summary>
+    /// <inheritdoc/>
     public void Clear()
     {
         _cache.Clear();

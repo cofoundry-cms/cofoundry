@@ -1,6 +1,6 @@
 ﻿namespace Cofoundry.Domain;
 
-public class GetActiveLocaleByIETFLanguageTagQuery : IQuery<ActiveLocale>
+public class GetActiveLocaleByIETFLanguageTagQuery : IQuery<ActiveLocale?>
 {
     public GetActiveLocaleByIETFLanguageTagQuery()
     {
@@ -12,5 +12,5 @@ public class GetActiveLocaleByIETFLanguageTagQuery : IQuery<ActiveLocale>
     }
 
     [Required]
-    public string IETFLanguageTag { get; set; }
+    public string IETFLanguageTag { get; set; } = string.Empty;
 }

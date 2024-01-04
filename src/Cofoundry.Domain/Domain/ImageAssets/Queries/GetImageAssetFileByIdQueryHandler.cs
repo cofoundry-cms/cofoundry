@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetImageAssetFileByIdQueryHandler
-    : IQueryHandler<GetImageAssetFileByIdQuery, ImageAssetFile>
-    , IPermissionRestrictedQueryHandler<GetImageAssetFileByIdQuery, ImageAssetFile>
+    : IQueryHandler<GetImageAssetFileByIdQuery, ImageAssetFile?>
+    , IPermissionRestrictedQueryHandler<GetImageAssetFileByIdQuery, ImageAssetFile?>
 {
     private readonly IFileStoreService _fileStoreService;
     private readonly IQueryExecutor _queryExecutor;
@@ -21,15 +21,19 @@ public class GetImageAssetFileByIdQueryHandler
         _imageAssetFileMapper = imageAssetFileMapper;
     }
 
-    public async Task<ImageAssetFile> ExecuteAsync(GetImageAssetFileByIdQuery query, IExecutionContext executionContext)
+    public async Task<ImageAssetFile?> ExecuteAsync(GetImageAssetFileByIdQuery query, IExecutionContext executionContext)
     {
         // Render details is potentially cached so we query for this rather than directly with the db
         var getImageQuery = new GetImageAssetRenderDetailsByIdQuery(query.ImageAssetId);
         var dbResult = await _queryExecutor.ExecuteAsync(getImageQuery, executionContext);
 
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
+
         var fileName = Path.ChangeExtension(dbResult.FileNameOnDisk, dbResult.FileExtension);
-        var contentStream = await _fileStoreService.GetAsync(ImageAssetConstants.FileContainerName, fileName); ;
+        var contentStream = await _fileStoreService.GetAsync(ImageAssetConstants.FileContainerName, fileName);
 
         if (contentStream == null)
         {

@@ -21,5 +21,5 @@ public class IsPageDirectoryPathUniqueQuery : IQuery<bool>
     /// <summary>
     /// The url path to check for uniqueness.
     /// </summary>
-    public string UrlPath { get; set; }
+    public string UrlPath { get; set; } = string.Empty;
 }

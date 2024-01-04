@@ -8,16 +8,6 @@
 public class PageRenderSummary
 {
     /// <summary>
-    /// A lighter weight page data projection designed for rendering to a site when the 
-    /// templates, region and block data is not required. This object is specific to a 
-    /// particular version which may not always be the latest (depending on the query).
-    /// </summary>
-    public PageRenderSummary()
-    {
-        OpenGraph = new OpenGraphData();
-    }
-
-    /// <summary>
     /// The database id of the page.
     /// </summary>
     public int PageId { get; set; }
@@ -33,13 +23,13 @@ public class PageRenderSummary
     /// used in the html page title meta tag. Does not have to be
     /// unique.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The description of the content of the page. This is intended to
     /// be used in the description html meta tag.
     /// </summary>
-    public string MetaDescription { get; set; }
+    public string? MetaDescription { get; set; }
 
     /// <summary>
     /// WorkFlowStatus of the version that this instance represents. The version
@@ -48,12 +38,12 @@ public class PageRenderSummary
     /// </summary>
     public WorkFlowStatus WorkFlowStatus { get; set; }
 
-    public OpenGraphData OpenGraph { get; set; }
+    public OpenGraphData OpenGraph { get; set; } = new OpenGraphData();
 
     /// <summary>
     /// The routing data for the page.
     /// </summary>
-    public PageRoute PageRoute { get; set; }
+    public PageRoute PageRoute { get; set; } = PageRoute.Uninitialized;
 
     /// <summary>
     /// The date the custom entity was created.

@@ -8,7 +8,7 @@ public class EntityOrderableHelper
         IEnumerable<T> collection,
         T entityToAdd,
         OrderedItemInsertMode insertMode,
-        T adjacentItem = null
+        T? adjacentItem = null
         )
         where T : class, IEntityOrderable
     {
@@ -27,10 +27,10 @@ public class EntityOrderableHelper
                 entities.Insert(0, entityToAdd);
                 break;
             case OrderedItemInsertMode.BeforeItem:
-                AddNextToEntity<T>(entityToAdd, adjacentItem, entities, 0);
+                AddNextToEntity(entityToAdd, adjacentItem, entities, 0);
                 break;
             case OrderedItemInsertMode.AfterItem:
-                AddNextToEntity<T>(entityToAdd, adjacentItem, entities, 1);
+                AddNextToEntity(entityToAdd, adjacentItem, entities, 1);
                 break;
             case OrderedItemInsertMode.Last:
                 // Just set the order and return
@@ -51,7 +51,7 @@ public class EntityOrderableHelper
         }
     }
 
-    private void AddNextToEntity<T>(T entityToAdd, T adjacentItem, List<T> entities, int velocity) where T : class, IEntityOrderable
+    private static void AddNextToEntity<T>(T entityToAdd, T? adjacentItem, List<T> entities, int velocity) where T : class, IEntityOrderable
     {
         if (adjacentItem == null)
         {

@@ -13,7 +13,7 @@ public class ValidateUsernameQuery : IQuery<ValidationQueryResult>
     /// </summary>
     [Required]
     [StringLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The username to check for uniqueness. The username will
@@ -21,7 +21,7 @@ public class ValidateUsernameQuery : IQuery<ValidationQueryResult>
     /// to pre-format this value.
     /// </summary>
     [Required]
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     /// <summary>
     /// Database id of an existing user. If the user is new then this can be <see langword="null"/>.

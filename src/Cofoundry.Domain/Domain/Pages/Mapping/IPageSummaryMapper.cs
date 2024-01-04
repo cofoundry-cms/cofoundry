@@ -10,5 +10,5 @@ public interface IPageSummaryMapper
     /// <summary>
     /// Finishes off bulk mapping of tags and page routes in a PageSummary object
     /// </summary>
-    Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages, IExecutionContext executionContext);
+    Task<IReadOnlyCollection<PageSummary>> MapAsync(IReadOnlyCollection<Page> dbPages, IExecutionContext executionContext);
 }

@@ -24,10 +24,10 @@ public class SearchCustomEntityRenderSummariesQuery
     /// </summary>
     [MaxLength(6)]
     [Required]
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
-    /// Optional direction on which to sort the results. If null
+    /// Optional direction on which to sort the results. If <see langword="null"/>
     /// then then default sort ordering is applied.
     /// </summary>
     public SortDirection? SortDirection { get; set; }
@@ -39,8 +39,8 @@ public class SearchCustomEntityRenderSummariesQuery
     public CustomEntityQuerySortType SortBy { get; set; }
 
     /// <summary>
-    /// Locale id to filter the results by, if null then only entities
-    /// with a null locale are shown
+    /// Locale id to filter the results by, if <see langword="null"/> then 
+    /// only entities with a <see langword="null"/> locale are shown.
     /// </summary>
     public int? LocaleId { get; set; }
 

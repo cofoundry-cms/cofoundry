@@ -11,5 +11,5 @@ public interface IAdvancedContentRepositoryCustomEntityByPathQueryBuilder
     /// cached in order to make routing lookups speedy.
     /// </summary>
     /// <param name="query">The query parameters.</param>
-    IDomainRepositoryQueryContext<CustomEntityRoute> AsCustomEntityRoute(GetCustomEntityRouteByPathQuery query);
+    IDomainRepositoryQueryContext<CustomEntityRoute?> AsCustomEntityRoute(GetCustomEntityRouteByPathQuery query);
 }

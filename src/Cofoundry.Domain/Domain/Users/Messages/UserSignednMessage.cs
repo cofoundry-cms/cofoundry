@@ -9,7 +9,7 @@ public class UserSignednMessage
     /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
     /// the user belongs to.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Id of the user that has logged in.

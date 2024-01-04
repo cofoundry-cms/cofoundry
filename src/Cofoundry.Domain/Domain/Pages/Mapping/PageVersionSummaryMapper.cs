@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Simple mapper for mapping to PageVersionSummary objects.
+/// Default implementation of <see cref="IPageRenderSummaryMapper"/>.
 /// </summary>
 public class PageVersionSummaryMapper : IPageVersionSummaryMapper
 {
@@ -19,12 +19,7 @@ public class PageVersionSummaryMapper : IPageVersionSummaryMapper
         _auditDataMapper = auditDataMapper;
     }
 
-    /// <summary>
-    /// Maps a set of paged EF PageVersion records for a single page into 
-    /// PageVersionSummary objects.
-    /// </summary>
-    /// <param name="pageId">Id of the page that these versions belong to.</param>
-    /// <param name="dbResult">Paged result set of records to map.</param>
+    /// <inheritdoc/>
     public virtual PagedQueryResult<PageVersionSummary> MapVersions(int pageId, PagedQueryResult<PageVersion> dbResult)
     {
         ArgumentNullException.ThrowIfNull(dbResult);

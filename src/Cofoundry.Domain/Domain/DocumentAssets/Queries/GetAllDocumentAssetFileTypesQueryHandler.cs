@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetAllDocumentAssetFileTypesQueryHandler
-    : IQueryHandler<GetAllDocumentAssetFileTypesQuery, ICollection<DocumentAssetFileType>>
-    , IPermissionRestrictedQueryHandler<GetAllDocumentAssetFileTypesQuery, ICollection<DocumentAssetFileType>>
+    : IQueryHandler<GetAllDocumentAssetFileTypesQuery, IReadOnlyCollection<DocumentAssetFileType>>
+    , IPermissionRestrictedQueryHandler<GetAllDocumentAssetFileTypesQuery, IReadOnlyCollection<DocumentAssetFileType>>
 {
     private readonly CofoundryDbContext _dbContext;
 
@@ -15,7 +15,7 @@ public class GetAllDocumentAssetFileTypesQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<ICollection<DocumentAssetFileType>> ExecuteAsync(GetAllDocumentAssetFileTypesQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<DocumentAssetFileType>> ExecuteAsync(GetAllDocumentAssetFileTypesQuery query, IExecutionContext executionContext)
     {
         var result = await _dbContext
             .DocumentAssets

@@ -97,10 +97,7 @@ public class ExecutePermissionValidationService : IExecutePermissionValidationSe
     /// </summary>
     protected void ValidateIgnorePermissionImplementation(object handler)
     {
-        // HACK: Here we have exclude handlers in Cofoundry.Core because they cannot implement the 
-        // Cofoundry permission interfaces. This is a bit hacky but I can't think of another easy way
-        // to do it and this should be fine for the forseeable future.
-        if (!(handler is IPermissionCheckHandler) && !handler.GetType().Namespace.StartsWith("Cofoundry.Core"))
+        if (!(handler is IPermissionCheckHandler))
         {
             var msg = string.Format("{0} does not implement an IPermissionCheckHandler. Either implement one of the permission checking interfaces or use IIgnorePermissionCheckHandler if no permission handling is required.", handler.GetType().FullName);
             throw new InvalidOperationException(msg);

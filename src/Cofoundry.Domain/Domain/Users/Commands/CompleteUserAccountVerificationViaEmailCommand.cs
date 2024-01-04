@@ -17,11 +17,11 @@ public class CompleteUserAccountVerificationViaEmailCommand : ICommand, ILoggabl
     /// the user belongs to.
     /// </summary>
     [Required]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The token used to verify the request.
     /// </summary>
     [Required]
-    public string Token { get; set; }
+    public string Token { get; set; } = string.Empty;
 }

@@ -56,7 +56,7 @@ public class AddUserCommandHandler
             LastName = command.LastName?.Trim(),
             RequirePasswordChange = command.RequirePasswordChange,
             LastPasswordChangeDate = executionContext.ExecutionDate,
-            AccountVerifiedDate = command.IsAccountVerified ? executionContext.ExecutionDate : (DateTime?)null,
+            AccountVerifiedDate = command.IsAccountVerified ? executionContext.ExecutionDate : null,
             CreateDate = executionContext.ExecutionDate,
             Role = role,
             UserArea = dbUserArea,
@@ -128,25 +128,23 @@ public class AddUserCommandHandler
         IExecutionContext executionContext
         )
     {
-        var isPasswordEmpty = string.IsNullOrWhiteSpace(command.Password);
-
-        if (userArea.AllowPasswordSignIn && isPasswordEmpty)
+        if (!userArea.AllowPasswordSignIn)
         {
-            throw ValidationErrorException.CreateWithProperties("Password field is required", nameof(command.Password));
-        }
-        else if (!userArea.AllowPasswordSignIn && !isPasswordEmpty)
-        {
-            throw ValidationErrorException.CreateWithProperties("Password field should be empty because the specified user area does not use passwords", nameof(command.Password));
-        }
-        else if (!userArea.AllowPasswordSignIn)
-        {
+            if (!string.IsNullOrWhiteSpace(command.Password))
+            {
+                throw ValidationErrorException.CreateWithProperties("Password field should be empty because the specified user area does not use passwords", nameof(command.Password));
+            }
             return;
         }
 
-        var context = NewPasswordValidationContext.MapFromUser(user);
+        if (string.IsNullOrWhiteSpace(command.Password))
+        {
+            throw ValidationErrorException.CreateWithProperties("Password field is required", nameof(command.Password));
+        }
+
+        var context = NewPasswordValidationContext.MapFromUser(user, executionContext);
         context.Password = command.Password;
         context.PropertyName = nameof(command.Password);
-        context.ExecutionContext = executionContext;
 
         await _newPasswordValidationService.ValidateAsync(context);
     }
@@ -155,6 +153,7 @@ public class AddUserCommandHandler
     {
         if (userArea.AllowPasswordSignIn)
         {
+            ArgumentNullException.ThrowIfNull(command.Password);
             var hashResult = _passwordCryptographyService.CreateHash(command.Password);
             user.Password = hashResult.Hash;
             user.PasswordHashVersion = hashResult.HashVersion;

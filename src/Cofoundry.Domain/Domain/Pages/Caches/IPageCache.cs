@@ -11,7 +11,7 @@ public interface IPageCache
     /// is returned, otherwise the getter is invoked and the result is cached and returned
     /// </summary>
     /// <param name="getter">Function to invoke if the page routes are not in the cache</param>
-    Task<IDictionary<int, PageRoute>> GetOrAddAsync(Func<Task<IDictionary<int, PageRoute>>> getter);
+    Task<IReadOnlyDictionary<int, PageRoute>> GetOrAddAsync(Func<Task<IReadOnlyDictionary<int, PageRoute>>> getter);
 
     /// <summary>
     /// Clears all items in the page cache

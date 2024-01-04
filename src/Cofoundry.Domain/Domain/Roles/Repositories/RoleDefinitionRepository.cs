@@ -13,7 +13,7 @@ public class RoleDefinitionRepository : IRoleDefinitionRepository
         _roleDefinitions = roleDefinitions.ToDictionary(k => CreateLookupKey(k.UserAreaCode, k.RoleCode));
     }
 
-    public IRoleDefinition GetByCode(string userAreaCode, string roleCode)
+    public IRoleDefinition? GetByCode(string userAreaCode, string roleCode)
     {
         var key = CreateLookupKey(userAreaCode, roleCode);
         return _roleDefinitions.GetOrDefault(key);
@@ -96,7 +96,7 @@ public class RoleDefinitionRepository : IRoleDefinitionRepository
         if (dulpicateCode != null)
         {
             var example = dulpicateCode.First();
-            var message = $"Duplicate role definitions encountered. { dulpicateCode.Count() } roles defined with the role code '{ example.RoleCode }' in user area { example.UserAreaCode }";
+            var message = $"Duplicate role definitions encountered. {dulpicateCode.Count()} roles defined with the role code '{example.RoleCode}' in user area {example.UserAreaCode}";
             throw new InvalidRoleDefinitionException(message, dulpicateCode.First(), definitions);
         }
 

@@ -8,19 +8,16 @@ public class SettingCache : ISettingCache
     private const string SETTING_TABLE_KEY = "SettingTable";
 
     private readonly IObjectCache _cache;
+
     public SettingCache(IObjectCacheFactory cacheFactory)
     {
         _cache = cacheFactory.Get(CACHEKEY);
     }
 
-    public Dictionary<string, string> GetOrAddSettingsTable(Func<Dictionary<string, string>> getter)
+    public async Task<IReadOnlyDictionary<string, string>> GetOrAddSettingsTableAsync(Func<Task<IReadOnlyDictionary<string, string>>> getter)
     {
-        return _cache.GetOrAdd(SETTING_TABLE_KEY, getter);
-    }
-
-    public async Task<Dictionary<string, string>> GetOrAddSettingsTableAsync(Func<Task<Dictionary<string, string>>> getter)
-    {
-        return await _cache.GetOrAddAsync(SETTING_TABLE_KEY, getter);
+        var result = await _cache.GetOrAddAsync(SETTING_TABLE_KEY, getter);
+        return result ?? ImmutableDictionary<string, string>.Empty;
     }
 
     public void Clear()

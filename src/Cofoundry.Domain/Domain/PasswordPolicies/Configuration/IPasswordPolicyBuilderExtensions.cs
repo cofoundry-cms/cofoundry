@@ -25,7 +25,7 @@ public static class IPasswordPolicyBuilderExtensions
     /// </param>
     public static IPasswordPolicyBuilder UseDefaults(
         this IPasswordPolicyBuilder builder,
-        Action<PasswordOptions> passwordOptionsConfig = null
+        Action<PasswordOptions>? passwordOptionsConfig = null
         )
     {
         var options = GetPasswordOptions(builder);

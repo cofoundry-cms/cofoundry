@@ -3,8 +3,8 @@
 public class PageRoutingHelper
 {
     public PageRoutingHelper(
-        ICollection<PageRoute> pageRoutes,
-        ICollection<PageDirectoryRoute> pageDirectoryRoutes,
+        IReadOnlyCollection<PageRoute> pageRoutes,
+        IReadOnlyCollection<PageDirectoryRoute> pageDirectoryRoutes,
         PageRoute currentPageRoute,
         VisualEditorMode visualEditorMode,
         int? currentPageVersionId
@@ -21,9 +21,9 @@ public class PageRoutingHelper
 
     public PageRoute CurrentPageRoute { get; private set; }
 
-    public ICollection<PageRoute> PageRoutes { get; private set; }
+    public IReadOnlyCollection<PageRoute> PageRoutes { get; private set; }
 
-    public ICollection<PageDirectoryRoute> PageDirectoryRoutes { get; private set; }
+    public IReadOnlyCollection<PageDirectoryRoute> PageDirectoryRoutes { get; private set; }
 
     public int? CurrentPageVersionId { get; private set; }
 }

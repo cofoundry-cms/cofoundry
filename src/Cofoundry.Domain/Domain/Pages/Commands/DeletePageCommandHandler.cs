@@ -42,7 +42,10 @@ public class DeletePageCommandHandler
             .FilterById(command.PageId)
             .SingleOrDefaultAsync();
 
-        if (page == null) return;
+        if (page == null)
+        {
+            return;
+        }
 
         var pageRoute = await _queryExecutor.ExecuteAsync(new GetPageRouteByIdQuery(page.PageId), executionContext);
         EntityNotFoundException.ThrowIfNull(pageRoute, command.PageId);

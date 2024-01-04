@@ -17,5 +17,5 @@ public class GetPageBlockTypeFileDetailsByFileNameQuery : IQuery<PageBlockTypeFi
     /// Full path including filename and file extension of the page
     /// template view file to parse.
     /// </summary>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 }

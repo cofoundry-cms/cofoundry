@@ -27,8 +27,8 @@ public interface IEntityVersionPageBlock : IEntityOrderable
     int? PageBlockTypeTemplateId { get; set; }
 
     /// <summary>
-    /// The block data model serialized into string data by
-    /// IDbUnstructuredDataSerializer, which uses JSON serlialization
+    /// The block data model serialized into string data by 
+    /// <see cref="IDbUnstructuredDataSerializer"/>, which uses JSON serlialization
     /// by default.
     /// </summary>
     string SerializedData { get; set; }
@@ -51,7 +51,7 @@ public interface IEntityVersionPageBlock : IEntityOrderable
     /// e.g. 'Wide', 'Headline', 'Large', 'Reversed'. If no template is set then 
     /// the default view is used for rendering.
     /// </summary>
-    PageBlockTypeTemplate PageBlockTypeTemplate { get; set; }
+    PageBlockTypeTemplate? PageBlockTypeTemplate { get; set; }
 
     /// <summary>
     /// Returns the id and database primary key of this instance.

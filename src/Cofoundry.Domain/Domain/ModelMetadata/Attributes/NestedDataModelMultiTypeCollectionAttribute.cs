@@ -51,25 +51,25 @@ public class NestedDataModelMultiTypeCollectionAttribute : ValidateObjectAttribu
     /// The text to use in the column header for the title field. Defaults
     /// to "Title".
     /// </summary>
-    public string TitleColumnHeader { get; set; }
+    public string? TitleColumnHeader { get; set; }
 
     /// <summary>
     /// The text to use in the column header for the description field. Defaults
     /// to "Description".
     /// </summary>
-    public string DescriptionColumnHeader { get; set; }
+    public string? DescriptionColumnHeader { get; set; }
 
     /// <summary>
     /// The text to use in the column header for the image field. Defaults
     /// to empty string.
     /// </summary>
-    public string ImageColumnHeader { get; set; }
+    public string? ImageColumnHeader { get; set; }
 
     /// <summary>
     /// The text to use in the column header for the model type field. Defaults
     /// to "Type".
     /// </summary>
-    public string TypeColumnHeader { get; set; }
+    public string? TypeColumnHeader { get; set; }
 
     public void Process(DisplayMetadataProviderContext context)
     {
@@ -77,7 +77,7 @@ public class NestedDataModelMultiTypeCollectionAttribute : ValidateObjectAttribu
 
         var nestedModelTypeNames = _types
             .Select(t => t.Name)
-            .ToList();
+            .ToArray();
 
         var modelMetaData = context.DisplayMetadata;
 
@@ -119,7 +119,7 @@ public class NestedDataModelMultiTypeCollectionAttribute : ValidateObjectAttribu
 
     private IncorrectCollectionMetaDataAttributePlacementException GetIncorrectTypeException(DisplayMetadataProviderContext context)
     {
-        var propertyName = context.Key.ContainerType.Name + "." + context.Key.Name;
+        var propertyName = context.Key.ContainerType?.Name + "." + context.Key.Name;
         var msg = $"{nameof(NestedDataModelMultiTypeCollectionAttribute)} can only be placed on properties with a generic collection of {typeof(NestedDataModelMultiTypeItem).Name} types. Property name is {propertyName} and the type is {context.Key.ModelType}.";
         var exception = new IncorrectCollectionMetaDataAttributePlacementException(this, context, new Type[] { typeof(NestedDataModelMultiTypeItem) }, msg);
 
@@ -136,25 +136,32 @@ public class NestedDataModelMultiTypeCollectionAttribute : ValidateObjectAttribu
         var dependencies = EnumerableHelper
             .Enumerate(nestedItems)
             .Select(i => i.Model)
+            .WhereNotNull()
             .SelectMany(EntityRelationAttributeHelper.GetRelations);
 
         return dependencies;
     }
 
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         var collection = value as IEnumerable<NestedDataModelMultiTypeItem>;
 
         if (MinItems > 0 && EnumerableHelper.Enumerate(collection).Count() < MinItems)
         {
-            return new ValidationResult(validationContext.MemberName + $" must have at least {MinItems} items.", new string[] { validationContext.MemberName });
+            return CreateError(validationContext, $" must have at least {MinItems} items.");
         }
 
         if (MaxItems > 0 && EnumerableHelper.Enumerate(collection).Count() > MaxItems)
         {
-            return new ValidationResult(validationContext.MemberName + $" cannot have more than {MaxItems} items.", new string[] { validationContext.MemberName });
+            return CreateError(validationContext, $" cannot have more than {MaxItems} items.");
         }
 
         return base.IsValid(value, validationContext);
+    }
+
+    private ValidationResult CreateError(ValidationContext validationContext, string message)
+    {
+        string[]? memberNames = string.IsNullOrEmpty(validationContext.MemberName) ? null : [validationContext.MemberName];
+        return new ValidationResult(validationContext.MemberName + message, memberNames);
     }
 }

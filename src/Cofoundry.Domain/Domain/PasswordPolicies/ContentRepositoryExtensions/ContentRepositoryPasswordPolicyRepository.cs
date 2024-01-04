@@ -19,6 +19,5 @@ public class ContentRepositoryPasswordPolicyRepository
     public IContentRepositoryPasswordPolicyByCodeQueryBuilder GetByCode(string userAreaCode)
     {
         return new ContentRepositoryPasswordPolicyByCodeQueryBuilder(ExtendableContentRepository, userAreaCode);
-        throw new System.NotImplementedException();
     }
 }

@@ -19,13 +19,13 @@ public class ContentRepositoryPageDirectoryByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<PageDirectoryNode> AsNode()
+    public IDomainRepositoryQueryContext<PageDirectoryNode?> AsNode()
     {
         var query = new GetPageDirectoryNodeByIdQuery(_pageDirectoryId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageDirectoryRoute> AsRoute()
+    public IDomainRepositoryQueryContext<PageDirectoryRoute?> AsRoute()
     {
         var query = new GetPageDirectoryRouteByIdQuery(_pageDirectoryId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

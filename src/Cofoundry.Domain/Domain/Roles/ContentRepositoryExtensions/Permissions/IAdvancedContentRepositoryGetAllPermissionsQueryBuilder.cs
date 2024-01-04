@@ -9,5 +9,5 @@ public interface IAdvancedContentRepositoryGetAllPermissionsQueryBuilder
     /// Returns all the permissions in the system as instances
     /// of their base definition types, which all inherit from IPermission.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<IPermission>> AsIPermission();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<IPermission>> AsIPermission();
 }

@@ -17,21 +17,24 @@ public class InvalidEntityDefinitionException : Exception
     public InvalidEntityDefinitionException(
         string message,
         IEntityDefinition invalidDefinition,
-        IEnumerable<IEntityDefinition> allCustomEntityDefinitions = null
+        IEnumerable<IEntityDefinition>? allCustomEntityDefinitions = null
         )
         : base(message)
     {
         InvalidDefinition = invalidDefinition;
-        AllDefinitions = allCustomEntityDefinitions?.ToArray();
+        if (allCustomEntityDefinitions != null)
+        {
+            AllDefinitions = allCustomEntityDefinitions.ToArray();
+        }
     }
 
     /// <summary>
     /// The entity definition that caused the exception.
     /// </summary>
-    public IEntityDefinition InvalidDefinition { get; private set; }
+    public IEntityDefinition? InvalidDefinition { get; private set; }
 
     /// <summary>
     /// Optional collection of all the entity definitions when available.
     /// </summary>
-    public IReadOnlyCollection<IEntityDefinition> AllDefinitions { get; private set; }
+    public IReadOnlyCollection<IEntityDefinition> AllDefinitions { get; private set; } = Array.Empty<IEntityDefinition>();
 }

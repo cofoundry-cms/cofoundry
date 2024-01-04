@@ -31,17 +31,18 @@ public class UpdatePageUrlCommand : ICommand, ILoggableCommand
     /// <summary>
     /// The path of the page within the directory. This must be
     /// unique within the directory the page is parented to.
-    /// E.g. 'about-the-team'
+    /// E.g. 'about-the-team'. This can be <see langword="null"/>
+    /// for <see cref="PageType.CustomEntityDetails"/>.
     /// </summary>
     [StringLength(200)]
     [Slug]
-    public virtual string UrlPath { get; set; }
+    public string? UrlPath { get; set; }
 
     /// <summary>
-    /// If this is a CustomEntityDetails page, this will need to be set
-    /// to a value that matches the RouteFormat of an existing
-    /// ICustomEntityRoutingRule e.g. "{Id}/{UrlSlug}".
+    /// If this is a <see cref="PageType.CustomEntityDetails"/> page, this will 
+    /// need to be set to a value that matches the RouteFormat of an existing
+    /// <see cref="ICustomEntityRoutingRule"/> e.g. "{Id}/{UrlSlug}".
     /// </summary>
     [StringLength(200)]
-    public string CustomEntityRoutingRule { get; set; }
+    public string? CustomEntityRoutingRule { get; set; }
 }

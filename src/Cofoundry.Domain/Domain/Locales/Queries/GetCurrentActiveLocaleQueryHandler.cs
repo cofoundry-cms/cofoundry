@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 public class GetCurrentActiveLocaleQueryHandler
-    : IQueryHandler<GetCurrentActiveLocaleQuery, ActiveLocale>
+    : IQueryHandler<GetCurrentActiveLocaleQuery, ActiveLocale?>
     , IIgnorePermissionCheckHandler
 {
     private readonly IQueryExecutor _queryExecutor;
@@ -16,11 +16,14 @@ public class GetCurrentActiveLocaleQueryHandler
         _cultureContextService = cultureContextService;
     }
 
-    public async Task<ActiveLocale> ExecuteAsync(GetCurrentActiveLocaleQuery query, IExecutionContext executionContext)
+    public async Task<ActiveLocale?> ExecuteAsync(GetCurrentActiveLocaleQuery query, IExecutionContext executionContext)
     {
         var tag = _cultureContextService.GetCurrent()?.Name;
 
-        if (string.IsNullOrWhiteSpace(tag)) return null;
+        if (string.IsNullOrWhiteSpace(tag))
+        {
+            return null;
+        }
 
         var byTagQuery = new GetActiveLocaleByIETFLanguageTagQuery(tag);
         var result = await _queryExecutor.ExecuteAsync(byTagQuery, executionContext);

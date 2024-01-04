@@ -42,7 +42,7 @@ public class ReOrderCustomEntitiesCommandHandler
 
         if (definition == null || definition.Ordering == CustomEntityOrdering.None)
         {
-            throw new InvalidOperationException("Cannot re-order a custom entity type with a definition that does not implement IOrderableCustomEntityDefinition (" + definition.GetType().Name + ")");
+            throw new InvalidOperationException($"Cannot re-order a custom entity type with a definition that does not implement {nameof(IOrderableCustomEntityDefinition)} ({command.CustomEntityDefinitionCode})");
         }
 
         if (!definition.HasLocale && command.LocaleId.HasValue)
@@ -77,7 +77,7 @@ public class ReOrderCustomEntitiesCommandHandler
 
     public IEnumerable<IPermissionApplication> GetPermissions(ReOrderCustomEntitiesCommand command)
     {
-        var definition = _customEntityDefinitionRepository.GetByCode(command.CustomEntityDefinitionCode);
+        var definition = _customEntityDefinitionRepository.GetRequiredByCode(command.CustomEntityDefinitionCode);
         yield return new CustomEntityUpdatePermission(definition);
     }
 }

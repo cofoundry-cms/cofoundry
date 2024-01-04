@@ -2,27 +2,32 @@
 
 namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IRandomStringGenerator"/>.
+/// </summary>
+/// <remarks>
+/// The profanity filtering idea is taken from https://hashids.org/, although
+/// the implementation is not the same.
+/// </remarks>
 public class RandomStringGenerator : IRandomStringGenerator
 {
     private const string DEFAULT_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     private const string DEFAULT_UNTRUSTWORTHY_CHARACTERS = "cfhistukvCFHISTUKV";
 
+    /// <inheritdoc/>
     public string Generate(int length)
     {
         return Generate(length, DEFAULT_CHARACTERS, DEFAULT_UNTRUSTWORTHY_CHARACTERS);
     }
 
+    /// <inheritdoc/>
     public string Generate(int length, string allowedCharacters)
     {
         return Generate(length, allowedCharacters, DEFAULT_UNTRUSTWORTHY_CHARACTERS);
     }
 
-    /// <remarks>
-    /// The profanity filtering idea is taken from https://hashids.org/, although
-    /// the implementation is not the same.
-    /// </remarks>
-    public string Generate(int length, string allowedCharacters, string untrustworthyCharacters)
+    /// <inheritdoc/>
+    public string Generate(int length, string allowedCharacters, string? untrustworthyCharacters)
     {
         if (length < 1) throw new ArgumentOutOfRangeException($"{nameof(length)} must be a positive integer.", nameof(length));
         ArgumentNullException.ThrowIfNull(allowedCharacters);

@@ -17,5 +17,5 @@ public interface IContentRepositoryRoleByCodeQueryBuilder
     /// Roles are cached, so repeat uses of this query is inexpensive.
     /// </para>
     /// </summary>
-    IDomainRepositoryQueryContext<RoleDetails> AsDetails();
+    IDomainRepositoryQueryContext<RoleDetails?> AsDetails();
 }

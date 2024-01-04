@@ -27,7 +27,7 @@ public class GetGeneralSiteSettingsQueryHandler
         return await MapSettingsAsync(allSettings);
     }
 
-    private async Task<GeneralSiteSettings> MapSettingsAsync(Dictionary<string, string> allSettings)
+    private async Task<GeneralSiteSettings> MapSettingsAsync(IReadOnlyDictionary<string, string> allSettings)
     {
         var settings = new GeneralSiteSettings();
 

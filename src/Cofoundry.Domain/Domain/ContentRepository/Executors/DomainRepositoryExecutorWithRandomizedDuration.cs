@@ -26,7 +26,7 @@ public class DomainRepositoryExecutorWithRandomizedDuration : IDomainRepositoryE
         _duration = duration;
     }
 
-    public async Task ExecuteAsync(ICommand command, IExecutionContext executionContext)
+    public async Task ExecuteAsync(ICommand command, IExecutionContext? executionContext)
     {
         await using (_executionDurationRandomizerScopeManager.Create(_duration))
         {
@@ -34,7 +34,7 @@ public class DomainRepositoryExecutorWithRandomizedDuration : IDomainRepositoryE
         }
     }
 
-    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext)
+    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext? executionContext)
     {
         await using (_executionDurationRandomizerScopeManager.Create(_duration))
         {

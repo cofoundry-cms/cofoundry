@@ -13,7 +13,7 @@ public interface ICustomEntityDefinitionRepository
     /// </summary>
     /// <param name="customEntityDefinitionCode">The unique 6 character code that identifies the custom entity definition.</param>
     /// <returns>Returns the matching <see cref="ICustomEntityDefinition"/> instance if one is found; otherwise <see langword="null"/>.</returns>
-    ICustomEntityDefinition GetByCode(string customEntityDefinitionCode);
+    ICustomEntityDefinition? GetByCode(string? customEntityDefinitionCode);
 
     /// <summary>
     /// Returns a custom entity definition by it's unique 

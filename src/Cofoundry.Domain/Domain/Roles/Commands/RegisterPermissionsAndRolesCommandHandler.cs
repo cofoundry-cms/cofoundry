@@ -62,14 +62,14 @@ public class RegisterPermissionsAndRolesCommandHandler
         // permissions already registered in the database
         var dbPermissions = await _dbContext
             .Permissions
-            .ToDictionaryAsync(p => p.GetUniqueCode());
+            .ToDictionaryAsync(p => p.GetRequiredUniqueCode());
 
         // code-based permission objects
         var codePermissions = _permissionRepository.GetAll();
 
         var newCodePermissions = codePermissions
             .Where(p => !dbPermissions.ContainsKey(p.GetUniqueIdentifier()))
-            .ToList();
+            .ToArray();
 
         // Add new permissions to db
 
@@ -81,11 +81,11 @@ public class RegisterPermissionsAndRolesCommandHandler
             .Roles
             .Include(r => r.RolePermissions)
             .ThenInclude(p => p.Permission)
-            .ToListAsync();
+            .ToArrayAsync();
 
         var dbRolesWithCodes = dbRoles
             .Where(r => !string.IsNullOrEmpty(r.RoleCode))
-            .ToDictionary(r => r.RoleCode.ToUpperInvariant());
+            .ToDictionary(r => r.RoleCode!.ToUpperInvariant());
 
         await EnsureUserAreaExistsAndValidatePermissionAsync(dbRoles, executionContext);
 
@@ -98,17 +98,17 @@ public class RegisterPermissionsAndRolesCommandHandler
                 // New role
                 ValidateRole(dbRoles, roleDefinition);
                 dbRole = MapAndAddRole(roleDefinition);
-                UpdatePermissions(dbRole, roleDefinition, codePermissions, dbPermissions, dbEntityDefinitions, false);
+                UpdatePermissions(dbRole, roleDefinition, codePermissions, dbPermissions, false);
             }
             else if (command.UpdateExistingRoles)
             {
                 // Existing role, to be updated to match initializer exactly
-                UpdatePermissions(dbRole, roleDefinition, codePermissions, dbPermissions, dbEntityDefinitions, true);
+                UpdatePermissions(dbRole, roleDefinition, codePermissions, dbPermissions, true);
             }
             else
             {
                 // Update for new permissions only
-                UpdatePermissions(dbRole, roleDefinition, newCodePermissions, dbPermissions, dbEntityDefinitions, false);
+                UpdatePermissions(dbRole, roleDefinition, newCodePermissions, dbPermissions, false);
             }
         }
 
@@ -117,9 +117,9 @@ public class RegisterPermissionsAndRolesCommandHandler
     }
 
     private void AddNewPermissionsToDb(
-        Dictionary<string, EntityDefinition> dbEntityDefinitions,
+        IReadOnlyDictionary<string, EntityDefinition> dbEntityDefinitions,
         Dictionary<string, Permission> dbPermissions,
-        List<IPermission> newCodePermissions
+        IReadOnlyCollection<IPermission> newCodePermissions
         )
     {
         foreach (var permissionToAdd in newCodePermissions)
@@ -131,7 +131,7 @@ public class RegisterPermissionsAndRolesCommandHandler
 
             if (permissionToAdd is IEntityPermission entityPermissionToAdd)
             {
-                dbPermission.EntityDefinition = dbEntityDefinitions.GetOrDefault(entityPermissionToAdd.EntityDefinition.EntityDefinitionCode);
+                dbPermission.EntityDefinition = dbEntityDefinitions.GetValueOrDefault(entityPermissionToAdd.EntityDefinition.EntityDefinitionCode);
 
                 if (dbPermission.EntityDefinition == null)
                 {
@@ -162,7 +162,10 @@ public class RegisterPermissionsAndRolesCommandHandler
             .Select(d => d.EntityDefinitionCode)
             .Where(d => !dbDefinitions.ContainsKey(d));
 
-        if (!newEntityCodes.Any()) return;
+        if (!newEntityCodes.Any())
+        {
+            return;
+        }
 
         foreach (var definitionCode in newEntityCodes)
         {
@@ -188,12 +191,14 @@ public class RegisterPermissionsAndRolesCommandHandler
         IRoleDefinition roleDefinition,
         IEnumerable<IPermission> codePermissions,
         Dictionary<string, Permission> dbPermissions,
-        Dictionary<string, EntityDefinition> dbEntityDefinitions,
         bool allowDeletions
         )
     {
         // Super admin role does not require any db-based permissions.
-        if (roleDefinition is SuperAdminRole) return;
+        if (roleDefinition is SuperAdminRole)
+        {
+            return;
+        }
 
         var roleInitializer = _rolePermissionInitializerFactory.Create(roleDefinition);
         var permissionSetBuilder = _permissionSetBuilderFactory.Create(codePermissions);
@@ -215,7 +220,11 @@ public class RegisterPermissionsAndRolesCommandHandler
             }
         }
 
-        if (!permissionsToInclude.Any()) return;
+        if (permissionsToInclude.Count == 0)
+        {
+            return;
+        }
+
         ValidatePermissions(dbRole, permissionsToInclude);
 
         // add new permissions
@@ -241,9 +250,10 @@ public class RegisterPermissionsAndRolesCommandHandler
                 throw new Exception("dbPermissions lookup does not contain the specified permission, but was expected: " + uniquePermissionCode);
             }
 
-            var rolePermission = new RolePermission();
-            rolePermission.Permission = dbPermission;
-            dbRole.RolePermissions.Add(rolePermission);
+            dbRole.RolePermissions.Add(new RolePermission
+            {
+                Permission = dbPermission
+            });
         }
     }
 
@@ -285,23 +295,23 @@ public class RegisterPermissionsAndRolesCommandHandler
         dbRole.RoleCode = roleDefinition.RoleCode;
 
         _dbContext.Roles.Add(dbRole);
+
         return dbRole;
     }
 
-    private static void ValidateRole(List<Role> existingRoles, IRoleDefinition roleDefinition)
+    private static void ValidateRole(IReadOnlyCollection<Role> existingRoles, IRoleDefinition roleDefinition)
     {
-        if (existingRoles
-                .Any(r =>
-                    r.Title.Equals(roleDefinition.Title?.Trim(), StringComparison.OrdinalIgnoreCase)
-                    && r.UserAreaCode == roleDefinition.UserAreaCode)
-                    )
+        if (existingRoles.Any(r =>
+            r.Title.Equals(roleDefinition.Title?.Trim(), StringComparison.OrdinalIgnoreCase)
+            && r.UserAreaCode == roleDefinition.UserAreaCode)
+            )
         {
-            throw new UniqueConstraintViolationException($"A role with the title '{ roleDefinition.Title }' already exists", nameof(Role.Title));
+            throw new UniqueConstraintViolationException($"A role with the title '{roleDefinition.Title}' already exists", nameof(Role.Title));
         }
     }
 
     private async Task EnsureUserAreaExistsAndValidatePermissionAsync(
-        List<Role> existingRoles,
+        IReadOnlyCollection<Role> existingRoles,
         IExecutionContext executionContext
         )
     {

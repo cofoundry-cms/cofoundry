@@ -5,8 +5,8 @@
 /// set is cached in memory and quick to access.
 /// </summary>
 public class GetRewriteRuleSummaryByPathQueryHandler
-    : IQueryHandler<GetRewriteRuleSummaryByPathQuery, RewriteRuleSummary>
-    , IPermissionRestrictedQueryHandler<GetRewriteRuleSummaryByPathQuery, RewriteRuleSummary>
+    : IQueryHandler<GetRewriteRuleSummaryByPathQuery, RewriteRuleSummary?>
+    , IPermissionRestrictedQueryHandler<GetRewriteRuleSummaryByPathQuery, RewriteRuleSummary?>
 {
     private readonly IRewriteRuleCache _cache;
     private readonly IQueryExecutor _queryExecutor;
@@ -20,15 +20,15 @@ public class GetRewriteRuleSummaryByPathQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<RewriteRuleSummary> ExecuteAsync(GetRewriteRuleSummaryByPathQuery query, IExecutionContext executionContext)
+    public async Task<RewriteRuleSummary?> ExecuteAsync(GetRewriteRuleSummaryByPathQuery query, IExecutionContext executionContext)
     {
         var rules = await _queryExecutor.ExecuteAsync(new GetAllRewriteRuleSummariesQuery(), executionContext);
         return FindRule(query, rules);
     }
 
-    private RewriteRuleSummary FindRule(GetRewriteRuleSummaryByPathQuery query, ICollection<RewriteRuleSummary> rules)
+    private RewriteRuleSummary? FindRule(GetRewriteRuleSummaryByPathQuery query, IReadOnlyCollection<RewriteRuleSummary> rules)
     {
-        RewriteRuleSummary rule = null;
+        RewriteRuleSummary? rule = null;
         var path = query.Path;
 
         // Set up an alternate path so we can check with/without a trailing slash 
@@ -36,11 +36,11 @@ public class GetRewriteRuleSummaryByPathQueryHandler
         if (string.IsNullOrEmpty(Path.GetExtension(path)))
         {
             var alternatePath = path.EndsWith("/") ? path.Substring(0, path.Length - 1) : path + "/";
-            pathVariations = new string[] { path, alternatePath };
+            pathVariations = [path, alternatePath];
         }
         else
         {
-            pathVariations = new string[] { path };
+            pathVariations = [path];
         }
 
 
@@ -51,10 +51,16 @@ public class GetRewriteRuleSummaryByPathQueryHandler
                 .FirstOrDefault(r => r.WriteFrom.Equals(pathVariation, StringComparison.OrdinalIgnoreCase)
                 || (r.WriteFrom.EndsWith("*") && pathVariation.StartsWith(r.WriteFrom.Substring(0, r.WriteFrom.Length - 1), StringComparison.OrdinalIgnoreCase)));
 
-            if (rule != null) break;
+            if (rule != null)
+            {
+                break;
+            }
         }
 
-        if (rule == null) return null;
+        if (rule == null)
+        {
+            return null;
+        }
 
         // Check to make sure we are not redirecting to the same path
         foreach (var pathVariation in pathVariations)

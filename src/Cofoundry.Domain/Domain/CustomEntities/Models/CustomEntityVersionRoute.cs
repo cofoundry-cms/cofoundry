@@ -6,11 +6,6 @@
 /// </summary>
 public class CustomEntityVersionRoute : IVersionRoute
 {
-    public CustomEntityVersionRoute()
-    {
-        AdditionalRoutingData = new Dictionary<string, string>();
-    }
-
     /// <summary>
     /// The database identifier for this route version required by
     /// the IVersionRoute. In this case this is the CustomEntityVersionId.
@@ -25,7 +20,7 @@ public class CustomEntityVersionRoute : IVersionRoute
     /// <summary>
     /// The title of the custom entity.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// A page can have many published versions, this flag indicates if
@@ -44,5 +39,5 @@ public class CustomEntityVersionRoute : IVersionRoute
     /// to this entity. To add data to this collection you need to 
     /// annotate the property with CustomEntityRouteDataAttribute. 
     /// </summary>
-    public Dictionary<string, string> AdditionalRoutingData { get; set; }
+    public Dictionary<string, string> AdditionalRoutingData { get; set; } = new();
 }

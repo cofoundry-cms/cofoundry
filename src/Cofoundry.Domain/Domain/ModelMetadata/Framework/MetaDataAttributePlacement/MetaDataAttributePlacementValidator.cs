@@ -35,7 +35,11 @@ public static class MetaDataAttributePlacementValidator
         ArgumentNullException.ThrowIfNull(attribute);
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(validParamTypes);
-        if (!validParamTypes.Any()) throw new ArgumentEmptyException(nameof(validParamTypes));
+
+        if (!validParamTypes.Any())
+        {
+            throw new ArgumentEmptyException(nameof(validParamTypes));
+        }
 
         var propertyModelType = context.Key.ModelType;
 
@@ -68,9 +72,13 @@ public static class MetaDataAttributePlacementValidator
         )
     {
         ArgumentNullException.ThrowIfNull(attribute);
-        if (context == null) throw new ArgumentNullException(nameof(context));
-        if (validParamTypes == null) throw new ArgumentNullException(nameof(validParamTypes));
-        if (!validParamTypes.Any()) throw new ArgumentEmptyException(nameof(validParamTypes));
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(validParamTypes);
+
+        if (!validParamTypes.Any())
+        {
+            throw new ArgumentEmptyException(nameof(validParamTypes));
+        }
 
         var propertyModelType = context.Key.ModelType;
 
@@ -79,7 +87,7 @@ public static class MetaDataAttributePlacementValidator
             throw new IncorrectCollectionMetaDataAttributePlacementException(attribute, context, validParamTypes);
         }
 
-        Type singularType = null;
+        Type? singularType = null;
         if (propertyModelType.IsGenericType)
         {
             var genericParameters = propertyModelType.GetGenericArguments();

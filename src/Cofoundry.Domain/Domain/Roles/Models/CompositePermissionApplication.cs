@@ -23,7 +23,7 @@ public class CompositePermissionApplication : IPermissionApplication
     /// </summary>
     public ICollection<IPermission> Permissions { get; set; }
 
-    public override string ToString()
+    public override string? ToString()
     {
         if (EnumerableHelper.IsNullOrEmpty(Permissions)) return base.ToString();
 

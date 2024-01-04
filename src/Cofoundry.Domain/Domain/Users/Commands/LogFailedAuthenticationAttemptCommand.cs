@@ -17,6 +17,7 @@ public class LogFailedAuthenticationAttemptCommand : ICommand
     /// "uniquified" format, as this should have been already processed whenever 
     /// this needs to be called.
     /// </param>
+    [SetsRequiredMembers]
     public LogFailedAuthenticationAttemptCommand(string userAreaCode, string username)
     {
         Username = username;
@@ -28,7 +29,7 @@ public class LogFailedAuthenticationAttemptCommand : ICommand
     /// attempting to be authenticated.
     /// </summary>
     [Required]
-    public string UserAreaCode { get; set; }
+    public required string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The username used in the authentication attempt. This is expected to be in a 
@@ -36,5 +37,5 @@ public class LogFailedAuthenticationAttemptCommand : ICommand
     /// this needs to be called.
     /// </summary>
     [Required]
-    public string Username { get; set; }
+    public required string Username { get; set; } = string.Empty;
 }

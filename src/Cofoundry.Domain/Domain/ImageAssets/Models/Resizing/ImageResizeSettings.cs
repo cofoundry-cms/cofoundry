@@ -31,7 +31,7 @@ public class ImageResizeSettings : IImageResizeSettings
     /// <summary>
     /// Hex color to use as the background color if the image is padded
     /// </summary>
-    public string BackgroundColor { get; set; }
+    public string? BackgroundColor { get; set; }
 
     /// <summary>
     /// Sets the desired height of the image. (minus padding, borders,
@@ -96,7 +96,7 @@ public class ImageResizeSettings : IImageResizeSettings
         return settings;
     }
 
-    private static string GetQueryStringValue(IQueryCollection queryString, string key)
+    private static string? GetQueryStringValue(IQueryCollection queryString, string key)
     {
         return queryString[key].FirstOrDefault();
     }

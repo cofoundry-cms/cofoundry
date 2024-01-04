@@ -7,7 +7,7 @@ namespace Cofoundry.Core.Validation;
 /// </summary>
 public class CompositeValidationResult : ValidationResult
 {
-    private readonly List<ValidationResult> _results = new List<ValidationResult>();
+    private readonly List<ValidationResult> _results = [];
 
     public IEnumerable<ValidationResult> Results
     {

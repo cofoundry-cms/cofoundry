@@ -28,9 +28,12 @@ public static class PagingQueryExtensions
     {
         ArgumentNullException.ThrowIfNull(source);
 
-        var result = new PagedQueryResult<T>();
-        result.TotalItems = source.Count();
-        result.Items = source.Page(query).ToArray();
+        var result = new PagedQueryResult<T>
+        {
+            TotalItems = source.Count(),
+            Items = source.Page(query).ToArray()
+        };
+
         MapPagingData<T>(query, result);
 
         return result;

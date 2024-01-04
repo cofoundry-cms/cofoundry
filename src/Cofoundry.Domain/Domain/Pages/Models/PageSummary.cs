@@ -17,12 +17,12 @@ public class PageSummary : ICreateAudited, IPageRoute, IPublishableEntity
     /// <summary>
     /// The path of the page within the directory.
     /// </summary>
-    public string UrlPath { get; set; }
+    public string UrlPath { get; set; } = string.Empty;
 
     /// <summary>
     /// The full path of the page including directories and the locale. 
     /// </summary>
-    public string FullUrlPath { get; set; }
+    public string FullUrlPath { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates if the page is marked as published or not, which allows the page
@@ -60,12 +60,12 @@ public class PageSummary : ICreateAudited, IPageRoute, IPublishableEntity
     /// The title of the page for the currently published version, falling
     /// back to the draft version is there is no published version.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// Optional locale of the page.
     /// </summary>
-    public ActiveLocale Locale { get; set; }
+    public ActiveLocale? Locale { get; set; }
 
     /// <summary>
     /// The page could be a generic page or could have some sort of
@@ -74,15 +74,15 @@ public class PageSummary : ICreateAudited, IPageRoute, IPublishableEntity
     public PageType PageType { get; set; }
 
     /// <summary>
-    /// If this instance is PageType.CustomEntityDetails, this will contain
-    /// name of the custom entity definition.
+    /// If this instance is <see cref="PageType.CustomEntityDetails"/>, this 
+    /// will contain name of the custom entity definition.
     /// </summary>
-    public string CustomEntityName { get; set; }
+    public string? CustomEntityName { get; set; }
 
     /// <summary>
     /// Collection of tag names that this entity is tagged with.
     /// </summary>
-    public ICollection<string> Tags { get; set; }
+    public IReadOnlyCollection<string> Tags { get; set; } = Array.Empty<string>();
 
-    public CreateAuditData AuditData { get; set; }
+    public CreateAuditData AuditData { get; set; } = CreateAuditData.Uninitialized;
 }

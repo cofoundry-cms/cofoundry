@@ -4,12 +4,14 @@ namespace Cofoundry.BasicTestSite;
 
 public class TestOptionSource : IListOptionSource
 {
-    public ICollection<ListOption> Create()
+    public IReadOnlyCollection<ListOption> Create()
     {
-        var options = new List<ListOption>();
-        options.Add(new ListOption("Test1", 1));
-        options.Add(new ListOption("Test2", 2));
-        options.Add(new ListOption("Test3", 3));
+        var options = new List<ListOption>
+        {
+            new ListOption("Test1", 1),
+            new ListOption("Test2", 2),
+            new ListOption("Test3", 3)
+        };
 
         return options;
     }

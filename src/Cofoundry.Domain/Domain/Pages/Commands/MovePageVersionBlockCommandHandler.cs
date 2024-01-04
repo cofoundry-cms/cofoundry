@@ -8,24 +8,18 @@ public class MovePageVersionBlockCommandHandler
     , IPermissionRestrictedCommandHandler<MovePageVersionBlockCommand>
 {
     private readonly CofoundryDbContext _dbContext;
-    private readonly EntityAuditHelper _entityAuditHelper;
-    private readonly EntityOrderableHelper _entityOrderableHelper;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
     private readonly ITransactionScopeManager _transactionScopeFactory;
 
     public MovePageVersionBlockCommandHandler(
         CofoundryDbContext dbContext,
-        EntityAuditHelper entityAuditHelper,
-        EntityOrderableHelper entityOrderableHelper,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
         ITransactionScopeManager transactionScopeFactory
         )
     {
         _dbContext = dbContext;
-        _entityAuditHelper = entityAuditHelper;
-        _entityOrderableHelper = entityOrderableHelper;
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
         _transactionScopeFactory = transactionScopeFactory;
@@ -39,8 +33,8 @@ public class MovePageVersionBlockCommandHandler
             .Select(b => new
             {
                 Block = b,
-                PageId = b.PageVersion.PageId,
-                WorkFlowStatusId = b.PageVersion.WorkFlowStatusId
+                b.PageVersion.PageId,
+                b.PageVersion.WorkFlowStatusId
             })
             .SingleOrDefaultAsync();
         EntityNotFoundException.ThrowIfNull(dbResult, command.PageVersionBlockId);
@@ -55,7 +49,7 @@ public class MovePageVersionBlockCommandHandler
             .PageVersionBlocks
             .Where(p => p.PageTemplateRegionId == block.PageTemplateRegionId && p.PageVersionId == block.PageVersionId);
 
-        PageVersionBlock blockToSwapWith;
+        PageVersionBlock? blockToSwapWith;
 
         switch (command.Direction)
         {
@@ -75,7 +69,10 @@ public class MovePageVersionBlockCommandHandler
                 throw new InvalidOperationException("OrderedItemMoveDirection not recognized: " + command.Direction);
         }
 
-        if (blockToSwapWith == null) return;
+        if (blockToSwapWith == null)
+        {
+            return;
+        }
 
         int oldOrdering = block.Ordering;
         block.Ordering = blockToSwapWith.Ordering;

@@ -15,21 +15,21 @@ public class PageDetails : ICreateAudited
     /// <summary>
     /// The routing data for the page.
     /// </summary>
-    public PageRoute PageRoute { get; set; }
+    public PageRoute PageRoute { get; set; } = PageRoute.Uninitialized;
 
     /// <summary>
     /// These tags are used in the admin panel for searching and categorizing.
     /// </summary>
-    public ICollection<string> Tags { get; set; }
+    public IReadOnlyCollection<string> Tags { get; set; } = Array.Empty<string>();
 
     /// <summary>
     /// Data for the latest version of the page, which is not
     /// neccessarily published.
     /// </summary>
-    public PageVersionDetails LatestVersion { get; set; }
+    public PageVersionDetails LatestVersion { get; set; } = PageVersionDetails.Uninitialized;
 
     /// <summary>
     /// Simple audit data for page creation.
     /// </summary>
-    public CreateAuditData AuditData { get; set; }
+    public CreateAuditData AuditData { get; set; } = CreateAuditData.Uninitialized;
 }

@@ -5,18 +5,23 @@
 /// be used to represent a user that is not logged in. This should be 
 /// accessed via the <see cref="UserContext.Empty"/> static instance.
 /// </summary>
-/// <inheritdoc/>
 public class EmptyUserContext : IUserContext
 {
+    /// <inheritdoc/>
     public int? UserId { get; }
 
-    public IUserAreaDefinition UserArea { get; }
+    /// <inheritdoc/>
+    public IUserAreaDefinition? UserArea { get; }
 
+    /// <inheritdoc/>
     public bool IsPasswordChangeRequired { get; }
 
+    /// <inheritdoc/>
     public bool IsAccountVerified { get; }
 
+    /// <inheritdoc/>
     public int? RoleId { get; }
 
-    public string RoleCode { get; }
+    /// <inheritdoc/>
+    public string? RoleCode { get; }
 }

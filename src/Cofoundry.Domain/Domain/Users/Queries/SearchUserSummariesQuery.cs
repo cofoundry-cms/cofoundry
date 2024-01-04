@@ -10,22 +10,22 @@ public class SearchUserSummariesQuery : SimplePageableQuery, IQuery<PagedQueryRe
     /// separate, therefore a UserAreaCode is required for the search.
     /// </summary>
     [Required]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Filter by first or last name.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Filter by email address
     /// </summary>
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     /// <summary>
     /// Filter by username
     /// </summary>
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
     /// <summary>
     /// Filter by whether the account is active or not.

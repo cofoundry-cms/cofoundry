@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Internal;
 /// definition class and is typically used as part of another domain model.
 /// </summary>
 public class GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQueryHandler
-    : IQueryHandler<GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery, CustomEntityDefinitionMicroSummary>
+    : IQueryHandler<GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery, CustomEntityDefinitionMicroSummary?>
     , IIgnorePermissionCheckHandler
 {
     private readonly IQueryExecutor _queryExecutor;
@@ -23,8 +23,13 @@ public class GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQueryHandler
         _customEntityDefinitionMicroSummaryMapper = customEntityDefinitionMicroSummaryMapper;
     }
 
-    public async Task<CustomEntityDefinitionMicroSummary> ExecuteAsync(GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery query, IExecutionContext executionContext)
+    public async Task<CustomEntityDefinitionMicroSummary?> ExecuteAsync(GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery query, IExecutionContext executionContext)
     {
+        if (query.DisplayModelType == null)
+        {
+            return null;
+        }
+
         var dataModelType = query.DisplayModelType
             .GetInterfaces()
             .Select(t => t.GetTypeInfo())

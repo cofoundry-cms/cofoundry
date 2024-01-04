@@ -28,14 +28,14 @@ public class DomainRepositoryExecutorWithUserAreaContext : IDomainRepositoryExec
         _userArea = userArea;
     }
 
-    public async Task ExecuteAsync(ICommand command, IExecutionContext executionContext)
+    public async Task ExecuteAsync(ICommand command, IExecutionContext? executionContext)
     {
         var userContext = await _userContextService.GetCurrentContextByUserAreaAsync(_userArea.UserAreaCode);
         var newExecutionContext = _executionContextFactory.Create(userContext, executionContext);
         await _innerDomainRepositoryExecutor.ExecuteAsync(command, newExecutionContext);
     }
 
-    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext)
+    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext? executionContext)
     {
         var userContext = await _userContextService.GetCurrentContextByUserAreaAsync(_userArea.UserAreaCode);
         var newExecutionContext = _executionContextFactory.Create(userContext, executionContext);

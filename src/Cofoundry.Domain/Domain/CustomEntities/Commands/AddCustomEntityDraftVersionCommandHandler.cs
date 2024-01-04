@@ -42,14 +42,15 @@ public class AddCustomEntityDraftVersionCommandHandler
         var definitionCode = await QueryVersionAndGetDefinitionCode(command).FirstOrDefaultAsync();
         EntityNotFoundException.ThrowIfNull(definitionCode, command.CustomEntityId);
 
-        _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
+        var user = _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
         _permissionValidationService.EnforceCustomEntityPermission<CustomEntityUpdatePermission>(definitionCode, executionContext.UserContext);
 
         var newVersionId = await _customEntityStoredProcedures.AddDraftAsync(
             command.CustomEntityId,
             command.CopyFromCustomEntityVersionId,
             executionContext.ExecutionDate,
-            executionContext.UserContext.UserId.Value);
+            user.UserId
+            );
 
         command.OutputCustomEntityVersionId = newVersionId;
 

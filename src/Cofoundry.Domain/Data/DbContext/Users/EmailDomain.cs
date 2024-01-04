@@ -17,7 +17,7 @@ public class EmailDomain
     /// The name of the domain, which should be in a valid lowercased
     /// format e.g. "example.com" or "müller.example.com".
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// An unsalted SHA256 hash representing the unique name of the domain.
@@ -25,7 +25,7 @@ public class EmailDomain
     /// the domain when parsed by <see cref="System.Uri"/> to better support international 
     /// domain names.
     /// </summary>
-    public byte[] NameHash { get; set; }
+    public byte[] NameHash { get; set; } = Array.Empty<byte>();
 
     /// <summary>
     /// Date and time at which the email domain record was added
@@ -36,5 +36,5 @@ public class EmailDomain
     /// <summary>
     /// Users with an email that belongs to this domain.
     /// </summary>
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public ICollection<User> Users { get; set; } = new List<User>();
 }

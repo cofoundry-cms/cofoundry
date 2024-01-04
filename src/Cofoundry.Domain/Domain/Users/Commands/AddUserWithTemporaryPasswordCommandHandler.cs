@@ -70,7 +70,14 @@ public class AddUserWithTemporaryPasswordCommandHandler
 
     private void Normalize(AddUserWithTemporaryPasswordCommand command)
     {
-        command.Email = _userDataFormatter.NormalizeEmail(command.UserAreaCode, command.Email);
+        var email = _userDataFormatter.NormalizeEmail(command.UserAreaCode, command.Email);
+
+        if (string.IsNullOrEmpty(email))
+        {
+            throw ValidationErrorException.CreateWithProperties("Email address is invalid", nameof(command.Email));
+        }
+
+        command.Email = email;
     }
 
     private void ValidateUserArea(AddUserWithTemporaryPasswordCommand command)
@@ -87,7 +94,7 @@ public class AddUserWithTemporaryPasswordCommandHandler
         // The password policy should be configured with the definitive min-length
         // as an attribute, but otherwise fall-back to the configured option
         var passwordPolicy = _passwordPolicyService.GetDescription(command.UserAreaCode);
-        var minLengthAttribute = passwordPolicy.Attributes.GetOrDefault(PasswordPolicyAttributes.MinLength);
+        var minLengthAttribute = passwordPolicy.Attributes.GetValueOrDefault(PasswordPolicyAttributes.MinLength);
         var options = _userAreaDefinitionRepository.GetOptionsByCode(command.UserAreaCode);
         var minLength = IntParser.ParseOrDefault(minLengthAttribute, options.Password.MinLength);
 
@@ -110,6 +117,16 @@ public class AddUserWithTemporaryPasswordCommandHandler
 
     private async Task SendNotificationAsync(AddUserCommand newUserCommand, IExecutionContext executionContext)
     {
+        if (string.IsNullOrWhiteSpace(newUserCommand.Password))
+        {
+            throw new InvalidOperationException($"{nameof(newUserCommand)}.{nameof(newUserCommand.Password)} should not be empty.");
+        }
+
+        if (string.IsNullOrWhiteSpace(newUserCommand.Email))
+        {
+            throw new InvalidOperationException($"{nameof(newUserCommand)}.{nameof(newUserCommand.Email)} should not be empty.");
+        }
+
         var query = new GetUserSummaryByIdQuery(newUserCommand.OutputUserId);
         var user = await _queryExecutor.ExecuteAsync(query, executionContext);
         EntityNotFoundException.ThrowIfNull(user, newUserCommand.OutputUserId);

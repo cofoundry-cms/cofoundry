@@ -18,5 +18,5 @@ public class EnsureUserAreaExistsCommand : ICommand
 
     [Required]
     [MaxLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 }

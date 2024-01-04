@@ -14,7 +14,7 @@ public class CleanupUsersCommand : ICommand, ILoggableCommand
     /// needs to be run for each user area separately.
     /// </summary>
     [Required]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The default retention period for stale data.

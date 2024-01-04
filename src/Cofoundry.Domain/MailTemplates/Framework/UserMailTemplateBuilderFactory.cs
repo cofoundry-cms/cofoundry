@@ -26,7 +26,10 @@ public class UserMailTemplateBuilderFactory : IUserMailTemplateBuilderFactory
         var factoryType = typeof(IUserMailTemplateBuilder<>).MakeGenericType(definitionType);
         var factory = _serviceProvider.GetService(factoryType);
 
-        if (factory != null) return (IUserMailTemplateBuilder)factory;
+        if (factory != null)
+        {
+            return (IUserMailTemplateBuilder)factory;
+        }
 
         var defaultBuilderType = typeof(IDefaultUserMailTemplateBuilder<>).MakeGenericType(definitionType);
 

@@ -9,8 +9,8 @@ public static class DocumentAttributeMetaDataHelper
 {
     public static void AddFilterData(
         DisplayMetadata modelMetaData,
-        ICollection<string> fileExtensions,
-        ICollection<string> tags
+        IReadOnlyCollection<string>? fileExtensions,
+        IReadOnlyCollection<string>? tags
         )
     {
         modelMetaData.AddAdditionalValueIfNotEmpty("Tags", tags);

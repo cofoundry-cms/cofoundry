@@ -5,7 +5,6 @@ namespace Cofoundry.Domain.Data;
 /// in a template region. The data and rendering of each block is controlled 
 /// by the page block type assigned to it.
 /// </summary>
-/// <inheritdoc/>
 public class PageVersionBlock : ICreateAuditable, IEntityVersionPageBlock
 {
     /// <summary>
@@ -19,24 +18,41 @@ public class PageVersionBlock : ICreateAuditable, IEntityVersionPageBlock
     /// </summary>
     public int PageVersionId { get; set; }
 
+    private PageVersion? _pageVersion;
     /// <summary>
-    /// Id of the template region this block belongs to.
+    /// The page version that this instance is
+    /// parented to.
     /// </summary>
+    public PageVersion PageVersion
+    {
+        get => _pageVersion ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(PageVersion));
+        set => _pageVersion = value;
+    }
+
+    /// <inheritdoc/>
     public int PageTemplateRegionId { get; set; }
 
-    /// <summary>
-    /// Id of the block type which defines the data model and display
-    /// templates available to render the block e.g. 'Image', 
-    /// 'Vimeo Video', 'Heading', 'Split Content'.
-    /// </summary>
+    private PageTemplateRegion? _pageTemplateRegion;
+    /// <inheritdoc/>
+    public PageTemplateRegion PageTemplateRegion
+    {
+        get => _pageTemplateRegion ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(PageTemplateRegion));
+        set => _pageTemplateRegion = value;
+    }
+
+    /// <inheritdoc/>
     public int PageBlockTypeId { get; set; }
 
-    /// <summary>
-    /// The block data model serialized into string data by
-    /// IDbUnstructuredDataSerializer, which uses JSON serlialization
-    /// by default.
-    /// </summary>
-    public string SerializedData { get; set; }
+    private PageBlockType? _pageBlockType;
+    /// <inheritdoc/>
+    public PageBlockType PageBlockType
+    {
+        get => _pageBlockType ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(PageBlockType));
+        set => _pageBlockType = value;
+    }
+
+    /// <inheritdoc/>
+    public string SerializedData { get; set; } = string.Empty;
 
     /// <summary>
     /// In regions that support multiple block types this indicates
@@ -44,54 +60,32 @@ public class PageVersionBlock : ICreateAuditable, IEntityVersionPageBlock
     /// </summary>
     public int Ordering { get; set; }
 
-    /// <summary>
-    /// A block can optionally have display templates associated with it, 
-    /// which will give the user a choice about how the data is rendered out
-    /// e.g. 'Wide', 'Headline', 'Large', 'Reversed'. If no template is set then 
-    /// the default view is used for rendering.
-    /// </summary>
+    /// <inheritdoc/>
     public int? PageBlockTypeTemplateId { get; set; }
 
-    /// <summary>
-    /// The template region this block belongs to.
-    /// </summary>
-    public virtual PageTemplateRegion PageTemplateRegion { get; set; }
+    /// <inheritdoc/>
+    public PageBlockTypeTemplate? PageBlockTypeTemplate { get; set; }
 
-    /// <summary>
-    /// The block type which defines the data model and display
-    /// templates available to render the block e.g. 'Image', 
-    /// 'Vimeo Video', 'Heading', 'Split Content'.
-    /// </summary>
-    public virtual PageBlockType PageBlockType { get; set; }
+    /// <inheritdoc/>
+    public DateTime CreateDate { get; set; }
 
-    /// <summary>
-    /// The page version that this instance is
-    /// parented to.
-    /// </summary>
-    public virtual PageVersion PageVersion { get; set; }
-
-    /// <summary>
-    /// A block can optionally have display templates associated with it, 
-    /// which will give the user a choice about how the data is rendered out
-    /// e.g. 'Wide', 'Headline', 'Large', 'Reversed'. If no template is set then 
-    /// the default view is used for rendering.
-    /// </summary>
-    public virtual PageBlockTypeTemplate PageBlockTypeTemplate { get; set; }
-
-    public System.DateTime CreateDate { get; set; }
-
+    /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    public virtual User Creator { get; set; }
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(Creator));
+        set => _creator = value;
+    }
 
     /// <summary>
     /// Date that the block was last updated.
     /// </summary>
     public DateTime UpdateDate { get; set; }
 
-    /// <summary>
-    /// Returns the id and database primary key of this instance.
-    /// </summary>
+    /// <inheritdoc/>
     public int GetVersionBlockId()
     {
         return PageVersionBlockId;

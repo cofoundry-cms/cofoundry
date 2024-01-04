@@ -3,8 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Cache for page data, which is frequently requested to 
-/// work out routing
+/// Default implementation of <see cref="IPageCache"/>.
 /// </summary>
 public class PageCache : IPageCache
 {
@@ -17,36 +16,32 @@ public class PageCache : IPageCache
         _cache = cacheFactory.Get(CACHEKEY);
     }
 
-    /// <summary>
-    /// Gets a collection of page routes, if the collection is already cached it 
-    /// is returned, otherwise the getter is invoked and the result is cached and returned
-    /// </summary>
-    /// <param name="getter">Function to invoke if the page routes are not in the cache</param>
-    public Task<IDictionary<int, PageRoute>> GetOrAddAsync(Func<Task<IDictionary<int, PageRoute>>> getter)
+    /// <inheritdoc/>
+    public async Task<IReadOnlyDictionary<int, PageRoute>> GetOrAddAsync(Func<Task<IReadOnlyDictionary<int, PageRoute>>> getter)
     {
-        return _cache.GetOrAddAsync(PAGEROUTES_CACHEKEY, getter);
+        var result = await _cache.GetOrAddAsync(PAGEROUTES_CACHEKEY, getter);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Result of {nameof(_cache.GetOrAddAsync)} with key {PAGEROUTES_CACHEKEY} should never be null.");
+        }
+
+        return result;
     }
 
-    /// <summary>
-    /// Clears all items in the page cache
-    /// </summary>
+    /// <inheritdoc/>
     public void Clear()
     {
         _cache.Clear();
     }
 
-    /// <summary>
-    /// Clears items in the page cache related to a specific page
-    /// </summary>
-    /// <param name="pageId">Id of the page to clear items for</param>
+    /// <inheritdoc/>
     public void Clear(int pageId)
     {
         ClearRoutes();
     }
 
-    /// <summary>
-    /// Clears all page routing data from the cache
-    /// </summary>
+    /// <inheritdoc/>
     public void ClearRoutes()
     {
         _cache.Clear(PAGEROUTES_CACHEKEY);

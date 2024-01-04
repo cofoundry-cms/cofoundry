@@ -7,7 +7,7 @@ public class CustomEntityRouteMapper : ICustomEntityRouteMapper
 {
     public CustomEntityRoute Map(
         CustomEntity dbCustomEntity,
-        ActiveLocale locale
+        ActiveLocale? locale
         )
     {
         ArgumentNullException.ThrowIfNull(dbCustomEntity);
@@ -26,7 +26,7 @@ public class CustomEntityRouteMapper : ICustomEntityRouteMapper
         };
 
         bool hasLatestPublishVersion = false;
-        route.Versions = new List<CustomEntityVersionRoute>();
+        var versions = new List<CustomEntityVersionRoute>();
 
         foreach (var dbVersion in dbCustomEntity
             .CustomEntityVersions
@@ -45,9 +45,10 @@ public class CustomEntityRouteMapper : ICustomEntityRouteMapper
                 version.IsLatestPublishedVersion = true;
                 hasLatestPublishVersion = true;
             }
-            route.Versions.Add(version);
+            versions.Add(version);
         }
 
+        route.Versions = versions;
         route.HasDraftVersion = route.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Draft);
         route.HasPublishedVersion = route.Versions.Any(v => v.WorkFlowStatus == WorkFlowStatus.Published);
 

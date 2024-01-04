@@ -18,12 +18,13 @@ public class UpdateRoleCommand : IPatchableByIdCommand, ILoggableCommand
     /// </summary>
     [StringLength(50)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The permissions set that the role should be updated to match. 
     /// You must include this otherwise all permissions will be 
     /// removed (unless of course you intend to remove all permissions).
     /// </summary>
-    public ICollection<PermissionCommandData> Permissions { get; set; }
+    [ValidateObject]
+    public IReadOnlyCollection<PermissionCommandData> Permissions { get; set; } = Array.Empty<PermissionCommandData>();
 }

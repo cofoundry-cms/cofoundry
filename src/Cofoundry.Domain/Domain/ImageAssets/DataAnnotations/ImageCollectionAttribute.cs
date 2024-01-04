@@ -21,7 +21,7 @@ public class ImageCollectionAttribute : Attribute, IMetadataAttribute
     /// of image assets. The editor allows for sorting of linked image assets and you can set filters for restricting image sizes.
     /// </summary>
     /// <param name="tags">An array of tags for which to filter when browsing for images.</param>
-    public ImageCollectionAttribute(params string[] tags)
+    public ImageCollectionAttribute(params string[]? tags)
         : base()
     {
         Tags = tags;
@@ -80,5 +80,5 @@ public class ImageCollectionAttribute : Attribute, IMetadataAttribute
     /// Filters the image selection to only show images with tags that 
     /// match this value.
     /// </summary>
-    public string[] Tags { get; set; }
+    public string[]? Tags { get; set; }
 }

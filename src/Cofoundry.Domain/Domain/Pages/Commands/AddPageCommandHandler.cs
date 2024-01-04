@@ -71,7 +71,7 @@ public class AddPageCommandHandler
         });
     }
 
-    private void Normalize(AddPageCommand command)
+    private static void Normalize(AddPageCommand command)
     {
         command.UrlPath = command.UrlPath?.ToLowerInvariant();
         command.Title = command.Title.Trim();
@@ -80,9 +80,12 @@ public class AddPageCommandHandler
         command.OpenGraphDescription = command.OpenGraphDescription?.Trim();
     }
 
-    private Locale GetLocale(int? localeId)
+    private Locale? GetLocale(int? localeId)
     {
-        if (!localeId.HasValue) return null;
+        if (!localeId.HasValue)
+        {
+            return null;
+        }
 
         var locale = _dbContext
             .Locales
@@ -130,6 +133,10 @@ public class AddPageCommandHandler
 
         if (command.PageType == PageType.CustomEntityDetails)
         {
+            if (string.IsNullOrEmpty(pageTemplate.CustomEntityDefinitionCode))
+            {
+                throw new InvalidOperationException($"{nameof(pageTemplate)}.{nameof(pageTemplate.CustomEntityDefinitionCode)} is not expected to be null for a custom entity template");
+            }
             var definition = await GetCustomEntityDefinitionAsync(pageTemplate.CustomEntityDefinitionCode, executionContext);
             var rule = await GetAndValidateRoutingRuleAsync(command, definition, executionContext);
 
@@ -138,18 +145,21 @@ public class AddPageCommandHandler
         }
         else
         {
+            ArgumentNullException.ThrowIfNull(command.UrlPath);
             page.UrlPath = command.UrlPath;
         }
 
-        var pageVersion = new PageVersion();
-        pageVersion.Title = command.Title;
-        pageVersion.ExcludeFromSitemap = !command.ShowInSiteMap;
-        pageVersion.MetaDescription = command.MetaDescription;
-        pageVersion.OpenGraphTitle = command.OpenGraphTitle;
-        pageVersion.OpenGraphDescription = command.OpenGraphDescription;
-        pageVersion.OpenGraphImageId = command.OpenGraphImageId;
-        pageVersion.PageTemplate = pageTemplate;
-        pageVersion.DisplayVersion = 1;
+        var pageVersion = new PageVersion
+        {
+            Title = command.Title,
+            ExcludeFromSitemap = !command.ShowInSiteMap,
+            MetaDescription = command.MetaDescription,
+            OpenGraphTitle = command.OpenGraphTitle,
+            OpenGraphDescription = command.OpenGraphDescription,
+            OpenGraphImageId = command.OpenGraphImageId,
+            PageTemplate = pageTemplate,
+            DisplayVersion = 1
+        };
 
         if (command.Publish)
         {
@@ -237,11 +247,13 @@ public class AddPageCommandHandler
 
         if (command.PageType == PageType.CustomEntityDetails)
         {
+            ArgumentNullException.ThrowIfNull(command.CustomEntityRoutingRule);
             path = command.CustomEntityRoutingRule;
             propertyName = nameof(command.CustomEntityRoutingRule);
         }
         else
         {
+            ArgumentNullException.ThrowIfNull(command.UrlPath);
             path = command.UrlPath;
             propertyName = nameof(command.UrlPath);
         }

@@ -14,6 +14,7 @@ public class AddPageDraftVersionCommandHandler
     , IPermissionRestrictedCommandHandler<AddPageDraftVersionCommand>
 {
     private readonly CofoundryDbContext _dbContext;
+    private readonly IPermissionValidationService _permissionValidationService;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPageStoredProcedures _pageStoredProcedures;
@@ -21,6 +22,7 @@ public class AddPageDraftVersionCommandHandler
 
     public AddPageDraftVersionCommandHandler(
         CofoundryDbContext dbContext,
+        IPermissionValidationService permissionValidationService,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
         IPageStoredProcedures pageStoredProcedures,
@@ -28,6 +30,7 @@ public class AddPageDraftVersionCommandHandler
         )
     {
         _dbContext = dbContext;
+        _permissionValidationService = permissionValidationService;
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
         _pageStoredProcedures = pageStoredProcedures;
@@ -36,6 +39,8 @@ public class AddPageDraftVersionCommandHandler
 
     public async Task ExecuteAsync(AddPageDraftVersionCommand command, IExecutionContext executionContext)
     {
+        var user = _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
+
         int newVersionId;
 
         try
@@ -44,7 +49,8 @@ public class AddPageDraftVersionCommandHandler
                 command.PageId,
                 command.CopyFromPageVersionId,
                 executionContext.ExecutionDate,
-                executionContext.UserContext.UserId.Value);
+                user.UserId
+                );
         }
         catch (StoredProcedureExecutionException ex) when (ex.ErrorNumber == StoredProcedureErrorNumbers.Page_AddDraft.DraftAlreadyExists)
         {

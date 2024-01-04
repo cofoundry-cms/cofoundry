@@ -21,19 +21,19 @@ public class PermissionValidationFailedException : NotPermittedException
     /// <summary>
     /// The permission that the user did not have that caused the exception
     /// </summary>
-    public IPermissionApplication Permission { get; private set; }
+    public IPermissionApplication? Permission { get; private set; }
 
     /// <summary>
     /// Information about the user that failed the pewrmission check
     /// </summary>
-    public IUserContext UserContext { get; private set; }
+    public IUserContext? UserContext { get; private set; }
 
     private static string FormatMessage(
         IPermissionApplication permission,
         IUserContext userContext
         )
     {
-        return $"Permission Validation Check Failed. Permission Type: { permission?.ToString() }. UserId: { userContext?.UserId }";
+        return $"Permission Validation Check Failed. Permission Type: {permission?.ToString()}. UserId: {userContext?.UserId}";
     }
 
 }

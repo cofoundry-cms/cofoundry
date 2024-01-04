@@ -36,8 +36,8 @@ public class DeletePageVersionBlockCommandHandler
             .Select(b => new
             {
                 Block = b,
-                PageId = b.PageVersion.PageId,
-                WorkFlowStatusId = b.PageVersion.WorkFlowStatusId
+                b.PageVersion.PageId,
+                b.PageVersion.WorkFlowStatusId
             })
             .SingleOrDefaultAsync();
 

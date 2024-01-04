@@ -22,7 +22,7 @@ public class GetSeoSettingsQueryHandler
         return MapSettings(allSettings);
     }
 
-    private SeoSettings MapSettings(Dictionary<string, string> allSettings)
+    private SeoSettings MapSettings(IReadOnlyDictionary<string, string> allSettings)
     {
         var settings = new SeoSettings();
 

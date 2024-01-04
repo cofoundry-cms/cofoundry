@@ -33,7 +33,7 @@ public class AddPageVersionBlockCommand : ICommand, ILoggableCommand, IValidatab
     /// </summary>
     [Required]
     [ValidateObject]
-    public IPageBlockTypeDataModel DataModel { get; set; }
+    public IPageBlockTypeDataModel DataModel { get; set; } = null!;
 
     /// <summary>
     /// The region of the page template to add the block to.

@@ -49,7 +49,8 @@ public class RegisterPageBlockTypesCommandHandler
         DetectDuplicateBlockTypes();
 
         var blockTypeDataModels = _allPageBlockTypeDataModels
-            .ToDictionary(m => FormatBlockTypeFileName(m));
+            .Where(m => m is not UninitializedPageBlockTypeDataModel)
+            .ToDictionary(FormatBlockTypeFileName);
 
         await DeleteBlockTypes(executionContext, dbPageBlockTypes, blockTypeDataModels);
 
@@ -79,9 +80,11 @@ public class RegisterPageBlockTypesCommandHandler
 
             if (existingBlock == null)
             {
-                existingBlock = new PageBlockType();
-                existingBlock.FileName = fileName;
-                existingBlock.CreateDate = executionContext.ExecutionDate;
+                existingBlock = new PageBlockType
+                {
+                    FileName = fileName,
+                    CreateDate = executionContext.ExecutionDate
+                };
                 _dbContext.PageBlockTypes.Add(existingBlock);
                 isUpdated = true;
             }
@@ -120,7 +123,7 @@ public class RegisterPageBlockTypesCommandHandler
         IExecutionContext executionContext
         )
     {
-        PageBlockTypeFileDetails fileDetails;
+        PageBlockTypeFileDetails? fileDetails;
 
         try
         {
@@ -174,11 +177,11 @@ public class RegisterPageBlockTypesCommandHandler
         )
     {
         var templatesToDelete = existingBlock
-                            .PageBlockTemplates
-                            .Where(mt => !fileDetails.Templates.Any(t => t.FileName.Equals(mt.FileName, StringComparison.OrdinalIgnoreCase)))
-                            .ToList();
+            .PageBlockTemplates
+            .Where(mt => !fileDetails.Templates.Any(t => t.FileName.Equals(mt.FileName, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
 
-        if (templatesToDelete.Any())
+        if (templatesToDelete.Count != 0)
         {
             _dbContext.PageBlockTypeTemplates.RemoveRange(templatesToDelete);
         }
@@ -204,7 +207,7 @@ public class RegisterPageBlockTypesCommandHandler
         }
     }
 
-    private void DetectDuplicateTemplateFileNames(PageBlockTypeFileDetails fileDetails)
+    private static void DetectDuplicateTemplateFileNames(PageBlockTypeFileDetails fileDetails)
     {
         // It's quite difficult to create duplicate template files since they should
         // all be in the same directory, but it is possible to spread between multiple 
@@ -219,7 +222,7 @@ public class RegisterPageBlockTypesCommandHandler
         if (!EnumerableHelper.IsNullOrEmpty(duplicates))
         {
             var duplicateNames = string.Join(", ", duplicates.Select(t => t.FileName));
-            var message = $"Duplicate page block type templates '{ duplicates.Key }' detected. Conflicting template file names: { duplicateNames }";
+            var message = $"Duplicate page block type templates '{duplicates.Key}' detected. Conflicting template file names: {duplicateNames}";
             throw new PageBlockTypeRegistrationException(message);
         }
     }
@@ -250,11 +253,12 @@ public class RegisterPageBlockTypesCommandHandler
     private async Task DeleteBlockTypes(
         IExecutionContext executionContext,
         Dictionary<string, PageBlockType> dbPageBlockTypes,
-        Dictionary<string, IPageBlockTypeDataModel> pageBlockTypeDataModels)
+        Dictionary<string, IPageBlockTypeDataModel> pageBlockTypeDataModels
+        )
     {
         var blockTypesToDelete = dbPageBlockTypes
             .Where(m => !pageBlockTypeDataModels.ContainsKey(m.Key) && !m.Value.IsArchived)
-            .ToList();
+            .ToArray();
 
         foreach (var blockTypeToDelete in blockTypesToDelete)
         {
@@ -280,15 +284,15 @@ public class RegisterPageBlockTypesCommandHandler
     private void DetectDuplicateBlockTypes()
     {
         var duplicateBlockTypeDefinitions = _allPageBlockTypeDataModels
-                .GroupBy(m => FormatBlockTypeFileName(m))
-                .Where(m => m.Count() > 1)
-                .FirstOrDefault();
+            .GroupBy(m => FormatBlockTypeFileName(m))
+            .Where(m => m.Count() > 1)
+            .FirstOrDefault();
 
         if (!EnumerableHelper.IsNullOrEmpty(duplicateBlockTypeDefinitions))
         {
             var blockTypes = string.Join(", ", duplicateBlockTypeDefinitions.Select(t => t.GetType().FullName));
             throw new PageBlockTypeRegistrationException(
-                $"Duplicate page block type '{ duplicateBlockTypeDefinitions.Key }' detected. Conflicting types: { blockTypes }");
+                $"Duplicate page block type '{duplicateBlockTypeDefinitions.Key}' detected. Conflicting types: {blockTypes}");
         }
     }
 

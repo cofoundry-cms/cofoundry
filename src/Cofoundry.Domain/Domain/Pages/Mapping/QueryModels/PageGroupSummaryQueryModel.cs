@@ -4,9 +4,9 @@ namespace Cofoundry.Domain.QueryModels;
 
 public class PageGroupSummaryQueryModel
 {
-    public PageGroup PageGroup { get; set; }
+    public required PageGroup PageGroup { get; set; }
 
-    public User Creator { get; set; }
+    public required User Creator { get; set; }
 
     public int NumPages { get; set; }
 }

@@ -17,7 +17,7 @@ public class PageDirectoryNode : ICreateAudited
     /// <summary>
     /// User friendly display name of the directory.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Id of the parent directory. This can only be null for the 
@@ -35,17 +35,17 @@ public class PageDirectoryNode : ICreateAudited
     [IgnoreDataMember]
     [Newtonsoft.Json.JsonIgnore]
     [System.Text.Json.Serialization.JsonIgnore]
-    public PageDirectoryNode ParentPageDirectory { get; set; }
+    public PageDirectoryNode? ParentPageDirectory { get; set; }
 
     /// <summary>
     /// Child pages in the site tree hierarchy.
     /// </summary>
-    public ICollection<PageDirectoryNode> ChildPageDirectories { get; set; }
+    public IReadOnlyCollection<PageDirectoryNode> ChildPageDirectories { get; set; } = Array.Empty<PageDirectoryNode>();
 
     /// <summary>
     /// The path of this directory (excluding parent directory path)
     /// </summary>
-    public string UrlPath { get; set; }
+    public string UrlPath { get; set; } = string.Empty;
 
     /// <summary>
     /// The number of pages directly associated with this 
@@ -62,9 +62,9 @@ public class PageDirectoryNode : ICreateAudited
     /// The full (relative) url of this directory
     /// excluding the trailing slash.
     /// </summary>
-    public string FullUrlPath { get; set; }
+    public string FullUrlPath { get; set; } = string.Empty;
 
-    public CreateAuditData AuditData { get; set; }
+    public CreateAuditData AuditData { get; set; } = CreateAuditData.Uninitialized;
 
     /// <summary>
     /// Flattens out the Node and it's children into a single enumerable.
@@ -75,9 +75,11 @@ public class PageDirectoryNode : ICreateAudited
         yield return this;
 
         foreach (var childNode in ChildPageDirectories)
+        {
             foreach (var flattenedNode in childNode.Flatten())
             {
                 yield return flattenedNode;
             }
+        }
     }
 }

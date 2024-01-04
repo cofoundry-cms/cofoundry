@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Domain;
+﻿using System.Collections.Immutable;
+
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// This model is a projection of the data defined in a custom entity 
@@ -11,23 +13,23 @@ public class CustomEntityDefinitionSummary
     /// <summary>
     /// Unique 6 letter code representing the entity (use uppercase)
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Plural name of the entity e.g. 'Products'
     /// </summary>
-    public string NamePlural { get; set; }
+    public string NamePlural { get; set; } = string.Empty;
 
     /// <summary>
     /// Singlar name of the entity e.g. 'Product'
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// A short description that shows up as a tooltip for the admin 
     /// module. E.g  "Products and stock." or "News items for shareholders"
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates whether the UrlSlug property should be treated
@@ -63,10 +65,10 @@ public class CustomEntityDefinitionSummary
     /// <summary>
     /// A type reference for the DataModel class used to persist custom data.
     /// </summary>
-    public Type DataModelType { get; set; }
+    public required Type DataModelType { get; set; }
 
     /// <summary>
     /// Terminology to use when displaying the custom entity, e.g. Title, Url Slug
     /// </summary>
-    public Dictionary<string, string> Terms { get; set; }
+    public IReadOnlyDictionary<string, string> Terms { get; set; } = ImmutableDictionary<string, string>.Empty;
 }

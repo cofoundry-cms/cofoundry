@@ -10,5 +10,5 @@ public interface IContentRepositoryDocumentAssetByIdQueryBuilder
     /// information required to render out a document to page, including 
     /// all the data needed to construct a document file url.
     /// </summary>
-    IDomainRepositoryQueryContext<DocumentAssetRenderDetails> AsRenderDetails();
+    IDomainRepositoryQueryContext<DocumentAssetRenderDetails?> AsRenderDetails();
 }

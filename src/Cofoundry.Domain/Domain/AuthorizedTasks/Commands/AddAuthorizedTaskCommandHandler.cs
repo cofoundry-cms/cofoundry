@@ -98,9 +98,9 @@ public class AddAuthorizedTaskCommandHandler
         }
     }
 
-    private Task<User> GetUserAsync(AddAuthorizedTaskCommand command)
+    private async Task<User> GetUserAsync(AddAuthorizedTaskCommand command)
     {
-        var user = _dbContext
+        var user = await _dbContext
             .Users
             .FilterCanSignIn()
             .FilterById(command.UserId)

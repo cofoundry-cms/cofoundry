@@ -11,7 +11,7 @@ public interface IPageDirectoryCache
     /// is returned, otherwise the getter is invoked and the result is cached and returned
     /// </summary>
     /// <param name="getter">Function to invoke if the entities are not in the cache</param>
-    ICollection<PageDirectoryRoute> GetOrAdd(Func<ICollection<PageDirectoryRoute>> getter);
+    IReadOnlyCollection<PageDirectoryRoute> GetOrAdd(Func<IReadOnlyCollection<PageDirectoryRoute>> getter);
 
     /// <summary>
     /// Clears all items in the page directory cache

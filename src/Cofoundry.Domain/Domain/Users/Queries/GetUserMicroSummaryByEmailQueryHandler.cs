@@ -8,8 +8,8 @@ namespace Cofoundry.Domain.Internal;
 /// addresses as the username then the email field is optional and may be empty.
 /// </summary>
 public class GetUserMicroSummaryByEmailQueryHandler
-    : IQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
-    , IPermissionRestrictedQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary>
+    : IQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary?>
+    , IPermissionRestrictedQueryHandler<GetUserMicroSummaryByEmailQuery, UserMicroSummary?>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IUserMicroSummaryMapper _userMicroSummaryMapper;
@@ -26,7 +26,7 @@ public class GetUserMicroSummaryByEmailQueryHandler
         _userDataFormatter = userDataFormatter;
     }
 
-    public async Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByEmailQuery query, IExecutionContext executionContext)
+    public async Task<UserMicroSummary?> ExecuteAsync(GetUserMicroSummaryByEmailQuery query, IExecutionContext executionContext)
     {
         if (string.IsNullOrWhiteSpace(query.Email)) return null;
 

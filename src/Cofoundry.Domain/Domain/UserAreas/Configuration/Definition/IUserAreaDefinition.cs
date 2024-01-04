@@ -48,7 +48,7 @@ public interface IUserAreaDefinition
     /// If set to <see langword="null"/> then a 403 (Forbidden) error page will be 
     /// returned instead.
     /// </summary>
-    string SignInPath { get; }
+    string? SignInPath { get; }
 
     /// <summary>
     /// Cofoundry creates an auth scheme for each user area, but only one can be the 

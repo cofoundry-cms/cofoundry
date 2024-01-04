@@ -2,12 +2,20 @@
 
 namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IPageDirectoryMicroSummaryMapper"/>.
+/// </summary>
 public class PageDirectoryMicroSummaryMapper : IPageDirectoryMicroSummaryMapper
 {
-    public PageDirectoryMicroSummary Map(PageDirectory pageDirectory)
+    /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(pageDirectory))]
+    public PageDirectoryMicroSummary? Map(PageDirectory? pageDirectory)
     {
-        if (pageDirectory == null) return null;
+        if (pageDirectory == null)
+        {
+            return null;
+        }
+
         MissingIncludeException.ThrowIfNull(pageDirectory, c => c.PageDirectoryPath);
 
         var result = new PageDirectoryMicroSummary()

@@ -63,7 +63,7 @@ public class NestedDataModelCollectionAttribute : ValidateObjectAttribute, IMeta
 
     private IncorrectCollectionMetaDataAttributePlacementException GetIncorrectTypeException(DisplayMetadataProviderContext context)
     {
-        var propertyName = context.Key.ContainerType.Name + "." + context.Key.Name;
+        var propertyName = context.Key.ContainerType?.Name + "." + context.Key.Name;
         var msg = $"{nameof(NestedDataModelCollectionAttribute)} can only be placed on properties with a generic collection of types that inherit from {typeof(INestedDataModel).Name}. Property name is {propertyName} and the type is {context.Key.ModelType}.";
         var exception = new IncorrectCollectionMetaDataAttributePlacementException(this, context, new Type[] { typeof(INestedDataModel) }, msg);
 
@@ -84,20 +84,26 @@ public class NestedDataModelCollectionAttribute : ValidateObjectAttribute, IMeta
         return dependencies;
     }
 
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         var collection = value as IEnumerable<INestedDataModel>;
 
         if (MinItems > 0 && EnumerableHelper.Enumerate(collection).Count() < MinItems)
         {
-            return new ValidationResult(validationContext.MemberName + $" must have at least {MinItems} items.", new string[] { validationContext.MemberName });
+            return CreateError(validationContext, $" must have at least {MinItems} items.");
         }
 
         if (MaxItems > 0 && EnumerableHelper.Enumerate(collection).Count() > MaxItems)
         {
-            return new ValidationResult(validationContext.MemberName + $" cannot have more than {MaxItems} items.", new string[] { validationContext.MemberName });
+            return CreateError(validationContext, $" cannot have more than {MaxItems} items.");
         }
 
         return base.IsValid(value, validationContext);
+    }
+
+    private ValidationResult CreateError(ValidationContext validationContext, string message)
+    {
+        string[]? memberNames = string.IsNullOrEmpty(validationContext.MemberName) ? null : [validationContext.MemberName];
+        return new ValidationResult(validationContext.MemberName + message, memberNames);
     }
 }

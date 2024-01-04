@@ -12,7 +12,7 @@ public class QueueAssetFileDeletionCommand : ICommand, ILoggableCommand, IValida
     /// </summary>
     [Required]
     [StringLength(6, MinimumLength = 6)]
-    public string EntityDefinitionCode { get; set; }
+    public string EntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The filename of the asset to delete without the file 
@@ -20,7 +20,7 @@ public class QueueAssetFileDeletionCommand : ICommand, ILoggableCommand, IValida
     /// </summary>
     [Required]
     [StringLength(50)]
-    public string FileNameOnDisk { get; set; }
+    public string FileNameOnDisk { get; set; } = string.Empty;
 
     /// <summary>
     /// The file extension of the asset to delete without the 
@@ -28,7 +28,7 @@ public class QueueAssetFileDeletionCommand : ICommand, ILoggableCommand, IValida
     /// </summary>
     [Required]
     [StringLength(30)]
-    public string FileExtension { get; set; }
+    public string FileExtension { get; set; } = string.Empty;
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

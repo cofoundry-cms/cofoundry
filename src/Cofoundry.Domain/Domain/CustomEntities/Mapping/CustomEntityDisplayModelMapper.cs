@@ -29,7 +29,7 @@ public class CustomEntityDisplayModelMapper : ICustomEntityDisplayModelMapper
     /// also be queried as Published.
     /// </param>
     /// <returns>Mapped display model instance.</returns>
-    public Task<TDisplayModel> MapDisplayModelAsync<TDisplayModel>(
+    public async Task<TDisplayModel> MapDisplayModelAsync<TDisplayModel>(
         CustomEntityRenderDetails renderDetails,
         PublishStatusQuery publishStatusQuery
         )
@@ -39,7 +39,18 @@ public class CustomEntityDisplayModelMapper : ICustomEntityDisplayModelMapper
         var mapper = _serviceProvider.GetRequiredService(mapperType);
 
         var method = mapperType.GetMethod(mapDisplayModelMethodName);
+        if (method == null)
+        {
+            throw new Exception($"Could not find method {mapDisplayModelMethodName} on type {mapperType.FullName}");
+        }
 
-        return (Task<TDisplayModel>)method.Invoke(mapper, new object[] { renderDetails, renderDetails.Model, publishStatusQuery });
+        var result = method.Invoke(mapper, new object[] { renderDetails, renderDetails.Model, publishStatusQuery });
+        var typedResult = result as Task<TDisplayModel>;
+        if (typedResult == null)
+        {
+            throw new Exception($"Unexpected result type when invoking {mapDisplayModelMethodName} on type {mapperType.FullName}. Expected Task of type '{typeof(TDisplayModel).FullName}' but got '{result?.GetType().FullName}'");
+        }
+
+        return await typedResult;
     }
 }

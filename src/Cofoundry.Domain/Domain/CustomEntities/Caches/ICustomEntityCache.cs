@@ -13,7 +13,7 @@ public interface ICustomEntityCache
     /// </summary>
     /// <param name="customEntityTypeCode">Definition code of the custom entity type to return routes for</param>
     /// <param name="getter">Function to invoke if the custom entities are not in the cache</param>
-    Task<ICollection<CustomEntityRoute>> GetOrAddAsync(string customEntityTypeCode, Func<Task<ICollection<CustomEntityRoute>>> getter);
+    Task<IReadOnlyCollection<CustomEntityRoute>> GetOrAddAsync(string customEntityTypeCode, Func<Task<IReadOnlyCollection<CustomEntityRoute>>> getter);
 
     /// <summary>
     /// Clears all items in the custom entity cache

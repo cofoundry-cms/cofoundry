@@ -44,8 +44,10 @@ public class DeleteCustomEntityDraftVersionCommandHandler
         var draft = await _dbContext
             .CustomEntityVersions
             .Include(v => v.CustomEntity)
-            .SingleOrDefaultAsync(v => v.CustomEntityId == command.CustomEntityId
-                                  && v.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
+            .SingleOrDefaultAsync(v =>
+                v.CustomEntityId == command.CustomEntityId
+                && v.WorkFlowStatusId == (int)WorkFlowStatus.Draft
+                );
 
         if (draft != null)
         {

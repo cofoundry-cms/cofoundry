@@ -12,9 +12,12 @@ public class RewriteRuleSummaryMapper : IRewriteRuleSummaryMapper
     /// object. If the db record is null then null is returned.
     /// </summary>
     /// <param name="dbRewriteRule">RewriteRule record from the database.</param>
-    public virtual RewriteRuleSummary Map(RewriteRule dbRewriteRule)
+    public virtual RewriteRuleSummary? Map(RewriteRule? dbRewriteRule)
     {
-        if (dbRewriteRule == null) return null;
+        if (dbRewriteRule == null)
+        {
+            return null;
+        }
 
         var result = new RewriteRuleSummary()
         {

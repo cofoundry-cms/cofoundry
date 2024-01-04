@@ -5,7 +5,7 @@
 /// CustomEntityId or UrlSlug property. These route objects are 
 /// cached in order to make routing lookups speedy.
 /// </summary>
-public class GetCustomEntityRouteByPathQuery : IQuery<CustomEntityRoute>
+public class GetCustomEntityRouteByPathQuery : IQuery<CustomEntityRoute?>
 {
     /// <summary>
     /// Unique 6 character code representing the type of custom 
@@ -13,7 +13,7 @@ public class GetCustomEntityRouteByPathQuery : IQuery<CustomEntityRoute>
     /// </summary>
     [Required]
     [MaxLength(6)]
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Database id of the custom entity to find. Either the
@@ -30,5 +30,5 @@ public class GetCustomEntityRouteByPathQuery : IQuery<CustomEntityRoute>
     /// The slug identifier of the custom entity to find. Either the
     /// id or url slug should be specified.
     /// </summary>
-    public string UrlSlug { get; set; }
+    public string? UrlSlug { get; set; }
 }

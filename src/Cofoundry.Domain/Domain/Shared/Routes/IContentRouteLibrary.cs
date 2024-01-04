@@ -17,12 +17,12 @@ public interface IContentRouteLibrary
     /// <summary>
     /// Gets the full url of a page.
     /// </summary>
-    string Page(IPageRoute route);
+    string Page(IPageRoute? route);
 
     /// <summary>
     /// Gets the full (relative) url of a custom entity details page.
     /// </summary>
-    string Page(ICustomEntityRoutable customEntity);
+    string Page(ICustomEntityRoutable? customEntity);
 
     #endregion
 
@@ -35,7 +35,7 @@ public interface IContentRouteLibrary
     /// </summary>
     /// <param name="imageAssetId">Id of the image asset to get the url for.</param>
     /// <param name="settings">Optional resizing settings for the image.</param>
-    Task<string> ImageAssetAsync(int? imageAssetId, IImageResizeSettings settings = null);
+    Task<string> ImageAssetAsync(int? imageAssetId, IImageResizeSettings? settings = null);
 
     /// <summary>
     /// Simple but less efficient way of getting an image url if you only know 
@@ -52,7 +52,7 @@ public interface IContentRouteLibrary
     /// </summary>
     /// <param name="image">Image asset to get the url for.</param>
     /// <param name="settings">Optional resizing settings for the image.</param>
-    string ImageAsset(IImageAssetRenderable image, IImageResizeSettings settings = null);
+    string ImageAsset(IImageAssetRenderable? image, IImageResizeSettings? settings = null);
 
     /// <summary>
     /// Gets the url for an image asset, with optional resizing parameters
@@ -60,7 +60,7 @@ public interface IContentRouteLibrary
     /// <param name="image">Image asset to get the url for.</param>
     /// <param name="width">width to resize the image to.</param>
     /// <param name="height">height to resize the image to.</param>
-    string ImageAsset(IImageAssetRenderable image, int? width, int? height = null);
+    string ImageAsset(IImageAssetRenderable? image, int? width, int? height = null);
 
     #endregion
 
@@ -81,7 +81,7 @@ public interface IContentRouteLibrary
     /// browser using the "inline" content disposition.
     /// </summary>
     /// <param name="asset">asset to get the url for.</param>
-    string DocumentAsset(IDocumentAssetRenderable asset);
+    string DocumentAsset(IDocumentAssetRenderable? asset);
 
     /// <summary>
     /// Simple but less efficient way of getting a document url if you only know 
@@ -97,7 +97,7 @@ public interface IContentRouteLibrary
     /// the "attachment" content disposition.
     /// </summary>
     /// <param name="asset">Document asset to get the url for.</param>
-    string DocumentAssetDownload(IDocumentAssetRenderable asset);
+    string DocumentAssetDownload(IDocumentAssetRenderable? asset);
 
     #endregion
 
@@ -105,5 +105,5 @@ public interface IContentRouteLibrary
     /// Maps a relative url to an absolute one.
     /// </summary>
     /// <param name="url">The relative url to map.</param>
-    string ToAbsolute(string url);
+    string? ToAbsolute(string? url);
 }

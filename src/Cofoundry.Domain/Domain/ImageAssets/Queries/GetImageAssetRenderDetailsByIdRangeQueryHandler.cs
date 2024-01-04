@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetImageAssetRenderDetailsByIdRangeQueryHandler
-    : IQueryHandler<GetImageAssetRenderDetailsByIdRangeQuery, IDictionary<int, ImageAssetRenderDetails>>
-    , IPermissionRestrictedQueryHandler<GetImageAssetRenderDetailsByIdRangeQuery, IDictionary<int, ImageAssetRenderDetails>>
+    : IQueryHandler<GetImageAssetRenderDetailsByIdRangeQuery, IReadOnlyDictionary<int, ImageAssetRenderDetails>>
+    , IPermissionRestrictedQueryHandler<GetImageAssetRenderDetailsByIdRangeQuery, IReadOnlyDictionary<int, ImageAssetRenderDetails>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IImageAssetCache _imageAssetCache;
@@ -21,18 +21,18 @@ public class GetImageAssetRenderDetailsByIdRangeQueryHandler
         _imageAssetRenderDetailsMapper = imageAssetRenderDetailsMapper;
     }
 
-    public async Task<IDictionary<int, ImageAssetRenderDetails>> ExecuteAsync(GetImageAssetRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, ImageAssetRenderDetails>> ExecuteAsync(GetImageAssetRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
     {
         var cachedResults = QueryCache(query.ImageAssetIds);
         var missingResultsQuery = QueryDb(cachedResults);
-        List<ImageAssetRenderDetails> missingResults = null;
+        IReadOnlyCollection<ImageAssetRenderDetails>? missingResults = null;
 
         if (missingResultsQuery != null)
         {
-            var dbMissingResults = await missingResultsQuery.ToListAsync();
+            var dbMissingResults = await missingResultsQuery.ToArrayAsync();
             missingResults = dbMissingResults
-                .Select(_imageAssetRenderDetailsMapper.Map)
-                .ToList();
+                .Select(i => _imageAssetRenderDetailsMapper.Map(i))
+                .ToArray();
         }
 
         return AddResultsToCacheAndReturnResult(cachedResults, missingResults);
@@ -53,7 +53,7 @@ public class GetImageAssetRenderDetailsByIdRangeQueryHandler
         return results;
     }
 
-    private IQueryable<ImageAsset> QueryDb(List<ImageCacheResult> cacheResults)
+    private IQueryable<ImageAsset>? QueryDb(List<ImageCacheResult> cacheResults)
     {
         var missingIds = cacheResults
             .Where(r => r.Model == null)
@@ -68,7 +68,10 @@ public class GetImageAssetRenderDetailsByIdRangeQueryHandler
             .FilterByIds(missingIds);
     }
 
-    private IDictionary<int, ImageAssetRenderDetails> AddResultsToCacheAndReturnResult(List<ImageCacheResult> results, List<ImageAssetRenderDetails> missingResults)
+    private IReadOnlyDictionary<int, ImageAssetRenderDetails> AddResultsToCacheAndReturnResult(
+        IReadOnlyCollection<ImageCacheResult> results,
+        IReadOnlyCollection<ImageAssetRenderDetails>? missingResults
+        )
     {
         if (missingResults != null)
         {
@@ -87,9 +90,9 @@ public class GetImageAssetRenderDetailsByIdRangeQueryHandler
         }
 
         return results
-            .Where(r => r.Model != null)
             .Select(r => r.Model)
-            .ToDictionary(i => i.ImageAssetId);
+            .WhereNotNull()
+            .ToImmutableDictionary(i => i.ImageAssetId);
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetImageAssetRenderDetailsByIdRangeQuery query)
@@ -101,6 +104,6 @@ public class GetImageAssetRenderDetailsByIdRangeQueryHandler
     {
         public int ImageAssetId { get; set; }
 
-        public ImageAssetRenderDetails Model { get; set; }
+        public ImageAssetRenderDetails? Model { get; set; }
     }
 }

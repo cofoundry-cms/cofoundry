@@ -26,7 +26,7 @@ public interface IEntityAccessRule : ICreateAuditable
     /// The optional <see cref="Role"/> that this rule restricts page 
     /// access to. The role must belong to the user area defined by <see cref="UserAreaCode"/>.
     /// </summary>
-    Role Role { get; set; }
+    Role? Role { get; set; }
 
     /// <summary>
     /// Returns the database primary key for the rule instance.

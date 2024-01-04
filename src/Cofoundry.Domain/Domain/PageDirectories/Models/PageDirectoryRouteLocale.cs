@@ -9,7 +9,7 @@ public class PageDirectoryRouteLocale
 {
     public int LocaleId { get; set; }
 
-    public string UrlPath { get; set; }
+    public string UrlPath { get; set; } = string.Empty;
 
-    public string FullUrlPath { get; set; }
+    public string FullUrlPath { get; set; } = string.Empty;
 }

@@ -6,7 +6,7 @@
 /// unstructured data blob where the relationship cannot be enforced by
 /// the database.
 /// </summary>
-public class GetEntityDependencySummaryByRelatedEntityIdQuery : IQuery<ICollection<EntityDependencySummary>>
+public class GetEntityDependencySummaryByRelatedEntityIdQuery : IQuery<IReadOnlyCollection<EntityDependencySummary>>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="GetEntityDependencySummaryByRelatedEntityIdQuery"/> class.
@@ -37,7 +37,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdQuery : IQuery<ICollecti
     /// to check.
     /// </summary>
     [Required]
-    public string EntityDefinitionCode { get; set; }
+    public string EntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Database id of the entity to check for required dependencies. Each entity 

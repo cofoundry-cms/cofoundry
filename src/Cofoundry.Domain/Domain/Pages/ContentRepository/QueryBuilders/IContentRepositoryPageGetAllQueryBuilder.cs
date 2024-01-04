@@ -12,5 +12,5 @@ public interface IContentRepositoryPageGetAllQueryBuilder
     /// default as it's core to routing and often incorporated in more detailed
     /// page projections.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<PageRoute>> AsRoutes();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<PageRoute>> AsRoutes();
 }

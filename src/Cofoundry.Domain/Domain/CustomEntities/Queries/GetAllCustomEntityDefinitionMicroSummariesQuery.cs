@@ -6,6 +6,6 @@
 /// data defined in a custom entity definition class which is typically used 
 /// as part of another domain model.
 /// </summary>
-public class GetAllCustomEntityDefinitionMicroSummariesQuery : IQuery<ICollection<CustomEntityDefinitionMicroSummary>>
+public class GetAllCustomEntityDefinitionMicroSummariesQuery : IQuery<IReadOnlyCollection<CustomEntityDefinitionMicroSummary>>
 {
 }

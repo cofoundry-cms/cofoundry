@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using Cofoundry.Core.Reflection.Internal;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 
@@ -11,10 +12,9 @@ namespace Cofoundry.Domain.CQS.Internal;
 /// Inspiration taken from http://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=91,
 /// but has been adapted a fair bit.
 /// </remarks>
-/// <inheritdoc/>
 public class CommandExecutor : ICommandExecutor
 {
-    private static readonly MethodInfo _executeAsyncMethod = typeof(CommandExecutor).GetMethod(nameof(ExecuteCommandAsync), BindingFlags.NonPublic | BindingFlags.Instance);
+    private static readonly MethodInfo _executeAsyncMethod = MethodReferenceHelper.GetPrivateInstanceMethod<CommandExecutor>(nameof(ExecuteCommandAsync));
     private static readonly ConcurrentDictionary<Type, MethodInfo> _cachedAsyncMethods = new ConcurrentDictionary<Type, MethodInfo>();
 
     private readonly IModelValidationService _modelValidationService;
@@ -41,29 +41,43 @@ public class CommandExecutor : ICommandExecutor
         _executePermissionValidationService = executePermissionValidationService;
     }
 
+    /// <inheritdoc/>
     public Task ExecuteAsync(ICommand command)
     {
-        IExecutionContext executionContext = null;
+        IExecutionContext? executionContext = null;
 
         return ExecuteAsync(command, executionContext);
     }
 
-    public async Task ExecuteAsync(ICommand command, IExecutionContext executionContext)
+    /// <inheritdoc/>
+    public async Task ExecuteAsync(ICommand command, IExecutionContext? executionContext)
     {
-        if (command == null) return;
+        ArgumentNullException.ThrowIfNull(command);
 
         try
         {
             var commandType = command.GetType();
             var genericExecuteMethod = _cachedAsyncMethods.GetOrAdd(commandType, t => { return CreateExecuteMethod(_executeAsyncMethod, t); });
-            await (Task)genericExecuteMethod.Invoke(this, new object[] { command, executionContext });
+            var task = genericExecuteMethod.Invoke(this, [command, executionContext]) as Task;
+
+            if (task == null)
+            {
+                throw new InvalidCastException($"Expected {_executeAsyncMethod.Name} to return a Task but found null.");
+            }
+
+            await task;
         }
         catch (TargetInvocationException ex)
         {
+            if (ex.InnerException == null)
+            {
+                throw;
+            }
             HandleException(ex);
         }
     }
 
+    /// <inheritdoc/>
     public Task ExecuteAsync(ICommand command, IUserContext userContext)
     {
         ArgumentNullException.ThrowIfNull(userContext);
@@ -80,7 +94,7 @@ public class CommandExecutor : ICommandExecutor
     /// in cases where a class inherits from a Command to add additional 
     /// information (e.g. in a ViewModel) but doesnt implement its own handler.
     /// </summary>
-    private MethodInfo CreateExecuteMethod(MethodInfo executeMethod, Type type, Type previousType = null)
+    private MethodInfo CreateExecuteMethod(MethodInfo executeMethod, Type type, Type? previousType = null)
     {
         var isAssignable = typeof(ICommand).IsAssignableFrom(type);
         var typeInfo = type.GetTypeInfo();
@@ -105,7 +119,7 @@ public class CommandExecutor : ICommandExecutor
         throw new InvalidOperationException(msg);
     }
 
-    private async Task ExecuteCommandAsync<TCommand>(TCommand command, IExecutionContext executionContext) where TCommand : ICommand
+    private async Task ExecuteCommandAsync<TCommand>(TCommand command, IExecutionContext? executionContext) where TCommand : ICommand
     {
         if (command == null) return;
 
@@ -131,7 +145,7 @@ public class CommandExecutor : ICommandExecutor
         await _commandLogService.LogAsync(command, cx);
     }
 
-    private async Task<IExecutionContext> CreateExecutionContextAsync(IExecutionContext cx)
+    private async Task<IExecutionContext> CreateExecutionContextAsync(IExecutionContext? cx)
     {
         if (cx == null)
         {
@@ -151,9 +165,10 @@ public class CommandExecutor : ICommandExecutor
         return cx;
     }
 
-    private void HandleException(TargetInvocationException ex)
+    [DoesNotReturn]
+    private void HandleException(Exception innerEx)
     {
-        var info = ExceptionDispatchInfo.Capture(ex.InnerException);
+        var info = ExceptionDispatchInfo.Capture(innerEx);
         info.Throw();
     }
 }

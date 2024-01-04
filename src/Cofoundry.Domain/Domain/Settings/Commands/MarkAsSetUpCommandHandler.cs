@@ -16,7 +16,6 @@ public class MarkAsSetUpCommandHandler
 
     public MarkAsSetUpCommandHandler(
         CofoundryDbContext dbContext,
-        SettingCommandHelper settingCommandHelper,
         ISettingCache settingCache,
         IPermissionValidationService permissionValidationService,
         ITransactionScopeManager transactionScopeFactory
@@ -38,10 +37,12 @@ public class MarkAsSetUpCommandHandler
 
         if (setting == null)
         {
-            setting = new Setting();
-            setting.SettingKey = SETTING_KEY;
-            setting.CreateDate = executionContext.ExecutionDate;
-            setting.UpdateDate = executionContext.ExecutionDate;
+            setting = new Setting
+            {
+                SettingKey = SETTING_KEY,
+                CreateDate = executionContext.ExecutionDate,
+                UpdateDate = executionContext.ExecutionDate
+            };
             _dbContext.Settings.Add(setting);
         }
 

@@ -8,9 +8,11 @@ namespace Cofoundry.Domain.Internal;
 public interface IImageAssetRenderDetailsMapper
 {
     /// <summary>
-    /// Maps an EF ImageAsset record from the db into a ImageAssetDetails 
-    /// object. If the db record is null then null is returned.
+    /// Maps an EF <see cref="ImageAsset"/> record from the db into an 
+    /// <see cref="ImageAssetRenderDetails"/> model. If the db record is 
+    /// <see langword="null"/> then <see langword="null"/> is returned.
     /// </summary>
-    /// <param name="dbImage">ImageAsset record from the database.</param>
-    ImageAssetRenderDetails Map(ImageAsset dbImage);
+    /// <param name="dbImage"><see cref="ImageAsset"/> record from the database.</param>
+    [return: NotNullIfNotNull(nameof(dbImage))]
+    ImageAssetRenderDetails? Map(ImageAsset? dbImage);
 }

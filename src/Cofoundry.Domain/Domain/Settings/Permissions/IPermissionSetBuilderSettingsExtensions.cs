@@ -38,9 +38,13 @@ public static class IPermissionSetBuilderSettingsExtensions
         return Run(builder, configure, false);
     }
 
-    private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<SettingsPermissionBuilder> configure, bool isIncludeOperation)
+    private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<SettingsPermissionBuilder>? configure, bool isIncludeOperation)
     {
-        if (configure == null) configure = c => c.All();
+        if (configure == null)
+        {
+            configure = c => c.All();
+        }
+
         var entityBuilder = new SettingsPermissionBuilder(builder, isIncludeOperation);
         configure(entityBuilder);
 

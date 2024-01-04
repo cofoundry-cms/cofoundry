@@ -15,24 +15,24 @@ public class PageTemplateDetails
     /// <summary>
     /// File name excluding extension and any leading underscores.
     /// </summary>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// Human readable display name. This is unique, so to avoid 
     /// confusion when selecting a template from a list.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Long description, nullable and can be empty.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Full virtual path to the view file including the filename. This will
     /// be unique.
     /// </summary>
-    public string FullPath { get; set; }
+    public string FullPath { get; set; } = string.Empty;
 
     /// <summary>
     /// The number of pages that use this template.
@@ -40,25 +40,25 @@ public class PageTemplateDetails
     public int NumPages { get; set; }
 
     /// <summary>
-    /// If this template is of type PageType.CustomEntityDetails then 
+    /// If this template is of type <see cref="PageType.CustomEntityDetails"/> then 
     /// it will represent the details page of a specific custom entity
     /// definition.
     /// </summary>
-    public CustomEntityDefinitionMicroSummary CustomEntityDefinition { get; set; }
+    public CustomEntityDefinitionMicroSummary? CustomEntityDefinition { get; set; }
 
     /// <summary>
-    /// If this template is of type PageType.CustomEntityDetails, this will
+    /// If this template is of type <see cref="PageType.CustomEntityDetails"/>, this will
     /// be the type of the custom entity model used in the template e.g.
     /// if the template model is CustomEntityPageViewModel&lt;BlogPostDetailsDisplayModel&gt;
     /// this property would be BlogPostDetailsDisplayModel.
     /// </summary>
-    public string CustomEntityModelType { get; set; }
+    public string? CustomEntityModelType { get; set; }
 
     /// <summary>
     /// Pages can be one of several types represented by 
-    /// the PageType enum which will either be PageType.Generic or
-    /// one of the special page function like PageType.CustomEntityDetails
-    /// or PageType.NotFound
+    /// the PageType enum which will either be <see cref="PageType.Generic"/> or
+    /// one of the special page function like <see cref="PageType.CustomEntityDetails"/>
+    /// or <see cref="PageType.NotFound"/>.
     /// </summary>
     public PageType PageType { get; set; }
 
@@ -68,7 +68,7 @@ public class PageTemplateDetails
     /// e.g. @Cofoundry.Template.Region("MyRegionName"). These regions represent
     /// areas where page blocks can be placed (i.e. insert content).
     /// </summary>
-    public ICollection<PageTemplateRegionDetails> Regions { get; set; }
+    public IReadOnlyCollection<PageTemplateRegionDetails> Regions { get; set; } = Array.Empty<PageTemplateRegionDetails>();
 
     /// <summary>
     /// Indicates if the template has been archived and is no longer available 

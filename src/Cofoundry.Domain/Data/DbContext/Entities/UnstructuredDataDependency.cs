@@ -12,14 +12,19 @@ public class UnstructuredDataDependency
     /// entity is the main entity record e.g. if an image is used in a custom entity data 
     /// model, the image is the root entity and the custom entity is the relation.
     /// </summary>
-    public string RootEntityDefinitionCode { get; set; }
+    public string RootEntityDefinitionCode { get; set; } = string.Empty;
 
+    private EntityDefinition? _rootEntityDefinition;
     /// <summary>
     /// The entity definition for the root entity. The root entity is the main entity record 
     /// e.g. if an image is used in a custom entity data model, the image is the root entity 
     /// and the custom entity is the relation.
     /// </summary>
-    public virtual EntityDefinition RootEntityDefinition { get; set; }
+    public EntityDefinition RootEntityDefinition
+    {
+        get => _rootEntityDefinition ?? throw NavigationPropertyNotInitializedException.Create<UnstructuredDataDependency>(nameof(RootEntityDefinition));
+        set => _rootEntityDefinition = value;
+    }
 
     /// <summary>
     /// The database id of the root entity. The root entity is the main entity record e.g. 
@@ -35,15 +40,20 @@ public class UnstructuredDataDependency
     /// is used in a custom entity data model, the image is the root entity and the custom entity 
     /// is the relation.
     /// </summary>
-    public string RelatedEntityDefinitionCode { get; set; }
+    public string RelatedEntityDefinitionCode { get; set; } = string.Empty;
 
+    private EntityDefinition? _relatedEntityDefinition;
     /// <summary>
     /// The entity definition the root is entity is related to. The related entity
     /// is the entity that contains a property that references the root entity e.g. if an image 
     /// is used in a custom entity data model, the image is the root entity and the custom entity 
     /// is the relation.
     /// </summary>
-    public virtual EntityDefinition RelatedEntityDefinition { get; set; }
+    public EntityDefinition RelatedEntityDefinition
+    {
+        get => _relatedEntityDefinition ?? throw NavigationPropertyNotInitializedException.Create<UnstructuredDataDependency>(nameof(EntityDefinition));
+        set => _relatedEntityDefinition = value;
+    }
 
     /// <summary>
     /// The database id of the entity the root is entity is related. The related entity

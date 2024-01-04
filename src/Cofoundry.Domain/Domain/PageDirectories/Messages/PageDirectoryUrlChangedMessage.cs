@@ -17,5 +17,5 @@ public class PageDirectoryUrlChangedMessage
     /// The full (relative) URL of the directory before the change, formatted with the leading
     /// slash but excluding the trailing slash e.g. "/parent-directory/child-directory".
     /// </summary
-    public string OldFullUrlPath { get; set; }
+    public string OldFullUrlPath { get; set; } = string.Empty;
 }

@@ -39,7 +39,10 @@ public class DeletePageDirectoryCommandHandler
             .PageDirectories
             .SingleOrDefaultAsync(d => d.PageDirectoryId == command.PageDirectoryId);
 
-        if (pageDirectory == null) return;
+        if (pageDirectory == null)
+        {
+            return;
+        }
         ValidateNotRootDirectory(pageDirectory);
 
         var directoriesToDelete = await GetDirectoryIdsToDeleteAsync(command);
@@ -94,7 +97,10 @@ public class DeletePageDirectoryCommandHandler
     /// are deleted. Note that these will be actually deleted via the database trigger
     /// but we need the list to check for constraints and publish messages.
     /// </summary>
-    private async Task<Dictionary<int, PageDeletedMessage>> GetPageIdsToDeleteAndValidatePermissionAsync(ICollection<int> directoryIdsToDelete, IExecutionContext executionContext)
+    private async Task<Dictionary<int, PageDeletedMessage>> GetPageIdsToDeleteAndValidatePermissionAsync(
+        IReadOnlyCollection<int> directoryIdsToDelete,
+        IExecutionContext executionContext
+        )
     {
         var pageIds = await _dbContext
             .Pages
@@ -103,7 +109,7 @@ public class DeletePageDirectoryCommandHandler
             .Select(p => p.PageId)
             .ToListAsync();
 
-        if (pageIds.Any())
+        if (pageIds.Count != 0)
         {
             _permissionValidationService.EnforcePermission<PageDeletePermission>(executionContext.UserContext);
         }
@@ -125,9 +131,12 @@ public class DeletePageDirectoryCommandHandler
         return results;
     }
 
-    private async Task ValidateDependencies(string entityDefinitionCode, ICollection<int> entityIds, IExecutionContext executionContext)
+    private async Task ValidateDependencies(string entityDefinitionCode, IReadOnlyCollection<int> entityIds, IExecutionContext executionContext)
     {
-        if (!entityIds.Any()) return;
+        if (entityIds.Count == 0)
+        {
+            return;
+        }
 
         var requiredDependencies = await _queryExecutor.ExecuteAsync(new GetEntityDependencySummaryByRelatedEntityIdRangeQuery()
         {

@@ -8,7 +8,7 @@ public interface IPagePathHelper
     /// - doesn't end with a trailing slash
     /// </summary>
     /// <param name="path">Path to standardize.</param>
-    string StandardizePath(string path);
+    string StandardizePath(string? path);
 
     /// <summary>
     /// Standardizes a page path ensuring it 
@@ -18,5 +18,5 @@ public interface IPagePathHelper
     /// </summary>
     /// <param name="path">Path to standardize.</param>
     /// <param name="currentLocale">Locale of the path to remove if present.</param>
-    string StandardizePathWithoutLocale(string path, ActiveLocale currentLocale);
+    string StandardizePathWithoutLocale(string? path, ActiveLocale currentLocale);
 }

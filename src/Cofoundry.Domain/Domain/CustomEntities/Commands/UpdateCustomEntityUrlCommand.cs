@@ -25,7 +25,7 @@ public class UpdateCustomEntityUrlCommand : ICommand, ILoggableCommand
     [Required]
     [StringLength(200)]
     [Slug]
-    public virtual string UrlSlug { get; set; }
+    public virtual string UrlSlug { get; set; } = string.Empty;
 
     /// <summary>
     /// Optional id of a locale to assign to the custom entity

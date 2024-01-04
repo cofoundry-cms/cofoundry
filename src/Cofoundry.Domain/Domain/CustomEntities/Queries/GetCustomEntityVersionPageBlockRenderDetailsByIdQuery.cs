@@ -5,7 +5,7 @@
 /// the mapped display model may contain other versioned entities, you can 
 /// optionally pass down a PublishStatusQuery to use in the mapping process.
 /// </summary>
-public class GetCustomEntityVersionPageBlockRenderDetailsByIdQuery : IQuery<CustomEntityVersionPageBlockRenderDetails>
+public class GetCustomEntityVersionPageBlockRenderDetailsByIdQuery : IQuery<CustomEntityVersionPageBlockRenderDetails?>
 {
     public GetCustomEntityVersionPageBlockRenderDetailsByIdQuery() { }
 

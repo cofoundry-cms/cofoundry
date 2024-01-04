@@ -12,5 +12,5 @@ public interface IAdvancedContentRepositoryPageByCustomEntityIdRangeQueryBuilder
     /// type, it is supported and so each custom entity id in the query returns a collection
     /// of routes.
     /// </summary>
-    IDomainRepositoryQueryContext<IDictionary<int, ICollection<PageRoutingInfo>>> AsRoutingInfo();
+    IDomainRepositoryQueryContext<IReadOnlyDictionary<int, IReadOnlyCollection<PageRoutingInfo>>> AsRoutingInfo();
 }

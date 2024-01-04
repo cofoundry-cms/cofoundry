@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.CQS.Internal;
 
 /// <summary>
-/// Factory to create ICommandHandler instances
+/// Default implementation of <see cref="ICommandHandlerFactory"/>.
 /// </summary>
 public class CommandHandlerFactory : ICommandHandlerFactory
 {
@@ -16,9 +16,7 @@ public class CommandHandlerFactory : ICommandHandlerFactory
         _serviceProvider = serviceProvider;
     }
 
-    /// <summary>
-    /// Creates a new IAsyncCommandHandler instance with the specified type signature.
-    /// </summary>
+    /// <inheritdoc/>
     public ICommandHandler<T> CreateAsyncHandler<T>() where T : ICommand
     {
         return _serviceProvider.GetRequiredService<ICommandHandler<T>>();

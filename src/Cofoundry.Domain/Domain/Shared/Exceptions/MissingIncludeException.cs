@@ -26,7 +26,7 @@ public class MissingIncludeException : Exception
     /// class using a specified error message.
     /// </summary>
     /// <param name="message">Message to use, or pass <see langword="null"/> to use the default.</param>
-    public MissingIncludeException(string message)
+    public MissingIncludeException(string? message)
         : base(message)
     {
     }
@@ -40,7 +40,7 @@ public class MissingIncludeException : Exception
     /// The exception that is the cause of the current exception, or a 
     /// <see langword="null"/> reference if no inner exception is specified.
     /// </param>
-    public MissingIncludeException(string message, Exception innerException)
+    public MissingIncludeException(string? message, Exception? innerException)
         : base(message, innerException)
     {
     }
@@ -59,7 +59,8 @@ public class MissingIncludeException : Exception
     /// <param name="includeEntitySelector">
     /// A selector that targets the entity relation that should not be <see langword="null"/>.
     /// </param>
-    public static void ThrowIfNull<TEntity, TIncludedEntity>(TEntity entity, Expression<Func<TEntity, TIncludedEntity>> includeEntitySelector) where TEntity : class
+    public static void ThrowIfNull<TEntity, TIncludedEntity>(TEntity entity, Expression<Func<TEntity, TIncludedEntity>> includeEntitySelector)
+        where TEntity : class
     {
         ArgumentNullException.ThrowIfNull(entity);
 
@@ -98,7 +99,7 @@ public class MissingIncludeException : Exception
     /// </param>
     public static void ThrowIfNull<TEntity, TIncludedEntity, TIncludedEntityId>(
         TEntity entity,
-        Expression<Func<TEntity, TIncludedEntity>> includeEntitySelector,
+        Expression<Func<TEntity, TIncludedEntity?>> includeEntitySelector,
         Expression<Func<TEntity, TIncludedEntityId?>> includeEntityIdSelector)
         where TEntity : class
         where TIncludedEntity : class
@@ -154,7 +155,7 @@ public class MissingIncludeException : Exception
         var includeValue = includeMemberSelector.Compile().Invoke(entity);
         var idValue = includeMemberIdSelector.Compile().Invoke(entity);
 
-        if (includeValue == null && idValue.Equals(default(TIncludedEntityId)))
+        if (includeValue == null && idValue.Equals(default))
         {
             throw new MissingIncludeException<TEntity>(null, includeMemberExpression.Member.Name);
         }
@@ -192,7 +193,7 @@ public class MissingIncludeException<TEntity> : MissingIncludeException where TE
     /// class using a specified error message.
     /// </summary>
     /// <param name="message">Message to use, or pass <see langword="null"/> to use the default.</param>
-    public MissingIncludeException(string message)
+    public MissingIncludeException(string? message)
         : base(FormatMessage(message, null))
     {
     }
@@ -206,7 +207,7 @@ public class MissingIncludeException<TEntity> : MissingIncludeException where TE
     /// The exception that is the cause of the current exception, or a 
     /// <see langword="null"/> reference if no inner exception is specified.
     /// </param>
-    public MissingIncludeException(string message, Exception innerException)
+    public MissingIncludeException(string? message, Exception innerException)
         : base(FormatMessage(message, null), innerException)
     {
     }
@@ -222,12 +223,12 @@ public class MissingIncludeException<TEntity> : MissingIncludeException where TE
     /// the <see cref="TEntity"/> type name and {1} for the <paramref name="memberName"/>.
     /// </param>
     /// <param name="memberName">The name of the property or member that is an include.</param>
-    public MissingIncludeException(string message, string memberName)
+    public MissingIncludeException(string? message, string? memberName)
         : base(FormatMessage(message, memberName))
     {
     }
 
-    private static string FormatMessage(string message, string memberName)
+    private static string FormatMessage(string? message, string? memberName)
     {
         if (memberName != null)
         {

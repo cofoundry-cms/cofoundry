@@ -14,7 +14,7 @@ public interface IAuthorizedTaskStoredProcedures
     /// <param name="dateNow">The current date and time to set the InvalidatedDate to.</param>
     Task InvalidateUserAccountRecoveryRequestsAsync(
         int userId,
-        string[] AuthorizedTaskTypeCodes,
+        string[]? AuthorizedTaskTypeCodes,
         DateTime dateNow
         );
 

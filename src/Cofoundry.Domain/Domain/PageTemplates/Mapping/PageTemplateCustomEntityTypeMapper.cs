@@ -1,43 +1,41 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Used to look up custom entity display model types from a string type 
-/// name. Used specifically when extracting the custom entity type from a
-/// razor view template.
+/// Default implementation of <see cref="IPageTemplateCustomEntityTypeMapper"/>.
 /// </summary>
 public class PageTemplateCustomEntityTypeMapper : IPageTemplateCustomEntityTypeMapper
 {
     private readonly IEnumerable<ICustomEntityDisplayModel> _customEntityDisplayModels;
+    private readonly ILogger<PageTemplateCustomEntityTypeMapper> _logger;
 
     public PageTemplateCustomEntityTypeMapper(
-        IEnumerable<ICustomEntityDisplayModel> customEntityDisplayModels
+        IEnumerable<ICustomEntityDisplayModel> customEntityDisplayModels,
+        ILogger<PageTemplateCustomEntityTypeMapper> logger
         )
     {
         _customEntityDisplayModels = customEntityDisplayModels;
+        _logger = logger;
     }
 
-    /// <summary>
-    /// Takes string type name and attempts to map it to a type that
-    /// implements ICustomEntityDisplayModel. If one is found it is returned
-    /// otherwise null is returned.
-    /// </summary>
-    /// <param name="typeName">
-    /// Type name to look for. This is case sensitive and the namespace can 
-    /// be included (but isn't checked).
-    /// </param>
-    /// <returns>ICustomEntityDisplayModel type if a match is found; otherwise null.</returns>
-    public virtual Type Map(string typeName)
+    /// <inheritdoc/>
+    public virtual Type? Map(string? typeName)
     {
         typeName = RemoveNamespace(typeName);
-        if (string.IsNullOrEmpty(typeName)) return null;
+        if (string.IsNullOrEmpty(typeName))
+        {
+            return null;
+        }
 
         var displayModels = _customEntityDisplayModels.Where(m => m.GetType().Name == typeName);
 
-        Debug.Assert(displayModels.Count() < 2, "Incorrect number of ICustomEntityDisplayModels registered with the name '" + typeName + "'. Expected 1, got " + displayModels.Count());
+        if (displayModels.Count() > 1)
+        {
+            _logger.LogWarning("Incorrect number of ICustomEntityDisplayModels registered with the name '{TypeName}'. Expected 1, got {NumModels}", typeName, displayModels.Count());
+        }
 
-        Type result = null;
+        Type? result = null;
 
         if (displayModels.Any())
         {
@@ -47,9 +45,12 @@ public class PageTemplateCustomEntityTypeMapper : IPageTemplateCustomEntityTypeM
         return result;
     }
 
-    protected string RemoveNamespace(string typeName)
+    protected static string? RemoveNamespace(string? typeName)
     {
-        if (string.IsNullOrEmpty(typeName)) return null;
+        if (string.IsNullOrEmpty(typeName))
+        {
+            return null;
+        }
 
         var dotIndex = typeName.LastIndexOf('.');
         if (dotIndex != -1 && dotIndex < typeName.Length)

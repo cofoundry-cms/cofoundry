@@ -33,5 +33,5 @@ public class UpdateCustomEntityVersionPageBlockCommand : IPatchableByIdCommand, 
     /// </summary>
     [Required]
     [ValidateObject]
-    public IPageBlockTypeDataModel DataModel { get; set; }
+    public IPageBlockTypeDataModel DataModel { get; set; } = null!;
 }

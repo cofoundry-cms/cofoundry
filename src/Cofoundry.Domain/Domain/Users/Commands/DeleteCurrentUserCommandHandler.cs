@@ -25,8 +25,11 @@ public class DeleteCurrentUserCommandHandler
 
     public async Task ExecuteAsync(DeleteCurrentUserCommand command, IExecutionContext executionContext)
     {
-        _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
-        var userId = executionContext.UserContext.UserId.Value;
+        var userContext = executionContext.UserContext;
+
+        _permissionValidationService.EnforceIsSignedIn(userContext);
+        EntityInvalidOperationException.ThrowIfNull(userContext, userContext.UserId);
+        var userId = userContext.UserId.Value;
 
         using (var scope = _domainRepository.Transactions().CreateScope())
         {

@@ -11,5 +11,5 @@ public interface IContentRepositoryPageByPathQueryBuilder
     /// similar route.
     /// </summary>
     /// <param name="query">Query parameters.</param>
-    IDomainRepositoryQueryContext<PageRoutingInfo> AsRoutingInfo(GetPageRoutingInfoByPathQuery query);
+    IDomainRepositoryQueryContext<PageRoutingInfo?> AsRoutingInfo(GetPageRoutingInfoByPathQuery query);
 }

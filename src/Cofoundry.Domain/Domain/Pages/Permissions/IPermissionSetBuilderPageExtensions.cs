@@ -38,9 +38,13 @@ public static class IPermissionSetBuilderPageExtensions
         return Run(builder, configure, false);
     }
 
-    private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<PagePermissionBuilder> configure, bool isIncludeOperation)
+    private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<PagePermissionBuilder>? configure, bool isIncludeOperation)
     {
-        if (configure == null) configure = c => c.All();
+        if (configure == null)
+        {
+            configure = c => c.All();
+        }
+
         var entityBuilder = new PagePermissionBuilder(builder, isIncludeOperation);
         configure(entityBuilder);
 

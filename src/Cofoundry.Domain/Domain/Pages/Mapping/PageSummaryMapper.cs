@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Common mapping functionality for PageSummaries
+/// Default implementation of <see cref="IPageRenderSummaryMapper"/>.
 /// </summary>
 public class PageSummaryMapper : IPageSummaryMapper
 {
@@ -25,10 +25,8 @@ public class PageSummaryMapper : IPageSummaryMapper
         _customEntityDefinitionRepository = customEntityDefinitionRepository;
     }
 
-    /// <summary>
-    /// Finishes off bulk mapping of tags and page routes in a PageSummary object
-    /// </summary>
-    public virtual async Task<List<PageSummary>> MapAsync(ICollection<Page> dbPages, IExecutionContext executionContext)
+    /// <inheritdoc/>
+    public virtual async Task<IReadOnlyCollection<PageSummary>> MapAsync(IReadOnlyCollection<Page> dbPages, IExecutionContext executionContext)
     {
         var ids = dbPages
             .Select(p => p.PageId)
@@ -42,16 +40,16 @@ public class PageSummaryMapper : IPageSummaryMapper
             .Where(p => ids.Contains(p.PageId))
             .Select(t => new
             {
-                PageId = t.PageId,
+                t.PageId,
                 Tag = t.Tag.TagText
             })
-            .ToListAsync();
+            .ToArrayAsync();
 
         var pages = new List<PageSummary>(ids.Length);
 
         foreach (var dbPage in dbPages)
         {
-            var pageRoute = routes.GetOrDefault(dbPage.PageId);
+            var pageRoute = routes.GetValueOrDefault(dbPage.PageId);
             EntityNotFoundException.ThrowIfNull(pageRoute, dbPage.PageId);
 
             var page = new PageSummary()

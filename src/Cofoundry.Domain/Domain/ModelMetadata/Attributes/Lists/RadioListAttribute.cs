@@ -31,7 +31,7 @@ public class RadioListAttribute : Attribute, IMetadataAttribute
     /// The text to display when the value is not set or has not 
     /// been selected yet.
     /// </summary>
-    public string DefaultItemText { get; set; }
+    public string? DefaultItemText { get; set; }
 
     /// <summary>
     /// A type to use to determine the options available for the 

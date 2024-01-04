@@ -17,5 +17,5 @@ public class PageDeletedMessage
     /// The full (relative) url of the deleted page with the leading
     /// slash, but excluding the trailing slash e.g. "/my-directory/example-page".
     /// </summary
-    public string FullUrlPath { get; set; }
+    public string FullUrlPath { get; set; } = string.Empty;
 }

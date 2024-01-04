@@ -7,76 +7,47 @@ namespace Cofoundry.Domain;
 /// to match the custom entity. When routing the request will be 
 /// redirected if the UrlSlug does not match exactly; 
 /// </summary>
-public class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
+public partial class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
 {
-    /// <summary>
-    /// id must be an integer, slug is optional
-    /// </summary>
-    private const string ROUTE_REGEX = @"^(\d+)(?:\/([a-zA-Z0-9-_]+))?$";
+    /// <inheritdoc/>
+    public string RouteFormat => "{Id}/{UrlSlug}";
 
-    /// <summary>
-    /// A string representation of the route format e.g.  "{Id}/{UrlSlug}". Used as a display value
-    /// but also as the unique identifier for the rule, so it shouldn't clash with any other routing rule.
-    /// </summary>
-    public string RouteFormat
-    {
-        get { return "{Id}/{UrlSlug}"; }
-    }
+    /// <inheritdoc/>
+    public int Priority => (int)RoutingRulePriority.Normal;
 
-    /// <summary>
-    /// Sets a priority over which rules should be run in case more than one is used in the
-    /// same page directory. Custom integer values can be used but use RoutingRulePriority whenever possible
-    /// to avoid hardcoding to a specific value.
-    /// </summary>
-    public int Priority
-    {
-        get { return (int)RoutingRulePriority.Normal; }
-    }
+    /// <inheritdoc/>
+    public bool RequiresUniqueUrlSlug => false;
 
-    /// <summary>
-    /// Indicates whether this rule can only be used with custom entities with a unique 
-    /// url slug, indicated by the ForceUrlSlugUniqueness setting on the 
-    /// <see cref="ICustomEntityDefinition"/> implementation.
-    /// </summary>
-    public bool RequiresUniqueUrlSlug
-    {
-        get { return false; }
-    }
-
-    /// <summary>
-    /// Indicates whether the specified url matches this routing rule.
-    /// </summary>
-    /// <param name="url">The url to test</param>
-    /// <param name="pageRoute">The page route already matched to this url.</param>
+    /// <inheritdoc/>
     public bool MatchesRule(string url, PageRoute pageRoute)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(url);
         ArgumentNullException.ThrowIfNull(pageRoute);
 
         var routingPart = GetRoutingPart(url, pageRoute);
-        if (string.IsNullOrEmpty(routingPart)) return false;
+        if (string.IsNullOrEmpty(routingPart))
+        {
+            return false;
+        }
 
-        var match = Regex.Match(routingPart, ROUTE_REGEX);
+        var match = RouteRegex().Match(routingPart);
 
-        if (!match.Success) return false;
+        if (!match.Success)
+        {
+            return false;
+        }
 
         var isMatch = IntParser.ParseOrDefault(match.Groups[1].Value) > 0;
 
         return isMatch;
     }
 
-    /// <summary>
-    /// Returns a query that can be used to look up the CustomEntityRoute relating 
-    /// to the matched entity. Throws an exception if the MatchesRule returns false, so
-    /// check this before calling this method.
-    /// </summary>
-    /// <param name="url">The url to parse custom entity key data from</param>
-    /// <param name="pageRoute">The page route matched to the url</param>
-    /// <returns>An IQuery object that can used to query for the CustomEntityRoute</returns>
-    public IQuery<CustomEntityRoute> ExtractRoutingQuery(string url, PageRoute pageRoute)
+    /// <inheritdoc/>
+    public IQuery<CustomEntityRoute?> ExtractRoutingQuery(string url, PageRoute pageRoute)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(url);
         ArgumentNullException.ThrowIfNull(pageRoute);
+        ArgumentNullException.ThrowIfNull(pageRoute.CustomEntityDefinitionCode);
 
         if (!MatchesRule(url, pageRoute))
         {
@@ -85,11 +56,18 @@ public class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
 
         var routingPart = GetRoutingPart(url, pageRoute);
 
-        var match = Regex.Match(routingPart, ROUTE_REGEX);
+        if (string.IsNullOrEmpty(routingPart))
+        {
+            throw new InvalidOperationException($"{nameof(routingPart)} is not expected to be null when {nameof(MatchesRule)} is true. Url: {url}, pageRoute: {pageRoute.FullUrlPath}");
+        }
 
-        var query = new GetCustomEntityRouteByPathQuery();
-        query.CustomEntityDefinitionCode = pageRoute.CustomEntityDefinitionCode;
-        query.CustomEntityId = Convert.ToInt32(match.Groups[1].Value);
+        var match = RouteRegex().Match(routingPart);
+
+        var query = new GetCustomEntityRouteByPathQuery
+        {
+            CustomEntityDefinitionCode = pageRoute.CustomEntityDefinitionCode,
+            CustomEntityId = Convert.ToInt32(match.Groups[1].Value)
+        };
 
         if (pageRoute.Locale != null)
         {
@@ -99,12 +77,7 @@ public class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
         return query;
     }
 
-    /// <summary>
-    /// Transforms the routing specified routing information into a full, relative url.
-    /// </summary>
-    /// <param name="pageRoute">The matched page route for the url</param>
-    /// <param name="entityRoute">The matched custom entity route for the url</param>
-    /// <returns>Full, relative url</returns>
+    /// <inheritdoc/>
     public string MakeUrl(PageRoute pageRoute, CustomEntityRoute entityRoute)
     {
         ArgumentNullException.ThrowIfNull(pageRoute);
@@ -120,14 +93,25 @@ public class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
     /// a <paramref name="url"/> e.g. url "/my-path/123" with Pageroute 
     /// "/my-path/{id}" will return "123".
     /// </summary>
-    private string GetRoutingPart(string url, PageRoute pageRoute)
+    private string? GetRoutingPart(string url, PageRoute pageRoute)
     {
-        if (pageRoute.FullUrlPath.IndexOf(RouteFormat) == -1) return null;
+        if (pageRoute.FullUrlPath.IndexOf(RouteFormat) == -1)
+        {
+            return null;
+        }
 
         var pathRoot = pageRoute.FullUrlPath.Replace(RouteFormat, string.Empty);
         // if not found or there are other parameters in the route path not resolved.
-        if (pathRoot.Contains('{')) return null;
+        if (pathRoot.Contains('{'))
+        {
+            return null;
+        }
 
         return url.Substring(pathRoot.Length - 1).Trim('/');
     }
+    /// <summary>
+    /// id must be an integer, slug is optional
+    /// </summary>
+    [GeneratedRegex(@"^(\d+)(?:\/([a-zA-Z0-9-_]+))?$")]
+    private static partial Regex RouteRegex();
 }

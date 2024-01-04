@@ -24,7 +24,7 @@ public class MinUniqueCharactersNewPasswordValidator
 
     public string Criteria => $"Must have at least {MinUniqueCharacters} unique characters.";
 
-    public ValidationError Validate(INewPasswordValidationContext context)
+    public ValidationError? Validate(INewPasswordValidationContext context)
     {
         if (MinUniqueCharacters > 1 && context
             .Password

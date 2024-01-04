@@ -1,5 +1,5 @@
 ﻿namespace Cofoundry.Domain;
 
-public class GetPermittedAdminModulesQuery : IQuery<ICollection<AdminModule>>
+public class GetPermittedAdminModulesQuery : IQuery<IReadOnlyCollection<AdminModule>>
 {
 }

@@ -19,7 +19,7 @@ public class ContentRepositoryCustomEntityByDefinitionQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null)
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null)
     {
         var query = new GetCustomEntityRenderSummariesByDefinitionCodeQuery(_customEntityDefinitionCode);
 
@@ -31,7 +31,7 @@ public class ContentRepositoryCustomEntityByDefinitionQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<ICollection<CustomEntityRoute>> AsRoutes()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityRoute>> AsRoutes()
     {
         var query = new GetCustomEntityRoutesByDefinitionCodeQuery(_customEntityDefinitionCode);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

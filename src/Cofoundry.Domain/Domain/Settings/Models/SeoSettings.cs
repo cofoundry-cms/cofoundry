@@ -2,7 +2,7 @@
 
 public class SeoSettings : ICofoundrySettings
 {
-    public string RobotsTxt { get; set; }
+    public string? RobotsTxt { get; set; }
 
-    public string HumansTxt { get; set; }
+    public string? HumansTxt { get; set; }
 }

@@ -46,7 +46,7 @@ public class AccountVerificationOptions : IValidatableObject
     /// implementation.
     /// </para>
     /// </summary>
-    public string VerificationUrlBase { get; set; }
+    public string? VerificationUrlBase { get; set; }
 
     /// <summary>
     /// Copies the options to a new instance, which can be modified

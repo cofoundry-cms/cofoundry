@@ -11,11 +11,11 @@ public class NestedDataModelMultiTypeItem
     /// type must implement INestedDataModel.
     /// </summary>
     [Required]
-    public string TypeName { get; set; }
+    public string TypeName { get; set; } = string.Empty;
 
     /// <summary>
     /// The model data to stored as unstructured data.
     /// </summary>
     [ValidateObject]
-    public INestedDataModel Model { get; set; }
+    public INestedDataModel? Model { get; set; }
 }

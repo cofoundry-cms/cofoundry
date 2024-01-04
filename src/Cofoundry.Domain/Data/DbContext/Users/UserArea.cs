@@ -10,27 +10,27 @@ public class UserArea
     /// <summary>
     /// 3 character code and primary key.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// A human readable name used to describe the user area.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Users attached to this user area. A User can only be attached to one user area.
     /// </summary>
-    public virtual ICollection<User> Users { get; set; }
+    public ICollection<User> Users { get; set; } = new List<User>();
 
     /// <summary>
     /// Dynamic website routes can optionally be restircted to specific user areas. This
     /// collection references zero or more access rules at the <see cref="Page"/> level.
     /// </summary>
-    public virtual ICollection<PageAccessRule> PageAccessRules { get; set; } = new List<PageAccessRule>();
+    public ICollection<PageAccessRule> PageAccessRules { get; set; } = new List<PageAccessRule>();
 
     /// <summary>
     /// Dynamic website routes can optionally be restircted to specific user areas. This
     /// collection references zero or more access rules at the <see cref="PageDirectory"/> level.
     /// </summary>
-    public virtual ICollection<PageDirectoryAccessRule> PageDirectoryAccessRules { get; set; } = new List<PageDirectoryAccessRule>();
+    public ICollection<PageDirectoryAccessRule> PageDirectoryAccessRules { get; set; } = new List<PageDirectoryAccessRule>();
 }

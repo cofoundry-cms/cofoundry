@@ -127,8 +127,7 @@ public class AddPageCommandHandlerTests
         var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
 
         var addPageCommand = app.TestData.Pages().CreateAddCommand(uniqueData, directoryId);
-        addPageCommand.Tags.Add(app.SeededEntities.TestTag.TagText);
-        addPageCommand.Tags.Add(uniqueData);
+        addPageCommand.Tags = [app.SeededEntities.TestTag.TagText, uniqueData];
 
         await contentRepository
             .Pages()

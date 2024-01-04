@@ -38,9 +38,13 @@ public static class IPermissionSetBuilderDocumentAssetExtensions
         return Run(builder, configure, false);
     }
 
-    private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<DocumentAssetPermissionBuilder> configure, bool isIncludeOperation)
+    private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<DocumentAssetPermissionBuilder>? configure, bool isIncludeOperation)
     {
-        if (configure == null) configure = c => c.All();
+        if (configure == null)
+        {
+            configure = c => c.All();
+        }
+
         var entityBuilder = new DocumentAssetPermissionBuilder(builder, isIncludeOperation);
         configure(entityBuilder);
 

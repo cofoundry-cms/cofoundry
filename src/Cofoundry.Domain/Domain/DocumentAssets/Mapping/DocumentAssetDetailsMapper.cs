@@ -2,7 +2,9 @@
 
 namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IDocumentAssetDetailsMapper"/>.
+/// </summary>
 public class DocumentAssetDetailsMapper : IDocumentAssetDetailsMapper
 {
     private readonly DocumentAssetSummaryMapper _documentAssetSummaryMapper;
@@ -15,14 +17,14 @@ public class DocumentAssetDetailsMapper : IDocumentAssetDetailsMapper
         _documentAssetSummaryMapper = new DocumentAssetSummaryMapper(auditDataMapper, documentAssetRouteLibrary);
     }
 
-    /// <summary>
-    /// Maps an EF DocumentAsset record from the db into a DocumentAssetDetails 
-    /// object. If the db record is null then null is returned.
-    /// </summary>
-    /// <param name="dbDocument">DocumentAsset record from the database.</param>
-    public DocumentAssetDetails Map(DocumentAsset dbDocument)
+    /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(dbDocument))]
+    public DocumentAssetDetails? Map(DocumentAsset? dbDocument)
     {
-        if (dbDocument == null) return null;
+        if (dbDocument == null)
+        {
+            return null;
+        }
 
         var document = new DocumentAssetDetails();
         _documentAssetSummaryMapper.Map(document, dbDocument);

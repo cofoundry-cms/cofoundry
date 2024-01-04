@@ -6,7 +6,7 @@
 /// type, it is supported and so each custom entity id in the query returns a collection
 /// of routes.
 /// </summary>
-public class GetPageRoutingInfoByCustomEntityIdRangeQuery : IQuery<IDictionary<int, ICollection<PageRoutingInfo>>>
+public class GetPageRoutingInfoByCustomEntityIdRangeQuery : IQuery<IReadOnlyDictionary<int, IReadOnlyCollection<PageRoutingInfo>>>
 {
     /// <summary>
     /// Finds routing information for a set of custom entities by their ids. Although
@@ -24,7 +24,7 @@ public class GetPageRoutingInfoByCustomEntityIdRangeQuery : IQuery<IDictionary<i
     /// </summary>
     /// <param name="customEntityIds">Database ids of the custom entities to find routing data for.</param>
     public GetPageRoutingInfoByCustomEntityIdRangeQuery(IEnumerable<int> customEntityIds)
-        : this(customEntityIds?.ToList())
+        : this(customEntityIds?.ToArray() ?? [])
     {
     }
 
@@ -43,5 +43,5 @@ public class GetPageRoutingInfoByCustomEntityIdRangeQuery : IQuery<IDictionary<i
     /// <summary>
     /// Database ids of the custom entities to find routing data for.
     /// </summary>
-    public IReadOnlyCollection<int> CustomEntityIds { get; set; }
+    public IReadOnlyCollection<int> CustomEntityIds { get; set; } = Array.Empty<int>();
 }

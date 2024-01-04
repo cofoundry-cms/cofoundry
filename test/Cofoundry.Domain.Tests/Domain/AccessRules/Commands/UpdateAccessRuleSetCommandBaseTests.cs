@@ -7,11 +7,19 @@ public class UpdateAccessRuleSetCommandBaseTests
     [Fact]
     public void Validate_WhenAccessRuleIsCofoundryUserArea_ReturnsError()
     {
-        var command = new UpdatePageAccessRuleSetCommand();
-        command.PageId = 1;
-        command.AccessRules
-            .AddNew("TST")
-            .AddNew(CofoundryAdminUserArea.Code);
+        var command = new UpdatePageAccessRuleSetCommand
+        {
+            PageId = 1,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = "TST"
+                },
+                new()
+                {
+                    UserAreaCode = CofoundryAdminUserArea.Code
+                }]
+        };
 
         var validationService = new ModelValidationService();
         var errors = validationService.GetErrors(command);
@@ -29,12 +37,20 @@ public class UpdateAccessRuleSetCommandBaseTests
     [Fact(Skip = "Multiple errors aren't provided with the current ModelValidationService, so other errors are reported ahead of this one. A new implementation of ModelValidationService might fix this.")]
     public void Validate_WhenRedirectAreaIsCofoundryUserArea_ReturnsError()
     {
-        var command = new UpdatePageAccessRuleSetCommand();
-        command.PageId = 1;
-        command.UserAreaCodeForSignInRedirect = CofoundryAdminUserArea.Code;
-        command.AccessRules
-            .AddNew("TST")
-            .AddNew(CofoundryAdminUserArea.Code);
+        var command = new UpdatePageAccessRuleSetCommand
+        {
+            PageId = 1,
+            UserAreaCodeForSignInRedirect = CofoundryAdminUserArea.Code,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = "TST"
+                },
+                new()
+                {
+                    UserAreaCode = CofoundryAdminUserArea.Code
+                }]
+        };
 
         var validationService = new ModelValidationService();
         var errors = validationService.GetErrors(command);
@@ -52,10 +68,16 @@ public class UpdateAccessRuleSetCommandBaseTests
     [Fact]
     public void Validate_WhenRedirectAreaIsNotInAccessRules_ReturnsError()
     {
-        var command = new UpdatePageAccessRuleSetCommand();
-        command.PageId = 1;
-        command.UserAreaCodeForSignInRedirect = "NON";
-        command.AccessRules.AddNew("TST");
+        var command = new UpdatePageAccessRuleSetCommand
+        {
+            PageId = 1,
+            UserAreaCodeForSignInRedirect = "NON",
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = "TST"
+                }]
+        };
 
         var validationService = new ModelValidationService();
         var errors = validationService.GetErrors(command);
@@ -73,14 +95,38 @@ public class UpdateAccessRuleSetCommandBaseTests
     [Fact]
     public void Validate_WhenDuplicates_ReturnsError()
     {
-        var command = new UpdatePageAccessRuleSetCommand();
-        command.PageId = 1;
-        command.AccessRules.AddNew("TST");
-        command.AccessRules.AddNew("TST");
-        command.AccessRules.AddNew("TST", 9);
-        command.AccessRules.AddNew("BLH");
-        command.AccessRules.AddNew("BLH", 6);
-        command.AccessRules.AddNew("BLH", 6);
+        var command = new UpdatePageAccessRuleSetCommand
+        {
+            PageId = 1,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = "TST"
+                },
+                new()
+                {
+                    UserAreaCode = "TST"
+                },
+                new()
+                {
+                    UserAreaCode = "TST",
+                    RoleId = 9
+                },
+                new()
+                {
+                    UserAreaCode = "BLH"
+                },
+                new()
+                {
+                    UserAreaCode = "BLH",
+                    RoleId = 6
+                },
+                new()
+                {
+                    UserAreaCode = "BLH",
+                    RoleId = 6
+                }]
+        };
 
         var validationService = new ModelValidationService();
         var errors = validationService.GetErrors(command);
@@ -104,10 +150,12 @@ public class UpdateAccessRuleSetCommandBaseTests
     [Fact]
     public void Validate_WhenBadEnum_ReturnsError()
     {
-        var command = new UpdatePageAccessRuleSetCommand();
-        command.PageId = 1;
-        command.AccessRules.AddNew("TST");
-        command.ViolationAction = (AccessRuleViolationAction)Int32.MinValue;
+        var command = new UpdatePageAccessRuleSetCommand
+        {
+            PageId = 1,
+            ViolationAction = (AccessRuleViolationAction)Int32.MinValue,
+            AccessRules = [new() { UserAreaCode = "TST" }]
+        };
 
         var validationService = new ModelValidationService();
         var errors = validationService.GetErrors(command);

@@ -26,7 +26,7 @@ public class MaxLengthNewPasswordValidator
         MaxLength = maxLength;
     }
 
-    public ValidationError Validate(INewPasswordValidationContext context)
+    public ValidationError? Validate(INewPasswordValidationContext context)
     {
         if (MaxLength == 0) throw new InvalidOperationException($"{nameof(Configure)} has not been called.");
 

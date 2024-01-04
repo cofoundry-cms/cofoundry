@@ -11,5 +11,5 @@ public interface IEmailAddressValidator
     /// <see cref="EmailAddressOptions"/> configuration settings, as well as checking
     /// for uniqueness if necessary.
     /// </summary>
-    Task<ICollection<ValidationError>> GetErrorsAsync(IEmailAddressValidationContext context);
+    Task<IReadOnlyCollection<ValidationError>> GetErrorsAsync(IEmailAddressValidationContext context);
 }

@@ -10,5 +10,5 @@ public interface IAdvancedContentRepositoryPageByCustomEntityIdQueryBuilder
     /// in a typical website you wouldn't have multiple details pages for a custom entity
     /// type, it is supported and the query returns a collection of routes.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<PageRoutingInfo>> AsRoutingInfo();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<PageRoutingInfo>> AsRoutingInfo();
 }

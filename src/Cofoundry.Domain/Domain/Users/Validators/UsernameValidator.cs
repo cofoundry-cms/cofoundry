@@ -17,11 +17,11 @@ public class UsernameValidator : IUsernameValidator
         _domainRepository = domainRepository;
     }
 
-    public async virtual Task<ICollection<ValidationError>> GetErrorsAsync(IUsernameValidationContext context)
+    public async virtual Task<IReadOnlyCollection<ValidationError>> GetErrorsAsync(IUsernameValidationContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var validators = new List<Func<IUsernameValidationContext, ValidationError>>()
+        var validators = new List<Func<IUsernameValidationContext, ValidationError?>>()
         {
             ValidateUsernameFormattingResult,
             ValidateMinLength,
@@ -29,7 +29,7 @@ public class UsernameValidator : IUsernameValidator
             ValidateAllowedCharacters,
         };
 
-        var asyncValidators = new List<Func<IUsernameValidationContext, Task<ValidationError>>>()
+        var asyncValidators = new List<Func<IUsernameValidationContext, Task<ValidationError?>>>()
         {
             ValidateUniqueAsync
         };
@@ -55,9 +55,12 @@ public class UsernameValidator : IUsernameValidator
     /// operation did not return a value. This should rarely happen, only if the username 
     /// contains only characters stripped out through a custom normalization process.
     /// </summary>
-    protected virtual ValidationError ValidateUsernameFormattingResult(IUsernameValidationContext context)
+    protected virtual ValidationError? ValidateUsernameFormattingResult(IUsernameValidationContext context)
     {
-        if (context.Username != null) return null;
+        if (context.Username != null)
+        {
+            return null;
+        }
 
         return UserValidationErrors
             .Username
@@ -70,10 +73,18 @@ public class UsernameValidator : IUsernameValidator
     /// Validates that the username is not shorter then the limit defined in the 
     /// <see cref="UsernameOptions"/> configuration settings.
     /// </summary>
-    protected virtual ValidationError ValidateMinLength(IUsernameValidationContext context)
+    protected virtual ValidationError? ValidateMinLength(IUsernameValidationContext context)
     {
+        if (context.Username == null)
+        {
+            return null;
+        }
+
         var options = _userAreaDefinitionRepository.GetOptionsByCode(context.UserAreaCode).Username;
-        if (context.Username.NormalizedUsername.Length >= options.MinLength) return null;
+        if (context.Username.NormalizedUsername.Length >= options.MinLength)
+        {
+            return null;
+        }
 
         return UserValidationErrors
             .Username
@@ -88,10 +99,18 @@ public class UsernameValidator : IUsernameValidator
     /// Validates that the username is not longer then the limit defined in the 
     /// <see cref="UsernameOptions"/> configuration settings.
     /// </summary>
-    protected virtual ValidationError ValidateMaxLength(IUsernameValidationContext context)
+    protected virtual ValidationError? ValidateMaxLength(IUsernameValidationContext context)
     {
+        if (context.Username == null)
+        {
+            return null;
+        }
+
         var options = _userAreaDefinitionRepository.GetOptionsByCode(context.UserAreaCode).Username;
-        if (context.Username.NormalizedUsername.Length <= options.MaxLength) return null;
+        if (context.Username.NormalizedUsername.Length <= options.MaxLength)
+        {
+            return null;
+        }
 
         return UserValidationErrors
             .Username
@@ -106,17 +125,28 @@ public class UsernameValidator : IUsernameValidator
     /// Validates that the username contains only the characters permitted by the 
     /// <see cref="UsernameOptions"/> configuration settings.
     /// </summary>
-    protected virtual ValidationError ValidateAllowedCharacters(IUsernameValidationContext context)
+    protected virtual ValidationError? ValidateAllowedCharacters(IUsernameValidationContext context)
     {
+        if (context.Username == null)
+        {
+            return null;
+        }
+
         var userArea = _userAreaDefinitionRepository.GetRequiredByCode(context.UserAreaCode);
 
         // Bypass format validation for email-based usernames
-        if (userArea.UseEmailAsUsername) return null;
+        if (userArea.UseEmailAsUsername)
+        {
+            return null;
+        }
 
         var options = _userAreaDefinitionRepository.GetOptionsByCode(context.UserAreaCode).Username;
         var invalidCharacters = UsernameCharacterValidator.GetInvalidCharacters(context.Username.NormalizedUsername, options);
 
-        if (!invalidCharacters.Any()) return null;
+        if (!invalidCharacters.Any())
+        {
+            return null;
+        }
 
         // Be careful here, because we're handling user input. Any message should be escaped when 
         // rendered, but to be safe we'll only include a single invalid character
@@ -132,8 +162,13 @@ public class UsernameValidator : IUsernameValidator
     /// <summary>
     /// Validates that the username is not already registered with another user.
     /// </summary>
-    protected virtual async Task<ValidationError> ValidateUniqueAsync(IUsernameValidationContext context)
+    protected virtual async Task<ValidationError?> ValidateUniqueAsync(IUsernameValidationContext context)
     {
+        if (context.Username == null)
+        {
+            return null;
+        }
+
         var query = new IsUsernameUniqueQuery()
         {
             Username = context.Username.UniqueUsername,
@@ -149,7 +184,10 @@ public class UsernameValidator : IUsernameValidator
             .WithContext(context.ExecutionContext)
             .ExecuteQueryAsync(query);
 
-        if (isUnique) return null;
+        if (isUnique)
+        {
+            return null;
+        }
 
         return UserValidationErrors
             .Username
@@ -157,8 +195,8 @@ public class UsernameValidator : IUsernameValidator
             .Create(context.PropertyName);
     }
 
-    private ICollection<ValidationError> WrapError(ValidationError error)
+    private IReadOnlyCollection<ValidationError> WrapError(ValidationError error)
     {
-        return new List<ValidationError>() { error };
+        return [error];
     }
 }

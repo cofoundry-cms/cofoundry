@@ -123,10 +123,9 @@ public class UpdateUserPasswordByUserIdCommandHandler
         _passwordUpdateCommandHelper.ValidateUserArea(userArea);
         _passwordUpdateCommandHelper.ValidatePermissions(userArea, executionContext);
 
-        var context = NewPasswordValidationContext.MapFromUser(user);
+        var context = NewPasswordValidationContext.MapFromUser(user, executionContext);
         context.Password = command.NewPassword;
         context.PropertyName = nameof(command.NewPassword);
-        context.ExecutionContext = executionContext;
 
         await _newPasswordValidationService.ValidateAsync(context);
     }

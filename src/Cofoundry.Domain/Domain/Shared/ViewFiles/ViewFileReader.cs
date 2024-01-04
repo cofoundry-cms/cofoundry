@@ -14,11 +14,14 @@ public class ViewFileReader : IViewFileReader
         _resourceLocator = resourceLocator;
     }
 
-    public virtual async Task<string> ReadViewFileAsync(string path)
+    public virtual async Task<string?> ReadViewFileAsync(string? path)
     {
-        string result = null;
+        string? result = null;
 
-        if (!FileExists(path)) return result;
+        if (!FileExists(path))
+        {
+            return result;
+        }
 
         var file = _resourceLocator.GetFile(path);
         if (file == null || !file.Exists || file.IsDirectory) return null;
@@ -32,11 +35,18 @@ public class ViewFileReader : IViewFileReader
         return result;
     }
 
-    protected bool FileExists(string path)
+    protected bool FileExists([NotNullWhen(true)] string? path)
     {
-        if (string.IsNullOrEmpty(path)) return false;
+        if (string.IsNullOrEmpty(path))
+        {
+            return false;
+        }
+
         // check well formatted path
-        if (path[0] != '~' && path[0] != '/') return false;
+        if (path[0] != '~' && path[0] != '/')
+        {
+            return false;
+        }
 
         return _resourceLocator.FileExists(path);
     }

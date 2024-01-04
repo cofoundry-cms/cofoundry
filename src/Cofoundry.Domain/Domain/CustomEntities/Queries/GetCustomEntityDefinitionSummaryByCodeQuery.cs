@@ -6,7 +6,7 @@
 /// defintion class, but the main difference is that instead of using generics 
 /// to identify the data model type, there is instead a DataModelType property.
 /// </summary>
-public class GetCustomEntityDefinitionSummaryByCodeQuery : IQuery<CustomEntityDefinitionSummary>
+public class GetCustomEntityDefinitionSummaryByCodeQuery : IQuery<CustomEntityDefinitionSummary?>
 {
     /// <summary>
     /// Query to get a custom entity definition by it's unique 6 character code.
@@ -33,5 +33,5 @@ public class GetCustomEntityDefinitionSummaryByCodeQuery : IQuery<CustomEntityDe
     /// <summary>
     /// Unique 6 letter code representing the entity.
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 }

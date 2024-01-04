@@ -17,7 +17,7 @@ public class AddAuthorizedTaskCommand : ICommand, ILoggableCommand
     /// The <see cref="IAuthorizedTaskTypeDefinition.AuthorizedTaskTypeCode"/> to group tasks by.
     /// </summary>
     [Required]
-    public string AuthorizedTaskTypeCode { get; set; }
+    public string AuthorizedTaskTypeCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Data to be included with the task. This might be data used to validate the
@@ -28,7 +28,7 @@ public class AddAuthorizedTaskCommand : ICommand, ILoggableCommand
     /// store the email in <see cref="TaskData"/>, and then once verified the user can be updated 
     /// with the new email address.
     /// </summary>
-    public string TaskData { get; set; }
+    public string? TaskData { get; set; }
 
     /// <summary>
     /// The maximum number of token generations to allow within a rate limit window.
@@ -55,5 +55,5 @@ public class AddAuthorizedTaskCommand : ICommand, ILoggableCommand
     /// verification.
     /// </summary>
     [OutputValue]
-    public string OutputToken { get; set; }
+    public string? OutputToken { get; set; }
 }

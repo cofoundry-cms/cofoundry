@@ -32,13 +32,13 @@ public class DateAndTimeLocalAttribute : DateTimeAttributeBase
     /// The inclusive minimum date and time allowed to be entered. The value must be
     /// in "yyyy-mm-ddThh:mm" format and be in the UTC timezone.
     /// </summary>
-    public override string Min { get => FormatDate(MinDate); set => MinDate = ParseDate(nameof(Min), value); }
+    public override string? Min { get => FormatDate(MinDate); set => MinDate = ParseDate(nameof(Min), value); }
 
     /// <summary>
     /// The inclusive maximum date and time allowed to be entered. The value must be
     /// in "yyyy-mm-ddThh:mm" format and be in the UTC timezone.
     /// </summary>
-    public override string Max { get => FormatDate(MaxDate); set => MaxDate = ParseDate(nameof(Max), value); }
+    public override string? Max { get => FormatDate(MaxDate); set => MaxDate = ParseDate(nameof(Max), value); }
 
     public override void Process(DisplayMetadataProviderContext context)
     {

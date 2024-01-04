@@ -24,7 +24,8 @@ public interface IPageBlockTypeDisplayModelMapper<TDataModel> where TDataModel :
     /// item should be added to the result parameter by calling 
     /// result.Add(inputDataModel, mappedDisplayModel). If the item 
     /// cannot be mapped (e.g. missing related data) then do not add
-    /// it to the result collection.
+    /// it to the result collection, this will prevent the block from
+    /// being rendered.
     /// </param>
     Task MapAsync(
         PageBlockTypeDisplayModelMapperContext<TDataModel> context,

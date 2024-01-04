@@ -16,7 +16,7 @@ public class RoleDetails
     /// <summary>
     /// The title is used to identify the role and select it in the admin UI
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// True if the role is the system level <see cref="SuperAdminRole"/> role.
@@ -34,18 +34,18 @@ public class RoleDetails
     /// and convention is to use upper case, although code matching is case insensitive.
     /// This is only used by roles defined in code using IRoleDefinition.
     /// </summary>
-    public string RoleCode { get; set; }
+    public string? RoleCode { get; set; }
 
     /// <summary>
     /// Collection of permissions that describe the actions this role is 
     /// permitted to perform.
     /// </summary>
-    public ICollection<IPermission> Permissions { get; set; }
+    public IReadOnlyCollection<IPermission> Permissions { get; set; } = Array.Empty<IPermission>();
 
     /// <summary>
     /// A role must be assigned to a user area e.g. CofoundryAdminUserArea.
     /// </summary>
-    public UserAreaMicroSummary UserArea { get; set; }
+    public UserAreaMicroSummary UserArea { get; set; } = UserAreaMicroSummary.Uninitialized;
 
     /// <summary>
     /// Determins if the role has the specified permission
@@ -67,4 +67,11 @@ public class RoleDetails
         var permission = new TPermission();
         return Permissions != null && Permissions.Contains(permission, _equalityComparer);
     }
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly RoleDetails Uninitialized = new();
 }

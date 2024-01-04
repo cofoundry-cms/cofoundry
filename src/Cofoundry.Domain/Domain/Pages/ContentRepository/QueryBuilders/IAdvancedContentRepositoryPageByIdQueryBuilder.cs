@@ -12,7 +12,7 @@ public interface IAdvancedContentRepositoryPageByIdQueryBuilder
     /// and the PageDetails projection includes audit data and other additional 
     /// information that should normally be hidden from a customer facing app.
     /// </summary>
-    IDomainRepositoryQueryContext<PageDetails> AsDetails();
+    IDomainRepositoryQueryContext<PageDetails?> AsDetails();
 
     /// <summary>
     /// Query that returns a specific version of a page (equivalent to using 
@@ -25,7 +25,7 @@ public interface IAdvancedContentRepositoryPageByIdQueryBuilder
     /// <param name="pageVersionId">
     /// Use this to specify a specific version to return in the query.
     /// </param>
-    IDomainRepositoryQueryContext<PageRenderSummary> AsRenderSummary(int pageVersionId);
+    IDomainRepositoryQueryContext<PageRenderSummary?> AsRenderSummary(int pageVersionId);
 
     /// <summary>
     /// Query that returns a specific version of a page (equivalent to using 
@@ -36,5 +36,5 @@ public interface IAdvancedContentRepositoryPageByIdQueryBuilder
     /// <param name="pageVersionId">
     /// Use this to specify a specific version to return in the query.
     /// </param>
-    IDomainRepositoryQueryContext<PageRenderDetails> AsRenderDetails(int pageVersionId);
+    IDomainRepositoryQueryContext<PageRenderDetails?> AsRenderDetails(int pageVersionId);
 }

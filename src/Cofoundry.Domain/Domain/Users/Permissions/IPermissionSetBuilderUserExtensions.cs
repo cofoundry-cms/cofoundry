@@ -18,8 +18,9 @@ public static class IPermissionSetBuilderUserExtensions
     /// </summary>
     public static IPermissionSetBuilder IncludeUserInCofoundryAdminUserArea(this IPermissionSetBuilder builder)
     {
-        Action<CofoundryUserPermissionBuilder> configure = c => c.All();
         return Run(builder, configure, true);
+
+        static void configure(CofoundryUserPermissionBuilder c) => c.All();
     }
 
     /// <summary>
@@ -45,8 +46,9 @@ public static class IPermissionSetBuilderUserExtensions
     /// </summary>
     public static IPermissionSetBuilder ExcludeUserInCofoundryAdminUserArea(this IPermissionSetBuilder builder)
     {
-        Action<CofoundryUserPermissionBuilder> configure = c => c.All();
         return Run(builder, configure, false);
+
+        static void configure(CofoundryUserPermissionBuilder c) => c.All();
     }
 
     /// <summary>
@@ -54,8 +56,9 @@ public static class IPermissionSetBuilderUserExtensions
     /// </summary>
     public static IPermissionSetBuilder IncludeUserInCustomUserArea(this IPermissionSetBuilder builder)
     {
-        Action<NonCofoundryUserPermissionBuilder> configure = c => c.All();
         return Run(builder, configure, true);
+
+        static void configure(NonCofoundryUserPermissionBuilder c) => c.All();
     }
 
     /// <summary>
@@ -72,8 +75,9 @@ public static class IPermissionSetBuilderUserExtensions
     /// </summary>
     public static IPermissionSetBuilder ExcludeUserInCustomUserArea(this IPermissionSetBuilder builder)
     {
-        Action<NonCofoundryUserPermissionBuilder> configure = c => c.All();
         return Run(builder, configure, false);
+
+        static void configure(NonCofoundryUserPermissionBuilder c) => c.All();
     }
 
     /// <summary>
@@ -90,8 +94,9 @@ public static class IPermissionSetBuilderUserExtensions
     /// </summary>
     public static IPermissionSetBuilder IncludeCurrentUser(this IPermissionSetBuilder builder)
     {
-        Action<CurrentUserPermissionBuilder> configure = c => c.All();
         return Run(builder, configure, true);
+
+        static void configure(CurrentUserPermissionBuilder c) => c.All();
     }
 
     /// <summary>
@@ -108,8 +113,9 @@ public static class IPermissionSetBuilderUserExtensions
     /// </summary>
     public static IPermissionSetBuilder ExcludeCurrentUser(this IPermissionSetBuilder builder)
     {
-        Action<CurrentUserPermissionBuilder> configure = c => c.All();
         return Run(builder, configure, false);
+
+        static void configure(CurrentUserPermissionBuilder c) => c.All();
     }
 
     /// <summary>

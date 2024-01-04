@@ -22,7 +22,7 @@ public interface ICommandExecutor
     /// Optional custom execution context which can be used to impersonate/elevate permissions 
     /// or change the execution date.
     /// </param>
-    Task ExecuteAsync(ICommand command, IExecutionContext executionContext);
+    Task ExecuteAsync(ICommand command, IExecutionContext? executionContext);
 
     /// <summary>
     /// Handles the execution of the specified <paramref name="command"/>.

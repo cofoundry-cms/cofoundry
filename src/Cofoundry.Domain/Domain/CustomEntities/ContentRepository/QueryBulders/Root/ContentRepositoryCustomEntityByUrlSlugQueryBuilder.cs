@@ -24,7 +24,7 @@ public class ContentRepositoryCustomEntityByUrlSlugQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery publishStatusQuery)
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery publishStatusQuery)
     {
         var query = new GetCustomEntityRenderSummariesByUrlSlugQuery()
         {
@@ -36,7 +36,7 @@ public class ContentRepositoryCustomEntityByUrlSlugQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummaries()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityRenderSummary>> AsRenderSummaries()
     {
         var query = new GetCustomEntityRenderSummariesByUrlSlugQuery()
         {
@@ -47,17 +47,17 @@ public class ContentRepositoryCustomEntityByUrlSlugQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryMutator<ICollection<CustomEntityRenderSummary>, CustomEntityRenderSummary> AsRenderSummary(PublishStatusQuery publishStatusQuery)
+    public IDomainRepositoryQueryMutator<IReadOnlyCollection<CustomEntityRenderSummary>, CustomEntityRenderSummary?> AsRenderSummary(PublishStatusQuery publishStatusQuery)
     {
         return AsRenderSummaryInternal(publishStatusQuery);
     }
 
-    public IDomainRepositoryQueryMutator<ICollection<CustomEntityRenderSummary>, CustomEntityRenderSummary> AsRenderSummary()
+    public IDomainRepositoryQueryMutator<IReadOnlyCollection<CustomEntityRenderSummary>, CustomEntityRenderSummary?> AsRenderSummary()
     {
         return AsRenderSummaryInternal(null);
     }
 
-    private IDomainRepositoryQueryMutator<ICollection<CustomEntityRenderSummary>, CustomEntityRenderSummary> AsRenderSummaryInternal(PublishStatusQuery? publishStatusQuery)
+    private IDomainRepositoryQueryMutator<IReadOnlyCollection<CustomEntityRenderSummary>, CustomEntityRenderSummary?> AsRenderSummaryInternal(PublishStatusQuery? publishStatusQuery)
     {
         if (!_customEntityDefinition.ForceUrlSlugUniqueness)
         {

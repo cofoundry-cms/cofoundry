@@ -1,8 +1,8 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 public class GetPageDirectoryNodeByIdQueryHandler
-    : IQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
-    , IPermissionRestrictedQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode>
+    : IQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode?>
+    , IPermissionRestrictedQueryHandler<GetPageDirectoryNodeByIdQuery, PageDirectoryNode?>
 {
     private readonly IQueryExecutor _queryExecutor;
 
@@ -13,7 +13,7 @@ public class GetPageDirectoryNodeByIdQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<PageDirectoryNode> ExecuteAsync(GetPageDirectoryNodeByIdQuery query, IExecutionContext executionContext)
+    public async Task<PageDirectoryNode?> ExecuteAsync(GetPageDirectoryNodeByIdQuery query, IExecutionContext executionContext)
     {
         var tree = await _queryExecutor.ExecuteAsync(new GetPageDirectoryTreeQuery(), executionContext);
         var result = tree

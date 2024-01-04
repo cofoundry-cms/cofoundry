@@ -9,5 +9,5 @@ public interface IAdvancedContentRepositoryPageRegionByPageVersionIdQueryBuilder
     /// Query retruning a collection of content managed regions with
     /// block data for a specific version of a page.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<PageRegionDetails>> AsDetails();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<PageRegionDetails>> AsDetails();
 }

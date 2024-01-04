@@ -18,6 +18,12 @@ public class ContentRepositoryAuthorizedTaskRepository
     public async Task<string> AddAsync(AddAuthorizedTaskCommand command)
     {
         await ExtendableContentRepository.ExecuteCommandAsync(command);
+
+        if (string.IsNullOrEmpty(command.OutputToken))
+        {
+            throw new InvalidOperationException($"{nameof(command.OutputToken)} should not be empty after executing {nameof(AddAuthorizedTaskCommand)}");
+        }
+
         return command.OutputToken;
     }
 

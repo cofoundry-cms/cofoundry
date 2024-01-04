@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain;
 
 public class GetNestedDataModelSchemaByNameRangeQueryHandler
-    : IQueryHandler<GetNestedDataModelSchemaByNameRangeQuery, IDictionary<string, NestedDataModelSchema>>
+    : IQueryHandler<GetNestedDataModelSchemaByNameRangeQuery, IReadOnlyDictionary<string, NestedDataModelSchema>>
     , IIgnorePermissionCheckHandler
 {
     private readonly INestedDataModelSchemaMapper _nestedDataModelSchemaMapper;
@@ -16,25 +16,29 @@ public class GetNestedDataModelSchemaByNameRangeQueryHandler
         _nestedDataModelRepository = nestedDataModelRepository;
     }
 
-    public Task<IDictionary<string, NestedDataModelSchema>> ExecuteAsync(GetNestedDataModelSchemaByNameRangeQuery query, IExecutionContext executionContext)
+    public Task<IReadOnlyDictionary<string, NestedDataModelSchema>> ExecuteAsync(GetNestedDataModelSchemaByNameRangeQuery query, IExecutionContext executionContext)
     {
-        IDictionary<string, NestedDataModelSchema> result = null;
+        IReadOnlyDictionary<string, NestedDataModelSchema> typedResult = ImmutableDictionary<string, NestedDataModelSchema>.Empty;
 
-        if (EnumerableHelper.IsNullOrEmpty(query.Names)) return Task.FromResult(result);
+        if (EnumerableHelper.IsNullOrEmpty(query.Names))
+        {
+            return Task.FromResult(typedResult);
+        }
 
-        result = new Dictionary<string, NestedDataModelSchema>(StringComparer.OrdinalIgnoreCase);
+        var resultBuilder = new Dictionary<string, NestedDataModelSchema>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var name in query.Names.Distinct(StringComparer.OrdinalIgnoreCase))
         {
             var dataModelType = _nestedDataModelRepository.GetByName(name);
-            NestedDataModelSchema schema = null;
             if (dataModelType != null)
             {
-                schema = _nestedDataModelSchemaMapper.Map(dataModelType);
+                var schema = _nestedDataModelSchemaMapper.Map(dataModelType);
+                resultBuilder.Add(name, schema);
             }
-            result.Add(name, schema);
         }
 
-        return Task.FromResult(result);
+        typedResult = resultBuilder;
+
+        return Task.FromResult(typedResult);
     }
 }

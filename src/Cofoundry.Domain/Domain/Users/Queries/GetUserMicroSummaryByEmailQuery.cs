@@ -5,7 +5,7 @@
 /// if the user could not be found. Note that if the user area does not use email 
 /// addresses as the username then the email field is optional and may be empty.
 /// </summary>
-public class GetUserMicroSummaryByEmailQuery : IQuery<UserMicroSummary>
+public class GetUserMicroSummaryByEmailQuery : IQuery<UserMicroSummary?>
 {
     public GetUserMicroSummaryByEmailQuery() { }
 
@@ -26,10 +26,10 @@ public class GetUserMicroSummaryByEmailQuery : IQuery<UserMicroSummary>
     /// <summary>
     /// This query must be run against a specific user area.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The email address to use to locate the user.
     /// </summary>
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 }

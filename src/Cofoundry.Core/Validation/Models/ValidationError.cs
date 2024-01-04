@@ -35,7 +35,7 @@ public class ValidationError
     /// <summary>
     /// Zero or more properties that the error message applies to.
     /// </summary>
-    public ICollection<string> Properties { get; set; } = Array.Empty<string>();
+    public IReadOnlyCollection<string> Properties { get; set; } = Array.Empty<string>();
 
     /// <summary>
     /// Client-friendly text describing the error.

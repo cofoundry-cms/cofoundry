@@ -6,7 +6,7 @@
 /// </summary>
 public interface IDbUnstructuredDataSerializer
 {
-    object Deserialize(string serialized, Type type);
-    T Deserialize<T>(string serialized);
-    string Serialize(object toSerialize);
+    object? Deserialize(string? serialized, Type type);
+    T? Deserialize<T>(string? serialized);
+    string? Serialize(object? toSerialize);
 }

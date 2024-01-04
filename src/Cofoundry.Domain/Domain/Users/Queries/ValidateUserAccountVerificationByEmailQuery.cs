@@ -10,7 +10,7 @@ public class ValidateUserAccountVerificationByEmailQuery : IQuery<AuthorizedTask
     /// A token used to identify and authenticate the request. May be <see langword="null"/> 
     /// if the token was not present in the querystring.
     /// </summary>
-    public string Token { get; set; }
+    public string? Token { get; set; }
 
     /// <summary>
     /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
@@ -18,5 +18,5 @@ public class ValidateUserAccountVerificationByEmailQuery : IQuery<AuthorizedTask
     /// </summary>
     [Required]
     [StringLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 }

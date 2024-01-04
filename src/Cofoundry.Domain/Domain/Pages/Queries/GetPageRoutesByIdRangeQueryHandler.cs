@@ -1,8 +1,8 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 public class GetPageRoutesByIdRangeQueryHandler
-    : IQueryHandler<GetPageRoutesByIdRangeQuery, IDictionary<int, PageRoute>>
-    , IPermissionRestrictedQueryHandler<GetPageRoutesByIdRangeQuery, IDictionary<int, PageRoute>>
+    : IQueryHandler<GetPageRoutesByIdRangeQuery, IReadOnlyDictionary<int, PageRoute>>
+    , IPermissionRestrictedQueryHandler<GetPageRoutesByIdRangeQuery, IReadOnlyDictionary<int, PageRoute>>
 {
     private readonly IQueryExecutor _queryExecutor;
 
@@ -13,12 +13,12 @@ public class GetPageRoutesByIdRangeQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<IDictionary<int, PageRoute>> ExecuteAsync(GetPageRoutesByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, PageRoute>> ExecuteAsync(GetPageRoutesByIdRangeQuery query, IExecutionContext executionContext)
     {
         var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetPageRouteLookupQuery(), executionContext);
         var result = allPageRoutes
             .FilterByKeys(query.PageIds)
-            .ToDictionary(r => r.PageId);
+            .ToImmutableDictionary(r => r.PageId);
 
         return result;
     }

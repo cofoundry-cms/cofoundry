@@ -19,7 +19,7 @@ public class ContentRepositoryPageBlockByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<PageVersionBlockRenderDetails> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null)
+    public IDomainRepositoryQueryContext<PageVersionBlockRenderDetails?> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null)
     {
         var query = new GetPageVersionBlockRenderDetailsByIdQuery(_pageVersionBlockId, publishStatusQuery);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

@@ -9,7 +9,7 @@ namespace Cofoundry.Web;
 /// <inheritdoc/>
 public class FormFileSource : IFileSource
 {
-    private IFormFile _formFile = null;
+    private readonly IFormFile _formFile = null;
 
     public FormFileSource(IFormFile formFile)
     {

@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Internal;
 /// is found, otherwise null.
 /// </summary>
 public class GetUserMicroSummaryByIdQueryHandler
-    : IQueryHandler<GetUserMicroSummaryByIdQuery, UserMicroSummary>
+    : IQueryHandler<GetUserMicroSummaryByIdQuery, UserMicroSummary?>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -25,7 +25,7 @@ public class GetUserMicroSummaryByIdQueryHandler
         _userMicroSummaryMapper = userMicroSummaryMapper;
     }
 
-    public async Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByIdQuery query, IExecutionContext executionContext)
+    public async Task<UserMicroSummary?> ExecuteAsync(GetUserMicroSummaryByIdQuery query, IExecutionContext executionContext)
     {
         var dbResult = await Query(query).SingleOrDefaultAsync();
         var user = _userMicroSummaryMapper.Map(dbResult);
@@ -43,7 +43,7 @@ public class GetUserMicroSummaryByIdQueryHandler
             .Where(u => u.UserId == query.UserId);
     }
 
-    private void ValidatePermission(GetUserMicroSummaryByIdQuery query, IExecutionContext executionContext, UserMicroSummary user)
+    private void ValidatePermission(GetUserMicroSummaryByIdQuery query, IExecutionContext executionContext, UserMicroSummary? user)
     {
         if (user == null) return;
 

@@ -8,7 +8,7 @@
 /// </summary>
 /// <typeparam name="TCommand"><see cref="ICommand"/>type to fetch.</typeparam>
 public class GetPatchableCommandQuery<TCommand>
-    : IQuery<TCommand>
+    : IQuery<TCommand?>
     where TCommand : IPatchableCommand
 {
 }

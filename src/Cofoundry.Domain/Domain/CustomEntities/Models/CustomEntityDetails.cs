@@ -16,7 +16,7 @@ public class CustomEntityDetails : IPublishableEntity, ICreateAudited
     /// Optional locale assigned to the custom entity
     /// if used in a localized site.
     /// </summary>
-    public ActiveLocale Locale { get; set; }
+    public ActiveLocale? Locale { get; set; }
 
     /// <summary>
     /// The string identifier slug which can
@@ -24,7 +24,7 @@ public class CustomEntityDetails : IPublishableEntity, ICreateAudited
     /// of the custom entity page. Can be forced to be unique
     /// by a setting on the custom entity definition.
     /// </summary>
-    public string UrlSlug { get; set; }
+    public string UrlSlug { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates if the page is marked as published or not, which allows the page
@@ -60,16 +60,16 @@ public class CustomEntityDetails : IPublishableEntity, ICreateAudited
     /// <summary>
     /// The full path of the default details page. 
     /// </summary>
-    public string FullUrlPath { get; set; }
+    public string? FullUrlPath { get; set; }
 
     /// <summary>
     /// Data for the latest version of the custom entity, which is not
     /// neccessarily published.
     /// </summary>
-    public CustomEntityVersionDetails LatestVersion { get; set; }
+    public CustomEntityVersionDetails LatestVersion { get; set; } = CustomEntityVersionDetails.Uninitialized;
 
     /// <summary>
     /// Simple audit data for entity creation.
     /// </summary>
-    public CreateAuditData AuditData { get; set; }
+    public CreateAuditData AuditData { get; set; } = CreateAuditData.Uninitialized;
 }

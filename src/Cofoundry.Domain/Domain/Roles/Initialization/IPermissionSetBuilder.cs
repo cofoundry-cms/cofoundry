@@ -66,7 +66,7 @@ public interface IPermissionSetBuilder
     /// </summary>
     /// <typeparam name="TRoleDefinition">The <see cref="IRoleDefinition"/> to copy configuration from.</typeparam>
     /// <param name="additionalFilter">An additional filter to run before adding the role permissions to the builder.</param>
-    IPermissionSetBuilder ApplyRoleConfiguration<TRoleDefinition>(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null)
+    IPermissionSetBuilder ApplyRoleConfiguration<TRoleDefinition>(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null)
        where TRoleDefinition : IRoleDefinition;
 
     /// <summary>
@@ -85,7 +85,7 @@ public interface IPermissionSetBuilder
     /// </summary>
     /// <typeparam name="TEntityDefinition">The <see cref="IEntityDefinition"/> to filter permissions by.</typeparam>
     /// <param name="additionalFilter">An additional filter to run before adding the permissions to the builder.</param>
-    IPermissionSetBuilder IncludeEntity<TEntityDefinition>(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null)
+    IPermissionSetBuilder IncludeEntity<TEntityDefinition>(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null)
        where TEntityDefinition : IEntityDefinition;
 
     /// <summary>
@@ -96,14 +96,14 @@ public interface IPermissionSetBuilder
     /// </summary>
     /// <param name="permissionTypeCode">The unique 6 character code of the permission type to add.</param>
     /// <param name="additionalFilter">An additional filter to run before adding the permissions to the builder.</param>
-    IPermissionSetBuilder IncludeAllWithPermissionType(string permissionTypeCode, Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder IncludeAllWithPermissionType(string permissionTypeCode, Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Adds permissions that use the Read common permission type to the builder
     /// configuration. Duplicate permissions are discarded.
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before adding the permissions to the builder.</param>
-    IPermissionSetBuilder IncludeAllRead(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder IncludeAllRead(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Adds permissions that use the Update common permission type to the builder
@@ -111,21 +111,21 @@ public interface IPermissionSetBuilder
     /// Duplicate permissions are discarded.
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before adding the permissions to the builder.</param>
-    IPermissionSetBuilder IncludeAllUpdate(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder IncludeAllUpdate(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Adds permissions that use the Create common permission type to the builder
     /// configuration. Duplicate permissions are discarded.
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before adding the permissions to the builder.</param>
-    IPermissionSetBuilder IncludeAllCreate(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder IncludeAllCreate(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Adds permissions that use the Delete common permission type to the builder
     /// configuration. Duplicate permissions are discarded.
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before adding the permissions to the builder.</param>
-    IPermissionSetBuilder IncludeAllDelete(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder IncludeAllDelete(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Adds permissions that use one of the common permission types associated with writing 
@@ -134,7 +134,7 @@ public interface IPermissionSetBuilder
     /// permissions such as <see cref="PageUpdateUrlPermission"/>. Duplicate permissions are discarded.
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before adding the permissions to the builder.</param>
-    IPermissionSetBuilder IncludeAllWrite(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder IncludeAllWrite(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Adds all permissions that grant access to admin panel sections to the builder 
@@ -142,7 +142,7 @@ public interface IPermissionSetBuilder
     /// code as well as the dashboard permission type code. Duplicate permissions are discarded.
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before adding the permissions to the builder.</param>
-    IPermissionSetBuilder IncludeAllAdminModule(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder IncludeAllAdminModule(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// <para>
@@ -158,7 +158,7 @@ public interface IPermissionSetBuilder
     /// </para>
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before adding the permissions to the builder.</param>
-    IPermissionSetBuilder IncludeAnonymousRoleDefaults(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder IncludeAnonymousRoleDefaults(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Removes the specified permission type from the builder configuration. Permissions
@@ -175,7 +175,7 @@ public interface IPermissionSetBuilder
     /// </summary>
     /// <typeparam name="TEntityDefinition">The <see cref="IEntityDefinition"/> to filter permissions by.</typeparam>
     /// <param name="additionalFilter">An additional filter to run before removing the permissions from the builder.</param>
-    IPermissionSetBuilder ExcludeEntity<TEntityDefinition>(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null)
+    IPermissionSetBuilder ExcludeEntity<TEntityDefinition>(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null)
         where TEntityDefinition : IEntityDefinition;
 
     /// <summary>
@@ -185,28 +185,28 @@ public interface IPermissionSetBuilder
     /// </summary>
     /// <param name="permissionTypeCode">The unique 6 character code of the permission type to exclude.</param>
     /// <param name="additionalFilter">An additional filter to run before removing the permissions from the builder.</param>
-    IPermissionSetBuilder ExcludeAllWithPermissionType(string permissionTypeCode, Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder ExcludeAllWithPermissionType(string permissionTypeCode, Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Removes permissions that use the Create common permission type from the builder
     /// configuration. 
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before removing the permissions from the builder.</param>
-    IPermissionSetBuilder ExcludeAllCreate(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder ExcludeAllCreate(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Removes permissions that use the Update common permission type from the builder
     /// configuration. This does not remove special permissions such as <see cref="PageUpdateUrlPermission"/>. 
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before removing the permissions from the builder.</param>
-    IPermissionSetBuilder ExcludeAllUpdate(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder ExcludeAllUpdate(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Removes permissions that use the Delete common permission type from the builder
     /// configuration.
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before removing the permissions from the builder.</param>
-    IPermissionSetBuilder ExcludeAllDelete(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder ExcludeAllDelete(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Removes permissions that use one of the common permission types associated with writing 
@@ -215,7 +215,7 @@ public interface IPermissionSetBuilder
     /// permissions such as <see cref="PageUpdateUrlPermission"/>.
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before removing the permissions from the builder.</param>
-    IPermissionSetBuilder ExcludeAllWrite(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder ExcludeAllWrite(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 
     /// <summary>
     /// Removes all permissions that grant access to sections of the admin panel from the builder 
@@ -223,5 +223,5 @@ public interface IPermissionSetBuilder
     /// code as well as the dashboard permission type code.
     /// </summary>
     /// <param name="additionalFilter">An additional filter to run before removing the permissions from the builder.</param>
-    IPermissionSetBuilder ExcludeAdminModule(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> additionalFilter = null);
+    IPermissionSetBuilder ExcludeAdminModule(Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null);
 }

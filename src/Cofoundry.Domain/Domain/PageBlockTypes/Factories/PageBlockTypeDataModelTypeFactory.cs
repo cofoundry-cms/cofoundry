@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Used to create data model types and validate they exist
+/// Default implementation of <see cref="IPageBlockTypeDataModelTypeFactory"/>.
 /// </summary>
 public class PageBlockTypeDataModelTypeFactory : IPageBlockTypeDataModelTypeFactory
 {
@@ -20,19 +20,14 @@ public class PageBlockTypeDataModelTypeFactory : IPageBlockTypeDataModelTypeFact
         _pageBlockTypeFileNameFormatter = pageBlockTypeFileNameFormatter;
     }
 
-    /// <summary>
-    /// Creates a data model type from the file name
-    /// string i.e. 'PlainText' not 'PlainTextDataModel'. Throws 
-    /// an InvalidOperationException if the requested type is not register
-    /// or has been defined multiple times.
-    /// </summary>
-    /// <param name="pageBlockTypeFileName">The unique name of the page block type.</param>
+    /// <inheritdoc/>
     public Type CreateByPageBlockTypeFileName(string pageBlockTypeFileName)
     {
         // take advantage of the cached type list in the dependency resolver to get a collection of DataModel instances
         // we dont actually use these instances, we just use them to get the type. A bit wasteful perhaps but object creation is cheap 
         // and the only alternative is searching through all assembly types which is very slow.
         var dataModelTypes = _allPageBlockTypeDataModels
+            .Where(m => !(m is UninitializedPageBlockTypeDataModel))
             .Select(t => t.GetType())
             .Where(t => _pageBlockTypeFileNameFormatter.FormatFromDataModelType(t).Equals(pageBlockTypeFileName, StringComparison.OrdinalIgnoreCase));
 
@@ -49,12 +44,7 @@ public class PageBlockTypeDataModelTypeFactory : IPageBlockTypeDataModelTypeFact
         return dataModelTypes.First();
     }
 
-    /// <summary>
-    /// Creates a data model type from the database id. Throws 
-    /// an InvalidOperationException if the requested type is not register
-    /// or has been defined multiple times
-    /// </summary>
-    /// <param name="pageBlockTypeId">Id of the page block type in the database</param>
+    /// <inheritdoc/>
     public async Task<Type> CreateByPageBlockTypeIdAsync(int pageBlockTypeId)
     {
         var query = new GetPageBlockTypeSummaryByIdQuery(pageBlockTypeId);

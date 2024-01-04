@@ -17,13 +17,13 @@ public sealed class AddUserWithTemporaryPasswordCommand : ICommand, ILoggableCom
     /// The first name is optional.
     /// </summary>
     [StringLength(32)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
     /// <summary>
     /// The last name is optional.
     /// </summary>
     [StringLength(32)]
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
     /// <summary>
     /// An optional display-friendly name. This is capped at 150 characters to
@@ -33,7 +33,7 @@ public sealed class AddUserWithTemporaryPasswordCommand : ICommand, ILoggableCom
     /// is instead copied from the normalized username.
     /// </summary>
     [StringLength(150)]
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 
     /// <summary>
     /// An email address is required for this command so that an email
@@ -41,14 +41,14 @@ public sealed class AddUserWithTemporaryPasswordCommand : ICommand, ILoggableCom
     /// </summary>
     [Required]
     [DataType(DataType.EmailAddress)]
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     /// <summary>
     /// The username is required if the user area has <see cref="IUserAreaDefinition.UseEmailAsUsername"/> 
     /// set to <see langword="false"/>, otherwise it should be empty and the <see cref="Email"/> will be used 
     /// as the username instead.
     /// </summary>
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
     /// <summary>
     /// The Cofoundry user system is partitioned into user areas, a user
@@ -56,7 +56,7 @@ public sealed class AddUserWithTemporaryPasswordCommand : ICommand, ILoggableCom
     /// </summary>
     [Required]
     [StringLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The id of the role that this user is assigned to. Either the
@@ -72,7 +72,7 @@ public sealed class AddUserWithTemporaryPasswordCommand : ICommand, ILoggableCom
     /// role is required and determines the permissions available to the user.
     /// </summary>
     [StringLength(3)]
-    public string RoleCode { get; set; }
+    public string? RoleCode { get; set; }
 
     /// <summary>
     /// The database id of the newly created user. This is set after the command

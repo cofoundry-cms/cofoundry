@@ -10,8 +10,8 @@ namespace Cofoundry.Domain.Internal;
 /// this behavior can be controlled by the publishStatus query property.    
 /// </summary>
 public class GetCustomEntityRenderSummariesByDefinitionCodeQueryHandler
-    : IQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, ICollection<CustomEntityRenderSummary>>
-    , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, ICollection<CustomEntityRenderSummary>>
+    : IQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IReadOnlyCollection<CustomEntityRenderSummary>>
+    , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByDefinitionCodeQuery, IReadOnlyCollection<CustomEntityRenderSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
@@ -28,7 +28,7 @@ public class GetCustomEntityRenderSummariesByDefinitionCodeQueryHandler
         _customEntityDefinitionRepository = customEntityDefinitionRepository;
     }
 
-    public async Task<ICollection<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByDefinitionCodeQuery query, IExecutionContext executionContext)
     {
         var dbResults = await QueryAsync(query, executionContext);
         var results = await _customEntityRenderSummaryMapper.MapAsync(dbResults, executionContext);

@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace Cofoundry.Core;
 
@@ -46,6 +48,35 @@ public class EntityInvalidOperationException : InvalidOperationException
     public EntityInvalidOperationException(string message, Exception innerException)
         : base(message, innerException)
     {
+    }
+
+    /// <summary>
+    /// Throw an <see cref="EntityInvalidOperationException"/> if the specified entity 
+    /// property is <see langword="null"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">
+    /// The type of entity that is in an invalid state. If the entity is <see langword="null"/> then an
+    /// <see cref="EntityNotFoundException"/> is thrown instead.
+    /// </typeparam>
+    /// <param name="entity">The entity to check for a <see langword="null"/> reference.</param>
+    /// <param name="value">The member (property or field) to check for <see langword="null"/>.</param>
+    /// <param name="memberName">The name of the property with which value corresponds.</param>
+    public static void ThrowIfNull<TEntity, TProperty>(
+        [NotNull] TEntity? entity,
+        [NotNull] TProperty? value,
+        [CallerArgumentExpression(nameof(value))] string? memberName = null
+        )
+        where TEntity : class
+    {
+        if (entity == null)
+        {
+            throw new EntityNotFoundException<TEntity>();
+        }
+
+        if (value == null)
+        {
+            throw new EntityInvalidOperationException<TEntity>(memberName, null);
+        }
     }
 
     /// <summary>
@@ -119,7 +150,7 @@ public class EntityInvalidOperationException<TEntity> : EntityInvalidOperationEx
     /// </summary>
     /// <param name="memberName">The name of the property or member in the unexpected state.</param>
     /// <param name="value">The unexpected value of the member.</param>
-    public EntityInvalidOperationException(string memberName, object? value)
+    public EntityInvalidOperationException(string? memberName, object? value)
         : base(FormatMessage(memberName, value))
     {
     }

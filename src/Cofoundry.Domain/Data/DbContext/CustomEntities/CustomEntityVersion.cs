@@ -20,7 +20,6 @@
 /// look up for an applicable version for various PublishStatusQuery
 /// states.
 /// </remarks>
-/// <inheritdoc/>
 public class CustomEntityVersion : ICreateAuditable, IEntityVersion
 {
     /// <summary>
@@ -36,10 +35,7 @@ public class CustomEntityVersion : ICreateAuditable, IEntityVersion
     /// </summary>
     public int CustomEntityId { get; set; }
 
-    /// <summary>
-    /// Mapped from the domain enum WorkFlowStatus, this is the workflow 
-    /// state of this version e.g. draft/published.
-    /// </summary>
+    /// <inheritdoc/>
     public int WorkFlowStatusId { get; set; }
 
     /// <summary>
@@ -54,21 +50,40 @@ public class CustomEntityVersion : ICreateAuditable, IEntityVersion
     /// <summary>
     /// The descriptive human-readable title of the custom entity.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The custom entity data model serialized into string data by
     /// IDbUnstructuredDataSerializer, which used JSON serlialization
     /// by default.
     /// </summary>
-    public string SerializedData { get; set; }
+    public string SerializedData { get; set; } = string.Empty;
 
+    private CustomEntity? _customEntity;
     /// <summary>
     /// The custom entity this version is parented to.
     /// Custom entities can have many versions, but only one is
     /// published at any one time.
     /// </summary>
-    public virtual CustomEntity CustomEntity { get; set; }
+    public CustomEntity CustomEntity
+    {
+        get => _customEntity ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersion>(nameof(CustomEntity));
+        set => _customEntity = value;
+    }
+
+    /// <inheritdoc/>
+    public DateTime CreateDate { get; set; }
+
+    /// <inheritdoc/>
+    public int CreatorId { get; set; }
+
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersion>(nameof(Creator));
+        set => _creator = value;
+    }
 
     /// <summary>
     /// The dynamic 'Pages' feature can be used to create one or more 
@@ -77,18 +92,12 @@ public class CustomEntityVersion : ICreateAuditable, IEntityVersion
     /// master-details arrangement). This property holds the block data
     /// for the page template regions on any of these pages.
     /// </summary>
-    public virtual ICollection<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; } = new List<CustomEntityVersionPageBlock>();
+    public ICollection<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; } = new List<CustomEntityVersionPageBlock>();
 
     /// <summary>
     /// Lookup cache used for quickly finding the correct version for a
     /// specific publish status query e.g. 'Latest', 'Published', 
     /// 'PreferPublished'.
     /// </summary>
-    public virtual ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; set; } = new List<CustomEntityPublishStatusQuery>();
-
-    public User Creator { get; set; }
-
-    public DateTime CreateDate { get; set; }
-
-    public int CreatorId { get; set; }
+    public ICollection<CustomEntityPublishStatusQuery> CustomEntityPublishStatusQueries { get; set; } = new List<CustomEntityPublishStatusQuery>();
 }

@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Route library for pages
+/// Default implementation of <see cref="IPageRouteLibrary"/>.
 /// </summary>
 public class PageRouteLibrary : IPageRouteLibrary
 {
@@ -16,14 +16,13 @@ public class PageRouteLibrary : IPageRouteLibrary
         _queryExecutor = queryExecutor;
     }
 
-    /// <summary>
-    /// Simple but less efficient way of getting a page url if you only know 
-    /// the id. Use the overload accepting an IPageRoute if possible to save a 
-    /// potential db query if the route isn't cached.
-    /// </summary>
+    /// <inheritdoc/>
     public async Task<string> PageAsync(int? pageId)
     {
-        if (!pageId.HasValue) return string.Empty;
+        if (!pageId.HasValue)
+        {
+            return string.Empty;
+        }
 
         var query = new GetPageRouteByIdQuery(pageId.Value);
         var route = await _queryExecutor.ExecuteAsync(query);
@@ -31,21 +30,24 @@ public class PageRouteLibrary : IPageRouteLibrary
         return Page(route);
     }
 
-    /// <summary>
-    /// Gets the full (relative) url of a page
-    /// </summary>
-    public string Page(IPageRoute route)
+    /// <inheritdoc/>
+    public string Page(IPageRoute? route)
     {
-        if (route == null) return string.Empty;
+        if (route == null)
+        {
+            return string.Empty;
+        }
+
         return route.FullUrlPath;
     }
 
-    /// <summary>
-    /// Gets the full (relative) url of a page
-    /// </summary>
-    public string Page(PageRoutingInfo route)
+    /// <inheritdoc/>
+    public string Page(PageRoutingInfo? route)
     {
-        if (route == null) return string.Empty;
+        if (route == null)
+        {
+            return string.Empty;
+        }
 
         if (route.CustomEntityRouteRule != null && route.CustomEntityRoute != null)
         {
@@ -55,12 +57,13 @@ public class PageRouteLibrary : IPageRouteLibrary
         return Page(route.PageRoute);
     }
 
-    /// <summary>
-    /// Gets the full (relative) url of a page
-    /// </summary>
-    public string Page(ICustomEntityRoutable customEntity)
+    /// <inheritdoc/>
+    public string Page(ICustomEntityRoutable? customEntity)
     {
-        if (customEntity == null || EnumerableHelper.IsNullOrEmpty(customEntity.PageUrls)) return string.Empty;
+        if (customEntity == null || EnumerableHelper.IsNullOrEmpty(customEntity.PageUrls))
+        {
+            return string.Empty;
+        }
 
         // Multiple details routes are technically possible, but
         // shouldn't really happen and if they are then it's reasonable
@@ -70,7 +73,7 @@ public class PageRouteLibrary : IPageRouteLibrary
             .OrderBy(r => r.Length)
             .FirstOrDefault();
 
-        return route;
+        return route ?? string.Empty;
     }
 
     #region visual editor
@@ -83,32 +86,20 @@ public class PageRouteLibrary : IPageRouteLibrary
     const string VISUAL_EDITOR_QS_EDITTYPE_ENTITY = "entity";
     const string VISUAL_EDITOR_QS_EDITTYPE_PAGE = "page";
 
-    /// <summary>
-    /// Gets the url for a page, formatted with specific visual editor 
-    /// parameters. Note that this method does not validate permissions
-    /// in any way, it simply formats the route correctly.
-    /// </summary>
-    /// <param name="route">The page to link to.</param>
-    /// <param name="visualEditorMode">
-    /// The mode to set the visual editor to. Note that this method cannot be
-    /// used for VisualEditorMode.SpecificVersion and will throw an exception if
-    /// you try. To get the url for a specific version, you need to use the overload
-    /// accepting an IVersionRoute parameter.
-    /// </param>
-    /// <param name="isEditingCustomEntity">
-    /// For custom entity pages, this option indicates whether the editing context 
-    /// should be the custom entity rather than the (default) page.
-    /// </param>
+    /// <inheritdoc/>
     public string VisualEditor(
-        PageRoutingInfo route,
+        PageRoutingInfo? route,
         VisualEditorMode visualEditorMode,
         bool isEditingCustomEntity = false
         )
     {
-        if (route == null) return string.Empty;
+        if (route == null)
+        {
+            return string.Empty;
+        }
 
         var baseUrl = Page(route);
-        var queryParams = new Dictionary<string, string>(2);
+        var queryParams = new Dictionary<string, string?>(2);
 
         switch (visualEditorMode)
         {
@@ -116,7 +107,7 @@ public class PageRouteLibrary : IPageRouteLibrary
 
                 var latestVersion = route.GetVersionRoute(isEditingCustomEntity, PublishStatusQuery.Latest, null);
 
-                if (latestVersion.WorkFlowStatus == WorkFlowStatus.Draft || !route.IsPublished())
+                if (latestVersion != null && latestVersion.WorkFlowStatus == WorkFlowStatus.Draft || !route.IsPublished())
                 {
                     queryParams.Add(VISUAL_EDITOR_QS_MODE, VISUAL_EDITOR_QS_MODE_PREVIEW);
                 }
@@ -153,19 +144,16 @@ public class PageRouteLibrary : IPageRouteLibrary
         return url;
     }
 
-    /// <summary>
-    /// Gets the url for a page at a specific page or custom entity version, loaded inside the 
-    /// visual editor. Note that this method does not validate permissions in any way, it simply 
-    /// formats the route correctly.
-    /// </summary>
-    /// <param name="route">The page to link to.</param>
-    /// <param name="versionRoute">The version of the page or custom entity to link to.</param>
+    /// <inheritdoc/>
     public string VisualEditor(
-        PageRoutingInfo route,
+        PageRoutingInfo? route,
         IVersionRoute versionRoute
         )
     {
-        if (route == null) return string.Empty;
+        if (route == null)
+        {
+            return string.Empty;
+        }
 
         ArgumentNullException.ThrowIfNull(versionRoute);
 
@@ -186,8 +174,10 @@ public class PageRouteLibrary : IPageRouteLibrary
         }
 
         var baseUrl = Page(route);
-        var queryParams = new Dictionary<string, string>(2);
-        queryParams.Add("version", versionRoute.VersionId.ToString());
+        var queryParams = new Dictionary<string, string?>(2)
+        {
+            { "version", versionRoute.VersionId.ToString() }
+        };
 
         if (isEditingCustomEntity)
         {

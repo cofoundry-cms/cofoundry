@@ -32,6 +32,7 @@ public class SetupCofoundryCommandHandler
             var userId = await CreateAdminUser(command);
 
             var settingsCommand = await _domainRepository.ExecuteQueryAsync(new GetPatchableCommandQuery<UpdateGeneralSiteSettingsCommand>());
+            settingsCommand ??= new();
             settingsCommand.ApplicationName = command.ApplicationName;
             await _domainRepository.ExecuteCommandAsync(settingsCommand);
 

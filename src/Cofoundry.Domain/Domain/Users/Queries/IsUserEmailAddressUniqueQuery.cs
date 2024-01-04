@@ -13,14 +13,17 @@ public class IsUserEmailAddressUniqueQuery : IQuery<bool>
     /// </summary>
     [Required]
     [StringLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The email address to check for uniqueness. The email will
     /// be "uniquified" before the check is made so there is no need
-    /// to pre-format this value
+    /// to pre-format this value. Null or empty values are not valid 
+    /// but will return <see langword="true"/> because although uniqueness 
+    /// validation should not be triggered for these values it is technically 
+    /// the correct answer.
     /// </summary>
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     /// <summary>
     /// Optional database id of an existing user to exclude from the uniqueness 

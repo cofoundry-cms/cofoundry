@@ -9,8 +9,8 @@ namespace Cofoundry.Domain.Internal;
 /// information that should normally be hidden from a customer facing app.
 /// </summary>
 public class GetPageDetailsByIdQueryHandler
-    : IQueryHandler<GetPageDetailsByIdQuery, PageDetails>
-    , IPermissionRestrictedQueryHandler<GetPageDetailsByIdQuery, PageDetails>
+    : IQueryHandler<GetPageDetailsByIdQuery, PageDetails?>
+    , IPermissionRestrictedQueryHandler<GetPageDetailsByIdQuery, PageDetails?>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
@@ -33,30 +33,27 @@ public class GetPageDetailsByIdQueryHandler
         _openGraphDataMapper = openGraphDataMapper;
     }
 
-    public async Task<PageDetails> ExecuteAsync(GetPageDetailsByIdQuery query, IExecutionContext executionContext)
+    public async Task<PageDetails?> ExecuteAsync(GetPageDetailsByIdQuery query, IExecutionContext executionContext)
     {
-        var dbPageVersion = await GetPageById(query.PageId).FirstOrDefaultAsync();
-        if (dbPageVersion == null) return null;
+        var dbPageVersion = await GetPageVersionByIdAsync(query.PageId);
+        if (dbPageVersion == null)
+        {
+            return null;
+        }
 
         var pageRouteQuery = new GetPageRouteByIdQuery(query.PageId);
         var pageRoute = await _queryExecutor.ExecuteAsync(pageRouteQuery, executionContext);
         EntityNotFoundException.ThrowIfNull(pageRoute, query.PageId);
 
-        var regions = await _queryExecutor.ExecuteAsync(GetRegionsQuery(dbPageVersion), executionContext);
+        var regionsQuery = new GetPageRegionDetailsByPageVersionIdQuery(dbPageVersion.PageVersionId);
+        var regions = await _queryExecutor.ExecuteAsync(regionsQuery, executionContext);
 
         return Map(dbPageVersion, regions, pageRoute);
     }
 
-    private GetPageRegionDetailsByPageVersionIdQuery GetRegionsQuery(PageVersion page)
-    {
-        var regionsQuery = new GetPageRegionDetailsByPageVersionIdQuery(page.PageVersionId);
-
-        return regionsQuery;
-    }
-
     private PageDetails Map(
         PageVersion dbPageVersion,
-        ICollection<PageRegionDetails> regions,
+        IReadOnlyCollection<PageRegionDetails> regions,
         PageRoute pageRoute
         )
     {
@@ -69,9 +66,9 @@ public class GetPageDetailsByIdQueryHandler
             .PageTags
             .Select(t => t.Tag.TagText)
             .OrderBy(t => t)
-            .ToList();
+            .ToArray();
 
-        page.LatestVersion = new PageVersionDetails()
+        page.LatestVersion = new()
         {
             MetaDescription = dbPageVersion.MetaDescription,
             PageVersionId = dbPageVersion.PageVersionId,
@@ -89,9 +86,9 @@ public class GetPageDetailsByIdQueryHandler
         return page;
     }
 
-    private IOrderedQueryable<PageVersion> GetPageById(int id)
+    private async Task<PageVersion?> GetPageVersionByIdAsync(int id)
     {
-        return _dbContext
+        var result = await _dbContext
             .PageVersions
             .Include(v => v.Creator)
             .Include(v => v.PageTemplate)
@@ -101,13 +98,16 @@ public class GetPageDetailsByIdQueryHandler
             .ThenInclude(p => p.PageTags)
             .ThenInclude(t => t.Tag)
             .Include(v => v.OpenGraphImageAsset)
-            .ThenInclude(v => v.Creator)
+            .ThenInclude(v => v!.Creator)
             .AsNoTracking()
             .FilterActive()
             .FilterByPageId(id)
             .OrderByDescending(g => g.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
             .ThenByDescending(g => g.WorkFlowStatusId == (int)WorkFlowStatus.Published)
-            .ThenByDescending(g => g.CreateDate);
+            .ThenByDescending(g => g.CreateDate)
+            .FirstOrDefaultAsync();
+
+        return result;
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetPageDetailsByIdQuery query)

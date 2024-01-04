@@ -7,7 +7,7 @@
 /// used in the admin panel and not in a version-sensitive context such as a 
 /// public webpage.
 /// </summary>
-public class GetCustomEntitySummariesByIdRangeQuery : IQuery<IDictionary<int, CustomEntitySummary>>
+public class GetCustomEntitySummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, CustomEntitySummary>>
 {
     /// <summary>
     /// An id range query for custom entities which returns basic
@@ -32,9 +32,9 @@ public class GetCustomEntitySummariesByIdRangeQuery : IQuery<IDictionary<int, Cu
     /// located will not be present in the result.
     /// </param>
     public GetCustomEntitySummariesByIdRangeQuery(
-        IEnumerable<int> customEntityIds
+        IEnumerable<int>? customEntityIds
         )
-        : this(customEntityIds?.ToList())
+        : this(customEntityIds?.ToArray() ?? [])
     {
     }
 
@@ -63,5 +63,5 @@ public class GetCustomEntitySummariesByIdRangeQuery : IQuery<IDictionary<int, Cu
     /// located will not be present in the result.
     /// </summary>
     [Required]
-    public IReadOnlyCollection<int> CustomEntityIds { get; set; }
+    public IReadOnlyCollection<int> CustomEntityIds { get; set; } = Array.Empty<int>();
 }

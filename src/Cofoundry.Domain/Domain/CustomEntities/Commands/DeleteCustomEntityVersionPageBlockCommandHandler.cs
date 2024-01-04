@@ -39,9 +39,9 @@ public class DeleteCustomEntityVersionPageBlockCommandHandler
             .Select(m => new
             {
                 Block = m,
-                CustomEntityId = m.CustomEntityVersion.CustomEntityId,
-                CustomEntityDefinitionCode = m.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode,
-                WorkFlowStatusId = m.CustomEntityVersion.WorkFlowStatusId
+                m.CustomEntityVersion.CustomEntityId,
+                m.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode,
+                m.CustomEntityVersion.WorkFlowStatusId
             })
             .SingleOrDefaultAsync();
 

@@ -17,5 +17,5 @@ public class GetPageTemplateFileInfoByPathQuery : IQuery<PageTemplateFileInfo>
     /// Full path including filename and file extension of the page
     /// template view file to parse.
     /// </summary>
-    public string FullPath { get; set; }
+    public string FullPath { get; set; } = string.Empty;
 }

@@ -15,7 +15,9 @@ public class UrlSlugCustomEntityRoutingRuleTests
             CustomEntityDefinitionCode = "TSTCDE",
             Locale = new ActiveLocale()
             {
-                LocaleId = 8
+                LocaleId = 8,
+                IETFLanguageTag = "te-te",
+                Name = "Test"
             }
         };
     }

@@ -7,6 +7,8 @@
 /// </summary>
 public class AssetFileTypeValidator : IAssetFileTypeValidator
 {
+    private const string DEFAULT_FILE_TYPE_MESSAGE = "The type of file you're trying to add isn't allowed.";
+
     private readonly AssetFilesSettings _assetFileSettings;
 
     public AssetFileTypeValidator(
@@ -31,7 +33,7 @@ public class AssetFileTypeValidator : IAssetFileTypeValidator
     /// <param name="propertyName">
     /// The name of the model property being validated, used in the validation error.
     /// </param>
-    public virtual IEnumerable<ValidationResult> Validate(string fileNameOrFileExtension, string mimeType, string propertyName)
+    public virtual IEnumerable<ValidationResult> Validate(string fileNameOrFileExtension, string mimeType, string? propertyName)
     {
         propertyName = propertyName ?? string.Empty;
         var formattedFileExtension = fileNameOrFileExtension;
@@ -44,7 +46,7 @@ public class AssetFileTypeValidator : IAssetFileTypeValidator
         if (!IsListValid(_assetFileSettings.MimeTypeValidation, _assetFileSettings.GetMimeTypeValidationListOrDefault(), mimeType)
             || !IsListValid(_assetFileSettings.FileExtensionValidation, GetFormattedFileExtensionList(), formattedFileExtension))
         {
-            yield return new ValidationResult("The type of file you're trying to add isn't allowed.", new string[] { propertyName });
+            yield return new ValidationResult(DEFAULT_FILE_TYPE_MESSAGE, new string[] { propertyName });
         }
     }
 
@@ -69,7 +71,8 @@ public class AssetFileTypeValidator : IAssetFileTypeValidator
 
         if (error != null)
         {
-            throw ValidationErrorException.CreateWithProperties(error.ErrorMessage, error.MemberNames?.ToArray());
+            var message = error.ErrorMessage ?? DEFAULT_FILE_TYPE_MESSAGE;
+            throw ValidationErrorException.CreateWithProperties(message, error.MemberNames?.ToArray());
         }
     }
 
@@ -77,7 +80,8 @@ public class AssetFileTypeValidator : IAssetFileTypeValidator
     {
         return _assetFileSettings
             .GetFileExtensionValidationListOrDefault()
-            .Select(l => l?.TrimStart('.'));
+            .Select(l => l?.TrimStart('.'))
+            .WhereNotNull();
     }
 
     private bool IsListValid(

@@ -13,5 +13,5 @@ public class InvalidImageResizeSettingsException : Exception
         ImageResizeSettings = imageResizeSettings;
     }
 
-    public IImageResizeSettings ImageResizeSettings { get; set; }
+    public IImageResizeSettings? ImageResizeSettings { get; set; }
 }

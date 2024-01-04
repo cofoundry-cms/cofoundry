@@ -29,7 +29,7 @@ public class UpdateSeoSettingsCommandHandler
     {
         var allSettings = await _dbContext
             .Settings
-            .ToListAsync();
+            .ToArrayAsync();
 
         _settingCommandHelper.SetSettingProperty(command, c => c.HumansTxt, allSettings, executionContext);
         _settingCommandHelper.SetSettingProperty(command, c => c.RobotsTxt, allSettings, executionContext);

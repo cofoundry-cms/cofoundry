@@ -10,7 +10,7 @@ public class UpdateAuditData : CreateAuditData
     /// the updater will be assigned to the user that created the 
     /// entity, ensuring this property always has a value.
     /// </summary>
-    public UserMicroSummary Updater { get; set; }
+    public UserMicroSummary Updater { get; set; } = UserMicroSummary.Uninitialized;
 
     /// <summary>
     /// The date the entity was last updated. When first created
@@ -18,4 +18,11 @@ public class UpdateAuditData : CreateAuditData
     /// property always has a value.
     /// </summary>
     public DateTime UpdateDate { get; set; }
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static new UpdateAuditData Uninitialized = new();
 }

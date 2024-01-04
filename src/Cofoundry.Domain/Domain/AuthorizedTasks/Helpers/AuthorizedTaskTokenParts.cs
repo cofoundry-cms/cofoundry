@@ -15,5 +15,5 @@ public class AuthorizedTaskTokenParts
     /// A cryptographically strong random code that is used to authenticate before 
     /// the action is permitted to be executed.
     /// </summary>
-    public string AuthorizationCode { get; set; }
+    public string AuthorizationCode { get; set; } = string.Empty;
 }

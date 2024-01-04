@@ -11,8 +11,8 @@
 /// </para>
 /// </summary>
 public class GetRoleMicroSummaryByIdQueryHandler
-    : IQueryHandler<GetRoleMicroSummaryByIdQuery, RoleMicroSummary>
-    , IPermissionRestrictedQueryHandler<GetRoleMicroSummaryByIdQuery, RoleMicroSummary>
+    : IQueryHandler<GetRoleMicroSummaryByIdQuery, RoleMicroSummary?>
+    , IPermissionRestrictedQueryHandler<GetRoleMicroSummaryByIdQuery, RoleMicroSummary?>
 {
     private readonly IInternalRoleRepository _internalRoleRepository;
     private readonly IRoleMicroSummaryMapper _roleMicroSummaryMapper;
@@ -26,7 +26,7 @@ public class GetRoleMicroSummaryByIdQueryHandler
         _roleMicroSummaryMapper = roleMicroSummaryMapper;
     }
 
-    public async Task<RoleMicroSummary> ExecuteAsync(GetRoleMicroSummaryByIdQuery query, IExecutionContext executionContext)
+    public async Task<RoleMicroSummary?> ExecuteAsync(GetRoleMicroSummaryByIdQuery query, IExecutionContext executionContext)
     {
         var roleDetails = await _internalRoleRepository.GetByIdAsync(query.RoleId);
         var result = _roleMicroSummaryMapper.Map(roleDetails);

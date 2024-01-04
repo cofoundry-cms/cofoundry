@@ -33,23 +33,30 @@ public abstract class DateTimeAttributeBase : ValidationAttribute, IMetadataAttr
     protected virtual string MinMetaDataProperty { get; } = "Min";
     protected virtual string MaxMetaDataProperty { get; } = "Max";
 
-    public abstract string Min { get; set; }
+    public abstract string? Min { get; set; }
 
-    public abstract string Max { get; set; }
+    public abstract string? Max { get; set; }
 
     protected virtual DateTime? MinDate { get; set; }
 
     protected virtual DateTime? MaxDate { get; set; }
 
-    protected string FormatDate(DateTime? date)
+    protected string? FormatDate(DateTime? date)
     {
-        if (!date.HasValue) return null;
+        if (!date.HasValue)
+        {
+            return null;
+        }
+
         return date.Value.ToString(_minMaxFormat);
     }
 
-    protected static DateTime? ParseDate(string property, string value)
+    protected static DateTime? ParseDate(string property, string? value)
     {
-        if (string.IsNullOrEmpty(value)) return null;
+        if (string.IsNullOrEmpty(value))
+        {
+            return null;
+        }
 
         if (!DateTime.TryParse(value, out DateTime result))
         {
@@ -59,7 +66,7 @@ public abstract class DateTimeAttributeBase : ValidationAttribute, IMetadataAttr
         return result;
     }
 
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value == null || !MinDate.HasValue || !MaxDate.HasValue)
         {
@@ -76,7 +83,8 @@ public abstract class DateTimeAttributeBase : ValidationAttribute, IMetadataAttr
         if ((MinDate.HasValue && parsed.Value < MinDate)
             || (MaxDate.HasValue && parsed.Value > MaxDate))
         {
-            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), new string[] { validationContext.MemberName });
+            string[]? memberNames = string.IsNullOrEmpty(validationContext.MemberName) ? null : [validationContext.MemberName];
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), memberNames);
         }
 
         return ValidationResult.Success;
@@ -86,9 +94,12 @@ public abstract class DateTimeAttributeBase : ValidationAttribute, IMetadataAttr
     /// Casts or parses the object supplied by the IsValid method to
     /// a datetime so it can be validated.
     /// </summary>
-    private DateTime? ParseValueForValidation(object value)
+    private DateTime? ParseValueForValidation(object? value)
     {
-        if (value == null) return null;
+        if (value == null)
+        {
+            return null;
+        }
 
         DateTime parsed;
 

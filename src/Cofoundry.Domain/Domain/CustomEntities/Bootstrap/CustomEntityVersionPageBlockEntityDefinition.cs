@@ -12,7 +12,7 @@ public sealed class CustomEntityVersionPageBlockEntityDefinition : IDependableEn
 
     public string Name => "Custom Entity Version Page Block";
 
-    public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
+    public IQuery<IReadOnlyDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
     {
         return new GetCustomEntityVersionPageBlockEntityMicroSummariesByIdRangeQuery(ids);
     }

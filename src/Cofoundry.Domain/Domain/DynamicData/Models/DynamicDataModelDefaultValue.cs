@@ -10,5 +10,15 @@ public class DynamicDataModelDefaultValue
     /// <summary>
     /// A new instance of the model with any default values.
     /// </summary>
-    public object Value { get; set; }
+    public required object Value { get; set; }
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly DynamicDataModelDefaultValue Uninitialized = new()
+    {
+        Value = string.Empty
+    };
 }

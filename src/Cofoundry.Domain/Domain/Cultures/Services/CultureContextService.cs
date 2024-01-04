@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Service abstraction over the culture of the current request.
+/// Default implementation of <see cref="ICultureContextService"/>.
 /// </summary>
 public class CultureContextService : ICultureContextService
 {
@@ -16,24 +16,16 @@ public class CultureContextService : ICultureContextService
         _cultureFactory = cultureFactory;
     }
 
-    /// <summary>
-    /// Gets the CultureInfo used by the current request.
-    /// </summary>
+    /// <inheritdoc/>
     public CultureInfo GetCurrent()
     {
         return CultureInfo.CurrentCulture;
     }
 
-    /// <summary>
-    /// Sets the current thread culture and UI culture.
-    /// </summary>
-    /// <param name="ietfLanguageTag">An IETF language tag to set the current thread culture to e.g. 'en-US' or 'es'.</param>
+    /// <inheritdoc/>
     public void SetCurrent(string ietfLanguageTag)
     {
-        if (string.IsNullOrEmpty(ietfLanguageTag))
-        {
-            throw new ArgumentException("Cannot set the current culture to empty.", ietfLanguageTag);
-        }
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(ietfLanguageTag);
 
         var culture = _cultureFactory.Create(ietfLanguageTag);
 

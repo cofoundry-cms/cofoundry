@@ -102,8 +102,8 @@ public class UpdateUnstructuredDataDependenciesCommandHandler
             else
             {
                 existingDependency.RelatedEntityCascadeActionId = (int)updatedRelation.RelatedEntityCascadeAction;
+                relations.Remove(updatedRelation);
             }
-            relations.Remove(updatedRelation);
         }
 
         foreach (var newRelation in relations)

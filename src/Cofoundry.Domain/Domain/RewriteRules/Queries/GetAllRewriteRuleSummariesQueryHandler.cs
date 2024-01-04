@@ -7,8 +7,8 @@ namespace Cofoundry.Domain.Internal;
 /// set is cached in memory and quick to access.
 /// </summary>
 public class GetAllRewriteRuleSummariesQueryHandler
-    : IQueryHandler<GetAllRewriteRuleSummariesQuery, ICollection<RewriteRuleSummary>>
-    , IPermissionRestrictedQueryHandler<GetAllRewriteRuleSummariesQuery, ICollection<RewriteRuleSummary>>
+    : IQueryHandler<GetAllRewriteRuleSummariesQuery, IReadOnlyCollection<RewriteRuleSummary>>
+    , IPermissionRestrictedQueryHandler<GetAllRewriteRuleSummariesQuery, IReadOnlyCollection<RewriteRuleSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IRewriteRuleCache _cache;
@@ -25,14 +25,15 @@ public class GetAllRewriteRuleSummariesQueryHandler
         _rewriteRuleSummaryMapper = rewriteRuleSummaryMapper;
     }
 
-    public async Task<ICollection<RewriteRuleSummary>> ExecuteAsync(GetAllRewriteRuleSummariesQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<RewriteRuleSummary>> ExecuteAsync(GetAllRewriteRuleSummariesQuery query, IExecutionContext executionContext)
     {
         var rules = await _cache.GetOrAddAsync(async () =>
         {
             var dbResult = await Query().ToListAsync();
             var mapped = dbResult
                 .Select(_rewriteRuleSummaryMapper.Map)
-                .ToList();
+                .WhereNotNull()
+                .ToArray();
 
             return mapped;
         });
@@ -43,9 +44,9 @@ public class GetAllRewriteRuleSummariesQueryHandler
     private IQueryable<RewriteRule> Query()
     {
         return _dbContext
-                .RewriteRules
-                .AsNoTracking()
-                .OrderByDescending(r => r.CreateDate);
+            .RewriteRules
+            .AsNoTracking()
+            .OrderByDescending(r => r.CreateDate);
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetAllRewriteRuleSummariesQuery command)

@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Domain.Tests.Integration.Pages.Queries;
+﻿using System.Collections.Immutable;
+
+namespace Cofoundry.Domain.Tests.Integration.Pages.Queries;
 
 [Collection(nameof(DbDependentFixtureCollection))]
 public class GetPageRenderSummariesByIdRangeQueryHandlerTests
@@ -47,12 +49,12 @@ public class GetPageRenderSummariesByIdRangeQueryHandlerTests
         AssertStatus(pages, pageWithPublishedandDraftId, publishAndDraftWorkFlowStatus);
 
         static void AssertStatus(
-            IDictionary<int, PageRenderSummary> pages,
+            IReadOnlyDictionary<int, PageRenderSummary> pages,
             int pageId,
             WorkFlowStatus? workFlowStatus
             )
         {
-            var page = pages.GetOrDefault(pageId);
+            var page = pages.GetValueOrDefault(pageId);
 
             if (!workFlowStatus.HasValue)
             {
@@ -149,7 +151,7 @@ public class GetPageRenderSummariesByIdRangeQueryHandlerTests
         using var app = _appFactory.Create();
         var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
         var addPageCommand = app.TestData.Pages().CreateAddCommand(uniqueData, directoryId);
-        addPageCommand.Tags.Add(app.SeededEntities.TestTag.TagText);
+        addPageCommand.Tags = [app.SeededEntities.TestTag.TagText];
         addPageCommand.OpenGraphTitle = uniqueData + "OG Title";
         addPageCommand.OpenGraphDescription = uniqueData + "OG desc";
         addPageCommand.OpenGraphImageId = app.SeededEntities.TestImageId;
@@ -174,7 +176,7 @@ public class GetPageRenderSummariesByIdRangeQueryHandlerTests
         using (new AssertionScope())
         {
             pages.Should().NotBeNull();
-            var page = pages.GetOrDefault(pageId);
+            var page = pages.GetValueOrDefault(pageId);
 
             GetPageRenderSummaryByIdQueryHandlerTests.AssertBasicDataMapping(
                 addPageCommand,

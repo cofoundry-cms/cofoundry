@@ -12,13 +12,13 @@ public class AddPageDirectoryCommand : ICommand, ILoggableCommand
 
     [StringLength(200)]
     [Display(Name = "Name", Description = "E.g. 'About the team' or 'Our products'")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [Required]
     [StringLength(200)]
     [Display(Name = "Url path", Description = "e.g. 'about-the-team' or 'products'.")]
     [Slug]
-    public string UrlPath { get; set; }
+    public string UrlPath { get; set; } = string.Empty;
 
     [OutputValue]
     public int OutputPageDirectoryId { get; set; }

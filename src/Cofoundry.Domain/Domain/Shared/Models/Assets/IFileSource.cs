@@ -19,7 +19,7 @@ public interface IFileSource
     /// implementations the mime type is specified by the client and is not to be 
     /// trusted.
     /// </summary>
-    string MimeType { get; }
+    string? MimeType { get; }
 
     /// <summary>
     /// Opens a stream of the file contents. The callee is responsible for disposing 

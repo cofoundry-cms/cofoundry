@@ -24,6 +24,7 @@ public class CompleteUserAccountVerificationViaEmailCommandHandler
     public async Task ExecuteAsync(CompleteUserAccountVerificationViaEmailCommand command, IExecutionContext executionContext)
     {
         var validationResult = await ValidateRequestAsync(command, executionContext);
+        EntityInvalidOperationException.ThrowIfNull(validationResult, validationResult.Data);
 
         using (var scope = _domainRepository.Transactions().CreateScope())
         {
@@ -47,14 +48,14 @@ public class CompleteUserAccountVerificationViaEmailCommandHandler
                 .WithContext(executionContext)
                 .ExecuteCommandAsync(new InvalidateAuthorizedTaskBatchCommand(validationResult.Data.UserId, UserAccountVerificationAuthorizedTaskType.Code));
 
-            scope.QueueCompletionTask(() => OnTransactionComplete(validationResult));
+            scope.QueueCompletionTask(() => OnTransactionComplete(validationResult.Data));
             await scope.CompleteAsync();
         }
     }
 
-    private void OnTransactionComplete(AuthorizedTaskTokenValidationResult validationResult)
+    private void OnTransactionComplete(AuthorizedTaskTokenValidationResultData validationResultData)
     {
-        _userContextCache.Clear(validationResult.Data.UserId);
+        _userContextCache.Clear(validationResultData.UserId);
     }
 
     private async Task<AuthorizedTaskTokenValidationResult> ValidateRequestAsync(

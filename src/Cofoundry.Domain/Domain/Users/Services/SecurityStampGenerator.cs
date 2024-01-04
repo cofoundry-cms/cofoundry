@@ -1,21 +1,20 @@
 ﻿using Cofoundry.Core.Internal;
-using System.Security.Cryptography;
 
 namespace Cofoundry.Domain;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="ISecurityStampGenerator"/>.
+/// </summary>
 /// <remarks>
-/// This implementation mirrors the logic in <see cref="UserManager.NewSecurityStamp"/>.
-/// See https://github.com/dotnet/aspnetcore/blob/v6.0.1/src/Identity/Extensions.Core/src/UserManager.cs
+/// This implementation mirrors the logic in <see cref="Microsoft.AspNetCore.Identity.UserManager.NewSecurityStamp"/>.
+/// See https://github.com/dotnet/aspnetcore/blob/v8.0.0/src/Identity/Extensions.Core/src/UserManager.cs
 /// for source.
 /// </remarks>
 public class SecurityStampGenerator : ISecurityStampGenerator
 {
+    /// <inheritdoc/>
     public string Generate()
     {
-        byte[] bytes = new byte[20];
-        RandomNumberGenerator.Fill(bytes);
-
-        return Base32Converter.ToBase32(bytes);
+        return Base32Converter.GenerateBase32();
     }
 }

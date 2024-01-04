@@ -80,6 +80,10 @@ public class AddRoleCommandHandler
             foreach (var entity in entityWithoutReadPermission)
             {
                 var entityCode = entity.First().EntityDefinitionCode;
+                if (entityCode == null)
+                {
+                    throw new NullReferenceException($"{nameof(entityCode)} should not be null.");
+                }
                 var readPermission = _permissionRepository.GetByEntityAndPermissionType(entityCode, CommonPermissionTypes.ReadPermissionCode);
 
                 if (readPermission != null)
@@ -128,8 +132,9 @@ public class AddRoleCommandHandler
                 // Because permissions are defined in code, it might not exists yet. If it doesn't lets add it.
                 if (dbPermission == null)
                 {
-
                     var codePermission = _permissionRepository.GetByCode(permissionCommand.PermissionCode, permissionCommand.EntityDefinitionCode);
+                    EntityNotFoundException.ThrowIfNull(codePermission, PermissionIdentifierFormatter.GetUniqueIdentifier(permissionCommand.PermissionCode, permissionCommand.EntityDefinitionCode));
+
                     dbPermission = new Permission();
                     dbPermission.PermissionCode = codePermission.PermissionType.Code;
 

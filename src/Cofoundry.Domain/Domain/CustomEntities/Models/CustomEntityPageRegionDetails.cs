@@ -20,12 +20,12 @@ public class CustomEntityPageRegionDetails
     /// but will likely be alpha-numerical human readable names like 
     /// 'Heading' or 'Main Content'.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// All block data for the region in this cusotm entity page. 
     /// This contains the dynamic content that gets rendered into
     /// the page template.
     /// </summary>
-    public ICollection<CustomEntityVersionPageBlockDetails> Blocks { get; set; }
+    public IReadOnlyCollection<CustomEntityVersionPageBlockDetails> Blocks { get; set; } = Array.Empty<CustomEntityVersionPageBlockDetails>();
 }

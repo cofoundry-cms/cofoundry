@@ -12,9 +12,12 @@ public class ActiveLocaleMapper : IActiveLocaleMapper
     /// object. If the db record is null then null is returned.
     /// </summary>
     /// <param name="dbLocale">Locale record from the database.</param>
-    public ActiveLocale Map(Locale dbLocale)
+    public ActiveLocale? Map(Locale? dbLocale)
     {
-        if (dbLocale == null) return null;
+        if (dbLocale == null)
+        {
+            return null;
+        }
 
         var locale = new ActiveLocale()
         {

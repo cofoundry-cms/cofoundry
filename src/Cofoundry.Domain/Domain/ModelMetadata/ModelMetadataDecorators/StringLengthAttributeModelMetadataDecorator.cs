@@ -14,12 +14,10 @@ public class StringLengthAttributeModelMetadataDecorator : IModelMetadataDecorat
     {
         ArgumentNullException.ThrowIfNull(attribute);
 
-        if (!(attribute is StringLengthAttribute))
+        if (attribute is not StringLengthAttribute stringLengthttribtue)
         {
             throw new ArgumentException("Attribute type is not StringLengthAttribute", nameof(attribute));
         }
-
-        var stringLengthttribtue = (StringLengthAttribute)attribute;
 
         var modelMetaData = context.DisplayMetadata;
         modelMetaData.AddAdditionalValueWithValidationMessage("Maxlength", stringLengthttribtue.MaximumLength, stringLengthttribtue);

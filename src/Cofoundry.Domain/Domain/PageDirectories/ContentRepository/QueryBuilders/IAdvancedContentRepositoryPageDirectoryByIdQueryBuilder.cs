@@ -12,5 +12,5 @@ public interface IAdvancedContentRepositoryPageDirectoryByIdQueryBuilder
     /// navigations properties.
     /// </summary>
     /// <returns></returns>
-    IDomainRepositoryQueryContext<PageDirectoryNode> AsNode();
+    IDomainRepositoryQueryContext<PageDirectoryNode?> AsNode();
 }

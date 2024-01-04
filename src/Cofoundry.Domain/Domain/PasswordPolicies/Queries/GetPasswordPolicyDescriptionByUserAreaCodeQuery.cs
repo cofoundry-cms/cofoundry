@@ -28,5 +28,5 @@ public class GetPasswordPolicyDescriptionByUserAreaCodeQuery : IQuery<PasswordPo
     /// </summary>
     [Required]
     [StringLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 }

@@ -12,5 +12,6 @@ public interface IRoleDetailsMapper
     /// object. If the db record is null then null is returned.
     /// </summary>
     /// <param name="dbRole">Role record from the database.</param>
-    RoleDetails Map(Role dbRole);
+    [return: NotNullIfNotNull(nameof(dbRole))]
+    RoleDetails? Map(Role? dbRole);
 }

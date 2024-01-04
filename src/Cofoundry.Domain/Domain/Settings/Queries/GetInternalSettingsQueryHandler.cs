@@ -22,7 +22,7 @@ public class GetInternalSettingsQueryHandler
         return MapSettings(allSettings);
     }
 
-    private InternalSettings MapSettings(Dictionary<string, string> allSettings)
+    private InternalSettings MapSettings(IReadOnlyDictionary<string, string> allSettings)
     {
         var settings = new InternalSettings();
 

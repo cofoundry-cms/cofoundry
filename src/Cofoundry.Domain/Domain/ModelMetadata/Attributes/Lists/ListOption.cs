@@ -8,7 +8,7 @@ public class ListOption
 {
     public ListOption() { }
 
-    public ListOption(string text, object value)
+    public ListOption(string text, object? value)
     {
         Text = text;
         Value = value;
@@ -17,10 +17,10 @@ public class ListOption
     /// <summary>
     /// The display text.
     /// </summary>
-    public string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
 
     /// <summary>
     /// The option value.
     /// </summary>
-    public object Value { get; set; }
+    public object? Value { get; set; }
 }

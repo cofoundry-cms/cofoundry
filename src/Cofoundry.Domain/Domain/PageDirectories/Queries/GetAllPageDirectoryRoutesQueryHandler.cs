@@ -7,8 +7,8 @@ namespace Cofoundry.Domain.Internal;
 /// query are cached.
 /// </summary>
 public class GetAllPageDirectoryRoutesQueryHandler
-    : IQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
-    , IPermissionRestrictedQueryHandler<GetAllPageDirectoryRoutesQuery, ICollection<PageDirectoryRoute>>
+    : IQueryHandler<GetAllPageDirectoryRoutesQuery, IReadOnlyCollection<PageDirectoryRoute>>
+    , IPermissionRestrictedQueryHandler<GetAllPageDirectoryRoutesQuery, IReadOnlyCollection<PageDirectoryRoute>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageDirectoryRouteMapper _pageDirectoryRouteMapper;
@@ -22,14 +22,14 @@ public class GetAllPageDirectoryRoutesQueryHandler
         _pageDirectoryRouteMapper = pageDirectoryRouteMapper;
     }
 
-    public async Task<ICollection<PageDirectoryRoute>> ExecuteAsync(GetAllPageDirectoryRoutesQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<PageDirectoryRoute>> ExecuteAsync(GetAllPageDirectoryRoutesQuery query, IExecutionContext executionContext)
     {
         var dbPageDirectories = await _dbContext
             .PageDirectories
             .AsNoTracking()
             .Include(d => d.AccessRules)
             .Include(d => d.PageDirectoryLocales)
-            .ToListAsync();
+            .ToArrayAsync();
 
         var activeWebRoutes = _pageDirectoryRouteMapper.Map(dbPageDirectories);
 

@@ -28,13 +28,13 @@ public class CofoundryUpdatePackageFactory : IUpdatePackageFactory
         yield return package;
     }
 
-    private IEnumerable<IAlwaysRunUpdateCommand> GetAlwaysUpdateCommand()
+    private static IEnumerable<IAlwaysRunUpdateCommand> GetAlwaysUpdateCommand()
     {
         yield return new RegisterPermissionsAndRolesUpdateCommand();
         yield return new RegisterPageTemplatesAndPageBlockTypesCommand();
     }
 
-    private IEnumerable<IVersionedUpdateCommand> GetAdditionalCommands(ModuleVersion moduleVersion)
+    private static IEnumerable<IVersionedUpdateCommand> GetAdditionalCommands(ModuleVersion? moduleVersion)
     {
         if (moduleVersion == null)
         {

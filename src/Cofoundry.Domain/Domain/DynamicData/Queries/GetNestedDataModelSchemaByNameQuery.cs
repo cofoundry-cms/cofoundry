@@ -5,7 +5,7 @@
 /// type name. The "DataModel" suffix is optional in the type name
 /// and the lookup is case-insesnitive.
 /// </summary>
-public class GetNestedDataModelSchemaByNameQuery : IQuery<NestedDataModelSchema>
+public class GetNestedDataModelSchemaByNameQuery : IQuery<NestedDataModelSchema?>
 {
     public GetNestedDataModelSchemaByNameQuery()
     {
@@ -27,5 +27,5 @@ public class GetNestedDataModelSchemaByNameQuery : IQuery<NestedDataModelSchema>
     /// The data model type name with or without the "DataModel" suffix,
     /// the lookup is case-insesnitive.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

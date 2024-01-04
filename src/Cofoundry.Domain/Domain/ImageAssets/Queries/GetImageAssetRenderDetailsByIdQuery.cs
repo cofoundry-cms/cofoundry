@@ -7,7 +7,7 @@
 /// required to render out an image asset to a page, including all the 
 /// data needed to construct an asset file url.
 /// </summary>
-public class GetImageAssetRenderDetailsByIdQuery : IQuery<ImageAssetRenderDetails>
+public class GetImageAssetRenderDetailsByIdQuery : IQuery<ImageAssetRenderDetails?>
 {
     public GetImageAssetRenderDetailsByIdQuery()
     {

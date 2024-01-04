@@ -10,5 +10,5 @@ public interface IHtmlEditorConfigSource
     /// Creates a collection of TinyMCE configuration options that
     /// will be applied after the Cofoundry defaults.
     /// </summary>
-    IDictionary<string, object> Create();
+    IReadOnlyDictionary<string, object> Create();
 }

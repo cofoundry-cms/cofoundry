@@ -13,7 +13,7 @@ public class AuthorizedTaskTokenFormatter : IAuthorizedTaskTokenFormatter
         return parts.AuthorizedTaskId.ToString("N") + "-" + parts.AuthorizationCode;
     }
 
-    public AuthorizedTaskTokenParts Parse(string token)
+    public AuthorizedTaskTokenParts? Parse(string? token)
     {
         if (string.IsNullOrWhiteSpace(token)) return null;
         token = token.Trim();

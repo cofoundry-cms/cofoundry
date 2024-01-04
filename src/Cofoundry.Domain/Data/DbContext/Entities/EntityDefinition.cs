@@ -5,12 +5,12 @@ public class EntityDefinition
     /// <summary>
     /// Unique 6 character code representing the entity (use uppercase).
     /// </summary>
-    public string EntityDefinitionCode { get; set; }
+    public string EntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Singlar name of the entity e.g. 'Page'
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    public virtual ICollection<Permission> Permissions { get; set; } = new List<Permission>();
+    public ICollection<Permission> Permissions { get; set; } = new List<Permission>();
 }

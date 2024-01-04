@@ -9,8 +9,8 @@ namespace Cofoundry.Domain.Internal;
 /// of routes.
 /// </summary>
 public class GetPageRoutingInfoByCustomEntityIdRangeQueryHandler
-    : IQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, ICollection<PageRoutingInfo>>>
-    , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IDictionary<int, ICollection<PageRoutingInfo>>>
+    : IQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IReadOnlyDictionary<int, IReadOnlyCollection<PageRoutingInfo>>>
+    , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdRangeQuery, IReadOnlyDictionary<int, IReadOnlyCollection<PageRoutingInfo>>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
@@ -24,13 +24,13 @@ public class GetPageRoutingInfoByCustomEntityIdRangeQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<IDictionary<int, ICollection<PageRoutingInfo>>> ExecuteAsync(GetPageRoutingInfoByCustomEntityIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, IReadOnlyCollection<PageRoutingInfo>>> ExecuteAsync(GetPageRoutingInfoByCustomEntityIdRangeQuery query, IExecutionContext executionContext)
     {
-        var idSets = await IdSetQuery(query).ToListAsync();
+        var idSets = await GetIdSetsAsync(query);
 
-        if (!idSets.Any())
+        if (idSets.Count == 0)
         {
-            return new Dictionary<int, ICollection<PageRoutingInfo>>();
+            return ImmutableDictionary<int, IReadOnlyCollection<PageRoutingInfo>>.Empty;
         }
 
         var customEntityRoutesQueries = GetCustomEntityRoutingQuery(idSets);
@@ -59,30 +59,41 @@ public class GetPageRoutingInfoByCustomEntityIdRangeQueryHandler
     {
         public int PageId { get; set; }
         public int CustomEntityId { get; set; }
-        public string CustomEntityDefinitionCode { get; set; }
+        public string CustomEntityDefinitionCode { get; set; } = string.Empty;
     }
 
-    private IQueryable<IdQueryResult> IdSetQuery(GetPageRoutingInfoByCustomEntityIdRangeQuery query)
+    private async Task<IReadOnlyCollection<IdQueryResult>> GetIdSetsAsync(GetPageRoutingInfoByCustomEntityIdRangeQuery query)
     {
-        return _dbContext
+        var dbResult = await _dbContext
             .Pages
             .AsNoTracking()
             .FilterActive()
-            .Join(_dbContext.CustomEntities, p => new { p.CustomEntityDefinitionCode, p.LocaleId }, e => new { e.CustomEntityDefinitionCode, e.LocaleId }, (p, e) => new
-            {
-                CustomEntity = e,
-                Page = p
-            })
+            .Join(_dbContext.CustomEntities, p =>
+                new { p.CustomEntityDefinitionCode, p.LocaleId },
+                e => new { e.CustomEntityDefinitionCode, e.LocaleId }!,
+                (p, e) => new
+                {
+                    CustomEntity = e,
+                    Page = p
+                })
             .Where(r => query.CustomEntityIds.Contains(r.CustomEntity.CustomEntityId))
             .Select(r => new IdQueryResult()
             {
                 PageId = r.Page.PageId,
                 CustomEntityId = r.CustomEntity.CustomEntityId,
                 CustomEntityDefinitionCode = r.CustomEntity.CustomEntityDefinitionCode
-            });
+            })
+            .ToArrayAsync();
+
+        return dbResult;
     }
 
-    private async Task<IDictionary<int, ICollection<PageRoutingInfo>>> MapAsync(IExecutionContext executionContext, List<IdQueryResult> idSets, Dictionary<int, CustomEntityRoute> customEntityRoutes, IDictionary<int, PageRoute> pageRoutes)
+    private async Task<IReadOnlyDictionary<int, IReadOnlyCollection<PageRoutingInfo>>> MapAsync(
+        IExecutionContext executionContext,
+        IReadOnlyCollection<IdQueryResult> idSets,
+        Dictionary<int, CustomEntityRoute> customEntityRoutes,
+        IReadOnlyDictionary<int, PageRoute> pageRoutes
+        )
     {
         var allRules = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityRoutingRulesQuery(), executionContext);
 
@@ -92,8 +103,9 @@ public class GetPageRoutingInfoByCustomEntityIdRangeQueryHandler
         {
             var routingInfo = new PageRoutingInfo();
 
-            routingInfo.PageRoute = pageRoutes.GetOrDefault(idSet.PageId);
-            EntityNotFoundException.ThrowIfNull(routingInfo.PageRoute, idSet.PageId);
+            var pageRoute = pageRoutes.GetValueOrDefault(idSet.PageId);
+            EntityNotFoundException.ThrowIfNull(pageRoute, idSet.PageId);
+            routingInfo.PageRoute = pageRoute;
 
             routingInfo.CustomEntityRoute = customEntityRoutes.GetOrDefault(idSet.CustomEntityId);
             EntityNotFoundException.ThrowIfNull(routingInfo.CustomEntityRoute, idSet.PageId);
@@ -104,13 +116,13 @@ public class GetPageRoutingInfoByCustomEntityIdRangeQueryHandler
         }
 
         var groupedResult = result
-            .GroupBy(r => r.CustomEntityRoute.CustomEntityId)
-            .ToDictionary(g => g.Key, g => (ICollection<PageRoutingInfo>)g.ToList());
+            .GroupBy(r => r.CustomEntityRoute!.CustomEntityId)
+            .ToImmutableDictionary(g => g.Key, g => (IReadOnlyCollection<PageRoutingInfo>)g.ToArray());
 
         return groupedResult;
     }
 
-    private static IEnumerable<GetCustomEntityRoutesByDefinitionCodeQuery> GetCustomEntityRoutingQuery(List<IdQueryResult> idSets)
+    private static IEnumerable<GetCustomEntityRoutesByDefinitionCodeQuery> GetCustomEntityRoutingQuery(IReadOnlyCollection<IdQueryResult> idSets)
     {
         return idSets
             .Select(i => i.CustomEntityDefinitionCode)

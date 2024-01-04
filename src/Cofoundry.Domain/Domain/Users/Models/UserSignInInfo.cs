@@ -16,7 +16,7 @@ public class UserSignInInfo
     /// Code identifier of the user area this user belongs to. Each user 
     /// must be assigned to a user area (but not more than one).
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// True if a password change is required, this is set to true when an account is

@@ -20,7 +20,7 @@ public class ContentRepositoryCustomEntityByIdRangeQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<IDictionary<int, CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatus = null)
+    public IDomainRepositoryQueryContext<IReadOnlyDictionary<int, CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatus = null)
     {
         var query = new GetCustomEntityRenderSummariesByIdRangeQuery(_customEntityIds);
         if (publishStatus.HasValue)
@@ -31,7 +31,7 @@ public class ContentRepositoryCustomEntityByIdRangeQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<IDictionary<int, CustomEntitySummary>> AsSummaries()
+    public IDomainRepositoryQueryContext<IReadOnlyDictionary<int, CustomEntitySummary>> AsSummaries()
     {
         var query = new GetCustomEntitySummariesByIdRangeQuery(_customEntityIds);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

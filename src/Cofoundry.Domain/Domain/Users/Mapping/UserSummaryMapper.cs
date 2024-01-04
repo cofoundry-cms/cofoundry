@@ -20,7 +20,8 @@ public class UserSummaryMapper : IUserSummaryMapper
         _roleMicroSummaryMapper = roleMicroSummaryMapper;
     }
 
-    public virtual UserSummary Map(User dbUser)
+    [return: NotNullIfNotNull(nameof(dbUser))]
+    public virtual UserSummary? Map(User? dbUser)
     {
         if (dbUser == null) return null;
 
@@ -29,33 +30,34 @@ public class UserSummaryMapper : IUserSummaryMapper
             throw new ArgumentException("dbUser.Role must be included in the query to map to use the UserSummaryMapper");
         }
 
-        var user = _userMicroSummaryMapper.Map<UserSummary>(dbUser);
-        user.Email = dbUser.Email;
-        user.FirstName = dbUser.FirstName;
-        user.LastName = dbUser.LastName;
-        user.Username = dbUser.Username;
-        user.LastSignInDate = dbUser.LastSignInDate;
-
-        user.AuditData = new CreateAuditData()
-        {
-            CreateDate = dbUser.CreateDate
-        };
-
-        if (dbUser.Creator != null)
-        {
-            user.AuditData.Creator = _userMicroSummaryMapper.Map(dbUser.Creator);
-        }
+        var role = _roleMicroSummaryMapper.Map(dbUser.Role);
+        EntityNotFoundException.ThrowIfNull(role, dbUser.Role.RoleId);
 
         var userArea = _userAreaRepository.GetRequiredByCode(dbUser.UserAreaCode);
         EntityNotFoundException.ThrowIfNull(userArea, dbUser.UserAreaCode);
 
-        user.UserArea = new UserAreaMicroSummary()
+        var user = new UserSummary()
         {
-            UserAreaCode = dbUser.UserAreaCode,
-            Name = userArea.Name
+            UserId = dbUser.UserId,
+            DisplayName = dbUser.DisplayName,
+            AccountStatus = UserAccountStatusMapper.Map(dbUser),
+            UserArea = new()
+            {
+                UserAreaCode = dbUser.UserAreaCode,
+                Name = userArea.Name
+            },
+            Email = dbUser.Email,
+            FirstName = dbUser.FirstName,
+            LastName = dbUser.LastName,
+            Username = dbUser.Username,
+            LastSignInDate = dbUser.LastSignInDate,
+            AuditData = new CreateAuditData()
+            {
+                CreateDate = dbUser.CreateDate,
+                Creator = _userMicroSummaryMapper.Map(dbUser.Creator)
+            },
+            Role = role
         };
-
-        user.Role = _roleMicroSummaryMapper.Map(dbUser.Role);
 
         return user;
     }

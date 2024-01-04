@@ -19,7 +19,7 @@ public class ContentRepositoryPageByDirectoryIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<PageRoute>> AsRoutes()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<PageRoute>> AsRoutes()
     {
         var query = new GetPageRoutesByPageDirectoryIdQuery(_pageDirectoryId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

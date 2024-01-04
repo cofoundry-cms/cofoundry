@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetImageAssetDetailsByIdQueryHandler
-    : IQueryHandler<GetImageAssetDetailsByIdQuery, ImageAssetDetails>
-    , IPermissionRestrictedQueryHandler<GetImageAssetDetailsByIdQuery, ImageAssetDetails>
+    : IQueryHandler<GetImageAssetDetailsByIdQuery, ImageAssetDetails?>
+    , IPermissionRestrictedQueryHandler<GetImageAssetDetailsByIdQuery, ImageAssetDetails?>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IImageAssetDetailsMapper _imageAssetDetailsMapper;
@@ -18,7 +18,7 @@ public class GetImageAssetDetailsByIdQueryHandler
         _imageAssetDetailsMapper = imageAssetDetailsMapper;
     }
 
-    public async Task<ImageAssetDetails> ExecuteAsync(GetImageAssetDetailsByIdQuery query, IExecutionContext executionContext)
+    public async Task<ImageAssetDetails?> ExecuteAsync(GetImageAssetDetailsByIdQuery query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .ImageAssets

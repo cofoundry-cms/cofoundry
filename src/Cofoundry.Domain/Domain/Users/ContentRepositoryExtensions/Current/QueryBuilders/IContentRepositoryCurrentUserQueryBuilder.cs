@@ -24,7 +24,7 @@ public interface IContentRepositoryCurrentUserQueryBuilder
     /// that is quick to load. If the user is not logged in then <see langword="null"/>
     /// is returned.
     /// </summary>
-    IDomainRepositoryQueryContext<UserMicroSummary> AsMicroSummary();
+    IDomainRepositoryQueryContext<UserMicroSummary?> AsMicroSummary();
 
     /// <summary>
     /// The <see cref="UserSummary"/> is a reduced representation of a user. Building 
@@ -32,12 +32,12 @@ public interface IContentRepositoryCurrentUserQueryBuilder
     /// and basic role data. If the user is not logged in then <see langword="null"/> 
     /// is returned.
     /// </summary>
-    IDomainRepositoryQueryContext<UserSummary> AsSummary();
+    IDomainRepositoryQueryContext<UserSummary?> AsSummary();
 
     /// <summary>
     /// The <see cref="UserDetails"/> projection is a full representation of a user, containing 
     /// all properties including role and permission data. If the user is not logged 
     /// in then <see langword="null"/> is returned.
     /// </summary>
-    IDomainRepositoryQueryContext<UserDetails> AsDetails();
+    IDomainRepositoryQueryContext<UserDetails?> AsDetails();
 }

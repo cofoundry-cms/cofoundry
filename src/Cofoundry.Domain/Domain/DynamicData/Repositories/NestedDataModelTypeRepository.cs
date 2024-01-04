@@ -17,7 +17,7 @@ public class NestedDataModelTypeRepository : INestedDataModelTypeRepository
         )
     {
         DetectDuplicates(allNestedDataModels);
-        _nestedDataModels = allNestedDataModels.ToDictionary(m => GetDataModelName(m), StringComparer.OrdinalIgnoreCase);
+        _nestedDataModels = allNestedDataModels.ToDictionary(GetDataModelName, StringComparer.OrdinalIgnoreCase);
     }
 
     private void DetectDuplicates(IEnumerable<INestedDataModel> allNestedDataModels)
@@ -48,10 +48,16 @@ public class NestedDataModelTypeRepository : INestedDataModelTypeRepository
     /// The name of the model to get. The "DataModel" suffix is options e.g. 
     /// "CarouselItemDataModel" and "CarouselItem" both match the same type.
     /// </param>
-    public Type GetByName(string name)
+    public Type? GetByName(string? name)
     {
+        if (string.IsNullOrEmpty(name))
+        {
+            return null;
+        }
+
         var normalizedName = NormalizeName(name);
         var model = _nestedDataModels.GetOrDefault(normalizedName);
+
         return model?.GetType();
     }
 

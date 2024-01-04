@@ -16,5 +16,5 @@ public class UpdatePageCommand : IPatchableByIdCommand, ILoggableCommand
     /// <summary>
     /// Tags can be used to categorize an entity.
     /// </summary>
-    public ICollection<string> Tags { get; set; }
+    public IReadOnlyCollection<string> Tags { get; set; } = Array.Empty<string>();
 }

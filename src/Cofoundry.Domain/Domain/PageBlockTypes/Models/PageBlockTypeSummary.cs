@@ -19,19 +19,19 @@ public class PageBlockTypeSummary
     /// The name should ideally be unique but this is not enforced as long as
     /// the filename is unique.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// An optional description used to help users pick a block
     /// type from a list of options.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// The name of the view file (without extension) that gets rendered 
     /// with the block data. This file name needs to be unique.
     /// </summary>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// A block can optionally have display templates associated with it, 
@@ -39,5 +39,15 @@ public class PageBlockTypeSummary
     /// e.g. 'Wide', 'Headline', 'Large', 'Reversed'. If no template is set then 
     /// the default view is used for rendering.
     /// </summary>
-    public ICollection<PageBlockTypeTemplateSummary> Templates { get; set; }
+    public IReadOnlyCollection<PageBlockTypeTemplateSummary> Templates { get; set; } = Array.Empty<PageBlockTypeTemplateSummary>();
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly PageBlockTypeSummary Uninitialized = new()
+    {
+        PageBlockTypeId = int.MinValue
+    };
 }

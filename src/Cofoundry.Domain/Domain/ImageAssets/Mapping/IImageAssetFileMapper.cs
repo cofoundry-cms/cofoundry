@@ -6,10 +6,13 @@
 public interface IImageAssetFileMapper
 {
     /// <summary>
-    /// Maps a ImageAssetRenderDetails (which is potentially cached) into an
-    /// ImageAssetFile object. If the dbImage is null then null is returned.
+    /// Maps an <see cref="ImageAssetRenderDetails"/> model (which is 
+    /// potentially cached) into an <see cref="ImageAssetFile"/> model. 
+    /// If the <paramref name="renderDetails"/> model is <see langword="null"/> 
+    /// then <see langword="null"/> is returned.
     /// </summary>
-    /// <param name="dbImage">ImageAssetRenderDetails record to map.</param>
-    /// <param name="contentStream">Steam containing the file data.</param>
-    ImageAssetFile Map(ImageAssetRenderDetails dbImage, Stream contentStream);
+    /// <param name="renderDetails">Model to map from.</param>
+    /// <param name="contentStream"><see cref="Stream"/> containing the image file data.</param>
+    [return: NotNullIfNotNull(nameof(renderDetails))]
+    ImageAssetFile? Map(ImageAssetRenderDetails? renderDetails, Stream contentStream);
 }

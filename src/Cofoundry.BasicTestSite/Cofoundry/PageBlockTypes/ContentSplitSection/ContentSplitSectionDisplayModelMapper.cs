@@ -31,7 +31,7 @@ public class ContentSplitSectionDisplayModelMapper : IPageBlockTypeDisplayModelM
             var displayModel = new ContentSplitSectionDisplayModel();
             displayModel.HtmlText = new HtmlString(item.DataModel.HtmlText);
             displayModel.Title = item.DataModel.Title;
-            displayModel.Image = imageAssets.GetOrDefault(item.DataModel.ImageAssetId);
+            displayModel.Image = imageAssets.GetValueOrDefault(item.DataModel.ImageAssetId);
 
             result.Add(item, displayModel);
         }

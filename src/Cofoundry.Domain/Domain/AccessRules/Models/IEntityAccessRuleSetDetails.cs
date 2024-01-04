@@ -18,7 +18,7 @@ public interface IEntityAccessRuleSetDetails<TEntityAccessRuleSummary> where TEn
     /// but instead are used to restrict public access to website pages and routes.
     /// </para>
     /// </summary>
-    public ICollection<TEntityAccessRuleSummary> AccessRules { get; set; }
+    public IReadOnlyCollection<TEntityAccessRuleSummary> AccessRules { get; set; }
 
     /// <summary>
     /// An action to take when a user does not meet the rule criteria.
@@ -28,5 +28,5 @@ public interface IEntityAccessRuleSetDetails<TEntityAccessRuleSummary> where TEn
     /// <summary>
     /// The user area to restrict access to.
     /// </summary>
-    public UserAreaMicroSummary UserAreaForSignInRedirect { get; set; }
+    public UserAreaMicroSummary? UserAreaForSignInRedirect { get; set; }
 }

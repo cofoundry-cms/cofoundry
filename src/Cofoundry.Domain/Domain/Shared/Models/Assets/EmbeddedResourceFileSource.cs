@@ -78,7 +78,7 @@ public class EmbeddedResourceFileSource : IFileSource
     /// Optional mime/content type associated with the file, if it is known. For
     /// embedded resources this is not often known.
     /// </summary>
-    public string MimeType { get; private set; }
+    public string? MimeType { get; private set; }
 
     /// <summary>
     /// The full embedded resource path including the namespace, folder 
@@ -97,6 +97,13 @@ public class EmbeddedResourceFileSource : IFileSource
     /// </summary>
     public Task<Stream> OpenReadStreamAsync()
     {
-        return Task.FromResult(Assembly.GetManifestResourceStream(FullPath));
+        var stream = Assembly.GetManifestResourceStream(FullPath);
+
+        if (stream == null)
+        {
+            throw new FileNotFoundException($"Embedded resource could not be found at path {FullPath}", FullPath);
+        }
+
+        return Task.FromResult(stream);
     }
 }

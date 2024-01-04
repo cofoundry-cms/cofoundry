@@ -6,7 +6,7 @@
 /// be a copy of the email address if the <see cref="IUserAreaDefinition.UseEmailAsUsername"/>
 /// setting is set to true.
 /// </summary>
-public class GetUserMicroSummaryByUsernameQuery : IQuery<UserMicroSummary>
+public class GetUserMicroSummaryByUsernameQuery : IQuery<UserMicroSummary?>
 {
     public GetUserMicroSummaryByUsernameQuery() { }
 
@@ -24,11 +24,11 @@ public class GetUserMicroSummaryByUsernameQuery : IQuery<UserMicroSummary>
     /// <summary>
     /// This query must be run against a specific user area.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The username to use to locate the user. The value will be normalized
     /// before making the comparison.
     /// </summary>
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 }

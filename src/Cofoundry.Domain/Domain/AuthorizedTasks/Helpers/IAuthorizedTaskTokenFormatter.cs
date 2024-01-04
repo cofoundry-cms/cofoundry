@@ -24,5 +24,5 @@ public interface IAuthorizedTaskTokenFormatter
     /// The token to parse. Can be <see langword="null"/> 
     /// which will return a <see langword="null"/> result.
     /// </param>
-    public AuthorizedTaskTokenParts Parse(string token);
+    public AuthorizedTaskTokenParts? Parse(string? token);
 }

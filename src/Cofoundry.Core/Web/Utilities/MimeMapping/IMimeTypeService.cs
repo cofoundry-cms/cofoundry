@@ -27,5 +27,5 @@ public interface IMimeTypeService
     /// default value is null or empty then "application/octet-stream" 
     /// is used instead.
     /// </param>
-    string MapFromFileName(string fileName, string defaultMimeType);
+    string MapFromFileName(string fileName, string? defaultMimeType);
 }

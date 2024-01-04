@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdateDocumentAssetCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
-    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand?>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateDocumentAssetCommand>, UpdateDocumentAssetCommand?>
 {
     private readonly CofoundryDbContext _dbContext;
 
@@ -15,7 +15,7 @@ public class GetUpdateDocumentAssetCommandByIdQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<UpdateDocumentAssetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateDocumentAssetCommand> query, IExecutionContext executionContext)
+    public async Task<UpdateDocumentAssetCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateDocumentAssetCommand> query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .DocumentAssets
@@ -25,7 +25,10 @@ public class GetUpdateDocumentAssetCommandByIdQueryHandler
             .FilterById(query.Id)
             .SingleOrDefaultAsync();
 
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
 
         var result = new UpdateDocumentAssetCommand()
         {
@@ -35,10 +38,10 @@ public class GetUpdateDocumentAssetCommandByIdQueryHandler
         };
 
         result.Tags = dbResult
-                .DocumentAssetTags
-                .Select(t => t.Tag.TagText)
-                .OrderBy(t => t)
-                .ToArray();
+            .DocumentAssetTags
+            .Select(t => t.Tag.TagText)
+            .OrderBy(t => t)
+            .ToArray();
 
         return result;
     }

@@ -11,6 +11,7 @@ public class CustomEntityCreatePermission : ICustomEntityPermissionTemplate
     public CustomEntityCreatePermission()
     {
         PermissionType = CommonPermissionTypes.Create("Not Set");
+        EntityDefinition = new CustomEntityDynamicEntityDefinition();
     }
 
     public CustomEntityCreatePermission(ICustomEntityDefinition customEntityDefinition)

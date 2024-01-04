@@ -24,7 +24,7 @@ public class CustomEntityVersionDetails
     /// <summary>
     /// The descriptive human-readable title of the custom entity.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The workflow state of this version e.g. draft/published.
@@ -39,16 +39,26 @@ public class CustomEntityVersionDetails
     /// cast the model to the correct data model type in oder to 
     /// access the properties.
     /// </summary>
-    public ICustomEntityDataModel Model { get; set; }
+    public ICustomEntityDataModel Model { get; set; } = UninitializedCustomEntityDataModel.Instance;
 
     /// <summary>
     /// Page region and block data for any pages that this custom
     /// entity is associated with.
     /// </summary>
-    public ICollection<CustomEntityPage> Pages { get; set; }
+    public IReadOnlyCollection<CustomEntityPage> Pages { get; set; } = Array.Empty<CustomEntityPage>();
 
     /// <summary>
     /// Simple audit data for custom entity creation.
     /// </summary>
-    public CreateAuditData AuditData { get; set; }
+    public CreateAuditData AuditData { get; set; } = CreateAuditData.Uninitialized;
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly CustomEntityVersionDetails Uninitialized = new()
+    {
+        CustomEntityVersionId = int.MinValue
+    };
 }

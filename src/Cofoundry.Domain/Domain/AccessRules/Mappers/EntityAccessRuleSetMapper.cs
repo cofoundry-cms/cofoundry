@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Common mapping functionality for <see cref="EntityAccessRule"/> projections.
+/// Default implementation of <see cref="IEntityAccessRuleSetMapper"/>.
 /// </summary>
 public class EntityAccessRuleSetMapper : IEntityAccessRuleSetMapper
 {
@@ -20,7 +20,8 @@ public class EntityAccessRuleSetMapper : IEntityAccessRuleSetMapper
         _logger = logger;
     }
 
-    public EntityAccessRuleSet Map<TAccessRule>(IEntityAccessRestrictable<TAccessRule> entity)
+    /// <inheritdoc/>
+    public EntityAccessRuleSet? Map<TAccessRule>(IEntityAccessRestrictable<TAccessRule> entity)
         where TAccessRule : IEntityAccessRule
     {
         ArgumentNullException.ThrowIfNull(entity);

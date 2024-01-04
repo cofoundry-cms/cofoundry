@@ -41,7 +41,7 @@ public class MimeTypeService : IMimeTypeService
     /// default value is null or empty then "application/octet-stream" 
     /// is used instead.
     /// </param>
-    public virtual string MapFromFileName(string fileName, string defaultMimeType)
+    public virtual string MapFromFileName(string fileName, string? defaultMimeType)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
 

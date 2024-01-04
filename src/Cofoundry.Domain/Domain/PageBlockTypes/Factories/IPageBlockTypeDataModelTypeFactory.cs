@@ -8,7 +8,7 @@ public interface IPageBlockTypeDataModelTypeFactory
     /// <summary>
     /// Creates a data model type from the file name
     /// string i.e. 'PlainText' not 'PlainTextDataModel'. Throws 
-    /// an InvalidOperationException if the requested type is not register
+    /// an InvalidOperationException if the requested type is not registered
     /// or has been defined multiple times
     /// </summary>
     /// <param name="pageBlockTypeFileName">The unique name of the page block type</param>

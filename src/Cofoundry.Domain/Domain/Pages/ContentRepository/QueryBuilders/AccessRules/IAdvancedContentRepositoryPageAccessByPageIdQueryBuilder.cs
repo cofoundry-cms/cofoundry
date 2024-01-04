@@ -10,5 +10,5 @@ public interface IAdvancedContentRepositoryPageAccessByPageIdQueryBuilder
     /// configured for a page, including all access rules as well as those 
     /// inherited from parent directories.
     /// </summary>>
-    IDomainRepositoryQueryContext<PageAccessRuleSetDetails> AsDetails();
+    IDomainRepositoryQueryContext<PageAccessRuleSetDetails?> AsDetails();
 }

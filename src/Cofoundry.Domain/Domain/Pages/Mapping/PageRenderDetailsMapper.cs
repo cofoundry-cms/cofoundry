@@ -2,35 +2,24 @@
 
 namespace Cofoundry.Domain.Internal;
 
+/// <summary>
+/// Default implementation of <see cref="IPageRenderDetailsMapper"/>.
+/// </summary>
 public class PageRenderDetailsMapper : IPageRenderDetailsMapper
 {
     private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
     private readonly IPageRenderSummaryMapper _pageRenderSummaryMapper;
-    private readonly IOpenGraphDataMapper _openGraphDataMapper;
 
     public PageRenderDetailsMapper(
         IPageTemplateMicroSummaryMapper pageTemplateMapper,
-        IOpenGraphDataMapper openGraphDataMapper,
         IPageRenderSummaryMapper pageRenderSummaryMapper
         )
     {
         _pageTemplateMapper = pageTemplateMapper;
-        _openGraphDataMapper = openGraphDataMapper;
         _pageRenderSummaryMapper = pageRenderSummaryMapper;
     }
 
-    /// <summary>
-    /// Maps the main properties on a PageRenderDetails including
-    /// page regions, but does not map the page block data.
-    /// </summary>
-    /// <param name="dbPageVersion">
-    /// PageVersion record from the database. Must include the 
-    /// OpenGraphImageAsset, PageTemplate and PageTemplate.PageTemplateRegions
-    /// properties.
-    /// </param>
-    /// <param name="pageRoute">
-    /// The page route to map to the new object.
-    /// </param>
+    /// <inheritdoc/>
     public virtual PageRenderDetails Map(
         PageVersion dbPageVersion,
         PageRoute pageRoute
@@ -46,19 +35,8 @@ public class PageRenderDetailsMapper : IPageRenderDetailsMapper
         return page;
     }
 
-    /// <summary>
-    /// Maps the main properties on a PageRenderDetails including
-    /// page regions, but does not map the page block data.
-    /// </summary>
-    /// <param name="dbPageVersion">
-    /// PageVersion record from the database. Must include the 
-    /// OpenGraphImageAsset, PageTemplate and PageTemplate.PageTemplateRegions
-    /// properties.
-    /// </param>
-    /// <param name="pageRouteLookup">
-    /// Set of page routes to lookup the route property value.
-    /// </param>
-    public virtual PageRenderDetails Map(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup)
+    /// <inheritdoc/>
+    public virtual PageRenderDetails Map(PageVersion dbPageVersion, IReadOnlyDictionary<int, PageRoute> pageRouteLookup)
     {
         ArgumentNullException.ThrowIfNull(dbPageVersion);
         ArgumentNullException.ThrowIfNull(pageRouteLookup);
@@ -83,6 +61,6 @@ public class PageRenderDetailsMapper : IPageRenderDetailsMapper
                 Name = r.Name
                 // Blocks mapped elsewhere
             })
-            .ToList();
+            .ToArray();
     }
 }

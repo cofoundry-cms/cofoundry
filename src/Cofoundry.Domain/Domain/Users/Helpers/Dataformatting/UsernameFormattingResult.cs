@@ -14,12 +14,12 @@ public class UsernameFormattingResult
     /// field is formatted by a "uniquification" process which can be more involved, because that field used for 
     /// comparisons when logging in.
     /// </summary>
-    public string NormalizedUsername { get; set; }
+    public string NormalizedUsername { get; set; } = string.Empty;
 
     /// <summary>
     /// A version of the username that is formatted to standardize casing and any other
     /// required formatting irregularities e.g. "jarnold" or "jarnold@example.com". This field 
     /// is used for uniqueness checks and user lookups.
     /// </summary>
-    public string UniqueUsername { get; set; }
+    public string UniqueUsername { get; set; } = string.Empty;
 }

@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdatePageCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand>
-    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand?>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageCommand>, UpdatePageCommand?>
 {
     private readonly CofoundryDbContext _dbContext;
 
@@ -15,7 +15,7 @@ public class GetUpdatePageCommandByIdQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<UpdatePageCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageCommand> query, IExecutionContext executionContext)
+    public async Task<UpdatePageCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageCommand> query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .Pages
@@ -26,7 +26,10 @@ public class GetUpdatePageCommandByIdQueryHandler
             .FilterById(query.Id)
             .SingleOrDefaultAsync();
 
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
 
         var command = new UpdatePageCommand()
         {

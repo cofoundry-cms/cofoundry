@@ -25,14 +25,14 @@ public class PageDirectoryAccessRuleSetDetails : IEntityAccessRuleSetDetails<Pag
     /// but instead are used to restrict public access to website pages and routes.
     /// </para>
     /// </summary>
-    public ICollection<PageDirectoryAccessRuleSummary> AccessRules { get; set; }
+    public IReadOnlyCollection<PageDirectoryAccessRuleSummary> AccessRules { get; set; } = Array.Empty<PageDirectoryAccessRuleSummary>();
 
     /// <summary>
     /// Rules inherited from the directories this page is parented to.
     /// </summary>
-    public ICollection<InheritedPageDirectoryAccessDetails> InheritedAccessRules { get; set; }
+    public IReadOnlyCollection<InheritedPageDirectoryAccessDetails> InheritedAccessRules { get; set; } = Array.Empty<InheritedPageDirectoryAccessDetails>();
 
     public AccessRuleViolationAction ViolationAction { get; set; }
 
-    public UserAreaMicroSummary UserAreaForSignInRedirect { get; set; }
+    public UserAreaMicroSummary? UserAreaForSignInRedirect { get; set; }
 }

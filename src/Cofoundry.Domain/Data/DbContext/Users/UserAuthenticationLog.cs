@@ -15,20 +15,30 @@ public class UserAuthenticationLog
     /// </summary>
     public int UserId { get; set; }
 
+    private User? _user;
     /// <summary>
     /// The <see cref="Data.User"/> that successfully authenticated.
     /// </summary>
-    public virtual User User { get; set; }
+    public virtual User User
+    {
+        get => _user ?? throw NavigationPropertyNotInitializedException.Create<UserAuthenticationLog>(nameof(User));
+        set => _user = value;
+    }
 
     /// <summary>
     /// IP Address of the connection that authenticated the user.
     /// </summary>
     public long IPAddressId { get; set; }
 
+    private IPAddress? _ipAddress;
     /// <summary>
     /// IP Address of the connection that authenticated the user.
     /// </summary>
-    public IPAddress IPAddress { get; set; }
+    public IPAddress IPAddress
+    {
+        get => _ipAddress ?? throw NavigationPropertyNotInitializedException.Create<UserAuthenticationLog>(nameof(IPAddress));
+        set => _ipAddress = value;
+    }
 
     /// <summary>
     /// The date and time of the authentication event.

@@ -34,6 +34,7 @@ public class SignInUserWithCredentialsCommandHandler
             });
 
         authResult.ThrowIfNotSuccess();
+        EntityInvalidOperationException.ThrowIfNull(authResult, authResult.User);
 
         await _domainRepository.ExecuteCommandAsync(new SignInAuthenticatedUserCommand()
         {

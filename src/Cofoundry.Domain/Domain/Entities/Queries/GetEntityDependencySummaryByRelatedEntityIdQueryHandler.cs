@@ -7,7 +7,7 @@
 /// the database.
 /// </summary>
 public class GetEntityDependencySummaryByRelatedEntityIdQueryHandler
-    : IQueryHandler<GetEntityDependencySummaryByRelatedEntityIdQuery, ICollection<EntityDependencySummary>>
+    : IQueryHandler<GetEntityDependencySummaryByRelatedEntityIdQuery, IReadOnlyCollection<EntityDependencySummary>>
     , IIgnorePermissionCheckHandler
 {
     private IQueryExecutor _queryExecutor;
@@ -19,10 +19,10 @@ public class GetEntityDependencySummaryByRelatedEntityIdQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<ICollection<EntityDependencySummary>> ExecuteAsync(GetEntityDependencySummaryByRelatedEntityIdQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<EntityDependencySummary>> ExecuteAsync(GetEntityDependencySummaryByRelatedEntityIdQuery query, IExecutionContext executionContext)
     {
         // Query and permissions are delegated to the GetByIdRange version
-        var delegateQuery = new GetEntityDependencySummaryByRelatedEntityIdRangeQuery(query.EntityDefinitionCode, new int[] { query.EntityId })
+        var delegateQuery = new GetEntityDependencySummaryByRelatedEntityIdRangeQuery(query.EntityDefinitionCode, [query.EntityId])
         {
             ExcludeDeletable = query.ExcludeDeletable
         };

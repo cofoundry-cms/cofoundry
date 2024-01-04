@@ -5,7 +5,7 @@
 /// specific type. These route objects are small and cached which
 /// makes them good for quick lookups.
 /// </summary>
-public class GetCustomEntityRoutesByDefinitionCodeQuery : IQuery<ICollection<CustomEntityRoute>>
+public class GetCustomEntityRoutesByDefinitionCodeQuery : IQuery<IReadOnlyCollection<CustomEntityRoute>>
 {
     /// <summary>
     /// Gets CustomEntityRoute data for all custom entities of a 
@@ -34,5 +34,5 @@ public class GetCustomEntityRoutesByDefinitionCodeQuery : IQuery<ICollection<Cus
     /// </summary>
     [Required]
     [MaxLength(6)]
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 }

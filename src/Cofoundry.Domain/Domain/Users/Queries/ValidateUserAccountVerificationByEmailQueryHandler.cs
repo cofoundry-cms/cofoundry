@@ -27,8 +27,6 @@ public class ValidateUserAccountVerificationByEmailQueryHandler
 
     public async Task<AuthorizedTaskTokenValidationResult> ExecuteAsync(ValidateUserAccountVerificationByEmailQuery query, IExecutionContext executionContext)
     {
-        var options = GetOptions(query);
-
         var tokenResult = await _domainRepository
             .WithContext(executionContext)
             .ExecuteQueryAsync(new ValidateAuthorizedTaskTokenQuery()
@@ -44,14 +42,7 @@ public class ValidateUserAccountVerificationByEmailQueryHandler
         return result;
     }
 
-    private AccountVerificationOptions GetOptions(ValidateUserAccountVerificationByEmailQuery query)
-    {
-        var options = _userAreaDefinitionRepository.GetOptionsByCode(query.UserAreaCode).AccountVerification;
-
-        return options;
-    }
-
-    private async Task RunAdditionalValidationAsync(ValidateUserAccountVerificationByEmailQuery query, AuthorizedTaskTokenValidationResult tokenResult)
+    private async Task RunAdditionalValidationAsync(ValidateUserAccountVerificationByEmailQuery query, AuthorizedTaskTokenValidationResult? tokenResult)
     {
         if (tokenResult == null)
         {
@@ -87,6 +78,11 @@ public class ValidateUserAccountVerificationByEmailQueryHandler
 
         // Map the generic errors to more specific account verification errors
         var mappedError = UserValidationErrors.AccountVerification.RequestValidation.Map(tokenResult);
+        if (mappedError == null)
+        {
+            throw new InvalidOperationException($"{nameof(mappedError)} should not be null.");
+        }
+
         return new AuthorizedTaskTokenValidationResult(mappedError);
     }
 }

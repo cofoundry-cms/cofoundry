@@ -44,7 +44,10 @@ public class PageBlockTypeDisplayModelMapperResult<TDataModel>
     public void Add(PageBlockTypeDisplayModelMapperInput<TDataModel> inputDataModel, IPageBlockTypeDisplayModel mappedDisplayModel)
     {
         ArgumentNullException.ThrowIfNull(inputDataModel);
-        if (mappedDisplayModel == null) throw new ArgumentNullException(nameof(mappedDisplayModel), "When mapping block data the display model should not be null, if the input cannot be mapped then exclude it from the result entirely.");
+        if (mappedDisplayModel == null)
+        {
+            throw new ArgumentNullException(nameof(mappedDisplayModel), "When mapping block data the display model should not be null, if the input cannot be mapped then exclude it from the result entirely.");
+        }
 
         if (_mappedDisplayModels.ContainsKey(inputDataModel.VersionBlockId))
         {

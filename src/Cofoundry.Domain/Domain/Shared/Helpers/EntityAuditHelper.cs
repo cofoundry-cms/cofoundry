@@ -17,9 +17,9 @@ public class EntityAuditHelper
         entity.CreateDate = executionContext.ExecutionDate;
         entity.CreatorId = executionContext.UserContext.UserId.Value;
 
-        if (entity is IUpdateAuditable)
+        if (entity is IUpdateAuditable updateAuditable)
         {
-            SetUpdated((IUpdateAuditable)entity, executionContext);
+            SetUpdated(updateAuditable, executionContext);
         }
     }
 

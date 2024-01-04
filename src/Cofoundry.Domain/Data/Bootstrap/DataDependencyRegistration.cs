@@ -11,6 +11,7 @@ public class DataDependencyRegistration : IDependencyRegistration
             .Register<CofoundryDbContext>(new Type[] { typeof(CofoundryDbContext), typeof(DbContext) }, RegistrationOptions.Scoped())
             .Register<IFileStoreService, FileSystemFileStoreService>()
             .Register<IDbUnstructuredDataSerializer, DbUnstructuredDataSerializer>()
+            .Register<IEmptyDataModelFactory, EmptyDataModelFactory>()
             .Register<ICustomEntityStoredProcedures, CustomEntityStoredProcedures>()
             .Register<IPageStoredProcedures, PageStoredProcedures>()
             .Register<IAssetStoredProcedures, AssetStoredProcedures>()

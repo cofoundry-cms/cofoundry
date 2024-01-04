@@ -11,7 +11,7 @@ public class CustomEntityRoute : IPublishableEntity
     /// <summary>
     /// Unique 6 letter code representing the type of custom entity.
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Database id of the custom entity.
@@ -22,7 +22,7 @@ public class CustomEntityRoute : IPublishableEntity
     /// Optional locale assigned to the custom entity
     /// if used in a localized site.
     /// </summary>
-    public ActiveLocale Locale { get; set; }
+    public ActiveLocale? Locale { get; set; }
 
     /// <summary>
     /// The string identifier slug which can
@@ -30,7 +30,7 @@ public class CustomEntityRoute : IPublishableEntity
     /// of the custom entity page. Can be forced to be unique
     /// by a setting on the custom entity definition.
     /// </summary>
-    public string UrlSlug { get; set; }
+    public string UrlSlug { get; set; } = string.Empty;
 
     public PublishStatus PublishStatus { get; set; }
 
@@ -59,5 +59,5 @@ public class CustomEntityRoute : IPublishableEntity
     /// <summary>
     /// Routing information particular to specific versions.
     /// </summary>
-    public ICollection<CustomEntityVersionRoute> Versions { get; set; }
+    public IReadOnlyCollection<CustomEntityVersionRoute> Versions { get; set; } = Array.Empty<CustomEntityVersionRoute>();
 }

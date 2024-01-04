@@ -9,5 +9,5 @@ public interface IViewFileReader
     /// Attempts to read a view file to a string, returning null if the file does not exist.
     /// </summary>
     /// <param name="path">The virtual path to the view file.</param>
-    Task<string> ReadViewFileAsync(string path);
+    Task<string?> ReadViewFileAsync(string? path);
 }

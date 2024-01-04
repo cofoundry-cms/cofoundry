@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdateCurrentUserCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandQuery<UpdateCurrentUserCommand>, UpdateCurrentUserCommand>
+    : IQueryHandler<GetPatchableCommandQuery<UpdateCurrentUserCommand>, UpdateCurrentUserCommand?>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -15,7 +15,7 @@ public class GetUpdateCurrentUserCommandByIdQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<UpdateCurrentUserCommand> ExecuteAsync(GetPatchableCommandQuery<UpdateCurrentUserCommand> query, IExecutionContext executionContext)
+    public async Task<UpdateCurrentUserCommand?> ExecuteAsync(GetPatchableCommandQuery<UpdateCurrentUserCommand> query, IExecutionContext executionContext)
     {
         if (!executionContext.UserContext.UserId.HasValue) return null;
 

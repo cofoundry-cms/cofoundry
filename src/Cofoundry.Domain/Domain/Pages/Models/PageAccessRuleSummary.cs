@@ -13,7 +13,6 @@
 /// but instead are used to restrict public access to website pages and routes.
 /// </para>
 /// </summary>
-/// <inheritdoc/>
 public class PageAccessRuleSummary : IEntityAccessRuleSummary
 {
     /// <summary>
@@ -26,7 +25,9 @@ public class PageAccessRuleSummary : IEntityAccessRuleSummary
     /// </summary>
     public int PageId { get; set; }
 
-    public UserAreaMicroSummary UserArea { get; set; }
+    /// <inheritdoc/>
+    public UserAreaMicroSummary UserArea { get; set; } = UserAreaMicroSummary.Uninitialized;
 
-    public RoleMicroSummary Role { get; set; }
+    /// <inheritdoc/>
+    public RoleMicroSummary? Role { get; set; }
 }

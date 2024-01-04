@@ -9,11 +9,11 @@ public interface IContentRepositoryPageBlockTypeByIdQueryBuilder
     /// The PageBlockTypeSummary projection is lightweight and designed to be cacheable.
     /// The results of this query are cached by default.
     /// </summary>
-    IDomainRepositoryQueryContext<PageBlockTypeSummary> AsSummary();
+    IDomainRepositoryQueryContext<PageBlockTypeSummary?> AsSummary();
 
     /// <summary>
     /// The PageBlockTypeDetails projection extends the PageBlockTypeSummary model and
     /// contains additional data model schema meta data.
     /// </summary>
-    IDomainRepositoryQueryContext<PageBlockTypeDetails> AsDetails();
+    IDomainRepositoryQueryContext<PageBlockTypeDetails?> AsDetails();
 }

@@ -16,20 +16,20 @@ public class PageVersionBlockRenderDetails : IEntityVersionPageBlockRenderDetail
     /// e.g. 'Wide', 'Headline', 'Large', 'Reversed'. If no template is set then 
     /// the default view is used for rendering.
     /// </summary>
-    public PageBlockTypeTemplateSummary Template { get; set; }
+    public PageBlockTypeTemplateSummary? Template { get; set; }
 
     /// <summary>
     /// The block type which defines the data model and display
     /// templates available to render the block e.g. 'Image', 
     /// 'Vimeo Video', 'Heading', 'Split Content'.
     /// </summary>
-    public PageBlockTypeSummary BlockType { get; set; }
+    public PageBlockTypeSummary BlockType { get; set; } = PageBlockTypeSummary.Uninitialized;
 
     /// <summary>
     /// Custom data associated with this block, mapped from
     /// the serialized database data into a display model.
     /// </summary>
-    public IPageBlockTypeDisplayModel DisplayModel { get; set; }
+    public IPageBlockTypeDisplayModel DisplayModel { get; set; } = UninitializedPageBlockTypeDisplayModel.Instance;
 
     /// <summary>
     /// Abstraction of the database identifier for this instance. Used

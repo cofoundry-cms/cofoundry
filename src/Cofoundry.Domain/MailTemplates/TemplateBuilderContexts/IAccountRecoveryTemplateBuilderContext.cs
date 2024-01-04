@@ -26,7 +26,7 @@ public interface IAccountRecoveryTemplateBuilderContext
     /// set or the URL building is handled in a custom <see cref="IUserMailTemplateBuilder{T}"/> 
     /// implementation.
     /// </summary>
-    string RecoveryUrlPath { get; }
+    string? RecoveryUrlPath { get; }
 
     /// <summary>
     /// Builds the default template, which you can optionally modify

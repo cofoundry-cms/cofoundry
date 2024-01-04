@@ -7,8 +7,8 @@ namespace Cofoundry.Domain.Internal;
 /// data for all the content-editable regions.
 /// </summary>
 public class GetPageRenderDetailsByIdQueryHandler
-    : IQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
-    , IPermissionRestrictedQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails>
+    : IQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails?>
+    , IPermissionRestrictedQueryHandler<GetPageRenderDetailsByIdQuery, PageRenderDetails?>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
@@ -28,27 +28,40 @@ public class GetPageRenderDetailsByIdQueryHandler
         _entityVersionPageBlockMapper = entityVersionPageBlockMapper;
     }
 
-    public async Task<PageRenderDetails> ExecuteAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
+    public async Task<PageRenderDetails?> ExecuteAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
     {
         var dbPage = await QueryPageAsync(query, executionContext);
-        if (dbPage == null) return null;
+        if (dbPage == null)
+        {
+            return null;
+        }
 
         var pageRouteQuery = new GetPageRouteByIdQuery(dbPage.PageId);
         var pageRoute = await _queryExecutor.ExecuteAsync(pageRouteQuery, executionContext);
+        if (pageRoute == null)
+        {
+            return null;
+        }
 
         var page = _pageRenderDetailsMapper.Map(dbPage, pageRoute);
 
-        var dbPageBlocks = await QueryPageBlocks(page).ToListAsync();
+        var dbPageBlocks = await GetPageBlocksAsync(page);
         var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
 
-        await _entityVersionPageBlockMapper.MapRegionsAsync(dbPageBlocks, page.Regions, allBlockTypes, query.PublishStatus, executionContext);
+        await _entityVersionPageBlockMapper.MapRegionsAsync(
+            dbPageBlocks,
+            page.Regions,
+            allBlockTypes,
+            query.PublishStatus,
+            executionContext
+            );
 
         return page;
     }
 
-    private async Task<PageVersion> QueryPageAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
+    private async Task<PageVersion?> QueryPageAsync(GetPageRenderDetailsByIdQuery query, IExecutionContext executionContext)
     {
-        PageVersion result;
+        PageVersion? result;
 
         if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
         {
@@ -92,13 +105,16 @@ public class GetPageRenderDetailsByIdQueryHandler
         return result;
     }
 
-    private IQueryable<PageVersionBlock> QueryPageBlocks(PageRenderDetails page)
+    private async Task<IReadOnlyCollection<PageVersionBlock>> GetPageBlocksAsync(PageRenderDetails page)
     {
-        return _dbContext
+        var dbBlocks = await _dbContext
             .PageVersionBlocks
             .FilterActive()
             .AsNoTracking()
-            .Where(m => m.PageVersionId == page.PageVersionId);
+            .Where(m => m.PageVersionId == page.PageVersionId)
+            .ToArrayAsync();
+
+        return dbBlocks;
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetPageRenderDetailsByIdQuery query)

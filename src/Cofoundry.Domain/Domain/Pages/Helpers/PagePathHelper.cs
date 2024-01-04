@@ -1,29 +1,20 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
+/// <summary>
+/// Default implementation of <see cref="IPagePathHelper"/>.
+/// </summary>
 public class PagePathHelper : IPagePathHelper
 {
     const string PATH_DELIMITER = "/";
 
-    /// <summary>
-    /// Standardizes a page path ensuring it 
-    /// - starts with a slash
-    /// - doesn't end with a trailing slash
-    /// </summary>
-    /// <param name="path">Path to standardize.</param>
-    public string StandardizePath(string path)
+    /// <inheritdoc/>
+    public string StandardizePath(string? path)
     {
         return StandardizePathWithoutLocale(path, null);
     }
 
-    /// <summary>
-    /// Standardizes a page path ensuring it 
-    /// - starts with a slash
-    /// - doesn't end with a trailing slash
-    /// - (optionally) does not contain the locale
-    /// </summary>
-    /// <param name="path">Path to standardize.</param>
-    /// <param name="currentLocale">Locale of the path to remove if present.</param>
-    public string StandardizePathWithoutLocale(string path, ActiveLocale currentLocale)
+    /// <inheritdoc/>
+    public string StandardizePathWithoutLocale(string? path, ActiveLocale? currentLocale)
     {
         if (string.IsNullOrWhiteSpace(path))
         {

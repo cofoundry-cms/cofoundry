@@ -2,6 +2,9 @@
 
 namespace Cofoundry.Domain.Internal;
 
+/// <summary>
+/// Default implementation of <see cref="IPageRenderSummaryMapper"/>.
+/// </summary>
 public class PageRenderSummaryMapper : IPageRenderSummaryMapper
 {
     private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
@@ -16,11 +19,7 @@ public class PageRenderSummaryMapper : IPageRenderSummaryMapper
         _openGraphDataMapper = openGraphDataMapper;
     }
 
-    /// <summary>
-    /// Genric mapper for objects that inherit from PageRenderSummary.
-    /// </summary>
-    /// <param name="dbPageVersion">PageVersion record from the database. Must include the OpenGraphImageAsset property.</param>
-    /// <param name="pageRoute">The page route to map to the new object.</param>
+    /// <inheritdoc/>
     public virtual T Map<T>(PageVersion dbPageVersion, PageRoute pageRoute)
         where T : PageRenderSummary, new()
     {
@@ -33,12 +32,8 @@ public class PageRenderSummaryMapper : IPageRenderSummaryMapper
         return page;
     }
 
-    /// <summary>
-    /// Genric mapper for objects that inherit from PageRenderSummary.
-    /// </summary>
-    /// <param name="dbPageVersion">PageVersion record from the database. Must include the OpenGraphImageAsset property.</param>
-    /// <param name="pageRouteLookup">Dictionary containing all page routes.</param>
-    public virtual T Map<T>(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup)
+    /// <inheritdoc/>
+    public virtual T Map<T>(PageVersion dbPageVersion, IReadOnlyDictionary<int, PageRoute> pageRouteLookup)
         where T : PageRenderSummary, new()
     {
         ArgumentNullException.ThrowIfNull(dbPageVersion);
@@ -46,12 +41,13 @@ public class PageRenderSummaryMapper : IPageRenderSummaryMapper
 
         var page = MapInternal<T>(dbPageVersion);
 
-        page.PageRoute = pageRouteLookup.GetOrDefault(page.PageId);
-
-        if (page.PageRoute == null)
+        var pageRoute = pageRouteLookup.GetValueOrDefault(page.PageId);
+        if (pageRoute == null)
         {
             throw new Exception($"Unable to locate a page route when mapping a {nameof(PageRenderSummary)} with an id of {page.PageId}.");
         }
+
+        page.PageRoute = pageRoute;
 
         return page;
     }
@@ -69,6 +65,7 @@ public class PageRenderSummaryMapper : IPageRenderSummaryMapper
         };
 
         page.OpenGraph = _openGraphDataMapper.Map(dbPageVersion);
+
         return page;
     }
 }

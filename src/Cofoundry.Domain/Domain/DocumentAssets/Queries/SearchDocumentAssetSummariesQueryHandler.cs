@@ -68,7 +68,7 @@ public class SearchDocumentAssetSummariesQueryHandler
 
         var mappedResults = dbPagesResults
             .Items
-            .Select(_documentAssetSummaryMapper.Map);
+            .Select(d => _documentAssetSummaryMapper.Map(d));
 
         return dbPagesResults.ChangeType(mappedResults);
     }

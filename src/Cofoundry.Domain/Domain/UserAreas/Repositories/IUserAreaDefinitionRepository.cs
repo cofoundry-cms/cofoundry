@@ -12,7 +12,7 @@ public interface IUserAreaDefinitionRepository
     /// </summary>
     /// <param name="userAreaCode">The unique 3 character code that identifies the user area definition.</param>
     /// <returns>Returns the matching <see cref="IUserAreaDefinition"/> instance, or <see langword="null"/> if it does not exist.</returns>
-    IUserAreaDefinition GetByCode(string userAreaCode);
+    IUserAreaDefinition? GetByCode(string? userAreaCode);
 
     /// <summary>
     /// Returns a user area definition by it's unique <see cref="IUserAreaDefinition.UserAreaCode"/>. 

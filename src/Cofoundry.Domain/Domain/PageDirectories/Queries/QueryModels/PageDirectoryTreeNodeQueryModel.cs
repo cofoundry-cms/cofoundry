@@ -1,10 +1,10 @@
 ﻿using Cofoundry.Domain.Data;
 
-namespace Cofoundry.Domain.QueryModels;
+namespace Cofoundry.Domain.Internal;
 
 public class PageDirectoryTreeNodeQueryModel
 {
-    public PageDirectory PageDirectory { get; set; }
-    public User Creator { get; set; }
+    public required PageDirectory PageDirectory { get; set; }
+    public required User Creator { get; set; }
     public int NumPages { get; set; }
 }

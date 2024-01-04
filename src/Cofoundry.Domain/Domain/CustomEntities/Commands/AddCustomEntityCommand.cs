@@ -10,7 +10,7 @@ public class AddCustomEntityCommand : ICommand, ILoggableCommand, ICustomEntityD
     /// </summary>
     [Required]
     [MaxLength(6)]
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The custom entity data model data to be validated and serialized 
@@ -18,7 +18,7 @@ public class AddCustomEntityCommand : ICommand, ILoggableCommand, ICustomEntityD
     /// </summary>
     [Required]
     [ValidateObject]
-    public ICustomEntityDataModel Model { get; set; }
+    public ICustomEntityDataModel Model { get; set; } = null!;
 
     /// <summary>
     /// Optional locale id assigned to the custom entity
@@ -33,7 +33,7 @@ public class AddCustomEntityCommand : ICommand, ILoggableCommand, ICustomEntityD
     /// </summary>
     [MaxLength(200)]
     [Slug]
-    public string UrlSlug { get; set; }
+    public string? UrlSlug { get; set; }
 
     /// <summary>
     /// The descriptive human-readable title of the custom entity. If the 
@@ -42,7 +42,7 @@ public class AddCustomEntityCommand : ICommand, ILoggableCommand, ICustomEntityD
     /// </summary>
     [MaxLength(200)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates whether to publish the custom entity immediately

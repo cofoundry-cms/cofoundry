@@ -6,7 +6,6 @@ namespace Cofoundry.Domain.Data;
 /// can have many published versions; the latest published version is
 /// the one that is rendered when the page is published. 
 /// </summary>
-/// <inheritdoc/>
 public class PageVersion : ICreateAuditable, IEntityVersion
 {
     /// <summary>
@@ -20,10 +19,30 @@ public class PageVersion : ICreateAuditable, IEntityVersion
     /// </summary>
     public int PageId { get; set; }
 
+    private Page? _page;
+    /// <summary>
+    /// The page this version is parented to.
+    /// </summary>
+    public Page Page
+    {
+        get => _page ?? throw NavigationPropertyNotInitializedException.Create<PageVersion>(nameof(Page));
+        set => _page = value;
+    }
+
     /// <summary>
     /// Id of the template used to render this version.
     /// </summary>
     public int PageTemplateId { get; set; }
+
+    private PageTemplate? _pageTemplate;
+    /// <summary>
+    /// The template used to render this version.
+    /// </summary>
+    public PageTemplate PageTemplate
+    {
+        get => _pageTemplate ?? throw NavigationPropertyNotInitializedException.Create<PageVersion>(nameof(PageTemplate));
+        set => _pageTemplate = value;
+    }
 
     /// <summary>
     /// A display-friendly version number that indicates
@@ -39,18 +58,15 @@ public class PageVersion : ICreateAuditable, IEntityVersion
     /// used in the html page title meta tag. Does not have to be
     /// unique.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The description of the content of the page. This is intended to
     /// be used in the description html meta tag.
     /// </summary>
-    public string MetaDescription { get; set; }
+    public string? MetaDescription { get; set; }
 
-    /// <summary>
-    /// Mapped from the domain enum WorkFlowStatus, this is the workflow 
-    /// state of this version e.g. draft/published.
-    /// </summary>
+    /// <inheritdoc/>
     public int WorkFlowStatusId { get; set; }
 
     /// <summary>
@@ -63,13 +79,13 @@ public class PageVersion : ICreateAuditable, IEntityVersion
     /// A title that can be used to share on social media via open 
     /// graph meta tags.
     /// </summary>
-    public string OpenGraphTitle { get; set; }
+    public string? OpenGraphTitle { get; set; }
 
     /// <summary>
     /// A description that can be used to share on social media via open 
     /// graph meta tags.
     /// </summary>
-    public string OpenGraphDescription { get; set; }
+    public string? OpenGraphDescription { get; set; }
 
     /// <summary>
     /// An image that can be used to share on social media via open 
@@ -81,22 +97,21 @@ public class PageVersion : ICreateAuditable, IEntityVersion
     /// An image that can be used to share on social media via open 
     /// graph meta tags.
     /// </summary>
-    public ImageAsset OpenGraphImageAsset { get; set; }
+    public ImageAsset? OpenGraphImageAsset { get; set; }
 
-    /// <summary>
-    /// The template used to render this version.
-    /// </summary>
-    public PageTemplate PageTemplate { get; set; }
+    /// <inheritdoc/>
+    public DateTime CreateDate { get; set; }
 
-    /// <summary>
-    /// Page content data to be rendered in the page template.
-    /// </summary>
-    public ICollection<PageVersionBlock> PageVersionBlocks { get; set; } = new List<PageVersionBlock>();
+    /// <inheritdoc/>
+    public int CreatorId { get; set; }
 
-    /// <summary>
-    /// The page this version is parented to.
-    /// </summary>
-    public Page Page { get; set; }
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageVersion>(nameof(Creator));
+        set => _creator = value;
+    }
 
     /// <summary>
     /// Lookup cache used for quickly finding the correct version for a
@@ -105,9 +120,8 @@ public class PageVersion : ICreateAuditable, IEntityVersion
     /// </summary>
     public ICollection<PagePublishStatusQuery> PagePublishStatusQueries { get; set; } = new List<PagePublishStatusQuery>();
 
-    public User Creator { get; set; }
-
-    public DateTime CreateDate { get; set; }
-
-    public int CreatorId { get; set; }
+    /// <summary>
+    /// Page content data to be rendered in the page template.
+    /// </summary>
+    public ICollection<PageVersionBlock> PageVersionBlocks { get; set; } = new List<PageVersionBlock>();
 }

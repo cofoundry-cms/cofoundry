@@ -22,7 +22,7 @@ public class ContentRepositoryUserByEmailQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<UserMicroSummary> AsMicroSummary()
+    public IDomainRepositoryQueryContext<UserMicroSummary?> AsMicroSummary()
     {
         var query = new GetUserMicroSummaryByEmailQuery()
         {

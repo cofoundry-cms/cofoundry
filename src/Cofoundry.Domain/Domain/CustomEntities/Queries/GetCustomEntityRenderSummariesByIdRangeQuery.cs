@@ -7,7 +7,7 @@
 /// version-sensitive and defaults to returning published versions only, but
 /// this behavior can be controlled by the publishStatus query property.
 /// </summary>
-public class GetCustomEntityRenderSummariesByIdRangeQuery : IQuery<IDictionary<int, CustomEntityRenderSummary>>
+public class GetCustomEntityRenderSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, CustomEntityRenderSummary>>
 {
     /// <summary>
     /// Query to get a range of custom entities by a set of ids, projected as a 
@@ -30,10 +30,10 @@ public class GetCustomEntityRenderSummariesByIdRangeQuery : IQuery<IDictionary<i
     /// <param name="customEntityIds">Database ids of the custom entities to get.</param>
     /// <param name="publishStatusQuery">Used to determine which version of the custom entities to include data for.</param>
     public GetCustomEntityRenderSummariesByIdRangeQuery(
-        IEnumerable<int> customEntityIds,
+        IEnumerable<int>? customEntityIds,
         PublishStatusQuery publishStatusQuery = PublishStatusQuery.Published
         )
-        : this(customEntityIds?.ToList(), publishStatusQuery)
+        : this(customEntityIds?.ToArray() ?? [], publishStatusQuery)
     {
     }
 
@@ -61,7 +61,7 @@ public class GetCustomEntityRenderSummariesByIdRangeQuery : IQuery<IDictionary<i
     /// Database ids of the custom entities to get.
     /// </summary>
     [Required]
-    public IReadOnlyCollection<int> CustomEntityIds { get; set; }
+    public IReadOnlyCollection<int> CustomEntityIds { get; set; } = Array.Empty<int>();
 
     /// <summary>
     /// Used to determine which version of the custom entities to include 

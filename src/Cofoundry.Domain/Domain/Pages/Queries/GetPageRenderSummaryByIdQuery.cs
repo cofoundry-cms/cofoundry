@@ -7,7 +7,7 @@
 /// version-sensitive and defaults to returning published versions only, but
 /// this behavior can be controlled by the publishStatus query property.
 /// </summary>
-public class GetPageRenderSummaryByIdQuery : IQuery<PageRenderSummary>, IValidatableObject
+public class GetPageRenderSummaryByIdQuery : IQuery<PageRenderSummary?>, IValidatableObject
 {
     /// <summary>
     /// Query to get a page by an id, projected as a PageRenderSummary which is

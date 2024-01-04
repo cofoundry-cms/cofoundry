@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdateCustomEntityVersionPageBlockCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>, UpdateCustomEntityVersionPageBlockCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand>, UpdateCustomEntityVersionPageBlockCommand?>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -21,7 +21,7 @@ public class GetUpdateCustomEntityVersionPageBlockCommandByIdQueryHandler
         _permissionValidationService = permissionValidationService;
     }
 
-    public async Task<UpdateCustomEntityVersionPageBlockCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand> query, IExecutionContext executionContext)
+    public async Task<UpdateCustomEntityVersionPageBlockCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateCustomEntityVersionPageBlockCommand> query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .CustomEntityVersionPageBlocks
@@ -31,7 +31,7 @@ public class GetUpdateCustomEntityVersionPageBlockCommandByIdQueryHandler
             {
                 PageBlock = b,
                 PageBlockTypeFileName = b.PageBlockType.FileName,
-                CustomEntityDefinitionCode = b.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode
+                b.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode
             })
             .SingleOrDefaultAsync();
 

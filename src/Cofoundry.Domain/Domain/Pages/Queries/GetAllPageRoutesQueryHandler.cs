@@ -8,8 +8,8 @@
 /// page projections.
 /// </summary>
 public class GetAllPageRoutesQueryHandler
-    : IQueryHandler<GetAllPageRoutesQuery, ICollection<PageRoute>>
-    , IPermissionRestrictedQueryHandler<GetAllPageRoutesQuery, ICollection<PageRoute>>
+    : IQueryHandler<GetAllPageRoutesQuery, IReadOnlyCollection<PageRoute>>
+    , IPermissionRestrictedQueryHandler<GetAllPageRoutesQuery, IReadOnlyCollection<PageRoute>>
 {
     private readonly IQueryExecutor _queryExecutor;
 
@@ -20,10 +20,10 @@ public class GetAllPageRoutesQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<ICollection<PageRoute>> ExecuteAsync(GetAllPageRoutesQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<PageRoute>> ExecuteAsync(GetAllPageRoutesQuery query, IExecutionContext executionContext)
     {
         var result = await _queryExecutor.ExecuteAsync(new GetPageRouteLookupQuery());
-        return result.Values;
+        return result.Values.ToArray();
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetAllPageRoutesQuery query)

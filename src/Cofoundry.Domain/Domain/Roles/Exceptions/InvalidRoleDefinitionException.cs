@@ -17,21 +17,24 @@ public class InvalidRoleDefinitionException : Exception
     public InvalidRoleDefinitionException(
         string message,
         IRoleDefinition invalidDefinition,
-        IEnumerable<IRoleDefinition> allDefinitions = null
+        IEnumerable<IRoleDefinition>? allDefinitions = null
         )
         : base(message)
     {
         InvalidDefinition = invalidDefinition;
-        AllDefinitions = allDefinitions?.ToArray();
+        if (allDefinitions != null)
+        {
+            AllDefinitions = allDefinitions.ToArray();
+        }
     }
 
     /// <summary>
     /// The role definition that caused the exception.
     /// </summary>
-    public IRoleDefinition InvalidDefinition { get; private set; }
+    public IRoleDefinition? InvalidDefinition { get; private set; }
 
     /// <summary>
     /// Optional collection of all the role definitions when available.
     /// </summary>
-    public IReadOnlyCollection<IRoleDefinition> AllDefinitions { get; private set; }
+    public IReadOnlyCollection<IRoleDefinition> AllDefinitions { get; private set; } = Array.Empty<IRoleDefinition>();
 }

@@ -21,7 +21,7 @@ public interface IRoleCache
     /// </summary>
     /// <param name="roleId">Id of the role to return.</param>
     /// <param name="getter">Function to invoke if the role isn't in the cache.</param>
-    RoleDetails GetOrAdd(int roleId, Func<RoleDetails> getter);
+    RoleDetails? GetOrAdd(int roleId, Func<RoleDetails?> getter);
 
     /// <summary>
     /// Gets a role if it's already cached, otherwise the getter is invoked
@@ -29,7 +29,7 @@ public interface IRoleCache
     /// </summary>
     /// <param name="roleId">Id of the role to return.</param>
     /// <param name="getter">Function to invoke if the role isn't in the cache.</param>
-    Task<RoleDetails> GetOrAddAsync(int roleId, Func<Task<RoleDetails>> getter);
+    Task<RoleDetails?> GetOrAddAsync(int roleId, Func<Task<RoleDetails?>> getter);
 
     /// <summary>
     /// Gets a range of roles from the cache if they exist, with any missing roles
@@ -40,7 +40,7 @@ public interface IRoleCache
     /// <returns></returns>
     Task<IDictionary<int, RoleDetails>> GetOrAddRangeAsync(
         IEnumerable<int> roleIds,
-        Func<IEnumerable<int>, Task<ICollection<RoleDetails>>> missingRolesGetter
+        Func<IEnumerable<int>, Task<IReadOnlyCollection<RoleDetails>>> missingRolesGetter
         );
 
     /// <summary>

@@ -15,7 +15,7 @@ public class ContentRepositoryPageBlockTypeGetAllQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<PageBlockTypeSummary>> AsSummaries()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<PageBlockTypeSummary>> AsSummaries()
     {
         var query = new GetAllPageBlockTypeSummariesQuery();
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

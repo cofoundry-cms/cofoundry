@@ -17,7 +17,7 @@ public class IncorrectCollectionMetaDataAttributePlacementException : IncorrectM
     public IncorrectCollectionMetaDataAttributePlacementException(
         Attribute attribute,
         DisplayMetadataProviderContext context,
-        ICollection<Type> validParamTypes
+        IReadOnlyCollection<Type> validParamTypes
         )
         : base(attribute, context, validParamTypes, FormatMessage(attribute, context, validParamTypes))
     {
@@ -31,7 +31,7 @@ public class IncorrectCollectionMetaDataAttributePlacementException : IncorrectM
     public IncorrectCollectionMetaDataAttributePlacementException(
         Attribute attribute,
         DisplayMetadataProviderContext context,
-        ICollection<Type> validParamTypes,
+        IReadOnlyCollection<Type> validParamTypes,
         string message
         )
         : base(attribute, context, validParamTypes, message)
@@ -41,7 +41,7 @@ public class IncorrectCollectionMetaDataAttributePlacementException : IncorrectM
     private static string FormatMessage(
         Attribute attribute,
         DisplayMetadataProviderContext context,
-        ICollection<Type> validParamTypes
+        IReadOnlyCollection<Type> validParamTypes
         )
     {
         string typeNameText = FormatTypeNamesText(validParamTypes);

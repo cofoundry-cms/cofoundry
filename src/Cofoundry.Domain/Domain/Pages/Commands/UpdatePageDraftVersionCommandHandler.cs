@@ -42,7 +42,7 @@ public class UpdatePageDraftVersionCommandHandler
     {
         Normalize(command);
 
-        var draft = await GetDraftVersion(command.PageId).SingleOrDefaultAsync();
+        var draft = await GetDraftVersionAsync(command.PageId);
 
         using (var scope = _transactionScopeFactory.Create(_dbContext))
         {
@@ -74,7 +74,7 @@ public class UpdatePageDraftVersionCommandHandler
         });
     }
 
-    private void Normalize(UpdatePageDraftVersionCommand command)
+    private static void Normalize(UpdatePageDraftVersionCommand command)
     {
         command.Title = command.Title.Trim();
         command.MetaDescription = command.MetaDescription?.Trim() ?? string.Empty;
@@ -82,28 +82,37 @@ public class UpdatePageDraftVersionCommandHandler
         command.OpenGraphDescription = command.OpenGraphDescription?.Trim();
     }
 
-    private IQueryable<PageVersion> GetDraftVersion(int pageId)
+    private async Task<PageVersion?> GetDraftVersionAsync(int pageId)
     {
-        return _dbContext
+        var draft = await _dbContext
             .PageVersions
-            .Where(p => p.PageId == pageId && p.WorkFlowStatusId == (int)WorkFlowStatus.Draft);
+            .Where(p => p.PageId == pageId && p.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
+            .SingleOrDefaultAsync();
+
+        return draft;
     }
 
-    private async Task<PageVersion> CreateDraftIfRequiredAsync(int pageId, PageVersion draft)
+    private async Task<PageVersion> CreateDraftIfRequiredAsync(int pageId, PageVersion? draft)
     {
-        if (draft != null) return draft;
+        if (draft != null)
+        {
+            return draft;
+        }
 
-        var command = new AddPageDraftVersionCommand();
-        command.PageId = pageId;
-        await _commandExecutor.ExecuteAsync(command);
+        await _commandExecutor.ExecuteAsync(new AddPageDraftVersionCommand()
+        {
+            PageId = pageId
+        });
 
-        return await GetDraftVersion(pageId).SingleOrDefaultAsync();
+        draft = await GetDraftVersionAsync(pageId);
+
+        EntityNotFoundException.ThrowIfNull(draft, "Draft:" + pageId);
+
+        return draft;
     }
 
-    private void UpdateDraft(UpdatePageDraftVersionCommand command, PageVersion draft)
+    private static void UpdateDraft(UpdatePageDraftVersionCommand command, PageVersion draft)
     {
-        EntityNotFoundException.ThrowIfNull(draft, "Draft:" + command.PageId);
-
         draft.Title = command.Title;
         draft.ExcludeFromSitemap = !command.ShowInSiteMap;
         draft.MetaDescription = command.MetaDescription;

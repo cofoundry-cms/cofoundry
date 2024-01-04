@@ -12,5 +12,5 @@ public interface IPageTemplateDetailsMapper
     /// object. If the db record is null then null is returned.
     /// </summary>
     /// <param name="queryModel">Query data returned from the database.</param>
-    PageTemplateDetails Map(PageTemplateDetailsQueryModel queryModel);
+    PageTemplateDetails? Map(PageTemplateDetailsQueryModel? queryModel);
 }

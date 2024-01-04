@@ -7,7 +7,7 @@
 /// default as it's core to routing and often incorporated in more detailed
 /// page projections.
 /// </summary>
-public class GetPageRoutesByPageDirectoryIdQuery : IQuery<ICollection<PageRoute>>
+public class GetPageRoutesByPageDirectoryIdQuery : IQuery<IReadOnlyCollection<PageRoute>>
 {
     /// <summary>
     /// Returns page routing data for pages that are nested immediately inside the specified 

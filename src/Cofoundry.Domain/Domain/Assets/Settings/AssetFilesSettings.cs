@@ -32,7 +32,7 @@ public class AssetFilesSettings : CofoundryConfigurationSettingsBase
     /// behavior to interpret it as a allowlist, or disabled this validation 
     /// entirely.
     /// </summary>
-    public ICollection<string> FileExtensionValidationList { get; set; }
+    public ICollection<string>? FileExtensionValidationList { get; set; }
 
     /// <summary>
     /// The list of mime types to use when validating an uploaded
@@ -41,7 +41,7 @@ public class AssetFilesSettings : CofoundryConfigurationSettingsBase
     /// MimeTypeValidation setting can be used to change this behavior 
     /// to interpret it as an allowlist, or disable this validation entirely.
     /// </summary>
-    public ICollection<string> MimeTypeValidationList { get; set; }
+    public ICollection<string>? MimeTypeValidationList { get; set; }
 
     /// <summary>
     /// Returns the FileExtensionValidationList collection if

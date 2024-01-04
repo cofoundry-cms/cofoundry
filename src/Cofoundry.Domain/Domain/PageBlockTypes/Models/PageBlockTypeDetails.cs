@@ -15,14 +15,14 @@
 /// </summary>
 public class PageBlockTypeDetails : PageBlockTypeSummary, IDynamicDataModelSchema
 {
-    public string DataTemplateName { get; set; }
+    public string DataTemplateName { get; set; } = string.Empty;
 
     /// <summary>
     /// The block type data model property meta data, including UI display details
     /// and validation attributes. This is typically used for dynamically generating 
     /// parts of the admin UI.
     /// </summary>
-    public ICollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; }
+    public IReadOnlyCollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; } = Array.Empty<DynamicDataModelSchemaProperty>();
 
-    public DynamicDataModelDefaultValue DefaultValue { get; set; }
+    public DynamicDataModelDefaultValue DefaultValue { get; set; } = DynamicDataModelDefaultValue.Uninitialized;
 }

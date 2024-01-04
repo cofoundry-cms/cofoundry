@@ -14,5 +14,5 @@ public class CustomEntityRenderDetails : CustomEntityRenderSummary
     /// template, which will have been specified in the query used to 
     /// load this instance.
     /// </summary>
-    public ICollection<CustomEntityPageRegionRenderDetails> Regions { get; set; }
+    public IReadOnlyCollection<CustomEntityPageRegionRenderDetails> Regions { get; set; } = Array.Empty<CustomEntityPageRegionRenderDetails>();
 }

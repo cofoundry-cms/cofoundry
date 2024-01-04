@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetPageDirectoryEntityMicroSummariesByIdRangeQueryHandler
-    : IQueryHandler<GetPageDirectoryEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
-    , IPermissionRestrictedQueryHandler<GetPageDirectoryEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+    : IQueryHandler<GetPageDirectoryEntityMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RootEntityMicroSummary>>
+    , IPermissionRestrictedQueryHandler<GetPageDirectoryEntityMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RootEntityMicroSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IEntityDefinitionRepository _entityDefinitionRepository;
@@ -18,7 +18,7 @@ public class GetPageDirectoryEntityMicroSummariesByIdRangeQueryHandler
         _entityDefinitionRepository = entityDefinitionRepository;
     }
 
-    public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetPageDirectoryEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetPageDirectoryEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         var definition = _entityDefinitionRepository.GetRequiredByCode(PageDirectoryEntityDefinition.DefinitionCode);
 
@@ -29,7 +29,7 @@ public class GetPageDirectoryEntityMicroSummariesByIdRangeQueryHandler
             .Select(d => new RootEntityMicroSummary()
             {
                 RootEntityId = d.PageDirectoryId,
-                RootEntityTitle = d.Name,
+                RootEntityTitle = d.Name ?? d.UrlPath,
                 EntityDefinitionName = definition.Name,
                 EntityDefinitionCode = definition.EntityDefinitionCode
             })

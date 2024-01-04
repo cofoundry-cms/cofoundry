@@ -32,7 +32,7 @@ public class ImageDisplayModelMapper : IPageBlockTypeDisplayModelMapper<ImageDat
                 LinkTarget = item.DataModel.LinkTarget
             };
 
-            var image = images.GetOrDefault(item.DataModel.ImageId);
+            var image = images.GetValueOrDefault(item.DataModel.ImageId);
             displayModel.Source = _imageAssetRouteLibrary.ImageAsset(image);
 
             result.Add(item, displayModel);

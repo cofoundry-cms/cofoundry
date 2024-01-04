@@ -6,7 +6,7 @@
 /// startup and will have been checked to ensure there are no
 /// duplicate RouteFormat values.
 /// </summary>
-public class GetCustomEntityRoutingRuleByRouteFormatQuery : IQuery<ICustomEntityRoutingRule>
+public class GetCustomEntityRoutingRuleByRouteFormatQuery : IQuery<ICustomEntityRoutingRule?>
 {
     /// <summary>
     /// Finds a custom entity routing rule with a specific route 

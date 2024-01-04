@@ -18,7 +18,7 @@ public class UpdateCurrentUserPasswordCommand : ICommand, ILoggableCommand
     [IgnoreDataMember]
     [Newtonsoft.Json.JsonIgnore]
     [System.Text.Json.Serialization.JsonIgnore]
-    public string OldPassword { get; set; }
+    public string OldPassword { get; set; } = string.Empty;
 
     /// <summary>
     /// The value to set as the new account password. The password will go through additional validation depending 
@@ -29,5 +29,5 @@ public class UpdateCurrentUserPasswordCommand : ICommand, ILoggableCommand
     [IgnoreDataMember]
     [Newtonsoft.Json.JsonIgnore]
     [System.Text.Json.Serialization.JsonIgnore]
-    public string NewPassword { get; set; }
+    public string NewPassword { get; set; } = string.Empty;
 }

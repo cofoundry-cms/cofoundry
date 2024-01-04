@@ -56,11 +56,25 @@ public class EntityNotFoundException : Exception
     /// <typeparam name="TEntity">Type of entity to check.</typeparam>
     /// <param name="entity">The entity to check for a <see langword="null"/> reference.</param>
     /// <param name="id">The unique identifier for the entity that could not be found.</param>
-    public static void ThrowIfNull<TEntity>([NotNull] TEntity? entity, object id)
+    public static void ThrowIfNull<TEntity>([NotNull] TEntity? entity, object? id)
     {
         if (entity == null)
         {
             throw new EntityNotFoundException<TEntity>(null, id);
+        }
+    }
+
+    /// <summary>
+    /// Throw an <see cref="EntityNotFoundException"/> if the specified entity 
+    /// is <see langword="null"/>.
+    /// </summary>
+    /// <typeparam name="TEntity">Type of entity to check.</typeparam>
+    /// <param name="entity">The entity to check for a <see langword="null"/> reference.</param>
+    public static void ThrowIfNull<TEntity>([NotNull] TEntity? entity)
+    {
+        if (entity == null)
+        {
+            throw new EntityNotFoundException<TEntity>(null);
         }
     }
 }
@@ -92,7 +106,7 @@ public class EntityNotFoundException<TEntity> : EntityNotFoundException
     /// a custom message then you can use the {0} formatting token which will be
     /// replaced with the <see cref="TEntity"/> type name.
     /// </param>
-    public EntityNotFoundException(string message)
+    public EntityNotFoundException(string? message)
         : base(FormatDefaultMessage(message))
     {
     }
@@ -126,7 +140,7 @@ public class EntityNotFoundException<TEntity> : EntityNotFoundException
     /// the <see cref="TEntity"/> type name and {1} for the <paramref name="id"/>.
     /// </param>
     /// <param name="id">The id of the entity that could not be found.</param>
-    public EntityNotFoundException(string? message, object id)
+    public EntityNotFoundException(string? message, object? id)
         : base(FormatMessageWithId(message, id))
     {
         Id = id;
@@ -142,7 +156,7 @@ public class EntityNotFoundException<TEntity> : EntityNotFoundException
         return string.Format(message ?? DEFAULT_MESSAGE, typeof(TEntity));
     }
 
-    private static string FormatMessageWithId(string? message, object id)
+    private static string FormatMessageWithId(string? message, object? id)
     {
         return string.Format(message ?? MESSAGE_WITH_ID, typeof(TEntity), id);
     }

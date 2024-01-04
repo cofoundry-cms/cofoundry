@@ -10,15 +10,15 @@ public class CustomEntityPage
     /// <summary>
     /// Information about the page this instance is associated with.
     /// </summary>
-    public PageRoute PageRoute { get; set; }
+    public PageRoute PageRoute { get; set; } = PageRoute.Uninitialized;
 
     /// <summary>
     /// The full path of the page including directories and the locale. 
     /// </summary>
-    public string FullUrlPath { get; set; }
+    public string FullUrlPath { get; set; } = string.Empty;
 
     /// <summary>
     /// All region and block data for this custom entity page.
     /// </summary>
-    public ICollection<CustomEntityPageRegionDetails> Regions { get; set; }
+    public IReadOnlyCollection<CustomEntityPageRegionDetails> Regions { get; set; } = Array.Empty<CustomEntityPageRegionDetails>();
 }

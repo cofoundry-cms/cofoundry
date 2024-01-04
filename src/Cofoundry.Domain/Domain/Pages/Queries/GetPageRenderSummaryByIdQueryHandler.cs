@@ -10,8 +10,8 @@ namespace Cofoundry.Domain.Internal;
 /// this behavior can be controlled by the publishStatus query property.
 /// </summary>
 public class GetPageRenderSummaryByIdQueryHandler
-    : IQueryHandler<GetPageRenderSummaryByIdQuery, PageRenderSummary>
-    , IPermissionRestrictedQueryHandler<GetPageRenderSummaryByIdQuery, PageRenderSummary>
+    : IQueryHandler<GetPageRenderSummaryByIdQuery, PageRenderSummary?>
+    , IPermissionRestrictedQueryHandler<GetPageRenderSummaryByIdQuery, PageRenderSummary?>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
@@ -28,23 +28,29 @@ public class GetPageRenderSummaryByIdQueryHandler
         _pageRenderSummaryMapper = pageRenderSummaryMapper;
     }
 
-    public async Task<PageRenderSummary> ExecuteAsync(GetPageRenderSummaryByIdQuery query, IExecutionContext executionContext)
+    public async Task<PageRenderSummary?> ExecuteAsync(GetPageRenderSummaryByIdQuery query, IExecutionContext executionContext)
     {
         var pageRouteQuery = new GetPageRouteByIdQuery(query.PageId);
         var pageRoute = await _queryExecutor.ExecuteAsync(pageRouteQuery, executionContext);
-        if (pageRoute == null) return null;
+        if (pageRoute == null)
+        {
+            return null;
+        }
 
         var dbPage = await QueryPageAsync(query, executionContext);
-        if (dbPage == null) return null;
+        if (dbPage == null)
+        {
+            return null;
+        }
 
         var page = _pageRenderSummaryMapper.Map<PageRenderSummary>(dbPage, pageRoute);
 
         return page;
     }
 
-    private async Task<PageVersion> QueryPageAsync(GetPageRenderSummaryByIdQuery query, IExecutionContext executionContext)
+    private async Task<PageVersion?> QueryPageAsync(GetPageRenderSummaryByIdQuery query, IExecutionContext executionContext)
     {
-        PageVersion result;
+        PageVersion? result;
 
         if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
         {

@@ -37,15 +37,15 @@ public class CheckboxListAttribute : Attribute, IMetadataAttribute
     /// <summary>
     /// A type to use to determine the options available for the 
     /// property. This could be an Enum type, or a class that inherits 
-    /// from either IListOptionSource (a static set of options) or 
-    /// IListOptionApiSource (options generated from an api request).
+    /// from either <see cref="IListOptionSource"/> (a static set of options) or 
+    /// <see cref="IListOptionApiSource"/> (options generated from an api request).
     /// </summary>
-    public Type OptionSource { get; private set; }
+    public Type OptionSource { get; }
 
     /// <summary>
     /// The text to show in non-edit mode when no value is selected.
     /// </summary>
-    public string NoValueText { get; set; }
+    public string? NoValueText { get; set; }
 
     public void Process(DisplayMetadataProviderContext context)
     {

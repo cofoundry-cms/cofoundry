@@ -23,18 +23,18 @@ public class PageDirectoryRoute : IEquatable<PageDirectoryRoute>
     /// Url slug used to create a path for this directory. Should not
     /// contain any slashes, just alpha-numerical with dashes.
     /// </summary>
-    public string UrlPath { get; set; }
+    public string UrlPath { get; set; } = string.Empty;
 
     /// <summary>
     /// The complete path of up to and including this directory. Includes the leading
     /// slash, but excludes the trailing slash e.g. "/my-directory".
     /// </summary>
-    public string FullUrlPath { get; set; }
+    public string FullUrlPath { get; set; } = string.Empty;
 
     /// <summary>
     /// Display name.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Contains variations of this directory path based on specific locales. 
@@ -48,7 +48,7 @@ public class PageDirectoryRoute : IEquatable<PageDirectoryRoute>
     /// structure. Supporting both might be confusing but the requirements need to be more fully 
     /// explored.
     /// </remarks>
-    public ICollection<PageDirectoryRouteLocale> LocaleVariations { get; set; }
+    public IReadOnlyCollection<PageDirectoryRouteLocale> LocaleVariations { get; set; } = Array.Empty<PageDirectoryRouteLocale>();
 
     /// <summary>
     /// Optional rules that can be used to restrict access to this directory.
@@ -56,7 +56,7 @@ public class PageDirectoryRoute : IEquatable<PageDirectoryRoute>
     /// order of distance, with the rules associated with the nearest parent rules 
     /// first.
     /// </summary>
-    public ICollection<EntityAccessRuleSet> AccessRuleSets { get; set; }
+    public IReadOnlyCollection<EntityAccessRuleSet> AccessRuleSets { get; set; } = Array.Empty<EntityAccessRuleSet>();
 
     /// <summary>
     /// Determins if the specified path matches this directory, does not 
@@ -98,7 +98,7 @@ public class PageDirectoryRoute : IEquatable<PageDirectoryRoute>
         return !ParentPageDirectoryId.HasValue && FullUrlPath == "/";
     }
 
-    public bool Equals(PageDirectoryRoute other)
+    public bool Equals(PageDirectoryRoute? other)
     {
         if (other == null) return false;
         if (other == this) return true;
@@ -106,7 +106,7 @@ public class PageDirectoryRoute : IEquatable<PageDirectoryRoute>
         return other.PageDirectoryId == PageDirectoryId;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return Equals(obj as PageDirectoryRoute);
     }
@@ -115,4 +115,14 @@ public class PageDirectoryRoute : IEquatable<PageDirectoryRoute>
     {
         return PageDirectoryId;
     }
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly PageDirectoryRoute Uninitialized = new()
+    {
+        PageDirectoryId = int.MinValue
+    };
 }

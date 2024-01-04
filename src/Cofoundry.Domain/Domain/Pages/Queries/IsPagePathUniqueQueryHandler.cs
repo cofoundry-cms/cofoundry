@@ -28,7 +28,8 @@ public class IsPagePathUniqueQueryHandler
                 && d.UrlPath == query.UrlPath
                 && d.LocaleId == query.LocaleId
                 && d.PageDirectoryId == query.PageDirectoryId
-                ).AnyAsync();
+                )
+            .AnyAsync();
 
         return !exists;
     }

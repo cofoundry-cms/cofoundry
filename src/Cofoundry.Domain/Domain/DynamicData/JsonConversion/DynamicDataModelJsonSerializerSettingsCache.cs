@@ -42,7 +42,7 @@ public class DynamicDataModelJsonSerializerSettingsCache
     /// may have changed e.g. the property name is the same but the type
     /// changed. These errors shouldn't break the application.
     /// </summary>
-    private void HandleDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
+    private void HandleDeserializationError(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs errorArgs)
     {
         _logger.LogWarning(errorArgs.ErrorContext.Error, "Error deserializing dynamic data model data");
         errorArgs.ErrorContext.Handled = true;

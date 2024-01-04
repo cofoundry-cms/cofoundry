@@ -16,7 +16,7 @@ public interface IContentRepositoryRoleByIdQueryBuilder
     /// Roles are cached, so repeat uses of this query is inexpensive.
     /// </para>
     /// </summary>
-    IDomainRepositoryQueryContext<RoleMicroSummary> AsMicroSummary();
+    IDomainRepositoryQueryContext<RoleMicroSummary?> AsMicroSummary();
 
     /// <summary>
     /// <para>
@@ -27,5 +27,5 @@ public interface IContentRepositoryRoleByIdQueryBuilder
     /// Roles are cached, so repeat uses of this query is inexpensive.
     /// </para>
     /// </summary>
-    IDomainRepositoryQueryContext<RoleDetails> AsDetails();
+    IDomainRepositoryQueryContext<RoleDetails?> AsDetails();
 }

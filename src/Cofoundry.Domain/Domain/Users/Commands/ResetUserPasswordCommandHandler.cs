@@ -103,9 +103,9 @@ public class ResetUserPasswordCommandHandler
         });
     }
 
-    private Task<User> GetUserAsync(int userId)
+    private async Task<User> GetUserAsync(int userId)
     {
-        var user = _dbContext
+        var user = await _dbContext
             .Users
             .IncludeForSummary()
             .FilterById(userId)
@@ -134,6 +134,8 @@ public class ResetUserPasswordCommandHandler
 
     private async Task SendNotificationAsync(User user, string temporaryPassword, IExecutionContext executionContext)
     {
+        EntityInvalidOperationException.ThrowIfNull(user, user.Email);
+
         var userSummary = _userSummaryMapper.Map(user);
         var context = _userMailTemplateBuilderContextFactory.CreatePasswordResetContext(userSummary, temporaryPassword);
         var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserAreaCode);

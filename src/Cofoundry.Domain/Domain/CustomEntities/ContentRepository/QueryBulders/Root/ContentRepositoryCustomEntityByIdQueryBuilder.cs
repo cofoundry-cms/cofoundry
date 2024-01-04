@@ -20,13 +20,13 @@ public class ContentRepositoryCustomEntityByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(PublishStatusQuery publishStatus)
+    public IDomainRepositoryQueryContext<CustomEntityRenderSummary?> AsRenderSummary(PublishStatusQuery publishStatus)
     {
         var query = new GetCustomEntityRenderSummaryByIdQuery(_customEntityId, publishStatus);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary()
+    public IDomainRepositoryQueryContext<CustomEntityRenderSummary?> AsRenderSummary()
     {
         var query = new GetCustomEntityRenderSummaryByIdQuery();
         query.CustomEntityId = _customEntityId;
@@ -34,7 +34,7 @@ public class ContentRepositoryCustomEntityByIdQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, PublishStatusQuery? publishStatus = null)
+    public IDomainRepositoryQueryContext<CustomEntityRenderDetails?> AsRenderDetails(int pageId, PublishStatusQuery? publishStatus = null)
     {
         var query = new GetCustomEntityRenderDetailsByIdQuery()
         {
@@ -50,13 +50,13 @@ public class ContentRepositoryCustomEntityByIdQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<CustomEntityDetails> AsDetails()
+    public IDomainRepositoryQueryContext<CustomEntityDetails?> AsDetails()
     {
         var query = new GetCustomEntityDetailsByIdQuery(_customEntityId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(int customEntityVersionId)
+    public IDomainRepositoryQueryContext<CustomEntityRenderSummary?> AsRenderSummary(int customEntityVersionId)
     {
         var query = new GetCustomEntityRenderSummaryByIdQuery(_customEntityId, PublishStatusQuery.SpecificVersion);
         query.CustomEntityVersionId = customEntityVersionId;
@@ -64,7 +64,7 @@ public class ContentRepositoryCustomEntityByIdQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, int customEntityVersionId)
+    public IDomainRepositoryQueryContext<CustomEntityRenderDetails?> AsRenderDetails(int pageId, int customEntityVersionId)
     {
         var query = new GetCustomEntityRenderDetailsByIdQuery()
         {

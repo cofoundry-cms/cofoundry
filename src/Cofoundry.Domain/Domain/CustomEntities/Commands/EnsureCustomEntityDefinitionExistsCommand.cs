@@ -36,5 +36,5 @@ public class EnsureCustomEntityDefinitionExistsCommand : ICommand
     /// </summary>
     [Required]
     [MaxLength(6)]
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 }

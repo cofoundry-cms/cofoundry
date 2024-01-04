@@ -4,7 +4,7 @@
 /// Query to extract and return meta data information about a custom 
 /// entity data model for a range of custom entity definitions.
 /// </summary>
-public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery : IQuery<IDictionary<string, CustomEntityDataModelSchema>>
+public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery : IQuery<IReadOnlyDictionary<string, CustomEntityDataModelSchema>>
 {
     /// <summary>
     /// Query to extract and return meta data information about a custom 
@@ -20,9 +20,9 @@ public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery : I
     /// </summary>
     /// <param name="customEntityDefinitionCodes">Range of definition codes to query (the unique 6 letter code representing the entity).</param>
     public GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery(
-        IEnumerable<string> customEntityDefinitionCodes
+        IEnumerable<string>? customEntityDefinitionCodes
         )
-        : this(customEntityDefinitionCodes?.ToList())
+        : this(customEntityDefinitionCodes?.ToArray() ?? Array.Empty<string>())
     {
     }
 
@@ -44,5 +44,5 @@ public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery : I
     /// Range of definition codes to query (the unique 6 letter code representing the entity).
     /// </summary>
     [Required]
-    public IReadOnlyCollection<string> CustomEntityDefinitionCodes { get; set; }
+    public IReadOnlyCollection<string> CustomEntityDefinitionCodes { get; set; } = Array.Empty<string>();
 }

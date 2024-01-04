@@ -29,7 +29,7 @@ public class UpdateImageAssetCommand : IPatchableByIdCommand, ILoggableCommand
     [Newtonsoft.Json.JsonIgnore]
     [System.Text.Json.Serialization.JsonIgnore]
     [ValidateObject]
-    public IFileSource File { get; set; }
+    public IFileSource? File { get; set; }
 
     /// <summary>
     /// The title or alt text for an image. Recommended to be up 
@@ -37,7 +37,7 @@ public class UpdateImageAssetCommand : IPatchableByIdCommand, ILoggableCommand
     /// </summary>
     [StringLength(130)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The focal point to use when using dynamic cropping
@@ -48,5 +48,5 @@ public class UpdateImageAssetCommand : IPatchableByIdCommand, ILoggableCommand
     /// <summary>
     /// Tags can be used to categorize an entity.
     /// </summary>
-    public ICollection<string> Tags { get; set; }
+    public IReadOnlyCollection<string> Tags { get; set; } = Array.Empty<string>();
 }

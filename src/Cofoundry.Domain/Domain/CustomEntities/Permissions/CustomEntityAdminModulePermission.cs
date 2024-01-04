@@ -10,7 +10,9 @@ public class CustomEntityAdminModulePermission : ICustomEntityPermissionTemplate
     /// </summary>
     public CustomEntityAdminModulePermission()
     {
+        // Invalid/uninitialized data but should only be used by AuthorizePermissionAttribute
         PermissionType = CommonPermissionTypes.AdminModule("Not Set");
+        EntityDefinition = new CustomEntityDynamicEntityDefinition();
     }
 
     public CustomEntityAdminModulePermission(ICustomEntityDefinition customEntityDefinition)

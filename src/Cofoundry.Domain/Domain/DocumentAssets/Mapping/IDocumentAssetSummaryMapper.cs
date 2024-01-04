@@ -12,5 +12,6 @@ public interface IDocumentAssetSummaryMapper
     /// object. If the db record is null then null is returned.
     /// </summary>
     /// <param name="dbDocument">DocumentAsset record from the database.</param>
-    DocumentAssetSummary Map(DocumentAsset dbDocument);
+    [return: NotNullIfNotNull(nameof(dbDocument))]
+    DocumentAssetSummary? Map(DocumentAsset? dbDocument);
 }

@@ -17,5 +17,5 @@ public interface IPageTemplateCustomEntityTypeMapper
     /// be included (but isn't checked).
     /// </param>
     /// <returns>ICustomEntityDisplayModel type if a match is found; otherwise null.</returns>
-    Type Map(string typeName);
+    Type? Map(string? typeName);
 }

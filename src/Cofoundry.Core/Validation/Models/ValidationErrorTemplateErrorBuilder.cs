@@ -106,13 +106,15 @@ public class ValidationErrorTemplateErrorBuilder
     /// <param name="propertyNames">
     /// Zero or more properties that the error message applies to.
     /// </param>
-    public ValidationErrorTemplateErrorBuilder WithProperties(params string[] propertyNames)
+    public ValidationErrorTemplateErrorBuilder WithProperties(params string?[] propertyNames)
     {
         if (EnumerableHelper.IsNullOrEmpty(propertyNames))
         {
             throw new ArgumentEmptyException(nameof(propertyNames));
         }
-        _validationError.Properties = propertyNames;
+        _validationError.Properties = propertyNames
+            .WhereNotNullOrEmpty()
+            .ToArray();
 
         return this;
     }

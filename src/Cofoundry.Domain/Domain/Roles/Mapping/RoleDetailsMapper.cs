@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Simple mapper for mapping to RoleDetails objects.
+/// Default implementation of <see cref="IRoleDetailsMapper"/>.
 /// </summary>
 public class RoleDetailsMapper : IRoleDetailsMapper
 {
@@ -19,29 +19,25 @@ public class RoleDetailsMapper : IRoleDetailsMapper
         _userAreaRepository = userAreaRepository;
     }
 
-    /// <summary>
-    /// Maps an EF Role record from the db into an RoleDetails 
-    /// object. If the db record is null then null is returned.
-    /// </summary>
-    /// <param name="dbRole">Role record from the database.</param>
-    public virtual RoleDetails Map(Role dbRole)
+    /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(dbRole))]
+    public virtual RoleDetails? Map(Role? dbRole)
     {
         if (dbRole == null) return null;
 
+        var userArea = _userAreaRepository.GetRequiredByCode(dbRole.UserAreaCode);
         var role = new RoleDetails()
         {
             IsAnonymousRole = dbRole.RoleCode == AnonymousRole.Code && dbRole.UserAreaCode == CofoundryAdminUserArea.Code,
             IsSuperAdminRole = dbRole.RoleCode == SuperAdminRole.Code && dbRole.UserAreaCode == CofoundryAdminUserArea.Code,
             RoleId = dbRole.RoleId,
             RoleCode = dbRole.RoleCode,
-            Title = dbRole.Title
-        };
-
-        var userArea = _userAreaRepository.GetRequiredByCode(dbRole.UserAreaCode);
-        role.UserArea = new UserAreaMicroSummary()
-        {
-            UserAreaCode = dbRole.UserAreaCode,
-            Name = userArea.Name
+            Title = dbRole.Title,
+            UserArea = new UserAreaMicroSummary()
+            {
+                UserAreaCode = dbRole.UserAreaCode,
+                Name = userArea.Name
+            }
         };
 
         if (role.IsSuperAdminRole)

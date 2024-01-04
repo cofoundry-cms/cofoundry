@@ -49,7 +49,7 @@ public class RequiredDependencyConstaintViolationException : ValidationErrorExce
     /// The <see cref="IEntityDefinition.EntityDefinitionCode"/> of the entity attempting to be deleted.
     /// </param>
     /// <param name="dependencies">Collection of dependencies to check.</param>
-    public static void ThrowIfCannotDelete(IEntityDefinition definitionOfEntityBeingDeleted, ICollection<EntityDependencySummary> dependencies)
+    public static void ThrowIfCannotDelete(IEntityDefinition definitionOfEntityBeingDeleted, IReadOnlyCollection<EntityDependencySummary> dependencies)
     {
         ArgumentNullException.ThrowIfNull(definitionOfEntityBeingDeleted);
 

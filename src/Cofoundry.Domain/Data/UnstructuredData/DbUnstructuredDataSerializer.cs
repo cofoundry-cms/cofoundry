@@ -19,25 +19,28 @@ public class DbUnstructuredDataSerializer : IDbUnstructuredDataSerializer
         _dynamicDataModelJsonSerializerSettingsCache = dynamicDataModelJsonSerializerSettingsCache;
     }
 
-    public object Deserialize(string serialized, Type type)
+    public object? Deserialize(string? serialized, Type type)
     {
-        if (String.IsNullOrEmpty(serialized))
+        if (string.IsNullOrEmpty(serialized))
         {
-            if (type.GetTypeInfo().IsValueType) return Activator.CreateInstance(type);
+            if (type.GetTypeInfo().IsValueType)
+            {
+                return Activator.CreateInstance(type);
+            }
             return null;
         }
 
         return JsonConvert.DeserializeObject(serialized, type, GetDeserializerSettings());
     }
 
-    public T Deserialize<T>(string serialized)
+    public T? Deserialize<T>(string? serialized)
     {
-        if (String.IsNullOrEmpty(serialized)) return default(T);
+        if (string.IsNullOrEmpty(serialized)) return default;
 
         return JsonConvert.DeserializeObject<T>(serialized, GetDeserializerSettings());
     }
 
-    public string Serialize(object toSerialize)
+    public string? Serialize(object? toSerialize)
     {
         var s = JsonConvert.SerializeObject(toSerialize);
 

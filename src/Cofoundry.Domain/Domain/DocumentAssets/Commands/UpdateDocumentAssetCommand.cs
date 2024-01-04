@@ -29,24 +29,24 @@ public class UpdateDocumentAssetCommand : IPatchableByIdCommand, ILoggableComman
     [Newtonsoft.Json.JsonIgnore]
     [System.Text.Json.Serialization.JsonIgnore]
     [ValidateObject]
-    public IFileSource File { get; set; }
+    public IFileSource? File { get; set; }
 
     /// <summary>
     /// A short descriptive title of the document (130 characters).
     /// </summary>
     [StringLength(130)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// A longer description of the document in plain text.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Tags can be used to categorize an entity.
     /// </summary>
-    public ICollection<string> Tags { get; set; }
+    public IReadOnlyCollection<string> Tags { get; set; } = Array.Empty<string>();
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

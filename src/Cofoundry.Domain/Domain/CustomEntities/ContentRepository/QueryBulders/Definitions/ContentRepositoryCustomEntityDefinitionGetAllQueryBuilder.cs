@@ -15,13 +15,13 @@ public class ContentRepositoryCustomEntityDefinitionGetAllQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<CustomEntityDefinitionMicroSummary>> AsMicroSummaries()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityDefinitionMicroSummary>> AsMicroSummaries()
     {
         var query = new GetAllCustomEntityDefinitionMicroSummariesQuery();
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<ICollection<CustomEntityDefinitionSummary>> AsSummaries()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityDefinitionSummary>> AsSummaries()
     {
         var query = new GetAllCustomEntityDefinitionSummariesQuery();
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

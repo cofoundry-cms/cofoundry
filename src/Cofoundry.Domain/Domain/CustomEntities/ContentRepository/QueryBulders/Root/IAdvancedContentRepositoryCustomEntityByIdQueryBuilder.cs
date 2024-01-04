@@ -12,7 +12,7 @@ public interface IAdvancedContentRepositoryCustomEntityByIdQueryBuilder
     /// and the CustomEntityDetails projection includes audit data and other additional 
     /// information that should normally be hidden from a customer facing app.
     /// </summary>
-    IDomainRepositoryQueryContext<CustomEntityDetails> AsDetails();
+    IDomainRepositoryQueryContext<CustomEntityDetails?> AsDetails();
 
     /// <summary>
     /// Gets a specific version of a custom entity (equivalent to using 
@@ -26,7 +26,7 @@ public interface IAdvancedContentRepositoryCustomEntityByIdQueryBuilder
     /// <param name="customEntityVersionId">
     /// Use this to specify a specific version to return in the query.
     /// </param>
-    IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(int customEntityVersionId);
+    IDomainRepositoryQueryContext<CustomEntityRenderSummary?> AsRenderSummary(int customEntityVersionId);
 
     /// <summary>
     /// Gets a specific version of a custom entity (equivalent to using 
@@ -47,5 +47,5 @@ public interface IAdvancedContentRepositoryCustomEntityByIdQueryBuilder
     /// <param name="customEntityVersionId">
     /// Use this to specify a specific version to return in the query.
     /// </param>
-    IDomainRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, int customEntityVersionId);
+    IDomainRepositoryQueryContext<CustomEntityRenderDetails?> AsRenderDetails(int pageId, int customEntityVersionId);
 }

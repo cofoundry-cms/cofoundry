@@ -13,7 +13,7 @@ public interface IEntityVersionPageBlockRenderDetails
     /// e.g. 'Wide', 'Headline', 'Large', 'Reversed'. If no template is set then 
     /// the default view is used for rendering.
     /// </summary>
-    PageBlockTypeTemplateSummary Template { get; set; }
+    PageBlockTypeTemplateSummary? Template { get; set; }
 
     /// <summary>
     /// The block type which defines the data model and display

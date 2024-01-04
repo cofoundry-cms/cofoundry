@@ -63,9 +63,9 @@ public class DuplicateCustomEntityCommandHandler
         command.OutputCustomEntityId = addCustomEntityCommand.OutputCustomEntityId;
     }
 
-    private Task<CustomEntityVersion> GetCustomEntityToDuplicateAsync(DuplicateCustomEntityCommand command)
+    private async Task<CustomEntityVersion> GetCustomEntityToDuplicateAsync(DuplicateCustomEntityCommand command)
     {
-        return _dbContext
+        var result = await _dbContext
             .CustomEntityVersions
             .AsNoTracking()
             .Include(e => e.CustomEntity)
@@ -73,6 +73,10 @@ public class DuplicateCustomEntityCommandHandler
             .FilterByCustomEntityId(command.CustomEntityToDuplicateId)
             .OrderByLatest()
             .FirstOrDefaultAsync();
+
+        EntityNotFoundException.ThrowIfNull(result, command.CustomEntityToDuplicateId);
+
+        return result;
     }
 
     private AddCustomEntityCommand MapCommand(
@@ -80,8 +84,6 @@ public class DuplicateCustomEntityCommandHandler
         CustomEntityVersion customEntityVersionToDuplicate
         )
     {
-        EntityNotFoundException.ThrowIfNull(customEntityVersionToDuplicate, command.CustomEntityToDuplicateId);
-
         var addCustomEntityCommand = new AddCustomEntityCommand();
         addCustomEntityCommand.Title = command.Title;
         addCustomEntityCommand.LocaleId = command.LocaleId;

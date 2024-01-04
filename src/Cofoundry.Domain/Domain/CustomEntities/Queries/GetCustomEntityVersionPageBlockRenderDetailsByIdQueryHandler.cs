@@ -1,5 +1,5 @@
 ﻿using Cofoundry.Domain.Data;
-using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -9,39 +9,45 @@ namespace Cofoundry.Domain.Internal;
 /// optionally pass down a PublishStatusQuery to use in the mapping process.
 /// </summary>
 public class GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler
-    : IQueryHandler<GetCustomEntityVersionPageBlockRenderDetailsByIdQuery, CustomEntityVersionPageBlockRenderDetails>
+    : IQueryHandler<GetCustomEntityVersionPageBlockRenderDetailsByIdQuery, CustomEntityVersionPageBlockRenderDetails?>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
     private readonly IPageVersionBlockModelMapper _pageVersionBlockModelMapper;
     private readonly IPermissionValidationService _permissionValidationService;
+    private readonly ILogger<GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler> _logger;
 
     public GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler(
         CofoundryDbContext dbContext,
         IQueryExecutor queryExecutor,
         IPageVersionBlockModelMapper pageVersionBlockModelMapper,
-        IPermissionValidationService permissionValidationService
+        IPermissionValidationService permissionValidationService,
+        ILogger<GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler> logger
         )
     {
         _dbContext = dbContext;
         _queryExecutor = queryExecutor;
         _pageVersionBlockModelMapper = pageVersionBlockModelMapper;
         _permissionValidationService = permissionValidationService;
+        _logger = logger;
     }
 
-    public async Task<CustomEntityVersionPageBlockRenderDetails> ExecuteAsync(GetCustomEntityVersionPageBlockRenderDetailsByIdQuery query, IExecutionContext executionContext)
+    public async Task<CustomEntityVersionPageBlockRenderDetails?> ExecuteAsync(GetCustomEntityVersionPageBlockRenderDetailsByIdQuery query, IExecutionContext executionContext)
     {
         var dbResult = await QueryBlock(query.CustomEntityVersionPageBlockId)
             .Select(b => new
             {
                 PageBlock = b,
                 BlockTypeFileName = b.PageBlockType.FileName,
-                CustomEntityDefinitionCode = b.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode
+                b.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode
             })
             .SingleOrDefaultAsync();
 
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
 
         var result = await MapAsync(
             dbResult.PageBlock,
@@ -51,11 +57,16 @@ public class GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler
             executionContext
             );
 
+        if (result == null)
+        {
+            return null;
+        }
+
         // Add any list context information.
 
         if (result.DisplayModel is IListablePageBlockTypeDisplayModel displayData)
         {
-            var blocks = await GetOrderedBlockIds(dbResult.PageBlock).ToListAsync();
+            var blocks = await GetOrderedBlockIdsAsync(dbResult.PageBlock);
 
             displayData.ListContext = new ListablePageBlockRenderContext()
             {
@@ -67,9 +78,9 @@ public class GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler
         return result;
     }
 
-    private IQueryable<int> GetOrderedBlockIds(CustomEntityVersionPageBlock versionBlock)
+    private async Task<List<int>> GetOrderedBlockIdsAsync(CustomEntityVersionPageBlock versionBlock)
     {
-        return _dbContext
+        return await _dbContext
             .CustomEntityVersionPageBlocks
             .AsNoTracking()
             .FilterActive()
@@ -77,10 +88,11 @@ public class GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler
                 && m.PageTemplateRegionId == versionBlock.PageTemplateRegionId
                 && m.PageId == versionBlock.PageId)
             .OrderBy(m => m.Ordering)
-            .Select(m => m.CustomEntityVersionPageBlockId);
+            .Select(m => m.CustomEntityVersionPageBlockId)
+            .ToListAsync();
     }
 
-    private async Task<CustomEntityVersionPageBlockRenderDetails> MapAsync(
+    private async Task<CustomEntityVersionPageBlockRenderDetails?> MapAsync(
         CustomEntityVersionPageBlock versionBlock,
         string blockTypeFileName,
         string customEntityDefinitionCode,
@@ -94,15 +106,26 @@ public class GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler
         var blockType = await _queryExecutor.ExecuteAsync(blockTypeQuery, executionContext);
         EntityNotFoundException.ThrowIfNull(blockType, versionBlock.PageBlockTypeId);
 
-        var result = new CustomEntityVersionPageBlockRenderDetails();
-        result.CustomEntityVersionPageBlockId = versionBlock.CustomEntityVersionPageBlockId;
-        result.BlockType = blockType;
-        result.DisplayModel = await _pageVersionBlockModelMapper.MapDisplayModelAsync(
+        var displayModel = await _pageVersionBlockModelMapper.MapDisplayModelAsync(
             blockTypeFileName,
             versionBlock,
             publishStatus,
             executionContext
             );
+
+        if (displayModel == null)
+        {
+            return null;
+        }
+
+        var result = new CustomEntityVersionPageBlockRenderDetails
+        {
+            CustomEntityVersionPageBlockId = versionBlock.CustomEntityVersionPageBlockId,
+            BlockType = blockType,
+            DisplayModel = displayModel
+        };
+
+        result.Template = GetCustomTemplate(versionBlock, blockType);
 
         return result;
     }
@@ -116,20 +139,21 @@ public class GetCustomEntityVersionPageBlockRenderDetailsByIdQueryHandler
             .Where(m => m.CustomEntityVersionPageBlockId == customEntityVersionPageBlockId);
     }
 
-    /// <summary>
-    /// Gets the custom view template to render the block as if one
-    /// is assigned, otherwise null.
-    /// </summary>
-    public PageBlockTypeTemplateSummary GetCustomTemplate(CustomEntityVersionPageBlock pageBlock, CustomEntityVersionPageBlockRenderDetails blockRenderDetails)
+    public PageBlockTypeTemplateSummary? GetCustomTemplate(CustomEntityVersionPageBlock versionBlock, PageBlockTypeSummary blockType)
     {
-        if (!pageBlock.PageBlockTypeTemplateId.HasValue) return null;
+        if (!versionBlock.PageBlockTypeTemplateId.HasValue)
+        {
+            return null;
+        }
 
-        var template = blockRenderDetails
-            .BlockType
+        var template = blockType
             .Templates
-            .FirstOrDefault(t => t.PageBlockTypeTemplateId == pageBlock.PageBlockTypeTemplateId);
+            .FirstOrDefault(t => t.PageBlockTypeTemplateId == versionBlock.PageBlockTypeTemplateId);
 
-        Debug.Assert(template != null, string.Format("The page block type template with id {0} could not be found for custom entity block {1}", pageBlock.PageBlockTypeTemplateId, pageBlock.CustomEntityVersionPageBlockId));
+        if (template == null)
+        {
+            _logger.LogWarning("The page block type template with id {PageBlockTypeTemplateId} could not be found for custom entity block {CustomEntityVersionPageBlockId}", versionBlock.PageBlockTypeTemplateId, versionBlock.CustomEntityVersionPageBlockId);
+        }
 
         return template;
     }

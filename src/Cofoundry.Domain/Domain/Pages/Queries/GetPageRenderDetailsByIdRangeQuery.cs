@@ -4,7 +4,7 @@
 /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
 /// the data required to render a page, including template data for all the content-editable regions.
 /// </summary>
-public class GetPageRenderDetailsByIdRangeQuery : IQuery<IDictionary<int, PageRenderDetails>>
+public class GetPageRenderDetailsByIdRangeQuery : IQuery<IReadOnlyDictionary<int, PageRenderDetails>>
 {
     public GetPageRenderDetailsByIdRangeQuery() { }
 
@@ -15,7 +15,7 @@ public class GetPageRenderDetailsByIdRangeQuery : IQuery<IDictionary<int, PageRe
     /// <param name="pageIds">PageIds of the pages to get.</param>
     /// <param name="publishStatusQuery">Used to determine which version of the page to include data for.</param>
     public GetPageRenderDetailsByIdRangeQuery(IEnumerable<int> pageIds, PublishStatusQuery? publishStatusQuery = null)
-        : this(pageIds?.ToList(), publishStatusQuery)
+        : this(pageIds?.ToArray() ?? [], publishStatusQuery)
     {
     }
 
@@ -37,7 +37,7 @@ public class GetPageRenderDetailsByIdRangeQuery : IQuery<IDictionary<int, PageRe
     /// <summary>
     /// Database ids of the pages to get.
     /// </summary>
-    public IReadOnlyCollection<int> PageIds { get; set; }
+    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
 
     /// <summary>
     /// Used to determine which version of the page to include data for. This 

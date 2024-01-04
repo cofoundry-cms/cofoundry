@@ -6,7 +6,7 @@
 /// and the CustomEntityDetails projection includes audit data and other additional 
 /// information that should normally be hidden from a customer facing app.
 /// </summary>
-public class GetCustomEntityDetailsByIdQuery : IQuery<CustomEntityDetails>
+public class GetCustomEntityDetailsByIdQuery : IQuery<CustomEntityDetails?>
 {
     /// <summary>
     /// Query for detailed information on a custom entity and it's latest version. This 

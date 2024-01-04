@@ -26,5 +26,5 @@ public class UpdateUserPasswordByUserIdCommand : ICommand, ILoggableCommand
     [IgnoreDataMember]
     [Newtonsoft.Json.JsonIgnore]
     [System.Text.Json.Serialization.JsonIgnore]
-    public string NewPassword { get; set; }
+    public string NewPassword { get; set; } = string.Empty;
 }

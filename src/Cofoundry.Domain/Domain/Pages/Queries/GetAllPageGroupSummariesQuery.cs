@@ -1,5 +1,5 @@
 ﻿namespace Cofoundry.Domain;
 
-public class GetAllPageGroupSummariesQuery : IQuery<ICollection<PageGroupSummary>>
+public class GetAllPageGroupSummariesQuery : IQuery<IReadOnlyCollection<PageGroupSummary>>
 {
 }

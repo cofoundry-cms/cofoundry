@@ -15,12 +15,12 @@ public class SearchCustomEntitySummariesQuery : SimplePageableQuery, IQuery<Page
     /// </summary>
     [Required]
     [MaxLength(6)]
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Text to filter on.
     /// </summary>
-    public string Text { get; set; }
+    public string? Text { get; set; }
 
     /// <summary>
     /// Locale id to filter the results by, if null then the is no filter (rather

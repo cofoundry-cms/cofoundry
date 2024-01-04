@@ -7,7 +7,7 @@
 /// This is specifically used in the admin panel and so contains audit 
 /// data and tagging information.
 /// </summary>
-public class GetImageAssetDetailsByIdQuery : IQuery<ImageAssetDetails>
+public class GetImageAssetDetailsByIdQuery : IQuery<ImageAssetDetails?>
 {
     public GetImageAssetDetailsByIdQuery()
     {

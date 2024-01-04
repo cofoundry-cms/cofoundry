@@ -4,7 +4,7 @@
 /// Finds a document asset by it's database id, returning a 
 /// DocumentAssetDetails projection if it is found, otherwise null.
 /// </summary>
-public class GetDocumentAssetDetailsByIdQuery : IQuery<DocumentAssetDetails>
+public class GetDocumentAssetDetailsByIdQuery : IQuery<DocumentAssetDetails?>
 {
     public GetDocumentAssetDetailsByIdQuery()
     {

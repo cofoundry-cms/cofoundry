@@ -13,7 +13,6 @@
 /// but instead are used to restrict public access to website pages and routes.
 /// </para>
 /// </summary>
-/// <inheritdoc/>
 public class PageDirectoryAccessRule : IEntityAccessRule
 {
     /// <summary>
@@ -22,31 +21,54 @@ public class PageDirectoryAccessRule : IEntityAccessRule
     public int PageDirectoryAccessRuleId { get; set; }
 
     /// <summary>
-    /// Id of the <see cref="PageDirectory"/> that this rule controls access 
+    /// Id of the <see cref="Data.PageDirectory"/> that this rule controls access 
     /// to, as well as any child directories or pages.
     /// </summary>
     public int PageDirectoryId { get; set; }
 
+    private PageDirectory? _pageDirectory;
     /// <summary>
-    /// <see cref="PageDirectory"/> that this rule controls access to,
+    /// <see cref="Data.PageDirectory"/> that this rule controls access to,
     /// as well as any child directories or pages.
     /// </summary>
-    public virtual PageDirectory PageDirectory { get; set; }
+    public PageDirectory PageDirectory
+    {
+        get => _pageDirectory ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryAccessRule>(nameof(PageDirectory));
+        set => _pageDirectory = value;
+    }
 
-    public string UserAreaCode { get; set; }
+    /// <inheritdoc/>
+    public string UserAreaCode { get; set; } = string.Empty;
 
-    public virtual UserArea UserArea { get; set; }
+    private UserArea? _userArea;
+    /// <inheritdoc/>
+    public UserArea UserArea
+    {
+        get => _userArea ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryAccessRule>(nameof(UserArea));
+        set => _userArea = value;
+    }
 
+    /// <inheritdoc/>
     public int? RoleId { get; set; }
 
-    public virtual Role Role { get; set; }
+    /// <inheritdoc/>
+    public Role? Role { get; set; }
 
+    /// <inheritdoc/>
     public DateTime CreateDate { get; set; }
 
+    /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    public virtual User Creator { get; set; }
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryAccessRule>(nameof(Creator));
+        set => _creator = value;
+    }
 
+    /// <inheritdoc/>
     public int GetId()
     {
         return PageDirectoryAccessRuleId;

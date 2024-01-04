@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Domain;
+﻿using System.Collections.ObjectModel;
+
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Describes a password policy using both a short <see cref="Description"/> 
@@ -12,7 +14,7 @@ public class PasswordPolicyDescription
     /// This description is designed to be displayed to users to help them choose
     /// their new password.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// A full list of password requirements extracted from each of
@@ -21,11 +23,11 @@ public class PasswordPolicyDescription
     /// in full to help a user choose their new password, however the list can include a tedious 
     /// list of edge cases such as "Password must not be the same as your current password.".
     /// </summary>
-    public ICollection<string> Criteria { get; set; }
+    public IReadOnlyCollection<string> Criteria { get; set; } = Array.Empty<string>();
 
     /// <summary>
     /// A collection of HTML attributes that describe the policy e.g. "minlength", "maxlength"
     /// or "passwordrules".
     /// </summary>
-    public IDictionary<string, string> Attributes { get; set; }
+    public IReadOnlyDictionary<string, string> Attributes { get; set; } = ReadOnlyDictionary<string, string>.Empty;
 }

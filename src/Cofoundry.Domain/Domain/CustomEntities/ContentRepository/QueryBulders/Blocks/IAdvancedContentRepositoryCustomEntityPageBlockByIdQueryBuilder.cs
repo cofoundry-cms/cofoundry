@@ -11,5 +11,5 @@ public interface IAdvancedContentRepositoryCustomEntityPageBlockByIdQueryBuilder
     /// entities, you can optionally pass down a PublishStatusQuery to use 
     /// in the mapping process.
     /// </summary>
-    IDomainRepositoryQueryContext<CustomEntityVersionPageBlockRenderDetails> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null);
+    IDomainRepositoryQueryContext<CustomEntityVersionPageBlockRenderDetails?> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null);
 }

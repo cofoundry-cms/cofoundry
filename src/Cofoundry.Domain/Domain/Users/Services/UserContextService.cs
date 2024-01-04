@@ -2,31 +2,31 @@
 
 namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IUserContextService"/>.
+/// </summary>
 public class UserContextService : IUserContextService
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IUserSessionService _userSessionService;
     private readonly UserContextMapper _userContextMapper;
     private readonly IUserContextCache _userContextCache;
-    private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
     public UserContextService(
         CofoundryDbContext dbContext,
         IUserSessionService userSessionService,
         UserContextMapper userContextMapper,
-        IUserContextCache userContextCache,
-        IUserAreaDefinitionRepository userAreaDefinitionRepository
+        IUserContextCache userContextCache
         )
     {
         _dbContext = dbContext;
         _userSessionService = userSessionService;
         _userContextMapper = userContextMapper;
         _userContextCache = userContextCache;
-        _userAreaDefinitionRepository = userAreaDefinitionRepository;
     }
 
 
+    /// <inheritdoc/>
     public virtual async Task<IUserContext> GetCurrentContextAsync()
     {
         var userId = _userSessionService.GetCurrentUserId();
@@ -35,6 +35,7 @@ public class UserContextService : IUserContextService
         return userContext;
     }
 
+    /// <inheritdoc/>
     public virtual async Task<IUserContext> GetCurrentContextByUserAreaAsync(string userAreaCode)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
@@ -45,6 +46,7 @@ public class UserContextService : IUserContextService
         return userContext;
     }
 
+    /// <inheritdoc/>
     public async Task<IUserContext> GetSystemUserContextAsync()
     {
         var userContext = await _userContextCache.GetOrAddSystemContextAsync(QuerySystemUserContextAsync);
@@ -66,7 +68,7 @@ public class UserContextService : IUserContextService
             .Where(u => u.IsSystemAccount)
             .FirstOrDefaultAsync();
 
-        EntityNotFoundException.ThrowIfNull(dbUser, "IsSystemAccount");
+        EntityNotFoundException.ThrowIfNull(dbUser, nameof(dbUser.IsSystemAccount));
         var impersonatedUserContext = _userContextMapper.Map(dbUser);
 
         return impersonatedUserContext;
@@ -87,7 +89,7 @@ public class UserContextService : IUserContextService
     /// </summary>
     protected virtual async Task<IUserContext> QueryUserContextByIdAsync(int userId)
     {
-        IUserContext cx = null;
+        IUserContext? cx = null;
 
         // Raw query required here because using IQueryExecutor will cause a stack overflow
         var dbResult = await _dbContext

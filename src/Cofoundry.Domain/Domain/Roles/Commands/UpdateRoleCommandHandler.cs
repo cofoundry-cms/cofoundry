@@ -133,6 +133,8 @@ public class UpdateRoleCommandHandler
                 if (dbPermission == null)
                 {
                     var codePermission = _permissionRepository.GetByCode(permissionToAdd.PermissionCode, permissionToAdd.EntityDefinitionCode);
+                    EntityNotFoundException.ThrowIfNull(codePermission, PermissionIdentifierFormatter.GetUniqueIdentifier(permissionToAdd.PermissionCode, permissionToAdd.EntityDefinitionCode));
+
                     dbPermission = new Permission();
                     dbPermission.PermissionCode = codePermission.PermissionType.Code;
 
@@ -173,6 +175,10 @@ public class UpdateRoleCommandHandler
             foreach (var entity in entityWithoutReadPermission)
             {
                 var entityCode = entity.First().EntityDefinitionCode;
+                if (entityCode == null)
+                {
+                    throw new NullReferenceException($"{nameof(entityCode)} should not be null.");
+                }
                 var readPermission = _permissionRepository.GetByEntityAndPermissionType(entityCode, CommonPermissionTypes.ReadPermissionCode);
 
                 if (readPermission != null)

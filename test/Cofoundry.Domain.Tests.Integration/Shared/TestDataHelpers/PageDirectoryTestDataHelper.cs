@@ -47,10 +47,7 @@ public class PageDirectoryTestDataHelper
     {
         var command = await CreateAddCommandAsync(uniqueData);
 
-        if (configration != null)
-        {
-            configration(command);
-        }
+        configration?.Invoke(command);
 
         using var scope = _serviceProvider.CreateScope();
         var contentRepository = scope.ServiceProvider.GetRequiredService<IAdvancedContentRepository>();
@@ -87,10 +84,7 @@ public class PageDirectoryTestDataHelper
         {
             command.ParentPageDirectoryId = parentDirectoryId;
 
-            if (configration != null)
-            {
-                configration(command);
-            }
+            configration?.Invoke(command);
         });
     }
 
@@ -157,15 +151,16 @@ public class PageDirectoryTestDataHelper
         var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
             PageDirectoryId = pageDirectoryId,
-            ViolationAction = AccessRuleViolationAction.Error
+            ViolationAction = AccessRuleViolationAction.Error,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = userAreaCode,
+                    RoleId = roleId
+                }]
         };
 
-        command.AccessRules.AddNew(userAreaCode, roleId);
-
-        if (configration != null)
-        {
-            configration(command);
-        }
+        configration?.Invoke(command);
 
         using var scope = _serviceProvider.CreateScope();
         var contentRepository = scope

@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Simple mapper for mapping to PageBlockTypeDetails objects.
+/// Default implementation of <see cref="IPageBlockTypeDetailsMapper"/>.
 /// </summary>
 public class PageBlockTypeDetailsMapper : IPageBlockTypeDetailsMapper
 {
@@ -17,11 +17,7 @@ public class PageBlockTypeDetailsMapper : IPageBlockTypeDetailsMapper
         _allPageBlockTypeDataModels = allPageBlockTypeDataModels;
     }
 
-    /// <summary>
-    /// Maps an EF PageBlockType record from the db into an PageBlockTypeDetails 
-    /// object. If the db record is null then null is returned.
-    /// </summary>
-    /// <param name="blockTypeSummary">PageBlockType record from the database.</param>
+    /// <inheritdoc/>
     public PageBlockTypeDetails Map(PageBlockTypeSummary blockTypeSummary)
     {
         var result = new PageBlockTypeDetails()

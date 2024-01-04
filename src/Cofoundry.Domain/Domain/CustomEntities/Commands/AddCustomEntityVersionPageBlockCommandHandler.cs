@@ -26,7 +26,6 @@ public class AddCustomEntityVersionPageBlockCommandHandler
         ICustomEntityCache customEntityCache,
         IPageBlockCommandHelper pageBlockCommandHelper,
         IMessageAggregator messageAggregator,
-        ICustomEntityDefinitionRepository customEntityDefinitionRepository,
         IPermissionValidationService permissionValidationService,
         ITransactionScopeManager transactionScopeFactory
         )
@@ -76,7 +75,7 @@ public class AddCustomEntityVersionPageBlockCommandHandler
             .CustomEntityVersionPageBlocks
             .Where(m => m.PageTemplateRegionId == templateRegion.PageTemplateRegionId);
 
-        CustomEntityVersionPageBlock adjacentItem = null;
+        CustomEntityVersionPageBlock? adjacentItem = null;
         if (command.AdjacentVersionBlockId.HasValue)
         {
             adjacentItem = customEntityVersionBlocks

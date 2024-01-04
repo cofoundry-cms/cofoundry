@@ -23,28 +23,37 @@ public class NestedDataModelMultiTypeItemJsonConverter : JsonConverter
         return typeof(NestedDataModelMultiTypeItem).IsAssignableFrom(objectType);
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         var json = JObject.Load(reader);
         var result = new NestedDataModelMultiTypeItem();
 
-        var typeName = json.GetValue(nameof(result.TypeName), StringComparison.OrdinalIgnoreCase);
-        var nestedDataModelType = _nestedDataModelTypeRepository.GetByName(typeName.Value<string>());
+        var typeNameToken = json.GetValue(nameof(result.TypeName), StringComparison.OrdinalIgnoreCase);
+        var typeName = typeNameToken?.Value<string>();
+        var nestedDataModelType = _nestedDataModelTypeRepository.GetByName(typeName);
+
+        if (nestedDataModelType == null)
+        {
+            return result;
+        }
 
         result.TypeName = nestedDataModelType.Name;
 
-        var modelData = json.GetValue(nameof(result.Model), StringComparison.OrdinalIgnoreCase);
-        if (modelData == null) return result;
-
-        using (var dataModelReader = modelData.CreateReader())
+        var modelDataToken = json.GetValue(nameof(result.Model), StringComparison.OrdinalIgnoreCase);
+        if (modelDataToken == null)
         {
-            result.Model = (INestedDataModel)serializer.Deserialize(dataModelReader, nestedDataModelType);
+            return result;
+        }
+
+        using (var dataModelReader = modelDataToken.CreateReader())
+        {
+            result.Model = serializer.Deserialize(dataModelReader, nestedDataModelType) as INestedDataModel;
         }
 
         return result;
     }
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
         throw new NotImplementedException();
     }

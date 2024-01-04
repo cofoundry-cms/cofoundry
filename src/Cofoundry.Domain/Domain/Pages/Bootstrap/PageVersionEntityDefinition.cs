@@ -8,7 +8,7 @@ public sealed class PageVersionEntityDefinition : IDependableEntityDefinition
 
     public string Name => "Page Version";
 
-    public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
+    public IQuery<IReadOnlyDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
     {
         return new GetPageVersionEntityMicroSummariesByIdRangeQuery(ids);
     }

@@ -32,6 +32,7 @@ public class InMemoryObjectCache : IObjectCache
     {
         var fullKey = CreateCacheKey(key);
         var entry = _cache.Get<T>(fullKey);
+
         return entry;
     }
 

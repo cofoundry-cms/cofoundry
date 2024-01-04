@@ -43,10 +43,7 @@ public class PageTestDataHelper
     {
         var command = CreateAddCommand(uniqueData, parentDirectoryId);
 
-        if (configration != null)
-        {
-            configration(command);
-        }
+        configration?.Invoke(command);
 
         using var scope = _serviceProvider.CreateScope();
         var contentRepository = scope
@@ -83,10 +80,7 @@ public class PageTestDataHelper
     {
         var command = CreateAddCommandWithCustomEntityDetailsPage(uniqueData, parentDirectoryId);
 
-        if (configration != null)
-        {
-            configration(command);
-        }
+        configration?.Invoke(command);
 
         using var scope = _serviceProvider.CreateScope();
         var contentRepository = scope
@@ -236,10 +230,7 @@ public class PageTestDataHelper
             PageVersionId = pageVersionId
         };
 
-        if (configuration != null)
-        {
-            configuration(command, blockType);
-        }
+        configuration?.Invoke(command, blockType);
 
         return await contentRepository
             .Pages()
@@ -305,16 +296,16 @@ public class PageTestDataHelper
         var command = new UpdatePageAccessRuleSetCommand()
         {
             PageId = pageId,
-            ViolationAction = AccessRuleViolationAction.Error
+            ViolationAction = AccessRuleViolationAction.Error,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = userAreaCode,
+                    RoleId = roleId
+                }]
         };
 
-        command.AccessRules.AddNew(userAreaCode, roleId);
-
-
-        if (configration != null)
-        {
-            configration(command);
-        }
+        configration?.Invoke(command);
 
         using var scope = _serviceProvider.CreateScope();
         var contentRepository = scope

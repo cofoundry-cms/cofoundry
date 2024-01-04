@@ -15,7 +15,7 @@ public class Role
     /// The role title is used to identify the role and select it in the admin 
     /// UI and therefore must be unique. Max 50 characters.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The role code is a unique three letter code that can be used to reference the role 
@@ -23,35 +23,40 @@ public class Role
     /// code matching is case insensitive. This is only used by roles defined in code using 
     /// <see cref="IRoleDefinition"/>.
     /// </summary>
-    public string RoleCode { get; set; }
+    public string? RoleCode { get; set; }
 
     /// <summary>
     /// A role must be assigned to a user area e.g. CofoundryAdminUserArea.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
+    private UserArea? _userArea;
     /// <summary>
     /// A role must be assigned to a user area e.g. CofoundryAdminUserArea.
     /// </summary>
-    public virtual UserArea UserArea { get; set; }
+    public UserArea UserArea
+    {
+        get => _userArea ?? throw NavigationPropertyNotInitializedException.Create<Role>(nameof(UserArea));
+        set => _userArea = value;
+    }
 
     /// <summary>
     /// Collection of permissions that describe the actions this role is 
     /// permitted to perform.
     /// </summary>
-    public virtual ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
+    public ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
 
     /// <summary>
     /// Dynamic website routes can optionally be restircted to specific roles. This
     /// collection references zero or more access rules at the <see cref="Page"/> level.
     /// </summary>
-    public virtual ICollection<PageAccessRule> PageAccessRules { get; set; } = new List<PageAccessRule>();
+    public ICollection<PageAccessRule> PageAccessRules { get; set; } = new List<PageAccessRule>();
 
     /// <summary>
     /// Dynamic website routes can optionally be restircted to specific roles. This
     /// collection references zero or more access rules at the <see cref="PageDirectory"/> level.
     /// </summary>
-    public virtual ICollection<PageDirectoryAccessRule> PageDirectoryAccessRules { get; set; } = new List<PageDirectoryAccessRule>();
+    public ICollection<PageDirectoryAccessRule> PageDirectoryAccessRules { get; set; } = new List<PageDirectoryAccessRule>();
 
     /// <summary>
     /// <see langword="true"/> if this role is the special <see cref="AnonymousRole"/>.

@@ -21,8 +21,8 @@ public interface IUserUpdateCommandHelper
     /// The command execution context to pass down to any nested queries or commands.
     /// </param>
     Task<UserUpdateCommandHelper.UpdateEmailAndUsernameResult> UpdateEmailAndUsernameAsync(
-        string email,
-        string username,
+        string? email,
+        string? username,
         User user,
         IExecutionContext executionContext
         );

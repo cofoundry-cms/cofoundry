@@ -15,14 +15,14 @@ public class ValidateUserEmailAddressQuery : IQuery<ValidationQueryResult>
     /// </summary>
     [Required]
     [StringLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The email address to validate. The email will be normalized before the check is 
     /// made so there is no need to pre-format this value.
     /// </summary>
     [Required]
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     /// <summary>
     /// Database id of an existing user. If the user is new then this can be <see langword="null"/>.

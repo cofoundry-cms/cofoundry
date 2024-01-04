@@ -3,13 +3,13 @@
 /// <inheritdoc/>
 public class AccountVerificationTemplateBuilderContext : IAccountVerificationTemplateBuilderContext
 {
-    public UserSummary User { get; set; }
+    public required UserSummary User { get; set; }
 
-    public string Token { get; set; }
+    public required string Token { get; set; }
 
-    public string VerificationUrlPath { get; set; }
+    public string VerificationUrlPath { get; set; } = string.Empty;
 
-    public Func<AccountVerificationTemplateBuilderContext, Task<AccountVerificationMailTemplate>> DefaultTemplateFactory { get; set; }
+    public required Func<AccountVerificationTemplateBuilderContext, Task<AccountVerificationMailTemplate>> DefaultTemplateFactory { get; set; }
 
     public Task<AccountVerificationMailTemplate> BuildDefaultTemplateAsync()
     {

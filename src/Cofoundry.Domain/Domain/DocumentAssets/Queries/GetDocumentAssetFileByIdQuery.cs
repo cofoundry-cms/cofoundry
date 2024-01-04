@@ -4,7 +4,7 @@
 /// Gets file information about a document asset including
 /// stream access to the file itself.
 /// </summary>
-public class GetDocumentAssetFileByIdQuery : IQuery<DocumentAssetFile>
+public class GetDocumentAssetFileByIdQuery : IQuery<DocumentAssetFile?>
 {
     public GetDocumentAssetFileByIdQuery()
     {

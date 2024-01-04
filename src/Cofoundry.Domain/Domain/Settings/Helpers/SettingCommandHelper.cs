@@ -8,32 +8,31 @@ public class SettingCommandHelper
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
-    private readonly EntityAuditHelper _entityAuditHelper;
-    private readonly IQueryExecutor _queryExecutor;
 
     public SettingCommandHelper(
         CofoundryDbContext dbContext,
-        IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
-        EntityAuditHelper entityAuditHelper,
-        IQueryExecutor queryExecutor
+        IDbUnstructuredDataSerializer dbUnstructuredDataSerializer
         )
     {
         _dbContext = dbContext;
         _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
-        _entityAuditHelper = entityAuditHelper;
-        _queryExecutor = queryExecutor;
     }
 
     public void SetSettingProperty<TCommand, TCommandProperty>(
         TCommand source,
         Expression<Func<TCommand, TCommandProperty>> propertyLambda,
-        List<Setting> allSettings,
-        IExecutionContext executionContext)
+        IReadOnlyCollection<Setting> allSettings,
+        IExecutionContext executionContext
+        )
     {
         Type type = typeof(TCommand);
 
         var member = propertyLambda.Body as MemberExpression;
-        var propInfo = member.Member as PropertyInfo;
+        var propInfo = member?.Member as PropertyInfo;
+        if (propInfo == null)
+        {
+            throw new ArgumentException("Expression must reference a property", nameof(propertyLambda));
+        }
 
         var setting = allSettings.SingleOrDefault(s => s.SettingKey == propInfo.Name);
 
@@ -52,7 +51,7 @@ public class SettingCommandHelper
 
         if (setting.SettingValue != serializedValue)
         {
-            setting.SettingValue = _dbUnstructuredDataSerializer.Serialize(propInfo.GetValue(source));
+            setting.SettingValue = _dbUnstructuredDataSerializer.Serialize(propInfo.GetValue(source)) ?? string.Empty;
             setting.UpdateDate = executionContext.ExecutionDate;
         }
     }

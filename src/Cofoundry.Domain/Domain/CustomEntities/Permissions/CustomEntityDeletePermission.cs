@@ -11,6 +11,7 @@ public class CustomEntityDeletePermission : ICustomEntityPermissionTemplate
     public CustomEntityDeletePermission()
     {
         PermissionType = CommonPermissionTypes.Delete("Not Set");
+        EntityDefinition = new CustomEntityDynamicEntityDefinition();
     }
 
     public CustomEntityDeletePermission(ICustomEntityDefinition customEntityDefinition)

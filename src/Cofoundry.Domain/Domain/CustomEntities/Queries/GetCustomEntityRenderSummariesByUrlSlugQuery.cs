@@ -5,7 +5,7 @@
 /// can return multiple custom entities because unique url slugs are an
 /// optional setting on the custom entity definition.
 /// </summary>
-public class GetCustomEntityRenderSummariesByUrlSlugQuery : IQuery<ICollection<CustomEntityRenderSummary>>
+public class GetCustomEntityRenderSummariesByUrlSlugQuery : IQuery<IReadOnlyCollection<CustomEntityRenderSummary>>
 {
     /// <summary>
     /// Returns custom entities filtered on the url slug value. This query
@@ -44,13 +44,13 @@ public class GetCustomEntityRenderSummariesByUrlSlugQuery : IQuery<ICollection<C
     /// Required. The definition code of the custom entity to filter on.
     /// </summary>
     [Required]
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Required. The url slug to find matching custom entities for.
     /// </summary>
     [Required]
-    public string UrlSlug { get; set; }
+    public string UrlSlug { get; set; } = string.Empty;
 
     /// <summary>
     /// Used to determine which version of the custom entities to include data for. This 

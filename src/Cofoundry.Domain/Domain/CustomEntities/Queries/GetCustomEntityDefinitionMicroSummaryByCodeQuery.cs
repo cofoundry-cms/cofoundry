@@ -6,7 +6,7 @@
 /// definition class. This is typically used as part of another domain model or
 /// for querying lists of definitions in the admin panel.
 /// </summary>
-public class GetCustomEntityDefinitionMicroSummaryByCodeQuery : IQuery<CustomEntityDefinitionMicroSummary>
+public class GetCustomEntityDefinitionMicroSummaryByCodeQuery : IQuery<CustomEntityDefinitionMicroSummary?>
 {
     /// <summary>
     /// Query to get a custom entity definition by it's unique 6 character code.
@@ -33,5 +33,5 @@ public class GetCustomEntityDefinitionMicroSummaryByCodeQuery : IQuery<CustomEnt
     /// <summary>
     /// Unique 6 letter code representing the entity.
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 }

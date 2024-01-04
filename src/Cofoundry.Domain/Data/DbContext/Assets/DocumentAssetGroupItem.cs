@@ -4,12 +4,36 @@ namespace Cofoundry.Domain.Data;
 public class DocumentAssetGroupItem : ICreateAuditable
 {
     public int DocumentAssetId { get; set; }
-    public int DocumentAssetGroupId { get; set; }
-    public int Ordering { get; set; }
-    public virtual DocumentAssetGroup DocumentAssetGroup { get; set; }
-    public virtual DocumentAsset DocumentAsset { get; set; }
 
-    public System.DateTime CreateDate { get; set; }
+    private DocumentAsset? _documentAsset;
+    public DocumentAsset DocumentAsset
+    {
+        get => _documentAsset ?? throw NavigationPropertyNotInitializedException.Create<DocumentAssetGroupItem>(nameof(DocumentAsset));
+        set => _documentAsset = value;
+    }
+
+    public int DocumentAssetGroupId { get; set; }
+
+    private DocumentAssetGroup? _documentAssetGroup;
+    public DocumentAssetGroup DocumentAssetGroup
+    {
+        get => _documentAssetGroup ?? throw NavigationPropertyNotInitializedException.Create<DocumentAssetGroupItem>(nameof(DocumentAssetGroup));
+        set => _documentAssetGroup = value;
+    }
+
+    public int Ordering { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime CreateDate { get; set; }
+
+    /// <inheritdoc/>
     public int CreatorId { get; set; }
-    public virtual User Creator { get; set; }
+
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<DocumentAssetGroupItem>(nameof(Creator));
+        set => _creator = value;
+    }
 }

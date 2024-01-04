@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetDocumentAssetRenderDetailsByIdRangeQueryHandler
-    : IQueryHandler<GetDocumentAssetRenderDetailsByIdRangeQuery, IDictionary<int, DocumentAssetRenderDetails>>
-    , IPermissionRestrictedQueryHandler<GetDocumentAssetRenderDetailsByIdRangeQuery, IDictionary<int, DocumentAssetRenderDetails>>
+    : IQueryHandler<GetDocumentAssetRenderDetailsByIdRangeQuery, IReadOnlyDictionary<int, DocumentAssetRenderDetails>>
+    , IPermissionRestrictedQueryHandler<GetDocumentAssetRenderDetailsByIdRangeQuery, IReadOnlyDictionary<int, DocumentAssetRenderDetails>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IDocumentAssetRenderDetailsMapper _documentAssetRenderDetailsMapper;
@@ -18,23 +18,19 @@ public class GetDocumentAssetRenderDetailsByIdRangeQueryHandler
         _documentAssetRenderDetailsMapper = documentAssetRenderDetailsMapper;
     }
 
-    public async Task<IDictionary<int, DocumentAssetRenderDetails>> ExecuteAsync(GetDocumentAssetRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, DocumentAssetRenderDetails>> ExecuteAsync(GetDocumentAssetRenderDetailsByIdRangeQuery query, IExecutionContext executionContext)
     {
-        var dbResults = await QueryDb(query).ToListAsync();
-
-        var mappedResults = dbResults
-            .Select(_documentAssetRenderDetailsMapper.Map)
-            .ToDictionary(d => d.DocumentAssetId);
-
-        return mappedResults;
-    }
-
-    private IQueryable<DocumentAsset> QueryDb(GetDocumentAssetRenderDetailsByIdRangeQuery query)
-    {
-        return _dbContext
+        var dbResults = await _dbContext
             .DocumentAssets
             .AsNoTracking()
-            .FilterByIds(query.DocumentAssetIds);
+            .FilterByIds(query.DocumentAssetIds)
+            .ToArrayAsync();
+
+        var mappedResults = dbResults
+            .Select(d => _documentAssetRenderDetailsMapper.Map(d))
+            .ToImmutableDictionary(d => d.DocumentAssetId);
+
+        return mappedResults;
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetDocumentAssetRenderDetailsByIdRangeQuery query)

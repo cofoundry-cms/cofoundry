@@ -22,7 +22,7 @@ public class InitiateUserAccountRecoveryViaEmailCommand : ICommand, ILoggableCom
     /// is to prevent enumeration attacks.
     /// </summary>
     [Required]
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     /// <summary>
     /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
@@ -30,5 +30,5 @@ public class InitiateUserAccountRecoveryViaEmailCommand : ICommand, ILoggableCom
     /// be registered in multiple user areas.
     /// </summary>
     [Required]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 }

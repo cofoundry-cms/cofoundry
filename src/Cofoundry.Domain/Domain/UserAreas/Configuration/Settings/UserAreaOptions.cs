@@ -10,7 +10,7 @@ public class UserAreaOptions
     /// <summary>
     /// Options used in the default password validation logic.
     /// </summary>
-    public PasswordOptions Password { get; set; }
+    public PasswordOptions Password { get; set; } = new();
 
     /// <summary>
     /// Options to control the formatting and validation of usernames.
@@ -19,42 +19,42 @@ public class UserAreaOptions
     /// <see langword="true"/>, because the format is already validated against
     /// the configured <see cref="EmailAddressOptions"/>.
     /// </summary>
-    public UsernameOptions Username { get; set; }
+    public UsernameOptions Username { get; set; } = new();
 
     /// <summary>
     /// Options to control the formatting and validation of user email 
     /// addresses.
     /// </summary>
-    public EmailAddressOptions EmailAddress { get; set; }
+    public EmailAddressOptions EmailAddress { get; set; } = new();
 
     /// <summary>
     /// Options to control the behavior of any authentication cookies.
     /// </summary>
-    public CookieOptions Cookies { get; set; }
+    public CookieOptions Cookies { get; set; } = new();
 
     /// <summary>
     /// Options to control the behavior of the authentication process and related
     /// security features
     /// </summary>
-    public AuthenticationOptions Authentication { get; set; }
+    public AuthenticationOptions Authentication { get; set; } = new();
 
     /// <summary>
     /// Options to control the behavior of the self-service account recovery feature.
     /// </summary>
-    public AccountRecoveryOptions AccountRecovery { get; set; }
+    public AccountRecoveryOptions AccountRecovery { get; set; } = new();
 
     /// <summary>
     /// Options to control the behavior of the account verification feature.
     /// Note that the Cofoundry admin panel does not support an account 
     /// verification flow and therefore these settings do not apply.
     /// </summary>
-    public AccountVerificationOptions AccountVerification { get; set; }
+    public AccountVerificationOptions AccountVerification { get; set; } = new();
 
     /// <summary>
     /// Options to control the background task that runs to clean up 
     /// stale user data.
     /// </summary>
-    public UserCleanupOptions Cleanup { get; set; }
+    public UserCleanupOptions Cleanup { get; set; } = new();
 
     /// <summary>
     /// Create a new <see cref="UserAreaOptions"/>, copying data from 

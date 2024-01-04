@@ -75,7 +75,7 @@ public class GetPageSummariesByIdRangeQueryHandlerTests
         using var app = _appFactory.Create();
         var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
         var addPageCommand = app.TestData.Pages().CreateAddCommand(uniqueData, directoryId);
-        addPageCommand.Tags.Add(app.SeededEntities.TestTag.TagText);
+        addPageCommand.Tags = [app.SeededEntities.TestTag.TagText];
         addPageCommand.OpenGraphTitle = uniqueData + "OG Title";
         addPageCommand.OpenGraphDescription = uniqueData + "OG desc";
         addPageCommand.OpenGraphImageId = app.SeededEntities.TestImageId;
@@ -100,7 +100,7 @@ public class GetPageSummariesByIdRangeQueryHandlerTests
         using (new AssertionScope())
         {
             pages.Should().NotBeNull();
-            var page = pages.GetOrDefault(pageId);
+            var page = pages.GetValueOrDefault(pageId);
 
             AssertBasicDataMapping(
                 uniqueData,

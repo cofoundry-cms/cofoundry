@@ -21,7 +21,7 @@ public class EntityAccessRuleSet
     /// (OR behavior). However if there are multiple sets in a route, the user will
     /// need to pass all sets (AND behaviour).
     /// </summary>
-    public ICollection<EntityAccessRule> AccessRules { get; set; }
+    public IReadOnlyCollection<EntityAccessRule> AccessRules { get; set; } = Array.Empty<EntityAccessRule>();
 
     /// <summary>
     /// An action to take when a user does not meet the rule criteria.
@@ -35,7 +35,7 @@ public class EntityAccessRuleSet
     /// rules for multiple user area, therefore this field helps to 
     /// distinguish which user area should be used for the redirection.
     /// </summary>
-    public string UserAreaCodeForSignInRedirect { get; set; }
+    public string? UserAreaCodeForSignInRedirect { get; set; }
 
     /// <summary>
     /// Determines if the <paramref name="user"/> is permitted to
@@ -61,7 +61,7 @@ public class EntityAccessRuleSet
         }
 
         // if logged in, the user should always be assigned a user area
-        EntityInvalidOperationException.ThrowIfNull(user, u => u.UserArea);
+        EntityInvalidOperationException.ThrowIfNull(user, user.UserArea);
 
         return AccessRules
             .Any(r => r.UserAreaCode == user.UserArea.UserAreaCode

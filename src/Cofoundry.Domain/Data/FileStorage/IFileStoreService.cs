@@ -19,7 +19,7 @@ public interface IFileStoreService
     /// <param name="containerName">The name of the container to look for the file</param>
     /// <param name="fileName">The name of the file to get</param>
     /// <returns>Stream reference to the file.</returns>
-    Task<Stream> GetAsync(string containerName, string fileName);
+    Task<Stream?> GetAsync(string containerName, string fileName);
 
     /// <summary>
     /// Creates a new file, throwing an exception if a file already exists with the same filename

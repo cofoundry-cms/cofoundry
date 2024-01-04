@@ -19,19 +19,19 @@ public class AdvancedContentRepositoryDocumentAssetByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<DocumentAssetDetails> AsDetails()
+    public IDomainRepositoryQueryContext<DocumentAssetDetails?> AsDetails()
     {
         var query = new GetDocumentAssetDetailsByIdQuery(_documentAssetId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<DocumentAssetFile> AsFile()
+    public IDomainRepositoryQueryContext<DocumentAssetFile?> AsFile()
     {
         var query = new GetDocumentAssetFileByIdQuery(_documentAssetId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<DocumentAssetRenderDetails> AsRenderDetails()
+    public IDomainRepositoryQueryContext<DocumentAssetRenderDetails?> AsRenderDetails()
     {
         var query = new GetDocumentAssetRenderDetailsByIdQuery(_documentAssetId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

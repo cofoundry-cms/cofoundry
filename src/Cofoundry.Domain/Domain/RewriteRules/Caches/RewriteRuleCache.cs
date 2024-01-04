@@ -3,8 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Cache for rewrite rules, which are frequently requested to 
-/// work out routing
+/// Default implementation of <see cref="IRewriteRuleCache"/>.
 /// </summary>
 public class RewriteRuleCache : IRewriteRuleCache
 {
@@ -17,29 +16,20 @@ public class RewriteRuleCache : IRewriteRuleCache
         _cache = cacheFactory.Get(CACHEKEY);
     }
 
-    /// <summary>
-    /// Gets a collection of rewrite rules, if the collection is already cached it 
-    /// is returned, otherwise the getter is invoked and the result is cached and returned
-    /// </summary>
-    /// <param name="getter">Function to invoke if the rewrite rules are not in the cache</param>
-    public ICollection<RewriteRuleSummary> GetOrAdd(Func<ICollection<RewriteRuleSummary>> getter)
+    /// <inheritdoc/>
+    public async Task<IReadOnlyCollection<RewriteRuleSummary>> GetOrAddAsync(Func<Task<IReadOnlyCollection<RewriteRuleSummary>>> getter)
     {
-        return _cache.GetOrAdd(REWRITERULESUMMARY_CACHEKEY, getter);
+        var result = await _cache.GetOrAddAsync(REWRITERULESUMMARY_CACHEKEY, getter);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Result of {nameof(_cache.GetOrAddAsync)} with key {REWRITERULESUMMARY_CACHEKEY} should never be null.");
+        }
+
+        return result;
     }
 
-    /// <summary>
-    /// Gets a collection of rewrite rules, if the collection is already cached it 
-    /// is returned, otherwise the getter is invoked and the result is cached and returned
-    /// </summary>
-    /// <param name="getter">Function to invoke if the rewrite rules are not in the cache</param>
-    public async Task<ICollection<RewriteRuleSummary>> GetOrAddAsync(Func<Task<ICollection<RewriteRuleSummary>>> getter)
-    {
-        return await _cache.GetOrAddAsync(REWRITERULESUMMARY_CACHEKEY, getter);
-    }
-
-    /// <summary>
-    /// Clears all items in the rewrite rules cache
-    /// </summary>
+    /// <inheritdoc/>
     public void Clear()
     {
         _cache.Clear();

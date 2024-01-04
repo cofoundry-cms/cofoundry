@@ -21,7 +21,7 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
     /// </summary>
     /// <param name="imageAssetId">Id of the image asset to get the url for</param>
     /// <param name="settings">Optional resizing settings for the image</param>
-    public async Task<string> ImageAssetAsync(int? imageAssetId, IImageResizeSettings settings = null)
+    public async Task<string> ImageAssetAsync(int? imageAssetId, IImageResizeSettings? settings = null)
     {
         if (!imageAssetId.HasValue) return string.Empty;
 
@@ -57,7 +57,7 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
     /// </summary>
     /// <param name="asset">asset to get the url for</param>
     /// <param name="settings">Optional resizing settings for the image</param>
-    public string ImageAsset(IImageAssetRenderable asset, IImageResizeSettings settings = null)
+    public string ImageAsset(IImageAssetRenderable? asset, IImageResizeSettings? settings = null)
     {
         if (asset == null) return string.Empty;
         SetDefaultCrop(asset, settings);
@@ -71,7 +71,7 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
     /// <param name="asset">asset to get the url for</param>
     /// <param name="width">width to resize the image to</param>
     /// <param name="height">height to resize the image to</param>
-    public string ImageAsset(IImageAssetRenderable asset, int? width, int? height = null)
+    public string ImageAsset(IImageAssetRenderable? asset, int? width, int? height = null)
     {
         if (asset == null) return string.Empty;
         var settings = GetResizeSettings(asset, width, height);
@@ -98,7 +98,7 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
         return settings;
     }
 
-    private static string GetUrl(IImageAssetRenderable asset, IImageResizeSettings settings = null)
+    private static string GetUrl(IImageAssetRenderable asset, IImageResizeSettings? settings = null)
     {
         var fileName = Path.ChangeExtension(SlugFormatter.ToSlug(asset.FileName), asset.FileExtension);
         var pathPart = asset.ImageAssetId + "-" + asset.FileStamp + "-" + asset.VerificationToken;
@@ -112,7 +112,7 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
         return url;
     }
 
-    private static void SetDefaultCrop(IImageAssetRenderable asset, IImageResizeSettings settings)
+    private static void SetDefaultCrop(IImageAssetRenderable asset, IImageResizeSettings? settings)
     {
         if (settings == null) return;
 

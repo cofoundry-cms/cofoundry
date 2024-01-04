@@ -10,5 +10,5 @@ public class DocumentAssetFileType
     /// The file system file extension without the
     /// leading dot.
     /// </summary>
-    public string FileExtension { get; set; }
+    public string FileExtension { get; set; } = string.Empty;
 }

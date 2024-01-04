@@ -15,5 +15,5 @@ public interface IEntityAccessRuleSummary
     /// Optionally the rule can be restricted to a specific role
     /// within the specified user area.
     /// </summary>
-    public RoleMicroSummary Role { get; set; }
+    public RoleMicroSummary? Role { get; set; }
 }

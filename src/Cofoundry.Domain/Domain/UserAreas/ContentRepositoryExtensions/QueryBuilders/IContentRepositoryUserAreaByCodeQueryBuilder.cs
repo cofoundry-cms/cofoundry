@@ -9,5 +9,5 @@ public interface IContentRepositoryUserAreaByCodeQueryBuilder
     /// The <see cref="UserMicroSummary"/> is a minimal projection of user data 
     /// that is quick to load.
     /// </summary>
-    IDomainRepositoryQueryContext<UserAreaMicroSummary> AsMicroSummary();
+    IDomainRepositoryQueryContext<UserAreaMicroSummary?> AsMicroSummary();
 }

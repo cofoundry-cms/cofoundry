@@ -1,8 +1,8 @@
 ﻿namespace Cofoundry.Domain.CQS;
 
 /// <summary>
-/// An exception for when a Handler cann not be found for an IQuery or ICommand. Typically
-/// this means a problem with handler registration.
+/// An exception for when a handler cannot be found for an <see cref="IQuery"/> 
+/// or <see cref="ICommand"/>. Typically this means a problem with handler registration.
 /// </summary>
 public class MissingHandlerMappingException : Exception
 {

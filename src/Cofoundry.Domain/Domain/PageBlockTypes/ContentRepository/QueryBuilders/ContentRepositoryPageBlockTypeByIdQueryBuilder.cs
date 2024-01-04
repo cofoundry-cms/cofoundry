@@ -19,13 +19,13 @@ public class ContentRepositoryPageBlockTypeByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<PageBlockTypeSummary> AsSummary()
+    public IDomainRepositoryQueryContext<PageBlockTypeSummary?> AsSummary()
     {
         var query = new GetPageBlockTypeSummaryByIdQuery(_pageBlockTypeId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageBlockTypeDetails> AsDetails()
+    public IDomainRepositoryQueryContext<PageBlockTypeDetails?> AsDetails()
     {
         var query = new GetPageBlockTypeDetailsByIdQuery(_pageBlockTypeId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

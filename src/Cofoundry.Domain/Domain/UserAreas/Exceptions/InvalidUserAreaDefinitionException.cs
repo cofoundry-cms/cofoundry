@@ -17,21 +17,24 @@ public class InvalidUserAreaDefinitionException : Exception
     public InvalidUserAreaDefinitionException(
         string message,
         IUserAreaDefinition invalidDefinition,
-        IEnumerable<IUserAreaDefinition> allDefinitions = null
+        IEnumerable<IUserAreaDefinition>? allDefinitions = null
         )
         : base(message)
     {
         InvalidDefinition = invalidDefinition;
-        AllDefinitions = allDefinitions?.ToArray();
+        if (allDefinitions != null)
+        {
+            AllDefinitions = allDefinitions.ToArray();
+        }
     }
 
     /// <summary>
     /// The user area definition that caused the exception.
     /// </summary>
-    public IUserAreaDefinition InvalidDefinition { get; private set; }
+    public IUserAreaDefinition? InvalidDefinition { get; private set; }
 
     /// <summary>
     /// Optional collection of all the user area definitions when available.
     /// </summary>
-    public IReadOnlyCollection<IUserAreaDefinition> AllDefinitions { get; private set; }
+    public IReadOnlyCollection<IUserAreaDefinition> AllDefinitions { get; private set; } = Array.Empty<IUserAreaDefinition>();
 }

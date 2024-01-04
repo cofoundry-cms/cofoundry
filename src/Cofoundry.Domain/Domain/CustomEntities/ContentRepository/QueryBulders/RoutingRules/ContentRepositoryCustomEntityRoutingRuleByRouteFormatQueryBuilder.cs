@@ -19,7 +19,7 @@ public class ContentRepositoryCustomEntityRoutingRuleByRouteFormatQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICustomEntityRoutingRule> AsRoutingRule()
+    public IDomainRepositoryQueryContext<ICustomEntityRoutingRule?> AsRoutingRule()
     {
         var query = new GetCustomEntityRoutingRuleByRouteFormatQuery(_routeFormat);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

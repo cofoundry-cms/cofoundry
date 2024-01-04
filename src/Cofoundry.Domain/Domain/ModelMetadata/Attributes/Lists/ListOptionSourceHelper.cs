@@ -13,7 +13,7 @@ public static class ListOptionSourceMetadataHelper
     {
         ArgumentNullException.ThrowIfNull(optionSourceType);
 
-        ICollection<ListOption> options = null;
+        IReadOnlyCollection<ListOption>? options = null;
 
         if (optionSourceType.IsEnum)
         {

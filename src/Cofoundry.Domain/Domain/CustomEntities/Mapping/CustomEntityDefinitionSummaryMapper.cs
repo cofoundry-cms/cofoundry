@@ -23,11 +23,10 @@ public class CustomEntityDefinitionSummaryMapper : ICustomEntityDefinitionSummar
             AutoGenerateUrlSlug = codeDefinition.AutoGenerateUrlSlug,
             AutoPublish = codeDefinition.AutoPublish,
             HasLocale = codeDefinition.HasLocale,
-            Ordering = CustomEntityOrdering.None
+            Ordering = CustomEntityOrdering.None,
+            DataModelType = codeDefinition.GetDataModelType(),
+            Terms = codeDefinition.GetTerms()
         };
-
-        result.DataModelType = codeDefinition.GetDataModelType();
-        result.Terms = codeDefinition.GetTerms();
 
         if (codeDefinition is IOrderableCustomEntityDefinition orderableDefinition)
         {

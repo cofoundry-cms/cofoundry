@@ -38,9 +38,13 @@ public static class IPermissionSetBuilderImageAssetExtensions
         return Run(builder, configure, false);
     }
 
-    private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<ImageAssetPermissionBuilder> configure, bool isIncludeOperation)
+    private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<ImageAssetPermissionBuilder>? configure, bool isIncludeOperation)
     {
-        if (configure == null) configure = c => c.All();
+        if (configure == null)
+        {
+            configure = c => c.All();
+        }
+
         var entityBuilder = new ImageAssetPermissionBuilder(builder, isIncludeOperation);
         configure(entityBuilder);
 

@@ -30,12 +30,12 @@ public class ContentRouteLibrary : IContentRouteLibrary
         return _pageRouteLibrary.PageAsync(pageId);
     }
 
-    public string Page(IPageRoute route)
+    public string Page(IPageRoute? route)
     {
         return _pageRouteLibrary.Page(route);
     }
 
-    public string Page(ICustomEntityRoutable customEntity)
+    public string Page(ICustomEntityRoutable? customEntity)
     {
         return _pageRouteLibrary.Page(customEntity);
     }
@@ -44,7 +44,7 @@ public class ContentRouteLibrary : IContentRouteLibrary
 
     #region images
 
-    public Task<string> ImageAssetAsync(int? imageAssetId, IImageResizeSettings settings = null)
+    public Task<string> ImageAssetAsync(int? imageAssetId, IImageResizeSettings? settings = null)
     {
         return _imageAssetRouteLibrary.ImageAssetAsync(imageAssetId, settings);
     }
@@ -54,12 +54,12 @@ public class ContentRouteLibrary : IContentRouteLibrary
         return _imageAssetRouteLibrary.ImageAssetAsync(imageAssetId, width, height);
     }
 
-    public string ImageAsset(IImageAssetRenderable image, IImageResizeSettings settings = null)
+    public string ImageAsset(IImageAssetRenderable? image, IImageResizeSettings? settings = null)
     {
         return _imageAssetRouteLibrary.ImageAsset(image, settings);
     }
 
-    public string ImageAsset(IImageAssetRenderable image, int? width, int? height = null)
+    public string ImageAsset(IImageAssetRenderable? image, int? width, int? height = null)
     {
         return _imageAssetRouteLibrary.ImageAsset(image, width, height);
     }
@@ -73,7 +73,7 @@ public class ContentRouteLibrary : IContentRouteLibrary
         return _documentAssetRouteLibrary.DocumentAssetAsync(documentAssetId);
     }
 
-    public string DocumentAsset(IDocumentAssetRenderable asset)
+    public string DocumentAsset(IDocumentAssetRenderable? asset)
     {
         return _documentAssetRouteLibrary.DocumentAsset(asset);
     }
@@ -83,14 +83,14 @@ public class ContentRouteLibrary : IContentRouteLibrary
         return _documentAssetRouteLibrary.DocumentAssetDownloadAsync(documentAssetId);
     }
 
-    public string DocumentAssetDownload(IDocumentAssetRenderable asset)
+    public string DocumentAssetDownload(IDocumentAssetRenderable? asset)
     {
         return _documentAssetRouteLibrary.DocumentAssetDownload(asset);
     }
 
     #endregion
 
-    public string ToAbsolute(string url)
+    public string? ToAbsolute(string? url)
     {
         if (string.IsNullOrWhiteSpace(url)) return url;
 

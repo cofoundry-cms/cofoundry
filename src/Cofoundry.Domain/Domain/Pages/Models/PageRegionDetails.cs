@@ -19,10 +19,10 @@ public class PageRegionDetails
     /// 'Main Content'. Region names are unique (non-case sensitive) for the 
     /// template they belong to.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Ordered data for the all the blocks in this region.
     /// </summary>
-    public ICollection<PageVersionBlockDetails> Blocks { get; set; }
+    public IReadOnlyCollection<PageVersionBlockDetails> Blocks { get; set; } = Array.Empty<PageVersionBlockDetails>();
 }

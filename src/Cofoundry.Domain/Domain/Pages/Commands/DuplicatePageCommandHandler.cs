@@ -9,18 +9,21 @@ public class DuplicatePageCommandHandler
     , IPermissionRestrictedCommandHandler<DuplicatePageCommand>
 {
     private readonly ICommandExecutor _commandExecutor;
+    private readonly IPermissionValidationService _permissionValidationService;
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageStoredProcedures _pageStoredProcedures;
     private readonly ITransactionScopeManager _transactionScopeFactory;
 
     public DuplicatePageCommandHandler(
         ICommandExecutor commandExecutor,
+        IPermissionValidationService permissionValidationService,
         CofoundryDbContext dbContext,
         IPageStoredProcedures pageStoredProcedures,
         ITransactionScopeManager transactionScopeFactory
         )
     {
         _commandExecutor = commandExecutor;
+        _permissionValidationService = permissionValidationService;
         _dbContext = dbContext;
         _pageStoredProcedures = pageStoredProcedures;
         _transactionScopeFactory = transactionScopeFactory;
@@ -28,6 +31,7 @@ public class DuplicatePageCommandHandler
 
     public async Task ExecuteAsync(DuplicatePageCommand command, IExecutionContext executionContext)
     {
+        var user = _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
         var pageToDuplicate = await GetPageToDuplicateAsync(command);
         var addPageCommand = MapCommand(command, pageToDuplicate);
 
@@ -39,7 +43,8 @@ public class DuplicatePageCommandHandler
                 addPageCommand.OutputPageId,
                 pageToDuplicate.Version.PageVersionId,
                 executionContext.ExecutionDate,
-                executionContext.UserContext.UserId.Value);
+                user.UserId
+                );
 
             await scope.CompleteAsync();
         }
@@ -50,14 +55,14 @@ public class DuplicatePageCommandHandler
 
     private class PageQuery
     {
-        public int PageTypeId { get; set; }
-        public PageVersion Version { get; set; }
-        public ICollection<string> Tags { get; set; }
+        public required int PageTypeId { get; set; }
+        public required PageVersion Version { get; set; }
+        public required IReadOnlyCollection<string> Tags { get; set; }
     }
 
-    private Task<PageQuery> GetPageToDuplicateAsync(DuplicatePageCommand command)
+    private async Task<PageQuery> GetPageToDuplicateAsync(DuplicatePageCommand command)
     {
-        return _dbContext
+        var dbResult = await _dbContext
             .PageVersions
             .AsNoTracking()
             .FilterActive()
@@ -74,28 +79,31 @@ public class DuplicatePageCommandHandler
                     .ToList()
             })
             .FirstOrDefaultAsync();
+
+        EntityNotFoundException.ThrowIfNull(dbResult, command.PageToDuplicateId);
+
+        return dbResult;
+
     }
 
-    private AddPageCommand MapCommand(DuplicatePageCommand command, PageQuery toDup)
+    private static AddPageCommand MapCommand(DuplicatePageCommand command, PageQuery toDup)
     {
-        EntityNotFoundException.ThrowIfNull(toDup, command.PageToDuplicateId);
-
-        var addPageCommand = new AddPageCommand();
-        addPageCommand.ShowInSiteMap = !toDup.Version.ExcludeFromSitemap;
-        addPageCommand.PageTemplateId = toDup.Version.PageTemplateId;
-        addPageCommand.MetaDescription = toDup.Version.MetaDescription;
-        addPageCommand.OpenGraphDescription = toDup.Version.OpenGraphDescription;
-        addPageCommand.OpenGraphImageId = toDup.Version.OpenGraphImageId;
-        addPageCommand.OpenGraphTitle = toDup.Version.OpenGraphTitle;
-        addPageCommand.PageType = (PageType)toDup.PageTypeId;
-
-        addPageCommand.Title = command.Title;
-        addPageCommand.LocaleId = command.LocaleId;
-        addPageCommand.UrlPath = command.UrlPath;
-        addPageCommand.CustomEntityRoutingRule = command.CustomEntityRoutingRule;
-        addPageCommand.PageDirectoryId = command.PageDirectoryId;
-
-        addPageCommand.Tags = toDup.Tags.ToArray();
+        var addPageCommand = new AddPageCommand
+        {
+            ShowInSiteMap = !toDup.Version.ExcludeFromSitemap,
+            PageTemplateId = toDup.Version.PageTemplateId,
+            MetaDescription = toDup.Version.MetaDescription,
+            OpenGraphDescription = toDup.Version.OpenGraphDescription,
+            OpenGraphImageId = toDup.Version.OpenGraphImageId,
+            OpenGraphTitle = toDup.Version.OpenGraphTitle,
+            PageType = (PageType)toDup.PageTypeId,
+            Title = command.Title,
+            LocaleId = command.LocaleId,
+            UrlPath = command.UrlPath,
+            CustomEntityRoutingRule = command.CustomEntityRoutingRule,
+            PageDirectoryId = command.PageDirectoryId,
+            Tags = toDup.Tags
+        };
 
         return addPageCommand;
     }

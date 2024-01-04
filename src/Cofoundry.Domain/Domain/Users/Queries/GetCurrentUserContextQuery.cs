@@ -23,5 +23,5 @@ public class GetCurrentUserContextQuery : IQuery<IUserContext>
     /// e.g. via an AuthorizeUserAreaAttribute.
     /// </summary>
     [StringLength(3)]
-    public string UserAreaCode { get; set; }
+    public string? UserAreaCode { get; set; }
 }

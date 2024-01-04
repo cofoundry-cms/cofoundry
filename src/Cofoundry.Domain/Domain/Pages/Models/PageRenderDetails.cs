@@ -20,10 +20,10 @@ public class PageRenderDetails : PageRenderSummary
     /// <summary>
     /// The template used to render this page.
     /// </summary>
-    public PageTemplateMicroSummary Template { get; set; }
+    public PageTemplateMicroSummary? Template { get; set; }
 
     /// <summary>
     /// Content-editable page region and block data for rendering out to the template.
     /// </summary>
-    public ICollection<PageRegionRenderDetails> Regions { get; set; }
+    public IReadOnlyCollection<PageRegionRenderDetails> Regions { get; set; } = Array.Empty<PageRegionRenderDetails>();
 }

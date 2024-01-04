@@ -24,7 +24,7 @@ public class ImageAttribute : RegularExpressionAttribute, IMetadataAttribute, IE
     /// I.e. you can specify dimensions and tags for filtering the list of images.
     /// </summary>
     /// <param name="tags">An array of tags for which to filter when browsing for this image</param>
-    public ImageAttribute(params string[] tags)
+    public ImageAttribute(params string[]? tags)
         : base(@"^[1-9]\d*$")
     {
         ErrorMessage = "The {0} field is required";
@@ -108,5 +108,5 @@ public class ImageAttribute : RegularExpressionAttribute, IMetadataAttribute, IE
     /// Filters the image selection to only show images with tags that 
     /// match this value.
     /// </summary>
-    public string[] Tags { get; set; }
+    public string[]? Tags { get; set; }
 }

@@ -33,7 +33,7 @@ public class GetPageEntityMicroSummariesByIdRangeQueryHandlerTests
             pageLookup.Should().NotBeNull();
             pageLookup.Count.Should().Be(2);
 
-            var page1 = pageLookup.GetOrDefault(page1Id);
+            var page1 = pageLookup.GetValueOrDefault(page1Id);
             page1.Should().NotBeNull();
             page1.EntityDefinitionCode.Should().Be(PageEntityDefinition.DefinitionCode);
             page1.EntityDefinitionName.Should().Be(new PageEntityDefinition().Name);
@@ -41,7 +41,7 @@ public class GetPageEntityMicroSummariesByIdRangeQueryHandlerTests
             page1.RootEntityId.Should().Be(page1Id);
             page1.RootEntityTitle.Should().Be(uniqueData + "1");
 
-            var page2 = pageLookup.GetOrDefault(page2Id);
+            var page2 = pageLookup.GetValueOrDefault(page2Id);
             page2.Should().NotBeNull();
         }
     }

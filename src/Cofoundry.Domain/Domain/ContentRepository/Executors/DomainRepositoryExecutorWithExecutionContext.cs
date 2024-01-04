@@ -21,12 +21,12 @@ public class DomainRepositoryExecutorWithExecutionContext : IDomainRepositoryExe
         _executionContextOverride = executionContext;
     }
 
-    public async Task ExecuteAsync(ICommand command, IExecutionContext executionContext)
+    public async Task ExecuteAsync(ICommand command, IExecutionContext? executionContext)
     {
         await _innerDomainRepositoryExecutor.ExecuteAsync(command, _executionContextOverride);
     }
 
-    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext)
+    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext? executionContext)
     {
         return await _innerDomainRepositoryExecutor.ExecuteAsync(query, _executionContextOverride);
     }

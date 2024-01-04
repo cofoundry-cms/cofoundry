@@ -19,7 +19,7 @@ public class ContentRepositoryImageAssetByIdRangeQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<IDictionary<int, ImageAssetRenderDetails>> AsRenderDetails()
+    public IDomainRepositoryQueryContext<IReadOnlyDictionary<int, ImageAssetRenderDetails>> AsRenderDetails()
     {
         var query = new GetImageAssetRenderDetailsByIdRangeQuery(_imageAssetIds);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

@@ -32,10 +32,13 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
 
         var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
-            PageDirectoryId = directoryId
+            PageDirectoryId = directoryId,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode
+                }]
         };
-
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode);
 
         await contentRepository
             .PageDirectories()
@@ -74,10 +77,14 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
 
         var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
-            PageDirectoryId = directoryId
+            PageDirectoryId = directoryId,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode,
+                    RoleId = app.SeededEntities.TestUserArea2.RoleA.RoleId
+                }]
         };
-
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleA.RoleId);
 
         await contentRepository
             .PageDirectories()
@@ -115,10 +122,14 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
             PageDirectoryId = directoryId,
-            ViolationAction = action
+            ViolationAction = action,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode,
+                    RoleId = app.SeededEntities.TestUserArea2.RoleA.RoleId
+                }]
         };
-
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleA.RoleId);
 
         await contentRepository
             .PageDirectories()
@@ -151,9 +162,13 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
             PageDirectoryId = directoryId,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode,
+                    RoleId = app.SeededEntities.TestUserArea1.RoleA.RoleId
+                }]
         };
-
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea1.RoleA.RoleId);
 
         await contentRepository
             .Awaiting(r => r.PageDirectories().AccessRules().UpdateAsync(command))
@@ -178,11 +193,18 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         {
             PageDirectoryId = directoryId,
             UserAreaCodeForSignInRedirect = userArea.UserAreaCode,
-            ViolationAction = AccessRuleViolationAction.NotFound
+            ViolationAction = AccessRuleViolationAction.NotFound,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = userArea.UserAreaCode
+                },
+                new()
+                {
+                    UserAreaCode = userArea.UserAreaCode,
+                    RoleId = userArea.RoleA.RoleId
+                }]
         };
-
-        command.AccessRules.AddNew(userArea.UserAreaCode);
-        command.AccessRules.AddNew(userArea.UserAreaCode, userArea.RoleA.RoleId);
 
         await contentRepository
             .PageDirectories()
@@ -229,10 +251,13 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
             PageDirectoryId = directoryId,
-            UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea1.UserAreaCode
+            UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea1.UserAreaCode,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode
+                }]
         };
-
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode);
 
         await contentRepository
             .PageDirectories()
@@ -285,10 +310,14 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
             PageDirectoryId = directoryId,
-            UserAreaCodeForSignInRedirect = userArea1.UserAreaCode
+            UserAreaCodeForSignInRedirect = userArea1.UserAreaCode,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode,
+                    RoleId = app.SeededEntities.TestUserArea1.RoleA.RoleId
+                }]
         };
-
-        command.AccessRules.AddNew(userArea1.UserAreaCode, userArea1.RoleA.RoleId);
 
         await contentRepository
             .PageDirectories()
@@ -339,10 +368,14 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
 
         var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
-            PageDirectoryId = directoryId
+            PageDirectoryId = directoryId,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode,
+                    RoleId = app.SeededEntities.TestUserArea1.RoleA.RoleId
+                }]
         };
-
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleA.RoleId);
 
         await contentRepository
             .PageDirectories()
@@ -391,10 +424,13 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
             PageDirectoryId = directoryId,
-            ViolationAction = AccessRuleViolationAction.Error
+            ViolationAction = AccessRuleViolationAction.Error,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode
+                }]
         };
-
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode);
 
         await contentRepository
             .PageDirectories()
@@ -438,11 +474,18 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
 
         var command = new UpdatePageDirectoryAccessRuleSetCommand()
         {
-            PageDirectoryId = directoryId
+            PageDirectoryId = directoryId,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode,
+                    RoleId = app.SeededEntities.TestUserArea1.RoleA.RoleId
+                },
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode
+                }]
         };
-
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleA.RoleId);
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode);
 
         await contentRepository
             .PageDirectories()
@@ -451,7 +494,10 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
         var accessRuleCommand = updateCommand.AccessRules.Single(r => r.RoleId == app.SeededEntities.TestUserArea1.RoleA.RoleId);
-        updateCommand.AccessRules.Remove(accessRuleCommand);
+        updateCommand.AccessRules = updateCommand
+            .AccessRules
+            .Except([accessRuleCommand])
+            .ToArray();
 
         await contentRepository
             .PageDirectories()
@@ -488,11 +534,18 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         {
             PageDirectoryId = directoryId,
             UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea1.UserAreaCode,
-            ViolationAction = AccessRuleViolationAction.NotFound
+            ViolationAction = AccessRuleViolationAction.NotFound,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode,
+                    RoleId = app.SeededEntities.TestUserArea1.RoleA.RoleId
+                },
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode
+                }]
         };
-
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea1.UserAreaCode, app.SeededEntities.TestUserArea1.RoleA.RoleId);
-        command.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode);
 
         await contentRepository
             .PageDirectories()
@@ -504,10 +557,19 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         updateCommand.ViolationAction = AccessRuleViolationAction.Error;
 
         var ruleToRemove = updateCommand.AccessRules.Single(r => r.UserAreaCode == app.SeededEntities.TestUserArea2.UserAreaCode);
-        updateCommand.AccessRules.Remove(ruleToRemove);
+        var accessRules = updateCommand
+            .AccessRules
+            .Except([ruleToRemove])
+            .ToList();
         var ruleToUpdate = updateCommand.AccessRules.Single(r => r.RoleId == app.SeededEntities.TestUserArea1.RoleA.RoleId);
         ruleToUpdate.RoleId = null;
-        updateCommand.AccessRules.AddNew(app.SeededEntities.TestUserArea2.UserAreaCode, app.SeededEntities.TestUserArea2.RoleA.RoleId);
+        accessRules.Add(new()
+        {
+            UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode,
+            RoleId = app.SeededEntities.TestUserArea2.RoleA.RoleId
+        });
+
+        updateCommand.AccessRules = accessRules;
 
         await contentRepository
             .PageDirectories()

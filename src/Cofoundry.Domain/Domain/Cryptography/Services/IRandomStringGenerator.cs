@@ -52,5 +52,5 @@ public interface IRandomStringGenerator
     /// slightly less often in general. Passing null or an empty string prevents the 
     /// filter from being run.
     /// </param>
-    string Generate(int length, string allowedCharacters, string untrustworthyCharacters);
+    string Generate(int length, string allowedCharacters, string? untrustworthyCharacters);
 }

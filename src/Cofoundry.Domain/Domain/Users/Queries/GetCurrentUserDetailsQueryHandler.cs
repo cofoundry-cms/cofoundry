@@ -8,7 +8,7 @@
 /// the flow of the request e.g. via an AuthorizeUserAreaAttribute.
 /// </summary>
 public class GetCurrentUserDetailsQueryHandler
-    : IQueryHandler<GetCurrentUserDetailsQuery, UserDetails>
+    : IQueryHandler<GetCurrentUserDetailsQuery, UserDetails?>
     , IIgnorePermissionCheckHandler
 {
     private readonly IDomainRepository _domainRepository;
@@ -23,7 +23,7 @@ public class GetCurrentUserDetailsQueryHandler
         _userContextService = userContextService;
     }
 
-    public async Task<UserDetails> ExecuteAsync(GetCurrentUserDetailsQuery query, IExecutionContext executionContext)
+    public async Task<UserDetails?> ExecuteAsync(GetCurrentUserDetailsQuery query, IExecutionContext executionContext)
     {
         var userId = executionContext.UserContext.UserId;
         if (!userId.HasValue) return null;

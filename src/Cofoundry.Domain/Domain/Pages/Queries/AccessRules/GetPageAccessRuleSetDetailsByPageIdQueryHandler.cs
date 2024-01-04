@@ -9,8 +9,8 @@ namespace Cofoundry.Domain;
 /// inherited from parent directories.
 /// </summary>
 public class GetPageAccessRuleSetDetailsByPageIdQueryHandler
-    : IQueryHandler<GetPageAccessRuleSetDetailsByPageIdQuery, PageAccessRuleSetDetails>
-    , IPermissionRestrictedQueryHandler<GetPageAccessRuleSetDetailsByPageIdQuery, PageAccessRuleSetDetails>
+    : IQueryHandler<GetPageAccessRuleSetDetailsByPageIdQuery, PageAccessRuleSetDetails?>
+    , IPermissionRestrictedQueryHandler<GetPageAccessRuleSetDetailsByPageIdQuery, PageAccessRuleSetDetails?>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IEntityAccessRuleSetDetailsMapper _entityAccessDetailsMapper;
@@ -27,7 +27,7 @@ public class GetPageAccessRuleSetDetailsByPageIdQueryHandler
         _pageDirectoryMicroSummaryMapper = pageDirectoryMicroSummaryMapper;
     }
 
-    public async Task<PageAccessRuleSetDetails> ExecuteAsync(GetPageAccessRuleSetDetailsByPageIdQuery query, IExecutionContext executionContext)
+    public async Task<PageAccessRuleSetDetails?> ExecuteAsync(GetPageAccessRuleSetDetailsByPageIdQuery query, IExecutionContext executionContext)
     {
         var dbPage = await _dbContext
             .Pages
@@ -37,7 +37,10 @@ public class GetPageAccessRuleSetDetailsByPageIdQueryHandler
             .FilterById(query.PageId)
             .SingleOrDefaultAsync();
 
-        if (dbPage == null) return null;
+        if (dbPage == null)
+        {
+            return null;
+        }
 
         var result = new PageAccessRuleSetDetails();
         await _entityAccessDetailsMapper.MapAsync(dbPage, result, executionContext, (dbRule, rule) =>
@@ -64,9 +67,9 @@ public class GetPageAccessRuleSetDetailsByPageIdQueryHandler
             .FilterByDescendantId(dbPage.PageDirectoryId)
             .Where(d => d.DescendantPageDirectoryId == dbPage.PageDirectoryId && d.AncestorPageDirectory.AccessRules.Any())
             .OrderByDescending(d => d.Distance)
-            .ToListAsync();
+            .ToArrayAsync();
 
-        result.InheritedAccessRules = new List<InheritedPageDirectoryAccessDetails>();
+        var inheritedAccessRules = new List<InheritedPageDirectoryAccessDetails>();
 
         foreach (var dbInheritedRule in dbInheritedRules)
         {
@@ -78,8 +81,10 @@ public class GetPageAccessRuleSetDetailsByPageIdQueryHandler
                 rule.PageDirectoryAccessRuleId = dbRule.PageDirectoryAccessRuleId;
             });
 
-            result.InheritedAccessRules.Add(inheritedDirectory);
+            inheritedAccessRules.Add(inheritedDirectory);
         }
+
+        result.InheritedAccessRules = inheritedAccessRules;
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetPageAccessRuleSetDetailsByPageIdQuery query)

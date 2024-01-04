@@ -18,5 +18,5 @@ public class EnsureEntityDefinitionExistsCommand : ICommand
 
     [Required]
     [MaxLength(6)]
-    public string EntityDefinitionCode { get; set; }
+    public string EntityDefinitionCode { get; set; } = string.Empty;
 }

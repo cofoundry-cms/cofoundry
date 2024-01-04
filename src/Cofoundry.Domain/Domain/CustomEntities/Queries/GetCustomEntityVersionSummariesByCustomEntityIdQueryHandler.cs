@@ -18,7 +18,6 @@ public class GetCustomEntityVersionSummariesByCustomEntityIdQueryHandler
 
     public GetCustomEntityVersionSummariesByCustomEntityIdQueryHandler(
         CofoundryDbContext dbContext,
-        IQueryExecutor queryExecutor,
         IPermissionValidationService permissionValidationService,
         ICustomEntityVersionSummaryMapper customEntityVersionSummaryMapper
         )
@@ -37,25 +36,29 @@ public class GetCustomEntityVersionSummariesByCustomEntityIdQueryHandler
             .Select(c => c.CustomEntityDefinitionCode)
             .FirstOrDefaultAsync();
 
-        if (definitionCode == null) return null;
+        if (definitionCode == null)
+        {
+            return PagedQueryResult<CustomEntityVersionSummary>.Empty(query);
+        }
 
         _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(definitionCode, executionContext.UserContext);
 
-        var dbVersions = await Query(query.CustomEntityId).ToPagedResultAsync(query);
+        var dbVersions = await QueryVersionsAsync(query);
         var versions = _customEntityVersionSummaryMapper.MapVersions(query.CustomEntityId, dbVersions);
 
         return versions;
     }
 
-    private IQueryable<CustomEntityVersion> Query(int id)
+    private async Task<PagedQueryResult<CustomEntityVersion>> QueryVersionsAsync(GetCustomEntityVersionSummariesByCustomEntityIdQuery query)
     {
-        return _dbContext
+        return await _dbContext
             .CustomEntityVersions
             .AsNoTracking()
             .Include(e => e.Creator)
             .FilterActive()
-            .FilterByCustomEntityId(id)
+            .FilterByCustomEntityId(query.CustomEntityId)
             .OrderByDescending(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
-            .ThenByDescending(v => v.CreateDate);
+            .ThenByDescending(v => v.CreateDate)
+            .ToPagedResultAsync(query);
     }
 }

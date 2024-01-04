@@ -46,8 +46,8 @@ public class UpdateAccessRuleSetCommandHelper : IUpdateAccessRuleSetCommandHelpe
         )
     {
         var roleIds = accessRules
-            .Where(r => r.RoleId.HasValue)
-            .Select(r => (int)r.RoleId)
+            .Select(r => r.RoleId)
+            .WhereNotNull()
             .Distinct()
             .ToArray();
 
@@ -104,6 +104,8 @@ public class UpdateAccessRuleSetCommandHelper : IUpdateAccessRuleSetCommandHelpe
         foreach (var updateRuleCommand in accessRules.Where(r => r.GetId().HasValue))
         {
             var id = updateRuleCommand.GetId();
+            EntityInvalidOperationException.ThrowIfNull(updateRuleCommand, id);
+
             var dbRule = entity
                 .AccessRules
                 .FilterById(id.Value)

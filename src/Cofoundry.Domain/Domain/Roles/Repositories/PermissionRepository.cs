@@ -16,13 +16,13 @@ public class PermissionRepository : IPermissionRepository
             .Union(customEntityPermissions);
 
         DetectDuplicates(allPermissions);
-        _permissions = allPermissions.ToDictionary(k => GetUniqueKey(k));
+        _permissions = allPermissions.ToDictionary(GetUniqueKey);
     }
 
     private void DetectDuplicates(IEnumerable<IPermission> permissions)
     {
         var dulpicateCodes = permissions
-            .GroupBy(e => GetUniqueKey(e), StringComparer.OrdinalIgnoreCase)
+            .GroupBy(GetUniqueKey, StringComparer.OrdinalIgnoreCase)
             .Where(g => g.Count() > 1);
 
         if (dulpicateCodes.Any())
@@ -46,8 +46,13 @@ public class PermissionRepository : IPermissionRepository
         }
     }
 
-    public IPermission GetByCode(string permissionTypeCode, string entityDefinitionCode)
+    public IPermission? GetByCode(string permissionTypeCode, string? entityDefinitionCode)
     {
+        if (permissionTypeCode == null)
+        {
+            return null;
+        }
+
         var key = PermissionIdentifierFormatter.GetUniqueIdentifier(permissionTypeCode, entityDefinitionCode);
         return _permissions.GetOrDefault(key);
     }
@@ -57,23 +62,23 @@ public class PermissionRepository : IPermissionRepository
         return _permissions.Select(p => p.Value);
     }
 
-    public IPermission GetByEntityAndPermissionType(IEntityDefinition entityDefinition, PermissionType permissionType)
+    public IPermission? GetByEntityAndPermissionType(IEntityDefinition entityDefinition, PermissionType permissionType)
     {
         if (entityDefinition == null || permissionType == null) return null;
+
         return GetByEntityAndPermissionType(entityDefinition.EntityDefinitionCode, permissionType.Code);
     }
 
-    public IPermission GetByEntityAndPermissionType(string entityDefinitionCode, string permissionTypeCode)
+    public IPermission? GetByEntityAndPermissionType(string entityDefinitionCode, string permissionTypeCode)
     {
         if (string.IsNullOrEmpty(entityDefinitionCode) || string.IsNullOrEmpty(permissionTypeCode)) return null;
+
         var key = PermissionIdentifierFormatter.GetUniqueIdentifier(permissionTypeCode, entityDefinitionCode);
         return _permissions.GetOrDefault(key);
     }
 
     private string GetUniqueKey(IPermission permission)
     {
-        if (permission == null) return null;
-
         return PermissionIdentifierFormatter.GetUniqueIdentifier(permission);
     }
 }

@@ -10,5 +10,5 @@ public interface IContentRepositoryUserAreaGetAllQueryBuilder
     /// as a lightweight <see cref="UserAreaMicroSummary"/> projection, which 
     /// contains only basic identification properties such as code and name.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<UserAreaMicroSummary>> AsMicroSummaries();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<UserAreaMicroSummary>> AsMicroSummaries();
 }

@@ -9,13 +9,13 @@ public class UpdateCurrentUserCommand : IPatchableCommand, ILoggableCommand
     /// The first name is optional.
     /// </summary>
     [StringLength(32)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
     /// <summary>
     /// The last name is optional.
     /// </summary>
     [StringLength(32)]
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
     /// <summary>
     /// An optional display-friendly name. This is capped at 150 characters to
@@ -25,19 +25,19 @@ public class UpdateCurrentUserCommand : IPatchableCommand, ILoggableCommand
     /// is instead copied from the normalized username.
     /// </summary>
     [StringLength(150)]
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 
     /// <summary>
     /// The email address is required if the user area has 
     /// <see cref="IUserAreaDefinition.UseEmailAsUsername"/> set to <see langword="true"/>.
     /// </summary>
     [DataType(DataType.EmailAddress)]
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     /// <summary>
     /// The username is required if the user area has UseEmailAsUsername set to 
     /// false, otherwise it should be empty and the Email address will be used 
     /// as the username instead.
     /// </summary>
-    public string Username { get; set; }
+    public string? Username { get; set; }
 }

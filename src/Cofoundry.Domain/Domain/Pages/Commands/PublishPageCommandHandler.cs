@@ -12,7 +12,6 @@ public class PublishPageCommandHandler
     : ICommandHandler<PublishPageCommand>
     , IPermissionRestrictedCommandHandler<PublishPageCommand>
 {
-    private readonly IQueryExecutor _queryExecutor;
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
@@ -20,7 +19,6 @@ public class PublishPageCommandHandler
     private readonly IPageStoredProcedures _pageStoredProcedures;
 
     public PublishPageCommandHandler(
-        IQueryExecutor queryExecutor,
         CofoundryDbContext dbContext,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
@@ -28,7 +26,6 @@ public class PublishPageCommandHandler
         IPageStoredProcedures pageStoredProcedures
         )
     {
-        _queryExecutor = queryExecutor;
         _dbContext = dbContext;
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;

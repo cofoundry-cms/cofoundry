@@ -21,13 +21,13 @@ public interface IPasswordPolicy
     /// This description is designed to be displayed to users to help them choose
     /// their new password.
     /// </summary>
-    string Description { get; }
+    string? Description { get; }
 
     /// <summary>
     /// A collection of HTML attributes that describe the policy e.g. "minlength", "maxlength"
     /// or "passwordrules".
     /// </summary>
-    IDictionary<string, string> Attributes { get; }
+    IReadOnlyDictionary<string, string> Attributes { get; }
 
     /// <summary>
     /// Returns a full list of password requirements extracted from each of
@@ -52,5 +52,5 @@ public interface IPasswordPolicy
     /// Returns any validation errors triggered by a password that violates the policy. If no errors 
     /// are found then an empty collection is returned.
     /// </returns>
-    Task<ICollection<ValidationError>> ValidateAsync(INewPasswordValidationContext context);
+    Task<IReadOnlyCollection<ValidationError>> ValidateAsync(INewPasswordValidationContext context);
 }

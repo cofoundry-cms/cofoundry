@@ -9,7 +9,7 @@ public class NotBePersonalDataNewPasswordValidator : INewPasswordValidator
 {
     public string Criteria => $"Must not be your email or username.";
 
-    public ValidationError Validate(INewPasswordValidationContext context)
+    public ValidationError? Validate(INewPasswordValidationContext context)
     {
         if (Matches(context.Password, context.Email))
         {
@@ -24,7 +24,7 @@ public class NotBePersonalDataNewPasswordValidator : INewPasswordValidator
         return null;
     }
 
-    private static bool Matches(string data, string password)
+    private static bool Matches(string password, string? data)
     {
         return !string.IsNullOrEmpty(data)
             && data.Equals(password, StringComparison.OrdinalIgnoreCase);

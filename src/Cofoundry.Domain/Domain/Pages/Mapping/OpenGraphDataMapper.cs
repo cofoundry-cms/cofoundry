@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Simple mapper for mapping to OpenGraphData objects.
+/// Default implementation of <see cref="IOpenGraphDataMapper"/>.
 /// </summary>
 public class OpenGraphDataMapper : IOpenGraphDataMapper
 {
@@ -16,11 +16,7 @@ public class OpenGraphDataMapper : IOpenGraphDataMapper
         _imageAssetRenderDetailsMapper = imageAssetRenderDetailsMapper;
     }
 
-    /// <summary>
-    /// Maps an EF PageVersion record from the db into an OpenGraphData 
-    /// object.
-    /// </summary>
-    /// <param name="dbPageVersion">PageVersion record from the database, must include the OpenGraphImageAsset property.</param>
+    /// <inheritdoc/>
     public virtual OpenGraphData Map(PageVersion dbPageVersion)
     {
         var result = new OpenGraphData()
@@ -29,10 +25,7 @@ public class OpenGraphDataMapper : IOpenGraphDataMapper
             Title = dbPageVersion.OpenGraphTitle
         };
 
-        if (dbPageVersion.OpenGraphImageId.HasValue && dbPageVersion.OpenGraphImageAsset == null)
-        {
-            throw new Exception($"{nameof(PageVersion)}.{nameof(dbPageVersion.OpenGraphImageAsset)} must be included in the EF query if using {nameof(OpenGraphDataMapper)}. ");
-        }
+        MissingIncludeException.ThrowIfNull(dbPageVersion, v => v.OpenGraphImageAsset, v => v.OpenGraphImageId);
 
         if (dbPageVersion.OpenGraphImageAsset != null)
         {

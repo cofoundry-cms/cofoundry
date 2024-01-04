@@ -18,5 +18,5 @@ public class UpdatePageDirectoryCommand : IPatchableByIdCommand, ILoggableComman
     /// </summary>
     [StringLength(200)]
     [Display(Name = "Name", Description = "E.g. 'About the team' or 'Our products'")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }

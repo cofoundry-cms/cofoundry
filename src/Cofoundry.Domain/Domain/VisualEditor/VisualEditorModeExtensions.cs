@@ -8,18 +8,13 @@ public static class VisualEditorModeExtensions
     /// </summary>
     public static PublishStatusQuery ToPublishStatusQuery(this VisualEditorMode visualEditorMode)
     {
-        switch (visualEditorMode)
+        return visualEditorMode switch
         {
-            case VisualEditorMode.Preview:
-            case VisualEditorMode.Edit:
-                return PublishStatusQuery.Draft;
-            case VisualEditorMode.Any:
-                return PublishStatusQuery.Latest;
-            case VisualEditorMode.SpecificVersion:
-                return PublishStatusQuery.SpecificVersion;
-            default:
-                return PublishStatusQuery.Published;
-        }
+            VisualEditorMode.Preview or VisualEditorMode.Edit => PublishStatusQuery.Draft,
+            VisualEditorMode.Any => PublishStatusQuery.Latest,
+            VisualEditorMode.SpecificVersion => PublishStatusQuery.SpecificVersion,
+            _ => PublishStatusQuery.Published,
+        };
     }
 
     /// <summary>

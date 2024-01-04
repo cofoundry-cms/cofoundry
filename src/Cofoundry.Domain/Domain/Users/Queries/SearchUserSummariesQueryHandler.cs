@@ -29,7 +29,8 @@ public class SearchUserSummariesQueryHandler
         var dbPagedResult = await CreateQuery(query).ToPagedResultAsync(query);
         var mappedResult = dbPagedResult
             .Items
-            .Select(_userSummaryMapper.Map);
+            .Select(_userSummaryMapper.Map)
+            .WhereNotNull();
 
         return dbPagedResult.ChangeType(mappedResult);
     }
@@ -54,13 +55,14 @@ public class SearchUserSummariesQueryHandler
         if (!string.IsNullOrEmpty(query.Email))
         {
             var uniqueEmail = FormatEmailForSearch(query);
-            dbQuery = dbQuery.Where(u => u.UniqueEmail.Contains(uniqueEmail));
+            dbQuery = dbQuery.Where(u => u.UniqueEmail != null && u.UniqueEmail.Contains(uniqueEmail));
         }
 
         if (!string.IsNullOrEmpty(query.Username))
         {
-            var uniqueUsername = _userDataFormatter.UniquifyUsername(query.UserAreaCode, query.Username);
-            dbQuery = dbQuery.Where(u => u.UniqueUsername.Contains(uniqueUsername));
+            var uniqueUsername = _userDataFormatter.UniquifyUsername(query.UserAreaCode, query.Username) ?? string.Empty;
+
+            dbQuery = dbQuery.Where(u => u.UniqueUsername != null && u.UniqueUsername.Contains(uniqueUsername));
         }
 
         // Filter by name
@@ -72,7 +74,9 @@ public class SearchUserSummariesQueryHandler
                 // See http://stackoverflow.com/a/7288269/486434 for why this is copied into a new variable
                 string localName = name;
 
-                dbQuery = dbQuery.Where(u => u.FirstName.Contains(localName) || u.LastName.Contains(localName));
+                dbQuery = dbQuery.Where(u =>
+                    (u.FirstName != null && u.FirstName.Contains(localName))
+                    || (u.LastName != null && u.LastName.Contains(localName)));
             }
 
             // Order by exact matches first
@@ -91,6 +95,7 @@ public class SearchUserSummariesQueryHandler
     private string FormatEmailForSearch(SearchUserSummariesQuery query)
     {
         const string PLACEHOLDER_DOMAIN = "@example.com";
+        ArgumentNullException.ThrowIfNull(query.Email);
 
         var email = query.Email;
         var isPartialEmail = !email.Contains("@");

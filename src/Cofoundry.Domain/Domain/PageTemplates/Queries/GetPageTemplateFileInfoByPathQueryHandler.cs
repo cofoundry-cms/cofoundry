@@ -1,9 +1,9 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 
 namespace Cofoundry.Domain.Internal;
 
-public class GetPageTemplateFileInfoByPathQueryHandler
+public partial class GetPageTemplateFileInfoByPathQueryHandler
     : IQueryHandler<GetPageTemplateFileInfoByPathQuery, PageTemplateFileInfo>
     , IPermissionRestrictedQueryHandler<GetPageTemplateFileInfoByPathQuery, PageTemplateFileInfo>
 {
@@ -12,25 +12,26 @@ public class GetPageTemplateFileInfoByPathQueryHandler
     const string CUSTOM_ENTITY_REGION_FUNC = ".Template.CustomEntityRegion";
     const string TEMPLATE_DESCRIPTION_FUNC = ".Template.UseDescription";
 
-    const string REGEX_REMOVE_METHOD_WHITEPSPACE = @"(\w+\s*\.Template+\s*\.[A-Za-z]*Region\()";
-    const string PARTIAL_NAME_REGEX = "Html.(?:Render)?Partial(?:Async)?\\(\"([^\"]+)\"";
     const string COMMENTS_REGEX = @"(@\*.*?(\*@))";
 
     private readonly IQueryExecutor _queryExecutor;
     private readonly IPageTemplateViewFileLocator _viewLocator;
     private readonly IViewFileReader _viewFileReader;
     private readonly IPageTemplateCustomEntityTypeMapper _pageTemplateCustomEntityTypeMapper;
+    private readonly ILogger<GetPageTemplateFileInfoByPathQueryHandler> _logger;
 
     public GetPageTemplateFileInfoByPathQueryHandler(
         IPageTemplateViewFileLocator viewLocator,
         IQueryExecutor queryExecutor,
         IViewFileReader viewFileReader,
-        IPageTemplateCustomEntityTypeMapper pageTemplateCustomEntityTypeMapper
+        IPageTemplateCustomEntityTypeMapper pageTemplateCustomEntityTypeMapper,
+        ILogger<GetPageTemplateFileInfoByPathQueryHandler> logger
         )
     {
         _queryExecutor = queryExecutor;
         _viewLocator = viewLocator;
         _pageTemplateCustomEntityTypeMapper = pageTemplateCustomEntityTypeMapper;
+        _logger = logger;
         _viewFileReader = viewFileReader;
     }
 
@@ -56,52 +57,52 @@ public class GetPageTemplateFileInfoByPathQueryHandler
     {
         viewFile = PrepareViewFileForParsing(viewFile);
 
-        var pageTemplateFileInfo = new PageTemplateFileInfo();
-        pageTemplateFileInfo.PageType = PageType.Generic;
+        var pageTemplateFileInfo = new PageTemplateFileInfo
+        {
+            PageType = PageType.Generic
+        };
 
         var regions = new List<PageTemplateFileRegion>();
 
-        using (var sr = new StringReader(viewFile))
+        using var sr = new StringReader(viewFile);
+        string? line;
+        bool parseCustomModelType = isRootFile;
+
+        while ((line = sr.ReadLine()) != null)
         {
-            string line;
-            bool parseCustomModelType = isRootFile;
-
-            while ((line = sr.ReadLine()) != null)
+            if (parseCustomModelType)
             {
-                if (parseCustomModelType)
+                // Check for model type on first line only
+                await SetCustomModelTypeFieldsAsync(pageTemplateFileInfo, line, executionContext);
+                if (pageTemplateFileInfo.CustomEntityDefinition != null)
                 {
-                    // Check for model type on first line only
-                    await SetCustomModelTypeFieldsAsync(pageTemplateFileInfo, line, executionContext);
-                    if (pageTemplateFileInfo.CustomEntityDefinition != null)
-                    {
-                        parseCustomModelType = false;
-                    }
+                    parseCustomModelType = false;
                 }
+            }
 
-                if (line.Contains(REGION_FUNC + FUNC_OPENER))
-                {
-                    var regionName = ParseFunctionParameter(line, REGION_FUNC);
-                    regions.Add(new PageTemplateFileRegion() { Name = regionName });
-                }
-                else if (line.Contains(CUSTOM_ENTITY_REGION_FUNC + FUNC_OPENER))
-                {
-                    var regionName = ParseFunctionParameter(line, CUSTOM_ENTITY_REGION_FUNC);
-                    regions.Add(new PageTemplateFileRegion() { Name = regionName, IsCustomEntityRegion = true });
-                }
-                else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC + FUNC_OPENER))
-                {
-                    pageTemplateFileInfo.Description = ParseFunctionParameter(line, TEMPLATE_DESCRIPTION_FUNC);
-                }
-                else
-                {
-                    var partialMatch = Regex.Match(line, PARTIAL_NAME_REGEX);
+            if (line.Contains(REGION_FUNC + FUNC_OPENER))
+            {
+                var regionName = ParseFunctionParameter(line, REGION_FUNC);
+                regions.Add(new PageTemplateFileRegion() { Name = regionName });
+            }
+            else if (line.Contains(CUSTOM_ENTITY_REGION_FUNC + FUNC_OPENER))
+            {
+                var regionName = ParseFunctionParameter(line, CUSTOM_ENTITY_REGION_FUNC);
+                regions.Add(new PageTemplateFileRegion() { Name = regionName, IsCustomEntityRegion = true });
+            }
+            else if (line.Contains(TEMPLATE_DESCRIPTION_FUNC + FUNC_OPENER))
+            {
+                pageTemplateFileInfo.Description = ParseFunctionParameter(line, TEMPLATE_DESCRIPTION_FUNC);
+            }
+            else
+            {
+                var partialMatch = PartialNameRegex().Match(line);
 
-                    if (partialMatch.Success)
-                    {
-                        var partialName = partialMatch.Groups[1].Value;
-                        var partialRegions = await ParsePartialView(partialName, executionContext);
-                        regions.AddRange(partialRegions);
-                    }
+                if (partialMatch.Success)
+                {
+                    var partialName = partialMatch.Groups[1].Value;
+                    var partialRegions = await ParsePartialView(partialName, executionContext);
+                    regions.AddRange(partialRegions);
                 }
             }
         }
@@ -111,11 +112,14 @@ public class GetPageTemplateFileInfoByPathQueryHandler
         return pageTemplateFileInfo;
     }
 
-    private string TrimLineAndRemoveComments(string line)
+    private string? TrimLineAndRemoveComments(string? line)
     {
-        if (line == null) return line;
+        if (line == null)
+        {
+            return line;
+        }
 
-        return Regex.Replace(line, COMMENTS_REGEX, string.Empty);
+        return CommentsRegex().Replace(line, string.Empty);
     }
 
     /// <summary>
@@ -124,16 +128,15 @@ public class GetPageTemplateFileInfoByPathQueryHandler
     /// </summary>
     private string PrepareViewFileForParsing(string viewFile)
     {
-        var whitespaceRemoved = Regex.Replace(viewFile, REGEX_REMOVE_METHOD_WHITEPSPACE, RemoveWhitepace);
-        var commentsRemoved = Regex.Replace(whitespaceRemoved, COMMENTS_REGEX, string.Empty, RegexOptions.Singleline);
+        var whitespaceRemoved = RemoveMethodWhitespaceRegex().Replace(viewFile, RemoveWhitespace);
+        var commentsRemoved = CommentsRegexSingleLine().Replace(whitespaceRemoved, string.Empty);
 
         return commentsRemoved;
     }
 
-    private string RemoveWhitepace(Match e)
+    private string RemoveWhitespace(Match e)
     {
-        const string REGEX_TRIM_WHITESPACE = @"\s+";
-        return Regex.Replace(e.Value, REGEX_TRIM_WHITESPACE, string.Empty);
+        return TrimWhitespaceRegex().Replace(e.Value, string.Empty);
     }
 
     private async Task SetCustomModelTypeFieldsAsync(
@@ -142,20 +145,21 @@ public class GetPageTemplateFileInfoByPathQueryHandler
         IExecutionContext executionContext
         )
     {
-        // This regex find models with generic parameters and captures the last generic type
-        // This could be the custom entity display model type and may have a namespace prefix
-        const string CUSTOM_ENTITY_MODEL_REGEX = @"\s*@(?:inherits|model)\s+[\w+<.]*<([\w\.]+)";
-
-        var match = Regex.Match(line, CUSTOM_ENTITY_MODEL_REGEX);
+        var match = CustomEntityModelRegex().Match(line);
         if (match.Success)
         {
             // Try and find a matching custom entity model type.
             var modelType = _pageTemplateCustomEntityTypeMapper.Map(match.Groups[1].Value);
 
-            if (modelType == null) return;
+            if (modelType == null)
+            {
+                return;
+            }
 
-            var query = new GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery();
-            query.DisplayModelType = modelType;
+            var query = new GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery
+            {
+                DisplayModelType = modelType
+            };
 
             pageTemplateFileInfo.CustomEntityDefinition = await _queryExecutor.ExecuteAsync(query, executionContext);
             EntityNotFoundException.ThrowIfNull(pageTemplateFileInfo.CustomEntityDefinition, modelType);
@@ -169,12 +173,22 @@ public class GetPageTemplateFileInfoByPathQueryHandler
     {
         var partialPath = _viewLocator.ResolvePageTemplatePartialViewPath(partialName);
 
-        Debug.Assert(!string.IsNullOrEmpty(partialPath), "Partial View file not found: " + partialName);
+        if (string.IsNullOrEmpty(partialPath))
+        {
+            _logger.LogWarning("Could not find partial view file '{PartialName}'", partialName);
+            return Enumerable.Empty<PageTemplateFileRegion>();
+        }
 
-        if (string.IsNullOrEmpty(partialPath)) return Enumerable.Empty<PageTemplateFileRegion>();
         var partialFile = await _viewFileReader.ReadViewFileAsync(partialPath);
+        if (partialFile == null)
+        {
+            _logger.LogWarning("Could not read partial view file '{PartialName}'", partialName);
+            return Enumerable.Empty<PageTemplateFileRegion>();
+        }
 
-        return (await ParseViewFile(partialFile, false, executionContext)).Regions;
+        var templateFileInfo = await ParseViewFile(partialFile, false, executionContext);
+
+        return templateFileInfo.Regions;
     }
 
     private string ParseFunctionParameter(string textLine, string functionName)
@@ -192,4 +206,26 @@ public class GetPageTemplateFileInfoByPathQueryHandler
     {
         yield return new CompositePermissionApplication(new PageTemplateCreatePermission(), new PageTemplateUpdatePermission());
     }
+
+    [GeneratedRegex("Html.(?:Render)?Partial(?:Async)?\\(\"([^\"]+)\"")]
+    private static partial Regex PartialNameRegex();
+
+    /// <summary>
+    /// This regex find models with generic parameters and captures the last generic type
+    /// This could be the custom entity display model type and may have a namespace prefix
+    /// </summary>
+    [GeneratedRegex(@"\s*@(?:inherits|model)\s+[\w+<.]*<([\w\.]+)")]
+    private static partial Regex CustomEntityModelRegex();
+
+    [GeneratedRegex(COMMENTS_REGEX)]
+    private static partial Regex CommentsRegex();
+
+    [GeneratedRegex(COMMENTS_REGEX, RegexOptions.Singleline)]
+    private static partial Regex CommentsRegexSingleLine();
+
+    [GeneratedRegex(@"(\w+\s*\.Template+\s*\.[A-Za-z]*Region\()")]
+    private static partial Regex RemoveMethodWhitespaceRegex();
+
+    [GeneratedRegex(@"\s+")]
+    private static partial Regex TrimWhitespaceRegex();
 }

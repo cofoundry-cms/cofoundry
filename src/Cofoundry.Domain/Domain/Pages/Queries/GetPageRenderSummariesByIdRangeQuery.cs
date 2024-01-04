@@ -7,7 +7,7 @@
 /// version-sensitive and defaults to returning published versions only, but
 /// this behavior can be controlled by the publishStatus query property.
 /// </summary>
-public class GetPageRenderSummariesByIdRangeQuery : IQuery<IDictionary<int, PageRenderSummary>>
+public class GetPageRenderSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, PageRenderSummary>>
 {
     /// <summary>
     /// Query to get a range of pages by a set of ids, projected as a PageRenderSummary, which is
@@ -28,7 +28,7 @@ public class GetPageRenderSummariesByIdRangeQuery : IQuery<IDictionary<int, Page
     /// <param name="pageIds">Database ids of the pages to get.</param>
     /// <param name="publishStatus">Used to determine which version of the page to include data for.</param>
     public GetPageRenderSummariesByIdRangeQuery(IEnumerable<int> pageIds, PublishStatusQuery? publishStatus = null)
-        : this(pageIds?.ToList(), publishStatus)
+        : this(pageIds?.ToArray() ?? [], publishStatus)
     {
     }
 
@@ -53,7 +53,7 @@ public class GetPageRenderSummariesByIdRangeQuery : IQuery<IDictionary<int, Page
     /// <summary>
     /// Database ids of the pages to get.
     /// </summary>
-    public IReadOnlyCollection<int> PageIds { get; set; }
+    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
 
     /// <summary>
     /// Used to determine which version of the page to include data for. This 

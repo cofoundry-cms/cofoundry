@@ -13,7 +13,7 @@ public interface IContentRepositoryCustomEntityByIdQueryBuilder
     /// to control the version returned.
     /// </summary>
     /// <param name="publishStatusQuery">Used to determine which version of the custom entity to include data for.</param>
-    IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary(PublishStatusQuery publishStatusQuery);
+    IDomainRepositoryQueryContext<CustomEntityRenderSummary?> AsRenderSummary(PublishStatusQuery publishStatusQuery);
 
     /// <summary>
     /// Queries a custom entity by it's database id, returning a 
@@ -23,7 +23,7 @@ public interface IContentRepositoryCustomEntityByIdQueryBuilder
     /// versions only, but you can use the overload with the publishStatusQuery 
     /// parameter to control this behavior.
     /// </summary>
-    IDomainRepositoryQueryContext<CustomEntityRenderSummary> AsRenderSummary();
+    IDomainRepositoryQueryContext<CustomEntityRenderSummary?> AsRenderSummary();
 
     /// <summary>
     /// Queries a custom entity by it's database id, projected as a
@@ -41,5 +41,5 @@ public interface IContentRepositoryCustomEntityByIdQueryBuilder
     /// included in the returned object.
     /// </param>
     /// <param name="publishStatusQuery">Used to determine which version of the custom entity to include data for.</param>
-    IDomainRepositoryQueryContext<CustomEntityRenderDetails> AsRenderDetails(int pageId, PublishStatusQuery? publishStatusQuery = null);
+    IDomainRepositoryQueryContext<CustomEntityRenderDetails?> AsRenderDetails(int pageId, PublishStatusQuery? publishStatusQuery = null);
 }

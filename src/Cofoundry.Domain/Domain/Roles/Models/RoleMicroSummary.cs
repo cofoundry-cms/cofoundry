@@ -14,10 +14,17 @@ public class RoleMicroSummary
     /// <summary>
     /// The title is used to identify the role and select it in the admin UI.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// A role must be assigned to a user area e.g. <see cref="CofoundryAdminUserArea"/>.
     /// </summary>
-    public UserAreaMicroSummary UserArea { get; set; }
+    public UserAreaMicroSummary UserArea { get; set; } = UserAreaMicroSummary.Uninitialized;
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly RoleMicroSummary Uninitialized = new();
 }

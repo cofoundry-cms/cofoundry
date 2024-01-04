@@ -8,7 +8,7 @@
 /// DataModelType property.
 /// </summary>
 public class GetAllCustomEntityDefinitionSummariesQueryHandler
-    : IQueryHandler<GetAllCustomEntityDefinitionSummariesQuery, ICollection<CustomEntityDefinitionSummary>>
+    : IQueryHandler<GetAllCustomEntityDefinitionSummariesQuery, IReadOnlyCollection<CustomEntityDefinitionSummary>>
     , IIgnorePermissionCheckHandler
 {
     private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
@@ -23,13 +23,13 @@ public class GetAllCustomEntityDefinitionSummariesQueryHandler
         _customEntityDefinitionSummaryMapper = customEntityDefinitionSummaryMapper;
     }
 
-    public Task<ICollection<CustomEntityDefinitionSummary>> ExecuteAsync(GetAllCustomEntityDefinitionSummariesQuery query, IExecutionContext executionContext)
+    public Task<IReadOnlyCollection<CustomEntityDefinitionSummary>> ExecuteAsync(GetAllCustomEntityDefinitionSummariesQuery query, IExecutionContext executionContext)
     {
         var results = _customEntityDefinitionRepository
              .GetAll()
              .Select(_customEntityDefinitionSummaryMapper.Map)
              .ToList();
 
-        return Task.FromResult<ICollection<CustomEntityDefinitionSummary>>(results);
+        return Task.FromResult<IReadOnlyCollection<CustomEntityDefinitionSummary>>(results);
     }
 }

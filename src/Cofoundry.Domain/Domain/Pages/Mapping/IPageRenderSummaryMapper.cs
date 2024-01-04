@@ -17,6 +17,6 @@ public interface IPageRenderSummaryMapper
     /// </summary>
     /// <param name="dbPageVersion">PageVersion record from the database. Must include the OpenGraphImageAsset property.</param>
     /// <param name="pageRouteLookup">Dictionary containing all page routes.</param>
-    T Map<T>(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup)
+    T Map<T>(PageVersion dbPageVersion, IReadOnlyDictionary<int, PageRoute> pageRouteLookup)
         where T : PageRenderSummary, new();
 }

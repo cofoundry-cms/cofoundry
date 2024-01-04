@@ -5,7 +5,7 @@
 /// objects. Note that this query does not account for WorkFlowStatus and so
 /// pages will be returned irrecpective of whether they aree published or not.
 /// </summary>
-public class GetPageSummariesByIdRangeQuery : IQuery<IDictionary<int, PageSummary>>
+public class GetPageSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, PageSummary>>
 {
     public GetPageSummariesByIdRangeQuery() { }
 
@@ -14,7 +14,7 @@ public class GetPageSummariesByIdRangeQuery : IQuery<IDictionary<int, PageSummar
     /// </summary>
     /// <param name="pageIds">A collection of database ids of the pages to fetch.</param>
     public GetPageSummariesByIdRangeQuery(IEnumerable<int> pageIds)
-        : this(pageIds?.ToList())
+        : this(pageIds?.ToArray() ?? [])
     {
     }
 
@@ -30,5 +30,5 @@ public class GetPageSummariesByIdRangeQuery : IQuery<IDictionary<int, PageSummar
     /// <summary>
     /// A collection of database ids of the pages to fetch.
     /// </summary>
-    public IReadOnlyCollection<int> PageIds { get; set; }
+    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
 }

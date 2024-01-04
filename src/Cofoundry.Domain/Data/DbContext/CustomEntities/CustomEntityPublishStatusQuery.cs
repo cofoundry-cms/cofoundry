@@ -25,15 +25,25 @@ public class CustomEntityPublishStatusQuery
     /// </summary>
     public int CustomEntityVersionId { get; set; }
 
+    private CustomEntity? _customEntity;
     /// <summary>
     /// Custom entity that this record represents.
     /// </summary>
-    public virtual CustomEntity CustomEntity { get; set; }
+    public CustomEntity CustomEntity
+    {
+        get => _customEntity ?? throw NavigationPropertyNotInitializedException.Create<CustomEntity>(nameof(CustomEntity));
+        set => _customEntity = value;
+    }
 
+    private CustomEntityVersion? _customEntityVersion;
     /// <summary>
     /// The version of the  custom entity that should be displayed
     /// for the corresponding PublishStatusQueryId.
     /// </summary>
-    public virtual CustomEntityVersion CustomEntityVersion { get; set; }
+    public CustomEntityVersion CustomEntityVersion
+    {
+        get => _customEntityVersion ?? throw NavigationPropertyNotInitializedException.Create<PagePublishStatusQuery>(nameof(CustomEntityVersion));
+        set => _customEntityVersion = value;
+    }
 
 }

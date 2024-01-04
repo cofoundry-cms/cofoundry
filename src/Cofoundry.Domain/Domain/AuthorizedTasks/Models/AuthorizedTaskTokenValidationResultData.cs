@@ -19,7 +19,7 @@ public class AuthorizedTaskTokenValidationResultData
     /// <summary>
     /// Unique 3 character code identifying this user area the user belongs to.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Data that was optionally included with the task. This might be data used to validate the
@@ -30,5 +30,5 @@ public class AuthorizedTaskTokenValidationResultData
     /// store the email in <see cref="TaskData"/>, and then once verified the user can be updated 
     /// with the new email address.
     /// </summary>
-    public string TaskData { get; set; }
+    public string? TaskData { get; set; }
 }

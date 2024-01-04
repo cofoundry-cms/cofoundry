@@ -9,8 +9,8 @@ namespace Cofoundry.Domain.Internal;
 /// the database.
 /// </summary>
 public class GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandler
-    : IQueryHandler<GetEntityDependencySummaryByRelatedEntityIdRangeQuery, ICollection<EntityDependencySummary>>
-    , IPermissionRestrictedQueryHandler<GetEntityDependencySummaryByRelatedEntityIdRangeQuery, ICollection<EntityDependencySummary>>
+    : IQueryHandler<GetEntityDependencySummaryByRelatedEntityIdRangeQuery, IReadOnlyCollection<EntityDependencySummary>>
+    , IPermissionRestrictedQueryHandler<GetEntityDependencySummaryByRelatedEntityIdRangeQuery, IReadOnlyCollection<EntityDependencySummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private IQueryExecutor _queryExecutor;
@@ -30,7 +30,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandler
         _permissionRepository = permissionRepository;
     }
 
-    public async Task<ICollection<EntityDependencySummary>> ExecuteAsync(GetEntityDependencySummaryByRelatedEntityIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<EntityDependencySummary>> ExecuteAsync(GetEntityDependencySummaryByRelatedEntityIdRangeQuery query, IExecutionContext executionContext)
     {
         var dbQuery = _dbContext
             .UnstructuredDataDependencies
@@ -43,10 +43,10 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandler
         }
 
         // Groupby still not suppored in EF 3.1 ¯\_(ツ)_/¯
-        var queryResult = await dbQuery.ToListAsync();
+        var queryResult = await dbQuery.ToArrayAsync();
         var dbDependencyGroups = queryResult
             .GroupBy(r => r.RootEntityDefinitionCode)
-            .ToList();
+            .ToArray();
 
         var allRelatedEntities = new List<EntityDependencySummary>();
 
@@ -61,6 +61,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandler
             foreach (var entityMicroSummary in entityMicroSummaries.OrderBy(e => e.Value.RootEntityTitle))
             {
                 var dbDependency = dbDependencyGroup.SingleOrDefault(e => e.RootEntityId == entityMicroSummary.Key);
+                EntityNotFoundException.ThrowIfNull(dbDependency, entityMicroSummary.Key);
 
                 // relations for previous versions can be removed even when they are required.
                 var canDelete = dbDependency.RelatedEntityCascadeActionId != (int)RelatedEntityCascadeAction.None
@@ -84,7 +85,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandler
             .GroupBy(e =>
                 new { e.Entity.EntityDefinitionCode, e.Entity.RootEntityId },
                 (k, v) => v.OrderBy(e => e.CanDelete).First())
-            .ToList();
+            .ToArray();
 
         return results;
     }

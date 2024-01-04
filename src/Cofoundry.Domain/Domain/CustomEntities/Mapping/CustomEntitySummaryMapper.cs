@@ -7,29 +7,29 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
-    private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
+    private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
     private readonly IAuditDataMapper _auditDataMapper;
 
     public CustomEntitySummaryMapper(
         CofoundryDbContext dbContext,
         IQueryExecutor queryExecutor,
-        IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
+        ICustomEntityDataModelMapper customEntityDataModelMapper,
         IAuditDataMapper auditDataMapper
         )
     {
         _dbContext = dbContext;
         _queryExecutor = queryExecutor;
-        _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
+        _customEntityDataModelMapper = customEntityDataModelMapper;
         _auditDataMapper = auditDataMapper;
     }
 
-    public async Task<List<CustomEntitySummary>> MapAsync(ICollection<CustomEntityPublishStatusQuery> dbCustomEntities, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<CustomEntitySummary>> MapAsync(IReadOnlyCollection<CustomEntityPublishStatusQuery> dbCustomEntities, IExecutionContext executionContext)
     {
         var entities = new List<CustomEntitySummary>(dbCustomEntities.Count);
         var routingsQuery = new GetPageRoutingInfoByCustomEntityIdRangeQuery(dbCustomEntities.Select(e => e.CustomEntityId));
         var routings = await _queryExecutor.ExecuteAsync(routingsQuery, executionContext);
 
-        Dictionary<int, ActiveLocale> allLocales = null;
+        Dictionary<int, ActiveLocale>? allLocales = null;
         var customEntityDefinitions = new Dictionary<string, CustomEntityDefinitionSummary>();
         var hasCheckedQueryValid = false;
 
@@ -47,6 +47,9 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
 
             if (detailsRouting != null)
             {
+                EntityInvalidOperationException.ThrowIfNull(detailsRouting, detailsRouting.CustomEntityRouteRule);
+                EntityInvalidOperationException.ThrowIfNull(detailsRouting, detailsRouting.CustomEntityRoute);
+
                 entity.FullUrlPath = detailsRouting.CustomEntityRouteRule.MakeUrl(detailsRouting.PageRoute, detailsRouting.CustomEntityRoute);
                 entity.HasPublishedVersion = detailsRouting.CustomEntityRoute.HasPublishedVersion;
             }
@@ -71,19 +74,7 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
                 EntityNotFoundException.ThrowIfNull(entity.Locale, localeId.Value);
             }
 
-            // Parse model data
-            var definition = customEntityDefinitions.GetOrDefault(dbCustomEntity.CustomEntity.CustomEntityDefinitionCode);
-            if (definition == null)
-            {
-                // Load and cache definitions
-                var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(dbCustomEntity.CustomEntity.CustomEntityDefinitionCode);
-                definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
-
-                EntityNotFoundException.ThrowIfNull(definition, definition.CustomEntityDefinitionCode);
-                customEntityDefinitions.Add(dbCustomEntity.CustomEntity.CustomEntityDefinitionCode, definition);
-            }
-
-            entity.Model = (ICustomEntityDataModel)_dbUnstructuredDataSerializer.Deserialize(dbCustomEntity.CustomEntityVersion.SerializedData, definition.DataModelType);
+            entity.Model = _customEntityDataModelMapper.Map(dbCustomEntity.CustomEntity.CustomEntityDefinitionCode, dbCustomEntity.CustomEntityVersion.SerializedData);
 
             entities.Add(entity);
         }
@@ -97,7 +88,7 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
     {
         var entity = new CustomEntitySummary()
         {
-            AuditData = _auditDataMapper.MapUpdateAuditDataCreatorData(dbStatusQuery.CustomEntity),
+            AuditData = _auditDataMapper.MapUpdateAuditDataFromVersion(dbStatusQuery.CustomEntity, dbStatusQuery.CustomEntityVersion),
             CustomEntityDefinitionCode = dbStatusQuery.CustomEntity.CustomEntityDefinitionCode,
             CustomEntityId = dbStatusQuery.CustomEntityId,
             HasDraftVersion = dbStatusQuery.CustomEntityVersion.WorkFlowStatusId == (int)WorkFlowStatus.Draft,
@@ -111,7 +102,6 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
             UrlSlug = dbStatusQuery.CustomEntity.UrlSlug
         };
 
-        _auditDataMapper.MapUpdateAuditDataUpdaterData(entity.AuditData, dbStatusQuery.CustomEntityVersion);
         return entity;
     }
 
@@ -119,9 +109,9 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
     /// There will only be routing data if there is a custom entity page
     /// associated with this entity type.
     /// </summary>
-    private static PageRoutingInfo FindRoutingData(IDictionary<int, ICollection<PageRoutingInfo>> routings, CustomEntityPublishStatusQuery dbStatusQuery)
+    private static PageRoutingInfo? FindRoutingData(IReadOnlyDictionary<int, IReadOnlyCollection<PageRoutingInfo>> routings, CustomEntityPublishStatusQuery dbStatusQuery)
     {
-        PageRoutingInfo detailsRouting = null;
+        PageRoutingInfo? detailsRouting = null;
         if (routings.ContainsKey(dbStatusQuery.CustomEntityId))
         {
             detailsRouting = routings[dbStatusQuery.CustomEntityId].FirstOrDefault(r => r.CustomEntityRouteRule != null);
@@ -138,8 +128,8 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
     private async Task EnsureHasPublishedVersionSet(List<CustomEntitySummary> entities)
     {
         var entitiesWithUnconfirmedPublishRecord = entities
-                        .Where(e => !e.HasPublishedVersion)
-                        .ToDictionary(e => e.CustomEntityId);
+            .Where(e => !e.HasPublishedVersion)
+            .ToDictionary(e => e.CustomEntityId);
 
         if (entitiesWithUnconfirmedPublishRecord.Any())
         {

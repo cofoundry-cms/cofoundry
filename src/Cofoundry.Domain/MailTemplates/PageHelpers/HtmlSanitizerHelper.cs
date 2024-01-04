@@ -15,22 +15,24 @@ public class HtmlSanitizerHelper : IHtmlSanitizerHelper
         _htmlSanitizer = htmlSanitizer;
     }
 
-    public IHtmlContent Sanitize(string source)
+    public IHtmlContent Sanitize(string? source)
     {
         return new HtmlString(_htmlSanitizer.Sanitize(source));
     }
 
-    public IHtmlContent Sanitize(IHtmlContent source)
+    public IHtmlContent Sanitize(IHtmlContent? source)
     {
         return new HtmlString(_htmlSanitizer.Sanitize(source));
     }
 
-    public string StripHtml(string source)
+    [return: NotNullIfNotNull(nameof(source))]
+    public string? StripHtml(string? source)
     {
         return _htmlSanitizer.StripHtml(source);
     }
 
-    public string StripHtml(HtmlString source)
+    [return: NotNullIfNotNull(nameof(source))]
+    public string? StripHtml(HtmlString? source)
     {
         return _htmlSanitizer.StripHtml(source);
     }

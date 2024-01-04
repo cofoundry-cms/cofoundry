@@ -19,13 +19,13 @@ public class ContentRepositoryUserByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<UserMicroSummary> AsMicroSummary()
+    public IDomainRepositoryQueryContext<UserMicroSummary?> AsMicroSummary()
     {
         var query = new GetUserMicroSummaryByIdQuery(_userId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<UserDetails> AsDetails()
+    public IDomainRepositoryQueryContext<UserDetails?> AsDetails()
     {
         var query = new GetUserDetailsByIdQuery(_userId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

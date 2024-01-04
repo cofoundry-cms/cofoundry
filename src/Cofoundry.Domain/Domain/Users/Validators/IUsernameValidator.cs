@@ -10,5 +10,5 @@ public interface IUsernameValidator
     /// the format contains only the characters permitted by the <see cref="UsernameOptions"/> 
     /// configuration settings, as well as checking for uniquness.
     /// </summary>
-    Task<ICollection<ValidationError>> GetErrorsAsync(IUsernameValidationContext context);
+    Task<IReadOnlyCollection<ValidationError>> GetErrorsAsync(IUsernameValidationContext context);
 }

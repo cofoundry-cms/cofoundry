@@ -5,12 +5,12 @@
 /// The returned object is a lightweight projection of the data defined in a custom entity 
 /// definition class and is typically used as part of another domain model.
 /// </summary>
-public class GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery : IQuery<CustomEntityDefinitionMicroSummary>
+public class GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQuery : IQuery<CustomEntityDefinitionMicroSummary?>
 {
     /// <summary>
     /// Type definition of the concrete ICustomEntityDisplayModel 
     /// implementation to find the associated custom entity 
     /// definition for. 
     /// </summary>
-    public Type DisplayModelType { get; set; }
+    public Type DisplayModelType { get; set; } = null!;
 }

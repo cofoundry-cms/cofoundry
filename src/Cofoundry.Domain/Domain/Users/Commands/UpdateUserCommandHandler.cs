@@ -178,7 +178,7 @@ public class UpdateUserCommandHandler
         IExecutionContext executionContext
         )
     {
-        InvalidateAuthorizedTaskBatchCommand command = null;
+        InvalidateAuthorizedTaskBatchCommand? command = null;
 
         if (updateStatus.HasBeenDeactivated)
         {

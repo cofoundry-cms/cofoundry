@@ -10,15 +10,15 @@ public class PageBlockTypeFileLocation
     /// The file name (without extension) which is used as the unique 
     /// identifier for this page block type.
     /// </summary>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// The virtual path to the view file.
     /// </summary>
-    public string Path { get; set; }
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>
     /// Locations of any alternative template view files, indexed by FileName.
     /// </summary>
-    public Dictionary<string, PageBlockTypeTemplateFileLocation> Templates { get; set; }
+    public IReadOnlyDictionary<string, PageBlockTypeTemplateFileLocation> Templates { get; set; } = ImmutableDictionary<string, PageBlockTypeTemplateFileLocation>.Empty;
 }

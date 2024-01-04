@@ -15,5 +15,5 @@ public interface IAdvancedContentRepositoryCustomEntityByIdRangeQueryBuilder
     /// used in the admin panel and not in a version-sensitive context such as a 
     /// public webpage.
     /// </summary>
-    IDomainRepositoryQueryContext<IDictionary<int, CustomEntitySummary>> AsSummaries();
+    IDomainRepositoryQueryContext<IReadOnlyDictionary<int, CustomEntitySummary>> AsSummaries();
 }

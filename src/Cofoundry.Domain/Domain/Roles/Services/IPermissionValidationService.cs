@@ -20,12 +20,12 @@ public interface IPermissionValidationService
     /// <summary>
     /// Checks to see if the user if signed in and throws a NotPermittedException if not.
     /// </summary>
-    Task EnforceIsSignedInAsync();
+    Task<ISignedInUserContext> EnforceIsSignedInAsync();
 
     /// <summary>
     /// Checks to see if the specified user context is signed in and throws a NotPermittedException if not.
     /// </summary>
-    void EnforceIsSignedIn(IUserContext userContext);
+    ISignedInUserContext EnforceIsSignedIn(IUserContext userContext);
 
     /// <summary>
     /// Checks to see if the user has permission to the specified user area. Note that Cofoundry users
@@ -79,8 +79,8 @@ public interface IPermissionValidationService
     /// <param name="currentUserContext">An IUserContext representing the currently signed in user.</param>
     void EnforceCurrentUserOrHasPermission<TPermission>(int userId, IUserContext currentUserContext) where TPermission : IPermissionApplication, new();
 
-    Task<bool> HasPermissionAsync(IPermissionApplication permission);
-    bool HasPermission(IPermissionApplication permission, IUserContext userContext);
+    Task<bool> HasPermissionAsync(IPermissionApplication? permission);
+    bool HasPermission(IPermissionApplication? permission, IUserContext userContext);
 
     Task<bool> HasPermissionAsync<TPermission>() where TPermission : IPermissionApplication, new();
     bool HasPermission<TPermission>(IUserContext userContext) where TPermission : IPermissionApplication, new();

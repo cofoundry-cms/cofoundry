@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.CQS.Internal;
 
 /// <summary>
-/// Factory to create the default QueryHandler instance
+/// Default implementation of <see cref="IQueryHandlerFactory"/>.
 /// </summary>
 public class QueryHandlerFactory : IQueryHandlerFactory
 {
@@ -16,9 +16,7 @@ public class QueryHandlerFactory : IQueryHandlerFactory
         _serviceProvider = serviceProvider;
     }
 
-    /// <summary>
-    /// Creates a new IAsyncQueryHandler instance with the specified type signature.
-    /// </summary>
+    /// <inheritdoc/>
     public IQueryHandler<TQuery, TResult> CreateAsyncHandler<TQuery, TResult>() where TQuery : IQuery<TResult>
     {
         return _serviceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();

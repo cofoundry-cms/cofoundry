@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Simple mapper for mapping to PageTemplateMicroSummary objects.
+/// Default implementation of <see cref="IPageTemplateMicroSummaryMapper"/>.
 /// </summary>
 public class PageTemplateMicroSummaryMapper : IPageTemplateMicroSummaryMapper
 {
@@ -16,21 +16,23 @@ public class PageTemplateMicroSummaryMapper : IPageTemplateMicroSummaryMapper
         _pageTemplateCustomEntityTypeMapper = pageTemplateCustomEntityTypeMapper;
     }
 
-    /// <summary>
-    /// Maps an EF PageTemplate record from the db into an PageTemplateMicroSummary 
-    /// object. If the db record is null then null is returned.
-    /// </summary>
-    /// <param name="dbPageTemplate">PageTemplate record from the database.</param>
-    public virtual PageTemplateMicroSummary Map(PageTemplate dbPageTemplate)
+    /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(dbPageTemplate))]
+    public virtual PageTemplateMicroSummary? Map(PageTemplate? dbPageTemplate)
     {
-        if (dbPageTemplate == null) return null;
+        if (dbPageTemplate == null)
+        {
+            return null;
+        }
 
-        var pageTemplate = new PageTemplateMicroSummary();
-        pageTemplate.CustomEntityDefinitionCode = dbPageTemplate.CustomEntityDefinitionCode;
-        pageTemplate.FullPath = dbPageTemplate.FullPath;
-        pageTemplate.IsArchived = dbPageTemplate.IsArchived;
-        pageTemplate.Name = dbPageTemplate.Name;
-        pageTemplate.PageTemplateId = dbPageTemplate.PageTemplateId;
+        var pageTemplate = new PageTemplateMicroSummary
+        {
+            CustomEntityDefinitionCode = dbPageTemplate.CustomEntityDefinitionCode,
+            FullPath = dbPageTemplate.FullPath,
+            IsArchived = dbPageTemplate.IsArchived,
+            Name = dbPageTemplate.Name,
+            PageTemplateId = dbPageTemplate.PageTemplateId
+        };
 
         pageTemplate.CustomEntityModelType = _pageTemplateCustomEntityTypeMapper.Map(dbPageTemplate.CustomEntityModelType);
 

@@ -3,13 +3,19 @@ using Cofoundry.Domain.QueryModels;
 
 namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IPageTemplateDetailsMapper"/>.
+/// </summary>
 public class PageTemplateDetailsMapper : IPageTemplateDetailsMapper
 {
-    public virtual PageTemplateDetails Map(PageTemplateDetailsQueryModel queryModel)
+    /// <inheritdoc/>
+    public virtual PageTemplateDetails? Map(PageTemplateDetailsQueryModel? queryModel)
     {
         var dbPageTemplate = queryModel?.PageTemplate;
-        if (dbPageTemplate == null) return null;
+        if (dbPageTemplate == null || queryModel == null)
+        {
+            return null;
+        }
 
         var pageTemplate = new PageTemplateDetails()
         {
@@ -31,12 +37,12 @@ public class PageTemplateDetailsMapper : IPageTemplateDetailsMapper
             .PageTemplate
             .PageTemplateRegions
             .Select(MapRegion)
-            .ToList();
+            .ToArray();
 
         return pageTemplate;
     }
 
-    protected PageTemplateRegionDetails MapRegion(PageTemplateRegion dbRegion)
+    protected static PageTemplateRegionDetails MapRegion(PageTemplateRegion dbRegion)
     {
         return new PageTemplateRegionDetails()
         {

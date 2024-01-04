@@ -15,7 +15,7 @@ public class SignInUserWithCredentialsCommand : ICommand
     /// on the configuration of the user area.
     /// </summary>
     [Required]
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     /// <summary>
     /// The plain text representaion of the password to attempt
@@ -23,7 +23,7 @@ public class SignInUserWithCredentialsCommand : ICommand
     /// </summary>
     [Required]
     [DataType(DataType.Password)]
-    public string Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 
     /// <summary>
     /// The unique code of the user area to attempt to sign into. Note
@@ -31,7 +31,7 @@ public class SignInUserWithCredentialsCommand : ICommand
     /// may have an account for more than one user area.
     /// </summary>
     [Required]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// True if the user should stay logged in perminantely; false

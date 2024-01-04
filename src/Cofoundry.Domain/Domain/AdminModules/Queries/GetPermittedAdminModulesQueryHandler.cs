@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 public class GetPermittedAdminModulesQueryHandler
-    : IQueryHandler<GetPermittedAdminModulesQuery, ICollection<AdminModule>>
+    : IQueryHandler<GetPermittedAdminModulesQuery, IReadOnlyCollection<AdminModule>>
     , IIgnorePermissionCheckHandler
 {
     private readonly IEnumerable<IAdminModuleRegistration> _moduleRegistrations;
@@ -16,13 +16,13 @@ public class GetPermittedAdminModulesQueryHandler
         _permissionValidationService = permissionValidationService;
     }
 
-    public Task<ICollection<AdminModule>> ExecuteAsync(GetPermittedAdminModulesQuery query, IExecutionContext executionContext)
+    public Task<IReadOnlyCollection<AdminModule>> ExecuteAsync(GetPermittedAdminModulesQuery query, IExecutionContext executionContext)
     {
         var userContext = executionContext.UserContext;
 
         if (userContext == null || !userContext.IsCofoundryUser())
         {
-            return Task.FromResult<ICollection<AdminModule>>(new AdminModule[0]);
+            return Task.FromResult<IReadOnlyCollection<AdminModule>>(Array.Empty<AdminModule>());
         }
 
         var modules = _moduleRegistrations
@@ -31,6 +31,6 @@ public class GetPermittedAdminModulesQueryHandler
             .SetStandardOrdering()
             .ToList();
 
-        return Task.FromResult<ICollection<AdminModule>>(modules);
+        return Task.FromResult<IReadOnlyCollection<AdminModule>>(modules);
     }
 }

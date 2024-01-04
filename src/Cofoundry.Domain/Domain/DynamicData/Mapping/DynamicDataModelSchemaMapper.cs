@@ -1,16 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Cofoundry.Domain.Data;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Cofoundry.Domain.Internal;
 
 public class DynamicDataModelSchemaMapper : IDynamicDataModelSchemaMapper
 {
     private readonly IModelMetadataProvider _modelMetadataProvider;
+    private readonly IEmptyDataModelFactory _emptyDataModelFactory;
 
     public DynamicDataModelSchemaMapper(
-        IModelMetadataProvider modelMetadataProvider
+        IModelMetadataProvider modelMetadataProvider,
+        IEmptyDataModelFactory emptyDataModelFactory
         )
     {
         _modelMetadataProvider = modelMetadataProvider;
+        _emptyDataModelFactory = emptyDataModelFactory;
     }
 
     public void Map(IDynamicDataModelSchema details, Type modelType)
@@ -31,8 +35,12 @@ public class DynamicDataModelSchemaMapper : IDynamicDataModelSchemaMapper
         foreach (var propertyMetaData in properiesMetaData.OrderBy(p => p.Order))
         {
             var property = new DynamicDataModelSchemaProperty();
+            if (propertyMetaData.PropertyName == null)
+            {
+                throw new InvalidOperationException($"{nameof(propertyMetaData.PropertyName)} is not expected to be null for property metadata");
+            }
             property.Name = propertyMetaData.PropertyName;
-            property.DisplayName = propertyMetaData.DisplayName;
+            property.DisplayName = propertyMetaData.DisplayName ?? propertyMetaData.PropertyName;
             property.Description = propertyMetaData.Description;
             property.IsRequired = propertyMetaData.IsRequired;
 
@@ -53,10 +61,9 @@ public class DynamicDataModelSchemaMapper : IDynamicDataModelSchemaMapper
         }
 
         details.DataModelProperties = dataModelProperties.ToArray();
-
-        // A default constructor is required for data model seralization anyway
-        // so that constraint isn't an issue here.
-        details.DefaultValue = new DynamicDataModelDefaultValue();
-        details.DefaultValue.Value = Activator.CreateInstance(modelType);
+        details.DefaultValue = new()
+        {
+            Value = _emptyDataModelFactory.Create<object>(modelType)
+        };
     }
 }

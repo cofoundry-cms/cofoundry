@@ -13,7 +13,10 @@ public class DefaultClientConnectionService : IClientConnectionService
     /// </summary>
     public ClientConnectionInfo GetConnectionInfo()
     {
-        var info = new ClientConnectionInfo();
+        var info = new ClientConnectionInfo()
+        {
+            IPAddress = IPAddressConstants.Default
+        };
 
         return info;
     }

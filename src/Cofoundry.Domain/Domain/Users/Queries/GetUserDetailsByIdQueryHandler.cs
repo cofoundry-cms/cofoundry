@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Internal;
 /// is found, otherwise null.
 /// </summary>
 public class GetUserDetailsByIdQueryHandler
-    : IQueryHandler<GetUserDetailsByIdQuery, UserDetails>
+    : IQueryHandler<GetUserDetailsByIdQuery, UserDetails?>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -25,7 +25,7 @@ public class GetUserDetailsByIdQueryHandler
         _userDetailsMapper = userDetailsMapper;
     }
 
-    public async Task<UserDetails> ExecuteAsync(GetUserDetailsByIdQuery query, IExecutionContext executionContext)
+    public async Task<UserDetails?> ExecuteAsync(GetUserDetailsByIdQuery query, IExecutionContext executionContext)
     {
         var dbUser = await _dbContext
             .Users

@@ -21,7 +21,7 @@ public class TimeAttribute : ValidationAttribute, IMetadataAttribute
     {
         var modelMetaData = context.DisplayMetadata;
         modelMetaData.TemplateHint = "Time";
-        var displayName = context.DisplayMetadata.DisplayName();
+        var displayName = context.DisplayMetadata.DisplayName?.Invoke();
 
         context.DisplayMetadata
             .AddAdditionalValueIfNotEmpty("Step", Step)
@@ -36,13 +36,13 @@ public class TimeAttribute : ValidationAttribute, IMetadataAttribute
     /// The inclusive minimum time allowed to be entered. The value must be
     /// in "hh:mm" or "hh:mm:ss" format.
     /// </summary>
-    public string Min { get; set; }
+    public string? Min { get; set; }
 
     /// <summary>
     /// The inclusive maximum time allowed to be entered. The value must be
     /// in "hh:mm" or "hh:mm:ss" format.
     /// </summary>
-    public string Max { get; set; }
+    public string? Max { get; set; }
 
     /// <summary>
     /// Maps to the "step" html attribute, and is the number of seconds to
@@ -53,7 +53,7 @@ public class TimeAttribute : ValidationAttribute, IMetadataAttribute
     /// </summary>
     public int Step { get; set; }
 
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         TimeSpan? minTime = ParseTime(Min, validationContext);
         TimeSpan? maxTime = ParseTime(Max, validationContext);
@@ -73,15 +73,20 @@ public class TimeAttribute : ValidationAttribute, IMetadataAttribute
         if ((minTime.HasValue && parsed.Value < minTime)
             || (maxTime.HasValue && parsed.Value > maxTime))
         {
-            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), new string[] { validationContext.MemberName });
+            string[]? memberNames = string.IsNullOrEmpty(validationContext.MemberName) ? null : [validationContext.MemberName];
+            return new ValidationResult(FormatErrorMessage(validationContext.DisplayName), memberNames);
         }
 
         return ValidationResult.Success;
     }
 
-    private TimeSpan? ParseTime(string timeAsString, ValidationContext validationContext)
+    private TimeSpan? ParseTime(string? timeAsString, ValidationContext validationContext)
     {
-        if (string.IsNullOrEmpty(timeAsString)) return null;
+        if (string.IsNullOrEmpty(timeAsString))
+        {
+            return null;
+        }
+
         if (!TimeSpan.TryParse(timeAsString, out TimeSpan time))
         {
             throw new InvalidOperationException($"{validationContext.MemberName} is not a valid time value: {timeAsString}");
@@ -92,7 +97,10 @@ public class TimeAttribute : ValidationAttribute, IMetadataAttribute
 
     private TimeSpan? ParseValueForValidation(object value)
     {
-        if (value == null) return null;
+        if (value == null)
+        {
+            return null;
+        }
 
         TimeSpan parsed;
 

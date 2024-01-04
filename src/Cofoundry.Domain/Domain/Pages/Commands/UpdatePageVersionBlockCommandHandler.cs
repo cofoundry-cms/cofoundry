@@ -58,7 +58,7 @@ public class UpdatePageVersionBlockCommandHandler
             dbBlock.PageBlockType = pageBlockType;
         }
 
-        dbBlock.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.DataModel);
+        dbBlock.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.DataModel) ?? string.Empty;
         dbBlock.UpdateDate = executionContext.ExecutionDate;
 
         if (command.PageBlockTypeTemplateId != dbBlock.PageBlockTypeTemplateId && command.PageBlockTypeTemplateId.HasValue)
@@ -80,7 +80,8 @@ public class UpdatePageVersionBlockCommandHandler
             var dependencyCommand = new UpdateUnstructuredDataDependenciesCommand(
                 PageVersionBlockEntityDefinition.DefinitionCode,
                 dbBlock.PageVersionBlockId,
-                command.DataModel);
+                command.DataModel
+                );
 
             await _commandExecutor.ExecuteAsync(dependencyCommand, executionContext);
 

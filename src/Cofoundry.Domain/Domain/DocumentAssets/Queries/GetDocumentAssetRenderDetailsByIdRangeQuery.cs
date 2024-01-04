@@ -7,7 +7,7 @@
 /// to page, including all the data needed to construct a document file 
 /// url.
 /// </summary>
-public class GetDocumentAssetRenderDetailsByIdRangeQuery : IQuery<IDictionary<int, DocumentAssetRenderDetails>>
+public class GetDocumentAssetRenderDetailsByIdRangeQuery : IQuery<IReadOnlyDictionary<int, DocumentAssetRenderDetails>>
 {
     public GetDocumentAssetRenderDetailsByIdRangeQuery()
     {
@@ -20,7 +20,7 @@ public class GetDocumentAssetRenderDetailsByIdRangeQuery : IQuery<IDictionary<in
     public GetDocumentAssetRenderDetailsByIdRangeQuery(
         IEnumerable<int> documentAssetIds
         )
-        : this(documentAssetIds?.ToList())
+        : this(documentAssetIds?.ToArray() ?? [])
     {
     }
 
@@ -41,5 +41,5 @@ public class GetDocumentAssetRenderDetailsByIdRangeQuery : IQuery<IDictionary<in
     /// Collection of database ids of the document assets to get.
     /// </summary>
     [Required]
-    public IReadOnlyCollection<int> DocumentAssetIds { get; set; }
+    public IReadOnlyCollection<int> DocumentAssetIds { get; set; } = Array.Empty<int>();
 }

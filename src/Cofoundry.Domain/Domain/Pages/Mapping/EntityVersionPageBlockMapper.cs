@@ -4,8 +4,7 @@ using Microsoft.Extensions.Logging;
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// A mapping helper containing a couple of mapping methods used in multiple queires
-/// to map page blocks in regular pages as well as custom entity details pages.
+/// Default implementation of <see cref="IEntityVersionPageBlockMapper"/>.
 /// </summary>
 public class EntityVersionPageBlockMapper : IEntityVersionPageBlockMapper
 {
@@ -13,7 +12,6 @@ public class EntityVersionPageBlockMapper : IEntityVersionPageBlockMapper
     private readonly ILogger<EntityVersionPageBlockMapper> _logger;
 
     public EntityVersionPageBlockMapper(
-        IQueryExecutor queryExecutor,
         IPageVersionBlockModelMapper pageVersionBlockModelMapper,
         ILogger<EntityVersionPageBlockMapper> logger
         )
@@ -24,15 +22,16 @@ public class EntityVersionPageBlockMapper : IEntityVersionPageBlockMapper
 
     private class MappedPageBlock
     {
-        public IEntityVersionPageBlock PageBlock { get; set; }
-        public IPageBlockTypeDisplayModel DisplayModel { get; set; }
-        public PageBlockTypeSummary BlockType { get; set; }
+        public required IEntityVersionPageBlock PageBlock { get; set; }
+        public required IPageBlockTypeDisplayModel DisplayModel { get; set; }
+        public required PageBlockTypeSummary BlockType { get; set; }
     }
 
+    /// <inheritdoc/>
     public async Task MapRegionsAsync<TBlockRenderDetails>(
         IEnumerable<IEntityVersionPageBlock> dbBlock,
         IEnumerable<IEntityRegionRenderDetails<TBlockRenderDetails>> regions,
-        ICollection<PageBlockTypeSummary> allBlockTypes,
+        IReadOnlyCollection<PageBlockTypeSummary> allBlockTypes,
         PublishStatusQuery publishStatus,
         IExecutionContext executionContext
         )
@@ -52,18 +51,16 @@ public class EntityVersionPageBlockMapper : IEntityVersionPageBlockMapper
         }
     }
 
-    /// <summary>
-    /// Locates and returns the correct templates for a block if it a custom template 
-    /// assigned, otherwise null is returned.
-    /// </summary>
-    /// <param name="pageBlock">An unmapped database block to locate the template for.</param>
-    /// <param name="blockType">The block type associated with the block in which to look for the template.</param>
-    public PageBlockTypeTemplateSummary GetCustomTemplate(IEntityVersionPageBlock pageBlock, PageBlockTypeSummary blockType)
+    /// <inheritdoc/>
+    public PageBlockTypeTemplateSummary? GetCustomTemplate(IEntityVersionPageBlock pageBlock, PageBlockTypeSummary blockType)
     {
         ArgumentNullException.ThrowIfNull(pageBlock);
         ArgumentNullException.ThrowIfNull(blockType);
 
-        if (!pageBlock.PageBlockTypeTemplateId.HasValue) return null;
+        if (!pageBlock.PageBlockTypeTemplateId.HasValue)
+        {
+            return null;
+        }
 
         var template = blockType
             .Templates
@@ -91,7 +88,10 @@ public class EntityVersionPageBlockMapper : IEntityVersionPageBlockMapper
             var blockType = blockTypes.SingleOrDefault(t => t.PageBlockTypeId == group.Key);
 
             // If missing e.g. archived, skip
-            if (blockType == null) continue;
+            if (blockType == null)
+            {
+                continue;
+            }
 
             var mapperOutput = await _pageVersionBlockModelMapper.MapDisplayModelAsync(
                 blockType.FileName,

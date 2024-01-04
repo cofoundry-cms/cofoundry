@@ -19,12 +19,12 @@ public class CustomEntitySummary : IUpdateAudited, IPageRoute, IPublishableEntit
     /// entity e.g. Blog Post, Project, Product. The definition code is defined
     /// in a class that inherits from ICustomEntityDefinition.
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The descriptive human-readable title of the custom entity.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The string identifier slug which can
@@ -32,12 +32,12 @@ public class CustomEntitySummary : IUpdateAudited, IPageRoute, IPublishableEntit
     /// of the custom entity page. Can be forced to be unique
     /// by a setting on the custom entity definition.
     /// </summary>
-    public string UrlSlug { get; set; }
+    public string UrlSlug { get; set; } = string.Empty;
 
     /// <summary>
     /// The full path of the entity including directories and the locale. 
     /// </summary>
-    public string FullUrlPath { get; set; }
+    public string FullUrlPath { get; set; } = string.Empty;
 
     public PublishStatus PublishStatus { get; set; }
 
@@ -69,7 +69,7 @@ public class CustomEntitySummary : IUpdateAudited, IPageRoute, IPublishableEntit
     /// <summary>
     /// Optional locale of the page.
     /// </summary>
-    public ActiveLocale Locale { get; set; }
+    public ActiveLocale? Locale { get; set; }
 
     /// <summary>
     /// Custom entity model data deserialized from the database
@@ -79,7 +79,7 @@ public class CustomEntitySummary : IUpdateAudited, IPageRoute, IPublishableEntit
     /// cast the model to the correct data model type in oder to 
     /// access the properties.
     /// </summary>
-    public ICustomEntityDataModel Model { get; set; }
+    public ICustomEntityDataModel Model { get; set; } = UninitializedCustomEntityDataModel.Instance;
 
-    public UpdateAuditData AuditData { get; set; }
+    public UpdateAuditData AuditData { get; set; } = UpdateAuditData.Uninitialized;
 }

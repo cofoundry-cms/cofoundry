@@ -9,7 +9,7 @@ public class DeleteUnstructuredDataDependenciesCommand : ICommand
     }
 
     [Required]
-    public string RootEntityDefinitionCode { get; set; }
+    public string RootEntityDefinitionCode { get; set; } = string.Empty;
 
     [Required]
     [PositiveInteger]

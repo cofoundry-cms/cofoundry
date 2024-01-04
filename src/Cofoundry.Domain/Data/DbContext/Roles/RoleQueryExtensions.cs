@@ -26,7 +26,7 @@ public static class RoleQueryExtensions
     /// <param name="roleId">Id of the role to filter to.</param>
     /// <param name="roleCode">3 character identifier of the role to filter to.</param>
     /// <returns>The filtered role collection.</returns>
-    public static IQueryable<Role> FilterByIdOrCode(this IQueryable<Role> roles, int? roleId, string roleCode)
+    public static IQueryable<Role> FilterByIdOrCode(this IQueryable<Role> roles, int? roleId, string? roleCode)
     {
         if (roleId.HasValue)
         {
@@ -44,7 +44,7 @@ public static class RoleQueryExtensions
     /// <param name="roles">Collection of roles to filter.</param>
     /// <param name="roleCode">3 character identifier of the role to filter to.</param>
     /// <returns>The filtered role collection.</returns>
-    public static IQueryable<Role> FilterByRoleCode(this IQueryable<Role> roles, string roleCode)
+    public static IQueryable<Role> FilterByRoleCode(this IQueryable<Role> roles, string? roleCode)
     {
         var role = roles
             .Where(r => r.RoleCode != null && r.RoleCode == roleCode);

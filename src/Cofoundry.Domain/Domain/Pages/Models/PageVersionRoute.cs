@@ -21,7 +21,7 @@ public class PageVersionRoute : IVersionRoute
     /// The display title of the page. Often used as the meta
     /// title of the webpage, but it is not mandatory.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// A page can have many published versions, this flag indicates if

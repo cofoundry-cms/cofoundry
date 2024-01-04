@@ -12,5 +12,5 @@ public interface IMailTemplateWithApplicationName : IMailTemplate
     /// <summary>
     /// The name of the application sending the email.
     /// </summary>
-    string ApplicationName { get; set; }
+    string? ApplicationName { get; set; }
 }

@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdateUserCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateUserCommand>, UpdateUserCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateUserCommand>, UpdateUserCommand?>
     , ISignedInPermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -21,7 +21,7 @@ public class GetUpdateUserCommandByIdQueryHandler
         _userAreaDefinitionRepository = userAreaDefinitionRepository;
     }
 
-    public async Task<UpdateUserCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateUserCommand> query, IExecutionContext executionContext)
+    public async Task<UpdateUserCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateUserCommand> query, IExecutionContext executionContext)
     {
         var dbUser = await _dbContext
             .Users
@@ -42,7 +42,7 @@ public class GetUpdateUserCommandByIdQueryHandler
             _permissionValidationService.EnforceCurrentUserOrHasPermission<NonCofoundryUserReadPermission>(query.Id, executionContext.UserContext);
         }
 
-        var userArea = _userAreaDefinitionRepository.GetByCode(dbUser.UserAreaCode);
+        var userArea = _userAreaDefinitionRepository.GetRequiredByCode(dbUser.UserAreaCode);
 
         var user = new UpdateUserCommand()
         {

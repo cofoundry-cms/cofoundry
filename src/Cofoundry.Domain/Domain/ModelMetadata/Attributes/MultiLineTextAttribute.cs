@@ -22,10 +22,9 @@ public class MultiLineTextAttribute : Attribute, IMetadataAttribute
 
     public void Process(DisplayMetadataProviderContext context)
     {
-        var modelMetaData = context
+        context
             .DisplayMetadata
             .AddAdditionalValueIfNotEmpty("Rows", Rows)
             .TemplateHint = DataType.MultilineText.ToString();
-
     }
 }

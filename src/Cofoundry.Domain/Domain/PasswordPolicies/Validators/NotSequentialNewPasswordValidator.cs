@@ -11,7 +11,7 @@ public class NotSequentialNewPasswordValidator : INewPasswordValidator
 {
     public string Criteria => $"Must not be a sequence of numbers or characters.";
 
-    public ValidationError Validate(INewPasswordValidationContext context)
+    public ValidationError? Validate(INewPasswordValidationContext context)
     {
         var lowerPassword = context
             .Password

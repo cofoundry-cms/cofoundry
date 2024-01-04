@@ -10,7 +10,7 @@ namespace Cofoundry.Domain.Internal;
 /// public webpage.
 /// </summary>
 public class GetCustomEntitySummariesByIdRangeQueryHandler
-    : IQueryHandler<GetCustomEntitySummariesByIdRangeQuery, IDictionary<int, CustomEntitySummary>>
+    : IQueryHandler<GetCustomEntitySummariesByIdRangeQuery, IReadOnlyDictionary<int, CustomEntitySummary>>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -29,7 +29,7 @@ public class GetCustomEntitySummariesByIdRangeQueryHandler
         _customEntitySummaryMapper = customEntitySummaryMapper;
     }
 
-    public async Task<IDictionary<int, CustomEntitySummary>> ExecuteAsync(GetCustomEntitySummariesByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, CustomEntitySummary>> ExecuteAsync(GetCustomEntitySummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         var dbResults = await QueryAsync(query, executionContext);
 
@@ -39,10 +39,10 @@ public class GetCustomEntitySummariesByIdRangeQueryHandler
 
         var mappedResults = await _customEntitySummaryMapper.MapAsync(dbResults, executionContext);
 
-        return mappedResults.ToDictionary(r => r.CustomEntityId);
+        return mappedResults.ToImmutableDictionary(r => r.CustomEntityId);
     }
 
-    private async Task<List<CustomEntityPublishStatusQuery>> QueryAsync(GetCustomEntitySummariesByIdRangeQuery query, IExecutionContext executionContext)
+    private async Task<IReadOnlyCollection<CustomEntityPublishStatusQuery>> QueryAsync(GetCustomEntitySummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         var dbResults = await _dbContext
             .CustomEntityPublishStatusQueries
@@ -54,7 +54,7 @@ public class GetCustomEntitySummariesByIdRangeQueryHandler
             .Where(v => query.CustomEntityIds.Contains(v.CustomEntityId))
             .FilterActive()
             .FilterByStatus(PublishStatusQuery.Latest, executionContext.ExecutionDate)
-            .ToListAsync();
+            .ToArrayAsync();
 
         return dbResults;
     }

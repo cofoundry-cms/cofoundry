@@ -7,6 +7,7 @@ namespace Cofoundry.Domain;
 /// </summary>
 public class AdminSettings : CofoundryConfigurationSettingsBase
 {
+    [SetsRequiredMembers]
     public AdminSettings()
     {
         DirectoryName = "Admin";
@@ -24,12 +25,12 @@ public class AdminSettings : CofoundryConfigurationSettingsBase
     /// </summary>
     [Required]
     [Slug]
-    public string DirectoryName
+    public required string DirectoryName
     {
         get { return _directoryName; }
-        set { _directoryName = value?.ToLowerInvariant(); }
+        set { _directoryName = value.ToLowerInvariant(); }
     }
-    private string _directoryName = null;
+    private string _directoryName = string.Empty;
 
     /// <summary>
     /// Indicates whether to automatically inject the visual editor

@@ -26,13 +26,13 @@ public static class EntityRelationAttributeHelper
                 Property = p,
                 Attribute = p.GetCustomAttributes(false)
                     .Where(a => a is IEntityRelationAttribute)
-                    .FirstOrDefault()
+                    .FirstOrDefault() as IEntityRelationAttribute
             })
             .Where(p => p.Attribute != null);
 
         foreach (var relationProperty in relationProperties)
         {
-            var attribtue = (IEntityRelationAttribute)relationProperty.Attribute;
+            var attribtue = relationProperty.Attribute!;
             foreach (var relation in attribtue.GetRelations(model, relationProperty.Property))
             {
                 yield return relation;

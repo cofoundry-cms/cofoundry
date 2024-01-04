@@ -23,8 +23,13 @@ public class EntityDefinitionRepository : IEntityDefinitionRepository
         _entityDefinitions = allDefinitions.ToDictionary(k => k.EntityDefinitionCode);
     }
 
-    public IEntityDefinition GetByCode(string entityDefinitionCode)
+    public IEntityDefinition? GetByCode(string? entityDefinitionCode)
     {
+        if (entityDefinitionCode == null)
+        {
+            return null;
+        }
+
         return _entityDefinitions.GetOrDefault(entityDefinitionCode);
     }
 
@@ -119,7 +124,7 @@ public class EntityDefinitionRepository : IEntityDefinitionRepository
         }
     }
 
-    private static void ValidateDefinitionExists(IEntityDefinition definition, string identifier)
+    private static void ValidateDefinitionExists([NotNull] IEntityDefinition? definition, string identifier)
     {
         if (definition == null)
         {

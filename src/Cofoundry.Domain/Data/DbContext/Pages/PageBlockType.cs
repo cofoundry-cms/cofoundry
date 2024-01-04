@@ -26,19 +26,19 @@ public class PageBlockType
     /// that were both named 'Content' because int he context of the templates there 
     /// would be no conflict.
     /// </remarks>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// An optional paragraph of description text that is displayed in the
     /// user interface to help someone decide which block type to choose.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// The name of the view file (without extension) that gets rendered 
     /// with the block data. This file name needs to be unique.
     /// </summary>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// This is basically a soft delete, with archived templates
@@ -62,15 +62,15 @@ public class PageBlockType
     /// default template. This allows for a user to display content in multiple 
     /// ways.
     /// </summary>
-    public virtual ICollection<PageBlockTypeTemplate> PageBlockTemplates { get; set; } = new List<PageBlockTypeTemplate>();
+    public ICollection<PageBlockTypeTemplate> PageBlockTemplates { get; set; } = new List<PageBlockTypeTemplate>();
 
     /// <summary>
     /// The page blocks this type is used in.
     /// </summary>
-    public virtual ICollection<PageVersionBlock> PageVersionBlocks { get; set; } = new List<PageVersionBlock>();
+    public ICollection<PageVersionBlock> PageVersionBlocks { get; set; } = new List<PageVersionBlock>();
 
     /// <summary>
     /// The custom entity blocks this type is used in.
     /// </summary>
-    public virtual ICollection<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; }
+    public ICollection<CustomEntityVersionPageBlock> CustomEntityVersionPageBlocks { get; set; } = new List<CustomEntityVersionPageBlock>();
 }

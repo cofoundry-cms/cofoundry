@@ -18,11 +18,11 @@ public class CustomEntityDynamicEntityDefinition : IDependableEntityDefinition
         Name = customEntityDefinition.Name;
     }
 
-    public string EntityDefinitionCode { get; private set; }
+    public string EntityDefinitionCode { get; private set; } = string.Empty;
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = string.Empty;
 
-    public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
+    public IQuery<IReadOnlyDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
     {
         return new GetCustomEntityEntityMicroSummariesByIdRangeQuery(ids);
     }

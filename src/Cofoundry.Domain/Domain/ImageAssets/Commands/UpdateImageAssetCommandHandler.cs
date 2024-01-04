@@ -55,7 +55,6 @@ public class UpdateImageAssetCommandHandler
     public async Task ExecuteAsync(UpdateImageAssetCommand command, IExecutionContext executionContext)
     {
         bool hasNewFile = command.File != null;
-
         if (hasNewFile)
         {
             ValidateFileType(command);
@@ -67,6 +66,7 @@ public class UpdateImageAssetCommandHandler
             .ThenInclude(a => a.Tag)
             .FilterById(command.ImageAssetId)
             .SingleOrDefaultAsync();
+        EntityNotFoundException.ThrowIfNull(imageAsset);
 
         imageAsset.Title = command.Title;
         imageAsset.FileName = SlugFormatter.ToSlug(command.Title);
@@ -91,6 +91,10 @@ public class UpdateImageAssetCommandHandler
                 imageAsset.FileNameOnDisk = $"{imageAsset.ImageAssetId}-{fileStamp}";
 
                 await _commandExecutor.ExecuteAsync(deleteOldFileCommand);
+                if (command.File == null)
+                {
+                    throw new InvalidOperationException("command.File should not be null");
+                }
                 await _imageAssetFileService.SaveAsync(command.File, imageAsset, nameof(command.File));
             }
 
@@ -120,6 +124,7 @@ public class UpdateImageAssetCommandHandler
 
     private void ValidateFileType(UpdateImageAssetCommand command)
     {
+        ArgumentNullException.ThrowIfNull(command.File);
         var contentType = _mimeTypeService.MapFromFileName(command.File.FileName, command.File.MimeType);
         _assetFileTypeValidator.ValidateAndThrow(command.File.FileName, contentType, nameof(command.File));
     }

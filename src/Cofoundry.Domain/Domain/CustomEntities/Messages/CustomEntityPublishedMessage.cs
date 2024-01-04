@@ -16,7 +16,7 @@ public class CustomEntityPublishedMessage : ICustomEntityContentUpdatedMessage
     /// <summary>
     /// Definition code of the custom entity that the content change affects
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// True, obvs.

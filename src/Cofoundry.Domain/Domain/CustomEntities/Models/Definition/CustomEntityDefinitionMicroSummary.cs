@@ -10,23 +10,23 @@ public class CustomEntityDefinitionMicroSummary
     /// <summary>
     /// Unique 6 letter code representing the entity (use uppercase)
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Plural name of the entity e.g. 'Products'
     /// </summary>
-    public string NamePlural { get; set; }
+    public string NamePlural { get; set; } = string.Empty;
 
     /// <summary>
     /// Singlar name of the entity e.g. 'Product'
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// A short description that shows up as a tooltip for the admin 
     /// module. E.g  "Products and stock." or "News items for shareholders"
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates whether the UrlSlug property should be treated

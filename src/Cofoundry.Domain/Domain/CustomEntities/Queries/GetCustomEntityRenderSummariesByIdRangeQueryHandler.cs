@@ -10,7 +10,7 @@ namespace Cofoundry.Domain.Internal;
 /// this behavior can be controlled by the publishStatus query property.
 /// </summary>
 public class GetCustomEntityRenderSummariesByIdRangeQueryHandler
-    : IQueryHandler<GetCustomEntityRenderSummariesByIdRangeQuery, IDictionary<int, CustomEntityRenderSummary>>
+    : IQueryHandler<GetCustomEntityRenderSummariesByIdRangeQuery, IReadOnlyDictionary<int, CustomEntityRenderSummary>>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -28,17 +28,17 @@ public class GetCustomEntityRenderSummariesByIdRangeQueryHandler
         _permissionValidationService = permissionValidationService;
     }
 
-    public async Task<IDictionary<int, CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         var dbResults = await QueryAsync(query, executionContext);
 
         EnforcePermissions(dbResults, executionContext);
         var results = await _customEntityRenderSummaryMapper.MapAsync(dbResults, executionContext);
 
-        return results.ToDictionary(r => r.CustomEntityId);
+        return results.ToImmutableDictionary(r => r.CustomEntityId);
     }
 
-    private async Task<List<CustomEntityVersion>> QueryAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    private async Task<IReadOnlyCollection<CustomEntityVersion>> QueryAsync(GetCustomEntityRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
         {
@@ -53,14 +53,14 @@ public class GetCustomEntityRenderSummariesByIdRangeQueryHandler
             .FilterActive()
             .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
             .Where(v => query.CustomEntityIds.Contains(v.CustomEntityId))
-            .ToListAsync();
+            .ToArrayAsync();
 
         return dbQuery
             .Select(v => v.CustomEntityVersion)
-            .ToList();
+            .ToArray();
     }
 
-    private void EnforcePermissions(List<CustomEntityVersion> dbResults, IExecutionContext executionContext)
+    private void EnforcePermissions(IReadOnlyCollection<CustomEntityVersion> dbResults, IExecutionContext executionContext)
     {
         var definitionCodes = dbResults.Select(r => r.CustomEntity.CustomEntityDefinitionCode);
         _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(definitionCodes, executionContext.UserContext);

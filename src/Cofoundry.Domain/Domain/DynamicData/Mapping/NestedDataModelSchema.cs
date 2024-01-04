@@ -11,28 +11,28 @@ public class NestedDataModelSchema : IDynamicDataModelSchema
     /// <summary>
     /// The name of the .NET data model type that the schema has been generated from.
     /// </summary>
-    public string TypeName { get; set; }
+    public string TypeName { get; set; } = string.Empty;
 
     /// <summary>
     /// The user-friendly display name, which is used to pick the model from a list
     /// in the admin panel.
     /// </summary>
-    public string DisplayName { get; set; }
+    public string DisplayName { get; set; } = string.Empty;
 
     /// <summary>
     /// Optional description of the data model, which is used to pick the model from a list
     /// in the admin panel.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
-    public string DataTemplateName { get; set; }
+    public string DataTemplateName { get; set; } = string.Empty;
 
     /// <summary>
     /// Data model property meta data, including UI display details
     /// and validation attributes. This is typically used for dynamically generating 
     /// parts of the admin UI.
     /// </summary>
-    public ICollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; }
+    public IReadOnlyCollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; } = Array.Empty<DynamicDataModelSchemaProperty>();
 
-    public DynamicDataModelDefaultValue DefaultValue { get; set; }
+    public DynamicDataModelDefaultValue DefaultValue { get; set; } = DynamicDataModelDefaultValue.Uninitialized;
 }

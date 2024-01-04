@@ -48,14 +48,16 @@ public class AddImageAssetCommandHandler
     {
         ValidateFileType(command);
 
-        var imageAsset = new ImageAsset();
-        imageAsset.Title = command.Title;
-        imageAsset.FileName = SlugFormatter.ToSlug(command.Title);
-        imageAsset.DefaultAnchorLocation = command.DefaultAnchorLocation;
-        imageAsset.FileUpdateDate = executionContext.ExecutionDate;
-        imageAsset.FileNameOnDisk = "file-not-saved";
-        imageAsset.FileExtension = "unknown";
-        imageAsset.VerificationToken = _randomStringGenerator.Generate(6);
+        var imageAsset = new ImageAsset
+        {
+            Title = command.Title,
+            FileName = SlugFormatter.ToSlug(command.Title),
+            DefaultAnchorLocation = command.DefaultAnchorLocation,
+            FileUpdateDate = executionContext.ExecutionDate,
+            FileNameOnDisk = "file-not-saved",
+            FileExtension = "unknown",
+            VerificationToken = _randomStringGenerator.Generate(6)
+        };
 
         var fileStamp = AssetFileStampHelper.ToFileStamp(imageAsset.FileUpdateDate);
 

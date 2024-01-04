@@ -3,16 +3,13 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// A culture factory that allows the creation and registration of custom cultures.
+/// Default implementation of <see cref="ICultureFactory"/>.
 /// </summary>
 public class CultureFactory : ICultureFactory
 {
     public CultureInfo Create(string languageTag)
     {
-        if (string.IsNullOrEmpty(languageTag))
-        {
-            throw new ArgumentException("Cannot create a culture with an empty language tag.", languageTag);
-        }
+        ArgumentEmptyException.ThrowIfNullOrWhitespace(languageTag);
 
         return new CultureInfo(languageTag);
     }

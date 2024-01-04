@@ -12,5 +12,6 @@ public interface IUserDetailsMapper
     /// db record is null then null is returned.
     /// </summary>
     /// <param name="dbUser">User record from the database.</param>
-    UserDetails Map(User dbUser);
+    [return: NotNullIfNotNull(nameof(dbUser))]
+    UserDetails? Map(User? dbUser);
 }

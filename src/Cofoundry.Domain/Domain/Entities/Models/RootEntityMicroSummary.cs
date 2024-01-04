@@ -22,24 +22,24 @@ public class RootEntityMicroSummary
     public int RootEntityId { get; set; }
 
     /// <summary>
-    /// Descriptive title of the root entity, suitable for diaply in a GUI or
+    /// Descriptive title of the root entity, suitable for display in a GUI or
     /// to be used for formatting messages. The "root" refers to the fact that 
     /// this instance may refer to "child" or aggregate entity such as a "page version",
     /// whereby <see cref="RootEntityTitle"/> would then refer to the aggregate root entity "page". 
     /// </summary>
-    public string RootEntityTitle { get; set; }
+    public string RootEntityTitle { get; set; } = string.Empty;
 
     /// <summary>
     /// 6 character identifier for the root entity type. Maps from 
     /// <see cref="IEntityDefinition.EntityDefinitionCode"/>.
     /// </summary>
-    public string EntityDefinitionCode { get; set; }
+    public string EntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
-    /// Descriptive name of the root entity type, suitable for diaply in a GUI or
+    /// Descriptive name of the root entity type, suitable for display in a GUI or
     /// to be used for formatting messages. Maps from <see cref="IEntityDefinition.Name"/>
     /// </summary>
-    public string EntityDefinitionName { get; set; }
+    public string EntityDefinitionName { get; set; } = string.Empty;
 
     /// <summary>
     /// If this entity is versioned, this indicates if the entity reference relates to a 

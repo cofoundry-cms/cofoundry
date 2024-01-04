@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Simple mapper for mapping to ImageAssetDetails objects.
+/// Default implementation of <see cref="IImageAssetDetailsMapper"/>.
 /// </summary>
 public class ImageAssetDetailsMapper : IImageAssetDetailsMapper
 {
@@ -17,18 +17,19 @@ public class ImageAssetDetailsMapper : IImageAssetDetailsMapper
         _imageAssetSummaryMapper = new ImageAssetSummaryMapper(auditDataMapper, imageAssetRouteLibrary);
     }
 
-    /// <summary>
-    /// Maps an EF ImageAsset record from the db into a ImageAssetDetails 
-    /// object. If the db record is null then null is returned.
-    /// </summary>
-    /// <param name="dbImage">ImageAsset record from the database.</param>
-    public ImageAssetDetails Map(ImageAsset dbImage)
+    /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(dbImage))]
+    public ImageAssetDetails? Map(ImageAsset? dbImage)
     {
-        if (dbImage == null) return null;
+        if (dbImage == null)
+        {
+            return null;
+        }
 
         var image = new ImageAssetDetails();
         _imageAssetSummaryMapper.Map(image, dbImage);
         image.FileUpdateDate = dbImage.FileUpdateDate;
+
         return image;
     }
 }

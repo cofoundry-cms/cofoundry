@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Internal;
 /// publishStatus query property.
 /// </summary>
 public class GetCustomEntityRenderSummaryByIdQueryHandler
-    : IQueryHandler<GetCustomEntityRenderSummaryByIdQuery, CustomEntityRenderSummary>
+    : IQueryHandler<GetCustomEntityRenderSummaryByIdQuery, CustomEntityRenderSummary?>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -20,7 +20,6 @@ public class GetCustomEntityRenderSummaryByIdQueryHandler
 
     public GetCustomEntityRenderSummaryByIdQueryHandler(
         CofoundryDbContext dbContext,
-        IQueryExecutor queryExecutor,
         ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
         IPermissionValidationService permissionValidationService
         )
@@ -30,10 +29,13 @@ public class GetCustomEntityRenderSummaryByIdQueryHandler
         _permissionValidationService = permissionValidationService;
     }
 
-    public async Task<CustomEntityRenderSummary> ExecuteAsync(GetCustomEntityRenderSummaryByIdQuery query, IExecutionContext executionContext)
+    public async Task<CustomEntityRenderSummary?> ExecuteAsync(GetCustomEntityRenderSummaryByIdQuery query, IExecutionContext executionContext)
     {
         var dbResult = await QueryAsync(query, executionContext);
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
 
         _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
 
@@ -42,9 +44,9 @@ public class GetCustomEntityRenderSummaryByIdQueryHandler
         return result;
     }
 
-    private async Task<CustomEntityVersion> QueryAsync(GetCustomEntityRenderSummaryByIdQuery query, IExecutionContext executionContext)
+    private async Task<CustomEntityVersion?> QueryAsync(GetCustomEntityRenderSummaryByIdQuery query, IExecutionContext executionContext)
     {
-        CustomEntityVersion result;
+        CustomEntityVersion? result;
 
         if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
         {

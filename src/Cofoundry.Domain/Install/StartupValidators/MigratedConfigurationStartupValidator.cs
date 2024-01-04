@@ -12,7 +12,7 @@ public class MigratedConfigurationStartupValidator : IStartupValidator
 {
     private readonly IConfiguration _configuration;
 
-    private Dictionary<string, string> ConfigMappings = new Dictionary<string, string>()
+    private readonly Dictionary<string, string> ConfigMappings = new()
     {
         { "Cofoundry:Authentication:NumHoursPasswordResetLinkValid", "Cofoundry:Users:AccountRecovery:ExpireAfter" },
         { "Cofoundry:Authentication:MaxUsernameAttemptsBoundaryInMinutes", "Cofoundry:Users:Authentication:UsernameRateLimit:Window" },
@@ -34,9 +34,9 @@ public class MigratedConfigurationStartupValidator : IStartupValidator
         var invalidSettings = ConfigMappings
             .Where(kvp => _configuration.GetValue<string>(kvp.Key) != null)
             .OrderBy(kvp => kvp.Key)
-            .ToList();
+            .ToArray();
 
-        if (invalidSettings.Any())
+        if (invalidSettings.Length != 0)
         {
             var sb = new StringBuilder();
             sb.AppendLine("Invalid configuration detected. The following configuration settings have been moved to a new location:");

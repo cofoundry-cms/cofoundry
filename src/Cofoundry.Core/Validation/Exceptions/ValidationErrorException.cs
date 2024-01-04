@@ -62,12 +62,12 @@ public class ValidationErrorException : ValidationException
     /// <param name="message">Client-friendly text describing the error.</param>
     /// <param name="properties">Zero or more properties that the error message applies to.</param>
     /// <returns>New ValidationErrorException instance.</returns>
-    public static ValidationErrorException CreateWithProperties(string message, params string[] properties)
+    public static ValidationErrorException CreateWithProperties(string message, params string[]? properties)
     {
         return new ValidationErrorException(new ValidationError()
         {
             Message = message,
-            Properties = properties
+            Properties = properties ?? []
         });
     }
 
@@ -101,13 +101,13 @@ public class ValidationErrorException : ValidationException
     /// </param>
     /// <param name="properties">Zero or more properties that the error message applies to.</param>
     /// <returns>New ValidationErrorException instance.</returns>
-    public static ValidationErrorException CreateWithCodeAndProperties(string message, string code, params string[] properties)
+    public static ValidationErrorException CreateWithCodeAndProperties(string message, string code, params string[]? properties)
     {
         return new ValidationErrorException(new ValidationError()
         {
             Message = message,
             ErrorCode = code,
-            Properties = properties
+            Properties = properties ?? []
         });
     }
 }

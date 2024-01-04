@@ -1,5 +1,5 @@
 ﻿namespace Cofoundry.Domain;
 
-public class GetAllRewriteRuleSummariesQuery : IQuery<ICollection<RewriteRuleSummary>>
+public class GetAllRewriteRuleSummariesQuery : IQuery<IReadOnlyCollection<RewriteRuleSummary>>
 {
 }

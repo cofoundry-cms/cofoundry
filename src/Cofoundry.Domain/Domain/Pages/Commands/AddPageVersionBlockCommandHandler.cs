@@ -64,7 +64,7 @@ public class AddPageVersionBlockCommandHandler
             .PageVersionBlocks
             .Where(m => m.PageTemplateRegionId == templateRegion.PageTemplateRegionId);
 
-        PageVersionBlock adjacentItem = null;
+        PageVersionBlock? adjacentItem = null;
         if (command.AdjacentVersionBlockId.HasValue)
         {
             adjacentItem = pageVersionBlocks

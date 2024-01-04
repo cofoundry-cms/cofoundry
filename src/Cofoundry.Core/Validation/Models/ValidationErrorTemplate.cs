@@ -81,7 +81,7 @@ public class ValidationErrorTemplate
     /// Zero or more properties that the error message applies to.
     /// </param>
     /// <returns>New <see cref="ValidationError"/> instance.</returns>
-    public ValidationError Create(params string[] properties)
+    public ValidationError Create(params string?[] properties)
     {
         var error = new ValidationError()
         {
@@ -92,7 +92,9 @@ public class ValidationErrorTemplate
 
         if (!EnumerableHelper.IsNullOrEmpty(properties))
         {
-            error.Properties = properties;
+            error.Properties = properties
+                .WhereNotNullOrEmpty()
+                .ToArray();
         }
 
         return error;

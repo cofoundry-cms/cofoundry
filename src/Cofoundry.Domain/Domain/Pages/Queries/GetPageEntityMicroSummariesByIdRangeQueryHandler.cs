@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetPageEntityMicroSummariesByIdRangeQueryHandler
-    : IQueryHandler<GetPageEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
-    , IPermissionRestrictedQueryHandler<GetPageEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+    : IQueryHandler<GetPageEntityMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RootEntityMicroSummary>>
+    , IPermissionRestrictedQueryHandler<GetPageEntityMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RootEntityMicroSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IEntityDefinitionRepository _entityDefinitionRepository;
@@ -18,7 +18,7 @@ public class GetPageEntityMicroSummariesByIdRangeQueryHandler
         _entityDefinitionRepository = entityDefinitionRepository;
     }
 
-    public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetPageEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetPageEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
 
         var definition = _entityDefinitionRepository.GetRequiredByCode(PageEntityDefinition.DefinitionCode);

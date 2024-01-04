@@ -15,7 +15,7 @@ public class ContentRepositoryRewriteRuleGetAllQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<RewriteRuleSummary>> AsSummaries()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<RewriteRuleSummary>> AsSummaries()
     {
         var query = new GetAllRewriteRuleSummariesQuery();
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

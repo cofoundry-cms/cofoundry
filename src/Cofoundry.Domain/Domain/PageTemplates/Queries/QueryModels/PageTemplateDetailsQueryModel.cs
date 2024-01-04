@@ -4,9 +4,9 @@ namespace Cofoundry.Domain.QueryModels;
 
 public class PageTemplateDetailsQueryModel
 {
-    public PageTemplate PageTemplate { get; set; }
+    public required PageTemplate PageTemplate { get; set; }
 
     public int NumPages { get; set; }
 
-    public CustomEntityDefinitionMicroSummary CustomEntityDefinition { get; set; }
+    public CustomEntityDefinitionMicroSummary? CustomEntityDefinition { get; set; }
 }

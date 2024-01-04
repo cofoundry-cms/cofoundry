@@ -12,7 +12,7 @@ public interface IEntityDefinitionRepository
     /// </summary>
     /// <param name="entityDefinitionCode">The unique 6 character code that identifies the entity definition.</param>
     /// <returns>Returns the matching <see cref="IEntityDefinition"/> instance if one is found; otherwise <see langword="null"/>.</returns>
-    IEntityDefinition GetByCode(string entityDefinitionCode);
+    IEntityDefinition? GetByCode(string entityDefinitionCode);
 
     /// <summary>
     /// Returns an entity definition by it's unique <see cref="IEntityDefinition.EntityDefinitionCode"/>. 

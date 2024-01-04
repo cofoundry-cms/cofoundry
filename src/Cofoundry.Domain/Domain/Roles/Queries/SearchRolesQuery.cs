@@ -8,7 +8,7 @@ public class SearchRolesQuery : SimplePageableQuery, IQuery<PagedQueryResult<Rol
     /// <summary>
     /// Text filtering that currently filters only on the title property.
     /// </summary>
-    public string Text { get; set; }
+    public string? Text { get; set; }
 
     /// <summary>
     /// Whether to exclude the special anonymous system role from the result 
@@ -21,5 +21,5 @@ public class SearchRolesQuery : SimplePageableQuery, IQuery<PagedQueryResult<Rol
     /// Roles are partitioned by UserArea so use this to filter to a single
     /// user area only.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string? UserAreaCode { get; set; }
 }

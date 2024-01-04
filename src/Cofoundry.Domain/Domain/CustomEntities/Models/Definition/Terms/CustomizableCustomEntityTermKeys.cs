@@ -11,7 +11,7 @@ public static class CustomizableCustomEntityTermKeys
     /// <summary>
     /// The default custom entity terms to apply if none other are defined.
     /// </summary>
-    public static readonly Dictionary<string, string> Defaults = new Dictionary<string, string>()
+    public static readonly Dictionary<string, string> Defaults = new()
     {
         { Title, Title },
         { UrlSlug, "Url Slug" }

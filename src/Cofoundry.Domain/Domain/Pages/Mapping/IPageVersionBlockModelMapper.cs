@@ -46,7 +46,7 @@ public interface IPageVersionBlockModelMapper
     /// passed down the chain of execution.
     /// </param>
     /// <returns>Mapped display model.</returns>
-    Task<IPageBlockTypeDisplayModel> MapDisplayModelAsync(string typeName, IEntityVersionPageBlock entityBlock, PublishStatusQuery publishStatus, IExecutionContext executionContext);
+    Task<IPageBlockTypeDisplayModel?> MapDisplayModelAsync(string typeName, IEntityVersionPageBlock entityBlock, PublishStatusQuery publishStatus, IExecutionContext executionContext);
 
     /// <summary>
     /// Deserialized a block data model to a stongly typed model.

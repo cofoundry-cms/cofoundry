@@ -12,7 +12,7 @@ namespace Cofoundry.Domain.Internal;
 /// possible to have multiple.
 /// </summary>
 public class GetCustomEntityRenderDetailsByIdQueryHandler
-    : IQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails>
+    : IQueryHandler<GetCustomEntityRenderDetailsByIdQuery, CustomEntityRenderDetails?>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -36,7 +36,7 @@ public class GetCustomEntityRenderDetailsByIdQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<CustomEntityRenderDetails> ExecuteAsync(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext)
+    public async Task<CustomEntityRenderDetails?> ExecuteAsync(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext)
     {
         var dbResult = await QueryCustomEntityAsync(query, executionContext);
         if (dbResult == null) return null;
@@ -51,7 +51,7 @@ public class GetCustomEntityRenderDetailsByIdQueryHandler
 
         var pageRoutesQuery = new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
         var pageRoutes = await _queryExecutor.ExecuteAsync(pageRoutesQuery, executionContext);
-        entity.PageUrls = MapPageRoutings(pageRoutes, dbResult);
+        entity.PageUrls = MapPageRoutings(pageRoutes);
 
         var selectedRoute = pageRoutes.FirstOrDefault(r => r.PageRoute.PageId == query.PageId);
 
@@ -77,19 +77,19 @@ public class GetCustomEntityRenderDetailsByIdQueryHandler
         return entity;
     }
 
-    private Task<List<CustomEntityVersionPageBlock>> GetPageBlocksAsync(int customEntityVersionId, int pageId)
+    private async Task<IReadOnlyCollection<CustomEntityVersionPageBlock>> GetPageBlocksAsync(int customEntityVersionId, int pageId)
     {
-        return _dbContext
+        return await _dbContext
             .CustomEntityVersionPageBlocks
             .AsNoTracking()
             .FilterActive()
             .Where(m => m.CustomEntityVersionId == customEntityVersionId && m.PageId == pageId)
-            .ToListAsync();
+            .ToArrayAsync();
     }
 
-    private Task<List<CustomEntityPageRegionRenderDetails>> GetRegionsAsync(int pageTemplateId)
+    private async Task<IReadOnlyCollection<CustomEntityPageRegionRenderDetails>> GetRegionsAsync(int pageTemplateId)
     {
-        return _dbContext
+        return await _dbContext
             .PageTemplateRegions
             .AsNoTracking()
             .Where(s => s.PageTemplateId == pageTemplateId)
@@ -98,7 +98,7 @@ public class GetCustomEntityRenderDetailsByIdQueryHandler
                 PageTemplateRegionId = s.PageTemplateRegionId,
                 Name = s.Name
             })
-            .ToListAsync();
+            .ToArrayAsync();
     }
 
     private CustomEntityRenderDetails MapCustomEntity(CustomEntityVersion dbResult, IExecutionContext executionContext)
@@ -124,9 +124,9 @@ public class GetCustomEntityRenderDetailsByIdQueryHandler
         return entity;
     }
 
-    private async Task<CustomEntityVersion> QueryCustomEntityAsync(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext)
+    private async Task<CustomEntityVersion?> QueryCustomEntityAsync(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext)
     {
-        CustomEntityVersion result;
+        CustomEntityVersion? result;
 
         if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
         {
@@ -162,18 +162,20 @@ public class GetCustomEntityRenderDetailsByIdQueryHandler
         return result;
     }
 
-    private ICollection<string> MapPageRoutings(
-        ICollection<PageRoutingInfo> allRoutings,
-        CustomEntityVersion dbResult
-        )
+    private IReadOnlyCollection<string> MapPageRoutings(IReadOnlyCollection<PageRoutingInfo> allRoutings)
     {
-        if (allRoutings == null) return Array.Empty<string>();
-
-        var urls = new List<string>(allRoutings.Count());
-
-        foreach (var detailsRouting in allRoutings
-            .Where(r => r.CustomEntityRouteRule != null))
+        if (allRoutings == null)
         {
+            return Array.Empty<string>();
+        }
+
+        var urls = new List<string>(allRoutings.Count);
+
+        foreach (var detailsRouting in allRoutings.Where(r => r.CustomEntityRouteRule != null))
+        {
+            EntityInvalidOperationException.ThrowIfNull(detailsRouting, detailsRouting.CustomEntityRouteRule);
+            EntityInvalidOperationException.ThrowIfNull(detailsRouting, detailsRouting.CustomEntityRoute);
+
             var detailsUrl = detailsRouting
                 .CustomEntityRouteRule
                 .MakeUrl(detailsRouting.PageRoute, detailsRouting.CustomEntityRoute);

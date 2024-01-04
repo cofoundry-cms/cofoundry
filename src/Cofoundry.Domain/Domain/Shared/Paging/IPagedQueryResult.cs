@@ -51,5 +51,5 @@ public interface IPagedQueryResult<TResult> : IPagedQueryResult
     /// <summary>
     /// The items returned.
     /// </summary>
-    ICollection<TResult> Items { get; set; }
+    IReadOnlyCollection<TResult> Items { get; set; }
 }

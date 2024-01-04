@@ -8,12 +8,12 @@ public class InvalidAuthorizedTaskTokenException : Exception
 {
     const string MESSAGE = "Invalid authorized task token";
 
-    public InvalidAuthorizedTaskTokenException(ValidateAuthorizedTaskTokenQuery query)
+    public InvalidAuthorizedTaskTokenException(ValidateAuthorizedTaskTokenQuery? query)
         : this(query, MESSAGE)
     {
     }
 
-    public InvalidAuthorizedTaskTokenException(ValidateAuthorizedTaskTokenQuery query, string message)
+    public InvalidAuthorizedTaskTokenException(ValidateAuthorizedTaskTokenQuery? query, string? message)
         : base(message)
     {
         if (query == null) return;
@@ -22,7 +22,7 @@ public class InvalidAuthorizedTaskTokenException : Exception
         AuthorizedTaskTypeCode = query.AuthorizedTaskTypeCode;
     }
 
-    public string Token { get; }
+    public string? Token { get; }
 
-    public string AuthorizedTaskTypeCode { get; }
+    public string? AuthorizedTaskTypeCode { get; }
 }

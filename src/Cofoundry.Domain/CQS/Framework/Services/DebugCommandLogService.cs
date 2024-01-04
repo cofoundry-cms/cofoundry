@@ -3,7 +3,8 @@
 namespace Cofoundry.Domain.CQS.Internal;
 
 /// <summary>
-/// Basic service for logging audit data about executed commands.
+/// Basic implementation of <see cref="ICommandLogService"/> for logging 
+/// audit data about executed commands.
 /// </summary>
 public class DebugCommandLogService : ICommandLogService
 {
@@ -16,6 +17,7 @@ public class DebugCommandLogService : ICommandLogService
         _logger = logger;
     }
 
+    /// <inheritdoc/>
     public Task LogAsync<TCommand>(TCommand command, IExecutionContext executionContext) where TCommand : ICommand
     {
         _logger.LogInformation(
@@ -28,7 +30,8 @@ public class DebugCommandLogService : ICommandLogService
         return Task.CompletedTask;
     }
 
-    public Task LogFailedAsync<TCommand>(TCommand command, IExecutionContext executionContext, Exception ex = null) where TCommand : ICommand
+    /// <inheritdoc/>
+    public Task LogFailedAsync<TCommand>(TCommand command, IExecutionContext executionContext, Exception? ex = null) where TCommand : ICommand
     {
         if (command is ILoggableCommand)
         {

@@ -53,11 +53,11 @@ public class DocumentCollectionAttribute : Attribute, IMetadataAttribute
     /// Filters the document selection to only show documents with these 
     /// file extensions.
     /// </summary>
-    public string[] FileExtensions { get; set; }
+    public string[]? FileExtensions { get; set; }
 
     /// <summary>
     /// Filters the document selection to only show documents with tags that 
     /// match this value.
     /// </summary>
-    public string[] Tags { get; set; }
+    public string[]? Tags { get; set; }
 }

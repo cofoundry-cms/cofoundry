@@ -8,8 +8,8 @@
 /// page projections.
 /// </summary>
 public class GetPageRouteByIdQueryHandler
-    : IQueryHandler<GetPageRouteByIdQuery, PageRoute>
-    , IPermissionRestrictedQueryHandler<GetPageRouteByIdQuery, PageRoute>
+    : IQueryHandler<GetPageRouteByIdQuery, PageRoute?>
+    , IPermissionRestrictedQueryHandler<GetPageRouteByIdQuery, PageRoute?>
 {
     private readonly IQueryExecutor _queryExecutor;
 
@@ -20,10 +20,10 @@ public class GetPageRouteByIdQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<PageRoute> ExecuteAsync(GetPageRouteByIdQuery query, IExecutionContext executionContext)
+    public async Task<PageRoute?> ExecuteAsync(GetPageRouteByIdQuery query, IExecutionContext executionContext)
     {
         var allPageRoutes = await _queryExecutor.ExecuteAsync(new GetPageRouteLookupQuery(), executionContext);
-        var result = allPageRoutes.GetOrDefault(query.PageId);
+        var result = allPageRoutes.GetValueOrDefault(query.PageId);
 
         return result;
     }

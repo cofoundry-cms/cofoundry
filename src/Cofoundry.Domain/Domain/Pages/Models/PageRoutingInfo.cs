@@ -4,39 +4,39 @@
 /// Combines single-page routing information with custom entity page routing.
 /// A collection of PageRoutingInfo therefore expresses a fuller page routing 
 /// graph with custom entity nodes expanded. Note that custom entity routing
-/// information is only included if the page is PageType.CustomEntityDetails.
+/// information is only included if the page is <see cref="PageType.CustomEntityDetails"/>.
 /// </summary>
 public class PageRoutingInfo
 {
     /// <summary>
     /// Routing info for the page part of the expanded route.
     /// </summary>
-    public PageRoute PageRoute { get; set; }
+    public PageRoute PageRoute { get; set; } = PageRoute.Uninitialized;
 
     /// <summary>
-    /// If the page is PageType.CustomEntityDetails, then this
+    /// If the page is <see cref="PageType.CustomEntityDetails"/>, then this
     /// property will represent the routing information of a single custom 
     /// entity.
     /// </summary>
-    public CustomEntityRoute CustomEntityRoute { get; set; }
+    public CustomEntityRoute? CustomEntityRoute { get; set; }
 
     /// <summary>
-    /// If the page is PageType.CustomEntityDetails, then this
+    /// If the page is <see cref="PageType.CustomEntityDetails"/>, then this
     /// property will the routing rule object that can be used to
     /// construct the full page url when combined with the custom
     /// entity routing data.
     /// </summary>
-    public ICustomEntityRoutingRule CustomEntityRouteRule { get; set; }
+    public ICustomEntityRoutingRule? CustomEntityRouteRule { get; set; }
 
     /// <summary>
-    /// Gets an IVersionRoute that matches the specified publishStatusQuery and version number.
+    /// Gets an <see cref="IVersionRoute"/> that matches the specified publishStatusQuery and version number.
     /// </summary>
     /// <param name="preferCustomEntity">Look for the CustomEntityRouting if its available.</param>
     /// <param name="publishStatusQuery">Specifies how to query for the version e.g. prefer publishes or draft version.</param>
     /// <param name="versionId">Id of a specifc version to look for if using PublishStatusQuery.SpecificVersion.</param>
-    public IVersionRoute GetVersionRoute(bool preferCustomEntity, PublishStatusQuery publishStatusQuery, int? versionId = null)
+    public IVersionRoute? GetVersionRoute(bool preferCustomEntity, PublishStatusQuery publishStatusQuery, int? versionId = null)
     {
-        IEnumerable<IVersionRoute> versions = null;
+        IEnumerable<IVersionRoute>? versions = null;
 
         if (preferCustomEntity && CustomEntityRoute != null)
         {
@@ -132,7 +132,7 @@ public class PageRoutingInfo
     /// If any rules are violated, then the most specific rule is returned; 
     /// otherwise <see langword="null"/>.
     /// </returns>
-    public EntityAccessRuleSet ValidateAccess(IUserContext user)
+    public EntityAccessRuleSet? ValidateAccess(IUserContext user)
     {
         ArgumentNullException.ThrowIfNull(user);
         EntityInvalidOperationException.ThrowIfNull(this, r => r.PageRoute);

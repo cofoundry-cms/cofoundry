@@ -24,7 +24,7 @@ public class CustomEntityDefinition
     /// <summary>
     /// Unique 6 letter code representing the entity (use uppercase)
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates whether the UrlSlug property should be treated
@@ -47,5 +47,10 @@ public class CustomEntityDefinition
     /// </summary>
     public bool HasLocale { get; set; }
 
-    public virtual EntityDefinition EntityDefinition { get; set; }
+    private EntityDefinition? _entityDefinition;
+    public EntityDefinition EntityDefinition
+    {
+        get => _entityDefinition ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityDefinition>(nameof(EntityDefinition));
+        set => _entityDefinition = value;
+    }
 }

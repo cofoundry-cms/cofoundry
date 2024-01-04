@@ -1,6 +1,6 @@
 ﻿using Cofoundry.Core.ResourceFiles;
 using Microsoft.Extensions.FileProviders;
-using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -16,16 +16,19 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
     private readonly IResourceLocator _resourceLocator;
     private readonly IEnumerable<IPageBlockTypeViewLocationRegistration> _pageBlockTypeViewLocationRegistrations;
     private readonly IPageBlockTypeCache _pageBlockTypeCache;
+    private readonly ILogger<PageBlockTypeViewFileLocator> _logger;
 
     public PageBlockTypeViewFileLocator(
         IResourceLocator resourceLocator,
         IEnumerable<IPageBlockTypeViewLocationRegistration> pageBlockTypeViewLocationRegistrations,
-        IPageBlockTypeCache pageBlockTypeCache
+        IPageBlockTypeCache pageBlockTypeCache,
+        ILogger<PageBlockTypeViewFileLocator> logger
         )
     {
         _resourceLocator = resourceLocator;
         _pageBlockTypeViewLocationRegistrations = pageBlockTypeViewLocationRegistrations;
         _pageBlockTypeCache = pageBlockTypeCache;
+        _logger = logger;
     }
 
     /// <summary>
@@ -33,7 +36,7 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
     /// null if it could not be found.
     /// </summary>
     /// <param name="pageBlockTypeFileName">The file name (without extension) of the page block type. E.g 'RawHtml', 'SingleLineText'</param>
-    public virtual string GetPathByFileName(string pageBlockTypeFileName)
+    public virtual string? GetPathByFileName(string pageBlockTypeFileName)
     {
         var blockLocation = GetLocationByFileName(pageBlockTypeFileName);
 
@@ -46,13 +49,16 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
     /// </summary>
     /// <param name="pageBlockTypeFileName">The file name of the page block type this template is for e.g. 'SingleLineText'</param>
     /// <param name="templateFileName">The file name of the template e.g. 'H1'</param>
-    public virtual string GetTemplatePathByTemplateFileName(string pageBlockTypeFileName, string templateFileName)
+    public virtual string? GetTemplatePathByTemplateFileName(string pageBlockTypeFileName, string templateFileName)
     {
         var blockTypeLocation = GetLocationByFileName(pageBlockTypeFileName);
 
-        if (blockTypeLocation == null) return null;
+        if (blockTypeLocation == null)
+        {
+            return null;
+        }
 
-        return blockTypeLocation.Templates.GetOrDefault(templateFileName)?.Path;
+        return blockTypeLocation.Templates.GetValueOrDefault(templateFileName)?.Path;
     }
 
     /// <summary>
@@ -62,14 +68,22 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
     public virtual IEnumerable<string> GetAllTemplatePathsByFileName(string pageBlockTypeFileName)
     {
         var blockTypeLocation = GetLocationByFileName(pageBlockTypeFileName);
-        if (blockTypeLocation == null) return Enumerable.Empty<string>();
+        if (blockTypeLocation == null)
+        {
+            return Enumerable.Empty<string>();
+        }
 
-        return blockTypeLocation.Templates.Select(t => t.Value.Path);
+        return blockTypeLocation
+            .Templates
+            .Select(t => t.Value.Path);
     }
 
-    private PageBlockTypeFileLocation GetLocationByFileName(string fileName)
+    private PageBlockTypeFileLocation? GetLocationByFileName(string fileName)
     {
-        var blockTypeLocation = GetPageBlockTypeFileLocationsFromCache().GetOrDefault(FormatCacheKey(fileName));
+        var cacheKey = FormatCacheKey(fileName);
+        var blockTypeLocations = GetPageBlockTypeFileLocationsFromCache();
+        var blockTypeLocation = blockTypeLocations.GetValueOrDefault(cacheKey);
+
         return blockTypeLocation;
     }
 
@@ -79,7 +93,7 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
         return fileName.ToLowerInvariant();
     }
 
-    private Dictionary<string, PageBlockTypeFileLocation> GetPageBlockTypeFileLocationsFromCache()
+    private IReadOnlyDictionary<string, PageBlockTypeFileLocation> GetPageBlockTypeFileLocationsFromCache()
     {
         var allBlockTypes = _pageBlockTypeCache.GetOrAddFileLocations(GetPageBlockTypeFileLocations);
         return allBlockTypes;
@@ -89,7 +103,8 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
     {
         var viewDirectoryPaths = _pageBlockTypeViewLocationRegistrations
             .SelectMany(r => r.GetPathPrefixes())
-            .Select(p => FormatViewFolder(p))
+            .Select(FormatViewFolder)
+            .WhereNotNull()
             ;
 
         var templateFiles = new Dictionary<string, PageBlockTypeFileLocation>();
@@ -126,11 +141,14 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
         var templateLocation = CreateTemplateFile(directoryPath, viewFile);
         var key = FormatCacheKey(templateLocation.FileName);
         bool isUnique = !templateFiles.ContainsKey(key);
-        Debug.Assert(isUnique, $"Duplicate page block type template file '{ templateLocation.FileName }' at location '{ templateLocation.Path }'");
 
         if (isUnique)
         {
             templateFiles.Add(key, templateLocation);
+        }
+        else
+        {
+            _logger.LogWarning("Duplicate page block type template file '{FileName}' at location '{Path}'", templateLocation.FileName, templateLocation.Path);
         }
     }
 
@@ -155,10 +173,11 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
 
     private PageBlockTypeFileLocation CreateTemplateFile(string directoryPath, IFileInfo file)
     {
-        var templateFile = new PageBlockTypeFileLocation();
-
-        templateFile.Path = RelativePathHelper.Combine(directoryPath, file.Name);
-        templateFile.FileName = Path.GetFileNameWithoutExtension(file.Name);
+        var templateFile = new PageBlockTypeFileLocation
+        {
+            Path = RelativePathHelper.Combine(directoryPath, file.Name),
+            FileName = Path.GetFileNameWithoutExtension(file.Name)
+        };
 
         var templatePath = RelativePathHelper.Combine(directoryPath, TEMPLATES_FOLDER_NAME);
 
@@ -166,25 +185,28 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
         if (templateDirectory != null)
         {
             templateFile.Templates = FilterViewFiles(templateDirectory)
-                .GroupBy(t => t.Name, (k, v) => v.FirstOrDefault()) // De-dup
+                .GroupBy(t => t.Name, (k, v) => v.First()) // De-dup
                 .Select(t => new PageBlockTypeTemplateFileLocation()
                 {
                     FileName = Path.GetFileNameWithoutExtension(t.Name),
                     Path = RelativePathHelper.Combine(templatePath, t.Name)
                 })
-                .ToDictionary(t => t.FileName);
+                .ToImmutableDictionary(t => t.FileName);
         }
         else
         {
-            templateFile.Templates = new Dictionary<string, PageBlockTypeTemplateFileLocation>();
+            templateFile.Templates = ImmutableDictionary<string, PageBlockTypeTemplateFileLocation>.Empty;
         }
 
         return templateFile;
     }
 
-    private string FormatViewFolder(string pathPrefix)
+    private static string? FormatViewFolder(string pathPrefix)
     {
-        if (string.IsNullOrWhiteSpace(pathPrefix)) return null;
+        if (string.IsNullOrWhiteSpace(pathPrefix))
+        {
+            return null;
+        }
 
         var path = "/" + pathPrefix.Trim('/') + "/";
 
@@ -194,10 +216,10 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
     /// <summary>
     /// Helper for readable case insensitive string comparing
     /// </summary>
-    private bool Contains(string compareFrom, string compareTo)
+    private static bool Contains(string compareFrom, string compareTo)
     {
         return string.IsNullOrWhiteSpace(compareFrom)
             || string.IsNullOrWhiteSpace(compareTo)
-            || compareFrom.IndexOf(compareTo, StringComparison.OrdinalIgnoreCase) >= 0;
+            || compareFrom.Contains(compareTo, StringComparison.OrdinalIgnoreCase);
     }
 }

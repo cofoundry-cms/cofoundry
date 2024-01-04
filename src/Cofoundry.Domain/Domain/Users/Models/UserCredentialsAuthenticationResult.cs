@@ -9,21 +9,23 @@ public class UserCredentialsAuthenticationResult : ValidationQueryResult
 {
     /// <summary>
     /// If successful this will be filled with user data; otherwise
-    /// it will be null.
+    /// it will be <see langword="null"/>.
     /// </summary>
-    public UserSignInInfo User { get; set; }
+    public UserSignInInfo? User { get; set; }
 
     /// <summary>
     /// Indicates if the authentication attempt was successful. If
     /// <see langword="true"/> then the User property should have a value.
     /// </summary>
+    [MemberNotNullWhen(false, nameof(Error))]
+    [MemberNotNullWhen(true, nameof(User))]
     public override bool IsSuccess { get => base.IsSuccess; set => base.IsSuccess = value; }
 
     /// <summary>
     /// Indicates the reason if the authentication failed. If authentication succeded 
     /// then this will be <see langword="null"/>.
     /// </summary>
-    public override ValidationError Error { get => base.Error; set => base.Error = value; }
+    public override ValidationError? Error { get => base.Error; set => base.Error = value; }
 
     /// <summary>
     /// Creates a new unsuccesful authentication result using the 

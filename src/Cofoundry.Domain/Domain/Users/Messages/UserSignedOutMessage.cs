@@ -9,7 +9,7 @@ public class UserSignedOutMessage
     /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
     /// the user belongs to.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Id of the user that has signed out. If logout was due to a user deletion,

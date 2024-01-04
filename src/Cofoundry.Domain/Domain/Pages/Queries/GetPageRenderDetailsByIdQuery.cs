@@ -4,7 +4,7 @@
 /// Gets a projection of a page that contains the data required to render a page, including template 
 /// data for all the content-editable regions.
 /// </summary>
-public class GetPageRenderDetailsByIdQuery : IQuery<PageRenderDetails>, IValidatableObject
+public class GetPageRenderDetailsByIdQuery : IQuery<PageRenderDetails?>, IValidatableObject
 {
     /// <summary>
     /// Gets a projection of a page that contains the data required to render a page, including template 

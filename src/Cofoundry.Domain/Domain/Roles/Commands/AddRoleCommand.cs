@@ -11,7 +11,7 @@ public class AddRoleCommand : ICommand, ILoggableCommand
     /// </summary>
     [StringLength(50)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// Roles must be assigned to an existing user area. The user area code
@@ -19,12 +19,13 @@ public class AddRoleCommand : ICommand, ILoggableCommand
     /// </summary>
     [StringLength(3, MinimumLength = 3)]
     [Required]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The permissions to add the role when it is created.
     /// </summary>
-    public ICollection<PermissionCommandData> Permissions { get; set; }
+    [ValidateObject]
+    public IReadOnlyCollection<PermissionCommandData> Permissions { get; set; } = Array.Empty<PermissionCommandData>();
 
     /// <summary>
     /// The database id of the newly created role. This is set after the command

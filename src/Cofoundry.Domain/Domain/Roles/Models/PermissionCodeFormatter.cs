@@ -35,7 +35,7 @@ public class PermissionIdentifierFormatter
     /// <param name="permissionTypeCode">6 character code representing the permission type e.g. "COMRED", "COMDEL"</param>
     /// <param name="entityDefinitionCode">Optional 6 charcter entity definition code if this permission is scoped to an entity type e.g. "COFPAG", "COFIMG".</param>
     /// <returns>A string identifier that uniquely identifies this permission.</returns>
-    public static string GetUniqueIdentifier(string permissionTypeCode, string entityDefinitionCode = null)
+    public static string GetUniqueIdentifier(string permissionTypeCode, string? entityDefinitionCode = null)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(permissionTypeCode);
 

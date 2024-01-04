@@ -14,7 +14,7 @@ public class PageDirectoryMicroSummary
     /// <summary>
     /// User friendly display name of the directory.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Id of the parent directory. This can only be null for the 
@@ -31,5 +31,15 @@ public class PageDirectoryMicroSummary
     /// The full (relative) url of this directory with the leading
     /// slash, but excluding the trailing slash e.g. "/my-directory".
     /// </summary>
-    public string FullUrlPath { get; set; }
+    public string FullUrlPath { get; set; } = string.Empty;
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly PageDirectoryMicroSummary Uninitialized = new()
+    {
+        PageDirectoryId = int.MinValue
+    };
 }

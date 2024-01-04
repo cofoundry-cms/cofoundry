@@ -34,8 +34,9 @@ public class UpdateUserPasswordByCredentialsCommandHandler
 
         var authResult = await GetUserSignInInfoAsync(command, executionContext);
         authResult.ThrowIfNotSuccess();
+        EntityInvalidOperationException.ThrowIfNull(authResult, authResult.User);
 
-        var user = await GetUserAsync(authResult);
+        var user = await GetUserAsync(authResult.User);
         var updatePasswordCommand = new UpdateUserPasswordByUserIdCommand()
         {
             UserId = authResult.User.UserId,
@@ -56,7 +57,7 @@ public class UpdateUserPasswordByCredentialsCommandHandler
         command.OutputUserId = authResult.User.UserId;
     }
 
-    private async Task<User> GetUserAsync(UserCredentialsAuthenticationResult authResult)
+    private async Task<User> GetUserAsync(UserSignInInfo userSignInInfo)
     {
         // in most other command that send password changed notifications we already have a user to 
         // send on to the helper, but not here
@@ -65,9 +66,9 @@ public class UpdateUserPasswordByCredentialsCommandHandler
             .AsNoTracking()
             .IncludeForSummary()
             .FilterCanSignIn()
-            .FilterById(authResult.User.UserId)
+            .FilterById(userSignInInfo.UserId)
             .SingleOrDefaultAsync();
-        EntityNotFoundException.ThrowIfNull(user, authResult.User.UserId);
+        EntityNotFoundException.ThrowIfNull(user, userSignInInfo.UserId);
 
         return user;
     }

@@ -17,5 +17,5 @@ public interface INestedDataModelTypeRepository
     /// The name of the model to get. The "DataModel" suffix is options e.g. 
     /// "CarouselItemDataModel" and "CarouselItem" both match the same type.
     /// </param>
-    Type GetByName(string name);
+    Type? GetByName(string? name);
 }

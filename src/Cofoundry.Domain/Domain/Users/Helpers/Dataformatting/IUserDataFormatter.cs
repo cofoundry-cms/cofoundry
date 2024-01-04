@@ -23,7 +23,7 @@ public interface IUserDataFormatter
     /// The email address string to format. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
     /// </param>
-    string NormalizeEmail(string userAreaCode, string emailAddress);
+    string? NormalizeEmail(string userAreaCode, string? emailAddress);
 
     /// <summary>
     /// <para>
@@ -49,7 +49,7 @@ public interface IUserDataFormatter
     /// The email address string to format. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
     /// </param>
-    string UniquifyEmail(string userAreaCode, string emailAddress);
+    string? UniquifyEmail(string userAreaCode, string? emailAddress);
 
     /// <summary>
     /// <para>
@@ -73,7 +73,7 @@ public interface IUserDataFormatter
     /// The username string to format. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
     /// </param>
-    string UniquifyUsername(string userAreaDefinitionCode, string username);
+    string? UniquifyUsername(string userAreaDefinitionCode, string? username);
 
     /// <summary>
     /// Formats an email address into the various formats required to update a User record.
@@ -86,7 +86,7 @@ public interface IUserDataFormatter
     /// The email address string to format. If the value is <see langword="null"/> 
     /// or otherwise invalid then <see langword="null"/> is returned.
     /// </param>
-    EmailAddressFormattingResult FormatEmailAddress(IUserAreaDefinition userAreaDefinition, string emailAddress);
+    EmailAddressFormattingResult? FormatEmailAddress(IUserAreaDefinition userAreaDefinition, string? emailAddress);
 
     /// <summary>
     /// Formats a username into the various formats required to update a User record.
@@ -100,7 +100,7 @@ public interface IUserDataFormatter
     /// if the email address is also the username. If the value is <see langword="null"/> 
     /// or otherwise invalid then <see langword="null"/> is returned.
     /// </param>
-    UsernameFormattingResult FormatUsername(IUserAreaDefinition userAreaDefinition, EmailAddressFormattingResult emailAddress);
+    UsernameFormattingResult? FormatUsername(IUserAreaDefinition userAreaDefinition, EmailAddressFormattingResult? emailAddress);
 
     /// <summary>
     /// Formats a username into the various formats required to update a User record.
@@ -113,5 +113,5 @@ public interface IUserDataFormatter
     /// The username string to format. If the value is <see langword="null"/> 
     /// or otherwise invalid then <see langword="null"/> is returned.
     /// </param>
-    UsernameFormattingResult FormatUsername(IUserAreaDefinition userAreaDefinition, string username);
+    UsernameFormattingResult? FormatUsername(IUserAreaDefinition userAreaDefinition, string? username);
 }

@@ -47,22 +47,29 @@ public class ValidateAuthorizedTaskTokenQueryHandler
 
         var result = Validate(authorizedTask, tokenParts, query, executionContext);
 
-        if (result.IsSuccess)
+        if (!result.IsSuccess)
         {
-            result.Data = new AuthorizedTaskTokenValidationResultData()
-            {
-                TaskData = authorizedTask.TaskData,
-                AuthorizedTaskId = authorizedTask.AuthorizedTaskId,
-                UserId = authorizedTask.User.UserId,
-                UserAreaCode = authorizedTask.User.UserAreaCode
-            };
+            return result;
         }
+
+        if (authorizedTask == null)
+        {
+            throw new InvalidOperationException($"{nameof(authorizedTask)} should not be null if {nameof(result)}.{nameof(result.IsSuccess)} is true");
+        }
+
+        result.Data = new AuthorizedTaskTokenValidationResultData()
+        {
+            TaskData = authorizedTask.TaskData,
+            AuthorizedTaskId = authorizedTask.AuthorizedTaskId,
+            UserId = authorizedTask.User.UserId,
+            UserAreaCode = authorizedTask.User.UserAreaCode
+        };
 
         return result;
     }
 
     private AuthorizedTaskTokenValidationResult Validate(
-        AuthorizedTask authorizedTask,
+        AuthorizedTask? authorizedTask,
         AuthorizedTaskTokenParts tokenParts,
         ValidateAuthorizedTaskTokenQuery query,
         IExecutionContext executionContext

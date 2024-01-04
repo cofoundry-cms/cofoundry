@@ -11,7 +11,7 @@ public interface IContentRepositoryCustomEntityDefinitionGetAllQueryBuilder
     /// data defined in a custom entity definition class which is typically used 
     /// as part of another domain model.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<CustomEntityDefinitionMicroSummary>> AsMicroSummaries();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityDefinitionMicroSummary>> AsMicroSummaries();
 
     /// <summary>
     /// Gets a collection of all custom entity definitions registered
@@ -20,5 +20,5 @@ public interface IContentRepositoryCustomEntityDefinitionGetAllQueryBuilder
     /// using generics to identify the data model type, there is instead a 
     /// DataModelType property.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<CustomEntityDefinitionSummary>> AsSummaries();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityDefinitionSummary>> AsSummaries();
 }

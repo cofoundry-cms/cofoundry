@@ -15,9 +15,9 @@ public abstract class UserMailTemplateBase : IMailTemplate, IMailTemplateWithApp
     /// or file extension (i.e. '_html.cshml' or '_text.cshml') because this is automatically 
     /// added. E.g. "~/Cofoundry/MailTemplates/Layouts/_Layout".
     /// </summary>
-    public string LayoutFile { get; set; }
+    public string LayoutFile { get; set; } = string.Empty;
 
-    public string ViewFile { get; set; }
+    public string ViewFile { get; set; } = string.Empty;
 
     /// <summary>
     /// String to use as the subject to the email. To customize this
@@ -33,26 +33,29 @@ public abstract class UserMailTemplateBase : IMailTemplate, IMailTemplateWithApp
     /// include a token "{0}" which is replaced with the application 
     /// name configuration setting e.g. "{0}: Password changed".
     /// </summary>
-    public string SubjectFormat { get; set; }
+    public string SubjectFormat { get; set; } = string.Empty;
 
     /// <summary>
     /// The application name to use in formatting the subject. By default
     /// this is retreived from a configuration setting.
     /// </summary>
-    public string ApplicationName { get; set; }
+    public string? ApplicationName { get; set; } = string.Empty;
 
     /// <summary>
-    /// The user requesting to recover their account.
+    /// The user associated with the email.
     /// </summary>
-    public virtual UserSummary User { get; set; }
+    public virtual UserSummary User { get; set; } = UserSummary.Uninitialized;
 
     /// <summary>
     /// Formats the layout file path for thr html template by
     /// adding the "_html.cshtml" postfix.
     /// </summary>
-    public string GetLayoutFilePathForHtmlTemplate()
+    public string? GetLayoutFilePathForHtmlTemplate()
     {
-        if (LayoutFile == null) return null;
+        if (LayoutFile == null)
+        {
+            return null;
+        }
 
         return LayoutFile + "_html.cshtml";
     }
@@ -61,9 +64,12 @@ public abstract class UserMailTemplateBase : IMailTemplate, IMailTemplateWithApp
     /// Formats the layout file path for thr html template by
     /// adding the "_text.cshtml" postfix.
     /// </summary>
-    public string GetLayoutFilePathForTextTemplate()
+    public string? GetLayoutFilePathForTextTemplate()
     {
-        if (LayoutFile == null) return null;
+        if (LayoutFile == null)
+        {
+            return null;
+        }
 
         return LayoutFile + "_text.cshtml";
     }

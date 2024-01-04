@@ -21,16 +21,18 @@ public class IsRoleTitleUniqueQueryHandler
 
     public async Task<bool> ExecuteAsync(IsRoleTitleUniqueQuery query, IExecutionContext executionContext)
     {
-        var exists = await Exists(query).AnyAsync();
-        return !exists;
-    }
+        if (string.IsNullOrWhiteSpace(query.Title))
+        {
+            return true;
+        }
 
-    private IQueryable<Role> Exists(IsRoleTitleUniqueQuery query)
-    {
-        return _dbContext
+        var exists = await _dbContext
             .Roles
             .AsNoTracking()
-            .Where(r => r.RoleId != query.RoleId && r.Title == query.Title && r.UserAreaCode == query.UserAreaCode);
+            .Where(r => r.RoleId != query.RoleId && r.Title == query.Title && r.UserAreaCode == query.UserAreaCode)
+            .AnyAsync();
+
+        return !exists;
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(IsRoleTitleUniqueQuery command)

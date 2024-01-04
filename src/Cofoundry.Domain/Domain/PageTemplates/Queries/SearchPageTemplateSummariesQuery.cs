@@ -2,5 +2,5 @@
 
 public class SearchPageTemplateSummariesQuery : SimplePageableQuery, IQuery<PagedQueryResult<PageTemplateSummary>>
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }

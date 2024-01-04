@@ -10,7 +10,7 @@
 /// Roles are cached, so repeat uses of this query is inexpensive.
 /// </para>
 /// </summary>
-public class GetRoleMicroSummaryByIdQuery : IQuery<RoleMicroSummary>
+public class GetRoleMicroSummaryByIdQuery : IQuery<RoleMicroSummary?>
 {
     public GetRoleMicroSummaryByIdQuery()
     {

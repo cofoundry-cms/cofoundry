@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetImageAssetEntityMicroSummariesByIdRangeQueryHandler
-    : IQueryHandler<GetImageAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
-    , IPermissionRestrictedQueryHandler<GetImageAssetEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+    : IQueryHandler<GetImageAssetEntityMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RootEntityMicroSummary>>
+    , IPermissionRestrictedQueryHandler<GetImageAssetEntityMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RootEntityMicroSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IEntityDefinitionRepository _entityDefinitionRepository;
@@ -18,18 +18,10 @@ public class GetImageAssetEntityMicroSummariesByIdRangeQueryHandler
         _entityDefinitionRepository = entityDefinitionRepository;
     }
 
-    public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetImageAssetEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
-    {
-        var results = await Query(query).ToDictionaryAsync(e => e.RootEntityId);
-
-        return results;
-    }
-
-    private IQueryable<RootEntityMicroSummary> Query(GetImageAssetEntityMicroSummariesByIdRangeQuery query)
+    public async Task<IReadOnlyDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetImageAssetEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         var definition = _entityDefinitionRepository.GetRequiredByCode(ImageAssetEntityDefinition.DefinitionCode);
-
-        var dbQuery = _dbContext
+        var results = await _dbContext
             .ImageAssets
             .AsNoTracking()
             .FilterByIds(query.ImageAssetIds)
@@ -39,9 +31,9 @@ public class GetImageAssetEntityMicroSummariesByIdRangeQueryHandler
                 RootEntityTitle = v.FileName,
                 EntityDefinitionCode = definition.EntityDefinitionCode,
                 EntityDefinitionName = definition.Name
-            });
+            }).ToDictionaryAsync(e => e.RootEntityId);
 
-        return dbQuery;
+        return results;
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetImageAssetEntityMicroSummariesByIdRangeQuery query)

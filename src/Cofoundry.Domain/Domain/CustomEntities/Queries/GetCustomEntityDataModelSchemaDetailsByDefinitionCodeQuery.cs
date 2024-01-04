@@ -4,7 +4,7 @@
 /// Query to extract and return meta data information about a custom 
 /// entity data model for a specific custom entity definition.
 /// </summary>
-public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery : IQuery<CustomEntityDataModelSchema>
+public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery : IQuery<CustomEntityDataModelSchema?>
 {
     /// <summary>
     /// Query to extract and return meta data information about a custom 
@@ -27,5 +27,5 @@ public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery : IQuery
     /// <summary>
     /// Unique 6 letter code representing the entity.
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 }

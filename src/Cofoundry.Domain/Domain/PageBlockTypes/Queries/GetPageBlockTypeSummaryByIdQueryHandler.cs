@@ -1,8 +1,8 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 public class GetPageBlockTypeSummaryByIdQueryHandler
-    : IQueryHandler<GetPageBlockTypeSummaryByIdQuery, PageBlockTypeSummary>
-    , IPermissionRestrictedQueryHandler<GetPageBlockTypeSummaryByIdQuery, PageBlockTypeSummary>
+    : IQueryHandler<GetPageBlockTypeSummaryByIdQuery, PageBlockTypeSummary?>
+    , IPermissionRestrictedQueryHandler<GetPageBlockTypeSummaryByIdQuery, PageBlockTypeSummary?>
 {
     private readonly IQueryExecutor _queryExecutor;
 
@@ -13,7 +13,7 @@ public class GetPageBlockTypeSummaryByIdQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<PageBlockTypeSummary> ExecuteAsync(GetPageBlockTypeSummaryByIdQuery query, IExecutionContext executionContext)
+    public async Task<PageBlockTypeSummary?> ExecuteAsync(GetPageBlockTypeSummaryByIdQuery query, IExecutionContext executionContext)
     {
         var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
         return allBlockTypes.SingleOrDefault(t => t.PageBlockTypeId == query.PageBlockTypeId);

@@ -14,15 +14,12 @@ public static class PublishStatusMapper
     /// <param name="code">Database publish status code to map.</param>
     public static PublishStatus FromCode(string code)
     {
-        switch (code)
+        return code switch
         {
-            case PublishStatusCode.Published:
-                return PublishStatus.Published;
-            case PublishStatusCode.Unpublished:
-                return PublishStatus.Unpublished;
-            default:
-                throw new Exception("PublishStatusCode not recognised: " + code);
-        }
+            PublishStatusCode.Published => PublishStatus.Published,
+            PublishStatusCode.Unpublished => PublishStatus.Unpublished,
+            _ => throw new Exception("PublishStatusCode not recognised: " + code),
+        };
     }
 
     /// <summary>
@@ -31,14 +28,11 @@ public static class PublishStatusMapper
     /// <param name="publishStatus">Enum to map.</param>
     public static string ToCode(PublishStatus publishStatus)
     {
-        switch (publishStatus)
+        return publishStatus switch
         {
-            case PublishStatus.Published:
-                return PublishStatusCode.Published;
-            case PublishStatus.Unpublished:
-                return PublishStatusCode.Unpublished;
-            default:
-                throw new Exception("PublishStatus not recognised: " + publishStatus);
-        }
+            PublishStatus.Published => PublishStatusCode.Published,
+            PublishStatus.Unpublished => PublishStatusCode.Unpublished,
+            _ => throw new Exception("PublishStatus not recognised: " + publishStatus),
+        };
     }
 }

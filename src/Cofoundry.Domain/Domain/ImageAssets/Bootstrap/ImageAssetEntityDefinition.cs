@@ -11,7 +11,7 @@ public sealed class ImageAssetEntityDefinition : IDependableEntityDefinition
 
     public string Name => "Image";
 
-    public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
+    public IQuery<IReadOnlyDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
     {
         return new GetImageAssetEntityMicroSummariesByIdRangeQuery(ids);
     }

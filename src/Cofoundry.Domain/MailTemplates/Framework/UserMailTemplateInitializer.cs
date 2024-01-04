@@ -46,7 +46,7 @@ public class UserMailTemplateInitializer : IUserMailTemplateInitializer
 
     public string GetSignInUrl(UserSummary user)
     {
-        string signInPath;
+        string? signInPath;
 
         if (user.UserArea.UserAreaCode == CofoundryAdminUserArea.Code)
         {
@@ -61,7 +61,7 @@ public class UserMailTemplateInitializer : IUserMailTemplateInitializer
         return _siteUrlResolver.MakeAbsolute(signInPath);
     }
 
-    public async Task<string> GetApplicationNameAsync()
+    public async Task<string?> GetApplicationNameAsync()
     {
         var query = new GetSettingsQuery<GeneralSiteSettings>();
         var result = await _queryExecutor.ExecuteAsync(query);

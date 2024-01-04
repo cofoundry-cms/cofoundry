@@ -8,11 +8,12 @@ public class ClientConnectionInfo
 {
     /// <summary>
     /// The IP Address of the client connected to the application.
+    /// For non-network requests this value will be <see cref="IPAddressConstants.Default"/>.
     /// </summary>
-    public string IPAddress { get; set; }
+    public required string IPAddress { get; set; }
 
     /// <summary>
     /// The connecting client's user agent string (if connecting via a web browser).
     /// </summary>
-    public string UserAgent { get; set; }
+    public string? UserAgent { get; set; }
 }

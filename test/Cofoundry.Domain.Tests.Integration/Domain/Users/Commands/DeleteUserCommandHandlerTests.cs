@@ -161,6 +161,7 @@ public class DeleteUserCommandHandlerTests
         var deletedUser = await GetUserAsync(dbContext, userId);
         var credentialLog = await dbContext
             .UserAuthenticationFailLogs
+            .AsNoTracking()
             .Where(u => u.Username == deletedUser.Username)
             .SingleOrDefaultAsync();
 

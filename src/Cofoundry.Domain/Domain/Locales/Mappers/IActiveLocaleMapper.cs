@@ -12,5 +12,5 @@ public interface IActiveLocaleMapper
     /// object. If the db record is null then null is returned.
     /// </summary>
     /// <param name="dbLocale">Locale record from the database.</param>
-    ActiveLocale Map(Locale dbLocale);
+    ActiveLocale? Map(Locale? dbLocale);
 }

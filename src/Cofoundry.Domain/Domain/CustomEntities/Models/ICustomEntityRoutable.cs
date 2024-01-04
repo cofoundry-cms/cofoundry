@@ -12,5 +12,5 @@ public interface ICustomEntityRoutable
     /// single page on a site to be associated with a custom entitiy, 
     /// but it's technically possible to have many.
     /// </summary>
-    ICollection<string> PageUrls { get; set; }
+    IReadOnlyCollection<string> PageUrls { get; set; }
 }

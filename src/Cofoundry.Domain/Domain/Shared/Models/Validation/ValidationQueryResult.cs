@@ -5,23 +5,24 @@
 /// result can only contain a single validation error, as typically 
 /// most queries will return after a single error is found.
 /// </summary>
-/// <inheritdoc/>
 public class ValidationQueryResult : IValidationQueryResult
 {
     public ValidationQueryResult() { }
 
-    public ValidationQueryResult(ValidationError error)
+    public ValidationQueryResult(ValidationError? error)
     {
         UpdateError(error);
     }
 
+    /// <inheritdoc/>
+    [MemberNotNullWhen(false, nameof(Error))]
     public virtual bool IsSuccess { get; set; }
 
     /// <summary>
     /// Contains the first validation error found when running the query. If no 
     /// validation errors are found then this will be <see langword="null"/>.
     /// </summary>
-    public virtual ValidationError Error { get; set; }
+    public virtual ValidationError? Error { get; set; }
 
     /// <summary>
     /// Throws a <see cref="ValidationErrorException"/> if the validation
@@ -44,7 +45,7 @@ public class ValidationQueryResult : IValidationQueryResult
     /// <see cref="IsSuccess"/> to the correct state.
     /// </summary>
     /// <param name="error"></param>
-    public virtual void UpdateError(ValidationError error)
+    public virtual void UpdateError(ValidationError? error)
     {
         Error = error;
         IsSuccess = error == null;

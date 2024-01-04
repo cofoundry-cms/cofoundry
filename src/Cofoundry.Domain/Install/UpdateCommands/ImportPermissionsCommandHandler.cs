@@ -34,9 +34,9 @@ public class ImportPermissionsCommandHandler : IAsyncVersionedUpdateCommandHandl
 
         foreach (var permission in _permissionRepository.GetAll())
         {
-            if (permission is IEntityPermission)
+            if (permission is IEntityPermission entityPermission)
             {
-                var entityDefinition = ((IEntityPermission)permission).EntityDefinition;
+                var entityDefinition = entityPermission.EntityDefinition;
 
                 sb.AppendLine(string.Format("if not exists (select * from Cofoundry.[EntityDefinition] where EntityDefinitionCode = '{0}')", entityDefinition.EntityDefinitionCode));
                 sb.AppendLine("begin");

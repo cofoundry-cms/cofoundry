@@ -14,7 +14,7 @@ public interface IDynamicDataModelSchema
     /// and validation attributes. This is typically used for dynamically generating 
     /// parts of the admin UI.
     /// </summary>
-    ICollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; }
+    IReadOnlyCollection<DynamicDataModelSchemaProperty> DataModelProperties { get; set; }
 
     public DynamicDataModelDefaultValue DefaultValue { get; set; }
 }

@@ -18,5 +18,5 @@ public class PageBlockTypeDisplayModelMapperInput<TDataModel> where TDataModel :
     /// <summary>
     /// The data model to map to a display model.
     /// </summary>
-    public TDataModel DataModel { get; set; }
+    public required TDataModel DataModel { get; set; }
 }

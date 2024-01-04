@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetAllPageTemplateMicroSummariesQueryHandler
-    : IQueryHandler<GetAllPageTemplateMicroSummariesQuery, ICollection<PageTemplateMicroSummary>>
-    , IPermissionRestrictedQueryHandler<GetAllPageTemplateMicroSummariesQuery, ICollection<PageTemplateMicroSummary>>
+    : IQueryHandler<GetAllPageTemplateMicroSummariesQuery, IReadOnlyCollection<PageTemplateMicroSummary>>
+    , IPermissionRestrictedQueryHandler<GetAllPageTemplateMicroSummariesQuery, IReadOnlyCollection<PageTemplateMicroSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageTemplateMicroSummaryMapper _pageTemplateMapper;
@@ -18,23 +18,20 @@ public class GetAllPageTemplateMicroSummariesQueryHandler
         _pageTemplateMapper = pageTemplateMapper;
     }
 
-    public async Task<ICollection<PageTemplateMicroSummary>> ExecuteAsync(GetAllPageTemplateMicroSummariesQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<PageTemplateMicroSummary>> ExecuteAsync(GetAllPageTemplateMicroSummariesQuery query, IExecutionContext executionContext)
     {
-        var dbResults = await Query().ToListAsync();
-        var results = dbResults
-            .Select(_pageTemplateMapper.Map)
-            .ToList();
-
-        return results;
-    }
-
-    private IQueryable<PageTemplate> Query()
-    {
-        return _dbContext
+        var dbResults = await _dbContext
             .PageTemplates
             .AsNoTracking()
             .FilterActive()
-            .OrderBy(l => l.FileName);
+            .OrderBy(l => l.FileName)
+            .ToArrayAsync();
+
+        var results = dbResults
+            .Select(_pageTemplateMapper.Map)
+            .ToArray();
+
+        return results;
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetAllPageTemplateMicroSummariesQuery query)

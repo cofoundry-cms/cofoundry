@@ -22,5 +22,6 @@ public interface IPageDirectoryMicroSummaryMapper
     /// <returns>
     /// Mapped projection, or <see langword="null"/> if <paramref name="pageDirectory"/> is <see langword="null"/>.
     /// </returns>
-    PageDirectoryMicroSummary Map(PageDirectory pageDirectory);
+    [return: NotNullIfNotNull(nameof(pageDirectory))]
+    PageDirectoryMicroSummary? Map(PageDirectory? pageDirectory);
 }

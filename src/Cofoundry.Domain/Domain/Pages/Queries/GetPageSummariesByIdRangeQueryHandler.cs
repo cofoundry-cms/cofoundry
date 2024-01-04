@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Internal;
 /// pages will be returned irrecpective of whether they aree published or not.
 /// </summary>
 public class GetPageSummariesByIdRangeQueryHandler
-    : IQueryHandler<GetPageSummariesByIdRangeQuery, IDictionary<int, PageSummary>>
+    : IQueryHandler<GetPageSummariesByIdRangeQuery, IReadOnlyDictionary<int, PageSummary>>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -23,19 +23,19 @@ public class GetPageSummariesByIdRangeQueryHandler
         _pageSummaryMapper = pageSummaryMapper;
     }
 
-    public async Task<IDictionary<int, PageSummary>> ExecuteAsync(GetPageSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, PageSummary>> ExecuteAsync(GetPageSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         var dbResult = await QueryPages(query, executionContext);
 
         var mappedResult = await _pageSummaryMapper.MapAsync(dbResult, executionContext);
-        var dictionary = mappedResult.ToDictionary(d => d.PageId);
+        var dictionary = mappedResult.ToImmutableDictionary(d => d.PageId);
 
         return dictionary;
     }
 
-    private Task<List<Page>> QueryPages(GetPageSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    private async Task<IReadOnlyCollection<Page>> QueryPages(GetPageSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
-        var results = _dbContext
+        var results = await _dbContext
             .PagePublishStatusQueries
             .AsNoTracking()
             .Include(p => p.Page)
@@ -44,7 +44,7 @@ public class GetPageSummariesByIdRangeQueryHandler
             .FilterActive()
             .Where(p => query.PageIds.Contains(p.PageId))
             .Select(p => p.Page)
-            .ToListAsync();
+            .ToArrayAsync();
 
         return results;
     }

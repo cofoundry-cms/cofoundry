@@ -46,7 +46,7 @@ public class StreamFileSource : IFileSource
     /// the callee will be responsible for disposing of the stream, however
     /// the factory function may not always be called.
     /// </param>
-    public StreamFileSource(string fileName, string mimeType, Func<Stream> streamFactory)
+    public StreamFileSource(string fileName, string? mimeType, Func<Stream> streamFactory)
         : this(fileName, mimeType, () => Task.FromResult(streamFactory()))
     {
         ArgumentNullException.ThrowIfNull(streamFactory);
@@ -63,7 +63,7 @@ public class StreamFileSource : IFileSource
     /// the callee will be responsible for disposing of the stream, however
     /// the factory function may not always be called.
     /// </param>
-    public StreamFileSource(string fileName, string mimeType, Func<Task<Stream>> streamFactory)
+    public StreamFileSource(string fileName, string? mimeType, Func<Task<Stream>> streamFactory)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
         ArgumentNullException.ThrowIfNull(streamFactory);
@@ -75,7 +75,7 @@ public class StreamFileSource : IFileSource
 
     public string FileName { get; private set; }
 
-    public string MimeType { get; private set; }
+    public string? MimeType { get; private set; }
 
     public Task<Stream> OpenReadStreamAsync()
     {

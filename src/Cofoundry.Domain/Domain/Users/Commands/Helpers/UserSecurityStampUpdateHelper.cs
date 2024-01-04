@@ -30,7 +30,7 @@ public class UserSecurityStampUpdateHelper : IUserSecurityStampUpdateHelper
     {
         ArgumentNullException.ThrowIfNull(user);
 
-        var userAreaCode = user.UserArea != null ? user.UserArea.UserAreaCode : user.UserAreaCode;
+        var userAreaCode = string.IsNullOrEmpty(user.UserAreaCode) ? user.UserArea.UserAreaCode : user.UserAreaCode;
 
         if (string.IsNullOrEmpty(userAreaCode))
         {

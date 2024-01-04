@@ -25,7 +25,7 @@ public class DuplicateCustomEntityCommand : ICommand, ILoggableCommand
     /// </summary>
     [MaxLength(200)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// A url slug is usually required, except if the custom entity defintion
@@ -33,7 +33,7 @@ public class DuplicateCustomEntityCommand : ICommand, ILoggableCommand
     /// </summary>
     [MaxLength(200)]
     [Slug]
-    public string UrlSlug { get; set; }
+    public string? UrlSlug { get; set; }
 
     /// <summary>
     /// The database id of the newly created custom entity. This is set after the 

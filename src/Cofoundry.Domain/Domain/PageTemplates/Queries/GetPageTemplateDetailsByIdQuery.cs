@@ -1,6 +1,6 @@
 ﻿namespace Cofoundry.Domain;
 
-public class GetPageTemplateDetailsByIdQuery : IQuery<PageTemplateDetails>
+public class GetPageTemplateDetailsByIdQuery : IQuery<PageTemplateDetails?>
 {
     public GetPageTemplateDetailsByIdQuery()
     {

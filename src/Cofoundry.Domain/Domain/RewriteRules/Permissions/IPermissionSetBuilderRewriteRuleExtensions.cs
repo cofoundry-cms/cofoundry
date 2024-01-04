@@ -38,9 +38,13 @@ public static class IPermissionSetBuilderRewriteRuleExtensions
         return Run(builder, configure, false);
     }
 
-    private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<RewriteRulePermissionBuilder> configure, bool isIncludeOperation)
+    private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<RewriteRulePermissionBuilder>? configure, bool isIncludeOperation)
     {
-        if (configure == null) configure = c => c.All();
+        if (configure == null)
+        {
+            configure = c => c.All();
+        }
+
         var entityBuilder = new RewriteRulePermissionBuilder(builder, isIncludeOperation);
         configure(entityBuilder);
 

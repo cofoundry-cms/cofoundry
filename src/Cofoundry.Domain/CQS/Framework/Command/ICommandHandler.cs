@@ -3,7 +3,7 @@
 /// <summary>
 /// Handles the execution of a <see cref="TCommand"/> instance.
 /// </summary>
-/// <typeparam name="TCommand">Type of ICommand to handle.</typeparam>
+/// <typeparam name="TCommand">Type of <see cref="ICommand"/> to handle.</typeparam>
 public interface ICommandHandler<TCommand>
      where TCommand : ICommand
 {

@@ -101,13 +101,21 @@ public class CurrentUserViewHelperTests
         var queryExecutor = new Mock<IQueryExecutor>();
         queryExecutor
             .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == null), It.Is<IUserContext>(m => m == defaultUserContext)))
-            .ReturnsAsync(() => new RoleDetails() { IsAnonymousRole = true });
+            .ReturnsAsync(() => new RoleDetails()
+            {
+                RoleId = -1,
+                IsAnonymousRole = true,
+                Title = "Anonymous",
+                UserArea = UserAreaMicroSummary.Uninitialized
+            });
         queryExecutor
             .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == _userAreaContext.RoleId), It.Is<IUserContext>(m => m == _userAreaContext)))
             .ReturnsAsync(() => new RoleDetails()
             {
                 IsAnonymousRole = false,
-                RoleId = _userAreaContext.RoleId.Value
+                RoleId = _userAreaContext.RoleId.Value,
+                Title = "Test Role",
+                UserArea = UserAreaMicroSummary.Uninitialized
             });
 
         queryExecutor
@@ -124,7 +132,9 @@ public class CurrentUserViewHelperTests
                 .ReturnsAsync(() => new RoleDetails()
                 {
                     IsAnonymousRole = false,
-                    RoleId = defaultUserContext.RoleId.Value
+                    RoleId = defaultUserContext.RoleId.Value,
+                    Title = "Test Role",
+                    UserArea = UserAreaMicroSummary.Uninitialized
                 });
 
             queryExecutor

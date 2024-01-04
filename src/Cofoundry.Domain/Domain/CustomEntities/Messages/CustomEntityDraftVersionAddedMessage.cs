@@ -13,7 +13,7 @@ public class CustomEntityDraftVersionAddedMessage
     /// <summary>
     /// Definition code of the custom entity that the content change affects
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Id of the newly creafted draft version

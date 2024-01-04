@@ -13,7 +13,7 @@ public class CustomEntityDraftVersionUpdatedMessage : ICustomEntityContentUpdate
     /// <summary>
     /// Definition code of the custom entity that the content change affects
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Always false because updating a draft cannot change the published version

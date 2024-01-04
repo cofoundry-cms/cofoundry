@@ -3,20 +3,29 @@ namespace Cofoundry.Domain.Data;
 [Obsolete("The image asset grouping system will be revised in an upcomming release.")]
 public class ImageAssetGroup : ICreateAuditable
 {
-    public ImageAssetGroup()
+    public int ImageAssetGroupId { get; set; }
+
+    public string GroupName { get; set; } = string.Empty;
+
+    public int? ParentImageAssetGroupId { get; set; }
+
+    public ImageAssetGroup? ParentImageAssetGroup { get; set; }
+
+    /// <inheritdoc/>
+    public DateTime CreateDate { get; set; }
+
+    /// <inheritdoc/>
+    public int CreatorId { get; set; }
+
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
     {
-        ImageAssetGroupItems = new List<ImageAssetGroupItem>();
-        ChildImageAssetGroups = new List<ImageAssetGroup>();
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<ImageAssetGroup>(nameof(Creator));
+        set => _creator = value;
     }
 
-    public int ImageAssetGroupId { get; set; }
-    public string GroupName { get; set; }
-    public int? ParentImageAssetGroupId { get; set; }
-    public virtual ICollection<ImageAssetGroupItem> ImageAssetGroupItems { get; set; }
-    public virtual ICollection<ImageAssetGroup> ChildImageAssetGroups { get; set; }
-    public virtual ImageAssetGroup ParentImageAssetGroup { get; set; }
+    public ICollection<ImageAssetGroupItem> ImageAssetGroupItems { get; set; } = new List<ImageAssetGroupItem>();
 
-    public DateTime CreateDate { get; set; }
-    public int CreatorId { get; set; }
-    public virtual User Creator { get; set; }
+    public ICollection<ImageAssetGroup> ChildImageAssetGroups { get; set; } = new List<ImageAssetGroup>();
 }

@@ -12,8 +12,6 @@ public class MoveCustomEntityVersionPageBlockCommandHandler
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
-    private readonly EntityAuditHelper _entityAuditHelper;
-    private readonly EntityOrderableHelper _entityOrderableHelper;
     private readonly ICustomEntityCache _customEntityCache;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPermissionValidationService _permissionValidationService;
@@ -21,8 +19,6 @@ public class MoveCustomEntityVersionPageBlockCommandHandler
 
     public MoveCustomEntityVersionPageBlockCommandHandler(
         CofoundryDbContext dbContext,
-        EntityAuditHelper entityAuditHelper,
-        EntityOrderableHelper entityOrderableHelper,
         ICustomEntityCache customEntityCache,
         IMessageAggregator messageAggregator,
         IPermissionValidationService permissionValidationService,
@@ -30,8 +26,6 @@ public class MoveCustomEntityVersionPageBlockCommandHandler
         )
     {
         _dbContext = dbContext;
-        _entityAuditHelper = entityAuditHelper;
-        _entityOrderableHelper = entityOrderableHelper;
         _customEntityCache = customEntityCache;
         _messageAggregator = messageAggregator;
         _permissionValidationService = permissionValidationService;
@@ -46,9 +40,9 @@ public class MoveCustomEntityVersionPageBlockCommandHandler
             .Select(b => new
             {
                 Block = b,
-                CustomEntityId = b.CustomEntityVersion.CustomEntityId,
-                CustomEntityDefinitionCode = b.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode,
-                WorkFlowStatusId = b.CustomEntityVersion.WorkFlowStatusId
+                b.CustomEntityVersion.CustomEntityId,
+                b.CustomEntityVersion.CustomEntity.CustomEntityDefinitionCode,
+                b.CustomEntityVersion.WorkFlowStatusId
             })
             .SingleOrDefaultAsync();
         EntityNotFoundException.ThrowIfNull(dbResult, command.CustomEntityVersionPageBlockId);
@@ -64,7 +58,7 @@ public class MoveCustomEntityVersionPageBlockCommandHandler
             .CustomEntityVersionPageBlocks
             .Where(p => p.PageTemplateRegionId == block.PageTemplateRegionId && p.CustomEntityVersionId == block.CustomEntityVersionId);
 
-        CustomEntityVersionPageBlock blockToSwapWith;
+        CustomEntityVersionPageBlock? blockToSwapWith;
 
         switch (command.Direction)
         {
@@ -84,7 +78,10 @@ public class MoveCustomEntityVersionPageBlockCommandHandler
                 throw new InvalidOperationException("OrderedItemMoveDirection not recognised: " + command.Direction);
         }
 
-        if (blockToSwapWith == null) return;
+        if (blockToSwapWith == null)
+        {
+            return;
+        }
 
         int oldOrdering = block.Ordering;
         block.Ordering = blockToSwapWith.Ordering;

@@ -12,23 +12,14 @@ public class UpdateCustomEntityOrderingPositionCommandHandler
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
-    private readonly ICustomEntityCache _customEntityCache;
-    private readonly IMessageAggregator _messageAggregator;
-    private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
     private readonly IPermissionValidationService _permissionValidationService;
 
     public UpdateCustomEntityOrderingPositionCommandHandler(
         CofoundryDbContext dbContext,
-        ICustomEntityCache customEntityCache,
-        IMessageAggregator messageAggregator,
-        ICustomEntityDefinitionRepository customEntityDefinitionRepository,
         IPermissionValidationService permissionValidationService
         )
     {
         _dbContext = dbContext;
-        _customEntityCache = customEntityCache;
-        _messageAggregator = messageAggregator;
-        _customEntityDefinitionRepository = customEntityDefinitionRepository;
         _permissionValidationService = permissionValidationService;
     }
 

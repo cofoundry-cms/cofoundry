@@ -1,4 +1,5 @@
 ﻿using Cofoundry.Domain.Data;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -7,31 +8,34 @@ namespace Cofoundry.Domain.Internal;
 /// block data for a specific version of a page.
 /// </summary>
 public class GetPageRegionDetailsByPageVersionIdQueryHandler
-    : IQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>
-    , IPermissionRestrictedQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, ICollection<PageRegionDetails>>
+    : IQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, IReadOnlyCollection<PageRegionDetails>>
+    , IPermissionRestrictedQueryHandler<GetPageRegionDetailsByPageVersionIdQuery, IReadOnlyCollection<PageRegionDetails>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
     private readonly IPageVersionBlockModelMapper _pageVersionBlockModelMapper;
     private readonly IEntityVersionPageBlockMapper _entityVersionPageBlockMapper;
+    private readonly ILogger<GetPageRegionDetailsByPageVersionIdQueryHandler> _logger;
 
     public GetPageRegionDetailsByPageVersionIdQueryHandler(
         CofoundryDbContext dbContext,
         IQueryExecutor queryExecutor,
         IPageVersionBlockModelMapper pageVersionBlockModelMapper,
-        IEntityVersionPageBlockMapper entityVersionPageBlockMapper
+        IEntityVersionPageBlockMapper entityVersionPageBlockMapper,
+        ILogger<GetPageRegionDetailsByPageVersionIdQueryHandler> logger
         )
     {
         _dbContext = dbContext;
         _queryExecutor = queryExecutor;
         _pageVersionBlockModelMapper = pageVersionBlockModelMapper;
         _entityVersionPageBlockMapper = entityVersionPageBlockMapper;
+        _logger = logger;
     }
 
-    public async Task<ICollection<PageRegionDetails>> ExecuteAsync(GetPageRegionDetailsByPageVersionIdQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<PageRegionDetails>> ExecuteAsync(GetPageRegionDetailsByPageVersionIdQuery query, IExecutionContext executionContext)
     {
-        var regions = await GetRegions(query).ToListAsync();
-        var dbPageBlocks = await QueryPageBlocks(query).ToListAsync();
+        var regions = await GetRegionsAsync(query);
+        var dbPageBlocks = await GetPageVersionBlocksAsync(query);
         var allBlockTypes = await _queryExecutor.ExecuteAsync(new GetAllPageBlockTypeSummariesQuery(), executionContext);
 
         MapRegions(regions, dbPageBlocks, allBlockTypes);
@@ -40,9 +44,9 @@ public class GetPageRegionDetailsByPageVersionIdQueryHandler
     }
 
     private void MapRegions(
-        List<PageRegionDetails> regions,
-        List<PageVersionBlock> dbPageBlocks,
-        ICollection<PageBlockTypeSummary> allBlockTypes
+        IReadOnlyCollection<PageRegionDetails> regions,
+        IReadOnlyCollection<PageVersionBlock> dbPageBlocks,
+        IReadOnlyCollection<PageBlockTypeSummary> allBlockTypes
         )
     {
         foreach (var region in regions)
@@ -56,18 +60,22 @@ public class GetPageRegionDetailsByPageVersionIdQueryHandler
         }
     }
 
-    private IQueryable<PageVersionBlock> QueryPageBlocks(GetPageRegionDetailsByPageVersionIdQuery query)
+    private async Task<IReadOnlyCollection<PageVersionBlock>> GetPageVersionBlocksAsync(GetPageRegionDetailsByPageVersionIdQuery query)
     {
-        return _dbContext
+        var dbPageVersionBlocks = await _dbContext
             .PageVersionBlocks
             .AsNoTracking()
             .FilterActive()
-            .Where(m => m.PageVersionId == query.PageVersionId);
+            .Where(m => m.PageVersionId == query.PageVersionId)
+            .ToArrayAsync();
+
+        return dbPageVersionBlocks;
     }
 
-    private PageVersionBlockDetails MapPageBlock(PageVersionBlock dbBlock, ICollection<PageBlockTypeSummary> allBlockTypes)
+    private PageVersionBlockDetails MapPageBlock(PageVersionBlock dbBlock, IReadOnlyCollection<PageBlockTypeSummary> allBlockTypes)
     {
         var blockType = allBlockTypes.SingleOrDefault(t => t.PageBlockTypeId == dbBlock.PageBlockTypeId);
+        EntityNotFoundException.ThrowIfNull(blockType, dbBlock.PageBlockTypeId);
 
         var block = new PageVersionBlockDetails();
         block.BlockType = blockType;
@@ -78,9 +86,9 @@ public class GetPageRegionDetailsByPageVersionIdQueryHandler
         return block;
     }
 
-    private IQueryable<PageRegionDetails> GetRegions(GetPageRegionDetailsByPageVersionIdQuery query)
+    private async Task<IReadOnlyCollection<PageRegionDetails>> GetRegionsAsync(GetPageRegionDetailsByPageVersionIdQuery query)
     {
-        var dbQuery = _dbContext
+        var dbRegions = await _dbContext
             .PageVersions
             .AsNoTracking()
             .FilterActive()
@@ -92,9 +100,10 @@ public class GetPageRegionDetailsByPageVersionIdQueryHandler
             {
                 PageTemplateRegionId = s.PageTemplateRegionId,
                 Name = s.Name
-            });
+            })
+            .ToArrayAsync();
 
-        return dbQuery;
+        return dbRegions;
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetPageRegionDetailsByPageVersionIdQuery query)

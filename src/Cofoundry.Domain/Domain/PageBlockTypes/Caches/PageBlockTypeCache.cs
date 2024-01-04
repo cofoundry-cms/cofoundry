@@ -3,9 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Cache for page block data, which is frequently requested to 
-/// when rendering pages and does no change once the application
-/// is running
+/// Default implementation of <see cref="IPageBlockTypeCache"/>.
 /// </summary>
 public class PageBlockTypeCache : IPageBlockTypeCache
 {
@@ -20,39 +18,33 @@ public class PageBlockTypeCache : IPageBlockTypeCache
         _cache = cacheFactory.Get(CACHEKEY);
     }
 
-    /// <summary>
-    /// Gets all page block types if they are already cached, otherwise the 
-    /// getter is invoked and the result is cached and returned
-    /// </summary>
-    /// <param name="getter">Function to invoke if the page block types aren't in the cache</param>
-    public ICollection<PageBlockTypeSummary> GetOrAdd(Func<ICollection<PageBlockTypeSummary>> getter)
+    /// <inheritdoc/>
+    public async Task<IReadOnlyCollection<PageBlockTypeSummary>> GetOrAddAsync(Func<Task<IReadOnlyCollection<PageBlockTypeSummary>>> getter)
     {
-        return _cache.GetOrAdd(SUMMARIES_CACHEKEY, getter);
+        var result = await _cache.GetOrAddAsync(SUMMARIES_CACHEKEY, getter);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Result of {nameof(_cache.GetOrAddAsync)} with key {SUMMARIES_CACHEKEY} should never be null.");
+        }
+
+        return result;
     }
 
-    /// <summary>
-    /// Gets all page block types if they are already cached, otherwise the 
-    /// getter is invoked and the result is cached and returned
-    /// </summary>
-    /// <param name="getter">Function to invoke if the page block types aren't in the cache</param>
-    public Task<ICollection<PageBlockTypeSummary>> GetOrAddAsync(Func<Task<ICollection<PageBlockTypeSummary>>> getter)
+    /// <inheritdoc/>
+    public IReadOnlyDictionary<string, PageBlockTypeFileLocation> GetOrAddFileLocations(Func<IReadOnlyDictionary<string, PageBlockTypeFileLocation>> getter)
     {
-        return _cache.GetOrAddAsync(SUMMARIES_CACHEKEY, getter);
+        var result = _cache.GetOrAdd(FILE_LOCATIONS_CACHEKEY, getter);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Result of {nameof(_cache.GetOrAdd)} with key {FILE_LOCATIONS_CACHEKEY} should never be null.");
+        }
+
+        return result;
     }
 
-    /// <summary>
-    /// Gets all a collection of all PageBlockTypeFileLocation objects if they are already 
-    /// cached, otherwise the getter is invoked and the result is cached and returned
-    /// </summary>
-    /// <param name="getter">Function to invoke if the page blocks types aren't in the cache</param>
-    public Dictionary<string, PageBlockTypeFileLocation> GetOrAddFileLocations(Func<Dictionary<string, PageBlockTypeFileLocation>> getter)
-    {
-        return _cache.GetOrAdd(FILE_LOCATIONS_CACHEKEY, getter);
-    }
-
-    /// <summary>
-    /// Removes all block type data from the cache
-    /// </summary>
+    /// <inheritdoc/>
     public void Clear()
     {
         _cache.Clear();

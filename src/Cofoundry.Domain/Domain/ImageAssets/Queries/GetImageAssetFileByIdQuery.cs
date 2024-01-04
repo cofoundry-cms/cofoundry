@@ -4,7 +4,7 @@
 /// Gets file information about an image asset including
 /// stream access to the file itself.
 /// </summary>
-public class GetImageAssetFileByIdQuery : IQuery<ImageAssetFile>
+public class GetImageAssetFileByIdQuery : IQuery<ImageAssetFile?>
 {
     public GetImageAssetFileByIdQuery()
     {

@@ -3,15 +3,11 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Simple mapper for mapping to PageBlockTypeSummary objects.
+/// Default implementation of <see cref="IPageBlockTypeSummaryMapper"/>.
 /// </summary>
 public class PageBlockTypeSummaryMapper : IPageBlockTypeSummaryMapper
 {
-    /// <summary>
-    /// Maps an EF PageBlockType record from the db into an PageBlockTypeSummary 
-    /// object. If the db record is null then null is returned.
-    /// </summary>
-    /// <param name="dbPageBlockType">PageBlockType record from the database.</param>
+    /// <inheritdoc/>
     public PageBlockTypeSummary Map(PageBlockType dbPageBlockType)
     {
         var result = new PageBlockTypeSummary()
@@ -25,7 +21,7 @@ public class PageBlockTypeSummaryMapper : IPageBlockTypeSummaryMapper
         result.Templates = dbPageBlockType
             .PageBlockTemplates
             .Select(Map)
-            .ToList();
+            .ToArray();
 
         return result;
     }

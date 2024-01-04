@@ -31,6 +31,12 @@ public class LogFailedAuthenticationAttemptCommandHandler
     public async Task ExecuteAsync(LogFailedAuthenticationAttemptCommand command, IExecutionContext executionContext)
     {
         var connectionInfo = _clientConnectionService.GetConnectionInfo();
+        EntityNotFoundException.ThrowIfNull(connectionInfo);
+
+        if (connectionInfo.IPAddress == null)
+        {
+            throw new InvalidOperationException("connectionInfo.IPAddress should never be null.");
+        }
 
         await _userStoredProcedures.LogAuthenticationFailedAsync(
             command.UserAreaCode,

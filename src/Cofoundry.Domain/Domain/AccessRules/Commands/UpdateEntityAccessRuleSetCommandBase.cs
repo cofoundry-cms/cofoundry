@@ -13,14 +13,14 @@ public abstract class UpdateAccessRuleSetCommandBase<TAddOrUpdateAccessRuleComma
     /// collection are removed from the database.
     /// </summary>
     [ValidateObject]
-    public ICollection<TAddOrUpdateAccessRuleCommand> AccessRules { get; set; } = new List<TAddOrUpdateAccessRuleCommand>();
+    public IReadOnlyCollection<TAddOrUpdateAccessRuleCommand> AccessRules { get; set; } = Array.Empty<TAddOrUpdateAccessRuleCommand>();
 
     /// <summary>
     /// Unique 3 character code representing the <see cref="UserArea"/> with
     /// the sign in page to redirect to when a user does not meet the criteria of 
     /// the access rules directly associated with this page.
     /// </summary>
-    public string UserAreaCodeForSignInRedirect { get; set; }
+    public string? UserAreaCodeForSignInRedirect { get; set; }
 
     /// <summary>
     /// The action that should be taken when a user does not meet the criteria 

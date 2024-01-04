@@ -7,7 +7,7 @@
 /// to a page, including all the data needed to construct an asset file 
 /// url.
 /// </summary>
-public class GetImageAssetRenderDetailsByIdRangeQuery : IQuery<IDictionary<int, ImageAssetRenderDetails>>
+public class GetImageAssetRenderDetailsByIdRangeQuery : IQuery<IReadOnlyDictionary<int, ImageAssetRenderDetails>>
 {
     public GetImageAssetRenderDetailsByIdRangeQuery()
     {
@@ -20,7 +20,7 @@ public class GetImageAssetRenderDetailsByIdRangeQuery : IQuery<IDictionary<int, 
     public GetImageAssetRenderDetailsByIdRangeQuery(
         IEnumerable<int> imageAssetIds
         )
-        : this(imageAssetIds?.ToList())
+        : this(imageAssetIds?.ToArray() ?? [])
     {
     }
 
@@ -41,5 +41,5 @@ public class GetImageAssetRenderDetailsByIdRangeQuery : IQuery<IDictionary<int, 
     /// Collection of database ids of the image assets to get.
     /// </summary>
     [Required]
-    public IReadOnlyCollection<int> ImageAssetIds { get; set; }
+    public IReadOnlyCollection<int> ImageAssetIds { get; set; } = Array.Empty<int>();
 }

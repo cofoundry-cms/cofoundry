@@ -2,7 +2,7 @@
 
 public class PermissionEqualityComparer : IEqualityComparer<IPermission>
 {
-    public bool Equals(IPermission x, IPermission y)
+    public bool Equals(IPermission? x, IPermission? y)
     {
         if (x == null || y == null) return false;
 
@@ -18,7 +18,7 @@ public class PermissionEqualityComparer : IEqualityComparer<IPermission>
         return x.PermissionType.Code == y.PermissionType.Code;
     }
 
-    private string GetEntityDefinitionCode(IPermission permission)
+    private string? GetEntityDefinitionCode(IPermission permission)
     {
         var entityPermission = permission as IEntityPermission;
         if (entityPermission != null && entityPermission.EntityDefinition != null)

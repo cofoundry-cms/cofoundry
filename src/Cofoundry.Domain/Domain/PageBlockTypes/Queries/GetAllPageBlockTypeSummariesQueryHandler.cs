@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetAllPageBlockTypeSummariesQueryHandler
-    : IQueryHandler<GetAllPageBlockTypeSummariesQuery, ICollection<PageBlockTypeSummary>>
-    , IPermissionRestrictedQueryHandler<GetAllPageBlockTypeSummariesQuery, ICollection<PageBlockTypeSummary>>
+    : IQueryHandler<GetAllPageBlockTypeSummariesQuery, IReadOnlyCollection<PageBlockTypeSummary>>
+    , IPermissionRestrictedQueryHandler<GetAllPageBlockTypeSummariesQuery, IReadOnlyCollection<PageBlockTypeSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageBlockTypeCache _pageBlockTypeCache;
@@ -21,14 +21,14 @@ public class GetAllPageBlockTypeSummariesQueryHandler
         _pageBlockTypeSummaryMapper = pageBlockTypeSummaryMapper;
     }
 
-    public async Task<ICollection<PageBlockTypeSummary>> ExecuteAsync(GetAllPageBlockTypeSummariesQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<PageBlockTypeSummary>> ExecuteAsync(GetAllPageBlockTypeSummariesQuery query, IExecutionContext executionContext)
     {
         return await _pageBlockTypeCache.GetOrAddAsync(async () =>
         {
-            var dbResults = await Query().ToListAsync();
+            var dbResults = await Query().ToArrayAsync();
             var results = dbResults
                 .Select(_pageBlockTypeSummaryMapper.Map)
-                .ToList();
+                .ToArray();
 
             return results;
         });

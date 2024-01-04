@@ -66,6 +66,8 @@ public class InitiateUserAccountVerificationViaEmailCommandHandler
 
     private async Task OnTransactionComplete(UserSummary user, AddAuthorizedTaskCommand addAuthorizedTaskCommand)
     {
+        ArgumentNullException.ThrowIfNull(addAuthorizedTaskCommand.OutputToken);
+
         await _messageAggregator.PublishAsync(new UserAccountVerificationInitiatedMessage()
         {
             AuthorizedTaskId = addAuthorizedTaskCommand.OutputAuthorizedTaskId,
@@ -120,6 +122,9 @@ public class InitiateUserAccountVerificationViaEmailCommandHandler
         UserSummary user
         )
     {
+        ArgumentNullException.ThrowIfNull(addAuthorizedTaskCommand.OutputToken);
+        EntityInvalidOperationException.ThrowIfNull(user, user.Email);
+
         var context = _userMailTemplateBuilderContextFactory.CreateAccountVerificationContext(user, addAuthorizedTaskCommand.OutputToken);
         var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserArea.UserAreaCode);
         var mailTemplate = await mailTemplateBuilder.BuildAccountVerificationTemplateAsync(context);

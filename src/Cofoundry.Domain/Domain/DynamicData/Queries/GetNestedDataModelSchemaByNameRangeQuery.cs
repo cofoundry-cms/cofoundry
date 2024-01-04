@@ -6,7 +6,7 @@
 /// and the lookup is case-insesnitive. The lookup name is used 
 /// unmodified as the key in the returned dictionary.
 /// </summary>
-public class GetNestedDataModelSchemaByNameRangeQuery : IQuery<IDictionary<string, NestedDataModelSchema>>
+public class GetNestedDataModelSchemaByNameRangeQuery : IQuery<IReadOnlyDictionary<string, NestedDataModelSchema>>
 {
     public GetNestedDataModelSchemaByNameRangeQuery()
     {
@@ -20,7 +20,7 @@ public class GetNestedDataModelSchemaByNameRangeQuery : IQuery<IDictionary<strin
     /// the lookup is case-insesnitive.
     /// </param>
     public GetNestedDataModelSchemaByNameRangeQuery(IEnumerable<string> names)
-        : this(names?.ToList())
+        : this(names?.ToArray() ?? Array.Empty<string>())
     {
     }
 
@@ -44,5 +44,5 @@ public class GetNestedDataModelSchemaByNameRangeQuery : IQuery<IDictionary<strin
     /// The data model type names with or without the "DataModel" suffix.
     /// the lookup is case-insesnitive.
     /// </summary>
-    public IReadOnlyCollection<string> Names { get; set; }
+    public IReadOnlyCollection<string> Names { get; set; } = Array.Empty<string>();
 }

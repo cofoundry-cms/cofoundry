@@ -20,25 +20,25 @@ public class ContentRepositoryPageByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<PageRoute> AsRoute()
+    public IDomainRepositoryQueryContext<PageRoute?> AsRoute()
     {
         var query = new GetPageRouteByIdQuery(_pageId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageRenderSummary> AsRenderSummary()
+    public IDomainRepositoryQueryContext<PageRenderSummary?> AsRenderSummary()
     {
         var query = new GetPageRenderSummaryByIdQuery(_pageId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageRenderSummary> AsRenderSummary(PublishStatusQuery publishStatus)
+    public IDomainRepositoryQueryContext<PageRenderSummary?> AsRenderSummary(PublishStatusQuery publishStatus)
     {
         var query = new GetPageRenderSummaryByIdQuery(_pageId, publishStatus);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageRenderSummary> AsRenderSummary(int pageVersionId)
+    public IDomainRepositoryQueryContext<PageRenderSummary?> AsRenderSummary(int pageVersionId)
     {
         var query = new GetPageRenderSummaryByIdQuery(_pageId, PublishStatusQuery.SpecificVersion);
         query.PageVersionId = pageVersionId;
@@ -46,19 +46,19 @@ public class ContentRepositoryPageByIdQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageRenderDetails> AsRenderDetails()
+    public IDomainRepositoryQueryContext<PageRenderDetails?> AsRenderDetails()
     {
         var query = new GetPageRenderDetailsByIdQuery(_pageId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageRenderDetails> AsRenderDetails(PublishStatusQuery publishStatus)
+    public IDomainRepositoryQueryContext<PageRenderDetails?> AsRenderDetails(PublishStatusQuery publishStatus)
     {
         var query = new GetPageRenderDetailsByIdQuery(_pageId, publishStatus);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageRenderDetails> AsRenderDetails(int pageVersionId)
+    public IDomainRepositoryQueryContext<PageRenderDetails?> AsRenderDetails(int pageVersionId)
     {
         var query = new GetPageRenderDetailsByIdQuery(_pageId, PublishStatusQuery.SpecificVersion);
         query.PageVersionId = pageVersionId;
@@ -66,7 +66,7 @@ public class ContentRepositoryPageByIdQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageDetails> AsDetails()
+    public IDomainRepositoryQueryContext<PageDetails?> AsDetails()
     {
         var query = new GetPageDetailsByIdQuery(_pageId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

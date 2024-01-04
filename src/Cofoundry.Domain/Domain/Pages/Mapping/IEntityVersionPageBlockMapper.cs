@@ -11,7 +11,7 @@ public interface IEntityVersionPageBlockMapper
     Task MapRegionsAsync<TBlockRenderDetails>(
         IEnumerable<IEntityVersionPageBlock> dbBlocks,
         IEnumerable<IEntityRegionRenderDetails<TBlockRenderDetails>> regions,
-        ICollection<PageBlockTypeSummary> allBlockTypes,
+        IReadOnlyCollection<PageBlockTypeSummary> allBlockTypes,
         PublishStatusQuery publishStatus,
         IExecutionContext executionContext
         )
@@ -23,5 +23,5 @@ public interface IEntityVersionPageBlockMapper
     /// </summary>
     /// <param name="pageBlock">An unmapped database block to locate the template for.</param>
     /// <param name="blockType">The block type associated with the block in which to look for the template.</param>
-    PageBlockTypeTemplateSummary GetCustomTemplate(IEntityVersionPageBlock pageBlock, PageBlockTypeSummary blockType);
+    PageBlockTypeTemplateSummary? GetCustomTemplate(IEntityVersionPageBlock pageBlock, PageBlockTypeSummary blockType);
 }

@@ -13,7 +13,6 @@
 /// but instead are used to restrict public access to website pages and routes.
 /// </para>
 /// </summary>
-/// <inheritdoc/>
 public class PageAccessRule : IEntityAccessRule
 {
     /// <summary>
@@ -26,25 +25,48 @@ public class PageAccessRule : IEntityAccessRule
     /// </summary>
     public int PageId { get; set; }
 
+    private Page? _page;
     /// <summary>
     /// <see cref="Page"/> that this rule controls access to.
     /// </summary>
-    public virtual Page Page { get; set; }
+    public Page Page
+    {
+        get => _page ?? throw NavigationPropertyNotInitializedException.Create<PageAccessRule>(nameof(Page));
+        set => _page = value;
+    }
 
-    public string UserAreaCode { get; set; }
+    /// <inheritdoc/>
+    public string UserAreaCode { get; set; } = string.Empty;
 
-    public virtual UserArea UserArea { get; set; }
+    private UserArea? _userArea;
+    /// <inheritdoc/>
+    public UserArea UserArea
+    {
+        get => _userArea ?? throw NavigationPropertyNotInitializedException.Create<PageAccessRule>(nameof(UserArea));
+        set => _userArea = value;
+    }
 
+    /// <inheritdoc/>
     public int? RoleId { get; set; }
 
-    public virtual Role Role { get; set; }
+    /// <inheritdoc/>
+    public Role? Role { get; set; }
 
+    /// <inheritdoc/>
     public DateTime CreateDate { get; set; }
 
+    /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    public virtual User Creator { get; set; }
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageAccessRule>(nameof(Creator));
+        set => _creator = value;
+    }
 
+    /// <inheritdoc/>
     public int GetId()
     {
         return PageAccessRuleId;

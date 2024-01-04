@@ -12,11 +12,16 @@ public class PageDirectoryPath
     /// </summary>
     public int PageDirectoryId { get; set; }
 
+    private PageDirectory? _pageDirectory;
     /// <summary>
     /// The parent <see cref="PageDirectory"/>. This can only be null for the 
     /// root directory.
     /// </summary>
-    public virtual PageDirectory PageDirectory { get; set; }
+    public PageDirectory PageDirectory
+    {
+        get => _pageDirectory ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryPath>(nameof(PageDirectory));
+        set => _pageDirectory = value;
+    }
 
     /// <summary>
     /// The zero-based depth of the directory in the heirarchy structure, where
@@ -28,5 +33,5 @@ public class PageDirectoryPath
     /// The complete path of the directory in the heirarchy up to and including 
     /// this directory, without a leading or trailing slash e.g. "parent-directory/child-directory"
     /// </summary>
-    public string FullUrlPath { get; set; }
+    public string FullUrlPath { get; set; } = string.Empty;
 }

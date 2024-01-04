@@ -74,6 +74,11 @@ public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
     {
         ArgumentNullException.ThrowIfNull(user);
 
+        if (string.IsNullOrEmpty(user.Email))
+        {
+            throw new InvalidOperationException($"{nameof(SendPasswordChangedNotification)} should not be called on a user that does not support email addresses.");
+        }
+
         var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserAreaCode).Password;
         if (!options.SendNotificationOnUpdate) return;
 

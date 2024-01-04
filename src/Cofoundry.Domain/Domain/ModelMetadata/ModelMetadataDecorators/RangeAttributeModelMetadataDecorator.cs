@@ -14,15 +14,13 @@ public class RangeAttributeModelMetadataDecorator : IModelMetadataDecorator
     {
         ArgumentNullException.ThrowIfNull(attribute);
 
-        if (!(attribute is RangeAttribute))
+        if (attribute is not RangeAttribute rangeLengthttribtue)
         {
             throw new ArgumentException("Attribute type is not RangeAttribute", nameof(attribute));
         }
 
-        var rangeLengthttribtue = (RangeAttribute)attribute;
-
-        string minAttribute = null;
-        string maxAttribute = null;
+        string? minAttribute;
+        string? maxAttribute;
 
         if (rangeLengthttribtue.OperandType == typeof(string))
         {

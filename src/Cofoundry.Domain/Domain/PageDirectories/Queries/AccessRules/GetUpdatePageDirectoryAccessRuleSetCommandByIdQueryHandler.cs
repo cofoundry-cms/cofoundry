@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdatePageDirectoryAccessRuleSetCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>, UpdatePageDirectoryAccessRuleSetCommand>
-    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>, UpdatePageDirectoryAccessRuleSetCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>, UpdatePageDirectoryAccessRuleSetCommand?>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>, UpdatePageDirectoryAccessRuleSetCommand?>
 {
     private readonly CofoundryDbContext _dbContext;
 
@@ -15,7 +15,7 @@ public class GetUpdatePageDirectoryAccessRuleSetCommandByIdQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<UpdatePageDirectoryAccessRuleSetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand> query, IExecutionContext executionContext)
+    public async Task<UpdatePageDirectoryAccessRuleSetCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand> query, IExecutionContext executionContext)
     {
         var dbPageDirectory = await _dbContext
             .PageDirectories
@@ -24,7 +24,10 @@ public class GetUpdatePageDirectoryAccessRuleSetCommandByIdQueryHandler
             .FilterById(query.Id)
             .SingleOrDefaultAsync();
 
-        if (dbPageDirectory == null) return null;
+        if (dbPageDirectory == null)
+        {
+            return null;
+        }
 
         var violationAction = EnumParser.ParseOrNull<AccessRuleViolationAction>(dbPageDirectory.AccessRuleViolationActionId);
         if (!violationAction.HasValue)
@@ -47,7 +50,7 @@ public class GetUpdatePageDirectoryAccessRuleSetCommandByIdQueryHandler
                 UserAreaCode = r.UserAreaCode,
                 RoleId = r.RoleId
             })
-            .ToList();
+            .ToArray();
 
         return command;
     }

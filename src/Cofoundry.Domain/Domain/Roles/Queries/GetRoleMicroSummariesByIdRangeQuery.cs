@@ -20,28 +20,18 @@ public class GetRoleMicroSummariesByIdRangeQuery : IQuery<IDictionary<int, RoleM
     /// </summary>
     /// <param name="roleIds">Collection of database ids of the roles to get.</param>
     public GetRoleMicroSummariesByIdRangeQuery(
-        IEnumerable<int> roleIds
-        )
-        : this(roleIds?.ToList())
-    {
-    }
-
-    /// <summary>
-    /// Initializes the query with parameters.
-    /// </summary>
-    /// <param name="roleIds">Collection of database ids of the roles to get.</param>
-    public GetRoleMicroSummariesByIdRangeQuery(
-        IReadOnlyCollection<int> roleIds
+        IEnumerable<int>? roleIds
         )
     {
-        ArgumentNullException.ThrowIfNull(roleIds);
-
-        RoleIds = roleIds;
+        if (!EnumerableHelper.IsNullOrEmpty(roleIds))
+        {
+            RoleIds = roleIds.ToArray();
+        }
     }
 
     /// <summary>
     /// Collection of database ids of the roles to get.
     /// </summary>
     [Required]
-    public IReadOnlyCollection<int> RoleIds { get; set; }
+    public IReadOnlyCollection<int> RoleIds { get; set; } = Array.Empty<int>();
 }

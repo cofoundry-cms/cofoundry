@@ -15,7 +15,7 @@ public class ContentRepositoryPageByPathQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<PageRoutingInfo> AsRoutingInfo(GetPageRoutingInfoByPathQuery query)
+    public IDomainRepositoryQueryContext<PageRoutingInfo?> AsRoutingInfo(GetPageRoutingInfoByPathQuery query)
     {
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }

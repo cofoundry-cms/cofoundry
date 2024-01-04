@@ -9,5 +9,5 @@ public class PageGroupMicroSummary
 
     public int? ParentGroupId { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

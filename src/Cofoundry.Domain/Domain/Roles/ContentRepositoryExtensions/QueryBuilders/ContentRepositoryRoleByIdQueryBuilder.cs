@@ -19,13 +19,13 @@ public class ContentRepositoryRoleByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<RoleMicroSummary> AsMicroSummary()
+    public IDomainRepositoryQueryContext<RoleMicroSummary?> AsMicroSummary()
     {
         var query = new GetRoleMicroSummaryByIdQuery(_roleId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<RoleDetails> AsDetails()
+    public IDomainRepositoryQueryContext<RoleDetails?> AsDetails()
     {
         var query = new GetRoleDetailsByIdQuery(_roleId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

@@ -6,7 +6,7 @@
 /// collection before returning them.
 /// </summary>
 public class GetAllCustomEntityRoutingRulesQueryHandler
-    : IQueryHandler<GetAllCustomEntityRoutingRulesQuery, ICollection<ICustomEntityRoutingRule>>
+    : IQueryHandler<GetAllCustomEntityRoutingRulesQuery, IReadOnlyCollection<ICustomEntityRoutingRule>>
     , IIgnorePermissionCheckHandler
 {
     private readonly IEnumerable<ICustomEntityRoutingRule> _customEntityRoutingRules;
@@ -18,7 +18,7 @@ public class GetAllCustomEntityRoutingRulesQueryHandler
         _customEntityRoutingRules = customEntityRoutingRules;
     }
 
-    public Task<ICollection<ICustomEntityRoutingRule>> ExecuteAsync(GetAllCustomEntityRoutingRulesQuery query, IExecutionContext executionContext)
+    public Task<IReadOnlyCollection<ICustomEntityRoutingRule>> ExecuteAsync(GetAllCustomEntityRoutingRulesQuery query, IExecutionContext executionContext)
     {
         var duplicateRule = _customEntityRoutingRules
             .GroupBy(r => r.RouteFormat)
@@ -29,6 +29,6 @@ public class GetAllCustomEntityRoutingRulesQueryHandler
             throw new Exception("Multiple handlers cannot exist using the same RouteFormat. Duplicate: " + duplicateRule.Key);
         }
 
-        return Task.FromResult<ICollection<ICustomEntityRoutingRule>>(_customEntityRoutingRules.ToList());
+        return Task.FromResult<IReadOnlyCollection<ICustomEntityRoutingRule>>(_customEntityRoutingRules.ToList());
     }
 }

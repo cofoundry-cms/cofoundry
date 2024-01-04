@@ -15,7 +15,7 @@ public class IsPagePathUniqueQuery : IQuery<bool>
     /// <summary>
     /// The path of the page within the directory. 
     /// </summary>
-    public string UrlPath { get; set; }
+    public string UrlPath { get; set; } = string.Empty;
 
     /// <summary>
     /// The directory the page is parented to.

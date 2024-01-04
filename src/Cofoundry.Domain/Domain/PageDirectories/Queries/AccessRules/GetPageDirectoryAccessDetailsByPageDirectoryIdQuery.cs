@@ -4,7 +4,7 @@
 /// Returns all access rules associated with a directory, including those inherited from
 /// parent directories.
 /// </summary>
-public class GetPageDirectoryAccessDetailsByPageDirectoryIdQuery : IQuery<PageDirectoryAccessRuleSetDetails>
+public class GetPageDirectoryAccessDetailsByPageDirectoryIdQuery : IQuery<PageDirectoryAccessRuleSetDetails?>
 {
     public GetPageDirectoryAccessDetailsByPageDirectoryIdQuery() { }
 

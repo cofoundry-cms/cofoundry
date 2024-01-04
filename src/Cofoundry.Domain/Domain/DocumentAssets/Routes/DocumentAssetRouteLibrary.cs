@@ -26,7 +26,7 @@ public class DocumentAssetRouteLibrary : IDocumentAssetRouteLibrary
     {
         if (!documentAssetId.HasValue) return string.Empty;
 
-        var asset = await GetDocumentAssetAsync(documentAssetId);
+        var asset = await GetDocumentAssetAsync(documentAssetId.Value);
 
         return DocumentAsset(asset);
     }
@@ -36,7 +36,7 @@ public class DocumentAssetRouteLibrary : IDocumentAssetRouteLibrary
     /// browser using the "inline" content disposition.
     /// </summary>
     /// <param name="asset">asset to get the url for</param>
-    public string DocumentAsset(IDocumentAssetRenderable asset)
+    public string DocumentAsset(IDocumentAssetRenderable? asset)
     {
         if (asset == null) return string.Empty;
 
@@ -58,7 +58,7 @@ public class DocumentAssetRouteLibrary : IDocumentAssetRouteLibrary
     {
         if (!documentAssetId.HasValue) return string.Empty;
 
-        var asset = await GetDocumentAssetAsync(documentAssetId);
+        var asset = await GetDocumentAssetAsync(documentAssetId.Value);
 
         return DocumentAssetDownload(asset);
     }
@@ -68,7 +68,7 @@ public class DocumentAssetRouteLibrary : IDocumentAssetRouteLibrary
     /// the "attachment" content disposition.
     /// </summary>
     /// <param name="asset">asset to get the url for</param>
-    public string DocumentAssetDownload(IDocumentAssetRenderable asset)
+    public string DocumentAssetDownload(IDocumentAssetRenderable? asset)
     {
         if (asset == null) return string.Empty;
 
@@ -79,9 +79,9 @@ public class DocumentAssetRouteLibrary : IDocumentAssetRouteLibrary
         return url;
     }
 
-    private async Task<DocumentAssetRenderDetails> GetDocumentAssetAsync(int? documentAssetId)
+    private async Task<DocumentAssetRenderDetails?> GetDocumentAssetAsync(int documentAssetId)
     {
-        var getAssetQuery = new GetDocumentAssetRenderDetailsByIdQuery(documentAssetId.Value);
+        var getAssetQuery = new GetDocumentAssetRenderDetailsByIdQuery(documentAssetId);
         var asset = await _queryExecutor.ExecuteAsync(getAssetQuery);
 
         return asset;

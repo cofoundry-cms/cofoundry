@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetCustomEntityEntityMicroSummariesByIdRangeQueryHandler
-    : IQueryHandler<GetCustomEntityEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+    : IQueryHandler<GetCustomEntityEntityMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RootEntityMicroSummary>>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -18,17 +18,9 @@ public class GetCustomEntityEntityMicroSummariesByIdRangeQueryHandler
         _permissionValidationService = permissionValidationService;
     }
 
-    public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetCustomEntityEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetCustomEntityEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
-        var results = await Query(query, executionContext).ToDictionaryAsync(e => e.RootEntityId);
-        EnforcePermissions(results, executionContext);
-
-        return results;
-    }
-
-    private IQueryable<RootEntityMicroSummary> Query(GetCustomEntityEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
-    {
-        var dbQuery = _dbContext
+        var results = await _dbContext
             .CustomEntityPublishStatusQueries
             .AsNoTracking()
             .FilterActive()
@@ -40,9 +32,11 @@ public class GetCustomEntityEntityMicroSummariesByIdRangeQueryHandler
                 RootEntityTitle = v.CustomEntityVersion.Title,
                 EntityDefinitionName = v.CustomEntity.CustomEntityDefinition.EntityDefinition.Name,
                 EntityDefinitionCode = v.CustomEntity.CustomEntityDefinition.CustomEntityDefinitionCode
-            });
+            })
+            .ToDictionaryAsync(e => e.RootEntityId);
+        EnforcePermissions(results, executionContext);
 
-        return dbQuery;
+        return results;
     }
 
     private void EnforcePermissions(IDictionary<int, RootEntityMicroSummary> entities, IExecutionContext executionContext)

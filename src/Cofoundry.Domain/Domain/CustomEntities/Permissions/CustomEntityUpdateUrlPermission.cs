@@ -13,6 +13,7 @@ public class CustomEntityUpdateUrlPermission : ICustomEntityPermissionTemplate
     public CustomEntityUpdateUrlPermission()
     {
         PermissionType = CreatePermissionType("Not Set");
+        EntityDefinition = new CustomEntityDynamicEntityDefinition();
     }
 
     public CustomEntityUpdateUrlPermission(ICustomEntityDefinition customEntityDefinition)

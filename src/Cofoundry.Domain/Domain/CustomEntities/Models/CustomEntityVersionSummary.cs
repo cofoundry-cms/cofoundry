@@ -23,10 +23,9 @@ public class CustomEntityVersionSummary : ICreateAudited
     public int DisplayVersion { get; set; }
 
     /// <summary>
-    /// Indicates if the page is marked as published or not, which allows the page
-    /// to be shown on the live site if the PublishDate has passed.
+    /// The descriptive human-readable title of the custom entity.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The workflow state of this version e.g. draft/published.
@@ -43,5 +42,5 @@ public class CustomEntityVersionSummary : ICreateAudited
     /// <summary>
     /// Simple audit data for custom entity creation.
     /// </summary>
-    public CreateAuditData AuditData { get; set; }
+    public CreateAuditData AuditData { get; set; } = CreateAuditData.Uninitialized;
 }

@@ -34,8 +34,8 @@ public class UserUpdateCommandHelper : IUserUpdateCommandHelper
     }
 
     public async Task<UpdateEmailAndUsernameResult> UpdateEmailAndUsernameAsync(
-        string email,
-        string username,
+        string? email,
+        string? username,
         User user,
         IExecutionContext executionContext
         )
@@ -60,6 +60,10 @@ public class UserUpdateCommandHelper : IUserUpdateCommandHelper
             }
 
             var usernameFormatResult = _userDataFormatter.FormatUsername(userArea, username);
+            if (usernameFormatResult == null)
+            {
+                throw ValidationErrorException.CreateWithProperties("Username is in an invalid format", USERNAME_PROPERTY);
+            }
             result.HasUsernameChanged = await UpdateUsernameAsync(userArea, usernameFormatResult, user, executionContext);
         }
 
@@ -95,8 +99,8 @@ public class UserUpdateCommandHelper : IUserUpdateCommandHelper
 
     private async Task<UpdateEmailAndUsernameResult> UpdateEmailAsync(
         IUserAreaDefinition userArea,
-        string email,
-        string username,
+        string? email,
+        string? username,
         User user,
         IExecutionContext executionContext
         )

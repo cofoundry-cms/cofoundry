@@ -2,7 +2,9 @@
 
 namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IRoleMicroSummaryMapper"/>.
+/// </summary>
 public class RoleMicroSummaryMapper : IRoleMicroSummaryMapper
 {
     private readonly IUserAreaDefinitionRepository _userAreaRepository;
@@ -14,27 +16,28 @@ public class RoleMicroSummaryMapper : IRoleMicroSummaryMapper
         _userAreaRepository = userAreaRepository;
     }
 
-    public virtual RoleMicroSummary Map(Role dbRole)
+    /// <inheritdoc/>
+    public virtual RoleMicroSummary? Map(Role? dbRole)
     {
         if (dbRole == null) return null;
 
+        var userArea = _userAreaRepository.GetRequiredByCode(dbRole.UserAreaCode);
         var role = new RoleMicroSummary()
         {
             RoleId = dbRole.RoleId,
-            Title = dbRole.Title
-        };
-
-        var userArea = _userAreaRepository.GetRequiredByCode(dbRole.UserAreaCode);
-        role.UserArea = new UserAreaMicroSummary()
-        {
-            UserAreaCode = dbRole.UserAreaCode,
-            Name = userArea.Name
+            Title = dbRole.Title,
+            UserArea = new UserAreaMicroSummary()
+            {
+                UserAreaCode = dbRole.UserAreaCode,
+                Name = userArea.Name
+            }
         };
 
         return role;
     }
 
-    public RoleMicroSummary Map(RoleDetails roleDetails)
+    /// <inheritdoc/>
+    public RoleMicroSummary? Map(RoleDetails? roleDetails)
     {
         if (roleDetails == null) return null;
 

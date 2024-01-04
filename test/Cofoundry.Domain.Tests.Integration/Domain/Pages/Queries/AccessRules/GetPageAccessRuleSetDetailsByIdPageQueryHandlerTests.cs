@@ -86,12 +86,23 @@ public class GetPageAccessRuleSetDetailsByIdPageQueryHandlerTests
         {
             PageId = pageId,
             UserAreaCodeForSignInRedirect = userArea1.UserAreaCode,
-            ViolationAction = AccessRuleViolationAction.NotFound
+            ViolationAction = AccessRuleViolationAction.NotFound,
+            AccessRules = [
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode,
+                    RoleId = app.SeededEntities.TestUserArea2.RoleA.RoleId
+                },
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea1.UserAreaCode,
+                    RoleId = app.SeededEntities.TestUserArea1.RoleA.RoleId
+                },
+                new()
+                {
+                    UserAreaCode = app.SeededEntities.TestUserArea2.UserAreaCode
+                }]
         };
-
-        command.AccessRules.AddNew(userArea2.UserAreaCode, userArea2.RoleA.RoleId);
-        command.AccessRules.AddNew(userArea1.UserAreaCode, userArea1.RoleA.RoleId);
-        command.AccessRules.AddNew(userArea2.UserAreaCode);
 
         await contentRepository
             .Pages()
@@ -167,7 +178,10 @@ public class GetPageAccessRuleSetDetailsByIdPageQueryHandlerTests
         var directory1Id = await app.TestData.PageDirectories().AddAsync(uniqueData);
         await app.TestData.PageDirectories().AddAccessRuleAsync(directory1Id, userArea1.UserAreaCode, userArea1.RoleA.RoleId, c =>
         {
-            c.AccessRules.AddNew(userArea2.UserAreaCode);
+            c.AccessRules = c.AccessRules.Append(new()
+            {
+                UserAreaCode = userArea2.UserAreaCode
+            }).ToArray();
             c.UserAreaCodeForSignInRedirect = userArea2.UserAreaCode;
             c.ViolationAction = AccessRuleViolationAction.NotFound;
         });

@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IEntityAccessRuleSetDetailsMapper"/>.
+/// </summary>
 public class EntityAccessRuleSetDetailsMapper : IEntityAccessRuleSetDetailsMapper
 {
     private readonly ILogger<IEntityAccessRuleSetDetailsMapper> _logger;
@@ -18,6 +20,7 @@ public class EntityAccessRuleSetDetailsMapper : IEntityAccessRuleSetDetailsMappe
         _queryExecutor = queryExecutor;
     }
 
+    /// <inheritdoc/>
     public async Task MapAsync<TAccessRule, TEntityAccessRuleSummary>(
         IEntityAccessRestrictable<TAccessRule> dbEntity,
         IEntityAccessRuleSetDetails<TEntityAccessRuleSummary> result,
@@ -33,11 +36,6 @@ public class EntityAccessRuleSetDetailsMapper : IEntityAccessRuleSetDetailsMappe
         ArgumentNullException.ThrowIfNull(ruleMapper);
 
         result.ViolationAction = ParseViolationAction(dbEntity);
-
-        if (result.AccessRules == null)
-        {
-            result.AccessRules = new List<TEntityAccessRuleSummary>();
-        }
 
         if (!dbEntity.AccessRules.Any()) return;
 
@@ -58,15 +56,18 @@ public class EntityAccessRuleSetDetailsMapper : IEntityAccessRuleSetDetailsMappe
         var roleIds = dbEntity
             .AccessRules
             .Where(r => r.RoleId.HasValue)
-            .Select(r => r.RoleId.Value)
+            .Select(r => r.RoleId)
+            .WhereNotNull()
             .ToArray();
 
-        IDictionary<int, RoleMicroSummary> roles = null;
+        IDictionary<int, RoleMicroSummary>? roles = null;
 
         if (roleIds.Any())
         {
             roles = await _queryExecutor.ExecuteAsync(new GetRoleMicroSummariesByIdRangeQuery(roleIds), executionContext);
         }
+
+        var accessRules = result.AccessRules.ToList();
 
         foreach (var dbRule in dbEntity
             .AccessRules
@@ -74,17 +75,21 @@ public class EntityAccessRuleSetDetailsMapper : IEntityAccessRuleSetDetailsMappe
         {
             var rule = new TEntityAccessRuleSummary();
             ruleMapper(dbRule, rule);
-            rule.UserArea = userAreas.SingleOrDefault(a => a.UserAreaCode == dbRule.UserAreaCode);
-            EntityNotFoundException.ThrowIfNull(rule.UserArea, dbRule.UserAreaCode);
+
+            var userArea = userAreas.SingleOrDefault(a => a.UserAreaCode == dbRule.UserAreaCode);
+            EntityNotFoundException.ThrowIfNull(userArea, dbRule.UserAreaCode);
+            rule.UserArea = userArea;
 
             if (dbRule.RoleId.HasValue)
             {
-                rule.Role = roles.GetOrDefault(dbRule.RoleId.Value);
+                rule.Role = roles?.GetOrDefault(dbRule.RoleId.Value);
                 EntityNotFoundException.ThrowIfNull(rule.Role, dbRule.RoleId.Value);
             }
 
-            result.AccessRules.Add(rule);
+            accessRules.Add(rule);
         }
+
+        result.AccessRules = accessRules;
     }
 
     private void MapUserAreaForSignInRedirect<TAccessRule, TEntityAccessRuleSummary>(

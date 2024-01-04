@@ -7,7 +7,7 @@
 /// as part of another domain model.
 /// </summary>
 public class GetAllCustomEntityDefinitionMicroSummariesQueryHandler
-    : IQueryHandler<GetAllCustomEntityDefinitionMicroSummariesQuery, ICollection<CustomEntityDefinitionMicroSummary>>
+    : IQueryHandler<GetAllCustomEntityDefinitionMicroSummariesQuery, IReadOnlyCollection<CustomEntityDefinitionMicroSummary>>
     , IIgnorePermissionCheckHandler
 {
     private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
@@ -22,13 +22,13 @@ public class GetAllCustomEntityDefinitionMicroSummariesQueryHandler
         _customEntityDefinitionMicroSummaryMapper = customEntityDefinitionMicroSummaryMapper;
     }
 
-    public Task<ICollection<CustomEntityDefinitionMicroSummary>> ExecuteAsync(GetAllCustomEntityDefinitionMicroSummariesQuery query, IExecutionContext executionContext)
+    public Task<IReadOnlyCollection<CustomEntityDefinitionMicroSummary>> ExecuteAsync(GetAllCustomEntityDefinitionMicroSummariesQuery query, IExecutionContext executionContext)
     {
         var result = _customEntityDefinitionRepository
             .GetAll()
             .Select(_customEntityDefinitionMicroSummaryMapper.Map)
-            .ToList();
+            .ToArray();
 
-        return Task.FromResult<ICollection<CustomEntityDefinitionMicroSummary>>(result);
+        return Task.FromResult<IReadOnlyCollection<CustomEntityDefinitionMicroSummary>>(result);
     }
 }

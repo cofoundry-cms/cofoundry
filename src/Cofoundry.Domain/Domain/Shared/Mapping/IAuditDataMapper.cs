@@ -22,18 +22,17 @@ public interface IAuditDataMapper
     UpdateAuditData MapUpdateAuditData(IUpdateAuditable model);
 
     /// <summary>
-    /// Maps an EF model that inherits from ICreateAuditable into a UpdateAuditData object
-    /// using only the creator information from the model. Useful when you are mapping audit
-    /// information from two different objects. If the db record is null then an ArgumentNullException is thrown.
+    /// Maps update audit information based on two EF models. Typically this is 
+    /// used where the create model is the root entity and the update model is a 
+    /// version record. If the db record is null then an <see cref="ArgumentNullException"/> is thrown.
     /// </summary>
-    /// <param name="model">ICreateAuditable EF database record to map create data from.</param>
-    UpdateAuditData MapUpdateAuditDataCreatorData(ICreateAuditable model);
-
-    /// <summary>
-    /// Updates an UpdateAuditData object  using the creator information from the model as the updater 
-    /// information. Useful when you are mapping audit information from two different objects. If the 
-    /// db record is null then an ArgumentNullException is thrown.
-    /// </summary>
-    /// <param name="model">ICreateAuditable EF database record to map create data from.</param>
-    void MapUpdateAuditDataUpdaterData(UpdateAuditData updateAuditDatra, ICreateAuditable model);
+    /// <param name="createModel">
+    /// The <see cref="ICreateAuditable"/> EF database record containing the create audit data.
+    /// </param>
+    /// <param name="updateModel">
+    /// The <see cref="ICreateAuditable"/> EF database record to take update audit information 
+    /// from. As this is expected to be a versioned record The creator and create date fields will be used for
+    /// </param>
+    UpdateAuditData MapUpdateAuditDataFromVersion<TVersionModel>(ICreateAuditable createModel, TVersionModel versionModel)
+        where TVersionModel : IEntityVersion, ICreateAuditable;
 }

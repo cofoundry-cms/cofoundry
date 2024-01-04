@@ -17,7 +17,6 @@ public class SearchPageSummariesQueryHandler
 
     public SearchPageSummariesQueryHandler(
         CofoundryDbContext dbContext,
-        IQueryExecutor queryExecutor,
         IPageSummaryMapper pageSummaryMapper
         )
     {

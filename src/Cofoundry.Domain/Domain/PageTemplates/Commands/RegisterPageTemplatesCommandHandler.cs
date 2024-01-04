@@ -50,7 +50,7 @@ public class RegisterPageTemplatesCommandHandler
 
         var fileTemplates = _pageTemplateViewFileLocator
             .GetPageTemplateFiles()
-            .ToList();
+            .ToArray();
 
         DetectDuplicateTemplates(fileTemplates);
 
@@ -66,7 +66,7 @@ public class RegisterPageTemplatesCommandHandler
     private async Task UpdateTemplates(
         IExecutionContext executionContext,
         ILookup<string, PageTemplate> dbPageTemplates,
-        ICollection<PageTemplateFile> fileTemplates
+        IReadOnlyCollection<PageTemplateFile> fileTemplates
         )
     {
         foreach (var fileTemplate in fileTemplates)
@@ -127,7 +127,7 @@ public class RegisterPageTemplatesCommandHandler
         {
             var templateList = string.Join(", ", duplicateTemplateFiles.Select(f => f.VirtualPath));
             throw new PageTemplateRegistrationException(
-                $"Duplicate template '{ duplicateTemplateFiles.Key }' detected. Conflicting templates: { templateList }");
+                $"Duplicate template '{duplicateTemplateFiles.Key}' detected. Conflicting templates: {templateList}");
         }
     }
 
@@ -137,7 +137,7 @@ public class RegisterPageTemplatesCommandHandler
     /// </summary>
     private Task EnsureCustomEntityDefinitionExistsAsync(
         PageTemplateFileInfo fileTemplateDetails,
-        PageTemplate dbPageTemplate,
+        PageTemplate? dbPageTemplate,
         IExecutionContext executionContext
         )
     {
@@ -146,7 +146,7 @@ public class RegisterPageTemplatesCommandHandler
         // Only update/check the definition if it has changed to potentially save a query
         if (!string.IsNullOrEmpty(definitionCode) && (dbPageTemplate == null || definitionCode != dbPageTemplate.CustomEntityDefinitionCode))
         {
-            var command = new EnsureCustomEntityDefinitionExistsCommand(fileTemplateDetails.CustomEntityDefinition.CustomEntityDefinitionCode);
+            var command = new EnsureCustomEntityDefinitionExistsCommand(definitionCode);
             return _commandExecutor.ExecuteAsync(command, executionContext);
         }
 
@@ -155,7 +155,7 @@ public class RegisterPageTemplatesCommandHandler
 
     private async Task<PageTemplate> UpdateTemplate(
         IExecutionContext executionContext,
-        PageTemplate dbPageTemplate,
+        PageTemplate? dbPageTemplate,
         PageTemplateFile fileTemplate,
         PageTemplateFileInfo fileTemplateDetails
         )
@@ -166,9 +166,11 @@ public class RegisterPageTemplatesCommandHandler
         {
             isNew = true;
 
-            dbPageTemplate = new PageTemplate();
-            dbPageTemplate.FileName = fileTemplate.FileName;
-            dbPageTemplate.CreateDate = executionContext.ExecutionDate;
+            dbPageTemplate = new PageTemplate
+            {
+                FileName = fileTemplate.FileName,
+                CreateDate = executionContext.ExecutionDate
+            };
 
             _dbContext.PageTemplates.Add(dbPageTemplate);
         }
@@ -257,7 +259,7 @@ public class RegisterPageTemplatesCommandHandler
 
         if (duplicateRegionName != null)
         {
-            throw new PageTemplateRegistrationException($"Dulpicate template region '{ duplicateRegionName.First().Name }' in template { fileTemplate.VirtualPath }");
+            throw new PageTemplateRegistrationException($"Dulpicate template region '{duplicateRegionName.First().Name}' in template {fileTemplate.VirtualPath}");
         }
 
         // Deletions
@@ -280,9 +282,11 @@ public class RegisterPageTemplatesCommandHandler
 
             if (existing == null)
             {
-                existing = new PageTemplateRegion();
-                existing.PageTemplate = dbPageTemplate;
-                existing.CreateDate = executionContext.ExecutionDate;
+                existing = new PageTemplateRegion
+                {
+                    PageTemplate = dbPageTemplate,
+                    CreateDate = executionContext.ExecutionDate
+                };
                 _dbContext.PageTemplateRegions.Add(existing);
             }
 
@@ -308,7 +312,7 @@ public class RegisterPageTemplatesCommandHandler
     /// best approach for the developer would be to create a new template under a 
     /// different name
     /// </remarks>
-    private bool HasCustomEntityDefinitionChanged(PageTemplate pageTemplate, PageTemplateFileInfo fileInfo)
+    private static bool HasCustomEntityDefinitionChanged(PageTemplate pageTemplate, PageTemplateFileInfo fileInfo)
     {
         // If generic page
         if (pageTemplate.CustomEntityDefinitionCode == null)

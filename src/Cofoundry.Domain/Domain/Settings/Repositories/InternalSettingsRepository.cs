@@ -20,27 +20,16 @@ public class InternalSettingsRepository : IInternalSettingsRepository
         _settingsCache = settingsCache;
     }
 
-    public async Task<Dictionary<string, string>> GetAllSettingsAsync()
+    public async Task<IReadOnlyDictionary<string, string>> GetAllSettingsAsync()
     {
-        var settings = await _settingsCache.GetOrAddSettingsTableAsync(() =>
+        var settings = await _settingsCache.GetOrAddSettingsTableAsync(async () =>
         {
-            return _dbContext
+            var result = await _dbContext
                 .Settings
                 .AsNoTracking()
                 .ToDictionaryAsync(k => k.SettingKey, v => v.SettingValue);
-        });
 
-        return settings;
-    }
-
-    public Dictionary<string, string> GetAllSettings()
-    {
-        var settings = _settingsCache.GetOrAddSettingsTable(() =>
-        {
-            return _dbContext
-                .Settings
-                .AsNoTracking()
-                .ToDictionary(k => k.SettingKey, v => v.SettingValue);
+            return result;
         });
 
         return settings;

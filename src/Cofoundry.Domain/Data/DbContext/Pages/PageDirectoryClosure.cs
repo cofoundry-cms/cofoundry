@@ -20,12 +20,17 @@ public class PageDirectoryClosure
     /// </summary>
     public int AncestorPageDirectoryId { get; set; }
 
+    private PageDirectory? _ancestorPageDirectory;
     /// <summary>
     /// The page directory that is an ancestor of <see cref="DescendantPageDirectory"/>. 
     /// The table includes a self-referencing node, so this can also be the same as 
     /// <see cref="DescendantPageDirectory"/>.
     /// </summary>
-    public virtual PageDirectory AncestorPageDirectory { get; set; }
+    public PageDirectory AncestorPageDirectory
+    {
+        get => _ancestorPageDirectory ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryClosure>(nameof(AncestorPageDirectory));
+        set => _ancestorPageDirectory = value;
+    }
 
     /// <summary>
     /// The id of page directory that is a descendant of <see cref="AncestorPageDirectoryId"/>. 
@@ -34,12 +39,17 @@ public class PageDirectoryClosure
     /// </summary>
     public int DescendantPageDirectoryId { get; set; }
 
+    private PageDirectory? _descendantPageDirectory;
     /// <summary>
     /// The page directory that is a descendant of <see cref="AncestorPageDirectory"/>. 
     /// The table includes a self-referencing node, so this can also be the same as 
     /// <see cref="AncestorPageDirectory"/>.
     /// </summary>
-    public virtual PageDirectory DescendantPageDirectory { get; set; }
+    public PageDirectory DescendantPageDirectory
+    {
+        get => _descendantPageDirectory ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryClosure>(nameof(DescendantPageDirectory));
+        set => _descendantPageDirectory = value;
+    }
 
     /// <summary>
     /// The number of levels between the <see cref="AncestorPageDirectory"/> and the

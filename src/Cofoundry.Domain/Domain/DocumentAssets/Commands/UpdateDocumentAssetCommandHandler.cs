@@ -36,14 +36,13 @@ public class UpdateDocumentAssetCommandHandler
 
     public async Task ExecuteAsync(UpdateDocumentAssetCommand command, IExecutionContext executionContext)
     {
-        bool hasNewFile = command.File != null;
-
         var documentAsset = await _dbContext
             .DocumentAssets
             .Include(a => a.DocumentAssetTags)
             .ThenInclude(a => a.Tag)
             .FilterById(command.DocumentAssetId)
             .SingleOrDefaultAsync();
+        EntityNotFoundException.ThrowIfNull(documentAsset, command.DocumentAssetId);
 
         documentAsset.Title = command.Title;
         documentAsset.Description = command.Description ?? string.Empty;
@@ -59,7 +58,8 @@ public class UpdateDocumentAssetCommandHandler
 
         using (var scope = _transactionScopeFactory.Create(_dbContext))
         {
-            if (hasNewFile)
+            bool hasNewFile = false;
+            if (command.File != null)
             {
                 var deleteOldFileCommand = new QueueAssetFileDeletionCommand()
                 {
@@ -71,6 +71,7 @@ public class UpdateDocumentAssetCommandHandler
                 await _commandExecutor.ExecuteAsync(deleteOldFileCommand, executionContext);
                 await _documentAssetCommandHelper.SaveFile(command.File, documentAsset);
                 documentAsset.FileUpdateDate = executionContext.ExecutionDate;
+                hasNewFile = true;
             }
 
             await _dbContext.SaveChangesAsync();

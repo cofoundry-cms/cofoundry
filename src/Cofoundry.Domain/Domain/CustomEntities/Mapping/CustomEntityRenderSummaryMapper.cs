@@ -5,26 +5,20 @@ namespace Cofoundry.Domain.Internal;
 /// <inheritdoc/>
 public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
 {
-    private readonly CofoundryDbContext _dbContext;
     private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
     private readonly IQueryExecutor _queryExecutor;
-    private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
     public CustomEntityRenderSummaryMapper(
-        CofoundryDbContext dbContext,
         IQueryExecutor queryExecutor,
-        ICustomEntityDataModelMapper customEntityDataModelMapper,
-        ICustomEntityDefinitionRepository customEntityDefinitionRepository
+        ICustomEntityDataModelMapper customEntityDataModelMapper
         )
     {
-        _dbContext = dbContext;
         _customEntityDataModelMapper = customEntityDataModelMapper;
         _queryExecutor = queryExecutor;
-        _customEntityDefinitionRepository = customEntityDefinitionRepository;
     }
 
-    public async Task<CustomEntityRenderSummary> MapAsync(
-        CustomEntityVersion dbResult,
+    public async Task<CustomEntityRenderSummary?> MapAsync(
+        CustomEntityVersion? dbResult,
         IExecutionContext executionContext
         )
     {
@@ -33,7 +27,7 @@ public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
         var routingQuery = GetPageRoutingQuery(dbResult);
         var routing = await _queryExecutor.ExecuteAsync(routingQuery, executionContext);
 
-        ActiveLocale locale = null;
+        ActiveLocale? locale = null;
         if (dbResult.CustomEntity.LocaleId.HasValue)
         {
             var getLocaleQuery = new GetActiveLocaleByIdQuery(dbResult.CustomEntity.LocaleId.Value);
@@ -43,8 +37,8 @@ public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
         return MapSingle(dbResult, routing, locale);
     }
 
-    public async Task<ICollection<CustomEntityRenderSummary>> MapAsync(
-        ICollection<CustomEntityVersion> dbResults,
+    public async Task<IReadOnlyCollection<CustomEntityRenderSummary>> MapAsync(
+        IReadOnlyCollection<CustomEntityVersion> dbResults,
         IExecutionContext executionContext
         )
     {
@@ -55,7 +49,7 @@ public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
         return Map(dbResults, allRoutings, allLocales);
     }
 
-    private static GetPageRoutingInfoByCustomEntityIdRangeQuery GetPageRoutingQuery(ICollection<CustomEntityVersion> dbResults)
+    private static GetPageRoutingInfoByCustomEntityIdRangeQuery GetPageRoutingQuery(IReadOnlyCollection<CustomEntityVersion> dbResults)
     {
         return new GetPageRoutingInfoByCustomEntityIdRangeQuery(dbResults.Select(e => e.CustomEntityId));
     }
@@ -68,10 +62,10 @@ public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
         return new GetPageRoutingInfoByCustomEntityIdQuery(dbResult.CustomEntityId);
     }
 
-    private ICollection<CustomEntityRenderSummary> Map(
-        ICollection<CustomEntityVersion> dbResults,
-        IDictionary<int, ICollection<PageRoutingInfo>> allRoutings,
-        ICollection<ActiveLocale> allLocalesAsEnumerable
+    private IReadOnlyCollection<CustomEntityRenderSummary> Map(
+        IReadOnlyCollection<CustomEntityVersion> dbResults,
+        IReadOnlyDictionary<int, IReadOnlyCollection<PageRoutingInfo>> allRoutings,
+        IReadOnlyCollection<ActiveLocale> allLocalesAsEnumerable
         )
     {
         var results = new List<CustomEntityRenderSummary>(dbResults.Count);
@@ -87,7 +81,7 @@ public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
                 EntityNotFoundException.ThrowIfNull(entity.Locale, dbResult.CustomEntity.LocaleId.Value);
             }
 
-            entity.PageUrls = MapPageRoutings(allRoutings.GetOrDefault(dbResult.CustomEntityId), dbResult);
+            entity.PageUrls = MapPageRoutings(allRoutings.GetValueOrDefault(dbResult.CustomEntityId));
 
             results.Add(entity);
         }
@@ -97,13 +91,13 @@ public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
 
     private CustomEntityRenderSummary MapSingle(
         CustomEntityVersion dbResult,
-        ICollection<PageRoutingInfo> allRoutings,
-        ActiveLocale locale
+        IReadOnlyCollection<PageRoutingInfo> allRoutings,
+        ActiveLocale? locale
         )
     {
         var entity = MapCore(dbResult);
         entity.Locale = locale;
-        entity.PageUrls = MapPageRoutings(allRoutings, dbResult);
+        entity.PageUrls = MapPageRoutings(allRoutings);
 
         return entity;
     }
@@ -130,22 +124,29 @@ public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
         return entity;
     }
 
-    private ICollection<string> MapPageRoutings(
-        ICollection<PageRoutingInfo> allRoutings,
-        CustomEntityVersion dbResult)
+    private static IReadOnlyCollection<string> MapPageRoutings(
+        IReadOnlyCollection<PageRoutingInfo>? allRoutings
+        )
     {
-        if (allRoutings == null) return Array.Empty<string>();
-
-        var urls = new List<string>(allRoutings.Count());
-
-        foreach (var detailsRouting in allRoutings
-            .Where(r => r.CustomEntityRouteRule != null))
+        if (allRoutings == null)
         {
-            var detailsUrl = detailsRouting
-                .CustomEntityRouteRule
-                .MakeUrl(detailsRouting.PageRoute, detailsRouting.CustomEntityRoute);
+            return Array.Empty<string>();
+        }
 
-            urls.Add(detailsUrl);
+        var urls = new List<string>(allRoutings.Count);
+
+        foreach (var detailsRouting in allRoutings)
+        {
+            if (detailsRouting.CustomEntityRouteRule != null)
+            {
+                EntityInvalidOperationException.ThrowIfNull(detailsRouting, detailsRouting.CustomEntityRoute);
+
+                var detailsUrl = detailsRouting
+                    .CustomEntityRouteRule
+                    .MakeUrl(detailsRouting.PageRoute, detailsRouting.CustomEntityRoute);
+
+                urls.Add(detailsUrl);
+            }
         }
 
         return urls;

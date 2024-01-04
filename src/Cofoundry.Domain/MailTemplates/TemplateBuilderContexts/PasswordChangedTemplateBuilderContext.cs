@@ -3,9 +3,9 @@
 /// <inheritdoc/>
 public class PasswordChangedTemplateBuilderContext : IPasswordChangedTemplateBuilderContext
 {
-    public UserSummary User { get; set; }
+    public required UserSummary User { get; set; }
 
-    public Func<PasswordChangedTemplateBuilderContext, Task<PasswordChangedMailTemplate>> DefaultTemplateFactory { get; set; }
+    public required Func<PasswordChangedTemplateBuilderContext, Task<PasswordChangedMailTemplate>> DefaultTemplateFactory { get; set; }
 
     public Task<PasswordChangedMailTemplate> BuildDefaultTemplateAsync()
     {

@@ -10,7 +10,7 @@ public class UserAccountVerificationInitiatedMessage
     /// The <see cref="IUserAreaDefinition.UserAreaCode"/> of the user area
     /// the user belongs to.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Id of the user verifying their account.
@@ -28,5 +28,5 @@ public class UserAccountVerificationInitiatedMessage
     /// A token that can be used to identify and authenticates the verification request. 
     /// Typically this is used in a url that is emailed to the user.
     /// </summary>
-    public string Token { get; set; }
+    public string Token { get; set; } = string.Empty;
 }

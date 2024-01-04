@@ -15,12 +15,19 @@ public class SettingQueryHelper
         _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
     }
 
-    public T FindSetting<T>(string key, Dictionary<string, string> allSettings)
+    public T? FindSetting<T>(string key, IReadOnlyDictionary<string, string> allSettings)
     {
-        if (!allSettings.ContainsKey(key)) return default(T);
+        if (!allSettings.ContainsKey(key))
+        {
+            return default;
+        }
+
         var setting = allSettings[key];
 
-        if (string.IsNullOrWhiteSpace(setting)) return default(T);
+        if (string.IsNullOrWhiteSpace(setting))
+        {
+            return default;
+        }
 
         var value = _dbUnstructuredDataSerializer.Deserialize<T>(setting);
 
@@ -30,12 +37,15 @@ public class SettingQueryHelper
     public void SetSettingProperty<TSource, TProperty>(
         TSource source,
         Expression<Func<TSource, TProperty>> propertyLambda,
-        Dictionary<string, string> allSettings)
+        IReadOnlyDictionary<string, string> allSettings
+        )
     {
-        Type type = typeof(TSource);
-
         var member = propertyLambda.Body as MemberExpression;
-        var propInfo = member.Member as PropertyInfo;
+        var propInfo = member?.Member as PropertyInfo;
+        if (propInfo == null)
+        {
+            throw new ArgumentException("Expression must reference a property", nameof(propertyLambda));
+        }
 
         var value = FindSetting<TProperty>(propInfo.Name, allSettings);
         propInfo.SetValue(source, value);

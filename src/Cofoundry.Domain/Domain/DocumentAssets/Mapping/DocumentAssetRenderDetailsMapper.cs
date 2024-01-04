@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Simple mapper for mapping to DocumentAssetRenderDetails objects.
+/// Default implementation of <see cref="IDocumentAssetRenderDetailsMapper"/>.
 /// </summary>
 public class DocumentAssetRenderDetailsMapper : IDocumentAssetRenderDetailsMapper
 {
@@ -16,14 +16,14 @@ public class DocumentAssetRenderDetailsMapper : IDocumentAssetRenderDetailsMappe
         _documentAssetRouteLibrary = documentAssetRouteLibrary;
     }
 
-    /// <summary>
-    /// Maps an EF DocumentAsset record from the db into a DocumentAssetDetails 
-    /// object. If the db record is null then null is returned.
-    /// </summary>
-    /// <param name="dbDocument">DocumentAsset record from the database.</param>
-    public DocumentAssetRenderDetails Map(DocumentAsset dbDocument)
+    /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(dbDocument))]
+    public DocumentAssetRenderDetails? Map(DocumentAsset? dbDocument)
     {
-        if (dbDocument == null) return null;
+        if (dbDocument == null)
+        {
+            return null;
+        }
 
         var document = new DocumentAssetRenderDetails();
 

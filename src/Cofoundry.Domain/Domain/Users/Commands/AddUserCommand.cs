@@ -17,13 +17,13 @@ public sealed class AddUserCommand : ICommand, ILoggableCommand, IValidatableObj
     /// The first name is optional.
     /// </summary>
     [StringLength(32)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
     /// <summary>
     /// The last name is optional.
     /// </summary>
     [StringLength(32)]
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
     /// <summary>
     /// An optional display-friendly name. This is capped at 150 characters to
@@ -33,7 +33,7 @@ public sealed class AddUserCommand : ICommand, ILoggableCommand, IValidatableObj
     /// is instead copied from the normalized username.
     /// </summary>
     [StringLength(150)]
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 
     /// <summary>
     /// The password is required if the user area has <see cref="IUserAreaDefinition.AllowPasswordSignIn"/> 
@@ -44,21 +44,21 @@ public sealed class AddUserCommand : ICommand, ILoggableCommand, IValidatableObj
     [IgnoreDataMember]
     [Newtonsoft.Json.JsonIgnore]
     [System.Text.Json.Serialization.JsonIgnore]
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     /// <summary>
     /// The email address is required if the user area has <see cref="IUserAreaDefinition.UseEmailAsUsername"/> 
     /// set to <see langword="true"/> or <see cref="IUserAreaDefinition.AllowPasswordSignIn"/>.
     /// </summary>
     [DataType(DataType.EmailAddress)]
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     /// <summary>
     /// The username is required if the user area has <see cref="IUserAreaDefinition.UseEmailAsUsername"/> 
     /// set to <see langword="false"/>, otherwise it should be empty and the <see cref="Email"/> will be used 
     /// as the username instead.
     /// </summary>
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
     /// <summary>
     /// Indicates whether the user will be prompted to change their password the
@@ -87,23 +87,25 @@ public sealed class AddUserCommand : ICommand, ILoggableCommand, IValidatableObj
     /// </summary>
     [Required]
     [StringLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The id of the role that this user is assigned to. Either the
-    /// RoleId or RoleCode property must be filled in, but not both. The 
-    /// role is required and determines the permissions available to the user. 
+    /// <see cref="RoleId"/> or <see cref="RoleCode"/> property must be filled 
+    /// in, but not both. The role is required and determines the permissions 
+    /// available to the user. 
     /// </summary>
     [PositiveInteger]
     public int? RoleId { get; set; }
 
     /// <summary>
     /// The code for the role that this user is assigned to. Either the
-    /// RoleId or RoleCode property must be filled in, but not both. The 
-    /// role is required and determines the permissions available to the user.
+    /// <see cref="RoleId"/> or <see cref="RoleCode"/> property must be filled in, 
+    /// but not both. The role is required and determines the permissions available 
+    /// to the user.
     /// </summary>
     [StringLength(3)]
-    public string RoleCode { get; set; }
+    public string? RoleCode { get; set; }
 
     /// <summary>
     /// The database id of the newly created user. This is set after the 

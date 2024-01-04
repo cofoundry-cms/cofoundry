@@ -12,5 +12,5 @@ public interface IRewriteRuleSummaryMapper
     /// object. If the db record is null then null is returned.
     /// </summary>
     /// <param name="dbRewriteRule">RewriteRule record from the database.</param>
-    RewriteRuleSummary Map(RewriteRule dbRewriteRule);
+    RewriteRuleSummary? Map(RewriteRule? dbRewriteRule);
 }

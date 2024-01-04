@@ -13,7 +13,7 @@ public class InvalidUserAccountVerificationRequestException : Exception
     {
     }
 
-    public InvalidUserAccountVerificationRequestException(ValidateUserAccountVerificationByEmailQuery query, string message)
+    public InvalidUserAccountVerificationRequestException(ValidateUserAccountVerificationByEmailQuery query, string? message)
         : base(message)
     {
         if (query == null) return;
@@ -22,7 +22,7 @@ public class InvalidUserAccountVerificationRequestException : Exception
         UserAreaCode = query.UserAreaCode;
     }
 
-    public string Token { get; }
+    public string? Token { get; }
 
-    public string UserAreaCode { get; }
+    public string? UserAreaCode { get; }
 }

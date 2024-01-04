@@ -13,7 +13,7 @@ public class HasExceededMaxAuthenticationAttemptsQuery : IQuery<bool>
     /// </summary>
     [Required]
     [StringLength(3)]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The username to query. This is expected to be in a "uniquified" 
@@ -21,5 +21,5 @@ public class HasExceededMaxAuthenticationAttemptsQuery : IQuery<bool>
     /// needs to be called.
     /// </summary>
     [Required]
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 }

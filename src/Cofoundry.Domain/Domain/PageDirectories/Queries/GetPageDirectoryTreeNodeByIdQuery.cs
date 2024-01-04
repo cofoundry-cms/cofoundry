@@ -1,6 +1,6 @@
 ﻿namespace Cofoundry.Domain;
 
-public class GetPageDirectoryNodeByIdQuery : IQuery<PageDirectoryNode>
+public class GetPageDirectoryNodeByIdQuery : IQuery<PageDirectoryNode?>
 {
     public GetPageDirectoryNodeByIdQuery()
     {

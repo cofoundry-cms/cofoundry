@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 public class GetUpdateSeoSiteSettingsCommandQueryHandler
-    : IQueryHandler<GetPatchableCommandQuery<UpdateSeoSettingsCommand>, UpdateSeoSettingsCommand>
+    : IQueryHandler<GetPatchableCommandQuery<UpdateSeoSettingsCommand>, UpdateSeoSettingsCommand?>
     , IIgnorePermissionCheckHandler
 {
     private readonly IQueryExecutor _queryExecutor;
@@ -13,7 +13,7 @@ public class GetUpdateSeoSiteSettingsCommandQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<UpdateSeoSettingsCommand> ExecuteAsync(GetPatchableCommandQuery<UpdateSeoSettingsCommand> query, IExecutionContext executionContext)
+    public async Task<UpdateSeoSettingsCommand?> ExecuteAsync(GetPatchableCommandQuery<UpdateSeoSettingsCommand> query, IExecutionContext executionContext)
     {
         var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>(), executionContext);
 

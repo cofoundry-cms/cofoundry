@@ -3,7 +3,7 @@
 public static class ImageAssetConstants
 {
     public static readonly string FileContainerName = "Images";
-    public static readonly Dictionary<string, string> PermittedImageTypes = new Dictionary<string, string>()
+    public static readonly Dictionary<string, string> PermittedImageTypes = new()
     {
         { ".jpg", "image/jpeg" },
         { ".jpeg", "image/jpeg" },

@@ -6,12 +6,12 @@
 /// recently added rule is returned. Non-file paths are matched with
 /// and without the trailing slash.
 /// </summary>
-public class GetRewriteRuleSummaryByPathQuery : IQuery<RewriteRuleSummary>
+public class GetRewriteRuleSummaryByPathQuery : IQuery<RewriteRuleSummary?>
 {
     /// <summary>
     /// Path to check for a rewrite rule. For non-file paths the trailing slash 
     /// is optional. Also supports '*' wildcard matching at the end of the path.
     /// </summary>
     [Required]
-    public string Path { get; set; }
+    public string Path { get; set; } = string.Empty;
 }

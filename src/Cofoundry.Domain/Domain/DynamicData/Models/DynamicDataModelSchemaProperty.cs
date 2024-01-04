@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Domain;
+﻿using System.Collections.Immutable;
+
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Represents a property of a data model, including UI display details
@@ -11,26 +13,26 @@ public class DynamicDataModelSchemaProperty
     /// <summary>
     /// The property name e.g. "ShortDescription".
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// An identifier that can be used as a UI hint to
     /// indicate which UI control or template to render
     /// for the property.
     /// </summary>
-    public string DataTemplateName { get; set; }
+    public string DataTemplateName { get; set; } = string.Empty;
 
     /// <summary>
     /// A description of the property that can be used to
     /// help a user when entering data.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// A user-friendly display name, typically used when labelling
     /// a field e.g. "Short description".
     /// </summary>
-    public string DisplayName { get; set; }
+    public string DisplayName { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates if the property should be validated
@@ -43,5 +45,5 @@ public class DynamicDataModelSchemaProperty
     /// the UI layer to render correctly. This could include validation
     /// properties, display hints, option data sources etc.
     /// </summary>
-    public Dictionary<string, object> AdditionalAttributes { get; set; }
+    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; } = ImmutableDictionary<string, object>.Empty;
 }

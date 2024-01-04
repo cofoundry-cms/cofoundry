@@ -4,7 +4,7 @@
 /// Finds a user by a database id returning a <see cref="UserSummary"/> projection 
 /// if it is found, otherwise <see langword="null"/>.
 /// </summary>
-public class GetUserSummaryByIdQuery : IQuery<UserSummary>
+public class GetUserSummaryByIdQuery : IQuery<UserSummary?>
 {
     public GetUserSummaryByIdQuery()
     {

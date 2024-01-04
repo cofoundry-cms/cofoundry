@@ -47,7 +47,7 @@ public class CustomEntityRouteDataBuilderParameter<TDataModel>
     /// <summary>
     /// The locale of the custom entity record being mapped (can be null).
     /// </summary>
-    public ActiveLocale Locale
+    public ActiveLocale? Locale
     {
         get { return _customEntityRoute.Locale; }
     }

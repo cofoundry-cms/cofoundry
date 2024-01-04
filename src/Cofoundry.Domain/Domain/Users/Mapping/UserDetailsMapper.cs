@@ -7,17 +7,21 @@ public class UserDetailsMapper : IUserDetailsMapper
 {
     private readonly IUserMicroSummaryMapper _userMicroSummaryMapper;
     private readonly IRoleDetailsMapper _roleDetailsMapper;
+    private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
     public UserDetailsMapper(
         IUserMicroSummaryMapper userMicroSummaryMapper,
-        IRoleDetailsMapper roleDetailsMapper
+        IRoleDetailsMapper roleDetailsMapper,
+        IUserAreaDefinitionRepository userAreaDefinitionRepository
         )
     {
         _userMicroSummaryMapper = userMicroSummaryMapper;
         _roleDetailsMapper = roleDetailsMapper;
+        _userAreaDefinitionRepository = userAreaDefinitionRepository;
     }
 
-    public virtual UserDetails Map(User dbUser)
+    [return: NotNullIfNotNull(nameof(dbUser))]
+    public virtual UserDetails? Map(User? dbUser)
     {
         if (dbUser == null) return null;
 
@@ -26,27 +30,37 @@ public class UserDetailsMapper : IUserDetailsMapper
             throw new ArgumentException("dbUser.Role must be included in the query to map to use the UserDetailsMapper");
         }
 
-        var user = _userMicroSummaryMapper.Map<UserDetails>(dbUser);
-        user.Email = dbUser.Email;
-        user.FirstName = dbUser.FirstName;
-        user.LastName = dbUser.LastName;
-        user.Username = dbUser.Username;
-        user.LastSignInDate = dbUser.LastSignInDate;
-        user.LastPasswordChangeDate = dbUser.LastPasswordChangeDate;
-        user.RequirePasswordChange = dbUser.RequirePasswordChange;
-        user.AccountVerifiedDate = dbUser.AccountVerifiedDate;
+        var role = _roleDetailsMapper.Map(dbUser.Role);
+        EntityNotFoundException.ThrowIfNull(role, dbUser.Role.RoleId);
 
-        user.AuditData = new CreateAuditData()
+        var userArea = _userAreaDefinitionRepository.GetRequiredByCode(dbUser.UserAreaCode);
+        EntityNotFoundException.ThrowIfNull(userArea, dbUser.UserAreaCode);
+
+        var user = new UserDetails()
         {
-            CreateDate = dbUser.CreateDate
+            UserId = dbUser.UserId,
+            DisplayName = dbUser.DisplayName,
+            AccountStatus = UserAccountStatusMapper.Map(dbUser),
+            UserArea = new()
+            {
+                UserAreaCode = dbUser.UserAreaCode,
+                Name = userArea.Name
+            },
+            Email = dbUser.Email,
+            FirstName = dbUser.FirstName,
+            LastName = dbUser.LastName,
+            Username = dbUser.Username,
+            LastSignInDate = dbUser.LastSignInDate,
+            LastPasswordChangeDate = dbUser.LastPasswordChangeDate,
+            RequirePasswordChange = dbUser.RequirePasswordChange,
+            AccountVerifiedDate = dbUser.AccountVerifiedDate,
+            AuditData = new CreateAuditData()
+            {
+                CreateDate = dbUser.CreateDate,
+                Creator = _userMicroSummaryMapper.Map(dbUser.Creator)
+            },
+            Role = role
         };
-
-        if (dbUser.Creator != null)
-        {
-            user.AuditData.Creator = _userMicroSummaryMapper.Map(dbUser.Creator);
-        }
-
-        user.Role = _roleDetailsMapper.Map(dbUser.Role);
 
         return user;
     }

@@ -81,6 +81,10 @@ public class ValidateUserAccountRecoveryByEmailQueryHandler
 
         // Map the generic errors to more specific password reset errors
         var mappedError = UserValidationErrors.AccountRecovery.RequestValidation.Map(tokenResult);
+        if (mappedError == null)
+        {
+            throw new InvalidOperationException($"{nameof(mappedError)} should not be null.");
+        }
         return new AuthorizedTaskTokenValidationResult(mappedError);
     }
 }

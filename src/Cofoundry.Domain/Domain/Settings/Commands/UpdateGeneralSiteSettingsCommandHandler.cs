@@ -33,7 +33,7 @@ public class UpdateGeneralSiteSettingsCommandHandler
     {
         var allSettings = await _dbContext
             .Settings
-            .ToListAsync();
+            .ToArrayAsync();
 
         _settingCommandHelper.SetSettingProperty(command, c => c.ApplicationName, allSettings, executionContext);
 

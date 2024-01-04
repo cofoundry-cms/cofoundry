@@ -9,7 +9,7 @@ public class DocumentAssetDetails : DocumentAssetSummary
     /// <summary>
     /// A longer description of the document in plain text.
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// The date the file was last updated. Used for cache busting

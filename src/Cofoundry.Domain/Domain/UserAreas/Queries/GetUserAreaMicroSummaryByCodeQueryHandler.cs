@@ -5,7 +5,7 @@
 /// If the definition does not exist then <see langword="null"/> is returned.
 /// </summary>
 public class GetUserAreaMicroSummaryByCodeQueryHandler
-    : IQueryHandler<GetUserAreaMicroSummaryByCodeQuery, UserAreaMicroSummary>
+    : IQueryHandler<GetUserAreaMicroSummaryByCodeQuery, UserAreaMicroSummary?>
     , IIgnorePermissionCheckHandler
 {
     private readonly IUserAreaDefinitionRepository _userAreaRepository;
@@ -17,10 +17,10 @@ public class GetUserAreaMicroSummaryByCodeQueryHandler
         _userAreaRepository = userAreaRepository;
     }
 
-    public Task<UserAreaMicroSummary> ExecuteAsync(GetUserAreaMicroSummaryByCodeQuery query, IExecutionContext executionContext)
+    public Task<UserAreaMicroSummary?> ExecuteAsync(GetUserAreaMicroSummaryByCodeQuery query, IExecutionContext executionContext)
     {
         var areaDefinition = _userAreaRepository.GetByCode(query.UserAreaCode);
-        UserAreaMicroSummary result = null;
+        UserAreaMicroSummary? result = null;
 
         if (areaDefinition != null)
         {

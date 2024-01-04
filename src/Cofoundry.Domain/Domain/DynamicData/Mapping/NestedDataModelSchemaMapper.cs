@@ -25,12 +25,15 @@ public class NestedDataModelSchemaMapper : INestedDataModelSchemaMapper
 
         schema.TypeName = modelType.Name;
         schema.Description = dataModelMetaData.Description;
-        schema.DisplayName = dataModelMetaData.DisplayName;
 
-        if (string.IsNullOrEmpty(schema.DisplayName))
+        if (string.IsNullOrEmpty(dataModelMetaData.DisplayName))
         {
             var modelName = StringHelper.RemoveSuffix(modelType.Name, "DataModel");
             schema.DisplayName = TextFormatter.PascalCaseToSentence(modelName);
+        }
+        else
+        {
+            schema.DisplayName = dataModelMetaData.DisplayName;
         }
 
         _dynamicDataModelSchemaMapper.Map(schema, modelType);

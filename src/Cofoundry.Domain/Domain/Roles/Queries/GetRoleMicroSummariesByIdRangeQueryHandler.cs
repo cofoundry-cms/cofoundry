@@ -36,6 +36,7 @@ public class GetRoleMicroSummariesByIdRangeQueryHandler
 
         var result = roleDetails
             .Select(d => _roleMicroSummaryMapper.Map(d.Value))
+            .WhereNotNull()
             .ToDictionary(k => k.RoleId);
 
         return result;

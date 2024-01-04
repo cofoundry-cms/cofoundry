@@ -19,7 +19,7 @@ public class ContentRepositoryPageByCustomEntityDefinitionCodeQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<PageRoute>> AsRoutes()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<PageRoute>> AsRoutes()
     {
         var query = new GetPageRoutesByCustomEntityDefinitionCodeQuery(_customEntityDefinitionCode);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

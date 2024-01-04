@@ -5,7 +5,7 @@
 /// in a typical website you wouldn't have multiple details pages for a custom entity
 /// type, it is supported and the query returns a collection of routes.
 /// </summary>
-public class GetPageRoutingInfoByCustomEntityIdQuery : IQuery<ICollection<PageRoutingInfo>>
+public class GetPageRoutingInfoByCustomEntityIdQuery : IQuery<IReadOnlyCollection<PageRoutingInfo>>
 {
     /// <summary>
     /// Finds routing information for a custom entitiy by it's id. Although

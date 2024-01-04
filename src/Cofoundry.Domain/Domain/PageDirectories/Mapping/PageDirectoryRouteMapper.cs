@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// A mapper for mapping <see cref="PageDirectoryRoute"/> projections.
+/// Default implementation of <see cref="IPageDirectoryRouteMapper"/>.
 /// </summary>
 public class PageDirectoryRouteMapper : IPageDirectoryRouteMapper
 {
@@ -16,15 +16,8 @@ public class PageDirectoryRouteMapper : IPageDirectoryRouteMapper
         _entityAccessRuleSetMapper = entityAccessRuleSetMapper;
     }
 
-    /// <summary>
-    /// Maps a <see cref="PageDirectory"/> data from the database to a
-    /// collection of <see cref="PageDirectoryRoute"/> projections.
-    /// </summary>
-    /// <param name="dbPageDirectories">
-    /// Entity Framework query results to map. The query must include the 
-    /// <see cref="PageDirectory.PageDirectoryLocales"/> and <see cref="PageDirectory.AccessRules"/> relations.
-    /// </param>
-    public ICollection<PageDirectoryRoute> Map(IReadOnlyCollection<PageDirectory> dbPageDirectories)
+    /// <inheritdoc/>
+    public IReadOnlyCollection<PageDirectoryRoute> Map(IReadOnlyCollection<PageDirectory> dbPageDirectories)
     {
         const string ROOT_PATH = "/";
 
@@ -46,26 +39,26 @@ public class PageDirectoryRouteMapper : IPageDirectoryRouteMapper
         MissingIncludeException.ThrowIfNull(dbDirectory, d => d.PageDirectoryLocales);
         MissingIncludeException.ThrowIfNull(dbDirectory, d => d.AccessRules);
 
-        var route = new PageDirectoryRoute();
-        route.Name = dbDirectory.Name;
-        route.PageDirectoryId = dbDirectory.PageDirectoryId;
-        route.ParentPageDirectoryId = dbDirectory.ParentPageDirectoryId;
-        route.UrlPath = dbDirectory.UrlPath;
+        var route = new PageDirectoryRoute
+        {
+            Name = dbDirectory.Name,
+            PageDirectoryId = dbDirectory.PageDirectoryId,
+            ParentPageDirectoryId = dbDirectory.ParentPageDirectoryId,
+            UrlPath = dbDirectory.UrlPath,
+            LocaleVariations = dbDirectory
+                .PageDirectoryLocales
+                .Select(d => new PageDirectoryRouteLocale()
+                {
+                    LocaleId = d.LocaleId,
+                    UrlPath = d.UrlPath
+                })
+                .ToArray()
+        };
 
-        route.LocaleVariations = dbDirectory
-            .PageDirectoryLocales
-            .Select(d => new PageDirectoryRouteLocale()
-            {
-                LocaleId = d.LocaleId,
-                UrlPath = d.UrlPath
-            })
-            .ToList();
-
-        route.AccessRuleSets = new List<EntityAccessRuleSet>();
         var accessRuleSet = _entityAccessRuleSetMapper.Map(dbDirectory);
         if (accessRuleSet != null)
         {
-            route.AccessRuleSets.Add(accessRuleSet);
+            route.AccessRuleSets = [accessRuleSet];
         }
 
         // FullUrlPaths set elsewhere
@@ -96,12 +89,15 @@ public class PageDirectoryRouteMapper : IPageDirectoryRouteMapper
         }
     }
 
-    private void ExpandAccessRules(PageDirectoryRoute parent, PageDirectoryRoute routingInfo)
+    private static void ExpandAccessRules(PageDirectoryRoute parent, PageDirectoryRoute routingInfo)
     {
-        foreach (var accessRuleSet in parent.AccessRuleSets)
+        if (parent.AccessRuleSets.Count > 0)
         {
-            routingInfo.AccessRuleSets.Add(accessRuleSet);
-        };
+            routingInfo.AccessRuleSets = routingInfo
+                .AccessRuleSets
+                .Concat(parent.AccessRuleSets)
+                .ToArray();
+        }
     }
 
     /// <summary>
@@ -132,7 +128,7 @@ public class PageDirectoryRouteMapper : IPageDirectoryRouteMapper
         routingInfo.LocaleVariations = locales;
     }
 
-    private string CombineUrl(string path1, string path2)
+    private static string CombineUrl(string path1, string path2)
     {
         return string.Join("/", path1, path2);
     }

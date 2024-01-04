@@ -6,7 +6,7 @@
 /// unstructured data blob where the relationship cannot be enforced by
 /// the database.
 /// </summary>
-public class GetEntityDependencySummaryByRelatedEntityIdRangeQuery : IQuery<ICollection<EntityDependencySummary>>
+public class GetEntityDependencySummaryByRelatedEntityIdRangeQuery : IQuery<IReadOnlyCollection<EntityDependencySummary>>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="GetEntityDependencySummaryByRelatedEntityIdRangeQuery"/> class.
@@ -26,10 +26,10 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQuery : IQuery<ICol
     /// Collection of entity ids to check for required dependencies. Each entity 
     /// must be of the type specified by <paramref name="entityDefinitionCode"/>.
     /// </param>
-    public GetEntityDependencySummaryByRelatedEntityIdRangeQuery(string entityDefinitionCode, ICollection<int> entityIds)
+    public GetEntityDependencySummaryByRelatedEntityIdRangeQuery(string entityDefinitionCode, IEnumerable<int> entityIds)
     {
         EntityDefinitionCode = entityDefinitionCode;
-        EntityIds = entityIds;
+        EntityIds = entityIds.ToArray();
     }
 
     /// <summary>
@@ -37,13 +37,13 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQuery : IQuery<ICol
     /// to check.
     /// </summary>
     [Required]
-    public string EntityDefinitionCode { get; set; }
+    public string EntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Collection of entity ids to check for required dependencies. Each entity 
     /// must be of the type specified by <see cref="EntityDefinitionCode"/>.
     /// </summary>
-    public ICollection<int> EntityIds { get; set; }
+    public IReadOnlyCollection<int> EntityIds { get; set; } = Array.Empty<int>();
 
     /// <summary>
     /// If set to true, then deletable dependencies will be excluded

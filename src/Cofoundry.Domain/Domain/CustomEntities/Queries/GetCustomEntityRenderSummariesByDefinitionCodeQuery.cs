@@ -7,7 +7,7 @@
 /// version-sensitive and defaults to returning published versions only, but
 /// this behavior can be controlled by the publishStatus query property.    
 /// </summary>
-public class GetCustomEntityRenderSummariesByDefinitionCodeQuery : IQuery<ICollection<CustomEntityRenderSummary>>
+public class GetCustomEntityRenderSummariesByDefinitionCodeQuery : IQuery<IReadOnlyCollection<CustomEntityRenderSummary>>
 {
     /// <summary>
     /// Query to retreive all custom entites of a specific type, projected as a
@@ -45,7 +45,7 @@ public class GetCustomEntityRenderSummariesByDefinitionCodeQuery : IQuery<IColle
     /// Required. The definition code of the custom entity to filter on.
     /// </summary>
     [Required]
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Used to determine which version of the custom entities to include data for. This 

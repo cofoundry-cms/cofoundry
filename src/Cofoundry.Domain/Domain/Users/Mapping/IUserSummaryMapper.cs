@@ -12,5 +12,6 @@ public interface IUserSummaryMapper
     /// db record is null then null is returned.
     /// </summary>
     /// <param name="dbUser">User record from the database.</param>
-    UserSummary Map(User dbUser);
+    [return: NotNullIfNotNull(nameof(dbUser))]
+    UserSummary? Map(User? dbUser);
 }

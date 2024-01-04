@@ -4,7 +4,7 @@
 /// As well as being able to create roles in the UI, roles can also
 /// be defined in code by implementing <see cref="IRoleDefinition"/>. To defined the
 /// permissions associated with the role implement a class that inherits 
-/// from <see cref="IRoleInitializer"/>
+/// from <see cref="IRolePermissionInitializer"/>
 /// </summary>
 public interface IRoleDefinition
 {

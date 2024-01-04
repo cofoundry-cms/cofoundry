@@ -16,12 +16,12 @@ public class User
     /// <summary>
     /// The first name is not required.
     /// </summary>
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
     /// <summary>
     /// The last name is not required.
     /// </summary>
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
     /// <summary>
     /// An optional display-friendly name. This is capped at 150 characters to
@@ -30,7 +30,7 @@ public class User
     /// <see langword="true"/> then this field will be a copy of the <see cref="Username"/>
     /// field.
     /// </summary>
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 
     /// <summary>
     /// The users primary email address whcih can be used to comminicate with the user.
@@ -40,14 +40,14 @@ public class User
     /// The formatting of this version should not be altered so that any privacy protections
     /// are left in place e.g. tricks like "plus addressing" should not be removed.
     /// </summary>
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     /// <summary>
     /// A copy of <see cref="Email"/> that is used for uniqueness checks, which
     /// can differ to prevent duplicates from legitimate variants that resolve 
     /// to the same email inbox e.g. "plus addressing" or interchangeable domains.
     /// </summary>
-    public string UniqueEmail { get; set; }
+    public string? UniqueEmail { get; set; }
 
     /// <summary>
     /// The username that is used as the user identifier e.g. "JArnold" or "jarnold@example.com". 
@@ -57,14 +57,14 @@ public class User
     /// "uniquification" process which can be more involved, because that field used for 
     /// comparisons when signing in.
     /// </summary>
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     /// <summary>
     /// A copy of <see cref="Username"/> that is formatted to standardize casing and any other
     /// required formatting irregularities e.g. "jarnold" or "jarnold@example.com". This field 
     /// is used for uniqueness checks and user lookups.
     /// </summary>
-    public string UniqueUsername { get; set; }
+    public string UniqueUsername { get; set; } = string.Empty;
 
     /// <summary>
     /// The domain name associated with the users <see cref="UniqueEmail"/> if one is supplied.
@@ -80,12 +80,12 @@ public class User
     /// e.g. the user's mail provider maps multiple domains to the same host e.g. "googlemail.com"
     /// and "gmail.com" may be consolidated depending on configuration.
     /// </summary>
-    public EmailDomain EmailDomain { get; set; }
+    public EmailDomain? EmailDomain { get; set; }
 
     /// <summary>
     /// The users hashed password value.
     /// </summary>
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     /// <summary>
     /// Cofoundry supports upgradable password hashing and this integer value
@@ -108,7 +108,7 @@ public class User
     /// This field is synonymous with the SecurityStamp field in ASP.NET Identity.
     /// </para>
     /// </summary>
-    public string SecurityStamp { get; set; }
+    public string SecurityStamp { get; set; } = string.Empty;
 
     /// <summary>
     /// Used for soft deletes so we can maintain old relations and
@@ -156,24 +156,34 @@ public class User
     /// </summary>
     public int RoleId { get; set; }
 
+    private Role? _role;
     /// <summary>
     /// The <see cref="Role"/> that this user is assigned to. The role is 
     /// required and determines the permissions available to the user
     /// </summary>
-    public virtual Role Role { get; set; }
+    public Role Role
+    {
+        get => _role ?? throw NavigationPropertyNotInitializedException.Create<User>(nameof(Role));
+        set => _role = value;
+    }
 
     /// <summary>
     /// The Cofoundry user system can be partitioned into user areas. Each
     /// user area has a 3 letter code, e.g. The Cofoundry admin area code is
     /// 'COF'.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
+    private UserArea? _userArea;
     /// <summary>
     /// The Cofoundry user system can be partitioned into user areas. This enables
     /// reuse of user functionality to create custom sign in areas in your application.
     /// </summary>
-    public virtual UserArea UserArea { get; set; }
+    public UserArea UserArea
+    {
+        get => _userArea ?? throw NavigationPropertyNotInitializedException.Create<User>(nameof(UserArea));
+        set => _userArea = value;
+    }
 
     /// <summary>
     /// There can be only one (system account). This is an account that
@@ -206,7 +216,7 @@ public class User
     /// The user that created this user. Nullable
     /// to allow the first user to be created.
     /// </summary>
-    public virtual User Creator { get; set; }
+    public User? Creator { get; set; }
 
     /// <summary>
     /// <see langword="true"/> if the user is active and not deleted. The system 

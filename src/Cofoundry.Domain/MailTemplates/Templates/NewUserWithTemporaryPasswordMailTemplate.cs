@@ -21,16 +21,16 @@ public class NewUserWithTemporaryPasswordMailTemplate : UserMailTemplateBase, IM
     /// <summary>
     /// The newly created user.
     /// </summary>
-    public override UserSummary User { get; set; }
+    public override UserSummary User { get; set; } = UserSummary.Uninitialized;
 
     /// <summary>
     /// The temporary password that the user can use to log in to 
     /// the site.
     /// </summary>
-    public IHtmlContent TemporaryPassword { get; set; }
+    public IHtmlContent TemporaryPassword { get; set; } = HtmlString.Empty;
 
     /// <summary>
     /// The absolute sign in page url e.g. "https://www.example.com/members/sign-in".
     /// </summary>
-    public string SignInUrl { get; set; }
+    public string SignInUrl { get; set; } = string.Empty;
 }

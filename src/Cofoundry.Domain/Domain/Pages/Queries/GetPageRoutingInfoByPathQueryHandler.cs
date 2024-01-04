@@ -6,9 +6,9 @@ namespace Cofoundry.Domain.Internal;
 /// Attempts to find a matching page route using the supplied path. The path
 /// has to be an absolute match, i.e. the query does not try and find a fall-back similar route.
 /// </summary>
-public class GetPageRoutingInfoByPathQueryHandler
-    : IQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
-    , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo>
+public partial class GetPageRoutingInfoByPathQueryHandler
+    : IQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo?>
+    , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByPathQuery, PageRoutingInfo?>
 {
     private readonly IQueryExecutor _queryExecutor;
     private readonly IPagePathHelper _pathHelper;
@@ -22,10 +22,13 @@ public class GetPageRoutingInfoByPathQueryHandler
         _pathHelper = pathHelper;
     }
 
-    public async Task<PageRoutingInfo> ExecuteAsync(GetPageRoutingInfoByPathQuery query, IExecutionContext executionContext)
+    public async Task<PageRoutingInfo?> ExecuteAsync(GetPageRoutingInfoByPathQuery query, IExecutionContext executionContext)
     {
         // Deal with malformed query
-        if (!string.IsNullOrWhiteSpace(query.Path) && !Uri.IsWellFormedUriString(query.Path, UriKind.Relative)) return null;
+        if (!string.IsNullOrWhiteSpace(query.Path) && !Uri.IsWellFormedUriString(query.Path, UriKind.Relative))
+        {
+            return null;
+        }
 
         var path = _pathHelper.StandardizePath(query.Path);
         var allRoutes = await _queryExecutor.ExecuteAsync(new GetAllPageRoutesQuery(), executionContext);
@@ -36,11 +39,14 @@ public class GetPageRoutingInfoByPathQueryHandler
             .Where(r => r.Locale == null || MatchesLocale(r.Locale, query.LocaleId))
             .OrderByDescending(r => r.FullUrlPath.Equals(path))
             .ThenByDescending(r => MatchesLocale(r.Locale, query.LocaleId))
-            .ToList();
+            .ToArray();
 
-        PageRoutingInfo result = null;
+        PageRoutingInfo? result = null;
 
-        if (!pageRoutes.Any()) return result;
+        if (pageRoutes.Length == 0)
+        {
+            return result;
+        }
 
         // Exact match
         if (pageRoutes[0].PageType != PageType.CustomEntityDetails)
@@ -76,21 +82,25 @@ public class GetPageRoutingInfoByPathQueryHandler
         return result;
     }
 
-    private bool MatchesLocale(ActiveLocale locale, int? localeId)
+    private static bool MatchesLocale(ActiveLocale? locale, int? localeId)
     {
         var localeIdToCheck = locale == null ? (int?)null : locale.LocaleId;
         return localeId == localeIdToCheck;
     }
 
-    private bool IsCustomRoutingMatch(string urltoTest, string routeUrl)
+    private static bool IsCustomRoutingMatch(string urltoTest, string routeUrl)
     {
-        var routePattern = "^" + Regex.Replace(routeUrl, @"{[^\/{}]*}", @"[^\/{}]*").Replace("/", @"\/") + "$";
+        var routePattern = "^" + CustomRoutingRegex().Replace(routeUrl, @"[^\/{}]*").Replace("/", @"\/") + "$";
         var isMatch = Regex.IsMatch(urltoTest, routePattern);
 
         return isMatch;
     }
 
-    private PageRoutingInfo ToRoutingInfo(PageRoute pageRoute, CustomEntityRoute customEntityRoute = null, ICustomEntityRoutingRule rule = null)
+    private static PageRoutingInfo ToRoutingInfo(
+        PageRoute pageRoute,
+        CustomEntityRoute? customEntityRoute = null,
+        ICustomEntityRoutingRule? rule = null
+        )
     {
         return new PageRoutingInfo()
         {
@@ -104,5 +114,8 @@ public class GetPageRoutingInfoByPathQueryHandler
     {
         yield return new PageReadPermission();
     }
+
+    [GeneratedRegex(@"{[^\/{}]*}")]
+    private static partial Regex CustomRoutingRegex();
 }
 

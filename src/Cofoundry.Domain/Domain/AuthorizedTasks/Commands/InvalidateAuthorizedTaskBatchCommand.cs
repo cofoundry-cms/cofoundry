@@ -31,5 +31,5 @@ public class InvalidateAuthorizedTaskBatchCommand : ICommand, ILoggableCommand
     /// <summary>
     /// Optionally restrict invalidation to a range of <see cref="IAuthorizedTaskTypeDefinition.AuthorizedTaskTypeCode"/>.
     /// </summary>
-    public ICollection<string> AuthorizedTaskTypeCodes { get; set; }
+    public IReadOnlyCollection<string> AuthorizedTaskTypeCodes { get; set; } = Array.Empty<string>();
 }

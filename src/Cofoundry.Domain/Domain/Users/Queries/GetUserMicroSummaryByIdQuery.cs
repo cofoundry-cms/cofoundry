@@ -4,7 +4,7 @@
 /// Finds a user by it's database id, returning a UserMicroSummary object if it 
 /// is found, otherwise null.
 /// </summary>
-public class GetUserMicroSummaryByIdQuery : IQuery<UserMicroSummary>
+public class GetUserMicroSummaryByIdQuery : IQuery<UserMicroSummary?>
 {
     public GetUserMicroSummaryByIdQuery()
     {

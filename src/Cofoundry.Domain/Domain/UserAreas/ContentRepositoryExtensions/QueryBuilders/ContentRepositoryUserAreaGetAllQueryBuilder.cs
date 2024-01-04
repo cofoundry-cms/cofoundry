@@ -15,7 +15,7 @@ public class ContentRepositoryUserAreaGetAllQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<UserAreaMicroSummary>> AsMicroSummaries()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<UserAreaMicroSummary>> AsMicroSummaries()
     {
         var query = new GetAllUserAreaMicroSummariesQuery();
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

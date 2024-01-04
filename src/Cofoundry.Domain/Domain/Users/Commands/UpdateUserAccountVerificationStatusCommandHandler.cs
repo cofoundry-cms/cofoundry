@@ -66,9 +66,9 @@ public class UpdateUserAccountVerificationStatusCommandHandler
         });
     }
 
-    private Task<User> GetUserAsync(int userId)
+    private async Task<User> GetUserAsync(int userId)
     {
-        var user = _dbContext
+        var user = await _dbContext
             .Users
             .FilterById(userId)
             .FilterCanSignIn()

@@ -4,8 +4,8 @@ using Cofoundry.Domain.QueryModels;
 namespace Cofoundry.Domain.Internal;
 
 public class GetPageTemplateDetailsByIdQueryHandler
-    : IQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
-    , IPermissionRestrictedQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails>
+    : IQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails?>
+    , IPermissionRestrictedQueryHandler<GetPageTemplateDetailsByIdQuery, PageTemplateDetails?>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
@@ -22,18 +22,24 @@ public class GetPageTemplateDetailsByIdQueryHandler
         _pageTemplateDetailsMapper = pageTemplateDetailsMapper;
     }
 
-    public async Task<PageTemplateDetails> ExecuteAsync(GetPageTemplateDetailsByIdQuery query, IExecutionContext executionContext)
+    public async Task<PageTemplateDetails?> ExecuteAsync(GetPageTemplateDetailsByIdQuery query, IExecutionContext executionContext)
     {
-        var queryModel = new PageTemplateDetailsQueryModel();
-
-        queryModel.PageTemplate = await _dbContext
+        var dbTemplate = await _dbContext
             .PageTemplates
             .AsNoTracking()
             .Include(t => t.PageTemplateRegions)
             .Where(l => l.PageTemplateId == query.PageTemplateId)
             .SingleOrDefaultAsync();
 
-        if (queryModel.PageTemplate == null) return null;
+        if (dbTemplate == null)
+        {
+            return null;
+        }
+
+        var queryModel = new PageTemplateDetailsQueryModel()
+        {
+            PageTemplate = dbTemplate
+        };
 
         if (!string.IsNullOrEmpty(queryModel.PageTemplate.CustomEntityDefinitionCode))
         {

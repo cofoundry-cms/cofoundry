@@ -13,7 +13,8 @@ public class UserContextMapper
         _userAreaRepository = userAreaRepository;
     }
 
-    public UserContext Map(User dbUser)
+    [return: NotNullIfNotNull(nameof(dbUser))]
+    public UserContext? Map(User dbUser)
     {
         if (dbUser == null) return null;
 

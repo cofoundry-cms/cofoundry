@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 public class GetActiveLocaleByIdQueryHandler
-    : IQueryHandler<GetActiveLocaleByIdQuery, ActiveLocale>
+    : IQueryHandler<GetActiveLocaleByIdQuery, ActiveLocale?>
     , IIgnorePermissionCheckHandler
 {
     private readonly IQueryExecutor _queryExecutor;
@@ -13,7 +13,7 @@ public class GetActiveLocaleByIdQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<ActiveLocale> ExecuteAsync(GetActiveLocaleByIdQuery query, IExecutionContext executionContext)
+    public async Task<ActiveLocale?> ExecuteAsync(GetActiveLocaleByIdQuery query, IExecutionContext executionContext)
     {
         var locales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
         var result = locales.SingleOrDefault(l => l.LocaleId == query.LocaleId);

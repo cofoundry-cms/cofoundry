@@ -6,7 +6,7 @@
 /// </summary>
 public static class AssetFileStampHelper
 {
-    private static DateTime COFOUNDRY_EPOCH = new DateTime(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    private static readonly DateTime COFOUNDRY_EPOCH = new(2010, 1, 1, 0, 0, 0, DateTimeKind.Utc);
     private const long TICKS_MULTIPLIER = 1000;
 
     /// <summary>
@@ -24,7 +24,10 @@ public static class AssetFileStampHelper
     /// <param name="fileUpdateDate">The UTC DateTime to convert.</param>
     public static string ToFileStamp(DateTime fileUpdateDate)
     {
-        if (fileUpdateDate < COFOUNDRY_EPOCH) throw new ArgumentException("Asset file update date is prior to the Cofoundry epoch: " + fileUpdateDate, nameof(fileUpdateDate));
+        if (fileUpdateDate < COFOUNDRY_EPOCH)
+        {
+            throw new ArgumentException("Asset file update date is prior to the Cofoundry epoch: " + fileUpdateDate, nameof(fileUpdateDate));
+        }
 
         var ticks = fileUpdateDate.Ticks - COFOUNDRY_EPOCH.Ticks;
         var nanoSeconds = ticks / TICKS_MULTIPLIER;

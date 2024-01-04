@@ -26,7 +26,7 @@ public class MinLengthNewPasswordValidator
 
     public string Criteria => $"Must be at least {MinLength} characters.";
 
-    public ValidationError Validate(INewPasswordValidationContext context)
+    public ValidationError? Validate(INewPasswordValidationContext context)
     {
         if (MinLength == 0) throw new InvalidOperationException($"{nameof(Configure)} has not been called.");
 

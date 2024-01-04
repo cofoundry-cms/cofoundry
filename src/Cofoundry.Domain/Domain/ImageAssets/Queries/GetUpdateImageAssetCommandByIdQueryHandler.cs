@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdateImageAssetCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
-    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand?>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateImageAssetCommand>, UpdateImageAssetCommand?>
 {
     private readonly CofoundryDbContext _dbContext;
 
@@ -15,7 +15,7 @@ public class GetUpdateImageAssetCommandByIdQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<UpdateImageAssetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateImageAssetCommand> query, IExecutionContext executionContext)
+    public async Task<UpdateImageAssetCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateImageAssetCommand> query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .ImageAssets
@@ -25,7 +25,10 @@ public class GetUpdateImageAssetCommandByIdQueryHandler
             .FilterById(query.Id)
             .SingleOrDefaultAsync();
 
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
 
         var result = new UpdateImageAssetCommand()
         {

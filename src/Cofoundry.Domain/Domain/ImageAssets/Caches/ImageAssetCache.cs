@@ -2,7 +2,9 @@
 
 namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IImageAssetCache"/>.
+/// </summary>
 public class ImageAssetCache : IImageAssetCache
 {
     private const string IMAGE_ASSET_RENDER_DETAILS_CACHEKEY = "ImageAssetRenderDetails:";
@@ -15,26 +17,40 @@ public class ImageAssetCache : IImageAssetCache
         _cache = cacheFactory.Get("COF_ImageAssets");
     }
 
-    public ImageAssetRenderDetails GetImageAssetRenderDetailsIfCached(int imageAssetId)
+    /// <inheritdoc/>
+    public ImageAssetRenderDetails? GetImageAssetRenderDetailsIfCached(int imageAssetId)
     {
-        return _cache.Get<ImageAssetRenderDetails>(IMAGE_ASSET_RENDER_DETAILS_CACHEKEY + imageAssetId);
+        var cacheKey = IMAGE_ASSET_RENDER_DETAILS_CACHEKEY + imageAssetId;
+        var result = _cache.Get<ImageAssetRenderDetails>(cacheKey);
+
+        return result;
     }
 
-    public Task<ImageAssetRenderDetails> GetOrAddAsync(int imageAssetId, Func<Task<ImageAssetRenderDetails>> getter)
+    /// <inheritdoc/>
+    public async Task<ImageAssetRenderDetails?> GetOrAddAsync(int imageAssetId, Func<Task<ImageAssetRenderDetails?>> getter)
     {
-        return _cache.GetOrAddAsync(IMAGE_ASSET_RENDER_DETAILS_CACHEKEY + imageAssetId, getter);
+        var cacheKey = IMAGE_ASSET_RENDER_DETAILS_CACHEKEY + imageAssetId;
+        var result = await _cache.GetOrAddAsync(cacheKey, getter);
+
+        return result;
     }
 
-    public ImageAssetRenderDetails GetOrAdd(int imageAssetId, Func<ImageAssetRenderDetails> getter)
+    /// <inheritdoc/>
+    public ImageAssetRenderDetails? GetOrAdd(int imageAssetId, Func<ImageAssetRenderDetails?> getter)
     {
-        return _cache.GetOrAdd(IMAGE_ASSET_RENDER_DETAILS_CACHEKEY + imageAssetId, getter);
+        var cacheKey = IMAGE_ASSET_RENDER_DETAILS_CACHEKEY + imageAssetId;
+        var result = _cache.GetOrAdd(cacheKey, getter);
+
+        return result;
     }
 
+    /// <inheritdoc/>
     public void Clear()
     {
         _cache.Clear();
     }
 
+    /// <inheritdoc/>
     public void Clear(int imageAssetId)
     {
         _cache.Clear(IMAGE_ASSET_RENDER_DETAILS_CACHEKEY + imageAssetId);

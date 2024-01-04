@@ -18,29 +18,34 @@ public class PageBlockTypeTemplate
     /// </summary>
     public int PageBlockTypeId { get; set; }
 
+    private PageBlockType? _pageBlockType;
+    /// <summary>
+    /// The block type this template belongs to. One block type can
+    /// 0 or more templates.
+    /// </summary>
+    public PageBlockType PageBlockType
+    {
+        get => _pageBlockType ?? throw NavigationPropertyNotInitializedException.Create<PageBlockTypeTemplate>(nameof(PageBlockType));
+        set => _pageBlockType = value;
+    }
+
     /// <summary>
     /// The display name for the template in the administration UI
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// An optional description used to help users pick a block
     /// type template from a list of options.
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// The name of the template view file without an extensions 
     /// e.g. 'H1', 'ReversedContent'. Must be unique to the block
     /// type.
     /// </summary>
-    public string FileName { get; set; }
-
-    /// <summary>
-    /// The block type this template belongs to. One block type can
-    /// 0 or more templates.
-    /// </summary>
-    public virtual PageBlockType PageBlockType { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// Date the record was created.

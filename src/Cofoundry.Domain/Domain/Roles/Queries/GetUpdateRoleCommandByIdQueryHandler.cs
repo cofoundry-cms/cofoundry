@@ -1,8 +1,8 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 public class GetUpdateRoleCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
-    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand?>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdateRoleCommand>, UpdateRoleCommand?>
 {
     private readonly IInternalRoleRepository _internalRoleRepository;
 
@@ -13,7 +13,7 @@ public class GetUpdateRoleCommandByIdQueryHandler
         _internalRoleRepository = internalRoleRepository;
     }
 
-    public async Task<UpdateRoleCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateRoleCommand> query, IExecutionContext executionContext)
+    public async Task<UpdateRoleCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateRoleCommand> query, IExecutionContext executionContext)
     {
         var role = await _internalRoleRepository.GetByIdAsync(query.Id);
         if (role == null) return null;
@@ -28,8 +28,8 @@ public class GetUpdateRoleCommandByIdQueryHandler
             .Permissions
             .Select(p => new PermissionCommandData()
             {
-                EntityDefinitionCode = p.GetUniqueIdentifier(),
-                PermissionCode = p is IEntityPermission ? ((IEntityPermission)p).EntityDefinition.EntityDefinitionCode : null
+                EntityDefinitionCode = p is IEntityPermission entityPermission ? entityPermission.EntityDefinition.EntityDefinitionCode : null,
+                PermissionCode = p.PermissionType.Code
             })
             .ToArray();
 

@@ -36,6 +36,8 @@ public class UpdateCurrentUserCommandHandler
     public async Task ExecuteAsync(UpdateCurrentUserCommand command, IExecutionContext executionContext)
     {
         _permissionValidationService.EnforceIsSignedIn(executionContext.UserContext);
+        EntityInvalidOperationException.ThrowIfNull(executionContext.UserContext, executionContext.UserContext.UserId);
+
         var userId = executionContext.UserContext.UserId.Value;
 
         var user = await _dbContext

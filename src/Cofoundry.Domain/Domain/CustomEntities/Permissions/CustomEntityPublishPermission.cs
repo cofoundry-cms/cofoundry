@@ -11,6 +11,7 @@ public class CustomEntityPublishPermission : ICustomEntityPermissionTemplate
     public CustomEntityPublishPermission()
     {
         PermissionType = CreatePermissionType("Not Set");
+        EntityDefinition = new CustomEntityDynamicEntityDefinition();
     }
 
     public CustomEntityPublishPermission(ICustomEntityDefinition customEntityDefinition)

@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Simple mapper for mapping to PageGroupSummary objects.
+/// Default implementation of <see cref="IPageGroupSummaryMapper"/>.
 /// </summary>
 public class PageGroupSummaryMapper : IPageGroupSummaryMapper
 {
@@ -16,15 +16,14 @@ public class PageGroupSummaryMapper : IPageGroupSummaryMapper
         _auditDataMapper = auditDataMapper;
     }
 
-    /// <summary>
-    /// Maps an EF PageGroup record from the db into an PageGroupSummary 
-    /// object. If the db record is null then null is returned.
-    /// </summary>
-    /// <param name="queryModel">Query model with data from the database.</param>
-    public PageGroupSummary Map(PageGroupSummaryQueryModel queryModel)
+    /// <inheritdoc/>
+    public PageGroupSummary? Map(PageGroupSummaryQueryModel? queryModel)
     {
         var dbPageGroup = queryModel?.PageGroup;
-        if (dbPageGroup == null) return null;
+        if (dbPageGroup == null || queryModel == null)
+        {
+            return null;
+        }
 
         var pageGroup = new PageGroupSummary()
         {

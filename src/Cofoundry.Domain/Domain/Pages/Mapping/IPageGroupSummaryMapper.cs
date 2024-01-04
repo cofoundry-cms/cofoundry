@@ -12,5 +12,5 @@ public interface IPageGroupSummaryMapper
     /// object. If the db record is null then null is returned.
     /// </summary>
     /// <param name="queryModel">Query model with data from the database.</param>
-    PageGroupSummary Map(PageGroupSummaryQueryModel queryModel);
+    PageGroupSummary? Map(PageGroupSummaryQueryModel? queryModel);
 }

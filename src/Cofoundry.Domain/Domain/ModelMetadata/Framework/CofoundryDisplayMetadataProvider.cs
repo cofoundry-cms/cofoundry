@@ -24,9 +24,9 @@ public class CofoundryDisplayMetadataProvider : IDisplayMetadataProvider
 
         foreach (var attribute in context.Attributes)
         {
-            if (attribute is IMetadataAttribute)
+            if (attribute is IMetadataAttribute metadataAttribute)
             {
-                ((IMetadataAttribute)attribute).Process(context);
+                metadataAttribute.Process(context);
             }
             else
             {

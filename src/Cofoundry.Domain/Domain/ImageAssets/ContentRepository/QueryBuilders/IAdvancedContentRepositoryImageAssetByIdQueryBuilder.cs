@@ -10,12 +10,12 @@ public interface IAdvancedContentRepositoryImageAssetByIdQueryBuilder
     /// The ImageAssetFile projection represents the file associated 
     /// with a document asset, including stream access to the file itself.
     /// </summary>
-    IDomainRepositoryQueryContext<ImageAssetFile> AsFile();
+    IDomainRepositoryQueryContext<ImageAssetFile?> AsFile();
 
     /// <summary>
     /// The ImageAssetDetails projection contains full image asset 
     /// information. This is specifically used in the admin panel and 
     /// so contains audit data and tagging information.
     /// </summary>
-    IDomainRepositoryQueryContext<ImageAssetDetails> AsDetails();
+    IDomainRepositoryQueryContext<ImageAssetDetails?> AsDetails();
 }

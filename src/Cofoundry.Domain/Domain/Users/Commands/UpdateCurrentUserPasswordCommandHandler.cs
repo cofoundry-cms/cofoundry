@@ -88,8 +88,10 @@ public class UpdateCurrentUserPasswordCommandHandler
         });
     }
 
-    private Task<User> GetUser(IExecutionContext executionContext)
+    private Task<User?> GetUser(IExecutionContext executionContext)
     {
+        EntityInvalidOperationException.ThrowIfNull(executionContext.UserContext, executionContext.UserContext.UserId);
+
         return _dbContext
             .Users
             .IncludeForSummary()
@@ -121,11 +123,10 @@ public class UpdateCurrentUserPasswordCommandHandler
         var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
         _passwordUpdateCommandHelper.ValidateUserArea(userArea);
 
-        var context = NewPasswordValidationContext.MapFromUser(user);
+        var context = NewPasswordValidationContext.MapFromUser(user, executionContext);
         context.CurrentPassword = command.OldPassword;
         context.Password = command.NewPassword;
         context.PropertyName = nameof(command.NewPassword);
-        context.ExecutionContext = executionContext;
 
         await _newPasswordValidationService.ValidateAsync(context);
     }

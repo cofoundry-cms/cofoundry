@@ -6,8 +6,8 @@
 /// type, it is supported and the query returns a collection of routes.
 /// </summary>
 public class GetPageRoutingInfoByCustomEntityIdQueryHandler
-    : IQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, ICollection<PageRoutingInfo>>
-    , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, ICollection<PageRoutingInfo>>
+    : IQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, IReadOnlyCollection<PageRoutingInfo>>
+    , IPermissionRestrictedQueryHandler<GetPageRoutingInfoByCustomEntityIdQuery, IReadOnlyCollection<PageRoutingInfo>>
 {
     private readonly IQueryExecutor _queryExecutor;
 
@@ -18,15 +18,18 @@ public class GetPageRoutingInfoByCustomEntityIdQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<ICollection<PageRoutingInfo>> ExecuteAsync(GetPageRoutingInfoByCustomEntityIdQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<PageRoutingInfo>> ExecuteAsync(GetPageRoutingInfoByCustomEntityIdQuery query, IExecutionContext executionContext)
     {
-        var result = await _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByCustomEntityIdRangeQuery(new int[] { query.CustomEntityId }), executionContext);
+        var result = await _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByCustomEntityIdRangeQuery([query.CustomEntityId]), executionContext);
 
-        if (!result.ContainsKey(query.CustomEntityId)) return Array.Empty<PageRoutingInfo>();
+        if (!result.ContainsKey(query.CustomEntityId))
+        {
+            return Array.Empty<PageRoutingInfo>();
+        }
 
         return result[query.CustomEntityId]
             .OrderBy(e => e.PageRoute.UrlPath.Length)
-            .ToList();
+            .ToArray();
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetPageRoutingInfoByCustomEntityIdQuery query)

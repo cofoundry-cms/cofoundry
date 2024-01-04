@@ -5,14 +5,16 @@
 /// </summary>
 public class ExecutionContext : IExecutionContext
 {
-    /// <summary>
-    /// The user that the Command/Query should be executed as.
-    /// </summary>
-    public IUserContext UserContext { get; set; }
+    /// <inheritdoc />
+    public IUserContext UserContext { get; set; } = Cofoundry.Domain.UserContext.Empty;
+
+    /// <inheritdoc />
+    public DateTime ExecutionDate { get; set; }
 
     /// <summary>
-    /// The datetime that the Commnad/Query has been executed by the user. If the Command execution
-    /// is deferred then this date may appear in the past and won't be equivalent to DateTime.UtcNow.
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
     /// </summary>
-    public DateTime ExecutionDate { get; set; }
+    public static readonly ExecutionContext Uninitialized = new();
 }

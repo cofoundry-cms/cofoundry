@@ -10,5 +10,5 @@ public interface IAdvancedContentRepositoryCustomEntityDataModelSchemaByCustomEn
     /// Query to extract and return meta data information about a custom 
     /// entity data model for a range of custom entity definitions.
     /// </summary>
-    IDomainRepositoryQueryContext<IDictionary<string, CustomEntityDataModelSchema>> AsDetails();
+    IDomainRepositoryQueryContext<IReadOnlyDictionary<string, CustomEntityDataModelSchema>> AsDetails();
 }

@@ -13,14 +13,14 @@ public class ActiveLocale : IEquatable<ActiveLocale>
     /// Brazilian Portuguese, or nan-Hant-TW for Min Nan Chinese as spoken in Taiwan using traditional 
     /// Han characters) defined by the Internet Engineering Task Force (IETF).
     /// </summary>
-    public string IETFLanguageTag { get; set; }
+    public string IETFLanguageTag { get; set; } = string.Empty;
 
     /// <summary>
     /// English name of the locale e.g. 'Spanish – Bolivia', 'English', 'English – Canada'
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
-    public bool Equals(ActiveLocale other)
+    public bool Equals(ActiveLocale? other)
     {
         if (other == null) return false;
         if (other == this) return true;
@@ -28,7 +28,7 @@ public class ActiveLocale : IEquatable<ActiveLocale>
         return other.LocaleId == LocaleId;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return Equals(obj as ActiveLocale);
     }
@@ -42,4 +42,14 @@ public class ActiveLocale : IEquatable<ActiveLocale>
     {
         return string.Format("{0} ({1})", Name, IETFLanguageTag);
     }
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly ActiveLocale Uninitialized = new()
+    {
+        LocaleId = int.MinValue
+    };
 }

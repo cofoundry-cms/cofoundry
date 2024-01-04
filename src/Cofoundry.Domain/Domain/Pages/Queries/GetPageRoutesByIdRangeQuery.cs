@@ -7,7 +7,7 @@
 /// default as it's core to routing and often incorporated in more detailed
 /// page projections.
 /// </summary>
-public class GetPageRoutesByIdRangeQuery : IQuery<IDictionary<int, PageRoute>>
+public class GetPageRoutesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, PageRoute>>
 {
     /// <summary>
     /// Returns page routing data for a set of pages by their database ids. The 
@@ -27,7 +27,7 @@ public class GetPageRoutesByIdRangeQuery : IQuery<IDictionary<int, PageRoute>>
     /// </summary>
     /// <param name="pageIds">Database id of the page to fetch routing data for.</param>
     public GetPageRoutesByIdRangeQuery(IEnumerable<int> pageIds)
-        : this(pageIds?.ToList())
+        : this(pageIds?.ToArray() ?? [])
     {
     }
 
@@ -47,5 +47,5 @@ public class GetPageRoutesByIdRangeQuery : IQuery<IDictionary<int, PageRoute>>
     /// <summary>
     /// Database id of the page to fetch routing data for.
     /// </summary>
-    public IReadOnlyCollection<int> PageIds { get; set; }
+    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
 }

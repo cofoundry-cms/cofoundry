@@ -5,6 +5,6 @@
 /// registered with the DI system. This query checks the validity of the 
 /// collection before returning them.
 /// </summary>
-public class GetAllCustomEntityRoutingRulesQuery : IQuery<ICollection<ICustomEntityRoutingRule>>
+public class GetAllCustomEntityRoutingRulesQuery : IQuery<IReadOnlyCollection<ICustomEntityRoutingRule>>
 {
 }

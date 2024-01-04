@@ -11,7 +11,7 @@ public interface IUsernameValidationContext
     /// This can be used when generating any validation errors that need to be returned. 
     /// This field is optional and so can be <see langword="null"/>.
     /// </summary>
-    public string PropertyName { get; }
+    public string? PropertyName { get; }
 
     /// <summary>
     /// The <see cref="IUserAreaDefinition.UserAreaCode"/> belonging to the user
@@ -26,9 +26,12 @@ public interface IUsernameValidationContext
     public int? UserId { get; }
 
     /// <summary>
-    /// The result of the username normalization and uniquification process, which should not be null.
+    /// The result of the username normalization and uniquification process.
+    /// A <see langword="null"/> value indicates that the formatting process
+    /// failed to return a value e.g. input was null or contained no valid
+    /// characters.
     /// </summary>
-    public UsernameFormattingResult Username { get; }
+    public UsernameFormattingResult? Username { get; }
 
     /// <summary>
     /// The context of the currently executing query or command.

@@ -6,7 +6,7 @@
 /// and the PageDetails projection includes audit data and other additional 
 /// information that should normally be hidden from a customer facing app.
 /// </summary>
-public class GetPageDetailsByIdQuery : IQuery<PageDetails>
+public class GetPageDetailsByIdQuery : IQuery<PageDetails?>
 {
     /// <summary>
     /// Returns detailed information on a page and it's latest version. This 

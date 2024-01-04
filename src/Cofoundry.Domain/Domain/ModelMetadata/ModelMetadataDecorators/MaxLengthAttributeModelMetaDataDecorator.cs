@@ -14,12 +14,10 @@ public class MaxLengthAttributeModelMetadataDecorator : IModelMetadataDecorator
     {
         ArgumentNullException.ThrowIfNull(attribute);
 
-        if (!(attribute is MaxLengthAttribute))
+        if (attribute is not MaxLengthAttribute maxLengthttribtue)
         {
             throw new ArgumentException("Attribute type is not MaxLengthAttribute", nameof(attribute));
         }
-
-        var maxLengthttribtue = (MaxLengthAttribute)attribute;
 
         var modelMetaData = context.DisplayMetadata;
         modelMetaData.AddAdditionalValueWithValidationMessage("Maxlength", maxLengthttribtue.Length, maxLengthttribtue);

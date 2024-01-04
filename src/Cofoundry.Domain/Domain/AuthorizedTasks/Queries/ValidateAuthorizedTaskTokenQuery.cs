@@ -11,11 +11,11 @@ public class ValidateAuthorizedTaskTokenQuery : IQuery<AuthorizedTaskTokenValida
     /// expected to be categorized as.
     /// </summary>
     [Required]
-    public string AuthorizedTaskTypeCode { get; set; }
+    public string AuthorizedTaskTypeCode { get; set; } = string.Empty;
 
     /// <summary>
     /// A token used to identify and authenticate a task before it is executed.
     /// May be <see langword="null"/> if the token was not present in the request.
     /// </summary>
-    public string Token { get; set; }
+    public string? Token { get; set; }
 }

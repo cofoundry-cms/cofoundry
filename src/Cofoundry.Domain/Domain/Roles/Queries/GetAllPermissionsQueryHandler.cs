@@ -4,8 +4,8 @@
 /// Returns all IPermission instances registered with Cofoundry.
 /// </summary>
 public class GetAllPermissionsQueryHandler
-    : IQueryHandler<GetAllPermissionsQuery, ICollection<IPermission>>
-    , IPermissionRestrictedQueryHandler<GetAllPermissionsQuery, ICollection<IPermission>>
+    : IQueryHandler<GetAllPermissionsQuery, IReadOnlyCollection<IPermission>>
+    , IPermissionRestrictedQueryHandler<GetAllPermissionsQuery, IReadOnlyCollection<IPermission>>
 {
     private readonly IPermissionRepository _permissionRepository;
 
@@ -16,19 +16,22 @@ public class GetAllPermissionsQueryHandler
         _permissionRepository = permissionRepository;
     }
 
-    public Task<ICollection<IPermission>> ExecuteAsync(GetAllPermissionsQuery query, IExecutionContext executionContext)
+    public Task<IReadOnlyCollection<IPermission>> ExecuteAsync(GetAllPermissionsQuery query, IExecutionContext executionContext)
     {
         var permissions = _permissionRepository
             .GetAll()
-            .OrderBy(p => GetPrimaryOrdering(p))
-            .ToList();
+            .OrderBy(GetPrimaryOrdering)
+            .ToArray();
 
-        return Task.FromResult<ICollection<IPermission>>(permissions);
+        return Task.FromResult<IReadOnlyCollection<IPermission>>(permissions);
     }
 
     private string GetPrimaryOrdering(IPermission permission)
     {
-        if (permission is IEntityPermission) return ((IEntityPermission)permission).EntityDefinition.Name;
+        if (permission is IEntityPermission entityPermission)
+        {
+            return entityPermission.EntityDefinition.Name;
+        }
 
         return "ZZZ";
     }

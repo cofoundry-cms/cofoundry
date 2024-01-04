@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetPageVersionEntityMicroSummariesByIdRangeQueryHandler
-    : IQueryHandler<GetPageVersionEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
-    , IPermissionRestrictedQueryHandler<GetPageVersionEntityMicroSummariesByIdRangeQuery, IDictionary<int, RootEntityMicroSummary>>
+    : IQueryHandler<GetPageVersionEntityMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RootEntityMicroSummary>>
+    , IPermissionRestrictedQueryHandler<GetPageVersionEntityMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RootEntityMicroSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IEntityDefinitionRepository _entityDefinitionRepository;
@@ -18,18 +18,10 @@ public class GetPageVersionEntityMicroSummariesByIdRangeQueryHandler
         _entityDefinitionRepository = entityDefinitionRepository;
     }
 
-    public async Task<IDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetPageVersionEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
-    {
-        var results = await Query(query).ToDictionaryAsync(e => e.ChildEntityId, e => (RootEntityMicroSummary)e);
-
-        return results;
-    }
-
-    private IQueryable<ChildEntityMicroSummary> Query(GetPageVersionEntityMicroSummariesByIdRangeQuery query)
+    public async Task<IReadOnlyDictionary<int, RootEntityMicroSummary>> ExecuteAsync(GetPageVersionEntityMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         var definition = _entityDefinitionRepository.GetRequiredByCode(PageEntityDefinition.DefinitionCode);
-
-        var dbQuery = _dbContext
+        var results = await _dbContext
             .PageVersions
             .AsNoTracking()
             .Where(v => query.PageVersionIds.Contains(v.PageVersionId))
@@ -41,9 +33,10 @@ public class GetPageVersionEntityMicroSummariesByIdRangeQueryHandler
                 EntityDefinitionCode = definition.EntityDefinitionCode,
                 EntityDefinitionName = definition.Name,
                 IsPreviousVersion = !v.PagePublishStatusQueries.Any() // not draft or latest published version
-            });
+            })
+            .ToDictionaryAsync(e => e.ChildEntityId, e => (RootEntityMicroSummary)e);
 
-        return dbQuery;
+        return results;
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(GetPageVersionEntityMicroSummariesByIdRangeQuery query)

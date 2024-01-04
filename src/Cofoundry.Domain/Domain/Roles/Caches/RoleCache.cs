@@ -3,7 +3,9 @@ using System.Collections.ObjectModel;
 
 namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IRoleCache"/>.
+/// </summary>
 public class RoleCache : IRoleCache
 {
     private const string ROLE_CODE_LOOKUP_CACHEKEY = "RoleCodes";
@@ -18,24 +20,41 @@ public class RoleCache : IRoleCache
         _cache = cacheFactory.Get(CACHEKEY);
     }
 
-    public virtual Task<ReadOnlyDictionary<string, int>> GetOrAddRoleCodeLookupAsync(Func<Task<ReadOnlyDictionary<string, int>>> getter)
+    /// <inheritdoc/>
+    public virtual async Task<ReadOnlyDictionary<string, int>> GetOrAddRoleCodeLookupAsync(Func<Task<ReadOnlyDictionary<string, int>>> getter)
     {
-        return _cache.GetOrAddAsync(ROLE_CODE_LOOKUP_CACHEKEY, getter);
+        var result = await _cache.GetOrAddAsync(ROLE_CODE_LOOKUP_CACHEKEY, getter);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Result of {nameof(_cache.GetOrAddAsync)} with key {ROLE_CODE_LOOKUP_CACHEKEY} should never be null.");
+        }
+
+        return result;
     }
 
-    public virtual RoleDetails GetOrAdd(int roleId, Func<RoleDetails> getter)
+    /// <inheritdoc/>
+    public virtual RoleDetails? GetOrAdd(int roleId, Func<RoleDetails?> getter)
     {
-        return _cache.GetOrAdd(CreateRoleCacheKey(roleId), getter);
+        var cacheKey = CreateRoleCacheKey(roleId);
+        var result = _cache.GetOrAdd(cacheKey, getter);
+
+        return result;
     }
 
-    public virtual Task<RoleDetails> GetOrAddAsync(int roleId, Func<Task<RoleDetails>> getter)
+    /// <inheritdoc/>
+    public virtual async Task<RoleDetails?> GetOrAddAsync(int roleId, Func<Task<RoleDetails?>> getter)
     {
-        return _cache.GetOrAddAsync(ROLE_DETAILS_CACHEKEY + roleId, getter);
+        var cacheKey = ROLE_DETAILS_CACHEKEY + roleId;
+        var result = await _cache.GetOrAddAsync(cacheKey, getter);
+
+        return result;
     }
 
-    public async virtual Task<IDictionary<int, RoleDetails>> GetOrAddRangeAsync(
+    /// <inheritdoc/>
+    public virtual async Task<IDictionary<int, RoleDetails>> GetOrAddRangeAsync(
         IEnumerable<int> roleIds,
-        Func<IEnumerable<int>, Task<ICollection<RoleDetails>>> missingRolesGetter
+        Func<IEnumerable<int>, Task<IReadOnlyCollection<RoleDetails>>> missingRolesGetter
         )
     {
         var missingIds = new HashSet<int>();
@@ -73,21 +92,39 @@ public class RoleCache : IRoleCache
         return result;
     }
 
+    /// <inheritdoc/>
     public virtual RoleDetails GetOrAddAnonymousRole(Func<RoleDetails> getter)
     {
-        return _cache.GetOrAdd(ANON_ROLE_CACHEKEY, getter);
+        var result = _cache.GetOrAdd(ANON_ROLE_CACHEKEY, getter);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Result of {nameof(_cache.GetOrAdd)} with key {ANON_ROLE_CACHEKEY} should never be null.");
+        }
+
+        return result;
     }
 
-    public virtual Task<RoleDetails> GetOrAddAnonymousRoleAsync(Func<Task<RoleDetails>> getter)
+    /// <inheritdoc/>
+    public virtual async Task<RoleDetails> GetOrAddAnonymousRoleAsync(Func<Task<RoleDetails>> getter)
     {
-        return _cache.GetOrAddAsync(ANON_ROLE_CACHEKEY, getter);
+        var result = await _cache.GetOrAddAsync(ANON_ROLE_CACHEKEY, getter);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Result of {nameof(_cache.GetOrAddAsync)} with key {ANON_ROLE_CACHEKEY} should never be null.");
+        }
+
+        return result;
     }
 
+    /// <inheritdoc/>
     public virtual void Clear()
     {
         _cache.Clear();
     }
 
+    /// <inheritdoc/>
     public virtual void Clear(int roleId)
     {
         var anonymousRole = _cache.Get<RoleDetails>(ANON_ROLE_CACHEKEY);

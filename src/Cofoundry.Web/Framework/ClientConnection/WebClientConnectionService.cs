@@ -25,13 +25,11 @@ public class WebClientConnectionService : IClientConnectionService
     {
         var context = _httpContextAccessor.HttpContext;
 
-        var info = new ClientConnectionInfo();
-
-        if (context != null && context.Request != null)
+        var info = new ClientConnectionInfo()
         {
-            info.IPAddress = context?.Connection?.RemoteIpAddress?.ToString();
-            info.UserAgent = context.Request?.Headers?.GetOrDefault("User-Agent");
-        }
+            IPAddress = context?.Connection?.RemoteIpAddress?.ToString() ?? IPAddressConstants.Default,
+            UserAgent = context?.Request?.Headers?.GetOrDefault("User-Agent")
+        };
 
         return info;
     }

@@ -75,7 +75,7 @@ public static class UnstructuredDataDependencyExtensions
     /// 6 character identifier of the related entity type to filter to.
     /// </param>
     /// <param name="relatedEntityIsd">Database ids of the related entities to filter on.</param>
-    public static IQueryable<UnstructuredDataDependency> FilterByRelatedEntity(this IQueryable<UnstructuredDataDependency> dependencies, string relatedEntityEntityDefinitionCode, ICollection<int> relatedEntityIds)
+    public static IQueryable<UnstructuredDataDependency> FilterByRelatedEntity(this IQueryable<UnstructuredDataDependency> dependencies, string relatedEntityEntityDefinitionCode, IEnumerable<int> relatedEntityIds)
     {
         var filtered = dependencies.Where(d => d.RelatedEntityDefinitionCode == relatedEntityEntityDefinitionCode && relatedEntityIds.Contains(d.RelatedEntityId));
 
@@ -91,7 +91,7 @@ public static class UnstructuredDataDependencyExtensions
     /// 6 character identifier of the related entity type to filter to.
     /// </param>
     /// <param name="relatedEntityIds">Database ids of the related entities to filter on.</param>
-    public static IEnumerable<UnstructuredDataDependency> FilterByRelatedEntity(this IEnumerable<UnstructuredDataDependency> dependencies, string relatedEntityEntityDefinitionCode, ICollection<int> relatedEntityIds)
+    public static IEnumerable<UnstructuredDataDependency> FilterByRelatedEntity(this IEnumerable<UnstructuredDataDependency> dependencies, string relatedEntityEntityDefinitionCode, IEnumerable<int> relatedEntityIds)
     {
         var filtered = dependencies.Where(d => d.RelatedEntityDefinitionCode == relatedEntityEntityDefinitionCode && relatedEntityIds.Contains(d.RelatedEntityId));
 

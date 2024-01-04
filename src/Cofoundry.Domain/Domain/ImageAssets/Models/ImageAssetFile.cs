@@ -14,7 +14,7 @@ public class ImageAssetFile : IImageAssetRenderable
     /// <summary>
     /// Original filename without an extension.
     /// </summary>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// File name used internally for storing the file on disk (without 
@@ -24,12 +24,12 @@ public class ImageAssetFile : IImageAssetRenderable
     /// For files created before file stamps were used this may
     /// contain only the image asset id.
     /// </remarks>
-    public string FileNameOnDisk { get; set; }
+    public string FileNameOnDisk { get; set; } = string.Empty;
 
     /// <summary>
     /// Original file extension without the leading dot.
     /// </summary>
-    public string FileExtension { get; set; }
+    public string FileExtension { get; set; } = string.Empty;
 
     /// <summary>
     /// The width of the image file in pixels.
@@ -45,19 +45,19 @@ public class ImageAssetFile : IImageAssetRenderable
     /// The title or alt text for an image. Recommended to be up 125 characters 
     /// to accomodate screen readers.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// An identifier linked to the physical file that can be used for
     /// cache busting. By default this is a timestamp.
     /// </summary>
-    public string FileStamp { get; set; }
+    public string FileStamp { get; set; } = string.Empty;
 
     /// <summary>
     /// A random string token that can be used to verify a file request
     /// and mitigate enumeration attacks.
     /// </summary>
-    public string VerificationToken { get; set; }
+    public string VerificationToken { get; set; } = string.Empty;
 
     /// <summary>
     /// The date the file was last updated. Used for cache busting
@@ -74,5 +74,5 @@ public class ImageAssetFile : IImageAssetRenderable
     /// A stream containing the contents of the file. This needs
     /// to be disposed of when you've finished with it.
     /// </summary>
-    public Stream ContentStream { get; set; }
+    public Stream ContentStream { get; set; } = Stream.Null;
 }

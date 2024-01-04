@@ -11,10 +11,17 @@ public class UserAreaMicroSummary
     /// <summary>
     /// 3 letter code identifying this user area.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Display name of the area, used in the Cofoundry admin panel
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly UserAreaMicroSummary Uninitialized = new();
 }

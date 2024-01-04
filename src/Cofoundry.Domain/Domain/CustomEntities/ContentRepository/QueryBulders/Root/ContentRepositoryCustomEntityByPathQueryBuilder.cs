@@ -15,7 +15,7 @@ public class ContentRepositoryCustomEntityByPathQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<CustomEntityRoute> AsCustomEntityRoute(GetCustomEntityRouteByPathQuery query)
+    public IDomainRepositoryQueryContext<CustomEntityRoute?> AsCustomEntityRoute(GetCustomEntityRouteByPathQuery query)
     {
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }

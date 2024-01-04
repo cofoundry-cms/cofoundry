@@ -12,7 +12,7 @@ public class EntityDependencySummary
     /// <summary>
     /// An entity that is related to the entity being queried.
     /// </summary>
-    public RootEntityMicroSummary Entity { get; set; }
+    public required RootEntityMicroSummary Entity { get; set; }
 
     /// <summary>
     /// Indicates whether the relationship to this entity can be 

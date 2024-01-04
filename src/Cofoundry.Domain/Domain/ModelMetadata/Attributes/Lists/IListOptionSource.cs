@@ -9,5 +9,5 @@ public interface IListOptionSource
     /// <summary>
     /// Creates the list of options.
     /// </summary>
-    ICollection<ListOption> Create();
+    IReadOnlyCollection<ListOption> Create();
 }

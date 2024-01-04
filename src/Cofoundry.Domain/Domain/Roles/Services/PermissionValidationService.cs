@@ -53,18 +53,22 @@ public class PermissionValidationService : IPermissionValidationService
     /// <summary>
     /// Checks to see if the user if logged in and throws a NotPermittedException if not.
     /// </summary>
-    public virtual async Task EnforceIsSignedInAsync()
+    public virtual async Task<ISignedInUserContext> EnforceIsSignedInAsync()
     {
         var userContext = await _userContextService.GetCurrentContextAsync();
         EnforceIsSignedIn(userContext);
+
+        return SignedInUserContext.MapRequired(userContext);
     }
 
     /// <summary>
     /// Checks to see if the specified user context is logged in and throws a NotPermittedException if not.
     /// </summary>
-    public virtual void EnforceIsSignedIn(IUserContext userContext)
+    public virtual ISignedInUserContext EnforceIsSignedIn(IUserContext userContext)
     {
         ThrowExceptionIfNotLoggedIn(userContext);
+
+        return SignedInUserContext.MapRequired(userContext);
     }
 
     /// <summary>
@@ -167,14 +171,14 @@ public class PermissionValidationService : IPermissionValidationService
         return HasPermission(new TPermission(), userContext);
     }
 
-    public virtual async Task<bool> HasPermissionAsync(IPermissionApplication permissionApplication)
+    public virtual async Task<bool> HasPermissionAsync(IPermissionApplication? permissionApplication)
     {
         var userContext = await _userContextService.GetCurrentContextAsync();
 
         return HasPermission(permissionApplication, userContext);
     }
 
-    public virtual bool HasPermission(IPermissionApplication permissionApplication, IUserContext userContext)
+    public virtual bool HasPermission(IPermissionApplication? permissionApplication, IUserContext userContext)
     {
         if (permissionApplication == null) return true;
 

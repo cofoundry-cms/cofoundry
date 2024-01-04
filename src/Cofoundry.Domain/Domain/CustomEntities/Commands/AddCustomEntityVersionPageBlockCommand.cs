@@ -61,7 +61,7 @@ public class AddCustomEntityVersionPageBlockCommand : ICommand, ILoggableCommand
     /// </summary>
     [Required]
     [ValidateObject]
-    public IPageBlockTypeDataModel DataModel { get; set; }
+    public IPageBlockTypeDataModel DataModel { get; set; } = null!;
 
     /// <summary>
     /// The database id of the newly created custom entity page block.

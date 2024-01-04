@@ -8,7 +8,7 @@ public class InheritedPageDirectoryAccessDetails : IEntityAccessRuleSetDetails<P
     /// <summary>
     /// Database id of the page these access rules are associated with.
     /// </summary>
-    public PageDirectoryMicroSummary PageDirectory { get; set; }
+    public PageDirectoryMicroSummary PageDirectory { get; set; } = PageDirectoryMicroSummary.Uninitialized;
 
     /// <summary>
     /// <para>
@@ -23,9 +23,9 @@ public class InheritedPageDirectoryAccessDetails : IEntityAccessRuleSetDetails<P
     /// but instead are used to restrict public access to website pages and routes.
     /// </para>
     /// </summary>
-    public ICollection<PageDirectoryAccessRuleSummary> AccessRules { get; set; }
+    public IReadOnlyCollection<PageDirectoryAccessRuleSummary> AccessRules { get; set; } = Array.Empty<PageDirectoryAccessRuleSummary>();
 
     public AccessRuleViolationAction ViolationAction { get; set; }
 
-    public UserAreaMicroSummary UserAreaForSignInRedirect { get; set; }
+    public UserAreaMicroSummary? UserAreaForSignInRedirect { get; set; }
 }

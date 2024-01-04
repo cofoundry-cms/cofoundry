@@ -15,14 +15,14 @@ public class IncorrectMetaDataAttributePlacementException : Exception
     public IncorrectMetaDataAttributePlacementException(
         Attribute attribute,
         DisplayMetadataProviderContext context,
-        ICollection<Type> validParamTypes,
-        string message
+        IReadOnlyCollection<Type> validParamTypes,
+        string? message
         )
         : base(message)
     {
         AttributeType = attribute?.GetType();
         ValidPropertyTypes = validParamTypes;
-        ModelType = context?.Key.ContainerType;
+        ModelType = context.Key.ContainerType;
         PropertyName = FormatPropertyName(context);
     }
 
@@ -33,7 +33,7 @@ public class IncorrectMetaDataAttributePlacementException : Exception
     public IncorrectMetaDataAttributePlacementException(
         Attribute attribute,
         DisplayMetadataProviderContext context,
-        ICollection<Type> validParamTypes
+        IReadOnlyCollection<Type> validParamTypes
         )
         : this(attribute, context, validParamTypes, FormatMessage(attribute, context, validParamTypes))
     {
@@ -42,7 +42,7 @@ public class IncorrectMetaDataAttributePlacementException : Exception
     /// <summary>
     /// The type of the attribute that is placed incorrectly.
     /// </summary>
-    public Type AttributeType { get; private set; }
+    public Type? AttributeType { get; private set; }
 
     /// <summary>
     /// The property types which are valid types to be decorated. 
@@ -50,24 +50,24 @@ public class IncorrectMetaDataAttributePlacementException : Exception
     /// whereas another property might require an int or nullable int
     /// type property.
     /// </summary>
-    public virtual ICollection<Type> ValidPropertyTypes { get; private set; }
+    public virtual IReadOnlyCollection<Type> ValidPropertyTypes { get; private set; } = Array.Empty<Type>();
 
     /// <summary>
     /// The type of the model that contains the incorrect attribute 
     /// placement.
     /// </summary>
-    public Type ModelType { get; private set; }
+    public Type? ModelType { get; private set; }
 
     /// <summary>
     /// Formatted name of the offending property, using the 
     /// format 'ModelName.PropertyName'.
     /// </summary>
-    public string PropertyName { get; private set; }
+    public string? PropertyName { get; private set; }
 
     private static string FormatMessage(
         Attribute attribute,
         DisplayMetadataProviderContext context,
-        ICollection<Type> validParamTypes
+        IReadOnlyCollection<Type> validParamTypes
         )
     {
         string typeNameText = FormatTypeNamesText(validParamTypes);
@@ -79,10 +79,10 @@ public class IncorrectMetaDataAttributePlacementException : Exception
 
     protected static string FormatPropertyName(DisplayMetadataProviderContext context)
     {
-        return context.Key.ContainerType.Name + "." + context.Key.Name;
+        return context.Key.ContainerType?.Name + "." + context.Key.Name;
     }
 
-    protected static string FormatTypeNamesText(ICollection<Type> validParamTypes)
+    protected static string FormatTypeNamesText(IReadOnlyCollection<Type> validParamTypes)
     {
         var typeNames = validParamTypes.Select(t => t.ToString());
         string typeNameText;

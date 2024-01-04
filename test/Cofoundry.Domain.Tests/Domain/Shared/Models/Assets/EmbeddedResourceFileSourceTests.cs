@@ -27,12 +27,14 @@ public class EmbeddedResourceFileSourceTests
     }
 
     [Fact]
-    public async Task OpenReadStreamAsync_WhenNotExists_OpensStream()
+    public async Task OpenReadStreamAsync_WhenNotExists_Throws()
     {
         var assembly = this.GetType().Assembly;
         var instance = new EmbeddedResourceFileSource(assembly, "Domain.Shared.Models.Assets", "NotFound.txt");
-        using var stream = await instance.OpenReadStreamAsync();
 
-        Assert.Null(stream);
+        await instance
+            .Awaiting(f => f.OpenReadStreamAsync())
+            .Should()
+            .ThrowAsync<FileNotFoundException>();
     }
 }

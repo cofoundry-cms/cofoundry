@@ -29,13 +29,21 @@ public class IsCustomEntityUrlSlugUniqueQueryHandler
 
     public async Task<bool> ExecuteAsync(IsCustomEntityUrlSlugUniqueQuery query, IExecutionContext executionContext)
     {
+        if (string.IsNullOrWhiteSpace(query.UrlSlug))
+        {
+            return true;
+        }
+
         var definition = await GetDefinitionAsync(query, executionContext);
-        if (!definition.ForceUrlSlugUniqueness) return true;
+        if (!definition.ForceUrlSlugUniqueness)
+        {
+            return true;
+        }
 
         var dbQuery = Query(query);
-        var exisits = await dbQuery.AnyAsync();
+        var exists = await dbQuery.AnyAsync();
 
-        return !exisits;
+        return !exists;
     }
 
     private IQueryable<CustomEntity> Query(IsCustomEntityUrlSlugUniqueQuery query)

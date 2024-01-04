@@ -3,7 +3,7 @@
 /// <summary>
 /// Gets a block type by it's unique database id.
 /// </summary>
-public class GetPageBlockTypeDetailsByIdQuery : IQuery<PageBlockTypeDetails>
+public class GetPageBlockTypeDetailsByIdQuery : IQuery<PageBlockTypeDetails?>
 {
     public GetPageBlockTypeDetailsByIdQuery()
     {

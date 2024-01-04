@@ -12,6 +12,7 @@ public class CustomEntityReadPermission : ICustomEntityPermissionTemplate
     public CustomEntityReadPermission()
     {
         PermissionType = CommonPermissionTypes.Read("Not Set");
+        EntityDefinition = new CustomEntityDynamicEntityDefinition();
     }
 
     public CustomEntityReadPermission(ICustomEntityDefinition customEntityDefinition)

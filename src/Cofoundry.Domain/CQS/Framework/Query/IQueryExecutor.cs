@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain.CQS;
 
 /// <summary>
-/// Handles the execution of IQuery instances.
+/// Handles the execution of <see cref="IQuery"/> instances.
 /// </summary>
 public interface IQueryExecutor
 {
@@ -19,7 +19,7 @@ public interface IQueryExecutor
     /// Optional custom execution context which can be used to impersonate/elevate permissions 
     /// or change the execution date.
     /// </param>
-    Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext);
+    Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext? executionContext);
 
     /// <summary>
     /// Handles the execution the specified <paramref name="query"/>.

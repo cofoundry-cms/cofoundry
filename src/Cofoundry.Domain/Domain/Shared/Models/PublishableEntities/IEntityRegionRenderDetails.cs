@@ -25,5 +25,5 @@ public interface IEntityRegionRenderDetails<TBlockRenderDetails> where TBlockRen
     /// <summary>
     /// Collection of fully mapped and ordered blocks including display models.
     /// </summary>
-    ICollection<TBlockRenderDetails> Blocks { get; set; }
+    IReadOnlyCollection<TBlockRenderDetails> Blocks { get; set; }
 }

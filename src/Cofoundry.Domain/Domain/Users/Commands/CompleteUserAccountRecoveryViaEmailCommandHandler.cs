@@ -44,6 +44,8 @@ public class CompleteUserAccountRecoveryViaEmailCommandHandler
     public async Task ExecuteAsync(CompleteUserAccountRecoveryViaEmailCommand command, IExecutionContext executionContext)
     {
         var validationResult = await ValidateRequestAsync(command, executionContext);
+        EntityInvalidOperationException.ThrowIfNull(validationResult, validationResult.Data);
+
         var user = await GetUserAsync(validationResult.Data.UserId);
 
         await ValidatePasswordAsync(user, command, executionContext);
@@ -73,6 +75,8 @@ public class CompleteUserAccountRecoveryViaEmailCommandHandler
 
     private async Task OnTransactionComplete(User user, AuthorizedTaskTokenValidationResult validationResult)
     {
+        EntityInvalidOperationException.ThrowIfNull(validationResult, validationResult.Data);
+
         _userContextCache.Clear(user.UserId);
 
         await _userSecurityStampUpdateHelper.OnTransactionCompleteAsync(user);
@@ -129,10 +133,9 @@ public class CompleteUserAccountRecoveryViaEmailCommandHandler
         var userArea = _userAreaDefinitionRepository.GetRequiredByCode(command.UserAreaCode);
         _passwordUpdateCommandHelper.ValidateUserArea(userArea);
 
-        var context = NewPasswordValidationContext.MapFromUser(user);
+        var context = NewPasswordValidationContext.MapFromUser(user, executionContext);
         context.Password = command.NewPassword;
         context.PropertyName = nameof(command.NewPassword);
-        context.ExecutionContext = executionContext;
 
         await _newPasswordValidationService.ValidateAsync(context);
     }

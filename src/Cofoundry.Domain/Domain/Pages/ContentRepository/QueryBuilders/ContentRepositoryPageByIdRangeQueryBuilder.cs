@@ -20,25 +20,25 @@ public class ContentRepositoryPageByIdRangeQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<IDictionary<int, PageRoute>> AsRoutes()
+    public IDomainRepositoryQueryContext<IReadOnlyDictionary<int, PageRoute>> AsRoutes()
     {
         var query = new GetPageRoutesByIdRangeQuery(_pageIds);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<IDictionary<int, PageRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatus = null)
+    public IDomainRepositoryQueryContext<IReadOnlyDictionary<int, PageRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatus = null)
     {
         var query = new GetPageRenderSummariesByIdRangeQuery(_pageIds, publishStatus);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<IDictionary<int, PageRenderDetails>> AsRenderDetails(PublishStatusQuery? publishStatus = null)
+    public IDomainRepositoryQueryContext<IReadOnlyDictionary<int, PageRenderDetails>> AsRenderDetails(PublishStatusQuery? publishStatus = null)
     {
         var query = new GetPageRenderDetailsByIdRangeQuery(_pageIds, publishStatus);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<IDictionary<int, PageSummary>> AsSummaries()
+    public IDomainRepositoryQueryContext<IReadOnlyDictionary<int, PageSummary>> AsSummaries()
     {
         var query = new GetPageSummariesByIdRangeQuery(_pageIds);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

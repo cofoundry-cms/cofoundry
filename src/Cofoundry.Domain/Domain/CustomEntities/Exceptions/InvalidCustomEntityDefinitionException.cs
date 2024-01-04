@@ -17,21 +17,25 @@ public class InvalidCustomEntityDefinitionException : Exception
     public InvalidCustomEntityDefinitionException(
         string message,
         ICustomEntityDefinition invalidDefinition,
-        IEnumerable<ICustomEntityDefinition> allCustomEntityDefinitions = null
+        IEnumerable<ICustomEntityDefinition>? allCustomEntityDefinitions = null
         )
         : base(message)
     {
         InvalidDefinition = invalidDefinition;
-        AllDefinitions = allCustomEntityDefinitions?.ToArray();
+
+        if (allCustomEntityDefinitions != null)
+        {
+            AllDefinitions = allCustomEntityDefinitions.ToArray();
+        }
     }
 
     /// <summary>
     /// The custom entity definition that caused the exception.
     /// </summary>
-    public ICustomEntityDefinition InvalidDefinition { get; private set; }
+    public ICustomEntityDefinition? InvalidDefinition { get; private set; }
 
     /// <summary>
     /// Optional collection of all the custom entity definitions when available.
     /// </summary>
-    public IReadOnlyCollection<ICustomEntityDefinition> AllDefinitions { get; private set; }
+    public IReadOnlyCollection<ICustomEntityDefinition> AllDefinitions { get; private set; } = Array.Empty<ICustomEntityDefinition>();
 }

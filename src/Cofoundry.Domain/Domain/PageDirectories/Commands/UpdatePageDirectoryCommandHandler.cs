@@ -42,7 +42,7 @@ public class UpdatePageDirectoryCommandHandler
         _transactionScopeFactory.QueueCompletionTask(_dbContext, _cache.Clear);
     }
 
-    private void Normalize(UpdatePageDirectoryCommand command)
+    private static void Normalize(UpdatePageDirectoryCommand command)
     {
         command.Name = command.Name?.Trim();
     }

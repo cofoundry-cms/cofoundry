@@ -13,7 +13,7 @@ public sealed class PageEntityDefinition : IDependableEntityDefinition
 
     public string Name => "Page";
 
-    public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
+    public IQuery<IReadOnlyDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
     {
         return new GetPageEntityMicroSummariesByIdRangeQuery(ids);
     }

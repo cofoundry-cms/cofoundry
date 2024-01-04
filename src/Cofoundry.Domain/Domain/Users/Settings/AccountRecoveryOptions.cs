@@ -8,10 +8,6 @@ namespace Cofoundry.Domain;
 /// </summary>
 public class AccountRecoveryOptions : IValidatableObject
 {
-    public AccountRecoveryOptions()
-    {
-    }
-
     /// <summary>
     /// The length of time an account recovery token is valid for, specified as a 
     /// <see cref="TimeSpan"/> or in JSON configuration as a time format string 
@@ -55,7 +51,7 @@ public class AccountRecoveryOptions : IValidatableObject
     /// implementation. Changing this setting does not affect the Cofoundry Admin account recovery feature.
     /// </para>
     /// </summary>
-    public string RecoveryUrlBase { get; set; }
+    public string? RecoveryUrlBase { get; set; }
 
     /// <summary>
     /// Copies the options to a new instance, which can be modified

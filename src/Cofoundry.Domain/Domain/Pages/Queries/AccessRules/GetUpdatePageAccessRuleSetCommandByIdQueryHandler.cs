@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdatePageAccessRuleSetCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>, UpdatePageAccessRuleSetCommand>
-    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>, UpdatePageAccessRuleSetCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>, UpdatePageAccessRuleSetCommand?>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>, UpdatePageAccessRuleSetCommand?>
 {
     private readonly CofoundryDbContext _dbContext;
 
@@ -15,7 +15,7 @@ public class GetUpdatePageAccessRuleSetCommandByIdQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<UpdatePageAccessRuleSetCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand> query, IExecutionContext executionContext)
+    public async Task<UpdatePageAccessRuleSetCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand> query, IExecutionContext executionContext)
     {
         var dbPage = await _dbContext
             .Pages
@@ -24,7 +24,10 @@ public class GetUpdatePageAccessRuleSetCommandByIdQueryHandler
             .FilterById(query.Id)
             .SingleOrDefaultAsync();
 
-        if (dbPage == null) return null;
+        if (dbPage == null)
+        {
+            return null;
+        }
 
         var violationAction = EnumParser.ParseOrNull<AccessRuleViolationAction>(dbPage.AccessRuleViolationActionId);
         if (!violationAction.HasValue)
@@ -47,7 +50,7 @@ public class GetUpdatePageAccessRuleSetCommandByIdQueryHandler
                 UserAreaCode = r.UserAreaCode,
                 RoleId = r.RoleId
             })
-            .ToList();
+            .ToArray();
 
         return command;
     }

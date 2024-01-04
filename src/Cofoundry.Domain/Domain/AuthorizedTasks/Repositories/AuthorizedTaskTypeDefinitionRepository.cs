@@ -14,7 +14,7 @@ public class AuthorizedTaskTypeDefinitionRepository : IAuthorizedTaskTypeDefinit
 
     }
 
-    public IAuthorizedTaskTypeDefinition GetByCode(string authorizedTaskTypeCode)
+    public IAuthorizedTaskTypeDefinition? GetByCode(string authorizedTaskTypeCode)
     {
         var area = _definitions.GetOrDefault(authorizedTaskTypeCode);
 

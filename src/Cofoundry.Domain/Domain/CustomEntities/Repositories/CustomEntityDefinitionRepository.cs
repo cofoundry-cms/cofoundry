@@ -1,6 +1,8 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="ICustomEntityDefinitionRepository"/>.
+/// </summary>
 public class CustomEntityDefinitionRepository : ICustomEntityDefinitionRepository
 {
     private readonly Dictionary<string, ICustomEntityDefinition> _customEntityDefinitions;
@@ -13,15 +15,22 @@ public class CustomEntityDefinitionRepository : ICustomEntityDefinitionRepositor
         _customEntityDefinitions = customEntityDefinitions.ToDictionary(k => k.CustomEntityDefinitionCode);
     }
 
-    public ICustomEntityDefinition GetByCode(string code)
+    /// <inheritdoc/>
+    public ICustomEntityDefinition? GetByCode(string? customEntityDefinitionCode)
     {
-        return _customEntityDefinitions.GetOrDefault(code);
+        if (string.IsNullOrEmpty(customEntityDefinitionCode))
+        {
+            return null;
+        }
+
+        return _customEntityDefinitions.GetOrDefault(customEntityDefinitionCode);
     }
 
-    public ICustomEntityDefinition GetRequiredByCode(string code)
+    /// <inheritdoc/>
+    public ICustomEntityDefinition GetRequiredByCode(string customEntityDefinitionCode)
     {
-        var definition = GetByCode(code);
-        ValidateDefinitionExists(definition, code);
+        var definition = GetByCode(customEntityDefinitionCode);
+        ValidateDefinitionExists(definition, customEntityDefinitionCode);
 
         return definition;
     }
@@ -42,7 +51,7 @@ public class CustomEntityDefinitionRepository : ICustomEntityDefinitionRepositor
         return definition;
     }
 
-    private static void ValidateDefinitionExists(ICustomEntityDefinition definition, string identifier)
+    private static void ValidateDefinitionExists([NotNull] ICustomEntityDefinition? definition, string identifier)
     {
         if (definition == null)
         {

@@ -75,7 +75,7 @@ public class BlogPostListViewComponent : ViewComponent
             var blogPost = new BlogPostSummary();
             blogPost.Title = customEntity.Title;
             blogPost.ShortDescription = model.ShortDescription;
-            blogPost.ThumbnailImageAsset = images.GetOrDefault(model.ThumbnailImageAssetId);
+            blogPost.ThumbnailImageAsset = images.GetValueOrDefault(model.ThumbnailImageAssetId);
             blogPost.FullPath = customEntity.PageUrls.FirstOrDefault();
             blogPost.PostDate = customEntity.CreateDate;
 

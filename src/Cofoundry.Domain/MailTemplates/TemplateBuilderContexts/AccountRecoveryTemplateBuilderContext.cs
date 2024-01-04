@@ -3,13 +3,13 @@
 /// <inheritdoc/>
 public class AccountRecoveryTemplateBuilderContext : IAccountRecoveryTemplateBuilderContext
 {
-    public UserSummary User { get; set; }
+    public required UserSummary User { get; set; }
 
-    public string Token { get; set; }
+    public required string Token { get; set; }
 
-    public string RecoveryUrlPath { get; set; }
+    public string? RecoveryUrlPath { get; set; } = string.Empty;
 
-    public Func<AccountRecoveryTemplateBuilderContext, Task<AccountRecoveryMailTemplate>> DefaultTemplateFactory { get; set; }
+    public required Func<AccountRecoveryTemplateBuilderContext, Task<AccountRecoveryMailTemplate>> DefaultTemplateFactory { get; set; }
 
     public Task<AccountRecoveryMailTemplate> BuildDefaultTemplateAsync()
     {

@@ -7,6 +7,6 @@
 /// using generics to identify the data model type, there is instead a 
 /// DataModelType property.
 /// </summary>
-public class GetAllCustomEntityDefinitionSummariesQuery : IQuery<ICollection<CustomEntityDefinitionSummary>>
+public class GetAllCustomEntityDefinitionSummariesQuery : IQuery<IReadOnlyCollection<CustomEntityDefinitionSummary>>
 {
 }

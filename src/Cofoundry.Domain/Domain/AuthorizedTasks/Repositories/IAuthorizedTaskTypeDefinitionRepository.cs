@@ -12,7 +12,7 @@ public interface IAuthorizedTaskTypeDefinitionRepository
     /// </summary>
     /// <param name="authorizedTaskTypeCode">The unique 6 character code that identifies the authorized task type.</param>
     /// <returns>Returns the matching <see cref="IAuthorizedTaskTypeDefinition"/> instance, or <see langword="null"/> if it does not exist.</returns>
-    IAuthorizedTaskTypeDefinition GetByCode(string authorizedTaskTypeCode);
+    IAuthorizedTaskTypeDefinition? GetByCode(string authorizedTaskTypeCode);
 
     /// <summary>
     /// Returns an authorized task type definition by it's unique <see cref="IAuthorizedTaskTypeDefinition.AuthorizedTaskTypeCode"/>. 

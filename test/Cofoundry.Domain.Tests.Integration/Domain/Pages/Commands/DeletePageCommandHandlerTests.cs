@@ -28,7 +28,7 @@ public class DeletePageCommandHandlerTests
         {
             c.Publish = true;
             c.OpenGraphImageId = app.SeededEntities.TestImageId;
-            c.Tags.Add(app.SeededEntities.TestTag.TagText);
+            c.Tags = [app.SeededEntities.TestTag.TagText];
         });
         var draftVersionId = await app.TestData.Pages().AddDraftAsync(pageId);
         await app.TestData.Pages().AddPlainTextBlockToTestTemplateAsync(draftVersionId);

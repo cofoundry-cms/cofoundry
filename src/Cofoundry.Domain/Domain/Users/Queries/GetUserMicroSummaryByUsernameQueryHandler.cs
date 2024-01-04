@@ -9,8 +9,8 @@ namespace Cofoundry.Domain.Internal;
 /// setting is set to true.
 /// </summary>
 public class GetUserMicroSummaryByUsernameQueryHandler
-    : IQueryHandler<GetUserMicroSummaryByUsernameQuery, UserMicroSummary>
-    , IPermissionRestrictedQueryHandler<GetUserMicroSummaryByUsernameQuery, UserMicroSummary>
+    : IQueryHandler<GetUserMicroSummaryByUsernameQuery, UserMicroSummary?>
+    , IPermissionRestrictedQueryHandler<GetUserMicroSummaryByUsernameQuery, UserMicroSummary?>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IUserMicroSummaryMapper _userMicroSummaryMapper;
@@ -27,7 +27,7 @@ public class GetUserMicroSummaryByUsernameQueryHandler
         _userDataFormatter = userDataFormatter;
     }
 
-    public async Task<UserMicroSummary> ExecuteAsync(GetUserMicroSummaryByUsernameQuery query, IExecutionContext executionContext)
+    public async Task<UserMicroSummary?> ExecuteAsync(GetUserMicroSummaryByUsernameQuery query, IExecutionContext executionContext)
     {
         if (string.IsNullOrWhiteSpace(query.Username)) return null;
 

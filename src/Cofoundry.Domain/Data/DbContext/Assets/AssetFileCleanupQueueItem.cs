@@ -20,19 +20,19 @@ public class AssetFileCleanupQueueItem
     /// The 6 character definition code of the asset entity i.e. 
     /// the image or document asset entity definition code.
     /// </summary>
-    public string EntityDefinitionCode { get; set; }
+    public string EntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The filename of the asset to delete without the file 
     /// extension. Copied directly from the deleted asset record.
     /// </summary>
-    public string FileNameOnDisk { get; set; }
+    public string FileNameOnDisk { get; set; } = string.Empty;
 
     /// <summary>
     /// The file extension of the asset to delete without the 
     /// leading dot. Copied directly from the deleted asset record.
     /// </summary>
-    public string FileExtension { get; set; }
+    public string FileExtension { get; set; } = string.Empty;
 
     /// <summary>
     /// Date that the queue record was created i.e. the date the

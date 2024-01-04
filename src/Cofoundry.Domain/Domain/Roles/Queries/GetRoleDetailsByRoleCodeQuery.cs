@@ -11,7 +11,7 @@
 /// Roles are cached, so repeat uses of this query is inexpensive.
 /// </para>
 /// </summary>
-public class GetRoleDetailsByRoleCodeQuery : IQuery<RoleDetails>
+public class GetRoleDetailsByRoleCodeQuery : IQuery<RoleDetails?>
 {
     public GetRoleDetailsByRoleCodeQuery()
     {
@@ -31,5 +31,5 @@ public class GetRoleDetailsByRoleCodeQuery : IQuery<RoleDetails>
     /// if they have been generated from code rather than the GUI. For GUI generated roles
     /// use <see cref="GetRoleDetailsByIdQuery"/>. Codes are 3 characters long (fixed length).
     /// </summary>
-    public string RoleCode { get; set; }
+    public string RoleCode { get; set; } = string.Empty;
 }

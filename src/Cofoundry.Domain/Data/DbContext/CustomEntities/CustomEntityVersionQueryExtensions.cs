@@ -58,7 +58,7 @@ public static class CustomEntityVersionQueryExtensions
     public static IQueryable<CustomEntityVersion> FilterActive(this IQueryable<CustomEntityVersion> customEntities)
     {
         var result = customEntities
-            .Where(e => e.CustomEntity.LocaleId == null || e.CustomEntity.Locale.IsActive);
+            .Where(e => e.CustomEntity.LocaleId == null || e.CustomEntity.Locale!.IsActive);
 
         return result;
     }

@@ -36,7 +36,7 @@ public class PageBlockCommandHelper : IPageBlockCommandHelper
             dbBlock.PageBlockType = pageBlockType;
         }
 
-        dbBlock.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.DataModel);
+        dbBlock.SerializedData = _dbUnstructuredDataSerializer.Serialize(command.DataModel) ?? string.Empty;
 
         if (command.PageBlockTypeTemplateId != dbBlock.PageBlockTypeTemplateId && command.PageBlockTypeTemplateId.HasValue)
         {

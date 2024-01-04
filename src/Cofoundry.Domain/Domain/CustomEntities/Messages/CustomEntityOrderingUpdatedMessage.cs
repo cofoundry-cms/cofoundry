@@ -15,7 +15,7 @@ public class CustomEntityOrderingUpdatedMessage : ICustomEntityContentUpdatedMes
     /// <summary>
     /// Definition code of the custom entity that the content change affects
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Marked as true because this is a batch operation and detecting which entities

@@ -11,17 +11,14 @@ public class GetPageVersionSummariesByPageIdQueryHandler
     , IPermissionRestrictedQueryHandler<GetPageVersionSummariesByPageIdQuery, PagedQueryResult<PageVersionSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
-    private readonly IQueryExecutor _queryExecutor;
     private readonly IPageVersionSummaryMapper _pageVersionSummaryMapper;
 
     public GetPageVersionSummariesByPageIdQueryHandler(
         CofoundryDbContext dbContext,
-        IQueryExecutor queryExecutor,
         IPageVersionSummaryMapper pageVersionSummaryMapper
         )
     {
         _dbContext = dbContext;
-        _queryExecutor = queryExecutor;
         _pageVersionSummaryMapper = pageVersionSummaryMapper;
     }
 

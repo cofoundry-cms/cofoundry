@@ -6,6 +6,5 @@
 /// </summary>
 public interface IInternalSettingsRepository
 {
-    Dictionary<string, string> GetAllSettings();
-    Task<Dictionary<string, string>> GetAllSettingsAsync();
+    Task<IReadOnlyDictionary<string, string>> GetAllSettingsAsync();
 }

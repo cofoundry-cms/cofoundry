@@ -15,18 +15,18 @@ public class PageTemplateSummary
     /// <summary>
     /// File name excluding extension and any leading underscores
     /// </summary>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// Human readable display name. This is unique, so to avoid 
     /// confusion when selecting a template from a list
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Long description, nullable and can be empty
     /// </summary>
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Pages can be one of several types represented by 

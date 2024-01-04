@@ -19,5 +19,5 @@ public interface INewPasswordValidator : INewPasswordValidatorBase
     /// A context object that contains the new password and other data about the request that may
     /// be useful for validating the password.
     /// </param>
-    ValidationError Validate(INewPasswordValidationContext context);
+    ValidationError? Validate(INewPasswordValidationContext context);
 }

@@ -15,12 +15,12 @@ public class DomainRepositoryExecutor : IDomainRepositoryExecutor
         _commandExecutor = commandExecutor;
     }
 
-    public async Task ExecuteAsync(ICommand command, IExecutionContext executionContext)
+    public async Task ExecuteAsync(ICommand command, IExecutionContext? executionContext)
     {
         await _commandExecutor.ExecuteAsync(command, executionContext);
     }
 
-    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext)
+    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext? executionContext)
     {
         return await _queryExecutor.ExecuteAsync(query, executionContext);
     }

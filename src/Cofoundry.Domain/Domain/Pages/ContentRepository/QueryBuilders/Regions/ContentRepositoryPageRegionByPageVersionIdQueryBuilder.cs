@@ -19,7 +19,7 @@ public class ContentRepositoryPageRegionByPageVersionIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<PageRegionDetails>> AsDetails()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<PageRegionDetails>> AsDetails()
     {
         var query = new GetPageRegionDetailsByPageVersionIdQuery(_pageVersionId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

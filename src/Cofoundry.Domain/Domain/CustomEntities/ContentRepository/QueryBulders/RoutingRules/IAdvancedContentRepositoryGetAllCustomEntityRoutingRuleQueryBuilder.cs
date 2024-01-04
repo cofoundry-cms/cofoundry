@@ -10,5 +10,5 @@ public interface IAdvancedContentRepositoryGetAllCustomEntityRoutingRuleQueryBui
     /// Returns all instances of ICustomEntityRoutingRule registered
     /// in the application.
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<ICustomEntityRoutingRule>> AsRoutingRules();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<ICustomEntityRoutingRule>> AsRoutingRules();
 }

@@ -4,7 +4,6 @@ namespace Cofoundry.Domain.Data;
 /// Represents a folder in the dynamic web page heirarchy. There is always a 
 /// single root directory.
 /// </summary>
-/// <inheritdoc/>
 public class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>, ICreateAuditable
 {
     /// <summary>
@@ -22,45 +21,56 @@ public class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>,
     /// The parent <see cref="PageDirectory"/>. This can only be null for the 
     /// root directory.
     /// </summary>
-    public virtual PageDirectory ParentPageDirectory { get; set; }
+    public PageDirectory? ParentPageDirectory { get; set; }
 
     /// <summary>
     /// User friendly display name of the directory.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Url slug used to create a path for this directory. Should not
     /// contain any slashes, just alpha-numerical with dashes.
     /// </summary>
-    public string UrlPath { get; set; }
+    public string UrlPath { get; set; } = string.Empty;
 
+    /// <inheritdoc/>
     public int AccessRuleViolationActionId { get; set; }
 
-    public string UserAreaCodeForSignInRedirect { get; set; }
+    /// <inheritdoc/>
+    public string? UserAreaCodeForSignInRedirect { get; set; }
 
-    public virtual UserArea UserAreaForSignInRedirect { get; set; }
+    /// <inheritdoc/>
+    public UserArea? UserAreaForSignInRedirect { get; set; }
 
+    /// <inheritdoc/>
     public DateTime CreateDate { get; set; }
 
+    /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    public virtual User Creator { get; set; }
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageDirectory>(nameof(Creator));
+        set => _creator = value;
+    }
 
     /// <summary>
     /// A directory can have zero or more pages. A <see cref="Page"/>
     /// without a <see cref="Page.UrlPath"/> is treated as the root or
     /// index page in a directory.
     /// </summary>
-    public virtual ICollection<Page> Pages { get; set; } = new List<Page>();
+    public ICollection<Page> Pages { get; set; } = new List<Page>();
 
     /// <summary>
     /// A directory can have zero or more child directories, creating
     /// a heirachical structure.
     /// </summary>
-    public virtual ICollection<PageDirectory> ChildPageDirectories { get; set; } = new List<PageDirectory>();
+    public ICollection<PageDirectory> ChildPageDirectories { get; set; } = new List<PageDirectory>();
 
-    public virtual ICollection<PageDirectoryLocale> PageDirectoryLocales { get; set; } = new List<PageDirectoryLocale>();
+    public ICollection<PageDirectoryLocale> PageDirectoryLocales { get; set; } = new List<PageDirectoryLocale>();
 
     /// <summary>
     /// <para>
@@ -75,7 +85,7 @@ public class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>,
     /// but instead are used to restrict public access to website pages and routes.
     /// </para>
     /// </summary>
-    public virtual ICollection<PageDirectoryAccessRule> AccessRules { get; set; } = new List<PageDirectoryAccessRule>();
+    public ICollection<PageDirectoryAccessRule> AccessRules { get; set; } = new List<PageDirectoryAccessRule>();
 
     /// <summary>
     /// Records from the <see cref="PageDirectoryClosure"/> table where this directory is the descendant
@@ -83,7 +93,7 @@ public class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>,
     /// include a self-referencing node. The <see cref="PageDirectoryClosure"/> table is automatically 
     /// generated and this collection should not be amended manually.
     /// </summary>
-    public virtual ICollection<PageDirectoryClosure> AncestorPageDirectories { get; set; }
+    public ICollection<PageDirectoryClosure> AncestorPageDirectories { get; set; } = new List<PageDirectoryClosure>();
 
     /// <summary>
     /// Records from the <see cref="PageDirectoryClosure"/> table where this directory is the ancestor
@@ -91,15 +101,21 @@ public class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>,
     /// include a self-referencing node. The <see cref="PageDirectoryClosure"/> table is automatically 
     /// generated and this collection should not be amended manually.
     /// </summary>
-    public virtual ICollection<PageDirectoryClosure> DescendantPageDirectories { get; set; }
+    public ICollection<PageDirectoryClosure> DescendantPageDirectories { get; set; } = new List<PageDirectoryClosure>();
 
+    private PageDirectoryPath? _pageDirectoryPath;
     /// <summary>
     /// Information about the full directory path and it's position in the directory 
     /// heirachy. This table is automatically updated whenever changes are made to the page 
     /// directory heirarchy and should be treated as read-only.
     /// </summary>
-    public virtual PageDirectoryPath PageDirectoryPath { get; set; }
+    public PageDirectoryPath PageDirectoryPath
+    {
+        get => _pageDirectoryPath ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryPath>(nameof(PageDirectoryPath));
+        set => _pageDirectoryPath = value;
+    }
 
+    /// <inheritdoc/>
     public int GetId()
     {
         return PageDirectoryId;

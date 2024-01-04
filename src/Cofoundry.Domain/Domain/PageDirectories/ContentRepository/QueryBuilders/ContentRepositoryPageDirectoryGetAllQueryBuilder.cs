@@ -15,7 +15,7 @@ public class ContentRepositoryPageDirectoryGetAllQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<PageDirectoryRoute>> AsRoutes()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<PageDirectoryRoute>> AsRoutes()
     {
         var query = new GetAllPageDirectoryRoutesQuery();
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

@@ -20,7 +20,7 @@ public class UserAuthenticationHelper
         _userAreaRepository = userAreaRepository;
     }
 
-    public PasswordVerificationResult VerifyPassword(User user, string password)
+    public PasswordVerificationResult VerifyPassword(User? user, string? password)
     {
         if (user == null) return PasswordVerificationResult.Failed;
 
@@ -31,7 +31,7 @@ public class UserAuthenticationHelper
             throw new InvalidOperationException("This user is not permitted to log in with a password.");
         }
 
-        if (String.IsNullOrWhiteSpace(user.Password) || !user.PasswordHashVersion.HasValue)
+        if (string.IsNullOrWhiteSpace(user.Password) || !user.PasswordHashVersion.HasValue)
         {
             throw new InvalidOperationException("Cannot authenticate via password because the specified account does not have a password set.");
         }

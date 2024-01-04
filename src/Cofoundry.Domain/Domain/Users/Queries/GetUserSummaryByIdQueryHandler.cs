@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Internal;
 /// if it is found, otherwise <see langword="null"/>.
 /// </summary>
 public class GetUserSummaryByIdQueryHandler
-    : IQueryHandler<GetUserSummaryByIdQuery, UserSummary>
+    : IQueryHandler<GetUserSummaryByIdQuery, UserSummary?>
     , IIgnorePermissionCheckHandler
 {
     private readonly CofoundryDbContext _dbContext;
@@ -25,7 +25,7 @@ public class GetUserSummaryByIdQueryHandler
         _userSummaryMapper = userSummaryMapper;
     }
 
-    public async Task<UserSummary> ExecuteAsync(GetUserSummaryByIdQuery query, IExecutionContext executionContext)
+    public async Task<UserSummary?> ExecuteAsync(GetUserSummaryByIdQuery query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .Users
@@ -40,7 +40,7 @@ public class GetUserSummaryByIdQueryHandler
         return user;
     }
 
-    private void ValidatePermission(GetUserSummaryByIdQuery query, IExecutionContext executionContext, UserMicroSummary user)
+    private void ValidatePermission(GetUserSummaryByIdQuery query, IExecutionContext executionContext, UserSummary? user)
     {
         if (user == null) return;
 

@@ -21,21 +21,21 @@ public class ContentRepositoryCurrentUserQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<UserMicroSummary> AsMicroSummary()
+    public IDomainRepositoryQueryContext<UserMicroSummary?> AsMicroSummary()
     {
         var query = new GetCurrentUserMicroSummaryQuery();
 
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<UserSummary> AsSummary()
+    public IDomainRepositoryQueryContext<UserSummary?> AsSummary()
     {
         var query = new GetCurrentUserSummaryQuery();
 
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<UserDetails> AsDetails()
+    public IDomainRepositoryQueryContext<UserDetails?> AsDetails()
     {
         var query = new GetCurrentUserDetailsQuery();
 

@@ -17,11 +17,11 @@ public class EmailAddressValidator : IEmailAddressValidator
         _domainRepository = domainRepository;
     }
 
-    public virtual async Task<ICollection<ValidationError>> GetErrorsAsync(IEmailAddressValidationContext context)
+    public virtual async Task<IReadOnlyCollection<ValidationError>> GetErrorsAsync(IEmailAddressValidationContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var validators = new List<Func<IEmailAddressValidationContext, ValidationError>>()
+        var validators = new List<Func<IEmailAddressValidationContext, ValidationError?>>()
         {
             ValidateEmailFormattingResult,
             ValidateMinLength,
@@ -29,7 +29,7 @@ public class EmailAddressValidator : IEmailAddressValidator
             ValidateAllowedCharacters,
         };
 
-        var asyncValidators = new List<Func<IEmailAddressValidationContext, Task<ValidationError>>>()
+        var asyncValidators = new List<Func<IEmailAddressValidationContext, Task<ValidationError?>>>()
         {
             ValidateUniqueAsync
         };
@@ -37,16 +37,22 @@ public class EmailAddressValidator : IEmailAddressValidator
         foreach (var validator in validators)
         {
             var error = validator(context);
-            if (error != null) return WrapError(error);
+            if (error != null)
+            {
+                return WrapError(error);
+            }
         }
 
         foreach (var asyncValidator in asyncValidators)
         {
             var error = await asyncValidator(context);
-            if (error != null) return WrapError(error);
+            if (error != null)
+            {
+                return WrapError(error);
+            }
         }
 
-        return new List<ValidationError>();
+        return Array.Empty<ValidationError>();
     }
 
     /// <summary>
@@ -55,9 +61,12 @@ public class EmailAddressValidator : IEmailAddressValidator
     /// operation did not return a value. This can happen if the normalizer was supplied
     /// a value but could not parse it successfully.
     /// </summary>
-    protected virtual ValidationError ValidateEmailFormattingResult(IEmailAddressValidationContext context)
+    protected virtual ValidationError? ValidateEmailFormattingResult(IEmailAddressValidationContext context)
     {
-        if (context.Email != null) return null;
+        if (context.Email != null)
+        {
+            return null;
+        }
 
         return UserValidationErrors
             .EmailAddress
@@ -69,10 +78,18 @@ public class EmailAddressValidator : IEmailAddressValidator
     /// Validates that the email is not shorter then the limit defined in the 
     /// <see cref="EmailAddressOptions"/> configuration settings.
     /// </summary>
-    protected virtual ValidationError ValidateMinLength(IEmailAddressValidationContext context)
+    protected virtual ValidationError? ValidateMinLength(IEmailAddressValidationContext context)
     {
+        if (context.Email == null)
+        {
+            return null;
+        }
+
         var options = _userAreaDefinitionRepository.GetOptionsByCode(context.UserAreaCode).EmailAddress;
-        if (context.Email.NormalizedEmailAddress.Length >= options.MinLength) return null;
+        if (context.Email.NormalizedEmailAddress.Length >= options.MinLength)
+        {
+            return null;
+        }
 
         return UserValidationErrors
             .EmailAddress
@@ -87,10 +104,18 @@ public class EmailAddressValidator : IEmailAddressValidator
     /// Validates that the email is not longer then the limit defined in the 
     /// <see cref="EmailAddressOptions"/> configuration settings.
     /// </summary>
-    protected virtual ValidationError ValidateMaxLength(IEmailAddressValidationContext context)
+    protected virtual ValidationError? ValidateMaxLength(IEmailAddressValidationContext context)
     {
+        if (context.Email == null)
+        {
+            return null;
+        }
+
         var options = _userAreaDefinitionRepository.GetOptionsByCode(context.UserAreaCode).EmailAddress;
-        if (context.Email.NormalizedEmailAddress.Length <= options.MaxLength) return null;
+        if (context.Email.NormalizedEmailAddress.Length <= options.MaxLength)
+        {
+            return null;
+        }
 
         return UserValidationErrors
             .EmailAddress
@@ -105,12 +130,20 @@ public class EmailAddressValidator : IEmailAddressValidator
     /// Validates that the email contains only the characters permitted by the 
     /// <see cref="EmailAddressOptions"/> configuration settings.
     /// </summary>
-    protected virtual ValidationError ValidateAllowedCharacters(IEmailAddressValidationContext context)
+    protected virtual ValidationError? ValidateAllowedCharacters(IEmailAddressValidationContext context)
     {
+        if (context.Email == null)
+        {
+            return null;
+        }
+
         var options = _userAreaDefinitionRepository.GetOptionsByCode(context.UserAreaCode).EmailAddress;
         var invalidCharacters = EmailAddressCharacterValidator.GetInvalidCharacters(context.Email.NormalizedEmailAddress, options);
 
-        if (!invalidCharacters.Any()) return null;
+        if (!invalidCharacters.Any())
+        {
+            return null;
+        }
 
         // Be careful here, because we're handling user input. Any message should be escaped when 
         // rendered, but to be safe we'll only include a single invalid character
@@ -126,11 +159,19 @@ public class EmailAddressValidator : IEmailAddressValidator
     /// <summary>
     /// Validates that the email is not already registered with another user.
     /// </summary>
-    protected virtual async Task<ValidationError> ValidateUniqueAsync(IEmailAddressValidationContext context)
+    protected virtual async Task<ValidationError?> ValidateUniqueAsync(IEmailAddressValidationContext context)
     {
+        if (context.Email == null)
+        {
+            return null;
+        }
+
         var userArea = _userAreaDefinitionRepository.GetRequiredByCode(context.UserAreaCode);
         var options = _userAreaDefinitionRepository.GetOptionsByCode(context.UserAreaCode).EmailAddress;
-        if (!options.RequireUnique && !userArea.UseEmailAsUsername) return null;
+        if (!options.RequireUnique && !userArea.UseEmailAsUsername)
+        {
+            return null;
+        }
 
         var query = new IsUserEmailAddressUniqueQuery()
         {
@@ -147,7 +188,10 @@ public class EmailAddressValidator : IEmailAddressValidator
             .WithContext(context.ExecutionContext)
             .ExecuteQueryAsync(query);
 
-        if (isUnique) return null;
+        if (isUnique)
+        {
+            return null;
+        }
 
         return UserValidationErrors
             .EmailAddress
@@ -155,8 +199,8 @@ public class EmailAddressValidator : IEmailAddressValidator
             .Create(context.PropertyName);
     }
 
-    private ICollection<ValidationError> WrapError(ValidationError error)
+    private IReadOnlyCollection<ValidationError> WrapError(ValidationError error)
     {
-        return new List<ValidationError>() { error };
+        return [error];
     }
 }

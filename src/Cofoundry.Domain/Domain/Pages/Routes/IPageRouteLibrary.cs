@@ -15,12 +15,12 @@ public interface IPageRouteLibrary
     /// <summary>
     /// Gets the full (relative) url of a page
     /// </summary>
-    string Page(IPageRoute route);
+    string Page(IPageRoute? route);
 
     /// <summary>
     /// Gets the full (relative) url of a custom entity details page
     /// </summary>
-    string Page(ICustomEntityRoutable customEntity);
+    string Page(ICustomEntityRoutable? customEntity);
 
     /// <summary>
     /// Gets the url for a page, formatted with specific visual editor 
@@ -39,7 +39,7 @@ public interface IPageRouteLibrary
     /// should be the custom entity rather than the (default) page.
     /// </param>
     string VisualEditor(
-        PageRoutingInfo route,
+        PageRoutingInfo? route,
         VisualEditorMode visualEditorMode,
         bool isEditingCustomEntity = false
         );
@@ -52,7 +52,7 @@ public interface IPageRouteLibrary
     /// <param name="route">The page to link to.</param>
     /// <param name="versionRoute">The version of the page or custom entity to link to.</param>
     string VisualEditor(
-        PageRoutingInfo route,
+        PageRoutingInfo? route,
         IVersionRoute versionRoute
         );
 }

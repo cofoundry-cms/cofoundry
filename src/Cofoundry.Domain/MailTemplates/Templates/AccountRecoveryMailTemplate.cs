@@ -18,11 +18,11 @@ public class AccountRecoveryMailTemplate : UserMailTemplateBase
     /// <summary>
     /// The user requesting to recover their account.
     /// </summary>
-    public override UserSummary User { get; set; }
+    public override UserSummary User { get; set; } = UserSummary.Uninitialized;
 
     /// <summary>
     /// The absolute url for the account recovery completion form e.g.
     /// "https://example.com/auth/acount-recovery?t={token}".
     /// </summary>
-    public string RecoveryUrl { get; set; }
+    public string RecoveryUrl { get; set; } = string.Empty;
 }

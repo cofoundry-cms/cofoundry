@@ -11,7 +11,7 @@ public interface INewPasswordValidationContext
     /// or "NewPassword". This can be used when generating any validation errors that
     /// need to be returned. This field is optional and so can be <see langword="null"/>.
     /// </summary>
-    public string PropertyName { get; }
+    public string? PropertyName { get; }
 
     /// <summary>
     /// The <see cref="IUserAreaDefinition.UserAreaCode"/> belonging to the user
@@ -34,7 +34,7 @@ public interface INewPasswordValidationContext
     /// The current users password. This will be <see langword="null"/> unless the current
     /// password has been supplied to authenticate a change password request.
     /// </summary>
-    public string CurrentPassword { get; }
+    public string? CurrentPassword { get; }
 
     /// <summary>
     /// The username of the user updating their password.
@@ -45,7 +45,7 @@ public interface INewPasswordValidationContext
     /// The email address of the user updating their password. This may be <see langword="null"/>
     /// if the user are does not require an email and one has not been supplied.
     /// </summary>
-    public string Email { get; }
+    public string? Email { get; }
 
     /// <summary>
     /// The context of the currently executing query or command.

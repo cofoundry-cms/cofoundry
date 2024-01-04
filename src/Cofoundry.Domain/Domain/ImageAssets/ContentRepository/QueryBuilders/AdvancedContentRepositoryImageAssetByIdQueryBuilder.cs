@@ -19,19 +19,19 @@ public class AdvancedContentRepositoryImageAssetByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ImageAssetDetails> AsDetails()
+    public IDomainRepositoryQueryContext<ImageAssetDetails?> AsDetails()
     {
         var query = new GetImageAssetDetailsByIdQuery(_imageAssetId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<ImageAssetFile> AsFile()
+    public IDomainRepositoryQueryContext<ImageAssetFile?> AsFile()
     {
         var query = new GetImageAssetFileByIdQuery(_imageAssetId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<ImageAssetRenderDetails> AsRenderDetails()
+    public IDomainRepositoryQueryContext<ImageAssetRenderDetails?> AsRenderDetails()
     {
         var query = new GetImageAssetRenderDetailsByIdQuery(_imageAssetId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

@@ -12,7 +12,7 @@ public interface IRoleMicroSummaryMapper
     /// projection. If the db record is null then <see langword="null"/> is returned.
     /// </summary>
     /// <param name="dbRole">Role record from the database.</param>
-    RoleMicroSummary Map(Role dbRole);
+    RoleMicroSummary? Map(Role? dbRole);
 
     /// <summary>
     /// Maps a <see cref="RoleDetails"/> projection (typically from the cache) into an 
@@ -20,5 +20,5 @@ public interface IRoleMicroSummaryMapper
     /// <see langword="null"/> then <see langword="null"/> is returned.
     /// </summary>
     /// <param name="roleDetails"><see cref="RoleDetails"/> projection to map from.</param>
-    RoleMicroSummary Map(RoleDetails roleDetails);
+    RoleMicroSummary? Map(RoleDetails? roleDetails);
 }

@@ -5,7 +5,7 @@
 /// configured for a page, including all access rules as well as those 
 /// inherited from parent directories.
 /// </summary>>
-public class GetPageAccessRuleSetDetailsByPageIdQuery : IQuery<PageAccessRuleSetDetails>
+public class GetPageAccessRuleSetDetailsByPageIdQuery : IQuery<PageAccessRuleSetDetails?>
 {
     public GetPageAccessRuleSetDetailsByPageIdQuery() { }
 

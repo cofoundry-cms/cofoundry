@@ -1,18 +1,18 @@
-﻿using System.Reflection;
+﻿using Cofoundry.Core.Reflection.Internal;
+using System.Reflection;
 using System.Runtime.ExceptionServices;
 
 namespace Cofoundry.Domain.CQS.Internal;
 
 /// <summary>
-/// Handles the execution IQuery instances.
+/// Default implementation of <see cref="IQueryExecutor"/>.
 /// </summary>
 /// <remarks>
 /// See http://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=92
 /// </remarks>
-/// <inheritdoc/>
 public class QueryExecutor : IQueryExecutor
 {
-    private static readonly MethodInfo _executeAsyncMethod = typeof(QueryExecutor).GetMethod(nameof(ExecuteQueryAsync), BindingFlags.NonPublic | BindingFlags.Instance);
+    private static readonly MethodInfo _executeAsyncMethod = MethodReferenceHelper.GetPrivateInstanceMethod<QueryExecutor>(nameof(ExecuteQueryAsync));
 
     private readonly IModelValidationService _modelValidationService;
     private readonly IQueryHandlerFactory _queryHandlerFactory;
@@ -32,44 +32,57 @@ public class QueryExecutor : IQueryExecutor
         _executePermissionValidationService = executePermissionValidationService;
     }
 
+    /// <inheritdoc/>
     public Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query)
     {
-        IExecutionContext executionContext = null;
+        IExecutionContext? executionContext = null;
 
         return ExecuteAsync(query, executionContext);
     }
 
-    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext)
+    /// <inheritdoc/>
+    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext? executionContext)
     {
+        ArgumentNullException.ThrowIfNull(query);
         TResult result;
 
-        if (query == null) return default(TResult);
         try
         {
-            result = await (Task<TResult>)_executeAsyncMethod
+            var task = _executeAsyncMethod
                 .MakeGenericMethod(query.GetType(), typeof(TResult))
-                .Invoke(this, new object[] { query, executionContext });
+                .Invoke(this, [query, executionContext]) as Task<TResult>;
+
+            if (task == null)
+            {
+                throw new InvalidCastException($"Expected {_executeAsyncMethod.Name} to return a Task but found null.");
+            }
+
+            result = await task;
         }
         catch (TargetInvocationException ex)
         {
-            result = HandleException<TResult>(ex);
+            if (ex.InnerException == null)
+            {
+                throw;
+            }
+            result = HandleException<TResult>(ex.InnerException);
         }
 
         return result;
     }
 
+    /// <inheritdoc/>
     public Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IUserContext userContext)
     {
+        ArgumentNullException.ThrowIfNull(query);
         ArgumentNullException.ThrowIfNull(userContext);
 
         var executionContext = _executionContextFactory.Create(userContext);
         return ExecuteAsync(query, executionContext);
     }
 
-    private async Task<TResult> ExecuteQueryAsync<TQuery, TResult>(TQuery query, IExecutionContext executionContext) where TQuery : IQuery<TResult>
+    private async Task<TResult> ExecuteQueryAsync<TQuery, TResult>(TQuery query, IExecutionContext? executionContext) where TQuery : IQuery<TResult>
     {
-        if (query == null) return default(TResult);
-
         var cx = await CreateExecutionContextAsync(executionContext);
 
         var handler = _queryHandlerFactory.CreateAsyncHandler<TQuery, TResult>();
@@ -85,7 +98,7 @@ public class QueryExecutor : IQueryExecutor
         return result;
     }
 
-    private async Task<IExecutionContext> CreateExecutionContextAsync(IExecutionContext cx)
+    private async Task<IExecutionContext> CreateExecutionContextAsync(IExecutionContext? cx)
     {
         if (cx == null)
         {
@@ -105,12 +118,12 @@ public class QueryExecutor : IQueryExecutor
         return cx;
     }
 
-    private TResult HandleException<TResult>(TargetInvocationException ex)
+    private TResult HandleException<TResult>(Exception innerEx)
     {
-        var info = ExceptionDispatchInfo.Capture(ex.InnerException);
+        var info = ExceptionDispatchInfo.Capture(innerEx);
         info.Throw();
 
         // compiler requires assignment
-        return default(TResult);
+        return default;
     }
 }

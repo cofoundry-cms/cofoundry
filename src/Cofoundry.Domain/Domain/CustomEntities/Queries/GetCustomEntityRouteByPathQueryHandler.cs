@@ -6,7 +6,7 @@
 /// cached in order to make routing lookups speedy.
 /// </summary>
 public class GetCustomEntityRouteByPathQueryHandler
-    : IQueryHandler<GetCustomEntityRouteByPathQuery, CustomEntityRoute>
+    : IQueryHandler<GetCustomEntityRouteByPathQuery, CustomEntityRoute?>
     , IIgnorePermissionCheckHandler
 {
     private readonly IQueryExecutor _queryExecutor;
@@ -18,11 +18,13 @@ public class GetCustomEntityRouteByPathQueryHandler
         _queryExecutor = queryExecutor;
     }
 
-    public async Task<CustomEntityRoute> ExecuteAsync(GetCustomEntityRouteByPathQuery query, IExecutionContext executionContext)
+    public async Task<CustomEntityRoute?> ExecuteAsync(GetCustomEntityRouteByPathQuery query, IExecutionContext executionContext)
     {
         var routes = await _queryExecutor.ExecuteAsync(new GetCustomEntityRoutesByDefinitionCodeQuery(query.CustomEntityDefinitionCode), executionContext);
 
-        var filter = routes.Where(r => (r.Locale == null && !query.LocaleId.HasValue) || (r.Locale != null && r.Locale.LocaleId == query.LocaleId.Value));
+        var filter = routes.Where(r =>
+            (r.Locale == null && !query.LocaleId.HasValue)
+            || (r.Locale != null && query.LocaleId.HasValue && r.Locale.LocaleId == query.LocaleId.Value));
 
         if (query.CustomEntityId.HasValue)
         {

@@ -14,14 +14,14 @@ public class UpdateUserPasswordByCredentialsCommand : ICommand, ILoggableCommand
     /// may have an account for more than one user area.
     /// </summary>
     [Required]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The users username, which is required to authenticate
     /// the user before performing the update.
     /// </summary>
     [Required]
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     /// <summary>
     /// The users existing password. This is required to authenticate
@@ -32,7 +32,7 @@ public class UpdateUserPasswordByCredentialsCommand : ICommand, ILoggableCommand
     [IgnoreDataMember]
     [Newtonsoft.Json.JsonIgnore]
     [System.Text.Json.Serialization.JsonIgnore]
-    public string OldPassword { get; set; }
+    public string OldPassword { get; set; } = string.Empty;
 
     /// <summary>
     /// The value to set as the new account password. The password will go through additional validation depending 
@@ -43,7 +43,7 @@ public class UpdateUserPasswordByCredentialsCommand : ICommand, ILoggableCommand
     [IgnoreDataMember]
     [Newtonsoft.Json.JsonIgnore]
     [System.Text.Json.Serialization.JsonIgnore]
-    public string NewPassword { get; set; }
+    public string NewPassword { get; set; } = string.Empty;
 
     /// <summary>
     /// The database id of the updated user. This is set after the command

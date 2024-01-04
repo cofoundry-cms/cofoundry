@@ -4,7 +4,6 @@
 /// Collated information about the access rules for a page including both those
 /// directly associated and those inherited from parent directories.
 /// </summary>
-/// <inheritdoc/>
 public class PageAccessRuleSetDetails : IEntityAccessRuleSetDetails<PageAccessRuleSummary>
 {
     /// <summary>
@@ -15,7 +14,7 @@ public class PageAccessRuleSetDetails : IEntityAccessRuleSetDetails<PageAccessRu
     /// <summary>
     /// Rules inherited from the directories this page is parented to.
     /// </summary>
-    public ICollection<InheritedPageDirectoryAccessDetails> InheritedAccessRules { get; set; }
+    public IReadOnlyCollection<InheritedPageDirectoryAccessDetails> InheritedAccessRules { get; set; } = Array.Empty<InheritedPageDirectoryAccessDetails>();
 
     /// <summary>
     /// <para>
@@ -30,9 +29,11 @@ public class PageAccessRuleSetDetails : IEntityAccessRuleSetDetails<PageAccessRu
     /// but instead are used to restrict public access to website pages and routes.
     /// </para>
     /// </summary>
-    public ICollection<PageAccessRuleSummary> AccessRules { get; set; }
+    public IReadOnlyCollection<PageAccessRuleSummary> AccessRules { get; set; } = Array.Empty<PageAccessRuleSummary>();
 
+    /// <inheritdoc/>
     public AccessRuleViolationAction ViolationAction { get; set; }
 
-    public UserAreaMicroSummary UserAreaForSignInRedirect { get; set; }
+    /// <inheritdoc/>
+    public UserAreaMicroSummary? UserAreaForSignInRedirect { get; set; }
 }

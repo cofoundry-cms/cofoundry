@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetUpdatePageVersionBlockCommandByIdQueryHandler
-    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
-    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand>
+    : IQueryHandler<GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand?>
+    , IPermissionRestrictedQueryHandler<GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand>, UpdatePageVersionBlockCommand?>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageVersionBlockModelMapper _pageVersionBlockModelMapper;
@@ -18,7 +18,7 @@ public class GetUpdatePageVersionBlockCommandByIdQueryHandler
         _pageVersionBlockModelMapper = pageVersionBlockModelMapper;
     }
 
-    public async Task<UpdatePageVersionBlockCommand> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand> query, IExecutionContext executionContext)
+    public async Task<UpdatePageVersionBlockCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdatePageVersionBlockCommand> query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .PageVersionBlocks
@@ -31,7 +31,10 @@ public class GetUpdatePageVersionBlockCommandByIdQueryHandler
             })
             .SingleOrDefaultAsync();
 
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
 
         var result = Map(dbResult.PageBlock, dbResult.BlockTypeFileName);
         return result;

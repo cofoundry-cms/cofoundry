@@ -26,8 +26,8 @@ public class GetPageDirectoryEntityMicroSummariesByIdRangeQueryHandlerTests
         var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
         var query = new GetPageDirectoryEntityMicroSummariesByIdRangeQuery(new int[] { directory1Id, directory2Id });
         var directoryLookup = await contentRepository.ExecuteQueryAsync(query);
-        var directory1 = directoryLookup.GetOrDefault(directory1Id);
-        var directory2 = directoryLookup.GetOrDefault(directory2Id);
+        var directory1 = directoryLookup.GetValueOrDefault(directory1Id);
+        var directory2 = directoryLookup.GetValueOrDefault(directory2Id);
 
         using (new AssertionScope())
         {

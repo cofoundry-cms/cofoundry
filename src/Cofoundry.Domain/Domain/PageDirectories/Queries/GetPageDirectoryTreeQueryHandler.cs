@@ -1,5 +1,4 @@
 ﻿using Cofoundry.Domain.Data;
-using Cofoundry.Domain.QueryModels;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -35,7 +34,7 @@ public class GetPageDirectoryTreeQueryHandler
                    PageDirectory = d,
                    NumPages = d.Pages.Count()
                })
-               .ToListAsync();
+               .ToArrayAsync();
 
         var result = _pageDirectoryTreeMapper.Map(dbResults);
 

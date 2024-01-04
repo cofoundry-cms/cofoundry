@@ -17,7 +17,7 @@ public interface IDocumentAssetRouteLibrary
     /// Gets the url for a document asset
     /// </summary>
     /// <param name="asset">asset to get the url for</param>
-    string DocumentAsset(IDocumentAssetRenderable asset);
+    string DocumentAsset(IDocumentAssetRenderable? asset);
 
     /// <summary>
     /// Simple but less efficient way of getting a document url if you only know 
@@ -33,5 +33,5 @@ public interface IDocumentAssetRouteLibrary
     /// the "attachment" content disposition.
     /// </summary>
     /// <param name="asset">asset to get the url for</param>
-    string DocumentAssetDownload(IDocumentAssetRenderable asset);
+    string DocumentAssetDownload(IDocumentAssetRenderable? asset);
 }

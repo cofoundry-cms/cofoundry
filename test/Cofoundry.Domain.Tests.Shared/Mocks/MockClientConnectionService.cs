@@ -12,7 +12,10 @@ public class MockClientConnectionService : IClientConnectionService
         configure(ClientConnectionInfo);
     }
 
-    public ClientConnectionInfo ClientConnectionInfo { get; set; } = new ClientConnectionInfo();
+    public ClientConnectionInfo ClientConnectionInfo { get; set; } = new ClientConnectionInfo()
+    {
+        IPAddress = IPAddressConstants.Default
+    };
 
     public ClientConnectionInfo GetConnectionInfo()
     {

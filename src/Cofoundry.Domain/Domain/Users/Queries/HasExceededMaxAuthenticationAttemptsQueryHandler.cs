@@ -52,18 +52,18 @@ public class HasExceededMaxAuthenticationAttemptsQueryHandler
         return !isValid;
     }
 
-    private int? GetRateLimitQuantityIfValid(RateLimitConfiguration rateLimit)
+    private int? GetRateLimitQuantityIfValid(RateLimitConfiguration? rateLimit)
     {
         if (rateLimit == null || !rateLimit.HasValidQuantityAndWindow()) return null;
 
         return rateLimit.Quantity;
     }
 
-    private int? RateLimitWindowToSeconds(RateLimitConfiguration rateLimit)
+    private int? RateLimitWindowToSeconds(RateLimitConfiguration? rateLimit)
     {
         if (rateLimit == null || !rateLimit.HasValidQuantityAndWindow()) return null;
 
-        if (rateLimit.Window.TotalSeconds > Int32.MaxValue)
+        if (rateLimit.Window.TotalSeconds > int.MaxValue)
         {
             throw new InvalidOperationException("Invalid rate limiting window. The number of seconds cannot exceed Int32.MaxValue.");
         }

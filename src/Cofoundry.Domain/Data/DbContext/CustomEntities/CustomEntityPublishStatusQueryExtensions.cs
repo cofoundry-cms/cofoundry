@@ -36,7 +36,7 @@ public static class CustomEntityPublishStatusQueryExtensions
     public static IQueryable<CustomEntityPublishStatusQuery> FilterActive(this IQueryable<CustomEntityPublishStatusQuery> customEntities)
     {
         var result = customEntities
-            .Where(e => e.CustomEntity.LocaleId == null || e.CustomEntity.Locale.IsActive);
+            .Where(e => e.CustomEntity.LocaleId == null || e.CustomEntity.Locale!.IsActive);
 
         return result;
     }
@@ -139,7 +139,7 @@ public static class CustomEntityPublishStatusQueryExtensions
                 else
                 {
                     result = dbQuery
-                        .OrderByWithSortDirection(e => e.CustomEntity.Locale.IETFLanguageTag, sortDirection)
+                        .OrderByWithSortDirection(e => e.CustomEntity.Locale!.IETFLanguageTag, sortDirection)
                         .ThenByWithSortDirection(e => e.CustomEntityVersion.Title, sortDirection);
                 }
                 break;
@@ -171,7 +171,7 @@ public static class CustomEntityPublishStatusQueryExtensions
     {
 
         var primarySorted = dbQuery
-            .OrderByWithSortDirection(e => e.CustomEntity.Locale.IETFLanguageTag, sortDirection)
+            .OrderByWithSortDirection(e => e.CustomEntity.Locale!.IETFLanguageTag, sortDirection)
             .ThenByWithSortDirection(e => !e.CustomEntity.Ordering.HasValue, sortDirection)
             .ThenByWithSortDirection(e => e.CustomEntity.Ordering, sortDirection);
 
@@ -197,7 +197,7 @@ public static class CustomEntityPublishStatusQueryExtensions
                     return primarySorted.ThenByWithSortDirection(e => e.CustomEntityVersion.Title, sortDirection);
                 case CustomEntityQuerySortType.Locale:
                     return primarySorted
-                            .ThenByWithSortDirection(e => e.CustomEntity.Locale.IETFLanguageTag, sortDirection)
+                            .ThenByWithSortDirection(e => e.CustomEntity.Locale!.IETFLanguageTag, sortDirection)
                             .ThenByWithSortDirection(e => e.CustomEntityVersion.Title, sortDirection);
 
                 case CustomEntityQuerySortType.CreateDate:

@@ -108,7 +108,7 @@ public class CustomEntityStoredProcedures : ICustomEntityStoredProcedures
     /// <returns>A collection of ids of custom entities that were updated i.e. some entities may not have needed their ordering changed.</returns>
     public async Task<ICollection<int>> ReOrderAsync(
        string customEntityDefinitionCode,
-       ICollection<int> orderedCustomEntityIds,
+       IReadOnlyCollection<int> orderedCustomEntityIds,
        int? localeId
        )
     {

@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Simple mapper for mapping to ImageAssetRenderDetails objects.
+/// Default implementation of <see cref="IImageAssetRenderDetailsMapper"/>.
 /// </summary>
 public class ImageAssetRenderDetailsMapper : IImageAssetRenderDetailsMapper
 {
@@ -16,14 +16,14 @@ public class ImageAssetRenderDetailsMapper : IImageAssetRenderDetailsMapper
         _imageAssetRouteLibrary = imageAssetRouteLibrary;
     }
 
-    /// <summary>
-    /// Maps an EF ImageAsset record from the db into a ImageAssetDetails 
-    /// object. If the db record is null then null is returned.
-    /// </summary>
-    /// <param name="dbImage">ImageAsset record from the database.</param>
-    public ImageAssetRenderDetails Map(ImageAsset dbImage)
+    /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(dbImage))]
+    public ImageAssetRenderDetails? Map(ImageAsset? dbImage)
     {
-        if (dbImage == null) return null;
+        if (dbImage == null)
+        {
+            return null;
+        }
 
         var image = new ImageAssetRenderDetails()
         {

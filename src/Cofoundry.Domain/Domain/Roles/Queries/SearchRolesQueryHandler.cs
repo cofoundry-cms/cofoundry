@@ -14,7 +14,6 @@ public class SearchRolesQueryHandler
 
     public SearchRolesQueryHandler(
         CofoundryDbContext dbContext,
-        IQueryExecutor queryExecutor,
         IRoleMicroSummaryMapper roleMicroSummaryMapper
         )
     {
@@ -28,7 +27,8 @@ public class SearchRolesQueryHandler
 
         var mappedResults = dbPagedResult
             .Items
-            .Select(_roleMicroSummaryMapper.Map);
+            .Select(_roleMicroSummaryMapper.Map)
+            .WhereNotNull();
 
         return dbPagedResult.ChangeType(mappedResults);
     }

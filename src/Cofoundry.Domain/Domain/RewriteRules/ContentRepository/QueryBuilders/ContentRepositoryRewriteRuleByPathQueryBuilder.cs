@@ -19,7 +19,7 @@ public class ContentRepositoryRewriteRuleByPathQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<RewriteRuleSummary> AsSummary()
+    public IDomainRepositoryQueryContext<RewriteRuleSummary?> AsSummary()
     {
         var query = new GetRewriteRuleSummaryByPathQuery() { Path = _path };
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

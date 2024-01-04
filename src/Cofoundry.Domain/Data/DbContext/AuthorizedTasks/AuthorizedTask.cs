@@ -28,23 +28,28 @@ public class AuthorizedTask
     /// </summary>
     public int UserId { get; set; }
 
+    private User? _user;
     /// <summary>
     /// The user associated with the task e.g. for an acount recovery task this
     /// is the user account being recovered.
     /// </summary>
-    public User User { get; set; }
+    public User User
+    {
+        get => _user ?? throw NavigationPropertyNotInitializedException.Create<AuthorizedTask>(nameof(User));
+        set => _user = value;
+    }
 
     /// <summary>
     /// A unique 6-character code used to group tasks by. These codes are associated with an
     /// <see cref="IAuthorizedTaskTypeDefinition"/> implementation.
     /// </summary>
-    public string AuthorizedTaskTypeCode { get; set; }
+    public string AuthorizedTaskTypeCode { get; set; } = string.Empty;
 
     /// <summary>
     /// A cryptographically strong random code that is used to authenticate before 
     /// the action is permitted to be executed.
     /// </summary>
-    public string AuthorizationCode { get; set; }
+    public string AuthorizationCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The IPAddress of the client that initiated (authorized) the task request.
@@ -54,7 +59,7 @@ public class AuthorizedTask
     /// <summary>
     /// The IPAddress of the client that initiated (authorized) the task request.
     /// </summary>
-    public IPAddress IPAddress { get; set; }
+    public IPAddress? IPAddress { get; set; }
 
     /// <summary>
     /// Data to be included with the task. This might be data used to authorized the
@@ -65,7 +70,7 @@ public class AuthorizedTask
     /// store the email in <see cref="TaskData"/>, and then once verified we can save
     /// the new email address to the user.
     /// </summary>
-    public string TaskData { get; set; }
+    public string? TaskData { get; set; }
 
     /// <summary>
     /// The date the task was created. This is used to calculate the

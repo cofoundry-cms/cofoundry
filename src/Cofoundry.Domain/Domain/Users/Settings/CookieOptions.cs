@@ -38,7 +38,7 @@ public class CookieOptions
     /// "MyAppAuth_COF". By default the cookie namespace is created
     /// using characters from the entry assembly name of your application.
     /// </summary>
-    public string Namespace { get; set; }
+    public string? Namespace { get; set; }
 
     /// <summary>
     /// Copies the options to a new instance, which can be modified

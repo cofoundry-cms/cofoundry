@@ -17,10 +17,10 @@ public class CustomEntityPageRegionRenderDetails : IEntityRegionRenderDetails<Cu
     /// 'Main Content'. Region names are unique (non-case sensitive) for the 
     /// template they belong to.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Collection of fully mapped blocks including display models.
     /// </summary>
-    public ICollection<CustomEntityVersionPageBlockRenderDetails> Blocks { get; set; }
+    public IReadOnlyCollection<CustomEntityVersionPageBlockRenderDetails> Blocks { get; set; } = Array.Empty<CustomEntityVersionPageBlockRenderDetails>();
 }

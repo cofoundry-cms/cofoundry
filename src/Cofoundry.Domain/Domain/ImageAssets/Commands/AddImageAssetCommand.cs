@@ -18,7 +18,7 @@ public class AddImageAssetCommand : ICommand, ILoggableCommand
     [Newtonsoft.Json.JsonIgnore]
     [System.Text.Json.Serialization.JsonIgnore]
     [ValidateObject]
-    public IFileSource File { get; set; }
+    public IFileSource File { get; set; } = null!;
 
     /// <summary>
     /// The title or alt text for an image. Recommended to be up 
@@ -26,7 +26,7 @@ public class AddImageAssetCommand : ICommand, ILoggableCommand
     /// </summary>
     [StringLength(130)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The focal point to use when using dynamic cropping
@@ -37,7 +37,7 @@ public class AddImageAssetCommand : ICommand, ILoggableCommand
     /// <summary>
     /// Tags can be used to categorize an entity.
     /// </summary>
-    public ICollection<string> Tags { get; set; } = new List<string>();
+    public IReadOnlyCollection<string> Tags { get; set; } = Array.Empty<string>();
 
     /// <summary>
     /// The database id of the newly created image asset. This is set 

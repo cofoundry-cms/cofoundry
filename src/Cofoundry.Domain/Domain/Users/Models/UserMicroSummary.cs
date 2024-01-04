@@ -16,7 +16,7 @@ public class UserMicroSummary
     /// An optional display-friendly name. If <see cref="UsernameOptions.UseAsDisplayName"/> is set to
     /// <see langword="true"/> then this field will be a copy of the <see cref="Username"/> field.
     /// </summary>
-    public string DisplayName { get; set; }
+    public string? DisplayName { get; set; }
 
     /// <summary>
     /// Encapsulates a number of status' that a user account can be in.
@@ -30,5 +30,15 @@ public class UserMicroSummary
     /// Each user must be assigned to a user area (but not more than
     /// one).
     /// </summary>
-    public UserAreaMicroSummary UserArea { get; set; }
+    public UserAreaMicroSummary UserArea { get; set; } = UserAreaMicroSummary.Uninitialized;
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly UserMicroSummary Uninitialized = new()
+    {
+        UserId = int.MinValue
+    };
 }

@@ -15,6 +15,6 @@ public interface ICustomEntityRouteMapper
     /// <param name="locale">Locale to map to the object.</param>
     CustomEntityRoute Map(
         CustomEntity dbCustomEntity,
-        ActiveLocale locale
+        ActiveLocale? locale
         );
 }

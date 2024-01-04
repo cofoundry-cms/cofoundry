@@ -15,7 +15,7 @@ public class ContentRepositoryGetAllCustomEntityRoutingRuleQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<ICollection<ICustomEntityRoutingRule>> AsRoutingRules()
+    public IDomainRepositoryQueryContext<IReadOnlyCollection<ICustomEntityRoutingRule>> AsRoutingRules()
     {
         var query = new GetAllCustomEntityRoutingRulesQuery();
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

@@ -1,15 +1,15 @@
 ﻿namespace Cofoundry.Domain;
 
-public class GetPageEntityMicroSummariesByIdRangeQuery : IQuery<IDictionary<int, RootEntityMicroSummary>>
+public class GetPageEntityMicroSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, RootEntityMicroSummary>>
 {
     public GetPageEntityMicroSummariesByIdRangeQuery()
     {
     }
 
     public GetPageEntityMicroSummariesByIdRangeQuery(
-        IEnumerable<int> ids
+        IEnumerable<int>? ids
         )
-        : this(ids?.ToList())
+        : this(ids?.ToArray() ?? [])
     {
     }
 
@@ -23,5 +23,5 @@ public class GetPageEntityMicroSummariesByIdRangeQuery : IQuery<IDictionary<int,
     }
 
     [Required]
-    public IReadOnlyCollection<int> PageIds { get; set; }
+    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
 }

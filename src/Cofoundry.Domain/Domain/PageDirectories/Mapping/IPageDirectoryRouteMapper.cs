@@ -15,5 +15,5 @@ public interface IPageDirectoryRouteMapper
     /// Entity Framework query results to map. The query must include the 
     /// <see cref="PageDirectory.PageDirectoryLocales"/> and <see cref="PageDirectory.AccessRules"/> relations.
     /// </param>
-    ICollection<PageDirectoryRoute> Map(IReadOnlyCollection<PageDirectory> dbPageDirectories);
+    IReadOnlyCollection<PageDirectoryRoute> Map(IReadOnlyCollection<PageDirectory> dbPageDirectories);
 }

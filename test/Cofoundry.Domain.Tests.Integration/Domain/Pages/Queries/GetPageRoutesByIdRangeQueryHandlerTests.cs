@@ -34,10 +34,10 @@ public class GetPageRoutesByIdRangeQueryHandlerTests
             .AsRoutes()
             .ExecuteAsync();
 
-        var page1 = results.GetOrDefault(page1Id);
-        var page2 = results.GetOrDefault(page2Id);
-        var page3 = results.GetOrDefault(page3Id);
-        var page4 = results.GetOrDefault(page4Id);
+        var page1 = results.GetValueOrDefault(page1Id);
+        var page2 = results.GetValueOrDefault(page2Id);
+        var page3 = results.GetValueOrDefault(page3Id);
+        var page4 = results.GetValueOrDefault(page4Id);
 
         using (new AssertionScope())
         {

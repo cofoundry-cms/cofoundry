@@ -13,7 +13,7 @@ public interface ICustomEntityRenderSummaryMapper
     /// </summary>
     /// <param name="dbResult">CustomEntityVersion record from the database.</param>
     /// <param name="executionContext">Context to run any sub queries under.</param>
-    Task<CustomEntityRenderSummary> MapAsync(CustomEntityVersion dbResult, IExecutionContext executionContext);
+    Task<CustomEntityRenderSummary?> MapAsync(CustomEntityVersion? dbResult, IExecutionContext executionContext);
 
     /// <summary>
     /// Maps a collection of EF CustomEntityVersion record from the db into CustomEntityRenderSummary 
@@ -21,5 +21,5 @@ public interface ICustomEntityRenderSummaryMapper
     /// </summary>
     /// <param name="dbResult">CustomEntityVersion record from the database.</param>
     /// <param name="executionContext">Context to run any sub queries under.</param>
-    Task<ICollection<CustomEntityRenderSummary>> MapAsync(ICollection<CustomEntityVersion> dbResults, IExecutionContext executionContext);
+    Task<IReadOnlyCollection<CustomEntityRenderSummary>> MapAsync(IReadOnlyCollection<CustomEntityVersion> dbResults, IExecutionContext executionContext);
 }

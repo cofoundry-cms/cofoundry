@@ -13,9 +13,9 @@ public class PageGroupSummary : ICreateAudited
 
     public int? ParentGroupId { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     public int NumPages { get; set; }
 
-    public CreateAuditData AuditData { get; set; }
+    public CreateAuditData AuditData { get; set; } = CreateAuditData.Uninitialized;
 }

@@ -11,7 +11,7 @@ public class NotCurrentPasswordNewPasswordValidator : INewPasswordValidator
 {
     public string Criteria => "Must not be the same as your current password.";
 
-    public ValidationError Validate(INewPasswordValidationContext context)
+    public ValidationError? Validate(INewPasswordValidationContext context)
     {
         if (!string.IsNullOrWhiteSpace(context.CurrentPassword)
             && context.CurrentPassword == context.Password)

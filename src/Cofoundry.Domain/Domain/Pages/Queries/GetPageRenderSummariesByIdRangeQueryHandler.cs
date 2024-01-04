@@ -10,8 +10,8 @@ namespace Cofoundry.Domain.Internal;
 /// this behavior can be controlled by the publishStatus query property.
 /// </summary>
 public class GetPageRenderSummariesByIdRangeQueryHandler
-    : IQueryHandler<GetPageRenderSummariesByIdRangeQuery, IDictionary<int, PageRenderSummary>>
-    , IPermissionRestrictedQueryHandler<GetPageRenderSummariesByIdRangeQuery, IDictionary<int, PageRenderSummary>>
+    : IQueryHandler<GetPageRenderSummariesByIdRangeQuery, IReadOnlyDictionary<int, PageRenderSummary>>
+    , IPermissionRestrictedQueryHandler<GetPageRenderSummariesByIdRangeQuery, IReadOnlyDictionary<int, PageRenderSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
@@ -28,7 +28,7 @@ public class GetPageRenderSummariesByIdRangeQueryHandler
         _pageRenderSummaryMapper = pageRenderSummaryMapper;
     }
 
-    public async Task<IDictionary<int, PageRenderSummary>> ExecuteAsync(GetPageRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, PageRenderSummary>> ExecuteAsync(GetPageRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         var dbPages = await GetPagesAsync(query, executionContext);
 
@@ -38,12 +38,12 @@ public class GetPageRenderSummariesByIdRangeQueryHandler
 
         var pages = dbPages
             .Select(p => _pageRenderSummaryMapper.Map<PageRenderSummary>(p, pageRoutes))
-            .ToList();
+            .ToArray();
 
-        return pages.ToDictionary(d => d.PageId);
+        return pages.ToImmutableDictionary(d => d.PageId);
     }
 
-    private async Task<List<PageVersion>> GetPagesAsync(GetPageRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    private async Task<IReadOnlyCollection<PageVersion>> GetPagesAsync(GetPageRenderSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         if (query.PublishStatus == PublishStatusQuery.SpecificVersion)
         {
@@ -59,7 +59,7 @@ public class GetPageRenderSummariesByIdRangeQueryHandler
             .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
             .Where(v => query.PageIds.Contains(v.PageId))
             .Select(r => r.PageVersion)
-            .ToListAsync();
+            .ToArrayAsync();
 
         return dbResults;
     }

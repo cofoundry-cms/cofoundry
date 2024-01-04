@@ -72,7 +72,10 @@ public class InitiateUserAccountRecoveryViaEmailCommandHandler
         var options = _userAreaDefinitionRepository.GetOptionsByCode(command.UserAreaCode).AccountRecovery;
 
         var user = await GetUserAsync(command);
-        if (user == null) return;
+        if (user == null)
+        {
+            return;
+        }
 
         using (var scope = _domainRepository.Transactions().CreateScope())
         {
@@ -86,6 +89,8 @@ public class InitiateUserAccountRecoveryViaEmailCommandHandler
 
     private async Task OnTransactionComplete(UserSummary user, AddAuthorizedTaskCommand addAuthorizedTaskCommand)
     {
+        ArgumentException.ThrowIfNullOrEmpty(addAuthorizedTaskCommand.OutputToken);
+
         await _messageAggregator.PublishAsync(new UserAccountRecoveryInitiatedMessage()
         {
             AuthorizedTaskId = addAuthorizedTaskCommand.OutputAuthorizedTaskId,
@@ -105,7 +110,7 @@ public class InitiateUserAccountRecoveryViaEmailCommandHandler
         }
     }
 
-    private async Task<UserSummary> GetUserAsync(InitiateUserAccountRecoveryViaEmailCommand command)
+    private async Task<UserSummary?> GetUserAsync(InitiateUserAccountRecoveryViaEmailCommand command)
     {
         var username = _userDataFormatter.UniquifyUsername(command.UserAreaCode, command.Username);
         var dbUser = await _dbContext
@@ -170,6 +175,9 @@ public class InitiateUserAccountRecoveryViaEmailCommandHandler
         UserSummary user
         )
     {
+        EntityInvalidOperationException.ThrowIfNull(user, user.Email);
+        ArgumentException.ThrowIfNullOrEmpty(addAuthorizedTaskCommand.OutputToken);
+
         var context = _userMailTemplateBuilderContextFactory.CreateAccountRecoveryContext(user, addAuthorizedTaskCommand.OutputToken);
         var mailTemplateBuilder = _userMailTemplateBuilderFactory.Create(user.UserArea.UserAreaCode);
         var mailTemplate = await mailTemplateBuilder.BuildAccountRecoveryTemplateAsync(context);

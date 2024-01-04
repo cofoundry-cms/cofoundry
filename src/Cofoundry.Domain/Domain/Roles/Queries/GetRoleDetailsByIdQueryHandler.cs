@@ -11,8 +11,8 @@
 /// </para>
 /// </summary>
 public class GetRoleDetailsByIdQueryHandler
-    : IQueryHandler<GetRoleDetailsByIdQuery, RoleDetails>
-    , IPermissionRestrictedQueryHandler<GetRoleDetailsByIdQuery, RoleDetails>
+    : IQueryHandler<GetRoleDetailsByIdQuery, RoleDetails?>
+    , IPermissionRestrictedQueryHandler<GetRoleDetailsByIdQuery, RoleDetails?>
 {
     private readonly IInternalRoleRepository _internalRoleRepository;
 
@@ -23,7 +23,7 @@ public class GetRoleDetailsByIdQueryHandler
         _internalRoleRepository = internalRoleRepository;
     }
 
-    public Task<RoleDetails> ExecuteAsync(GetRoleDetailsByIdQuery query, IExecutionContext executionContext)
+    public Task<RoleDetails?> ExecuteAsync(GetRoleDetailsByIdQuery query, IExecutionContext executionContext)
     {
         return _internalRoleRepository.GetByIdAsync(query.RoleId);
     }

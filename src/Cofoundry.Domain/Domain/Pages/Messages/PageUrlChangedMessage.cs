@@ -23,5 +23,5 @@ public class PageUrlChangedMessage : IPageContentUpdatedMessage
     /// The url is formatted with the leading slash, but excluding the trailing 
     /// slash e.g. "/my-directory/example-page".
     /// </summary
-    public string OldFullUrlPath { get; set; }
+    public string OldFullUrlPath { get; set; } = string.Empty;
 }

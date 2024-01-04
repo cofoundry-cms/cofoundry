@@ -73,7 +73,10 @@ public class UserAuthenticationHelperTests
 
     public UserAuthenticationHelper CreateUserAuthenticationHelper(params IUserAreaDefinition[] userAreaDefinitions)
     {
-        var userAreaRepository = new UserAreaDefinitionRepository(userAreaDefinitions, new UsersSettings());
+        // Admin user area needs to be added to always ensure ther eis a default
+        var allDefinitions = userAreaDefinitions.Append(new CofoundryAdminUserArea(new AdminSettings()));
+
+        var userAreaRepository = new UserAreaDefinitionRepository(allDefinitions, new UsersSettings());
 
         var passwordCryptographyServiceMock = new Mock<IPasswordCryptographyService>();
         passwordCryptographyServiceMock

@@ -13,21 +13,21 @@ public class AuthenticateUserCredentialsQuery : IQuery<UserCredentialsAuthentica
     /// may have an account for more than one user area.
     /// </summary>
     [Required]
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// The username to use to locate the user. The value will be "uniquified"
     /// before making the comparison.
     /// </summary>
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
     /// <summary>
     /// The password to authenticate the user account with.
     /// </summary>
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     /// <summary>
     /// Optional name of the property to return in any validation errors.
     /// </summary>
-    public string PropertyToValidate { get; set; }
+    public string? PropertyToValidate { get; set; }
 }

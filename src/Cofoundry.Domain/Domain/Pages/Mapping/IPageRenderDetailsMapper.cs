@@ -16,7 +16,7 @@ public interface IPageRenderDetailsMapper
     /// <param name="pageRouteLookup">
     /// Set of page routes to lookup the route property value.
     /// </param>
-    PageRenderDetails Map(PageVersion dbPageVersion, IDictionary<int, PageRoute> pageRouteLookup);
+    PageRenderDetails Map(PageVersion dbPageVersion, IReadOnlyDictionary<int, PageRoute> pageRouteLookup);
 
     /// <summary>
     /// Maps the main properties on a PageRenderDetails including

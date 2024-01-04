@@ -15,7 +15,7 @@ public interface IDomainRepositoryExecutor
     /// Optional custom execution context which can be used to impersonate/elevate permissions 
     /// or change the execution date.
     /// </param>
-    Task ExecuteAsync(ICommand command, IExecutionContext executionContext);
+    Task ExecuteAsync(ICommand command, IExecutionContext? executionContext);
 
     /// <summary>
     /// Handles the execution the specified <paramref name="query"/>.
@@ -25,5 +25,5 @@ public interface IDomainRepositoryExecutor
     /// Optional custom execution context which can be used to impersonate/elevate permissions 
     /// or change the execution date.
     /// </param>
-    Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext);
+    Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext? executionContext);
 }

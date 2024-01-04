@@ -14,13 +14,12 @@ public class CompareAttributeModelMetadataDecorator : IModelMetadataDecorator
     {
         ArgumentNullException.ThrowIfNull(attribute);
 
-        if (!(attribute is CompareAttribute))
+        if (attribute is not CompareAttribute compareAttribtue)
         {
             throw new ArgumentException("Attribute type is not CompareAttribute", nameof(attribute));
         }
 
 
-        var compareAttribtue = (CompareAttribute)attribute;
         var otherProperty = compareAttribtue.OtherProperty;
         var valAttribute = compareAttribtue;
 

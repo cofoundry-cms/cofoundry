@@ -44,10 +44,14 @@ public static class IPermissionSetBuilderCustomEntityExtensions
         return Run<TCustomEntityDefinition>(builder, configure, false);
     }
 
-    private static IPermissionSetBuilder Run<TCustomEntityDefinition>(IPermissionSetBuilder builder, Action<CustomEntityPermissionBuilder> configure, bool isIncludeOperation)
+    private static IPermissionSetBuilder Run<TCustomEntityDefinition>(IPermissionSetBuilder builder, Action<CustomEntityPermissionBuilder>? configure, bool isIncludeOperation)
         where TCustomEntityDefinition : ICustomEntityDefinition
     {
-        if (configure == null) configure = c => c.All();
+        if (configure == null)
+        {
+            configure = c => c.All();
+        }
+
         var definition = GetDefinition<TCustomEntityDefinition>(builder);
         var entityBuilder = new CustomEntityPermissionBuilder(definition, builder, isIncludeOperation);
         configure(entityBuilder);

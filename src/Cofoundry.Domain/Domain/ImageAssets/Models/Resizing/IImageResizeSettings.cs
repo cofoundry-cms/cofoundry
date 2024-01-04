@@ -15,7 +15,7 @@ public interface IImageResizeSettings
     /// <summary>
     /// Hex color to use as the background color if the image is padded
     /// </summary>
-    string BackgroundColor { get; set; }
+    string? BackgroundColor { get; set; }
 
     /// <summary>
     /// Sets the desired height of the image. (minus padding, borders,

@@ -51,15 +51,15 @@ public class SignOutCurrentUserCommandHandler
 
         if (userId.HasValue)
         {
-            await _domainRepository.Transactions().QueueCompletionTaskAsync(() => OnTransactionComplete(userAreaCode, userId));
+            await _domainRepository.Transactions().QueueCompletionTaskAsync(() => OnTransactionComplete(userAreaCode, userId.Value));
         }
     }
 
-    private async Task OnTransactionComplete(string userAreaCode, int? userId)
+    private async Task OnTransactionComplete(string userAreaCode, int userId)
     {
         await _messageAggregator.PublishAsync(new UserSignedOutMessage()
         {
-            UserId = userId.Value,
+            UserId = userId,
             UserAreaCode = userAreaCode
         });
     }

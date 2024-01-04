@@ -8,8 +8,8 @@ namespace Cofoundry.Domain.Internal;
 /// optional setting on the custom entity definition.
 /// </summary>
 public class GetCustomEntityRenderSummariesByUrlSlugQueryHandler
-    : IQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
-    , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, ICollection<CustomEntityRenderSummary>>
+    : IQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, IReadOnlyCollection<CustomEntityRenderSummary>>
+    , IPermissionRestrictedQueryHandler<GetCustomEntityRenderSummariesByUrlSlugQuery, IReadOnlyCollection<CustomEntityRenderSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly ICustomEntityRenderSummaryMapper _customEntityRenderSummaryMapper;
@@ -17,7 +17,6 @@ public class GetCustomEntityRenderSummariesByUrlSlugQueryHandler
 
     public GetCustomEntityRenderSummariesByUrlSlugQueryHandler(
         CofoundryDbContext dbContext,
-        IQueryExecutor queryExecutor,
         ICustomEntityRenderSummaryMapper customEntityRenderSummaryMapper,
         ICustomEntityDefinitionRepository customEntityDefinitionRepository
         )
@@ -27,7 +26,7 @@ public class GetCustomEntityRenderSummariesByUrlSlugQueryHandler
         _customEntityDefinitionRepository = customEntityDefinitionRepository;
     }
 
-    public async Task<ICollection<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByUrlSlugQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<CustomEntityRenderSummary>> ExecuteAsync(GetCustomEntityRenderSummariesByUrlSlugQuery query, IExecutionContext executionContext)
     {
         var dbResult = await _dbContext
             .CustomEntityPublishStatusQueries
@@ -39,9 +38,12 @@ public class GetCustomEntityRenderSummariesByUrlSlugQueryHandler
             .FilterByCustomEntityUrlSlug(query.UrlSlug)
             .FilterByStatus(query.PublishStatus, executionContext.ExecutionDate)
             .Select(e => e.CustomEntityVersion)
-            .ToListAsync();
+            .ToArrayAsync();
 
-        if (!dbResult.Any()) return Array.Empty<CustomEntityRenderSummary>();
+        if (!dbResult.Any())
+        {
+            return Array.Empty<CustomEntityRenderSummary>();
+        }
 
         var result = await _customEntityRenderSummaryMapper.MapAsync(dbResult, executionContext);
 

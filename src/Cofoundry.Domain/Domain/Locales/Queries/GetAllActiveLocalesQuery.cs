@@ -1,5 +1,5 @@
 ﻿namespace Cofoundry.Domain;
 
-public class GetAllActiveLocalesQuery : IQuery<ICollection<ActiveLocale>>
+public class GetAllActiveLocalesQuery : IQuery<IReadOnlyCollection<ActiveLocale>>
 {
 }

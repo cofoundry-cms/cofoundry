@@ -20,6 +20,7 @@ public class PermissionType
     /// <param name="code">The unique 6 character key of the permission type</param>
     /// <param name="name">A user friendly name for the permission</param>
     /// <param name="description">A description to display against the permission in the user interface</param>
+    [SetsRequiredMembers]
     public PermissionType(string code, string name, string description)
     {
         Code = code;
@@ -30,15 +31,15 @@ public class PermissionType
     /// <summary>
     /// The unique 6 character key of the permission type.
     /// </summary>
-    public string Code { get; set; }
+    public required string Code { get; set; }
 
     /// <summary>
     /// A user friendly name for the permission.
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// A description to display against the permission in the user interface.
     /// </summary>
-    public string Description { get; set; }
+    public required string Description { get; set; }
 }

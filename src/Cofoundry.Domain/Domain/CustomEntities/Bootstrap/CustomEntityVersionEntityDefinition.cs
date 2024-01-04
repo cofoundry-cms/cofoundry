@@ -13,7 +13,7 @@ public sealed class CustomEntityVersionEntityDefinition : IDependableEntityDefin
 
     public string Name => "Custom Entity Version";
 
-    public IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
+    public IQuery<IReadOnlyDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids)
     {
         return new GetCustomEntityVersionEntityMicroSummariesByIdRangeQuery(ids);
     }

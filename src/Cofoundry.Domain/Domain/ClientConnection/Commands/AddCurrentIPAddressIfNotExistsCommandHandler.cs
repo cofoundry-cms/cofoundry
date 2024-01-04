@@ -26,7 +26,7 @@ public class AddCurrentIPAddressIfNotExistsCommandHandler
     public async Task ExecuteAsync(AddCurrentIPAddressIfNotExistsCommand command, IExecutionContext executionContext)
     {
         var connectionInfo = _clientConnectionService.GetConnectionInfo();
-        EntityNotFoundException.ThrowIfNull(connectionInfo, null);
+        EntityNotFoundException.ThrowIfNull(connectionInfo);
 
         if (string.IsNullOrWhiteSpace(connectionInfo.IPAddress)) return;
 

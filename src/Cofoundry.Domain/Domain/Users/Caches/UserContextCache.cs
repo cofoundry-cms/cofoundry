@@ -1,5 +1,8 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
+/// <summary>
+/// Default implementation of <see cref="IUserContextCache"/>.
+/// </summary>
 public class UserContextCache : IUserContextCache
 {
     /// <summary>
@@ -7,8 +10,9 @@ public class UserContextCache : IUserContextCache
     /// should be per-scope for web requests.
     /// </summary>
     private Dictionary<int, IUserContext> _userContextCache = new Dictionary<int, IUserContext>();
-    private const int SYSTEM_CACHE_KEY = Int32.MinValue;
+    private const int SYSTEM_CACHE_KEY = int.MinValue;
 
+    /// <inheritdoc/>
     public async Task<IUserContext> GetOrAddAsync(int userId, Func<Task<IUserContext>> getter)
     {
         ArgumentNullException.ThrowIfNull(getter);
@@ -25,6 +29,7 @@ public class UserContextCache : IUserContextCache
         return userContext;
     }
 
+    /// <inheritdoc/>
     public async Task<IUserContext> GetOrAddSystemContextAsync(Func<Task<IUserContext>> getter)
     {
         ArgumentNullException.ThrowIfNull(getter);
@@ -40,6 +45,7 @@ public class UserContextCache : IUserContextCache
         return userContext;
     }
 
+    /// <inheritdoc/>
     public void Clear(int userId)
     {
         if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId), nameof(userId) + " must be positive.");
@@ -47,6 +53,7 @@ public class UserContextCache : IUserContextCache
         _userContextCache.Remove(userId);
     }
 
+    /// <inheritdoc/>
     public void Clear()
     {
         _userContextCache.Clear();

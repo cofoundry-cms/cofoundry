@@ -31,8 +31,10 @@ public class CleanupUsersCommandHandler
 
     private double GetPeriodInSeconds(CleanupUsersCommand command, TimeSpan? period)
     {
-        if (!period.HasValue && !command.DefaultRetentionPeriod.HasValue) return 0;
-        if (!period.HasValue) return command.DefaultRetentionPeriod.Value.TotalSeconds;
+        if (!period.HasValue)
+        {
+            return command.DefaultRetentionPeriod?.TotalSeconds ?? 0;
+        }
 
         return period.Value.TotalSeconds;
     }

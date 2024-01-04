@@ -23,7 +23,7 @@ public class CustomEntityIdentity
     /// </summary>
     [Required]
     [StringLength(6, MinimumLength = 6)]
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Database id of the custom entity record.

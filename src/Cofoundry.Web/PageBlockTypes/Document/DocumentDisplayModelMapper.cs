@@ -25,7 +25,7 @@ public class DocumentDisplayModelMapper : IPageBlockTypeDisplayModelMapper<Docum
 
         foreach (var item in context.Items)
         {
-            var document = documents.GetOrDefault(item.DataModel.DocumentAssetId);
+            var document = documents.GetValueOrDefault(item.DataModel.DocumentAssetId);
 
             var displayModel = new DocumentDisplayModel();
             if (document != null)

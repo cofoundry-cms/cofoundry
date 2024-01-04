@@ -7,7 +7,7 @@
 /// required to render out a document to page, including all the data 
 /// needed to construct a document file url.
 /// </summary>
-public class GetDocumentAssetRenderDetailsByIdQuery : IQuery<DocumentAssetRenderDetails>
+public class GetDocumentAssetRenderDetailsByIdQuery : IQuery<DocumentAssetRenderDetails?>
 {
     public GetDocumentAssetRenderDetailsByIdQuery()
     {

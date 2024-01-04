@@ -15,20 +15,21 @@ public class DuplicatePageCommand : ICommand, ILoggableCommand
     /// <summary>
     /// The path of the new page within the directory. This must be
     /// unique within the directory the page is parented to.
-    /// E.g. 'about-the-team'
+    /// E.g. 'about-the-team'. This can be <see langword="null"/>
+    /// for <see cref="PageType.CustomEntityDetails"/>.
     /// </summary>
     [Display(Name = "Url path", Description = "Lower case and containing only letter, numbers, underscores and hyphens. E.g. 'about-the-team'")]
     [StringLength(64)]
     [Slug]
-    public virtual string UrlPath { get; set; }
+    public virtual string? UrlPath { get; set; }
 
     /// <summary>
-    /// If copying a CustomEntityDetails page, this will need to be set
-    /// to a value that matches the RouteFormat of an existing
+    /// If copying a <see cref="PageType.CustomEntityDetails"/> page, this 
+    /// will need to be set to a value that matches the RouteFormat of an existing
     /// ICustomEntityRoutingRule e.g. "{Id}/{UrlSlug}".
     /// </summary>
     [StringLength(70)]
-    public string CustomEntityRoutingRule { get; set; }
+    public string? CustomEntityRoutingRule { get; set; }
 
     /// <summary>
     /// The id of the directory the new page should be added to.
@@ -53,7 +54,7 @@ public class DuplicatePageCommand : ICommand, ILoggableCommand
     [Display(Description = "A few words descriptive page title, e.g. 'About the team'. Google <a href=\"http://en.wikipedia.org/wiki/Search_engine_results_page\" target=\"_blank\">SERP</a> shows a maximum of 66 characters")]
     [StringLength(70)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// The database id of the newly created page. This is set after the 

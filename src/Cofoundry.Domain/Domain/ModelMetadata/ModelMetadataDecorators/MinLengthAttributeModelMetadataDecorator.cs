@@ -14,12 +14,10 @@ public class MinLengthAttributeModelMetadataDecorator : IModelMetadataDecorator
     {
         ArgumentNullException.ThrowIfNull(attribute);
 
-        if (!(attribute is MinLengthAttribute))
+        if (attribute is not MinLengthAttribute minLengthttribtue)
         {
             throw new ArgumentException("Attribute type is not MinLengthAttribute", nameof(attribute));
         }
-
-        var minLengthttribtue = (MinLengthAttribute)attribute;
 
         var modelMetaData = context.DisplayMetadata;
         modelMetaData.AddAdditionalValueWithValidationMessage("Minlength", minLengthttribtue.Length, minLengthttribtue);

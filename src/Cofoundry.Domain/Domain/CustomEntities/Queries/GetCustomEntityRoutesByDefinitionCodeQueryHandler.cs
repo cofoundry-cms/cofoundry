@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core.Reflection.Internal;
+using Cofoundry.Domain.Data;
 using System.Reflection;
 
 namespace Cofoundry.Domain.Internal;
@@ -9,10 +10,10 @@ namespace Cofoundry.Domain.Internal;
 /// makes them good for quick lookups.
 /// </summary>
 public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
-    : IQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, ICollection<CustomEntityRoute>>
+    : IQueryHandler<GetCustomEntityRoutesByDefinitionCodeQuery, IReadOnlyCollection<CustomEntityRoute>>
     , IIgnorePermissionCheckHandler
 {
-    private static readonly MethodInfo _mapAdditionalRouteDataAsyncMethod = typeof(GetCustomEntityRoutesByDefinitionCodeQueryHandler).GetMethod(nameof(MapAdditionalRouteDataAsync), BindingFlags.NonPublic | BindingFlags.Instance);
+    private static readonly MethodInfo _mapAdditionalRouteDataAsyncMethod = MethodReferenceHelper.GetPrivateInstanceMethod<GetCustomEntityRoutesByDefinitionCodeQueryHandler>(nameof(MapAdditionalRouteDataAsync));
 
     private readonly CofoundryDbContext _dbContext;
     private readonly ICustomEntityCache _customEntityCache;
@@ -41,7 +42,7 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
         _customEntityRouteDataBuilderFactory = customEntityRouteDataBuilderFactory;
     }
 
-    public async Task<ICollection<CustomEntityRoute>> ExecuteAsync(GetCustomEntityRoutesByDefinitionCodeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<CustomEntityRoute>> ExecuteAsync(GetCustomEntityRoutesByDefinitionCodeQuery query, IExecutionContext executionContext)
     {
         return await _customEntityCache.GetOrAddAsync(query.CustomEntityDefinitionCode, async () =>
         {
@@ -50,8 +51,8 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
                 .Include(c => c.CustomEntityVersions)
                 .Include(c => c.Locale)
                 .AsNoTracking()
-                .Where(e => e.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode && (e.LocaleId == null || e.Locale.IsActive))
-                .ToListAsync();
+                .Where(e => e.CustomEntityDefinitionCode == query.CustomEntityDefinitionCode && (e.LocaleId == null || e.Locale!.IsActive))
+                .ToArrayAsync();
 
             var allLocales = await _queryExecutor.ExecuteAsync(new GetAllActiveLocalesQuery(), executionContext);
             var localesLookup = allLocales.ToDictionary(l => l.LocaleId);
@@ -60,9 +61,9 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
         });
     }
 
-    private async Task<ICollection<CustomEntityRoute>> MapRoutesAsync(
+    private async Task<IReadOnlyCollection<CustomEntityRoute>> MapRoutesAsync(
         GetCustomEntityRoutesByDefinitionCodeQuery query,
-        List<CustomEntity> dbEntities,
+        IReadOnlyCollection<CustomEntity> dbEntities,
         Dictionary<int, ActiveLocale> allLocales
         )
     {
@@ -74,17 +75,24 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
 
         // Map additional parameters
 
-        await (Task)_mapAdditionalRouteDataAsyncMethod
-            .MakeGenericMethod(definition.GetType(), definition.GetDataModelType())
-            .Invoke(this, new object[] { definition, routes, dbEntities });
+        var routeDataResult = _mapAdditionalRouteDataAsyncMethod
+           .MakeGenericMethod(definition.GetType(), definition.GetDataModelType())
+           .Invoke(this, new object[] { definition, routes, dbEntities }) as Task;
+
+        if (routeDataResult is not Task task)
+        {
+            throw new InvalidOperationException($"Exected {nameof(_mapAdditionalRouteDataAsyncMethod)} to return Task but {routeDataResult} was returned.");
+        }
+
+        await task;
 
         return routes;
     }
 
     private async Task MapAdditionalRouteDataAsync<TCustomEntityDefinition, TDataModel>(
         TCustomEntityDefinition customEntityDefiniton,
-        List<CustomEntityRoute> routes,
-        List<CustomEntity> dbEntities
+        IReadOnlyCollection<CustomEntityRoute> routes,
+        IReadOnlyCollection<CustomEntity> dbEntities
         )
         where TCustomEntityDefinition : ICustomEntityDefinition<TDataModel>
         where TDataModel : ICustomEntityDataModel
@@ -97,7 +105,10 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
             .GetProperties()
             .Where(prop => prop.IsDefined(typeof(CustomEntityRouteDataAttribute), false));
 
-        if (!routeDataBuilders.Any() && !routingDataProperties.Any()) return;
+        if (!routeDataBuilders.Any() && !routingDataProperties.Any())
+        {
+            return;
+        }
 
         var dbVersionIndex = dbEntities
             .SelectMany(e => e.CustomEntityVersions)
@@ -106,6 +117,7 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
         var allBuilderParams = new List<CustomEntityRouteDataBuilderParameter<TDataModel>>();
 
         foreach (var route in routes)
+        {
             foreach (var versionRoute in route.Versions)
             {
                 var dbCustomEntityVersion = dbVersionIndex.GetOrDefault(versionRoute.VersionId);
@@ -122,7 +134,7 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
                     throw new Exception($"Data model should not be null.");
                 }
 
-                if (!(dataModel is TDataModel))
+                if (dataModel is not TDataModel)
                 {
                     throw new Exception($"Data model is not of the expected type. Expected {typeof(TDataModel).FullName}, got {dataModel.GetType().FullName}");
                 }
@@ -131,7 +143,7 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
                     route,
                     versionRoute,
                     (TDataModel)dataModel
-                );
+                    );
 
                 allBuilderParams.Add(builderParam);
 
@@ -139,9 +151,13 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
                 foreach (var routingDataProperty in routingDataProperties)
                 {
                     var value = Convert.ToString(routingDataProperty.GetValue(dataModel));
-                    builderParam.AdditionalRoutingData.Add(routingDataProperty.Name, value);
+                    if (value != null)
+                    {
+                        builderParam.AdditionalRoutingData.Add(routingDataProperty.Name, value);
+                    }
                 }
             }
+        }
 
         // Run injected route builders
         foreach (var routeDataBuilder in routeDataBuilders)
@@ -155,7 +171,7 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
         Dictionary<int, ActiveLocale> allLocales
         )
     {
-        ActiveLocale locale = null;
+        ActiveLocale? locale = null;
 
         if (dbCustomEntity.LocaleId.HasValue)
         {

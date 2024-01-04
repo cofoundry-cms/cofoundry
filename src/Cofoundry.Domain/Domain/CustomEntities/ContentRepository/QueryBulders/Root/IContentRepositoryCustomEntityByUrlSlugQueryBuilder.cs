@@ -21,7 +21,7 @@ public interface IContentRepositoryCustomEntityByUrlSlugQueryBuilder
     /// </para>
     /// </summary>
     /// <param name="publishStatusQuery">Used to determine which version of the custom entity to include data for.</param>
-    IDomainRepositoryQueryMutator<ICollection<CustomEntityRenderSummary>, CustomEntityRenderSummary> AsRenderSummary(PublishStatusQuery publishStatusQuery);
+    IDomainRepositoryQueryMutator<IReadOnlyCollection<CustomEntityRenderSummary>, CustomEntityRenderSummary?> AsRenderSummary(PublishStatusQuery publishStatusQuery);
 
     /// <summary>
     /// <para>
@@ -37,7 +37,7 @@ public interface IContentRepositoryCustomEntityByUrlSlugQueryBuilder
     /// parameter to control this behavior.
     /// </para>
     /// </summary>
-    IDomainRepositoryQueryMutator<ICollection<CustomEntityRenderSummary>, CustomEntityRenderSummary> AsRenderSummary();
+    IDomainRepositoryQueryMutator<IReadOnlyCollection<CustomEntityRenderSummary>, CustomEntityRenderSummary?> AsRenderSummary();
 
     /// <summary>
     /// <para>
@@ -53,7 +53,7 @@ public interface IContentRepositoryCustomEntityByUrlSlugQueryBuilder
     /// </para>
     /// </summary>
     /// <param name="publishStatusQuery">Used to determine which version of the custom entity to include data for.</param>
-    IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery publishStatusQuery);
+    IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery publishStatusQuery);
 
     /// <summary>
     /// <para>
@@ -69,5 +69,5 @@ public interface IContentRepositoryCustomEntityByUrlSlugQueryBuilder
     /// parameter to control this behavior.
     /// </para>
     /// </summary>
-    IDomainRepositoryQueryContext<ICollection<CustomEntityRenderSummary>> AsRenderSummaries();
+    IDomainRepositoryQueryContext<IReadOnlyCollection<CustomEntityRenderSummary>> AsRenderSummaries();
 }

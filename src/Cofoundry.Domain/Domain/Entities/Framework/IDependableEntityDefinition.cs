@@ -13,5 +13,5 @@ public interface IDependableEntityDefinition : IEntityDefinition
     /// aggregate root is the Page.
     /// </summary>
     /// <param name="ids">Ids of the entities to get.</param>
-    IQuery<IDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids);
+    IQuery<IReadOnlyDictionary<int, RootEntityMicroSummary>> CreateGetEntityMicroSummariesByIdRangeQuery(IEnumerable<int> ids);
 }

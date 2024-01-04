@@ -3,8 +3,8 @@
 namespace Cofoundry.Domain.Internal;
 
 public class GetAllPageGroupMicroSummariesQueryHandler
-    : IQueryHandler<GetAllPageGroupMicroSummariesQuery, ICollection<PageGroupMicroSummary>>
-    , IPermissionRestrictedQueryHandler<GetAllPageGroupMicroSummariesQuery, ICollection<PageGroupMicroSummary>>
+    : IQueryHandler<GetAllPageGroupMicroSummariesQuery, IReadOnlyCollection<PageGroupMicroSummary>>
+    , IPermissionRestrictedQueryHandler<GetAllPageGroupMicroSummariesQuery, IReadOnlyCollection<PageGroupMicroSummary>>
 {
     private readonly CofoundryDbContext _dbContext;
 
@@ -15,7 +15,7 @@ public class GetAllPageGroupMicroSummariesQueryHandler
         _dbContext = dbContext;
     }
 
-    public async Task<ICollection<PageGroupMicroSummary>> ExecuteAsync(GetAllPageGroupMicroSummariesQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<PageGroupMicroSummary>> ExecuteAsync(GetAllPageGroupMicroSummariesQuery query, IExecutionContext executionContext)
     {
         var results = await _dbContext
             .PageGroups
@@ -27,7 +27,7 @@ public class GetAllPageGroupMicroSummariesQueryHandler
                 PageGroupId = g.PageGroupId,
                 ParentGroupId = g.ParentGroupId
             })
-            .ToListAsync();
+            .ToArrayAsync();
 
         return results;
     }

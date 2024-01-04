@@ -1,5 +1,5 @@
 ﻿namespace Cofoundry.Domain;
 
-public class GetAllPageTemplateMicroSummariesQuery : IQuery<ICollection<PageTemplateMicroSummary>>
+public class GetAllPageTemplateMicroSummariesQuery : IQuery<IReadOnlyCollection<PageTemplateMicroSummary>>
 {
 }

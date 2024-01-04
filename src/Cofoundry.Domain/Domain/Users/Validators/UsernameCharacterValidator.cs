@@ -25,12 +25,12 @@ public static class UsernameCharacterValidator
 
         if (options.AllowAnyDigit)
         {
-            badCharacters = badCharacters.Where(c => !Char.IsDigit(c));
+            badCharacters = badCharacters.Where(c => !char.IsDigit(c));
         }
 
         if (options.AllowAnyLetter)
         {
-            badCharacters = badCharacters.Where(c => !Char.IsLetter(c));
+            badCharacters = badCharacters.Where(c => !char.IsLetter(c));
         }
 
         if (!string.IsNullOrEmpty(options.AdditionalAllowedCharacters))

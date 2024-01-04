@@ -19,7 +19,7 @@ public class ContentRepositoryDocumentAssetByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<DocumentAssetRenderDetails> AsRenderDetails()
+    public IDomainRepositoryQueryContext<DocumentAssetRenderDetails?> AsRenderDetails()
     {
         var query = new GetDocumentAssetRenderDetailsByIdQuery(_documentAssetId);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

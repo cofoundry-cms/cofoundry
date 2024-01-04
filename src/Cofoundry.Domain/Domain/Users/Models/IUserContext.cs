@@ -27,7 +27,7 @@ public interface IUserContext
     /// user area will be Cofoundry Admin, but some sites may have additional 
     /// custom user areas e.g. a members area.
     /// </summary>
-    IUserAreaDefinition UserArea { get; }
+    IUserAreaDefinition? UserArea { get; }
 
     /// <summary>
     /// Indicates if the user should be required to change thier password when they log on.
@@ -51,5 +51,5 @@ public interface IUserContext
     /// If the user belongs to a code-first role, then this will be the string identifier
     /// for that role. Otherwise this will be <see langword="null"/>.
     /// </summary>
-    string RoleCode { get; }
+    string? RoleCode { get; }
 }

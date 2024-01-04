@@ -24,7 +24,7 @@ public class PageTemplateRegionDetails
     /// Region names should be unique (non-case sensitive) irrespective of
     /// whether thy are custom entity regions or not.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates whether this region should apply to the Page (false) or

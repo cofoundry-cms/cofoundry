@@ -1,51 +1,35 @@
-﻿using Cofoundry.Domain.Data;
+﻿using Cofoundry.Core.Reflection.Internal;
+using Cofoundry.Domain.Data;
 using System.Reflection;
 
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Helper for mapping page and custom entity version page block data from an 
-/// unstructured db source to a display model instance.
+/// Default implementation of <see cref="IPageRenderSummaryMapper"/>.
 /// </summary>
 public class PageVersionBlockModelMapper : IPageVersionBlockModelMapper
 {
-    private static readonly MethodInfo _mapGenericMethod = typeof(PageVersionBlockModelMapper).GetMethod(nameof(MapGeneric), BindingFlags.NonPublic | BindingFlags.Instance);
+    private static readonly MethodInfo _mapGenericMethod = MethodReferenceHelper.GetPrivateInstanceMethod<PageVersionBlockModelMapper>(nameof(MapGeneric));
 
     private readonly IServiceProvider _serviceProvider;
     private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
     private readonly IPageBlockTypeDataModelTypeFactory _pageBlockDataModelTypeFactory;
+    private readonly IEmptyDataModelFactory _emptyDataModelFactory;
 
     public PageVersionBlockModelMapper(
         IServiceProvider serviceProvider,
         IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
-        IPageBlockTypeDataModelTypeFactory pageBlockDataModelTypeFactory
+        IPageBlockTypeDataModelTypeFactory pageBlockDataModelTypeFactory,
+        IEmptyDataModelFactory emptyDataModelFactory
         )
     {
         _serviceProvider = serviceProvider;
         _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
         _pageBlockDataModelTypeFactory = pageBlockDataModelTypeFactory;
+        _emptyDataModelFactory = emptyDataModelFactory;
     }
 
-    /// <summary>
-    /// Maps a batch of the same type of page block data to a collection
-    /// of display models ready for rendering.
-    /// </summary>
-    /// <param name="typeName">The block type name e.g. 'PlainText', 'RawHtml'.</param>
-    /// <param name="entityBlocks">The version data to get the serialized model from.</param>
-    /// <param name="publishStatus">
-    /// The publish status of the parent page or custom entity 
-    /// being mapped. This is provided so dependent entities can use
-    /// the same publish status.
-    /// </param>
-    /// <param name="executionContext">
-    /// The execution context from the caller which can be used in
-    /// any child queries to ensure any elevated permissions are 
-    /// passed down the chain of execution.
-    /// </param>
-    /// <returns>
-    /// Dictionary of mapped display models, with a key (block version id) that can be 
-    /// used to identify them.
-    /// </returns>
+    /// <inheritdoc/>
     public virtual async Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>> MapDisplayModelAsync(
         string typeName,
         IEnumerable<IEntityVersionPageBlock> entityBlocks,
@@ -62,7 +46,13 @@ public class PageVersionBlockModelMapper : IPageVersionBlockModelMapper
             var displayModels = new Dictionary<int, IPageBlockTypeDisplayModel>();
             foreach (var pageBlock in entityBlocks)
             {
-                var displayModel = (IPageBlockTypeDisplayModel)_dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, modelType);
+                var displayModel = _dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, modelType) as IPageBlockTypeDisplayModel;
+                if (displayModel == null)
+                {
+                    // if there's a problem deserializing, then skip. Error should be logged by the serializer
+                    continue;
+                }
+
                 var versionBlockId = pageBlock.GetVersionBlockId();
 
                 if (displayModels.ContainsKey(versionBlockId))
@@ -80,32 +70,21 @@ public class PageVersionBlockModelMapper : IPageVersionBlockModelMapper
             var blockWorkflowStatus = publishStatus.ToRelatedEntityQueryStatus();
 
             // We have to use a mapping class to do some custom mapping
-            var displayModels = (Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>>)_mapGenericMethod
+            var mapGenericResult = _mapGenericMethod
                 .MakeGenericMethod(modelType)
-                .Invoke(this, new object[] { entityBlocks, blockWorkflowStatus, executionContext });
+                .Invoke(this, new object[] { entityBlocks, blockWorkflowStatus, executionContext }) as Task<IReadOnlyDictionary<int, IPageBlockTypeDisplayModel>>;
 
-            return await displayModels;
+            if (mapGenericResult == null)
+            {
+                throw new InvalidCastException($"{nameof(_mapGenericMethod)} did not return the expected result type.");
+            }
+
+            return await mapGenericResult;
         }
     }
 
-    /// <summary>
-    /// Maps a single page block data model to a concrete
-    /// display model.
-    /// </summary>
-    /// <param name="typeName">The block type name e.g. 'PlainText', 'RawHtml'.</param>
-    /// <param name="pageBlock">The version data to get the serialized model from.</param>
-    /// <param name="publishStatus">
-    /// The publish status of the parent page or custom entity 
-    /// being mapped. This is provided so dependent entities can use
-    /// the same publish status.
-    /// </param>
-    /// <param name="executionContext">
-    /// The execution context from the caller which can be used in
-    /// any child queries to ensure any elevated permissions are 
-    /// passed down the chain of execution.
-    /// </param>
-    /// <returns>Mapped display model.</returns>
-    public virtual async Task<IPageBlockTypeDisplayModel> MapDisplayModelAsync(
+    /// <inheritdoc/>
+    public virtual async Task<IPageBlockTypeDisplayModel?> MapDisplayModelAsync(
         string typeName,
         IEntityVersionPageBlock pageBlock,
         PublishStatusQuery publishStatus,
@@ -120,21 +99,24 @@ public class PageVersionBlockModelMapper : IPageVersionBlockModelMapper
             );
 
         var id = pageBlock.GetVersionBlockId();
-        if (mapped.ContainsKey(id)) return mapped[id];
+        if (mapped.ContainsKey(id))
+        {
+            return mapped[id];
+        }
 
         return null;
     }
 
-    /// <summary>
-    /// Deserialized a page block data model to a stongly typed model.
-    /// </summary>
-    /// <param name="typeName">The block type name e.g. 'PlainText', 'RawHtml'.</param>
-    /// <param name="pageBlock">The version data to get the serialized model from.</param>
-    /// <returns>Strongly typed data model including deserialized data.</returns>
+    /// <inheritdoc/>
     public virtual IPageBlockTypeDataModel MapDataModel(string typeName, IEntityVersionPageBlock pageBlock)
     {
         Type modelType = _pageBlockDataModelTypeFactory.CreateByPageBlockTypeFileName(typeName);
-        var model = (IPageBlockTypeDataModel)_dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, modelType);
+        var model = _dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, modelType) as IPageBlockTypeDataModel;
+
+        if (model == null)
+        {
+            model = _emptyDataModelFactory.Create<IPageBlockTypeDataModel>(modelType);
+        }
 
         return model;
     }
@@ -143,24 +125,30 @@ public class PageVersionBlockModelMapper : IPageVersionBlockModelMapper
         IEnumerable<IEntityVersionPageBlock> pageBlocks,
         PublishStatusQuery publishStatusQuery,
         IExecutionContext executionContext
-        ) where TDataModel : IPageBlockTypeDataModel
+        ) where TDataModel : class, IPageBlockTypeDataModel
     {
         var mapperType = typeof(IPageBlockTypeDisplayModelMapper<TDataModel>);
-        var mapper = (IPageBlockTypeDisplayModelMapper<TDataModel>)_serviceProvider.GetService(mapperType);
+        var mapper = (IPageBlockTypeDisplayModelMapper<TDataModel>?)_serviceProvider.GetService(mapperType);
         if (mapper == null)
         {
-            string msg = @"{0} does not implement IPageBlockDisplayModel and no custom mapper could be found. You must create 
-                               a class that implements IPageBlockDisplayModelMapper<{0}> if you are using a custom display model. Full type name: {1}";
-            throw new Exception(string.Format(msg, typeof(TDataModel).Name, typeof(TDataModel).FullName));
+            string msg = $"{typeof(TDataModel).Name} does not implement IPageBlockDisplayModel and no custom mapper could be found. You must create a class that implements IPageBlockDisplayModelMapper<{typeof(TDataModel).Name}> if you are using a custom display model. Full type name: {typeof(TDataModel).FullName}";
+            throw new Exception(msg);
         }
 
         var dataModels = new List<PageBlockTypeDisplayModelMapperInput<TDataModel>>();
 
         foreach (var pageBlock in pageBlocks)
         {
-            var mapperModel = new PageBlockTypeDisplayModelMapperInput<TDataModel>();
-            mapperModel.DataModel = (TDataModel)_dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, typeof(TDataModel));
-            mapperModel.VersionBlockId = pageBlock.GetVersionBlockId();
+            var dataModel = _dbUnstructuredDataSerializer.Deserialize<TDataModel>(pageBlock.SerializedData);
+            if (dataModel == null)
+            {
+                dataModel = _emptyDataModelFactory.Create<TDataModel>();
+            }
+            var mapperModel = new PageBlockTypeDisplayModelMapperInput<TDataModel>
+            {
+                DataModel = dataModel,
+                VersionBlockId = pageBlock.GetVersionBlockId()
+            };
             dataModels.Add(mapperModel);
         }
 

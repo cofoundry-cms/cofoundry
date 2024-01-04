@@ -6,7 +6,7 @@
 /// be a single page for a custom entity (e.g. blog post details)
 /// but it is possible to have multiple.
 /// </summary>
-public class GetPageRoutesByCustomEntityDefinitionCodeQuery : IQuery<ICollection<PageRoute>>
+public class GetPageRoutesByCustomEntityDefinitionCodeQuery : IQuery<IReadOnlyCollection<PageRoute>>
 {
     public GetPageRoutesByCustomEntityDefinitionCodeQuery() { }
 
@@ -15,5 +15,5 @@ public class GetPageRoutesByCustomEntityDefinitionCodeQuery : IQuery<ICollection
         CustomEntityDefinitionCode = customEntityDefinitionCode;
     }
 
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 }

@@ -16,13 +16,13 @@ public class PageTemplateMicroSummary
     /// Full virtual path to the view file including the filename. This will
     /// be unique.
     /// </summary>
-    public string FullPath { get; set; }
+    public string FullPath { get; set; } = string.Empty;
 
     /// <summary>
     /// Human readable display name. This is unique, so to avoid 
     /// confusion when selecting a template from a list.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// If this template is of type <see cref="PageType.CustomEntityDetails"/>, this will
@@ -30,14 +30,14 @@ public class PageTemplateMicroSummary
     /// if the template model is CustomEntityPageViewModel&lt;BlogPostDetailsDisplayModel&gt;
     /// this property would be BlogPostDetailsDisplayModel.
     /// </summary>
-    public Type CustomEntityModelType { get; set; }
+    public Type? CustomEntityModelType { get; set; }
 
     /// <summary>
     /// If this template is of type <see cref="PageType.CustomEntityDetails"/> then 
     /// it will represent the details page of a specific custom entity
     /// definition.
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string? CustomEntityDefinitionCode { get; set; }
 
     /// <summary>
     /// Indicates if the template has been archived and is no longer available 
@@ -46,4 +46,14 @@ public class PageTemplateMicroSummary
     /// an old template to a new template.
     /// </summary>
     public bool IsArchived { get; set; }
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly PageTemplateMicroSummary Uninitialized = new()
+    {
+        PageTemplateId = int.MinValue
+    };
 }

@@ -7,7 +7,6 @@ namespace Cofoundry.Domain.Data;
 /// version, but can have many published versions; the latest published version is the one that 
 /// is rendered when the page is published. 
 /// </summary>
-/// <inheritdoc/>
 public class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable, IEntityPublishable
 {
     /// <summary>
@@ -20,10 +19,15 @@ public class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable,
     /// </summary>
     public int PageDirectoryId { get; set; }
 
+    private PageDirectory? _pageDirectory;
     /// <summary>
-    /// The <see cref="PageDirectory"/> this page is in.
+    /// The <see cref="Data.PageDirectory"/> this page is in.
     /// </summary>
-    public virtual PageDirectory PageDirectory { get; set; }
+    public PageDirectory PageDirectory
+    {
+        get => _pageDirectory ?? throw NavigationPropertyNotInitializedException.Create<Page>(nameof(PageDirectory));
+        set => _pageDirectory = value;
+    }
 
     /// <summary>
     /// Optional id of the <see cref="Locale"/> if used in a localized site.
@@ -33,13 +37,13 @@ public class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable,
     /// <summary>
     /// Optional <see cref="Locale"/> of the page if used in a localized site.
     /// </summary>
-    public virtual Locale Locale { get; set; }
+    public Locale? Locale { get; set; }
 
     /// <summary>
     /// The path of the page within the directory. This must be
     /// unique within the directory the page is parented to.
     /// </summary>
-    public string UrlPath { get; set; }
+    public string UrlPath { get; set; } = string.Empty;
 
     /// <summary>
     /// Most pages are generic pages but they could have some sort of
@@ -53,54 +57,52 @@ public class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable,
     /// If this is of <see cref="PageType.CustomEntityDetails"/>, this is used
     /// to look up the routing.
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string? CustomEntityDefinitionCode { get; set; }
 
     /// <summary>
     /// If this is of <see cref="PageType.CustomEntityDetails"/>, this is used
     /// to look up the routing.
     /// </summary>
-    public virtual CustomEntityDefinition CustomEntityDefinition { get; set; }
+    public CustomEntityDefinition? CustomEntityDefinition { get; set; }
 
-    public string PublishStatusCode { get; set; }
+    /// <inheritdoc/>
+    public string PublishStatusCode { get; set; } = string.Empty;
 
-    /// <summary>
-    /// The date and time that the page is or should be published.
-    /// The publish date should always be set if the <see cref="PublishStatusCode"/> 
-    /// is set to "P" (Published). Generally this tracks the first or original publish 
-    /// date, with subsequent publishes only updating the <see cref="LastPublishDate"/>,
-    /// however the <see cref="PublishDate"/> can be set to a specific date to allow for
-    /// scheduled publishing.
-    /// </summary>
+    /// <inheritdoc/>
     public DateTime? PublishDate { get; set; }
 
-    /// <summary>
-    /// The date and time that the page was last published. This can be different to
-    /// <see cref="PublishDate"/> which is generally the date the page was originally
-    /// published, with this property relecting any subsequent updates. The <see cref="PublishDate"/> 
-    /// can be set manually to a future date when publishing, however the change is also 
-    /// reflected in <see cref="LastPublishDate"/> if it is scheduled ahead of the existing 
-    /// <see cref="LastPublishDate"/>.
-    /// </summary>
+    /// <inheritdoc/>
     public DateTime? LastPublishDate { get; set; }
 
+    /// <inheritdoc/>
     public int AccessRuleViolationActionId { get; set; }
 
-    public string UserAreaCodeForSignInRedirect { get; set; }
+    /// <inheritdoc/>
+    public string? UserAreaCodeForSignInRedirect { get; set; }
 
-    public virtual UserArea UserAreaForSignInRedirect { get; set; }
+    /// <inheritdoc/>
+    public UserArea? UserAreaForSignInRedirect { get; set; }
 
+    /// <inheritdoc/>
     public DateTime CreateDate { get; set; }
 
+    /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    public virtual User Creator { get; set; }
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<Page>(nameof(Creator));
+        set => _creator = value;
+    }
 
-    public virtual ICollection<PageGroupItem> PageGroupItems { get; set; } = new List<PageGroupItem>();
+    public ICollection<PageGroupItem> PageGroupItems { get; set; } = new List<PageGroupItem>();
 
     /// <summary>
     /// Tags can be used to categorize an entity.
     /// </summary>
-    public virtual ICollection<PageTag> PageTags { get; set; } = new List<PageTag>();
+    public ICollection<PageTag> PageTags { get; set; } = new List<PageTag>();
 
     /// <summary>
     /// Pages are a versioned entity and therefore have many page version
@@ -108,13 +110,13 @@ public class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable,
     /// can have many published versions; the latest published version is
     /// the one that is rendered when the page is published. 
     /// </summary>
-    public virtual ICollection<PageVersion> PageVersions { get; set; } = new List<PageVersion>();
+    public ICollection<PageVersion> PageVersions { get; set; } = new List<PageVersion>();
 
     /// <summary>
     /// Lookup cache used for quickly finding the correct version for a
     /// specific publish status query e.g. 'Latest', 'Published', 'PreferPublished'
     /// </summary>
-    public virtual ICollection<PagePublishStatusQuery> PagePublishStatusQueries { get; set; } = new List<PagePublishStatusQuery>();
+    public ICollection<PagePublishStatusQuery> PagePublishStatusQueries { get; set; } = new List<PagePublishStatusQuery>();
 
     /// <summary>
     /// <para>
@@ -129,8 +131,9 @@ public class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable,
     /// but instead are used to restrict public access to website pages and routes.
     /// </para>
     /// </summary>
-    public virtual ICollection<PageAccessRule> AccessRules { get; set; } = new List<PageAccessRule>();
+    public ICollection<PageAccessRule> AccessRules { get; set; } = new List<PageAccessRule>();
 
+    /// <inheritdoc/>
     public int GetId()
     {
         return PageId;

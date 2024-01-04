@@ -20,7 +20,7 @@ public class DocumentAttribute : RegularExpressionAttribute, IMetadataAttribute
     /// Initializes a new instance of the <see cref="DocumentAttribute"/> class.
     /// </summary>
     /// <param name="tags">An array of tags for which to filter when browsing for this document</param>
-    public DocumentAttribute(params string[] tags)
+    public DocumentAttribute(params string[]? tags)
         : base(@"^[1-9]\d*$")
     {
         ErrorMessage = "The {0} field is required";
@@ -56,11 +56,11 @@ public class DocumentAttribute : RegularExpressionAttribute, IMetadataAttribute
     /// Filters the document selection to only show documents with these 
     /// file extensions.
     /// </summary>
-    public string[] FileExtensions { get; set; }
+    public string[]? FileExtensions { get; set; }
 
     /// <summary>
     /// Filters the document selection to only show documents with tags that 
     /// match this value.
     /// </summary>
-    public string[] Tags { get; private set; }
+    public string[]? Tags { get; private set; }
 }

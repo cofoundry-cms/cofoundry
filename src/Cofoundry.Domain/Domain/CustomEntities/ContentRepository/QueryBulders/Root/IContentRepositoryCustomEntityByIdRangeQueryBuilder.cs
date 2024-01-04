@@ -15,5 +15,5 @@ public interface IContentRepositoryCustomEntityByIdRangeQueryBuilder
     /// can be controlled by the publishStatus parameter.
     /// </summary>
     /// <param name="publishStatusQuery">Used to determine which version of the custom entities to include data for.</param>
-    IDomainRepositoryQueryContext<IDictionary<int, CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null);
+    IDomainRepositoryQueryContext<IReadOnlyDictionary<int, CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null);
 }

@@ -4,9 +4,19 @@ public class RolePermission
 {
     public int RoleId { get; set; }
 
-    public virtual Role Role { get; set; }
+    private Role? _role;
+    public Role Role
+    {
+        get => _role ?? throw NavigationPropertyNotInitializedException.Create<RolePermission>(nameof(Role));
+        set => _role = value;
+    }
 
     public int PermissionId { get; set; }
 
-    public virtual Permission Permission { get; set; }
+    private Permission? _permission;
+    public Permission Permission
+    {
+        get => _permission ?? throw NavigationPropertyNotInitializedException.Create<RolePermission>(nameof(Permission));
+        set => _permission = value;
+    }
 }

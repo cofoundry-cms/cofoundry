@@ -119,6 +119,8 @@ public static class IDomainRepositoryExtensions
     {
         var query = new GetPatchableCommandQuery<TCommand>();
         var command = await repository.ExecuteQueryAsync(query);
+        EntityNotFoundException.ThrowIfNull(command);
+
         commandPatcher(command);
 
         await repository.ExecuteCommandAsync(command);
@@ -141,6 +143,8 @@ public static class IDomainRepositoryExtensions
     {
         var query = new GetPatchableCommandByIdQuery<TCommand>(id);
         var command = await repository.ExecuteQueryAsync(query);
+
+        EntityNotFoundException.ThrowIfNull(command, id);
         commandPatcher(command);
 
         await repository.ExecuteCommandAsync(command);

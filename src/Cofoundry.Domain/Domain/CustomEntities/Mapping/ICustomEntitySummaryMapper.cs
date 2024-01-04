@@ -15,5 +15,5 @@ public interface ICustomEntitySummaryMapper
     /// </summary>
     /// <param name="dbCustomEntities">Collection of CustomEntityPublishStatusQuery records to map.</param>
     /// <param name="executionContext">Execution context to pass down when executing child queries.</param>
-    Task<List<CustomEntitySummary>> MapAsync(ICollection<CustomEntityPublishStatusQuery> dbStatusQueries, IExecutionContext executionContext);
+    Task<IReadOnlyCollection<CustomEntitySummary>> MapAsync(IReadOnlyCollection<CustomEntityPublishStatusQuery> dbStatusQueries, IExecutionContext executionContext);
 }

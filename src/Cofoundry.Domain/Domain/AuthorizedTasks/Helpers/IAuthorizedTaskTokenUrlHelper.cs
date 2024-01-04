@@ -35,5 +35,5 @@ public interface IAuthorizedTaskTokenUrlHelper
     /// Parsed token value, which may be <see langword="null"/> if the token
     /// parameter could not be found.
     /// </returns>
-    string ParseTokenFromQuery(IQueryCollection queryCollection);
+    string? ParseTokenFromQuery(IQueryCollection queryCollection);
 }

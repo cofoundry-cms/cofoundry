@@ -7,6 +7,6 @@
 /// is typically the default user area unless the ambient scheme has been changed during 
 /// the flow of the request e.g. via an AuthorizeUserAreaAttribute.
 /// </summary>
-public class GetCurrentUserSummaryQuery : IQuery<UserSummary>
+public class GetCurrentUserSummaryQuery : IQuery<UserSummary?>
 {
 }

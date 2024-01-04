@@ -45,7 +45,7 @@ public class EmailAddressOptions
     /// see https://en.wikipedia.org/wiki/Email_address#Syntax for an overview.
     /// </para>
     /// </summary>
-    public string AdditionalAllowedCharacters { get; set; } = "!#$%&'*+-/=?^_`{|}~.";
+    public string? AdditionalAllowedCharacters { get; set; } = "!#$%&'*+-/=?^_`{|}~.";
 
     /// <summary>
     /// The minimum length of an email address. Defaults to 3. Must be between 3 and 

@@ -26,7 +26,7 @@ public class PageDirectoryAccessRuleSummary : IEntityAccessRuleSummary
     /// </summary>
     public int PageDirectoryId { get; set; }
 
-    public UserAreaMicroSummary UserArea { get; set; }
+    public UserAreaMicroSummary UserArea { get; set; } = UserAreaMicroSummary.Uninitialized;
 
-    public RoleMicroSummary Role { get; set; }
+    public RoleMicroSummary? Role { get; set; }
 }

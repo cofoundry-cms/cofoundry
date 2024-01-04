@@ -3,7 +3,7 @@
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// A mapper for mapping a tree structure of PageDirectoryNode objects.
+/// Default implementation of <see cref="IPageDirectoryRouteMapper"/>.
 /// </summary>
 public class PageDirectoryTreeMapper : IPageDirectoryTreeMapper
 {
@@ -17,17 +17,12 @@ public class PageDirectoryTreeMapper : IPageDirectoryTreeMapper
     }
 
 
-    /// <summary>
-    /// Maps a collection of projected EF PageDirectoryTreeNodeQueryModel records from the db 
-    /// into a tree of PageDirectoryNode instances with a single root node
-    /// object.
-    /// </summary>
-    /// <param name="dbPageDirectories">PageDirectoryTreeNodeQueryModel records from the database.</param>
+    /// <inheritdoc/>
     public PageDirectoryNode Map(IReadOnlyCollection<PageDirectoryTreeNodeQueryModel> dbPageDirectories)
     {
         var allPageDirectories = dbPageDirectories
             .Select(MapInitial)
-            .ToList();
+            .ToArray();
 
         // Build the urls
         var root = allPageDirectories.SingleOrDefault(r => !r.ParentPageDirectoryId.HasValue);
@@ -55,7 +50,7 @@ public class PageDirectoryTreeMapper : IPageDirectoryTreeMapper
         return result;
     }
 
-    private void SetChildRoutes(PageDirectoryNode parent, List<PageDirectoryNode> allDirectories)
+    private static void SetChildRoutes(PageDirectoryNode parent, IReadOnlyCollection<PageDirectoryNode> allDirectories)
     {
         var childNodes = new List<PageDirectoryNode>();
         foreach (var directory in allDirectories.Where(r => r.ParentPageDirectoryId == parent.PageDirectoryId))

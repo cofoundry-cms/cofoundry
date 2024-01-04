@@ -7,7 +7,7 @@
 /// default as it's core to routing and often incorporated in more detailed
 /// page projections.
 /// </summary>
-public class GetPageRouteByIdQuery : IQuery<PageRoute>
+public class GetPageRouteByIdQuery : IQuery<PageRoute?>
 {
     /// <summary>
     /// Returns page routing data for a single page. The 

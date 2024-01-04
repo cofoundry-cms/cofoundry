@@ -41,10 +41,12 @@ public class AddPageDirectoryCommandHandler
         var parentDirectory = await GetParentDirectoryAsync(command);
         await ValidateIsUniqueAsync(command, executionContext);
 
-        var pageDirectory = new PageDirectory();
-        pageDirectory.Name = command.Name;
-        pageDirectory.UrlPath = command.UrlPath;
-        pageDirectory.ParentPageDirectory = parentDirectory;
+        var pageDirectory = new PageDirectory
+        {
+            Name = command.Name,
+            UrlPath = command.UrlPath,
+            ParentPageDirectory = parentDirectory
+        };
         _entityAuditHelper.SetCreated(pageDirectory, executionContext);
 
         _dbContext.PageDirectories.Add(pageDirectory);
@@ -90,9 +92,11 @@ public class AddPageDirectoryCommandHandler
 
     private async Task ValidateIsUniqueAsync(AddPageDirectoryCommand command, IExecutionContext executionContext)
     {
-        var query = new IsPageDirectoryPathUniqueQuery();
-        query.ParentPageDirectoryId = command.ParentPageDirectoryId;
-        query.UrlPath = command.UrlPath;
+        var query = new IsPageDirectoryPathUniqueQuery
+        {
+            ParentPageDirectoryId = command.ParentPageDirectoryId,
+            UrlPath = command.UrlPath
+        };
 
         var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
 

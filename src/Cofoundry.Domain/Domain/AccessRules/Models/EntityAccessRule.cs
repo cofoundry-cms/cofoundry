@@ -11,7 +11,7 @@ public class EntityAccessRule
     /// <summary>
     /// The user area to restrict access to.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Optionally the rule can be restricted to a specific role

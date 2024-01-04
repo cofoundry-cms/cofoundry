@@ -2,22 +2,19 @@
 
 namespace Cofoundry.Domain.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IPageTemplateDetailsMapper"/>.
+/// </summary>
 public class PageTemplateSummaryMapper : IPageTemplateSummaryMapper
 {
-    private readonly IPageTemplateCustomEntityTypeMapper _pageTemplateCustomEntityTypeMapper;
-
-    public PageTemplateSummaryMapper(
-        IPageTemplateCustomEntityTypeMapper pageTemplateCustomEntityTypeMapper
-        )
-    {
-        _pageTemplateCustomEntityTypeMapper = pageTemplateCustomEntityTypeMapper;
-    }
-
-    public virtual PageTemplateSummary Map(PageTemplateSummaryQueryModel queryModel)
+    /// <inheritdoc/>
+    public virtual PageTemplateSummary? Map(PageTemplateSummaryQueryModel? queryModel)
     {
         var dbPageTemplate = queryModel?.PageTemplate;
-        if (dbPageTemplate == null) return null;
+        if (dbPageTemplate == null || queryModel == null)
+        {
+            return null;
+        }
 
         var pageTemplate = new PageTemplateSummary()
         {

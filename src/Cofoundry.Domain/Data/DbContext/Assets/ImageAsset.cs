@@ -13,7 +13,7 @@ public class ImageAsset : IUpdateAuditable
     /// <summary>
     /// Original filename without an extension.
     /// </summary>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// File name used internally for storing the file on disk (without 
@@ -23,18 +23,18 @@ public class ImageAsset : IUpdateAuditable
     /// For files created before file stamps were used this may
     /// contain only the image asset id.
     /// </remarks>
-    public string FileNameOnDisk { get; set; }
+    public string FileNameOnDisk { get; set; } = string.Empty;
 
     /// <summary>
     /// Original file extension without the leading dot.
     /// </summary>
-    public string FileExtension { get; set; }
+    public string FileExtension { get; set; } = string.Empty;
 
     /// <summary>
     /// A random string token that can be used to verify a file request
     /// and mitigate enumeration attacks.
     /// </summary>
-    public string VerificationToken { get; set; }
+    public string VerificationToken { get; set; } = string.Empty;
 
     /// <summary>
     /// The width of the image file in pixels.
@@ -56,7 +56,7 @@ public class ImageAsset : IUpdateAuditable
     /// The title or alt text for an image. Recommended to be up 
     /// 125 characters to accomodate screen readers.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// Size of the image file on disk.
@@ -69,18 +69,38 @@ public class ImageAsset : IUpdateAuditable
     /// </summary>
     public DateTime FileUpdateDate { get; set; }
 
-    public virtual ICollection<ImageAssetGroupItem> ImageAssetGroupItems { get; set; } = new List<ImageAssetGroupItem>();
+    /// <inheritdoc/>
+    public DateTime CreateDate { get; set; }
+
+    /// <inheritdoc/>
+    public int CreatorId { get; set; }
+
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<ImageAsset>(nameof(Creator));
+        set => _creator = value;
+    }
+
+    /// <inheritdoc/>
+    public DateTime UpdateDate { get; set; }
+
+    /// <inheritdoc/>
+    public int UpdaterId { get; set; }
+
+    private User? _updater;
+    /// <inheritdoc/>
+    public User Updater
+    {
+        get => _updater ?? throw NavigationPropertyNotInitializedException.Create<ImageAsset>(nameof(Creator));
+        set => _updater = value;
+    }
+
+    public ICollection<ImageAssetGroupItem> ImageAssetGroupItems { get; set; } = new List<ImageAssetGroupItem>();
 
     /// <summary>
     /// Tags can be used to categorize an entity.
     /// </summary>
-    public virtual ICollection<ImageAssetTag> ImageAssetTags { get; set; } = new List<ImageAssetTag>();
-
-    public DateTime CreateDate { get; set; }
-    public int CreatorId { get; set; }
-    public virtual User Creator { get; set; }
-
-    public DateTime UpdateDate { get; set; }
-    public int UpdaterId { get; set; }
-    public virtual User Updater { get; set; }
+    public ICollection<ImageAssetTag> ImageAssetTags { get; set; } = new List<ImageAssetTag>();
 }

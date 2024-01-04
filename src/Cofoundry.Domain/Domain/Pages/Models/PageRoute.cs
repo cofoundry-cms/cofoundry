@@ -15,31 +15,31 @@ public class PageRoute : IPageRoute, IPublishableEntity
     /// <summary>
     /// Optional locale of the page.
     /// </summary>
-    public ActiveLocale Locale { get; set; }
+    public ActiveLocale? Locale { get; set; }
 
     /// <summary>
     /// The directory this page is in.
     /// </summary>
-    public PageDirectoryRoute PageDirectory { get; set; }
+    public PageDirectoryRoute PageDirectory { get; set; } = PageDirectoryRoute.Uninitialized;
 
     /// <summary>
     /// The path of the page within the directory. This will be
     /// unique within the directory the page is parented to.
     /// </summary>
-    public string UrlPath { get; set; }
+    public string UrlPath { get; set; } = string.Empty;
 
     /// <summary>
     /// The full path of the page including directories and the locale. This 
     /// includes the leading slash, but excludes a trailing slash 
     /// e.g. "/my-directory/my-page".
     /// </summary>
-    public string FullUrlPath { get; set; }
+    public string FullUrlPath { get; set; } = string.Empty;
 
     /// <summary>
     /// The title of the page for the currently published version, falling
     /// back to the draft version is there is no published version.
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates if the page is marked as published or not, which allows the page
@@ -76,7 +76,7 @@ public class PageRoute : IPageRoute, IPublishableEntity
     /// <summary>
     /// Routing information particular to specific versions.
     /// </summary>
-    public ICollection<PageVersionRoute> Versions { get; set; }
+    public IReadOnlyCollection<PageVersionRoute> Versions { get; set; } = Array.Empty<PageVersionRoute>();
 
     /// <summary>
     /// Most pages are generic pages but they could have some sort of
@@ -93,27 +93,31 @@ public class PageRoute : IPageRoute, IPublishableEntity
     public bool ShowInSiteMap { get; set; }
 
     /// <summary>
-    /// If this is of PageType.CustomEntityDetails, this is used
+    /// If this is of <see cref="PageType.CustomEntityDetails"/>, this is used
     /// to look up the routing.
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string? CustomEntityDefinitionCode { get; set; }
 
     /// <summary>
     /// Optional set of rules that can be used to restrict access to this page.
     /// These rules are for this page only, and does not include rules
     /// associated with any parent directories. To check he full directory tree 
     /// use the <see cref="ValidateAccess"/> method. If there are no rules associated 
-    /// with the page then this will be null.
+    /// with the page then this will be <see langword="null"/>.
     /// </summary>
-    public EntityAccessRuleSet AccessRuleSet { get; set; }
+    public EntityAccessRuleSet? AccessRuleSet { get; set; }
 
     /// <summary>
     /// Determines if the page is within the specified directory path. Does
-    /// not return true if it is in a subdirectory of the specified directory path.
+    /// not return <see langword="true"/> if it is in a subdirectory of the 
+    /// specified directory path.
     /// </summary>
     public bool IsInDirectory(string directoryPath)
     {
-        if (PageDirectory == null) return false;
+        if (PageDirectory == null)
+        {
+            return false;
+        }
 
         if (Locale == null)
         {
@@ -136,7 +140,10 @@ public class PageRoute : IPageRoute, IPublishableEntity
     /// the access rules for the page and any parent directories.
     /// </summary>
     /// <param name="user">The <see cref="IUserContext"/> to check against access rules.</param>
-    /// <returns><see langword="true"/> if the user is permitted access; <see langword="false"/> if access rule violations were found.</returns>
+    /// <returns>
+    /// <see langword="true"/> if the user is permitted access; <see langword="false"/> if access
+    /// rule violations were found.
+    /// </returns>
     public bool CanAccess(IUserContext user)
     {
         return ValidateAccess(user) == null;
@@ -155,7 +162,7 @@ public class PageRoute : IPageRoute, IPublishableEntity
     /// If any rules are violated, then the most specific <see cref="EntityAccessRuleSet"/> is returned; 
     /// otherwise <see langword="null"/>.
     /// </returns>
-    public EntityAccessRuleSet ValidateAccess(IUserContext user)
+    public EntityAccessRuleSet? ValidateAccess(IUserContext user)
     {
         ArgumentNullException.ThrowIfNull(user);
         EntityInvalidOperationException.ThrowIfNull(this, r => r.PageDirectory);
@@ -172,4 +179,14 @@ public class PageRoute : IPageRoute, IPublishableEntity
 
         return directoryViolation;
     }
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly PageRoute Uninitialized = new()
+    {
+        PageId = int.MinValue
+    };
 }

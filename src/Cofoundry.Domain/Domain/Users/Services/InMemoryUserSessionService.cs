@@ -131,6 +131,7 @@ public class InMemoryUserSessionService : IUserSessionService
         return Task.CompletedTask;
     }
 
+    [MemberNotNull(nameof(_ambientUserAreaCode))]
     private void ResetAmbientUserAreaToDefault()
     {
         var defaultUserArea = _userAreaDefinitionRepository.GetDefault();

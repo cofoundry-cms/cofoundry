@@ -36,7 +36,7 @@ public class UserMailTemplateBuilderContextFactory : IUserMailTemplateBuilderCon
             DefaultTemplateFactory = AccountRecoveryTemplateFactory
         };
 
-        // Can be null to allow a custom IDefaultMailTemplateBuilder implementation to the path explicitly
+        // Can be null to allow a custom IDefaultMailTemplateBuilder implementation to add the path explicitly
         if (options.RecoveryUrlBase != null)
         {
             context.RecoveryUrlPath = _authorizedTaskTokenUrlHelper.MakeUrl(options.RecoveryUrlBase, token);
@@ -47,7 +47,6 @@ public class UserMailTemplateBuilderContextFactory : IUserMailTemplateBuilderCon
 
     private async Task<AccountRecoveryMailTemplate> AccountRecoveryTemplateFactory(AccountRecoveryTemplateBuilderContext context)
     {
-
         if (context.RecoveryUrlPath == null || !Uri.IsWellFormedUriString(context.RecoveryUrlPath, UriKind.Relative))
         {
             // The RecoveryUrlPath setting isn't required in config because the feature may not be used, or may 

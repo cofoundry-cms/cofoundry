@@ -6,7 +6,7 @@ public class ContentRepositoryCustomEntityDataModelSchemaByCustomEntityDefinitio
     : IAdvancedContentRepositoryCustomEntityDataModelSchemaByCustomEntityDefinitionCodeQueryBuilder
     , IExtendableContentRepositoryPart
 {
-    private string _customEntityDefinitionCode;
+    private readonly string _customEntityDefinitionCode;
 
     public ContentRepositoryCustomEntityDataModelSchemaByCustomEntityDefinitionCodeQueryBuilder(
         IExtendableContentRepository contentRepository,
@@ -19,7 +19,7 @@ public class ContentRepositoryCustomEntityDataModelSchemaByCustomEntityDefinitio
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<CustomEntityDataModelSchema> AsDetails()
+    public IDomainRepositoryQueryContext<CustomEntityDataModelSchema?> AsDetails()
     {
         var query = new GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQuery(_customEntityDefinitionCode);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

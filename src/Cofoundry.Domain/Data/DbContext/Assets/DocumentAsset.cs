@@ -17,18 +17,18 @@ public class DocumentAsset : IUpdateAuditable
     /// The filename is taken from the title property
     /// and cleaned to remove invalid characters.
     /// </summary>
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// Original file extension without the leading dot.
     /// </summary>
-    public string FileExtension { get; set; }
+    public string FileExtension { get; set; } = string.Empty;
 
     /// <summary>
     /// A random string token that can be used to verify a file request
     /// and mitigate enumeration attacks.
     /// </summary>
-    public string VerificationToken { get; set; }
+    public string VerificationToken { get; set; } = string.Empty;
 
     /// <summary>
     /// File name used internally for storing the file on disk (without 
@@ -38,17 +38,17 @@ public class DocumentAsset : IUpdateAuditable
     /// For files created before file stamps were used this may
     /// contain only the image asset id.
     /// </remarks>
-    public string FileNameOnDisk { get; set; }
+    public string FileNameOnDisk { get; set; } = string.Empty;
 
     /// <summary>
     /// A short descriptive title of the document (130 characters).
     /// </summary>
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// A longer description of the document in plain text.
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// The length of the document file, in bytes.
@@ -61,17 +61,42 @@ public class DocumentAsset : IUpdateAuditable
     /// </summary>
     public DateTime FileUpdateDate { get; set; }
 
-    public string ContentType { get; set; }
+    /// <summary>
+    /// The MIME type used to describe the file in the content-type header of
+    /// an http request. This can be <see langword="null"/> if the content
+    /// type could not be determined.
+    /// </summary>
+    public string? ContentType { get; set; }
 
-    public virtual ICollection<DocumentAssetGroupItem> DocumentAssetGroupItems { get; set; } = new List<DocumentAssetGroupItem>();
-
-    public virtual ICollection<DocumentAssetTag> DocumentAssetTags { get; set; } = new List<DocumentAssetTag>();
-
+    /// <inheritdoc/>
     public DateTime CreateDate { get; set; }
-    public int CreatorId { get; set; }
-    public virtual User Creator { get; set; }
 
+    /// <inheritdoc/>
+    public int CreatorId { get; set; }
+
+    private User? _creator;
+    /// <inheritdoc/>
+    public User Creator
+    {
+        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<DocumentAsset>(nameof(Creator));
+        set => _creator = value;
+    }
+
+    /// <inheritdoc/>
     public DateTime UpdateDate { get; set; }
+
+    /// <inheritdoc/>
     public int UpdaterId { get; set; }
-    public virtual User Updater { get; set; }
+
+    private User? _updater;
+    /// <inheritdoc/>
+    public User Updater
+    {
+        get => _updater ?? throw NavigationPropertyNotInitializedException.Create<DocumentAsset>(nameof(Creator));
+        set => _updater = value;
+    }
+
+    public ICollection<DocumentAssetGroupItem> DocumentAssetGroupItems { get; set; } = new List<DocumentAssetGroupItem>();
+
+    public ICollection<DocumentAssetTag> DocumentAssetTags { get; set; } = new List<DocumentAssetTag>();
 }

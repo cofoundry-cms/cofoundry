@@ -5,11 +5,11 @@ public class AdminModule
     /// <remarks>
     /// Uniquely identifies the module
     /// </remarks>
-    public string AdminModuleCode { get; set; }
+    public string AdminModuleCode { get; set; } = string.Empty;
 
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     public AdminModuleMenuCategory MenuCategory { get; set; }
 
@@ -26,15 +26,15 @@ public class AdminModule
     /// </summary>
     public int SecondaryOrdering { get; set; }
 
-    public string Url { get; set; }
+    public string Url { get; set; } = string.Empty;
 
     /// <summary>
     /// The IPermission to check to see if the user is allowed to 
     /// view this module.
     /// </summary>
-    public IPermission RestrictedToPermission { get; set; }
+    public IPermission? RestrictedToPermission { get; set; }
 
-    public string GetMenuLinkByPath(string path)
+    public string? GetMenuLinkByPath(string path)
     {
         if (Url != null && Url.StartsWith(path, StringComparison.OrdinalIgnoreCase))
         {

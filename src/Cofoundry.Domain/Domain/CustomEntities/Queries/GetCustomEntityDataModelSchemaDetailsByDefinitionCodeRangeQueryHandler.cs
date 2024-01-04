@@ -7,8 +7,8 @@ namespace Cofoundry.Domain.Internal;
 /// entity data model for a range of custom entity definitions.
 /// </summary>
 public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQueryHandler
-    : IQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
-    , IPermissionRestrictedQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IDictionary<string, CustomEntityDataModelSchema>>
+    : IQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IReadOnlyDictionary<string, CustomEntityDataModelSchema>>
+    , IPermissionRestrictedQueryHandler<GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery, IReadOnlyDictionary<string, CustomEntityDataModelSchema>>
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
@@ -28,7 +28,7 @@ public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQueryHand
         _customEntityDefinitionRepository = customEntityDefinitionRepository;
     }
 
-    public async Task<IDictionary<string, CustomEntityDataModelSchema>> ExecuteAsync(GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<string, CustomEntityDataModelSchema>> ExecuteAsync(GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery query, IExecutionContext executionContext)
     {
         var definitionQuery = new GetAllCustomEntityDefinitionSummariesQuery();
         var definitions = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);

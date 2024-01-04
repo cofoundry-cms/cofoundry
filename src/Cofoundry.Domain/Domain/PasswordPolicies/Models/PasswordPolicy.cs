@@ -5,12 +5,12 @@ namespace Cofoundry.Domain;
 /// <inheritdoc/>
 public class PasswordPolicy : IPasswordPolicy
 {
-    private readonly ICollection<INewPasswordValidatorBase> _validators;
+    private readonly IReadOnlyCollection<INewPasswordValidatorBase> _validators;
 
     public PasswordPolicy(
-        string description,
-        ICollection<INewPasswordValidatorBase> validators,
-        IDictionary<string, string> attributes
+        string? description,
+        IReadOnlyCollection<INewPasswordValidatorBase> validators,
+        IReadOnlyDictionary<string, string> attributes
         )
     {
         Description = description;
@@ -18,9 +18,9 @@ public class PasswordPolicy : IPasswordPolicy
         Attributes = attributes;
     }
 
-    public string Description { get; }
+    public string? Description { get; }
 
-    public IDictionary<string, string> Attributes { get; }
+    public IReadOnlyDictionary<string, string> Attributes { get; }
 
     public IEnumerable<string> GetCriteria()
     {
@@ -29,7 +29,7 @@ public class PasswordPolicy : IPasswordPolicy
             .Select(v => v.Criteria);
     }
 
-    public async Task<ICollection<ValidationError>> ValidateAsync(
+    public async Task<IReadOnlyCollection<ValidationError>> ValidateAsync(
         INewPasswordValidationContext newPasswordValidatonContext
         )
     {
@@ -37,7 +37,7 @@ public class PasswordPolicy : IPasswordPolicy
 
         foreach (var validator in _validators.OrderBy(v => v is IAsyncNewPasswordValidator))
         {
-            ValidationError error = null;
+            ValidationError? error = null;
 
             if (validator is INewPasswordValidator syncValidator)
             {

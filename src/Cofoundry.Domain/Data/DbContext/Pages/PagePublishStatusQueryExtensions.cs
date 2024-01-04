@@ -96,7 +96,7 @@ public static class PagePublishStatusQueryExtensions
                 break;
             case PageQuerySortType.Locale:
                 result = source
-                    .OrderByWithSortDirection(e => e.Page.Locale.IETFLanguageTag, sortDirection)
+                    .OrderByWithSortDirection(e => e.Page.Locale!.IETFLanguageTag, sortDirection)
                     .ThenByWithSortDirection(e => e.PageVersion.Title, sortDirection);
                 break;
             case PageQuerySortType.CreateDate:

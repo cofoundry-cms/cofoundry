@@ -111,14 +111,6 @@ public static class UserValidationErrors
         /// </summary>
         public static class RequestValidation
         {
-            private static readonly Dictionary<string, Func<ValidationErrorTemplate>> ErrorMap = new Dictionary<string, Func<ValidationErrorTemplate>>()
-            {
-                { AuthorizedTaskValidationErrors.TokenValidation.NotFound.ErrorCode , () => NotFound },
-                { AuthorizedTaskValidationErrors.TokenValidation.Invalidated.ErrorCode , () => Invalidated },
-                { AuthorizedTaskValidationErrors.TokenValidation.AlreadyComplete.ErrorCode , () => AlreadyComplete },
-                { AuthorizedTaskValidationErrors.TokenValidation.Expired.ErrorCode , () => Expired },
-            };
-
             /// <summary>
             /// Invalid id and token combination. This can include
             /// situations where the id or token are not correctly
@@ -155,11 +147,22 @@ public static class UserValidationErrors
                 "The account recovery request has expired."
                 );
 
-            public static ValidationError Map(AuthorizedTaskTokenValidationResult result)
+            private static readonly Dictionary<string, Func<ValidationErrorTemplate>> ErrorMap = new Dictionary<string, Func<ValidationErrorTemplate>>()
             {
-                if (result.IsSuccess) return null;
+                { AuthorizedTaskValidationErrors.TokenValidation.NotFound.ErrorCode , () => NotFound },
+                { AuthorizedTaskValidationErrors.TokenValidation.Invalidated.ErrorCode , () => Invalidated },
+                { AuthorizedTaskValidationErrors.TokenValidation.AlreadyComplete.ErrorCode , () => AlreadyComplete },
+                { AuthorizedTaskValidationErrors.TokenValidation.Expired.ErrorCode , () => Expired },
+            };
 
-                var mappedError = ErrorMap.GetValueOrDefault(result.Error.ErrorCode)?.Invoke();
+            public static ValidationError? Map(AuthorizedTaskTokenValidationResult result)
+            {
+                if (result.IsSuccess || result.Error == null)
+                {
+                    return null;
+                }
+
+                var mappedError = ErrorMap.GetOrDefault(result.Error.ErrorCode)?.Invoke();
                 if (mappedError != null)
                 {
                     return mappedError.Create();
@@ -222,14 +225,6 @@ public static class UserValidationErrors
         /// </summary>
         public static class RequestValidation
         {
-            private static readonly Dictionary<string, Func<ValidationErrorTemplate>> ErrorMap = new Dictionary<string, Func<ValidationErrorTemplate>>()
-            {
-                { AuthorizedTaskValidationErrors.TokenValidation.NotFound.ErrorCode , () => NotFound },
-                { AuthorizedTaskValidationErrors.TokenValidation.Invalidated.ErrorCode , () => Invalidated },
-                { AuthorizedTaskValidationErrors.TokenValidation.AlreadyComplete.ErrorCode , () => AlreadyComplete },
-                { AuthorizedTaskValidationErrors.TokenValidation.Expired.ErrorCode , () => Expired },
-            };
-
             /// <summary>
             /// Invalid id and token combination. This can include
             /// situations where the id or token are not correctly
@@ -274,11 +269,22 @@ public static class UserValidationErrors
                 "The account verification request has expired."
                 );
 
-            public static ValidationError Map(AuthorizedTaskTokenValidationResult result)
+            private static readonly Dictionary<string, Func<ValidationErrorTemplate>> ErrorMap = new Dictionary<string, Func<ValidationErrorTemplate>>()
             {
-                if (result.IsSuccess) return null;
+                { AuthorizedTaskValidationErrors.TokenValidation.NotFound.ErrorCode , () => NotFound },
+                { AuthorizedTaskValidationErrors.TokenValidation.Invalidated.ErrorCode , () => Invalidated },
+                { AuthorizedTaskValidationErrors.TokenValidation.AlreadyComplete.ErrorCode , () => AlreadyComplete },
+                { AuthorizedTaskValidationErrors.TokenValidation.Expired.ErrorCode , () => Expired },
+            };
 
-                var mappedError = ErrorMap.GetValueOrDefault(result.Error.ErrorCode)?.Invoke();
+            public static ValidationError? Map(AuthorizedTaskTokenValidationResult result)
+            {
+                if (result.IsSuccess || result.Error == null)
+                {
+                    return null;
+                }
+
+                var mappedError = ErrorMap.GetOrDefault(result.Error.ErrorCode)?.Invoke();
                 if (mappedError != null)
                 {
                     return mappedError.Create();

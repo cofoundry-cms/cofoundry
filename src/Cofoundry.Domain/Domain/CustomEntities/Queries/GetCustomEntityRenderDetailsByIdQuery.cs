@@ -9,7 +9,7 @@
 /// specific page. Although often you may only have one custom entity page, it is 
 /// possible to have multiple.
 /// </summary>
-public class GetCustomEntityRenderDetailsByIdQuery : IQuery<CustomEntityRenderDetails>, IValidatableObject
+public class GetCustomEntityRenderDetailsByIdQuery : IQuery<CustomEntityRenderDetails?>, IValidatableObject
 {
     /// <summary>
     /// Database id of the custom entity to get.

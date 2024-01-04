@@ -13,7 +13,7 @@ public static class EnumListOptionHelper
     /// of <see cref="ListOption"/>, using the the string name as the value
     /// and trying to convert the name to a human readable description.
     /// </summary>
-    public static ICollection<ListOption> ConvertToOptions(Type type)
+    public static IReadOnlyCollection<ListOption> ConvertToOptions(Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
         if (!type.IsEnum)
@@ -38,6 +38,10 @@ public static class EnumListOptionHelper
     private static string GetDescription(Enum value, string stringValue)
     {
         var field = value.GetType().GetField(stringValue);
+        if (field == null)
+        {
+            throw new NullReferenceException($"'{nameof(field)}' not expected to be null for enum value {stringValue}");
+        }
         var attributes = (DescriptionAttribute[])field.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
         if (attributes.Any())

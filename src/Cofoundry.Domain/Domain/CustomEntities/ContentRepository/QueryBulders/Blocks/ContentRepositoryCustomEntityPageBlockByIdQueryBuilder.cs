@@ -19,7 +19,7 @@ public class ContentRepositoryCustomEntityPageBlockByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<CustomEntityVersionPageBlockRenderDetails> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null)
+    public IDomainRepositoryQueryContext<CustomEntityVersionPageBlockRenderDetails?> AsRenderDetails(PublishStatusQuery? publishStatusQuery = null)
     {
         var query = new GetCustomEntityVersionPageBlockRenderDetailsByIdQuery(_customEntityBlockId, publishStatusQuery);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

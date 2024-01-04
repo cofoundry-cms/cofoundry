@@ -19,7 +19,7 @@ public class ContentRepositoryUserAreaByCodeQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<UserAreaMicroSummary> AsMicroSummary()
+    public IDomainRepositoryQueryContext<UserAreaMicroSummary?> AsMicroSummary()
     {
         var query = new GetUserAreaMicroSummaryByCodeQuery(_userAreaCode);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

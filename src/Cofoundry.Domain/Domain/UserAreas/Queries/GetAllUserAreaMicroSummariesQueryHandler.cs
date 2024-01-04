@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 public class GetAllUserAreaMicroSummariesQueryHandler
-    : IQueryHandler<GetAllUserAreaMicroSummariesQuery, ICollection<UserAreaMicroSummary>>
+    : IQueryHandler<GetAllUserAreaMicroSummariesQuery, IReadOnlyCollection<UserAreaMicroSummary>>
     , IIgnorePermissionCheckHandler
 {
     private readonly IUserAreaDefinitionRepository _userAreaRepository;
@@ -13,7 +13,7 @@ public class GetAllUserAreaMicroSummariesQueryHandler
         _userAreaRepository = userAreaRepository;
     }
 
-    public Task<ICollection<UserAreaMicroSummary>> ExecuteAsync(GetAllUserAreaMicroSummariesQuery query, IExecutionContext executionContext)
+    public Task<IReadOnlyCollection<UserAreaMicroSummary>> ExecuteAsync(GetAllUserAreaMicroSummariesQuery query, IExecutionContext executionContext)
     {
         var areas = _userAreaRepository.GetAll().OrderBy(u => u.Name);
         var results = areas
@@ -22,8 +22,8 @@ public class GetAllUserAreaMicroSummariesQueryHandler
                 Name = a.Name,
                 UserAreaCode = a.UserAreaCode
             })
-            .ToList();
+            .ToArray();
 
-        return Task.FromResult<ICollection<UserAreaMicroSummary>>(results);
+        return Task.FromResult<IReadOnlyCollection<UserAreaMicroSummary>>(results);
     }
 }

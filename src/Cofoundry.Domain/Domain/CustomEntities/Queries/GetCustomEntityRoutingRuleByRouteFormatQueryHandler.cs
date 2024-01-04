@@ -7,7 +7,7 @@
 /// duplicate RouteFormat values.
 /// </summary>
 public class GetCustomEntityRoutingRuleByRouteFormatQueryHandler
-    : IQueryHandler<GetCustomEntityRoutingRuleByRouteFormatQuery, ICustomEntityRoutingRule>
+    : IQueryHandler<GetCustomEntityRoutingRuleByRouteFormatQuery, ICustomEntityRoutingRule?>
     , IIgnorePermissionCheckHandler
 {
     private readonly IEnumerable<ICustomEntityRoutingRule> _customEntityRoutingRules;
@@ -19,7 +19,7 @@ public class GetCustomEntityRoutingRuleByRouteFormatQueryHandler
         _customEntityRoutingRules = customEntityRoutingRules;
     }
 
-    public Task<ICustomEntityRoutingRule> ExecuteAsync(GetCustomEntityRoutingRuleByRouteFormatQuery query, IExecutionContext executionContext)
+    public Task<ICustomEntityRoutingRule?> ExecuteAsync(GetCustomEntityRoutingRuleByRouteFormatQuery query, IExecutionContext executionContext)
     {
         var routingRule = _customEntityRoutingRules.SingleOrDefault(r => r.RouteFormat == query.RouteFormat);
 

@@ -12,14 +12,14 @@ public class SearchPageSummariesQuery : SimplePageableQuery, IQuery<PagedQueryRe
     /// Basic text filtering which only filters on url slug and title. Full-text filtering will
     /// be added in a later release.
     /// </summary>
-    public string Text { get; set; }
+    public string? Text { get; set; }
 
     /// <summary>
     /// Filters by tags, which can be provided as a space or comma separated
     /// list. Tags with multiple words or commas can be escaped with single or
     /// double quotation marks.
     /// </summary>
-    public string Tags { get; set; }
+    public string? Tags { get; set; }
 
     /// <summary>
     /// Locale id to filter the results by, if null then only entities

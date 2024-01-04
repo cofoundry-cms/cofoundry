@@ -12,5 +12,6 @@ public interface IDocumentAssetRenderDetailsMapper
     /// object. If the db record is null then null is returned.
     /// </summary>
     /// <param name="dbDocument">DocumentAsset record from the database.</param>
-    DocumentAssetRenderDetails Map(DocumentAsset dbDocument);
+    [return: NotNullIfNotNull(nameof(dbDocument))]
+    DocumentAssetRenderDetails? Map(DocumentAsset? dbDocument);
 }
