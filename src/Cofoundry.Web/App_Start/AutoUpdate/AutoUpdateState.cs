@@ -13,9 +13,9 @@ public class AutoUpdateState
 
     /// <summary>
     /// The exception that caused the stats to be put into the 
-    /// AutoUpdateStatus.Error state.
+    /// <see cref="AutoUpdateStatus.Error"/> state.
     /// </summary>
-    internal Exception Exception { get; private set; }
+    internal Exception? Exception { get; private set; }
 
     /// <summary>
     /// Updated internally from the AutoUpdateHostedService to 
@@ -23,7 +23,7 @@ public class AutoUpdateState
     /// </summary>
     /// <param name="newStatus">The new state.</param>
     /// <param name="ex">An exception can optionally be provded if the status is AutoUpdateStatus.Error</param>
-    internal void Update(AutoUpdateStatus newStatus, Exception ex = null)
+    internal void Update(AutoUpdateStatus newStatus, Exception? ex = null)
     {
         if (ex != null && newStatus != AutoUpdateStatus.Error)
         {

@@ -2,9 +2,12 @@
 
 namespace Cofoundry.Web.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IClaimsPrincipalFactory"/>.
+/// </summary>
 public class ClaimsPrincipalFactory : IClaimsPrincipalFactory
 {
+    /// <inheritdoc/>
     public Task<ClaimsPrincipal> CreateAsync(IClaimsPrincipalBuilderContext context)
     {
         ArgumentNullException.ThrowIfNull(context);

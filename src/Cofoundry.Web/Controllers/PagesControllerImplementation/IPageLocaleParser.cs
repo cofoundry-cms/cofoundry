@@ -10,5 +10,5 @@ public interface IPageLocaleParser
     /// it is an active locale, returning the ActiveLocale object if
     /// found.
     /// </summary>
-    Task<ActiveLocale> ParseLocaleAsync(string path);
+    Task<ActiveLocale?> ParseLocaleAsync(string? path);
 }

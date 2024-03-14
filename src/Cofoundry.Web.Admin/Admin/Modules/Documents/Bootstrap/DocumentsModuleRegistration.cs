@@ -14,9 +14,12 @@ public class DocumentsModuleRegistration : IInternalAngularModuleRegistration
         _documentAssetsSettings = documentAssetsSettings;
     }
 
-    public AdminModule GetModule()
+    public AdminModule? GetModule()
     {
-        if (_documentAssetsSettings.Disabled) return null;
+        if (_documentAssetsSettings.Disabled)
+        {
+            return null;
+        }
 
         var module = new AdminModule()
         {
@@ -32,8 +35,5 @@ public class DocumentsModuleRegistration : IInternalAngularModuleRegistration
         return module;
     }
 
-    public string RoutePrefix
-    {
-        get { return DocumentsModuleRouteLibrary.RoutePrefix; }
-    }
+    public string RoutePrefix => DocumentsModuleRouteLibrary.RoutePrefix;
 }

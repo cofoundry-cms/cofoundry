@@ -29,7 +29,7 @@ public class StandardAngularModuleRegistrationBootstrapper
     {
         return _standardAdminModuleRegistrations
             .Select(r => r.GetModule())
-            .Where(m => m != null);
+            .WhereNotNull();
     }
 
     public int Ordering => (int)RouteRegistrationOrdering.Early;
@@ -52,7 +52,10 @@ public class StandardAngularModuleRegistrationBootstrapper
 
     public IEnumerable<EmbeddedResourcePath> GetEmbeddedResourcePaths()
     {
-        if (_adminSettings.Disabled) yield break;
+        if (_adminSettings.Disabled)
+        {
+            yield break;
+        }
 
         foreach (var registration in _standardAdminModuleRegistrations)
         {

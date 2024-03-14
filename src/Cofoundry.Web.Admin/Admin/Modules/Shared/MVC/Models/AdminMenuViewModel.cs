@@ -2,11 +2,11 @@
 
 public class AdminMenuViewModel
 {
-    public ICollection<AdminModule> ManageSiteModules { get; set; }
+    public IReadOnlyCollection<AdminModule> ManageSiteModules { get; set; } = Array.Empty<AdminModule>();
 
-    public ICollection<AdminModule> SettingsModules { get; set; }
+    public IReadOnlyCollection<AdminModule> SettingsModules { get; set; } = Array.Empty<AdminModule>();
 
-    public AdminModuleMenuCategory SelectedCategory { get; set; }
+    public AdminModuleMenuCategory? SelectedCategory { get; set; }
 
-    public AdminModule SelectedModule { get; set; }
+    public AdminModule? SelectedModule { get; set; }
 }

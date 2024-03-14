@@ -23,7 +23,7 @@ public class CofoundryFilesController : Controller
 
     public async Task<ActionResult> RobotsTxt()
     {
-        string robotsTxt = string.Empty;
+        string robotsTxt;
 
         if (_debugSettings.DisableRobotsTxt)
         {
@@ -33,13 +33,14 @@ public class CofoundryFilesController : Controller
         else
         {
             var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<SeoSettings>());
-            robotsTxt = settings.RobotsTxt;
 
-            if (string.IsNullOrEmpty(robotsTxt))
+            if (string.IsNullOrEmpty(settings.RobotsTxt))
             {
                 Response.StatusCode = 404;
                 return Content("Not found", "text/plain", Encoding.UTF8);
             }
+
+            robotsTxt = settings.RobotsTxt;
 
             if (robotsTxt.IndexOf("sitemap", StringComparison.OrdinalIgnoreCase) == -1)
             {

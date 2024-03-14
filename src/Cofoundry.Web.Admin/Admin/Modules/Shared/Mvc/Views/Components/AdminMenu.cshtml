@@ -7,7 +7,7 @@
 }
 @functions
 {
-    IHtmlContent ActiveIfCategory(AdminModuleMenuCategory category, string additionalCls = null)
+    IHtmlContent ActiveIfCategory(AdminModuleMenuCategory category, string? additionalCls = null)
     {
         return Cofoundry.Html.TextIf(Model.SelectedCategory == category, "selected");
     }
@@ -59,7 +59,7 @@
         }
     </ol>
 
-    @if (currentUser.IsLoggedIn)
+    @if (currentUser.IsSignedIn)
     {
         <div class="logout">
             <a href="@adminRouteLibrary.Auth.LogOut()">Sign Out</a>

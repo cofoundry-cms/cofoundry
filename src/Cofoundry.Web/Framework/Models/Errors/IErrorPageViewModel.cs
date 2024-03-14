@@ -10,5 +10,5 @@ public interface IErrorPageViewModel : IPageWithMetaDataViewModel
 
     string Path { get; set; }
 
-    string QueryString { get; set; }
+    string? QueryString { get; set; }
 }

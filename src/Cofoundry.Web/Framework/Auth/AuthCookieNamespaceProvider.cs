@@ -2,7 +2,9 @@
 
 namespace Cofoundry.Web;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IAuthCookieNamespaceProvider"/>.
+/// </summary>
 public class AuthCookieNamespaceProvider : IAuthCookieNamespaceProvider
 {
     private readonly IHostEnvironment _hostingEnvironment;
@@ -17,6 +19,7 @@ public class AuthCookieNamespaceProvider : IAuthCookieNamespaceProvider
         _userAreaDefinitionRepository = userAreaDefinitionRepository;
     }
 
+    /// <inheritdoc/>
     public string GetNamespace(string userAreaCode)
     {
         var options = _userAreaDefinitionRepository.GetOptionsByCode(userAreaCode).Cookies;

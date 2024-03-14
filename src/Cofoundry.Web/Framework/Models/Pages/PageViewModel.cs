@@ -1,46 +1,71 @@
-﻿namespace Cofoundry.Web;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Cofoundry.Web;
 
 public class PageViewModel : IPageViewModel
 {
-    public PageRenderDetails Page { get; set; }
+    private PageRenderDetails? _page { get; set; }
+    public PageRenderDetails Page
+    {
+        get
+        {
+            PagePropertyNullCheck();
+            return _page;
+        }
+        set
+        {
+            _page = value;
+            _pageTitle = _page.Title;
+            _metaDescription = _page.MetaDescription;
+        }
+    }
 
     public bool IsPageEditMode { get; set; }
 
+    public string _pageTitle = string.Empty;
     public string PageTitle
     {
         get
         {
-            if (Page == null) return null;
-            return Page.Title;
+            PagePropertyNullCheck();
+            return _pageTitle;
         }
         set
         {
-            SetPagePropertyNullCheck(nameof(PageTitle));
-            Page.Title = value;
+            PagePropertyNullCheck();
+            _pageTitle = value;
         }
     }
 
-    public string MetaDescription
+    public string? _metaDescription;
+    public string? MetaDescription
     {
         get
         {
-            if (Page == null) return null;
-            return Page.MetaDescription;
+            PagePropertyNullCheck();
+            return _metaDescription;
         }
         set
         {
-            SetPagePropertyNullCheck(nameof(MetaDescription));
-            Page.MetaDescription = value;
+            PagePropertyNullCheck();
+            _metaDescription = value;
         }
     }
 
-    private void SetPagePropertyNullCheck(string property)
+
+    private PageRoutingHelper? _pageRoutingHelper;
+    public PageRoutingHelper PageRoutingHelper
     {
-        if (Page == null)
-        {
-            throw new NullReferenceException($"Cannot set the {property} property, the Page property has not been set.");
-        }
+        get => _pageRoutingHelper ?? throw ViewModelPropertyNotInitializedException.Create<PageViewModel>(nameof(PageRoutingHelper));
+        set => _pageRoutingHelper = value;
     }
 
-    public PageRoutingHelper PageRoutingHelper { get; set; }
+    [MemberNotNull(nameof(_page))]
+    private void PagePropertyNullCheck()
+    {
+        if (_page == null)
+        {
+            throw ViewModelPropertyNotInitializedException.Create<PageViewModel>(nameof(Page));
+        }
+    }
 }

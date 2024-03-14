@@ -11,5 +11,5 @@ public interface IRunBeforeTask
     /// Indicates the types that this task should run 
     /// before when ordered.
     /// </summary>
-    ICollection<Type> RunBefore { get; }
+    IReadOnlyCollection<Type> RunBefore { get; }
 }

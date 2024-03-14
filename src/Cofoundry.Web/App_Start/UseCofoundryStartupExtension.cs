@@ -13,29 +13,28 @@ public static class UseCofoundryStartupExtension
     /// <param name="configBuilder">Additional configuration options.</param>
     public static void UseCofoundry(
         this IApplicationBuilder application,
-        Action<UseCofoundryStartupConfiguration> configBuilder = null
+        Action<UseCofoundryStartupConfiguration>? configBuilder = null
         )
     {
         var configuration = new UseCofoundryStartupConfiguration();
-        if (configBuilder != null) configBuilder(configuration);
+        configBuilder?.Invoke(configuration);
 
-        using (var childContext = application.ApplicationServices.CreateScope())
+        using var childContext = application.ApplicationServices.CreateScope();
+
+        var startupTasks = childContext
+            .ServiceProvider
+            .GetServices<IStartupConfigurationTask>();
+
+        startupTasks = SortTasksByDependency(startupTasks);
+
+        if (configuration.StartupTaskFilter != null)
         {
-            var startupTasks = childContext
-                .ServiceProvider
-                .GetServices<IStartupConfigurationTask>();
+            startupTasks = configuration.StartupTaskFilter(startupTasks);
+        }
 
-            startupTasks = SortTasksByDependency(startupTasks);
-
-            if (configuration.StartupTaskFilter != null)
-            {
-                startupTasks = configuration.StartupTaskFilter(startupTasks);
-            }
-
-            foreach (var startupTask in startupTasks)
-            {
-                startupTask.Configure(application);
-            }
+        foreach (var startupTask in startupTasks)
+        {
+            startupTask.Configure(application);
         }
     }
 

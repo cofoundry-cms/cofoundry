@@ -21,7 +21,7 @@ public class DashboardModuleRegistration : IInternalAngularModuleRegistration
             Description = "An overview of your site.",
             MenuCategory = AdminModuleMenuCategory.ManageSite,
             PrimaryOrdering = AdminModuleMenuPrimaryOrdering.Primary,
-            SecondaryOrdering = Int32.MaxValue,
+            SecondaryOrdering = int.MaxValue,
             Url = _adminRouteLibrary.Dashboard.Dashboard(),
             RestrictedToPermission = new DashboardAdminModulePermission()
         };

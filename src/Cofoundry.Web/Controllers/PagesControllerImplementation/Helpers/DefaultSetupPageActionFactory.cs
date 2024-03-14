@@ -9,6 +9,7 @@ namespace Cofoundry.Web;
 /// </summary>
 public class DefaultSetupPageActionFactory : ISetupPageActionFactory
 {
+    /// <inheritdoc/>
     public ActionResult GetSetupPageAction(Controller controller)
     {
         throw new Exception("Cofoundry has not been setup. Admin panel is not installed so installation must be done manually.");

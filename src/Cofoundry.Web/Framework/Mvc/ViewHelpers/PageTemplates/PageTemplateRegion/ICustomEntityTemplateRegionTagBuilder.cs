@@ -64,7 +64,7 @@ public interface ICustomEntityTemplateRegionTagBuilder<TModel> : IHtmlContent
     /// <param name="tagName">Name of the element to wrap the output in e.g. div, p, header</param>
     /// <param name="htmlAttributes">Html attributes to apply to the wrapping tag.</param>
     /// <returns>ICustomEntityTemplateRegionTagBuilder for method chaining</returns>
-    ICustomEntityTemplateRegionTagBuilder<TModel> WrapWithTag(string tagName, object htmlAttributes = null);
+    ICustomEntityTemplateRegionTagBuilder<TModel> WrapWithTag(string tagName, object? htmlAttributes = null);
 
     /// <summary>
     /// This method must be called at the end of the region definition to build and render the

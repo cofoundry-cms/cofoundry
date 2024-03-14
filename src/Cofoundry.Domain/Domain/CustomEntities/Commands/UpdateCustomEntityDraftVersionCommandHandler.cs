@@ -99,7 +99,7 @@ public class UpdateCustomEntityDraftVersionCommandHandler
 
         if (!isUnique)
         {
-            var term = definition.GetTerms().GetOrDefault(CustomizableCustomEntityTermKeys.Title, "title").ToLower();
+            var term = definition.GetTerms().GetValueOrDefault(CustomizableCustomEntityTermKeys.Title, "title").ToLower();
             var message = $"Cannot publish because the {command.Title} '{term}' is not unique (symbols and spaces are ignored in the uniqueness check)";
 
             throw new UniqueConstraintViolationException(message, "Title", command.Title);

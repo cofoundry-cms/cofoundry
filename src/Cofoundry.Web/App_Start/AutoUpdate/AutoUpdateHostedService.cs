@@ -53,12 +53,14 @@ public class AutoUpdateHostedService : BackgroundService
 
     private static int GetRetryTimeoutInSeconds(ulong numAttmpts)
     {
-        if (numAttmpts > 30) return 60;
-        if (numAttmpts > 20) return 30;
-        if (numAttmpts > 10) return 15;
-        if (numAttmpts > 2) return 5;
-
-        return 1;
+        return numAttmpts switch
+        {
+            > 30 => 60,
+            > 20 => 30,
+            > 10 => 15,
+            > 2 => 5,
+            _ => 1
+        };
     }
 
     private async Task<bool> TryUpdate(CancellationToken stoppingToken)

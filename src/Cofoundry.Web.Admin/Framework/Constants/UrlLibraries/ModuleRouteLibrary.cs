@@ -114,14 +114,17 @@ public class ModuleRouteLibrary
     }
 
 
-    public string AngularRoute(string path = null)
+    public string AngularRoute(string? path = null)
     {
         return "/" + _adminSettings.DirectoryName + "/" + UrlPrefix + "#/" + path;
     }
 
-    public string MvcRoute(string action = null, string qs = null)
+    public string MvcRoute(string? action = null, string? qs = null)
     {
-        if (action == null) return "/" + _adminSettings.DirectoryName + "/" + UrlPrefix + qs;
+        if (action == null)
+        {
+            return "/" + _adminSettings.DirectoryName + "/" + UrlPrefix + qs;
+        }
 
         return "/" + _adminSettings.DirectoryName + "/" + UrlPrefix + "/" + action + qs;
     }

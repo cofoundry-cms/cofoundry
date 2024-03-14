@@ -16,7 +16,7 @@ public class UseRoutingStartupConfigurationTask
         get { return (int)StartupTaskOrdering.Early; }
     }
 
-    public ICollection<Type> RunAfter => new Type[] { typeof(StaticFileStartupConfigurationTask) };
+    public IReadOnlyCollection<Type> RunAfter => [typeof(StaticFileStartupConfigurationTask)];
 
     public void Configure(IApplicationBuilder app)
     {

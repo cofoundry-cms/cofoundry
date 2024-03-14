@@ -8,10 +8,13 @@ namespace Cofoundry.Web;
 /// </summary>
 public class CofoundryAssemblyDiscoveryRule : IAssemblyDiscoveryRule
 {
+    /// <inheritdoc/>
     public bool CanInclude(RuntimeLibrary libraryToCheck, IAssemblyDiscoveryRuleContext context)
     {
-        return libraryToCheck.Name.IndexOf("Cofoundry", StringComparison.OrdinalIgnoreCase) != -1
-            || libraryToCheck.Name.StartsWith(context.EntryAssemblyName.Name, StringComparison.OrdinalIgnoreCase)
+        var entryAssemblyName = context.EntryAssemblyName.Name;
+
+        return libraryToCheck.Name.Contains("Cofoundry", StringComparison.OrdinalIgnoreCase)
+            || (entryAssemblyName != null && libraryToCheck.Name.StartsWith(entryAssemblyName, StringComparison.OrdinalIgnoreCase))
             || libraryToCheck.Name.IndexOf("Plugin", StringComparison.OrdinalIgnoreCase) > 0;
     }
 }

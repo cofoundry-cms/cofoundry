@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Net;
@@ -26,19 +27,19 @@ public class CofoundryErrorController : Controller
     /// Route to be used with UseExceptionHandler(exceptionHandlingPath) when 
     /// using the default Cofoundry error handling page.
     /// </summary>
-    public static string ExceptionHandlerPath = "/cofoundryerror/exception/";
+    public const string ExceptionHandlerPath = "/cofoundryerror/exception/";
 
     /// <summary>
     /// Route to be used with UseStatusCodePagesWithReExecute(pathFormat) when using
     /// Cofoundry default status code pages.
     /// </summary>
-    public static string StatusCodePagesRoute = "/cofoundryerror/errorcode/{0}";
+    public const string StatusCodePagesRoute = "/cofoundryerror/errorcode/{0}";
 
     public Task<IActionResult> Exception()
     {
         const int STATUS_CODE = 500;
 
-        var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+        var feature = HttpContext.Features.GetRequiredFeature<IExceptionHandlerPathFeature>();
         var request = HttpContext.Request;
 
         if (feature.Error is NotPermittedException)

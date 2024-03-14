@@ -2,8 +2,8 @@
 
 public class ImageDisplayModelMapper : IPageBlockTypeDisplayModelMapper<ImageDataModel>
 {
-    private IQueryExecutor _queryExecutor;
-    private IImageAssetRouteLibrary _imageAssetRouteLibrary;
+    private readonly IQueryExecutor _queryExecutor;
+    private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
 
     public ImageDisplayModelMapper(
         IQueryExecutor queryExecutor,

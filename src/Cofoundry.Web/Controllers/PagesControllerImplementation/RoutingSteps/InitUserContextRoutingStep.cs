@@ -23,8 +23,8 @@ public class InitUserContextRoutingStep : IInitUserContextRoutingStep
         // So we will attempt to find the cofoundry user to execute the contoller with
         // falling back to the user authenticated with the ambient scheme
         state.AmbientUserContext = await _userContextService.GetCurrentContextAsync();
-        IUserContext cofoundryUserContext = null;
 
+        IUserContext cofoundryUserContext;
         if (state.AmbientUserContext.IsCofoundryUser())
         {
             cofoundryUserContext = state.AmbientUserContext;

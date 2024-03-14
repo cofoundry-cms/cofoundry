@@ -11,6 +11,6 @@ public static class IApiResponseHelperExtensions
     /// <param name="validationErrors">Validation error, if any, to be returned.</param>
     public static JsonResult SimpleCommandResponse(this IApiResponseHelper apiResponseHelper, ValidationError validationError)
     {
-        return apiResponseHelper.SimpleCommandResponse(new ValidationError[] { validationError });
+        return apiResponseHelper.SimpleCommandResponse([validationError]);
     }
 }

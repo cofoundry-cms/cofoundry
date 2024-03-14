@@ -1,6 +1,6 @@
-﻿// Adapted from https://github.com/aspnet/AspNetCore/blob/master/src/Mvc/src/Microsoft.AspNetCore.Mvc.Razor/Infrastructure/DefaultFileVersionProvider.cs
-// Copyright (c) .NET Foundation. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See https://github.com/aspnet/AspNetCore/blob/master/LICENSE.txt for license information.
+﻿// Adapted from https://github.com/dotnet/aspnetcore/blob/main/src/Mvc/Mvc.Razor/src/Infrastructure/DefaultFileVersionProvider.cs
+// Copyright (c) .NET Foundation and Contributors. All rights reserved.
+// Licensed under the MIT License. See https://github.com/dotnet/aspnetcore/blob/main/LICENSE.txt for license information.
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -22,13 +22,12 @@ namespace Cofoundry.Web;
 /// embedded resources.
 /// </para>
 /// <para>
-/// Adapted from https://github.com/aspnet/AspNetCore/blob/master/src/Mvc/src/Microsoft.AspNetCore.Mvc.Razor/Infrastructure/DefaultFileVersionProvider.cs
+/// Adapted from https://github.com/dotnet/aspnetcore/blob/main/src/Mvc/Mvc.Razor/src/Infrastructure/DefaultFileVersionProvider.cs
 /// </para>
 /// </remarks>
 public class CofoundryFileVersionProvider : IFileVersionProvider
 {
     private const string VersionKey = "v";
-    private static readonly char[] QueryStringAndFragmentTokens = new[] { '?', '#' };
 
     private readonly IFileProvider _fileProvider;
     private readonly IMemoryCache _cache;
@@ -54,7 +53,7 @@ public class CofoundryFileVersionProvider : IFileVersionProvider
 
         var resolvedPath = path;
 
-        var queryStringOrFragmentStartIndex = path.IndexOfAny(QueryStringAndFragmentTokens);
+        var queryStringOrFragmentStartIndex = path.AsSpan().IndexOfAny('?', '#');
         if (queryStringOrFragmentStartIndex != -1)
         {
             resolvedPath = path.Substring(0, queryStringOrFragmentStartIndex);
@@ -66,7 +65,7 @@ public class CofoundryFileVersionProvider : IFileVersionProvider
             return path;
         }
 
-        if (_cache.TryGetValue(path, out string value))
+        if (_cache.TryGetValue(path, out string? value) && value is not null)
         {
             return value;
         }
@@ -95,21 +94,16 @@ public class CofoundryFileVersionProvider : IFileVersionProvider
         }
 
         cacheEntryOptions.SetSize(value.Length * sizeof(char));
-        value = _cache.Set(path, value, cacheEntryOptions);
+        _cache.Set(path, value, cacheEntryOptions);
+
         return value;
     }
 
     private static string GetHashForFile(IFileInfo fileInfo)
     {
-        // Removed because the wrapped exception does not apply to .NET Core
-        //using (var sha256 = CryptographyAlgorithms.CreateSHA256())
-        using (var sha256 = SHA256.Create())
-        {
-            using (var readStream = fileInfo.CreateReadStream())
-            {
-                var hash = sha256.ComputeHash(readStream);
-                return WebEncoders.Base64UrlEncode(hash);
-            }
-        }
+        using var readStream = fileInfo.CreateReadStream();
+        var hash = SHA256.HashData(readStream);
+
+        return WebEncoders.Base64UrlEncode(hash);
     }
 }

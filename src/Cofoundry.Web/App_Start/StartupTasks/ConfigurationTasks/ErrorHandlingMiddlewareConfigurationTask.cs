@@ -24,7 +24,7 @@ public class ErrorHandlingMiddlewareConfigurationTask : IStartupConfigurationTas
 
     public void Configure(IApplicationBuilder app)
     {
-        var env = app.ApplicationServices.GetService<IWebHostEnvironment>();
+        var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
 
         if (_debugSettings.CanShowDeveloperExceptionPage(env))
         {

@@ -13,14 +13,14 @@ public class AuthRouteLibrary : ModuleRouteLibrary
     {
     }
 
-    public string Login(string returnUrl = null)
+    public string Login(string? returnUrl = null)
     {
         var qs = QueryStringBuilder.Create("ReturnUrl", returnUrl);
 
         return MvcRoute("login", qs);
     }
 
-    public string ChangePassword(string returnUrl = null)
+    public string ChangePassword(string? returnUrl = null)
     {
         var qs = QueryStringBuilder.Create("ReturnUrl", returnUrl);
 

@@ -39,11 +39,9 @@ public class DashboardContentProvider : IDashboardContentProvider
         }
         else
         {
-            using (var stream = result.CreateReadStream())
-            using (var reader = new StreamReader(stream))
-            {
-                html = await reader.ReadToEndAsync();
-            }
+            using var stream = result.CreateReadStream();
+            using var reader = new StreamReader(stream);
+            html = await reader.ReadToEndAsync();
         }
 
         return new HtmlString(html);

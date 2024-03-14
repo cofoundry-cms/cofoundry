@@ -9,5 +9,5 @@ public class UseCofoundryStartupConfiguration
     /// <summary>
     /// A function that can be used to alter the startup task pipeline.
     /// </summary>
-    public Func<IEnumerable<IStartupConfigurationTask>, IEnumerable<IStartupConfigurationTask>> StartupTaskFilter { get; set; }
+    public Func<IEnumerable<IStartupConfigurationTask>, IEnumerable<IStartupConfigurationTask>>? StartupTaskFilter { get; set; }
 }

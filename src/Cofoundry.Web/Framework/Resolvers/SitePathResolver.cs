@@ -17,11 +17,14 @@ public class SitePathResolver : IPathResolver
         _hostingEnvironment = hostingEnvironment;
     }
 
-    public string MapPath(string path)
+    public string MapPath(string? path)
     {
         var root = _hostingEnvironment.ContentRootPath;
-        if (string.IsNullOrWhiteSpace(path)) return root;
-        path = path.TrimStart('~').TrimStart(new char[] { '/', '\\' });
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return root;
+        }
+        path = path.TrimStart('~').TrimStart(['/', '\\']);
 
         var combinedPath = Path.Combine(root, path);
 

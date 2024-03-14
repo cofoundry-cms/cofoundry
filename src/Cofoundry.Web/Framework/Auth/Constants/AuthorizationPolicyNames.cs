@@ -14,7 +14,7 @@ public static class AuthorizationPolicyNames
     /// <returns>Namespaced policy name in the format 'Cofoundry_UserArea_{userAreaCode}'</returns>
     public static string UserArea(string userAreaCode)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(userAreaCode);
 
         return $"Cofoundry_UserArea_{userAreaCode}";
     }
@@ -33,8 +33,8 @@ public static class AuthorizationPolicyNames
     /// <returns>Namespaced policy name in the format 'Cofoundry_UserArea_{userAreaCode}_Role_{roleCode}'</returns>
     public static string Role(string userAreaCode, string roleCode)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(roleCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(userAreaCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(roleCode);
 
         return UserArea(userAreaCode) + $"_Role_{roleCode}";
     }
@@ -67,7 +67,7 @@ public static class AuthorizationPolicyNames
     /// <returns>Namespaced policy name in the format 'Cofoundry_Permission_{identifier}'</returns>
     public static string Permission(string permissionTypeCode)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(permissionTypeCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(permissionTypeCode);
 
         if (permissionTypeCode.Length != 6)
         {
@@ -93,8 +93,8 @@ public static class AuthorizationPolicyNames
     /// <returns>Namespaced policy name in the format 'Cofoundry_Permission_{identifier}'</returns>
     public static string Permission(string permissionTypeCode, string entityDefinitionCode)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(permissionTypeCode);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(entityDefinitionCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(permissionTypeCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(entityDefinitionCode);
 
         var identifier = PermissionIdentifierFormatter.GetUniqueIdentifier(permissionTypeCode, entityDefinitionCode);
         return $"Cofoundry_Permission_{identifier}";

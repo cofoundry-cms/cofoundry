@@ -6,10 +6,9 @@ namespace Cofoundry.Web;
 /// Cofoundry <see cref="IFileSource"/> abstraction over an ASP.NET 
 /// <see cref="IFormFile"/>.
 /// </summary>
-/// <inheritdoc/>
 public class FormFileSource : IFileSource
 {
-    private readonly IFormFile _formFile = null;
+    private readonly IFormFile _formFile;
 
     public FormFileSource(IFormFile formFile)
     {
@@ -40,6 +39,7 @@ public class FormFileSource : IFileSource
     /// </summary>
     public long FileLength { get; private set; }
 
+    /// <inheritdoc/>
     public Task<Stream> OpenReadStreamAsync()
     {
         return Task.FromResult(_formFile.OpenReadStream());

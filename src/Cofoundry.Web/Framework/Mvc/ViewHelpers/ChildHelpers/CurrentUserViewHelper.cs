@@ -5,8 +5,8 @@
 /// </summary>
 public class CurrentUserViewHelper : ICurrentUserViewHelper
 {
-    private ICurrentUserViewHelperContext _helperContext = null;
-    private Dictionary<string, ICurrentUserViewHelperContext> _alternativeHelperContextCache = new Dictionary<string, ICurrentUserViewHelperContext>();
+    private ICurrentUserViewHelperContext? _helperContext = null;
+    private readonly Dictionary<string, ICurrentUserViewHelperContext> _alternativeHelperContextCache = [];
 
     private readonly IUserContextService _userContextService;
     private readonly IQueryExecutor _queryExecutor;
@@ -75,8 +75,13 @@ public class CurrentUserViewHelper : ICurrentUserViewHelper
 
     private async Task<ICurrentUserViewHelperContext> GetHelperContextAsync(IUserContext userContext)
     {
-        var context = new CurrentUserViewHelperContext();
-        context.Role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(userContext.RoleId), userContext);
+        var role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(userContext.RoleId), userContext);
+        EntityNotFoundException.ThrowIfNull(role, userContext.RoleId);
+
+        var context = new CurrentUserViewHelperContext
+        {
+            Role = role
+        };
 
         if (userContext.UserId.HasValue)
         {

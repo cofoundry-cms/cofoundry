@@ -14,9 +14,12 @@ public class ImagesModuleRegistration : IInternalAngularModuleRegistration
         _imageAssetsSettings = imageAssetsSettings;
     }
 
-    public AdminModule GetModule()
+    public AdminModule? GetModule()
     {
-        if (_imageAssetsSettings.Disabled) return null;
+        if (_imageAssetsSettings.Disabled)
+        {
+            return null;
+        }
 
         var module = new AdminModule()
         {
@@ -32,8 +35,5 @@ public class ImagesModuleRegistration : IInternalAngularModuleRegistration
         return module;
     }
 
-    public string RoutePrefix
-    {
-        get { return ImagesModuleRouteLibrary.RoutePrefix; }
-    }
+    public string RoutePrefix => ImagesModuleRouteLibrary.RoutePrefix;
 }

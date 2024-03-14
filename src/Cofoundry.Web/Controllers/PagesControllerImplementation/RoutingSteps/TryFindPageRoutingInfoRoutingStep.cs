@@ -19,24 +19,15 @@ public class TryFindPageRoutingInfoRoutingStep : ITryFindPageRoutingInfoRoutingS
 
     public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
     {
-        var pageQuery = GetPageRoutingInfoQuery(state);
-        var pageRoutingInfo = await _queryExecutor.ExecuteAsync(pageQuery);
-        state.PageRoutingInfo = pageRoutingInfo;
-    }
+        EntityInvalidOperationException.ThrowIfNull(state, state.VisualEditorState);
 
-    private GetPageRoutingInfoByPathQuery GetPageRoutingInfoQuery(PageActionRoutingState state)
-    {
-        var pageQuery = new GetPageRoutingInfoByPathQuery()
+        var pageRoutingInfo = await _queryExecutor.ExecuteAsync(new GetPageRoutingInfoByPathQuery()
         {
             Path = state.InputParameters.Path,
-            IncludeUnpublished = state.VisualEditorState.VisualEditorMode != VisualEditorMode.Live
-        };
+            IncludeUnpublished = state.VisualEditorState.VisualEditorMode != VisualEditorMode.Live,
+            LocaleId = state.Locale?.LocaleId
+        });
 
-        if (state.Locale != null)
-        {
-            pageQuery.LocaleId = state.Locale.LocaleId;
-        }
-
-        return pageQuery;
+        state.PageRoutingInfo = pageRoutingInfo;
     }
 }

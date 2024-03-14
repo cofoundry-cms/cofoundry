@@ -4,11 +4,15 @@ namespace Cofoundry.Web.Admin;
 
 public class CustomEntityModuleController : BaseAdminMvcController
 {
-    private static readonly Dictionary<string, string> EmptyTerms = new Dictionary<string, string>();
+    private static readonly Dictionary<string, string> EmptyTerms = [];
 
     public ActionResult Index()
     {
         var definition = RouteData.DataTokens["Definition"] as ICustomEntityDefinition;
+        if (definition == null)
+        {
+            throw new Exception($"RouteData.DataTokens[\"Definition\"] is null or not castable to ICustomEntityDefinition.");
+        }
 
         var options = new CustomEntityModuleOptions()
         {
@@ -22,9 +26,9 @@ public class CustomEntityModuleController : BaseAdminMvcController
             Terms = definition.GetTerms()
         };
 
-        if (definition is IOrderableCustomEntityDefinition)
+        if (definition is IOrderableCustomEntityDefinition orderableCustomEntityDefinition)
         {
-            options.Ordering = ((IOrderableCustomEntityDefinition)definition).Ordering;
+            options.Ordering = orderableCustomEntityDefinition.Ordering;
         }
 
         var viewPath = ViewPathFormatter.View("CustomEntities", nameof(Index));

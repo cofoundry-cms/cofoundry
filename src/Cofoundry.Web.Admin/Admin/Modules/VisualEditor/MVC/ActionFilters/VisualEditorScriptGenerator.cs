@@ -6,8 +6,7 @@ using Newtonsoft.Json;
 namespace Cofoundry.Web.Admin.Internal;
 
 /// <summary>
-/// Used to generate the scripts and CSS links that are added
-/// to a page in order display the visual editor.
+/// Default implementation of <see cref="IVisualEditorScriptGenerator"/>.
 /// </summary>
 public class VisualEditorScriptGenerator : IVisualEditorScriptGenerator
 {
@@ -39,10 +38,7 @@ public class VisualEditorScriptGenerator : IVisualEditorScriptGenerator
         _permissionValidationService = permissionValidationService;
     }
 
-    /// <summary>
-    /// Generates any scripts or CSS links that need to be
-    /// added to the document header.
-    /// </summary>
+    /// <inheritdoc/>
     public string CreateHeadScript()
     {
         return TAB + _staticResourceReferenceRenderer.ScriptTag(_adminRouteLibrary.VisualEditor, "contentpage").ToString()
@@ -52,13 +48,7 @@ public class VisualEditorScriptGenerator : IVisualEditorScriptGenerator
             ;
     }
 
-    /// <summary>
-    /// Generates any scripts or content that needs to be added
-    /// to the end of the document body.
-    /// </summary>
-    /// <param name="context">
-    /// The current ActionContext of the exectuing MVC action.
-    /// </param>
+    /// <inheritdoc/>
     public async Task<string> CreateBodyScriptAsync(ActionContext context)
     {
         string responseJson = "null";
@@ -84,6 +74,8 @@ public class VisualEditorScriptGenerator : IVisualEditorScriptGenerator
     /// </summary>
     private string CreateResponseJson(IPageResponseData pageResponseData)
     {
+        EntityInvalidOperationException.ThrowIfNull(pageResponseData, pageResponseData.CofoundryAdminUserContext);
+
         string responseJson;
 
         // When using IPageBlockWithParentPageData and referencing the parent page we get a
@@ -93,11 +85,13 @@ public class VisualEditorScriptGenerator : IVisualEditorScriptGenerator
         settings.StringEscapeHandling = StringEscapeHandling.EscapeHtml;
 
         bool isCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
-        bool hasEntityUpdatePermission = false;
-        bool hasEntityPublishPermission = false;
+        bool hasEntityUpdatePermission;
+        bool hasEntityPublishPermission;
 
         if (isCustomEntityRoute)
         {
+            EntityInvalidOperationException.ThrowIfNull(pageResponseData, pageResponseData.CustomEntityDefinition);
+
             hasEntityUpdatePermission = _permissionValidationService.HasCustomEntityPermission<CustomEntityUpdatePermission>(
                 pageResponseData.CustomEntityDefinition.CustomEntityDefinitionCode,
                 pageResponseData.CofoundryAdminUserContext
@@ -115,14 +109,14 @@ public class VisualEditorScriptGenerator : IVisualEditorScriptGenerator
 
         var responseObject = new
         {
-            Page = pageResponseData.Page,
-            PageRoutingInfo = pageResponseData.PageRoutingInfo,
-            PageVersion = pageResponseData.PageVersion,
+            pageResponseData.Page,
+            pageResponseData.PageRoutingInfo,
+            pageResponseData.PageVersion,
+            pageResponseData.HasDraftVersion,
+            pageResponseData.Version,
+            pageResponseData.VisualEditorMode,
+            pageResponseData.CustomEntityDefinition,
             IsCustomEntityRoute = isCustomEntityRoute,
-            HasDraftVersion = pageResponseData.HasDraftVersion,
-            Version = pageResponseData.Version,
-            VisualEditorMode = pageResponseData.VisualEditorMode,
-            CustomEntityDefinition = pageResponseData.CustomEntityDefinition,
             HasEntityUpdatePermission = hasEntityUpdatePermission,
             HasEntityPublishPermission = hasEntityPublishPermission
         };
@@ -134,13 +128,10 @@ public class VisualEditorScriptGenerator : IVisualEditorScriptGenerator
     private async Task<string> RenderSvgIconsToStringAsync()
     {
         var virtualFile = _resourceLocator.GetFile(_adminRouteLibrary.VisualEditor.StaticResourceFilePath("svg-cache.html"));
-        string result = null;
 
-        using (var stream = virtualFile.CreateReadStream())
-        using (var reader = new StreamReader(stream))
-        {
-            result = await reader.ReadToEndAsync();
-        }
+        using var stream = virtualFile.CreateReadStream();
+        using var reader = new StreamReader(stream);
+        var result = await reader.ReadToEndAsync();
 
         return result;
     }

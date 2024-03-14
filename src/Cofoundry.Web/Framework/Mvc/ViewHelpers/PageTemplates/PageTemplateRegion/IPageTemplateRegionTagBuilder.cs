@@ -63,7 +63,7 @@ public interface IPageTemplateRegionTagBuilder : IHtmlContent
     /// <param name="tagName">Name of the element to wrap the output in e.g. div, p, header</param>
     /// <param name="htmlAttributes">Html attributes to apply to the wrapping tag.</param>
     /// <returns>IPageTemplateRegionTagBuilder for method chaining</returns>
-    IPageTemplateRegionTagBuilder WrapWithTag(string tagName, object htmlAttributes = null);
+    IPageTemplateRegionTagBuilder WrapWithTag(string tagName, object? htmlAttributes = null);
 
     /// <summary>
     /// This method must be called at the end of the region definition to build and render the

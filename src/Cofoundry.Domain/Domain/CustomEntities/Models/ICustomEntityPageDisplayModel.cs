@@ -7,7 +7,7 @@ public interface ICustomEntityPageDisplayModel : ICustomEntityDisplayModel
 {
     string PageTitle { get; set; }
 
-    string MetaDescription { get; set; }
+    string? MetaDescription { get; set; }
 }
 
 /// <summary>

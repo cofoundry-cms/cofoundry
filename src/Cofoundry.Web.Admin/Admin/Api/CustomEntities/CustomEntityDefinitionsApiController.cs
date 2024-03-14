@@ -45,7 +45,7 @@ public class CustomEntityDefinitionsApiController : BaseAdminApiController
 
     public async Task<JsonResult> GetCustomEntities(string customEntityDefinitionCode, [FromQuery] SearchCustomEntitySummariesQuery query)
     {
-        if (query == null) query = new SearchCustomEntitySummariesQuery();
+        query ??= new SearchCustomEntitySummariesQuery();
         query.CustomEntityDefinitionCode = customEntityDefinitionCode;
         ApiPagingHelper.SetDefaultBounds(query);
 

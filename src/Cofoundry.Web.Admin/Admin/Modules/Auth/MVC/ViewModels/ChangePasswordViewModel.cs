@@ -6,21 +6,21 @@ public class ChangePasswordViewModel
     [Required]
     [EmailAddress(ErrorMessage = "Please use a valid email address")]
     [Display(Name = "Email")]
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     [Required]
     [Display(Name = "Current password")]
     [DataType(DataType.Password)]
-    public string OldPassword { get; set; }
+    public string OldPassword { get; set; } = string.Empty;
 
     [Required]
     [Display(Name = "New password")]
     [DataType(DataType.Password)]
-    public string NewPassword { get; set; }
+    public string NewPassword { get; set; } = string.Empty;
 
     [Required]
     [Display(Name = "Confirm new password")]
     [DataType(DataType.Password)]
     [Compare(nameof(NewPassword), ErrorMessage = "Password does not match")]
-    public string ConfirmNewPassword { get; set; }
+    public string ConfirmNewPassword { get; set; } = string.Empty;
 }

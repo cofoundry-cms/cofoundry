@@ -21,12 +21,12 @@ public class AdminMenuViewComponent : ViewComponent
         vm.ManageSiteModules = menuItems
             .Where(m => m.MenuCategory == AdminModuleMenuCategory.ManageSite)
             .SetStandardOrdering()
-            .ToList();
+            .ToArray();
 
         vm.SettingsModules = menuItems
             .Where(m => m.MenuCategory == AdminModuleMenuCategory.Settings)
             .SetStandardOrdering()
-            .ToList();
+            .ToArray();
 
         var selectedItem = menuItems
             .Select(m => new

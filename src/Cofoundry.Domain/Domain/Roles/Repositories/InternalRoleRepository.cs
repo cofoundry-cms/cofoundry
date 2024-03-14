@@ -22,8 +22,15 @@ public class InternalRoleRepository : IInternalRoleRepository
 
     public RoleDetails? GetById(int? roleId)
     {
-        if (!roleId.HasValue) return GetAnonymousRoleFromCache();
-        if (roleId < 1) return null;
+        if (!roleId.HasValue)
+        {
+            return GetAnonymousRoleFromCache();
+        }
+
+        if (roleId < 1)
+        {
+            return null;
+        }
 
         var cachedRole = _roleCache.GetOrAdd(roleId.Value, () =>
         {
@@ -41,8 +48,15 @@ public class InternalRoleRepository : IInternalRoleRepository
 
     public async Task<RoleDetails?> GetByIdAsync(int? roleId)
     {
-        if (!roleId.HasValue) return await GetAnonymousRoleFromCacheAsync();
-        if (roleId < 1) return null;
+        if (!roleId.HasValue)
+        {
+            return await GetAnonymousRoleFromCacheAsync();
+        }
+
+        if (roleId < 1)
+        {
+            return null;
+        }
 
         var cachedRole = await _roleCache.GetOrAddAsync(roleId.Value, async () =>
         {
@@ -71,12 +85,12 @@ public class InternalRoleRepository : IInternalRoleRepository
         {
             var dbRole = await QueryRoles()
                 .Where(r => roleIds.Contains(r.RoleId))
-                .ToListAsync();
+                .ToArrayAsync();
 
             var result = dbRole
                 .Select(_roleDetailsMapper.Map)
                 .WhereNotNull()
-                .ToList();
+                .ToArray();
 
             return result;
         }

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Cofoundry.Web.Admin;
 
 /// <summary>
-/// Used to write out script references to the angular admin UI for a standard implementation
+/// Default implementation of <see cref="IAngularBootstrapper"/>.
 /// </summary>
 public class AngularBootstrapper : IAngularBootstrapper
 {
@@ -48,15 +48,8 @@ public class AngularBootstrapper : IAngularBootstrapper
         _jsonSerializerSettings = jsonSerializerSettings;
     }
 
-    /// <summary>
-    /// Adds scripts/templates for the core angular framework and the
-    /// specified module and then bootstraps it.
-    /// </summary>
-    /// <param name="routeLibrary">Js routing library for the module to bootstrap.</param>
-    /// <param name="options">
-    /// Additional options object to render as js and inject as a constant in the angular module.
-    /// </param>
-    public async Task<IHtmlContent> BootstrapAsync(AngularModuleRouteLibrary routeLibrary, object options = null)
+    /// <inheritdoc/>
+    public async Task<IHtmlContent> BootstrapAsync(AngularModuleRouteLibrary routeLibrary, object? options = null)
     {
         var bootstrapScript = await RenderBootstrapperAsync(routeLibrary, options);
 
@@ -116,8 +109,13 @@ public class AngularBootstrapper : IAngularBootstrapper
         return formattedPluginScripts;
     }
 
-    private async Task<string> RenderBootstrapperAsync(AngularModuleRouteLibrary routeLibrary, object options)
+    private async Task<string> RenderBootstrapperAsync(AngularModuleRouteLibrary routeLibrary, object? options)
     {
+        if (_httpContextAccessor.HttpContext == null)
+        {
+            throw new InvalidOperationException($"{nameof(RenderBootstrapperAsync)} shoudl not be invoked outside of a web request, _httpContextAccessor.HttpContext is null.");
+        }
+
         var args = string.Empty;
         if (_webHostEnvironment.IsDevelopment())
         {
@@ -127,6 +125,8 @@ public class AngularBootstrapper : IAngularBootstrapper
 
         var user = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.Code);
         var role = await _queryExecutor.ExecuteAsync(new GetRoleDetailsByIdQuery(user.RoleId));
+        EntityNotFoundException.ThrowIfNull(role, user.RoleId);
+
         var currentUserInfo = new
         {
             UserId = user.UserId,
@@ -135,7 +135,7 @@ public class AngularBootstrapper : IAngularBootstrapper
             PermissionCodes = role
                 .Permissions
                 .Select(p => p.GetUniqueIdentifier())
-                .ToList()
+                .ToArray()
         };
 
         var tokens = _antiforgery.GetAndStoreTokens(_httpContextAccessor.HttpContext);

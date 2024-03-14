@@ -8,7 +8,7 @@ public static class IWebHostBuilderExtensions
 {
     /// <summary>
     /// Uses an optional appsettings.local.json configuration file
-    /// for local developer configuration, only when in the developer 
+    /// for local developer configuration, only when in the development 
     /// environment. This local configuration file should not be checked 
     /// into version control.
     /// </summary>

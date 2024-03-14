@@ -1,6 +1,9 @@
 ﻿namespace Cofoundry.Web;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IPageViewModelBuilder"/>. You can override 
+/// this implementation to customize the view model types and mapping behaviour.
+/// </summary>
 public class PageViewModelBuilder : IPageViewModelBuilder
 {
     private readonly IPageViewModelMapper _pageViewModelMapper;
@@ -15,6 +18,7 @@ public class PageViewModelBuilder : IPageViewModelBuilder
         _pageViewModelFactory = pageViewModelFactory;
     }
 
+    /// <inheritdoc/>
     public virtual async Task<IPageViewModel> BuildPageViewModelAsync(
         PageViewModelBuilderParameters mappingParameters
         )
@@ -26,6 +30,7 @@ public class PageViewModelBuilder : IPageViewModelBuilder
         return viewModel;
     }
 
+    /// <inheritdoc/>
     public virtual async Task<ICustomEntityPageViewModel<TDisplayModel>> BuildCustomEntityPageViewModelAsync<TDisplayModel>(
         CustomEntityPageViewModelBuilderParameters mappingParameters
         ) where TDisplayModel : ICustomEntityPageDisplayModel
@@ -37,6 +42,7 @@ public class PageViewModelBuilder : IPageViewModelBuilder
         return viewModel;
     }
 
+    /// <inheritdoc/>
     public virtual async Task<INotFoundPageViewModel> BuildNotFoundPageViewModelAsync(
         NotFoundPageViewModelBuilderParameters mappingParameters
         )
@@ -48,6 +54,7 @@ public class PageViewModelBuilder : IPageViewModelBuilder
         return viewModel;
     }
 
+    /// <inheritdoc/>
     public virtual async Task<IErrorPageViewModel> BuildErrorPageViewModelAsync(
         ErrorPageViewModelBuilderParameters mappingParameters
         )

@@ -1,7 +1,7 @@
 ﻿namespace Cofoundry.Web.Admin;
 
 /// <summary>
-/// A base class for module url/content routing information.
+/// A base class for angular module url/content routing information.
 /// </summary>
 public class AngularModuleRouteLibrary : ModuleRouteLibrary
 {

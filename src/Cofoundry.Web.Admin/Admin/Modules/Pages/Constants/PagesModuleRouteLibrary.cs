@@ -32,7 +32,7 @@ public class PagesModuleRouteLibrary : AngularModuleRouteLibrary
         return CreatePageDirectoryRoute();
     }
 
-    private string CreatePageDirectoryRoute(string path = null)
+    private string CreatePageDirectoryRoute(string? path = null)
     {
         return _adminSettings.DirectoryName + "/" + UrlPrefix + "#/directories/" + path;
     }

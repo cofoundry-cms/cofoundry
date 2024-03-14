@@ -23,8 +23,13 @@ public class GetPageRenderDataRoutingStep : IGetPageRenderDataRoutingStep
 
     public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
     {
-        var query = new GetPageRenderDetailsByIdQuery();
-        query.PageId = state.PageRoutingInfo.PageRoute.PageId;
+        EntityInvalidOperationException.ThrowIfNull(state, state.PageRoutingInfo);
+        EntityInvalidOperationException.ThrowIfNull(state, state.VisualEditorState);
+
+        var query = new GetPageRenderDetailsByIdQuery
+        {
+            PageId = state.PageRoutingInfo.PageRoute.PageId
+        };
 
         if (state.InputParameters.IsEditingCustomEntity)
         {

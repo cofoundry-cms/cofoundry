@@ -45,7 +45,7 @@ public class CofoundryPagesController : Controller
     /// </param>
     public async Task<IActionResult> Page(
         string path,
-        string mode,
+        string? mode,
         int? version = null,
         string editType = "entity"
         )
@@ -53,16 +53,17 @@ public class CofoundryPagesController : Controller
         _logger.LogInformation("Processing route {Path} with visual editor mode '{VisualEditorMode}', page version Id '{PageVersionId}' and edit-type '{EditType}'", path, mode, version, editType);
 
         // Init state
-        var state = new PageActionRoutingState();
-        state.Locale = await GetLocaleAsync();
-
-        state.InputParameters = new PageActionInputParameters()
+        var state = new PageActionRoutingState()
         {
-            Path = path,
-            VersionId = version,
-            IsEditingCustomEntity = editType == "entity"
+            InputParameters = new PageActionInputParameters()
+            {
+                Path = path,
+                VersionId = version,
+                IsEditingCustomEntity = editType == "entity"
+            }
         };
 
+        state.Locale = await GetLocaleAsync();
 
         // Run through the pipline in order
         foreach (var method in _pageActionRoutingStepFactory.Create())
@@ -81,7 +82,7 @@ public class CofoundryPagesController : Controller
         throw new InvalidOperationException("Unknown Page Routing State");
     }
 
-    private async Task<ActiveLocale> GetLocaleAsync()
+    private async Task<ActiveLocale?> GetLocaleAsync()
     {
         var activeLocale = await _queryExecutor.ExecuteAsync(new GetCurrentActiveLocaleQuery());
         if (activeLocale != null)

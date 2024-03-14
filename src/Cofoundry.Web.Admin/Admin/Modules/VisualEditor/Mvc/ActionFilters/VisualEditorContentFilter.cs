@@ -7,10 +7,8 @@ namespace Cofoundry.Web.Admin.Internal;
 /// <summary>
 /// Adds in styles and js to run the site viewer if it is required.
 /// </summary>
-public class VisualEditorContentFilter : IAsyncResultFilter
+public partial class VisualEditorContentFilter : IAsyncResultFilter
 {
-    const string PAGE_PATH_REGEX = @"^(?!(.*[\.].*))";
-
     private readonly IVisualEditorActionResultFactory _visualEditorActionResultFactory;
     private readonly IUserContextService _userContextService;
     private readonly IEnumerable<IVisualEditorRequestExclusionRule> _visualEditorRouteExclusionRules;
@@ -44,7 +42,7 @@ public class VisualEditorContentFilter : IAsyncResultFilter
         await next();
     }
 
-    private Task<IUserContext> GetCofoundryUserIfCanShowVisualEditorAsync(ResultExecutingContext filterContext)
+    private Task<IUserContext?> GetCofoundryUserIfCanShowVisualEditorAsync(ResultExecutingContext filterContext)
     {
         var httpContext = filterContext.HttpContext;
 
@@ -58,31 +56,36 @@ public class VisualEditorContentFilter : IAsyncResultFilter
             // Valid Result Type
             && IsValidActionType(filterContext.Result)
             // Isn't an ajax request
-            && httpContext.Request.Headers["X-Requested-With"] != "XMLHttpRequest"
+            && httpContext.Request.Headers.XRequestedWith != "XMLHttpRequest"
             // Is a page and not a static resource
-            && Regex.IsMatch(path, PAGE_PATH_REGEX, RegexOptions.IgnoreCase)
+            && PagePathRegex().IsMatch(path)
             // Isn't in the path blocklist
             && !_visualEditorRouteExclusionRules.Any(r => r.ShouldExclude(httpContext.Request));
 
-        if (!canShowSiteViewer) return Task.FromResult<IUserContext>(null);
+        if (!canShowSiteViewer)
+        {
+            return Task.FromResult<IUserContext?>(null);
+        }
 
         // Last check is if authenticated as a cofoundry user (this is most expensive test so do it last)
         return GetCofoundryUserAsync();
     }
 
-    private bool IsValidActionType(IActionResult actionResult)
+    private static bool IsValidActionType(IActionResult actionResult)
     {
-        if (actionResult is FileResult) return false;
-        if (actionResult is StatusCodeResult) return false;
-        // There seems to be an issue with rendering Razor Pages from the MVC pipeline used by the visual editor, so 
-        // this has to be disabled for now. Since the Visual Editor doesn't work with razor pages, this isn't so 
-        // important for now.
-        if (actionResult is Microsoft.AspNetCore.Mvc.RazorPages.PageResult) return false;
-
-        return true;
+        return actionResult switch
+        {
+            FileResult => false,
+            StatusCodeResult => false,
+            // There seems to be an issue with rendering Razor Pages from the MVC pipeline used by the visual editor, so 
+            // this has to be disabled for now. Since the Visual Editor doesn't work with razor pages, this isn't so 
+            // important for now.
+            Microsoft.AspNetCore.Mvc.RazorPages.PageResult => false,
+            _ => true
+        };
     }
 
-    private async Task<IUserContext> GetCofoundryUserAsync()
+    private async Task<IUserContext?> GetCofoundryUserAsync()
     {
         // The ambient auth scheme may not be for CofoundryAdmin so make sure we get 
         var userContext = await _userContextService.GetCurrentContextByUserAreaAsync(CofoundryAdminUserArea.Code);
@@ -94,4 +97,7 @@ public class VisualEditorContentFilter : IAsyncResultFilter
 
         return null;
     }
+
+    [GeneratedRegex(@"^(?!(.*[\.].*))", RegexOptions.IgnoreCase)]
+    private static partial Regex PagePathRegex();
 }

@@ -8,6 +8,6 @@ public class RichTextDataModel : IPageBlockTypeDataModel
     [Required, Display(Name = "Text")]
     [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings)]
     //[Searchable]
-    public string RawHtml { get; set; }
+    public string RawHtml { get; set; } = string.Empty;
 
 }

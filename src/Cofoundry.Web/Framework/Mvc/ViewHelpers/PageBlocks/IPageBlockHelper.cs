@@ -2,10 +2,9 @@
 
 /// <summary>
 /// This helper exposes page block specific functionality in a page 
-/// block view file.
+/// block type view file.
 /// </summary>
 public interface IPageBlockHelper<TViewModel>
-// where TViewModel : IPageBlockTypeDisplayModel
 {
     /// <summary>
     /// Sets a custom display name for the page block type. Usually the name is taken 

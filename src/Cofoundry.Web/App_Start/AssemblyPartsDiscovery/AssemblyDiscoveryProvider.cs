@@ -16,23 +16,23 @@ namespace Cofoundry.Web;
 /// </remarks>
 public class AssemblyDiscoveryProvider : IAssemblyDiscoveryProvider
 {
-    /// <summary>
-    /// Run the discovery routine using the provided ruleset.
-    /// </summary>
-    /// <param name="mvcBuilder">The application IMvcBuilder configuration.</param>
-    /// <param name="rules">The ruleset to use when discovering assemblies.</param>
-    /// <returns>
-    /// A collection of additional assemblies to reference that aren't already referenced 
-    /// by the IMvcBuilder AssemblyPartsProvider.
-    /// </returns>
+    /// <inheritdoc/>
     public virtual IEnumerable<Assembly> DiscoverAssemblies(
         IMvcBuilder mvcBuilder,
         IEnumerable<IAssemblyDiscoveryRule> rules
         )
     {
         var entryAssembly = Assembly.GetEntryAssembly();
+        if (entryAssembly == null)
+        {
+            return Enumerable.Empty<Assembly>();
+        }
+
         var dependencyContext = DependencyContext.Load(entryAssembly);
-        if (dependencyContext == null) return Enumerable.Empty<Assembly>();
+        if (dependencyContext == null)
+        {
+            return Enumerable.Empty<Assembly>();
+        }
 
         var existingReferences = mvcBuilder
             .PartManager
@@ -44,7 +44,8 @@ public class AssemblyDiscoveryProvider : IAssemblyDiscoveryProvider
             entryAssembly,
             dependencyContext,
             existingReferences,
-            rules);
+            rules
+            );
 
         return additionalAssemblies;
     }

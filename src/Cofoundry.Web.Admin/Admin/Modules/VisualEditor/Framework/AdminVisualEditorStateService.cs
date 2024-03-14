@@ -46,7 +46,10 @@ public class AdminVisualEditorStateService : IVisualEditorStateService
     private async Task<VisualEditorState> CreateAsync()
     {
         var state = new VisualEditorState();
-        if (_adminSettings.Disabled) return state;
+        if (_adminSettings.Disabled)
+        {
+            return state;
+        }
 
         var requestParameters = GetRequestParameters();
 
@@ -80,7 +83,7 @@ public class AdminVisualEditorStateService : IVisualEditorStateService
 
     private class VisualEditorRequestParameters
     {
-        public string VisualEditorMode { get; set; }
+        public string? VisualEditorMode { get; set; }
 
         public int? VersionId { get; set; }
     }

@@ -23,6 +23,8 @@ public class ValidateSpecificVersionRoutingRoutingStep : IValidateSpecificVersio
 
     public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
     {
+        EntityInvalidOperationException.ThrowIfNull(state, state.VisualEditorState);
+
         // Ensure that non-authenticated users can't access previous versions
         if (state.VisualEditorState.VisualEditorMode != VisualEditorMode.SpecificVersion)
         {
@@ -33,7 +35,8 @@ public class ValidateSpecificVersionRoutingRoutingStep : IValidateSpecificVersio
             var versionRoute = state.PageRoutingInfo.GetVersionRoute(
                 state.InputParameters.IsEditingCustomEntity,
                 state.VisualEditorState.GetPublishStatusQuery(),
-                state.InputParameters.VersionId);
+                state.InputParameters.VersionId
+                );
 
             // If this isn't an old version of a page, set the VisualEditorMode accordingly.
             if (versionRoute != null)

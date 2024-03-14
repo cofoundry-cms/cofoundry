@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Html;
+﻿using Cofoundry.Web.Framework.Mvc.ViewHelpers;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,20 +7,47 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Cofoundry.Web;
 
 /// <summary>
-/// UI helper for Page Template functionality such as defining region.
+/// Default implementation of <see cref="IPageTemplateHelper<>"/>.
 /// </summary>
-/// <typeparam name="TModel">ViewModel type</typeparam>
 public class PageTemplateHelper<TModel>
     : IPageTemplateHelper<TModel>, IViewContextAware
     where TModel : IEditablePageViewModel
 {
-    public ViewContext ViewContext { get; private set; }
+    private ViewContext? _viewContext;
+    /// <summary>
+    /// The view model associated with the page this helper is contained in
+    /// </summary>
+    public ViewContext ViewContext
+    {
+        get
+        {
+            if (_viewContext == null)
+            {
+                throw ViewHelperNotContextualizedException.Create<CofoundryPageHelper<TModel>>(nameof(ViewContext));
+            }
+            return _viewContext;
+        }
+    }
 
-    public TModel Model { get; private set; }
+    private TModel? _model;
+    /// <summary>
+    /// The view model associated with the page this helper is contained in
+    /// </summary>
+    public TModel Model
+    {
+        get
+        {
+            if (_model == null)
+            {
+                throw ViewHelperNotContextualizedException.Create<CofoundryPageHelper<TModel>>(nameof(Model));
+            }
+            return _model;
+        }
+    }
 
     public void Contextualize(ViewContext viewContext)
     {
-        ViewContext = viewContext;
+        _viewContext = viewContext;
 
         if (viewContext.ViewData.Model is TModel model)
         {
@@ -27,33 +55,29 @@ public class PageTemplateHelper<TModel>
             {
                 throw new ArgumentException("Page templates must use a model that inherits from " + typeof(IEditablePageViewModel).Name);
             }
-            Model = model;
+            _model = model;
+        }
+        else if (viewContext.ViewData.Model is null)
+        {
+            throw new Exception($"Null model supplied when contextualizing '{nameof(CofoundryPageHelper<TModel>)}'.");
         }
         else
         {
-            throw new Exception("Model is not correct");
+            var modelType = viewContext.ViewData.Model.GetType();
+            throw new Exception($"Incorrect model type supplied when contextualizing '{nameof(CofoundryPageHelper<TModel>)}' with model type '{modelType.FullName}'.");
         }
     }
 
-    /// <summary>
-    /// Indictes where to render a region in the page template. 
-    /// </summary>
-    /// <param name="regionName">The name of the page template region. This must be unique in a page template.</param>
-    /// <returns>IPageTemplateRegionTagBuilder to allow for method chaining.</returns>
+    /// <inheritdoc/>
     public IPageTemplateRegionTagBuilder Region(string regionName)
     {
         var factory = ViewContext.HttpContext.RequestServices.GetRequiredService<IPageTemplateRegionTagBuilderFactory>();
-        var output = factory.Create(ViewContext, (IEditablePageViewModel)Model, regionName);
+        var output = factory.Create(ViewContext, Model, regionName);
 
         return output;
     }
 
-    /// <summary>
-    /// Sets the description assigned to the template in the
-    /// administration UI. Use this to tell users what the template 
-    /// should be used for.
-    /// </summary>
-    /// <param name="description">A plain text description about this template</param>
+    /// <inheritdoc/>
     public IHtmlContent UseDescription(string description)
     {
         ArgumentNullException.ThrowIfNull(description);

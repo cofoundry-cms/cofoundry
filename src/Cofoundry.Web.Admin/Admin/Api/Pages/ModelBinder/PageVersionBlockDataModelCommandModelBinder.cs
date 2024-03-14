@@ -43,7 +43,7 @@ public class PageVersionBlockDataModelCommandModelBinder : IModelBinder
         bindingContext.Result = ModelBindingResult.Success(result);
     }
 
-    private async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
+    private static async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
     {
         string body;
         using (var reader = new StreamReader(bindingContext.ActionContext.HttpContext.Request.Body, Encoding.UTF8))
@@ -54,11 +54,14 @@ public class PageVersionBlockDataModelCommandModelBinder : IModelBinder
         return body;
     }
 
-    private async Task<JsonConverter> GetBlockDataTypeConverterAsync(int? pageBlockTypeId)
+    private async Task<JsonConverter?> GetBlockDataTypeConverterAsync(int? pageBlockTypeId)
     {
         // If there's no id then the model probably wasn't supplied and should be
         // considered null which will cause a validation error
-        if (!pageBlockTypeId.HasValue || pageBlockTypeId < 1) return null;
+        if (!pageBlockTypeId.HasValue || pageBlockTypeId < 1)
+        {
+            return null;
+        }
 
         var dataBlockType = await _pageBlockTypeDataModelTypeFactory.CreateByPageBlockTypeIdAsync(pageBlockTypeId.Value);
         EntityNotFoundException.ThrowIfNull(dataBlockType, pageBlockTypeId);

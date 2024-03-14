@@ -19,20 +19,19 @@ public class PageResponseDataCache : IPageResponseDataCache
         _httpContextAccessor = httpContextAccessor;
     }
 
-    /// <summary>
-    /// Sets the cache value.
-    /// </summary>
-    public IPageResponseData Get()
+    /// <inheritdoc/>
+    public IPageResponseData? Get()
     {
         var cache = _httpContextAccessor.HttpContext?.Items;
-        if (cache == null) return null;
+        if (cache == null)
+        {
+            return null;
+        };
 
         return cache[CACHE_KEY] as PageResponseData;
     }
 
-    /// <summary>
-    /// Gets the cache value or null if it has not been set.
-    /// </summary>
+    /// <inheritdoc/>
     public void Set(IPageResponseData data)
     {
         var cache = _httpContextAccessor.HttpContext?.Items;

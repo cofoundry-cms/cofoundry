@@ -20,8 +20,9 @@ public class UserAreaAuthorizationHandler : AuthorizationHandler<UserAreaAuthori
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserAreaAuthorizationRequirement requirement)
     {
         var user = await _userContextService.GetCurrentContextAsync();
+        var signedInUser = user.ToSignedInContext();
 
-        if (user.IsSignedIn() && user.UserArea.UserAreaCode == requirement.UserAreaCode)
+        if (signedInUser != null && signedInUser.UserArea.UserAreaCode == requirement.UserAreaCode)
         {
             context.Succeed(requirement);
         }

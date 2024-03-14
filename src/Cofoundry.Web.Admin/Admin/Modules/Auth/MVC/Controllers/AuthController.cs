@@ -83,7 +83,7 @@ public class AuthController : Controller
             })
             .ExecuteAsync();
 
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid || !authResult.IsSuccess)
         {
             var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
             return View(viewPath, viewModel);
@@ -186,7 +186,10 @@ public class AuthController : Controller
     [HttpPost]
     public async Task<ActionResult> ResetPassword(CompleteAccountRecoveryViewModel vm)
     {
-        if (await IsLoggedInAsync()) return await GetLoggedInDefaultRedirectActionAsync();
+        if (await IsLoggedInAsync())
+        {
+            return await GetLoggedInDefaultRedirectActionAsync();
+        }
 
         var token = _authorizedTaskTokenUrlHelper.ParseTokenFromQuery(Request.Query);
 
@@ -197,7 +200,7 @@ public class AuthController : Controller
             .CompleteAsync(new CompleteUserAccountRecoveryViaEmailCommand()
             {
                 UserAreaCode = CofoundryAdminUserArea.Code,
-                Token = token,
+                Token = token ?? string.Empty,
                 NewPassword = vm.NewPassword
             });
 
@@ -245,9 +248,10 @@ public class AuthController : Controller
         return View(viewPath, vm);
     }
 
-    private async Task<ActionResult> ValidateChangePasswordRouteAsync()
+    private async Task<ActionResult?> ValidateChangePasswordRouteAsync()
     {
         var user = await GetUserContextAsync();
+
         if (user.UserId.HasValue)
         {
             if (!user.IsPasswordChangeRequired)

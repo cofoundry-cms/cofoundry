@@ -22,12 +22,17 @@ public class GetNotFoundRouteRoutingStep : IGetNotFoundRouteRoutingStep
 
     public async Task ExecuteAsync(Controller controller, PageActionRoutingState state)
     {
+        EntityInvalidOperationException.ThrowIfNull(state, state.VisualEditorState);
+
         // Find a 404 page if a version does not exist.
         if (state.PageRoutingInfo == null)
         {
             // First check for a rewrite rule and apply it
             state.Result = await GetRewriteResult(controller);
-            if (state.Result != null) return;
+            if (state.Result != null)
+            {
+                return;
+            }
 
             // else try and find a 404 page route
             state.PageRoutingInfo = await TryFindNotFoundPageRoute(state.InputParameters.Path, state.VisualEditorState.VisualEditorMode);
@@ -40,13 +45,15 @@ public class GetNotFoundRouteRoutingStep : IGetNotFoundRouteRoutingStep
         }
     }
 
-    private async Task<ActionResult> GetRewriteResult(Controller controller)
+    private async Task<ActionResult?> GetRewriteResult(Controller controller)
     {
-        var query = new GetRewriteRuleSummaryByPathQuery() { Path = controller.Request.Path };
-        var rewriteRule = await _queryExecutor.ExecuteAsync(query);
+        var rewriteRule = await _queryExecutor.ExecuteAsync(new GetRewriteRuleSummaryByPathQuery()
+        {
+            Path = controller.Request.Path
+        });
+
         if (rewriteRule != null)
         {
-            string writeTo = rewriteRule.WriteTo;
             var response = new RedirectResult(rewriteRule.WriteTo, true);
             return response;
         }
@@ -57,16 +64,18 @@ public class GetNotFoundRouteRoutingStep : IGetNotFoundRouteRoutingStep
     /// <summary>
     /// Try and find a page route for a 404 page.
     /// </summary>
-    private async Task<PageRoutingInfo> TryFindNotFoundPageRoute(string path, VisualEditorMode siteViewerMode)
+    private async Task<PageRoutingInfo?> TryFindNotFoundPageRoute(string path, VisualEditorMode siteViewerMode)
     {
-        var notFoundQuery = new GetNotFoundPageRouteByPathQuery()
+        var pageRoute = await _queryExecutor.ExecuteAsync(new GetNotFoundPageRouteByPathQuery()
         {
             Path = path,
             IncludeUnpublished = siteViewerMode != VisualEditorMode.Live
-        };
-        var pageRoute = await _queryExecutor.ExecuteAsync(notFoundQuery);
+        });
 
-        if (pageRoute == null) return null;
+        if (pageRoute == null)
+        {
+            return null;
+        }
 
         return new PageRoutingInfo()
         {

@@ -14,7 +14,7 @@ namespace Cofoundry.Web.Admin.TagHelpers.Internal;
 public class PasswordPolicyTagHelper : TagHelper
 {
     [HtmlAttributeName("cf-policy")]
-    public PasswordPolicyDescription Policy { get; set; }
+    public PasswordPolicyDescription? Policy { get; set; }
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {

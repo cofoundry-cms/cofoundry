@@ -29,7 +29,7 @@ public class CustomEntitiesApiController : BaseAdminApiController
             });
         }
 
-        if (query == null) query = new SearchCustomEntitySummariesQuery();
+        query ??= new SearchCustomEntitySummariesQuery();
         ApiPagingHelper.SetDefaultBounds(query);
 
         return await _apiResponseHelper.RunQueryAsync(query);

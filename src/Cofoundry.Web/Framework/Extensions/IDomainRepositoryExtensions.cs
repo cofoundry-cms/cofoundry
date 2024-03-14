@@ -11,6 +11,8 @@ public static class IDomainRepositoryExtensions
     /// Wraps query and command execution with error handling code that pipes validation
     /// exceptions and validation query results into model state. Additionally if the
     /// model state is invalid prior to execution, then execution will be skipped.
+    /// If execution is skipped then the default result type value will be returned and 
+    /// should be ignored.
     /// </summary>
     /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
     public static TRepository WithModelState<TRepository>(this TRepository repository, ControllerBase controller)
@@ -26,6 +28,8 @@ public static class IDomainRepositoryExtensions
     /// Wraps query and command execution with error handling code that pipes validation
     /// exceptions and validation query results into model state. Additionally if the
     /// model state is invalid prior to execution, then execution will be skipped.
+    /// If execution is skipped then the default result type value will be returned and 
+    /// should be ignored.
     /// </summary>
     /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
     public static TRepository WithModelState<TRepository>(this TRepository repository, Controller controller)
@@ -41,6 +45,8 @@ public static class IDomainRepositoryExtensions
     /// Wraps query and command execution with error handling code that pipes validation
     /// exceptions and validation query results into model state. Additionally if the
     /// model state is invalid prior to execution, then execution will be skipped.
+    /// If execution is skipped then the default result type value will be returned and 
+    /// should be ignored.
     /// </summary>
     /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
     public static TRepository WithModelState<TRepository>(this TRepository repository, PageModel pageModel)

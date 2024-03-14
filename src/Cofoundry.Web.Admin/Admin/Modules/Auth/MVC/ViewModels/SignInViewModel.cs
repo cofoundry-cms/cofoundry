@@ -15,7 +15,7 @@ public class SignInViewModel
     [Required]
     [EmailAddress(ErrorMessage = "Please use a valid email address")]
     [Display(Name = "Email")]
-    public string Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     /// <summary>
     /// The plain text representaion of the password to attempt
@@ -24,7 +24,7 @@ public class SignInViewModel
     [DataType(DataType.Password)]
     [Required(ErrorMessage = "Please provide your password")]
     [Display(Name = "Password")]
-    public string Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 
     /// <summary>
     /// True if the user should stay logged in perminantely; false

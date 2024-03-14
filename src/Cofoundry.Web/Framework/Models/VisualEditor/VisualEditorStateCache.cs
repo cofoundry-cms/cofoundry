@@ -2,6 +2,9 @@
 
 namespace Cofoundry.Web;
 
+/// <summary>
+/// Default implementation of <see cref="IVisualEditorStateCache"/>.
+/// </summary>
 public class VisualEditorStateCache : IVisualEditorStateCache
 {
     const string CACHE_KEY = "Cofoundry.Web.VisualEditorStateCache";
@@ -14,10 +17,8 @@ public class VisualEditorStateCache : IVisualEditorStateCache
         _httpContextAccessor = httpContextAccessor;
     }
 
-    /// <summary>
-    /// Sets the cache value.
-    /// </summary>
-    public VisualEditorState Get()
+    /// <inheritdoc/>
+    public VisualEditorState? Get()
     {
         var cache = _httpContextAccessor.HttpContext?.Items;
         if (cache == null) return null;
@@ -25,9 +26,7 @@ public class VisualEditorStateCache : IVisualEditorStateCache
         return cache[CACHE_KEY] as VisualEditorState;
     }
 
-    /// <summary>
-    /// Gets the cache value or null if it has not been set.
-    /// </summary>
+    /// <inheritdoc/>
     public void Set(VisualEditorState data)
     {
         var cache = _httpContextAccessor.HttpContext?.Items;

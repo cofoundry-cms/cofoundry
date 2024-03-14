@@ -21,10 +21,8 @@ public class CurrentUserViewHelperTests
         var result = await currentUserViewHelper.GetAsync();
         var cachedResult = await currentUserViewHelper.GetAsync();
 
-        Assert.False(result.IsLoggedIn);
         Assert.False(result.IsSignedIn);
         Assert.True(result.Role.IsAnonymousRole);
-        Assert.Null(result.User);
         Assert.Null(result.Data);
         Assert.Equal(result, cachedResult);
     }
@@ -46,7 +44,6 @@ public class CurrentUserViewHelperTests
         Assert.True(result.IsSignedIn);
         Assert.False(result.Role.IsAnonymousRole);
         Assert.Equal(userContext.RoleId, result.Role.RoleId);
-        Assert.Equal(userContext.UserId, result.User.UserId);
         Assert.Equal(userContext.UserId, result.Data.UserId);
         Assert.Equal(result, cachedResult);
     }
@@ -63,17 +60,13 @@ public class CurrentUserViewHelperTests
         Assert.True(result.IsSignedIn);
         Assert.False(result.Role.IsAnonymousRole);
         Assert.Equal(_userAreaContext.RoleId, result.Role.RoleId);
-        Assert.Equal(_userAreaContext.UserId, result.User.UserId);
         Assert.Equal(_userAreaContext.UserId, result.Data.UserId);
         Assert.Equal(result, cachedResult);
     }
 
     private CurrentUserViewHelper CreateCurrentUserViewHelper(IUserContext defaultUserContext = null)
     {
-        if (defaultUserContext == null)
-        {
-            defaultUserContext = new UserContext();
-        }
+        defaultUserContext ??= new UserContext();
 
         var userContextService = MockUserContextService(defaultUserContext);
         var queryExecutor = MockQueryExecutor(defaultUserContext);

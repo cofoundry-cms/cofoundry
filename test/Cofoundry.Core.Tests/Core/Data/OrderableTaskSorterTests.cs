@@ -16,11 +16,11 @@ public class OrderableTaskSorterTests
     [Fact]
     public void Sort_WithDependencies_CanSort()
     {
-        var list = new List<TestSortableTask>()
+        var list = new List<ITestSortableTask>()
         {
-            new FirstTask() { RunAfter = new Type[] { typeof(SecondTask), typeof(FithTask) } },
-            new SecondTask() { RunBefore = new Type[] { typeof(SixthTask) } },
-            new ThirdTask() { RunAfter = new Type[] { typeof(FirstTask) } },
+            new FirstTask() { RunAfter = [typeof(SecondTask), typeof(FithTask)] },
+            new SecondTask() { RunBefore = [typeof(SixthTask)]},
+            new ThirdTask() { RunAfter = [typeof(FirstTask)]},
             new FourthTask(),
             new FithTask(),
             new SixthTask()
@@ -37,7 +37,7 @@ public class OrderableTaskSorterTests
     [Fact]
     public void Sort_WithOrdering_CanSort()
     {
-        var list = new List<TestSortableTask>()
+        var list = new List<ITestSortableTask>()
         {
             new FirstTask() { Ordering = 6 },
             new SecondTask() { Ordering = 5 },
@@ -58,11 +58,11 @@ public class OrderableTaskSorterTests
     [Fact]
     public void Sort_WithOrderingAndDependencies_CanSort()
     {
-        var list = new List<TestSortableTask>()
+        var list = new List<ITestSortableTask>()
         {
-            new FirstTask() { Ordering = 1, RunAfter = new Type[] { typeof(SecondTask), typeof(FithTask) } },
-            new SecondTask() { Ordering = 10, RunBefore = new Type[] { typeof(SixthTask) } },
-            new ThirdTask() { Ordering = 100, RunAfter = new Type[] { typeof(FirstTask) } },
+            new FirstTask() { Ordering = 1, RunAfter = [typeof(SecondTask), typeof(FithTask)] },
+            new SecondTask() { Ordering = 10, RunBefore = [typeof(SixthTask)] },
+            new ThirdTask() { Ordering = 100, RunAfter = [typeof(FirstTask)] },
             new FourthTask() { Ordering = 1 },
             new FithTask(),
             new SixthTask()
@@ -76,35 +76,35 @@ public class OrderableTaskSorterTests
         Assert.Equal(expected, stringResult);
     }
 
-    private interface TestSortableTask { };
+    private interface ITestSortableTask { };
 
-    private class FirstTask : TestSortableTask, IRunAfterTask, IOrderedTask
+    private class FirstTask : ITestSortableTask, IRunAfterTask, IOrderedTask
     {
-        public ICollection<Type> RunAfter { get; set; }
+        public IReadOnlyCollection<Type> RunAfter { get; set; }
 
         public int Ordering { get; set; }
     }
 
-    private class SecondTask : TestSortableTask, IRunBeforeTask, IOrderedTask
+    private class SecondTask : ITestSortableTask, IRunBeforeTask, IOrderedTask
     {
-        public ICollection<Type> RunBefore { get; set; }
+        public IReadOnlyCollection<Type> RunBefore { get; set; }
 
         public int Ordering { get; set; }
     }
 
-    private class ThirdTask : TestSortableTask, IRunAfterTask, IOrderedTask
+    private class ThirdTask : ITestSortableTask, IRunAfterTask, IOrderedTask
     {
-        public ICollection<Type> RunAfter { get; set; }
+        public IReadOnlyCollection<Type> RunAfter { get; set; }
 
         public int Ordering { get; set; }
     }
 
-    private class FourthTask : TestSortableTask, IOrderedTask
+    private class FourthTask : ITestSortableTask, IOrderedTask
     {
         public int Ordering { get; set; }
     }
 
-    private class FithTask : TestSortableTask { }
+    private class FithTask : ITestSortableTask { }
 
-    private class SixthTask : TestSortableTask { }
+    private class SixthTask : ITestSortableTask { }
 }

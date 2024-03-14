@@ -6,7 +6,7 @@
 /// </summary>
 public class RoleDetails
 {
-    private readonly PermissionEqualityComparer _equalityComparer = new PermissionEqualityComparer();
+    private readonly PermissionEqualityComparer _equalityComparer = new();
 
     /// <summary>
     /// Database id of the role.

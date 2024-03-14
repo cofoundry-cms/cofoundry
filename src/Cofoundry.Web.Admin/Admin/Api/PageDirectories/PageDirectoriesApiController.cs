@@ -48,8 +48,10 @@ public class PageDirectoriesApiController : BaseAdminApiController
 
     public Task<JsonResult> Delete(int pageDirectoryId)
     {
-        var command = new DeletePageDirectoryCommand();
-        command.PageDirectoryId = pageDirectoryId;
+        var command = new DeletePageDirectoryCommand
+        {
+            PageDirectoryId = pageDirectoryId
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }

@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Web.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IClaimsPrincipalBuilderContextRepository"/>.
+/// </summary>
 public class ClaimsPrincipalBuilderContextRepository : IClaimsPrincipalBuilderContextRepository
 {
     private readonly CofoundryDbContext _cofoundryDbContext;
@@ -15,9 +17,13 @@ public class ClaimsPrincipalBuilderContextRepository : IClaimsPrincipalBuilderCo
         _cofoundryDbContext = cofoundryDbContext;
     }
 
-    public async Task<IClaimsPrincipalBuilderContext> GetAsync(int userId)
+    /// <inheritdoc/>
+    public async Task<IClaimsPrincipalBuilderContext?> GetAsync(int userId)
     {
-        if (userId < 1) return null;
+        if (userId < 1)
+        {
+            return null;
+        }
 
         var result = await _cofoundryDbContext
             .Users

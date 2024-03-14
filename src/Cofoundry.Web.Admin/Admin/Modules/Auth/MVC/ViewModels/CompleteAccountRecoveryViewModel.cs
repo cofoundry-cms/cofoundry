@@ -9,7 +9,7 @@ public class CompleteAccountRecoveryViewModel
     [Required]
     [Display(Name = "New password")]
     [DataType(DataType.Password)]
-    public string NewPassword { get; set; }
+    public string NewPassword { get; set; } = string.Empty;
 
     /// <summary>
     /// The token used to verify the request.
@@ -18,5 +18,5 @@ public class CompleteAccountRecoveryViewModel
     [Display(Name = "Confirm new password")]
     [DataType(DataType.Password)]
     [Compare(nameof(NewPassword), ErrorMessage = "Password does not match")]
-    public string ConfirmNewPassword { get; set; }
+    public string ConfirmNewPassword { get; set; } = string.Empty;
 }

@@ -7,7 +7,10 @@ public class ImageDataModel : IPageBlockTypeDataModel
 {
     [Image]
     public int ImageId { get; set; }
-    public string AltText { get; set; }
-    public string LinkPath { get; set; }
-    public string LinkTarget { get; set; }
+
+    public string? AltText { get; set; }
+
+    public string? LinkPath { get; set; }
+
+    public string? LinkTarget { get; set; }
 }

@@ -14,7 +14,7 @@ public interface ICofoundryHtmlHelper
     /// <param name="cls">The class to apply if the condition is met.</param>
     /// <param name="elseCls">Optional class to apply if the condition is not met.</param>
     /// <returns>HtmlString in the format 'class="{cls}"'.</returns>
-    IHtmlContent ClassIf(bool condition, string cls, string elseCls = null);
+    IHtmlContent ClassIf(bool condition, string cls, string? elseCls = null);
 
     /// <summary>
     /// Returns the specified string value if the condition is met.
@@ -23,5 +23,5 @@ public interface ICofoundryHtmlHelper
     /// <param name="passContent">String to insert if the condition is true</param>
     /// <param name="failContent">Optional string to insert if the condition is false</param>
     /// <returns>The value if the condition is true; otherwise an empty IHtmlString.</returns>
-    IHtmlContent TextIf(bool condition, string passContent, string failContent = null);
+    IHtmlContent TextIf(bool condition, string passContent, string? failContent = null);
 }

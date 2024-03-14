@@ -18,19 +18,31 @@ public class UsersRouteLibrary : AngularModuleRouteLibrary
 
     public string New(IUserAreaDefinition definition)
     {
-        if (definition == null) return string.Empty;
+        if (definition == null)
+        {
+            return string.Empty;
+        }
+
         return List(definition) + "new";
     }
 
     public string Details(IUserAreaDefinition definition, int id)
     {
-        if (definition == null) return string.Empty;
+        if (definition == null)
+        {
+            return string.Empty;
+        }
+
         return List(definition) + id.ToString();
     }
 
-    private string GetUserAreaRoute(IUserAreaDefinition definition, string route = null)
+    private string GetUserAreaRoute(IUserAreaDefinition definition, string? route = null)
     {
-        if (definition == null) return string.Empty;
+        if (definition == null)
+        {
+            return string.Empty;
+        }
+
         return "/" + _adminSettings.DirectoryName + "/" + SlugFormatter.ToSlug(definition.Name) + "-users#/" + route;
     }
 }

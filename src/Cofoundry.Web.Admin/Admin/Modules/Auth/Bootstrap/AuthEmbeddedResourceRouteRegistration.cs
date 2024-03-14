@@ -18,7 +18,10 @@ public class AuthEmbeddedResourceRouteRegistration : IEmbeddedResourceRouteRegis
 
     public IEnumerable<EmbeddedResourcePath> GetEmbeddedResourcePaths()
     {
-        if (_adminSettings.Disabled) yield break;
+        if (_adminSettings.Disabled)
+        {
+            yield break;
+        }
 
         var path = new EmbeddedResourcePath(
             GetType().Assembly,

@@ -35,7 +35,12 @@ public class AuthorizePermissionAttribute : AuthorizeAttribute
             throw new ArgumentException($"{permissionType} must be a permission type implementing {nameof(IPermission)} to be used in {nameof(AuthorizePermissionAttribute)}");
         }
 
-        var permission = (IPermission)Activator.CreateInstance(permissionType);
+        var permission = Activator.CreateInstance(permissionType) as IPermission;
+        if (permission == null)
+        {
+            throw new Exception($"Activator.CreateInstance unexpectedly returned null for permission type '{permissionType}'");
+        }
+
         Policy = AuthorizationPolicyNames.Permission(permission);
     }
 
@@ -54,7 +59,7 @@ public class AuthorizePermissionAttribute : AuthorizeAttribute
         : base()
     {
         ArgumentNullException.ThrowIfNull(customEntityPermissionTemplateType);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(customEntityDefinitionCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(customEntityDefinitionCode);
 
         if (customEntityPermissionTemplateType.GetConstructor(Type.EmptyTypes) == null)
         {
@@ -66,8 +71,13 @@ public class AuthorizePermissionAttribute : AuthorizeAttribute
             throw new ArgumentException($"{customEntityPermissionTemplateType} must be a permission type implementing {nameof(ICustomEntityPermissionTemplate)} to be used in {nameof(AuthorizePermissionAttribute)} with a {nameof(customEntityDefinitionCode)}");
         }
 
-        var permission = (ICustomEntityPermissionTemplate)Activator.CreateInstance(customEntityPermissionTemplateType);
-        if (permission.PermissionType == null) throw new InvalidOperationException(nameof(customEntityPermissionTemplateType));
+        var permission = Activator.CreateInstance(customEntityPermissionTemplateType) as ICustomEntityPermissionTemplate;
+        if (permission == null)
+        {
+            throw new Exception($"Activator.CreateInstance unexpectedly returned null for permission type '{customEntityPermissionTemplateType}'");
+        }
+
+        EntityInvalidOperationException.ThrowIfNull(permission, permission.PermissionType);
 
         Policy = AuthorizationPolicyNames.Permission(permission.PermissionType.Code, customEntityDefinitionCode);
     }

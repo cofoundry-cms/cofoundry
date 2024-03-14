@@ -3,12 +3,12 @@
 public interface IVisualEditorStateCache
 {
     /// <summary>
-    /// Sets the cache value.
+    /// Gets the cache value or <see langword="null"/> if it has not been set.
     /// </summary>
-    VisualEditorState Get();
+    VisualEditorState? Get();
 
     /// <summary>
-    /// Gets the cache value or null if it has not been set.
+    /// Sets the cache value.
     /// </summary>
     void Set(VisualEditorState data);
 }

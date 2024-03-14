@@ -6,5 +6,5 @@
 public class PlainTextDataModel : IPageBlockTypeDataModel, IPageBlockTypeDisplayModel
 {
     [MultiLineText]
-    public string PlainText { get; set; }
+    public string? PlainText { get; set; }
 }

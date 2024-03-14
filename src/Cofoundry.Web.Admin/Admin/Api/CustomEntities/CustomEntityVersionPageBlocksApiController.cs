@@ -25,7 +25,12 @@ public class CustomEntityVersionPageBlocksApiController : BaseAdminApiController
             return await _apiResponseHelper.RunQueryAsync(updateCommandQuery);
         }
 
-        var query = new GetCustomEntityVersionPageBlockRenderDetailsByIdQuery() { CustomEntityVersionPageBlockId = customEntityVersionPageBlockId, PublishStatus = PublishStatusQuery.Latest };
+        var query = new GetCustomEntityVersionPageBlockRenderDetailsByIdQuery()
+        {
+            CustomEntityVersionPageBlockId = customEntityVersionPageBlockId,
+            PublishStatus = PublishStatusQuery.Latest
+        };
+
         return await _apiResponseHelper.RunQueryAsync(query);
     }
 
@@ -49,18 +54,22 @@ public class CustomEntityVersionPageBlocksApiController : BaseAdminApiController
 
     public Task<JsonResult> MoveUp(int customEntityVersionPageBlockId)
     {
-        var command = new MoveCustomEntityVersionPageBlockCommand();
-        command.CustomEntityVersionPageBlockId = customEntityVersionPageBlockId;
-        command.Direction = OrderedItemMoveDirection.Up;
+        var command = new MoveCustomEntityVersionPageBlockCommand
+        {
+            CustomEntityVersionPageBlockId = customEntityVersionPageBlockId,
+            Direction = OrderedItemMoveDirection.Up
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }
 
     public Task<JsonResult> MoveDown(int customEntityVersionPageBlockId)
     {
-        var command = new MoveCustomEntityVersionPageBlockCommand();
-        command.CustomEntityVersionPageBlockId = customEntityVersionPageBlockId;
-        command.Direction = OrderedItemMoveDirection.Down;
+        var command = new MoveCustomEntityVersionPageBlockCommand
+        {
+            CustomEntityVersionPageBlockId = customEntityVersionPageBlockId,
+            Direction = OrderedItemMoveDirection.Down
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }

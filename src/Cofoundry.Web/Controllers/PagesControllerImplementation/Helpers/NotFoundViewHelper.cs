@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Use this in your controllers to return a 404 result using the Cofoundry custom 404 page system. This 
-/// has the added benefit of checking for Rewrite Rules and automatically redirecting.
+/// Default implementation of <see cref="INotFoundViewHelper"/>.
 /// </summary>
 public class NotFoundViewHelper : INotFoundViewHelper
 {
@@ -25,10 +24,7 @@ public class NotFoundViewHelper : INotFoundViewHelper
         _razorViewEngine = razorViewEngine;
     }
 
-    /// <summary>
-    /// Use this in your controllers to return a 404 result using the Cofoundry custom 404 page system. This 
-    /// has the added benefit of checking for Rewrite Rules and automatically redirecting.
-    /// </summary>
+    /// <inheritdoc/>
     public async Task<ActionResult> GetViewAsync(Controller controller)
     {
         var vmParameters = GetViewModelBuilderParameters(controller);
@@ -67,10 +63,12 @@ public class NotFoundViewHelper : INotFoundViewHelper
     /// If a page isnt found, check to see if we have a redirection rule
     /// in place for the url.
     /// </summary>
-    private async Task<ActionResult> GetRewriteResultAsync(NotFoundPageViewModelBuilderParameters vmParameters)
+    private async Task<ActionResult?> GetRewriteResultAsync(NotFoundPageViewModelBuilderParameters vmParameters)
     {
-        var query = new GetRewriteRuleSummaryByPathQuery() { Path = vmParameters.Path };
-        var rewriteRule = await _queryExecutor.ExecuteAsync(query);
+        var rewriteRule = await _queryExecutor.ExecuteAsync(new GetRewriteRuleSummaryByPathQuery()
+        {
+            Path = vmParameters.Path
+        });
 
         if (rewriteRule != null)
         {
@@ -86,8 +84,15 @@ public class NotFoundViewHelper : INotFoundViewHelper
         const string GENERIC_NOTFOUND_VIEW = "~/Views/Shared/NotFound.cshtml";
         const string GENERIC_ERROR_VIEW = "~/Views/Shared/Error.cshtml";
 
-        if (DoesViewExist(GENERIC_404_VIEW)) return GENERIC_404_VIEW;
-        if (DoesViewExist(GENERIC_NOTFOUND_VIEW)) return GENERIC_NOTFOUND_VIEW;
+        if (DoesViewExist(GENERIC_404_VIEW))
+        {
+            return GENERIC_404_VIEW;
+        }
+
+        if (DoesViewExist(GENERIC_NOTFOUND_VIEW))
+        {
+            return GENERIC_NOTFOUND_VIEW;
+        }
 
         // Fall back to generic error, i.e. "Error.cshtml"
         return GENERIC_ERROR_VIEW;

@@ -14,15 +14,15 @@ public class NotFoundPageViewModelBuilderParameters
     /// <summary>
     /// Base path i.e. virtual directory of the requested path.
     /// </summary>
-    public string PathBase { get; set; }
+    public string PathBase { get; set; } = string.Empty;
 
     /// <summary>
     /// The path of the page requested that could not be found.
     /// </summary>
-    public string Path { get; set; }
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>
     /// Full querystring of the requested path with leading ? character.
     /// </summary>
-    public string QueryString { get; set; }
+    public string? QueryString { get; set; }
 }

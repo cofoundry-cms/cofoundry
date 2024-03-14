@@ -6,7 +6,9 @@ namespace Cofoundry.Web;
 /// Represents a partial update of a model, intended for use in
 /// a web api http patch operation with a json payload.
 /// </summary>
-public class JsonDelta<TModel> : IDelta<TModel>
+public class JsonDelta<TModel>
+    : IDelta<TModel>
+    where TModel : notnull
 {
     private readonly string _jsonData;
     private readonly JsonSerializerSettings _jsonSerializerSettings;

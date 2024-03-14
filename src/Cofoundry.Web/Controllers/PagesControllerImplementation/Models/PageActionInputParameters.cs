@@ -8,7 +8,7 @@ public class PageActionInputParameters
     /// <summary>
     /// The raw, relative path of the page without querystring.
     /// </summary>
-    public string Path { get; set; }
+    public string Path { get; set; } = string.Empty;
 
     /// <summary>
     /// Optionally a VersionId can be specified to

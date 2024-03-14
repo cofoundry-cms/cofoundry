@@ -41,8 +41,5 @@ public class UsersModuleRegistration : IAdminModuleRegistration
         }
     }
 
-    public string RoutePrefix
-    {
-        get { return UsersRouteLibrary.RoutePrefix; }
-    }
+    public string RoutePrefix => UsersRouteLibrary.RoutePrefix;
 }

@@ -9,7 +9,6 @@ public class RobotsRouteRegistration : IOrderedRouteRegistration
 
     public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
     {
-        // General files
         routeBuilder.MapControllerRoute("RobotsTxt", "robots.txt", new { controller = "CofoundryFiles", action = "RobotsTxt" });
         routeBuilder.MapControllerRoute("HumansTxt", "humans.txt", new { controller = "CofoundryFiles", action = "HumansTxt" });
     }

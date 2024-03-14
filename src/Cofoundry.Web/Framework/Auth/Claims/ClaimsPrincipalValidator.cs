@@ -5,7 +5,9 @@ using System.Security.Claims;
 
 namespace Cofoundry.Web.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IClaimsPrincipalValidator"/>.
+/// </summary>
 /// <remarks>
 /// Adapted from <see cref="Microsoft.AspNetCore.Identity.SecurityStampValidator"/>,
 /// see https://github.com/dotnet/aspnetcore/blob/v6.0.1/src/Identity/Core/src/SecurityStampValidator.cs
@@ -36,6 +38,7 @@ public class ClaimsPrincipalValidator : IClaimsPrincipalValidator
         _logger = logger;
     }
 
+    /// <inheritdoc/>
     public virtual async Task ValidateAsync(CookieValidatePrincipalContext validationContext)
     {
         var now = _dateTimeService.OffsetUtcNow();
@@ -65,9 +68,9 @@ public class ClaimsPrincipalValidator : IClaimsPrincipalValidator
 
     private TimeSpan GetClaimsValidationInterval(CookieValidatePrincipalContext validationContext)
     {
-        var userAreaCode = validationContext.Principal.FindFirstValue(CofoundryClaimTypes.UserAreaCode);
+        var userAreaCode = validationContext.Principal?.FindFirstValue(CofoundryClaimTypes.UserAreaCode);
 
-        if (!_userAreaDefinitionRepository.Exists(userAreaCode))
+        if (userAreaCode == null || !_userAreaDefinitionRepository.Exists(userAreaCode))
         {
             // Invalid or missing user area claim: the cookie should be invalidated immediately
             _logger.LogInformation("Invalid or missing user area claim: {userAreaCode}.", userAreaCode);
@@ -86,13 +89,19 @@ public class ClaimsPrincipalValidator : IClaimsPrincipalValidator
     /// is returned.
     /// </summary>
     /// <param name="principal">The principal to verify.</param>
-    protected virtual async Task<IClaimsPrincipalBuilderContext> VerifyClaimsPrincipalAsync(ClaimsPrincipal principal)
+    protected virtual async Task<IClaimsPrincipalBuilderContext?> VerifyClaimsPrincipalAsync(ClaimsPrincipal? principal)
     {
-        if (principal == null) return null;
+        if (principal == null)
+        {
+            return null;
+        }
 
         var userId = IntParser.ParseOrDefault(principal.FindFirstValue(CofoundryClaimTypes.UserId));
         var context = await _claimsPrincipalBuilderContextRepository.GetAsync(userId);
-        if (context == null) return null;
+        if (context == null)
+        {
+            return null;
+        }
 
         var securityStampClaim = principal.FindFirstValue(CofoundryClaimTypes.SecurityStamp);
         if (string.IsNullOrEmpty(context.SecurityStamp) || securityStampClaim == context.SecurityStamp)
@@ -145,10 +154,10 @@ public class ClaimsPrincipalValidator : IClaimsPrincipalValidator
     protected virtual async Task ClaimsPrincipalRejectedAsync(CookieValidatePrincipalContext validationContext)
     {
         _logger.LogDebug("Security stamp validation failed, rejecting cookie.");
-        var userAreaCode = validationContext.Principal.FindFirstValue(CofoundryClaimTypes.UserAreaCode);
+        var userAreaCode = validationContext.Principal?.FindFirstValue(CofoundryClaimTypes.UserAreaCode);
         validationContext.RejectPrincipal();
 
-        if (_userAreaDefinitionRepository.Exists(userAreaCode))
+        if (userAreaCode != null && _userAreaDefinitionRepository.Exists(userAreaCode))
         {
             await _userSessionService.SignOutAsync(userAreaCode);
         }

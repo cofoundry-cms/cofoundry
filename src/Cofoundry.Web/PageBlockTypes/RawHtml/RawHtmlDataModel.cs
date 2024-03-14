@@ -8,6 +8,6 @@ public class RawHtmlDataModel : IPageBlockTypeDataModel
     [Required, Display(Name = "Html")]
     [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings, HtmlToolbarPreset.Source, HtmlToolbarPreset.Media)]
     //[Searchable]
-    public string RawHtml { get; set; }
+    public string RawHtml { get; set; } = string.Empty;
 
 }

@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Cofoundry.Web;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IPageBlockRenderer"/>.
+/// </summary>
 public class PageBlockRenderer : IPageBlockRenderer
 {
     private readonly IPageBlockTypeViewFileLocator _pageBlockTypeViewFileLocator;
@@ -20,6 +22,7 @@ public class PageBlockRenderer : IPageBlockRenderer
         _razorViewRenderer = razorViewRenderer;
     }
 
+    /// <inheritdoc/>
     public async Task<string> RenderBlockAsync(
         ViewContext viewContext,
         IEditablePageViewModel pageViewModel,
@@ -27,7 +30,11 @@ public class PageBlockRenderer : IPageBlockRenderer
         )
     {
         var displayData = GetBlockDisplayData(pageViewModel, blockViewModel);
-        string viewPath = GetViewPath(blockViewModel);
+        var viewPath = GetViewPath(blockViewModel);
+        if (viewPath == null)
+        {
+            throw new ViewNotFoundException($"View path could not be determined for block {blockViewModel.EntityVersionPageBlockId}");
+        }
 
         string html = await _razorViewRenderer.RenderViewAsync(viewContext, viewPath, displayData);
 
@@ -39,6 +46,7 @@ public class PageBlockRenderer : IPageBlockRenderer
         return html;
     }
 
+    /// <inheritdoc/>
     public string RenderPlaceholderBlock(int? minHeight = null)
     {
         string styles = string.Empty;
@@ -51,11 +59,9 @@ public class PageBlockRenderer : IPageBlockRenderer
         return html;
     }
 
-    private IPageBlockTypeDisplayModel GetBlockDisplayData(IEditablePageViewModel pageViewModel, IEntityVersionPageBlockRenderDetails blockViewModel)
+    private static IPageBlockTypeDisplayModel GetBlockDisplayData(IEditablePageViewModel pageViewModel, IEntityVersionPageBlockRenderDetails blockViewModel)
     {
-        var displayData = blockViewModel.DisplayModel as IPageBlockWithParentPageData;
-
-        if (displayData != null)
+        if (blockViewModel.DisplayModel is IPageBlockWithParentPageData displayData)
         {
             displayData.ParentPage = pageViewModel;
         }
@@ -63,9 +69,9 @@ public class PageBlockRenderer : IPageBlockRenderer
         return blockViewModel.DisplayModel;
     }
 
-    private string GetViewPath(IEntityVersionPageBlockRenderDetails blockViewModel)
+    private string? GetViewPath(IEntityVersionPageBlockRenderDetails blockViewModel)
     {
-        string viewPath;
+        string? viewPath;
         string fileName = blockViewModel.BlockType.FileName;
 
         if (blockViewModel.Template == null)
@@ -77,7 +83,11 @@ public class PageBlockRenderer : IPageBlockRenderer
             viewPath = _pageBlockTypeViewFileLocator.GetTemplatePathByTemplateFileName(fileName, blockViewModel.Template.FileName);
         }
 
-        if (viewPath == null) return null;
+        if (viewPath == null)
+        {
+            return null;
+        }
+
         return "~" + viewPath;
     }
 
@@ -85,13 +95,15 @@ public class PageBlockRenderer : IPageBlockRenderer
     /// Parses the rendered html string of a block, when in edit mode. It adds attributes used for hovering and interacting
     /// with a block in siteviewer mode. It also adds a css class.
     /// </summary>
-    private string ParseBlockHtmlForEditing(string blockHtml, IEntityVersionPageBlockRenderDetails blockViewModel)
+    private static string ParseBlockHtmlForEditing(string blockHtml, IEntityVersionPageBlockRenderDetails? blockViewModel)
     {
         string entityType = blockViewModel is CustomEntityVersionPageBlockRenderDetails ? "custom-entity" : "page";
 
-        var attrs = new Dictionary<string, string>();
-        attrs.Add("class", "cofoundry-sv__block");
-        attrs.Add("data-cms-" + entityType + "-region-block", string.Empty);
+        var attrs = new Dictionary<string, string>
+        {
+            { "class", "cofoundry-sv__block" },
+            { "data-cms-" + entityType + "-region-block", string.Empty }
+        };
 
         if (blockViewModel != null)
         {
@@ -102,23 +114,27 @@ public class PageBlockRenderer : IPageBlockRenderer
 
         var parser = new HtmlParser();
         var document = parser.ParseDocument(blockHtml.Trim());
+        var wrapper = document.CreateElement("div");
 
-        var elements = document.Body.Children;
-
-        if (elements.Length == 1)
+        if (document.Body != null)
         {
-            var element = elements.Single();
+            var elements = document.Body.Children;
 
-            if (element.NodeType == NodeType.Element)
+            if (elements.Length == 1)
             {
-                AngleSharpHelper.MergeAttributes(element, attrs);
+                var element = elements.Single();
 
-                return element.OuterHtml;
+                if (element.NodeType == NodeType.Element)
+                {
+                    AngleSharpHelper.MergeAttributes(element, attrs);
+
+                    return element.OuterHtml;
+                }
             }
+
+            AngleSharpHelper.WrapChildren(document.Body, wrapper);
         }
 
-        var wrapper = document.CreateElement("div");
-        AngleSharpHelper.WrapChildren(document.Body, wrapper);
         AngleSharpHelper.MergeAttributes(wrapper, attrs);
 
         return wrapper.OuterHtml;

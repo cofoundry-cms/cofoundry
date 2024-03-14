@@ -10,12 +10,12 @@ public class UsersModuleOptions
     /// <summary>
     /// 3 letter code identifying this user area.
     /// </summary>
-    public string UserAreaCode { get; set; }
+    public string UserAreaCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Display name of the area, used in the Cofoundry admin panel
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates if users in this area can sign in using a password. If this

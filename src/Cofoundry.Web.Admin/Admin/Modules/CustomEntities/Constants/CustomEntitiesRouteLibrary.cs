@@ -23,19 +23,31 @@ public class CustomEntitiesRouteLibrary : AngularModuleRouteLibrary
 
     public string New(CustomEntityDefinitionSummary definition)
     {
-        if (definition == null) return string.Empty;
+        if (definition == null)
+        {
+            return string.Empty;
+        }
+
         return List(definition) + "new";
     }
 
     public string Details(CustomEntityDefinitionSummary definition, int id)
     {
-        if (definition == null) return string.Empty;
+        if (definition == null)
+        {
+            return string.Empty;
+        }
+
         return List(definition) + id.ToString();
     }
 
-    private string GetCustomEntityRoute(string namePlural, string route = null)
+    private string GetCustomEntityRoute(string? namePlural, string? route = null)
     {
-        if (namePlural == null) return string.Empty;
+        if (namePlural == null)
+        {
+            return string.Empty;
+        }
+
         return "/" + _adminSettings.DirectoryName + "/" + SlugFormatter.ToSlug(namePlural) + "#/" + route;
     }
 }

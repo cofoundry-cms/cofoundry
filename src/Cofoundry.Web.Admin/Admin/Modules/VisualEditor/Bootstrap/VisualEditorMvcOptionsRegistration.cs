@@ -19,7 +19,10 @@ public class VisualEditorMvcOptionsConfiguration : IMvcOptionsConfiguration
 
     public void Configure(MvcOptions options)
     {
-        if (_pagesSettings.Disabled || !_adminSettings.AutoInjectVisualEditor) return;
+        if (_pagesSettings.Disabled || !_adminSettings.AutoInjectVisualEditor)
+        {
+            return;
+        }
 
         options.Filters.Add(typeof(VisualEditorContentFilter));
     }

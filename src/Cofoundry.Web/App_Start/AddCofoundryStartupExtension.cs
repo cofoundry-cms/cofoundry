@@ -17,7 +17,7 @@ public static class AddCofoundryStartupExtension
     public static IMvcBuilder AddCofoundry(
         this IMvcBuilder mvcBuilder,
         IConfiguration configuration,
-        Action<AddCofoundryStartupConfiguration> configBuilder = null
+        Action<AddCofoundryStartupConfiguration>? configBuilder = null
         )
     {
         var cofoundryConfig = new AddCofoundryStartupConfiguration();
@@ -82,13 +82,12 @@ public static class AddCofoundryStartupExtension
     private static void RunAdditionalConfiguration(IMvcBuilder mvcBuilder)
     {
         var serviceProvider = mvcBuilder.Services.BuildServiceProvider();
-        using (var serviceScope = serviceProvider.CreateScope())
+        using var serviceScope = serviceProvider.CreateScope();
+        var mvcBuilderConfigurations = serviceScope.ServiceProvider.GetRequiredService<IEnumerable<IStartupServiceConfigurationTask>>();
+
+        foreach (var mvcBuilderConfiguration in mvcBuilderConfigurations)
         {
-            var mvcBuilderConfigurations = serviceScope.ServiceProvider.GetRequiredService<IEnumerable<IStartupServiceConfigurationTask>>();
-            foreach (var mvcBuilderConfiguration in mvcBuilderConfigurations)
-            {
-                mvcBuilderConfiguration.ConfigureServices(mvcBuilder);
-            }
+            mvcBuilderConfiguration.ConfigureServices(mvcBuilder);
         }
     }
 }

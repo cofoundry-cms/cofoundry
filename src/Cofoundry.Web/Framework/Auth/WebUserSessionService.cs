@@ -24,7 +24,7 @@ public class WebUserSessionService : IUserSessionService
     /// issues if the user is requested after sign out has occurred (e.g. in 
     /// view rendering). This is used to track sign-outs and prevent this occuring.
     /// </summary>
-    private HashSet<string> _signedOutUserAreas = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    private HashSet<string> _signedOutUserAreas = new(StringComparer.OrdinalIgnoreCase);
 
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
@@ -51,16 +51,25 @@ public class WebUserSessionService : IUserSessionService
     public int? GetCurrentUserId()
     {
         var cachedUserId = _inMemoryUserSessionService.GetCurrentUserId();
-        if (cachedUserId.HasValue) return cachedUserId;
+        if (cachedUserId.HasValue)
+        {
+            return cachedUserId;
+        }
 
         var user = _httpContextAccessor?.HttpContext?.User;
         var userIdClaim = user?.FindFirst(CofoundryClaimTypes.UserId);
         var userAreaClaim = user?.FindFirst(CofoundryClaimTypes.UserAreaCode);
 
-        if (userIdClaim == null || userAreaClaim == null) return null;
+        if (userIdClaim == null || userAreaClaim == null)
+        {
+            return null;
+        }
 
         // User has been signed out during this request so ignore
-        if (_signedOutUserAreas.Contains(userAreaClaim.Value)) return null;
+        if (_signedOutUserAreas.Contains(userAreaClaim.Value))
+        {
+            return null;
+        }
 
         // Otherwise get it from the Identity
         var userId = IntParser.ParseOrNull(userIdClaim.Value);
@@ -71,18 +80,34 @@ public class WebUserSessionService : IUserSessionService
     {
         ArgumentNullException.ThrowIfNull(userAreaCode);
 
-        if (_signedOutUserAreas.Contains(userAreaCode)) return null;
-        var cachedUserId = await _inMemoryUserSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
-        if (cachedUserId.HasValue) return cachedUserId;
+        if (_signedOutUserAreas.Contains(userAreaCode))
+        {
+            return null;
+        }
 
-        if (_httpContextAccessor.HttpContext == null) return null;
+        var cachedUserId = await _inMemoryUserSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
+        if (cachedUserId.HasValue)
+        {
+            return cachedUserId;
+        }
+
+        if (_httpContextAccessor.HttpContext == null)
+        {
+            return null;
+        }
 
         var scheme = AuthenticationSchemeNames.UserArea(userAreaCode);
         var result = await _httpContextAccessor.HttpContext.AuthenticateAsync(scheme);
-        if (!result.Succeeded) return null;
+        if (!result.Succeeded)
+        {
+            return null;
+        }
 
         var userIdClaim = result.Principal.FindFirst(CofoundryClaimTypes.UserId);
-        if (userIdClaim == null) return null;
+        if (userIdClaim == null)
+        {
+            return null;
+        }
 
         var userId = IntParser.ParseOrNull(userIdClaim.Value);
 
@@ -98,8 +123,12 @@ public class WebUserSessionService : IUserSessionService
     public async Task SignInAsync(string userAreaCode, int userId, bool rememberUser)
     {
         ArgumentNullException.ThrowIfNull(userAreaCode);
-        if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
-        ValidateHttpContext("sign in a user");
+        if (userId < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(userId));
+        }
+
+        var httpContext = GetHttpContext("sign in a user");
 
         var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
         var userPrincipal = await CreateUserPrincipal(userId, userArea);
@@ -108,42 +137,40 @@ public class WebUserSessionService : IUserSessionService
         if (rememberUser)
         {
             var authProperties = new AuthenticationProperties() { IsPersistent = true };
-            await _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal, authProperties);
+            await httpContext.SignInAsync(scheme, userPrincipal, authProperties);
         }
         else
         {
-            await _httpContextAccessor.HttpContext.SignInAsync(scheme, userPrincipal);
+            await httpContext.SignInAsync(scheme, userPrincipal);
         }
 
         await _inMemoryUserSessionService.SignInAsync(userAreaCode, userId, rememberUser);
-        if (_signedOutUserAreas.Contains(userAreaCode))
-        {
-            // signed out and back in during the same request: odd but let's handle it.
-            _signedOutUserAreas.Remove(userAreaCode);
-        }
+
+        // remove if signed out and back in during the same request: odd but let's handle it.
+        _signedOutUserAreas.Remove(userAreaCode);
     }
 
     public async Task SignOutAsync(string userAreaCode)
     {
         ArgumentNullException.ThrowIfNull(userAreaCode);
-        ValidateHttpContext("sign out a user");
+        var httpContext = GetHttpContext("sign out a user");
 
         await _inMemoryUserSessionService.SignOutAsync(userAreaCode);
 
         var scheme = AuthenticationSchemeNames.UserArea(userAreaCode);
-        await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
+        await httpContext.SignOutAsync(scheme);
         TrackSignOut(userAreaCode);
     }
 
     public async Task SignOutOfAllUserAreasAsync()
     {
-        ValidateHttpContext("sign out a user");
+        var httpContext = GetHttpContext("sign out a user");
         await _inMemoryUserSessionService.SignOutOfAllUserAreasAsync();
 
         foreach (var userArea in _userAreaDefinitionRepository.GetAll())
         {
             var scheme = AuthenticationSchemeNames.UserArea(userArea.UserAreaCode);
-            await _httpContextAccessor.HttpContext.SignOutAsync(scheme);
+            await httpContext.SignOutAsync(scheme);
             TrackSignOut(userArea.UserAreaCode);
         }
     }
@@ -164,29 +191,38 @@ public class WebUserSessionService : IUserSessionService
     public async Task RefreshAsync(string userAreaCode, int userId)
     {
         ArgumentNullException.ThrowIfNull(userAreaCode);
-        if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
-        ValidateHttpContext("refresh a user sign in");
+        if (userId < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(userId));
+        }
+
+        var httpContext = GetHttpContext("refresh a user sign in");
 
         var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
         var loggedInUser = await GetUserIdByUserAreaCodeAsync(userAreaCode);
 
         // Only refresh the sign in if the user is currently logged in
-        if (loggedInUser != userId) return;
+        if (loggedInUser != userId)
+        {
+            return;
+        }
 
         var scheme = AuthenticationSchemeNames.UserArea(userArea.UserAreaCode);
 
-        var auth = await _httpContextAccessor.HttpContext.AuthenticateAsync(scheme);
+        var auth = await httpContext.AuthenticateAsync(scheme);
         var isPeristent = auth?.Properties?.IsPersistent ?? false;
 
         await SignInAsync(userAreaCode, userId, isPeristent);
     }
 
-    private void ValidateHttpContext(string actionDescription)
+    private HttpContext GetHttpContext(string actionDescription)
     {
         if (_httpContextAccessor.HttpContext == null)
         {
             throw new InvalidOperationException($"{nameof(_httpContextAccessor)}.HttpContext is null. Cannot use {nameof(WebUserSessionService)} to {actionDescription} outside of a web request.");
         }
+
+        return _httpContextAccessor.HttpContext;
     }
 
     private async Task<ClaimsPrincipal> CreateUserPrincipal(int userId, IUserAreaDefinition userArea)
@@ -210,9 +246,6 @@ public class WebUserSessionService : IUserSessionService
 
     private void TrackSignOut(string userAreaCode)
     {
-        if (!_signedOutUserAreas.Contains(userAreaCode))
-        {
-            _signedOutUserAreas.Add(userAreaCode);
-        }
+        _signedOutUserAreas.Add(userAreaCode);
     }
 }

@@ -8,7 +8,7 @@ namespace Cofoundry.Web;
 /// </summary>
 public class JsonDeltaModelBinderProvider : IModelBinderProvider
 {
-    public IModelBinder GetBinder(ModelBinderProviderContext context)
+    public IModelBinder? GetBinder(ModelBinderProviderContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 

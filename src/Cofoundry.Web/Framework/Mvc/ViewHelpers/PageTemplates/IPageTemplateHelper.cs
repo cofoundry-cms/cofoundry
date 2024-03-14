@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Cofoundry.Web;
 
+/// <summary>
+/// UI helper for Page Template functionality such as defining region.
+/// </summary>
+/// <typeparam name="TModel">ViewModel type</typeparam>
 public interface IPageTemplateHelper<out TModel>
     where TModel : IEditablePageViewModel
 {

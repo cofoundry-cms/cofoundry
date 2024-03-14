@@ -18,7 +18,7 @@ public class RolesApiController : BaseAdminApiController
 
     public async Task<JsonResult> Get([FromQuery] SearchRolesQuery query)
     {
-        if (query == null) query = new SearchRolesQuery();
+        query ??= new SearchRolesQuery();
         ApiPagingHelper.SetDefaultBounds(query);
 
         var results = await _queryExecutor.ExecuteAsync(query);
@@ -43,8 +43,10 @@ public class RolesApiController : BaseAdminApiController
 
     public Task<JsonResult> Delete(int roleId)
     {
-        var command = new DeleteRoleCommand();
-        command.RoleId = roleId;
+        var command = new DeleteRoleCommand
+        {
+            RoleId = roleId
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }

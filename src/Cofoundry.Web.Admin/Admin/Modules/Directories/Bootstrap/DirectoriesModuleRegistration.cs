@@ -14,9 +14,12 @@ public class DirectoriesModuleRegistration : IInternalAngularModuleRegistration
         _pagesSettings = pagesSettings;
     }
 
-    public AdminModule GetModule()
+    public AdminModule? GetModule()
     {
-        if (_pagesSettings.Disabled) return null;
+        if (_pagesSettings.Disabled)
+        {
+            return null;
+        }
 
         var module = new AdminModule()
         {
@@ -32,8 +35,5 @@ public class DirectoriesModuleRegistration : IInternalAngularModuleRegistration
         return module;
     }
 
-    public string RoutePrefix
-    {
-        get { return DirectoriesRouteLibrary.RoutePrefix; }
-    }
+    public string RoutePrefix => DirectoriesRouteLibrary.RoutePrefix;
 }

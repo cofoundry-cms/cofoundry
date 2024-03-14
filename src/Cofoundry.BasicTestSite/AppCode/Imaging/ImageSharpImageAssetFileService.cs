@@ -45,81 +45,79 @@ public class ImageSharpImageAssetFileService : IImageAssetFileService
         Image imageFile = null;
         IImageFormat imageFormat = null;
 
-        using (var inputSteam = await uploadedFile.OpenReadStreamAsync())
+        using var inputSteam = await uploadedFile.OpenReadStreamAsync();
+
+        try
         {
-            try
+            imageFile = Image.Load(inputSteam, out imageFormat);
+        }
+        catch (ArgumentException)
+        {
+            // We'll get an argument exception if the image file is invalid
+            // so lets check to see if we can identify if it is an invalid file type and show that error
+            // This might not always be the case since a file extension or mime type might not be supplied.
+            var ext = Path.GetExtension(uploadedFile.FileName);
+            if ((!string.IsNullOrEmpty(ext) && !ImageAssetConstants.PermittedImageTypes.ContainsKey(ext))
+                || (!string.IsNullOrEmpty(uploadedFile.MimeType) && !ImageAssetConstants.PermittedImageTypes.ContainsValue(uploadedFile.MimeType)))
             {
-                imageFile = Image.Load(inputSteam, out imageFormat);
-            }
-            catch (ArgumentException)
-            {
-                // We'll get an argument exception if the image file is invalid
-                // so lets check to see if we can identify if it is an invalid file type and show that error
-                // This might not always be the case since a file extension or mime type might not be supplied.
-                var ext = Path.GetExtension(uploadedFile.FileName);
-                if ((!string.IsNullOrEmpty(ext) && !ImageAssetConstants.PermittedImageTypes.ContainsKey(ext))
-                    || (!string.IsNullOrEmpty(uploadedFile.MimeType) && !ImageAssetConstants.PermittedImageTypes.ContainsValue(uploadedFile.MimeType)))
-                {
-                    throw new PropertyValidationException("The file is not a supported image type.", propertyName);
-                }
-
-                throw;
+                throw new PropertyValidationException("The file is not a supported image type.", propertyName);
             }
 
-            using (imageFile) // validate image file
+            throw;
+        }
+
+        using (imageFile) // validate image file
+        {
+            ValidateImage(propertyName, imageFile, imageFormat);
+
+            var requiredReEncoding = true;
+            var fileExtension = "jpg";
+            var foundExtension = _permittedImageFileExtensions
+                .FirstOrDefault(e => imageFormat.FileExtensions.Contains(e));
+
+            if (foundExtension != null)
             {
-                ValidateImage(propertyName, imageFile, imageFormat);
+                fileExtension = foundExtension;
+                requiredReEncoding = false;
+            }
 
-                var requiredReEncoding = true;
-                var fileExtension = "jpg";
-                var foundExtension = _permittedImageFileExtensions
-                    .FirstOrDefault(e => imageFormat.FileExtensions.Contains(e));
+            imageAsset.WidthInPixels = imageFile.Width;
+            imageAsset.HeightInPixels = imageFile.Height;
+            imageAsset.FileExtension = fileExtension;
+            imageAsset.FileSizeInBytes = inputSteam.Length;
 
-                if (foundExtension != null)
+            using (var scope = _transactionScopeManager.Create(_dbContext))
+            {
+                var fileName = Path.ChangeExtension(imageAsset.FileNameOnDisk, imageAsset.FileExtension);
+
+                if (requiredReEncoding)
                 {
-                    fileExtension = foundExtension;
-                    requiredReEncoding = false;
-                }
-
-                imageAsset.WidthInPixels = imageFile.Width;
-                imageAsset.HeightInPixels = imageFile.Height;
-                imageAsset.FileExtension = fileExtension;
-                imageAsset.FileSizeInBytes = inputSteam.Length;
-
-                using (var scope = _transactionScopeManager.Create(_dbContext))
-                {
-                    var fileName = Path.ChangeExtension(imageAsset.FileNameOnDisk, imageAsset.FileExtension);
+                    // Convert the image to jpg
+                    using var outputStream = new MemoryStream();
 
                     if (requiredReEncoding)
                     {
-                        // Convert the image to jpg
-                        using (var outputStream = new MemoryStream())
-                        {
-                            if (requiredReEncoding)
-                            {
-                                imageFile.Save(outputStream, new JpegEncoder());
-                            }
-                            else
-                            {
-                                imageFile.Save(outputStream, imageFormat);
-                            }
-
-                            await _fileStoreService.CreateAsync(ASSET_FILE_CONTAINER_NAME, fileName, outputStream);
-
-                            // recalculate size and save
-                            imageAsset.FileSizeInBytes = outputStream.Length;
-                        }
+                        imageFile.Save(outputStream, new JpegEncoder());
                     }
                     else
                     {
-                        // Save the raw file directly
-                        await _fileStoreService.CreateAsync(ASSET_FILE_CONTAINER_NAME, fileName, inputSteam);
+                        imageFile.Save(outputStream, imageFormat);
                     }
 
-                    await _dbContext.SaveChangesAsync();
-                    await scope.CompleteAsync();
-                };
-            }
+                    await _fileStoreService.CreateAsync(ASSET_FILE_CONTAINER_NAME, fileName, outputStream);
+
+                    // recalculate size and save
+                    imageAsset.FileSizeInBytes = outputStream.Length;
+                }
+                else
+                {
+                    // Save the raw file directly
+                    await _fileStoreService.CreateAsync(ASSET_FILE_CONTAINER_NAME, fileName, inputSteam);
+                }
+
+                await _dbContext.SaveChangesAsync();
+                await scope.CompleteAsync();
+            };
         }
     }
 

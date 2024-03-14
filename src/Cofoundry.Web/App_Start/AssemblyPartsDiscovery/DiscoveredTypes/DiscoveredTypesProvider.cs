@@ -19,6 +19,7 @@ public class DiscoveredTypesProvider : IDiscoveredTypesProvider
         _applicationPartManager = applicationPartManager;
     }
 
+    /// <inheritdoc/>
     public IEnumerable<Assembly> GetDiscoveredAssemblies()
     {
         return _applicationPartManager
@@ -27,6 +28,7 @@ public class DiscoveredTypesProvider : IDiscoveredTypesProvider
             .Select(p => p.Assembly);
     }
 
+    /// <inheritdoc/>
     public IEnumerable<TypeInfo> GetDiscoveredTypes()
     {
         return _applicationPartManager

@@ -7,7 +7,7 @@ using System.Text;
 namespace Cofoundry.Web.Admin;
 
 /// <summary>
-/// A custom model binder for commands like AddCustomEntityCommand which is
+/// A custom model binder for commands like <see cref="AddCustomEntityCommand"/> which is
 /// required to resolve the child model property to a concrete type.
 /// </summary>
 public class CustomEntityDataModelCommandModelBinder : IModelBinder
@@ -54,11 +54,14 @@ public class CustomEntityDataModelCommandModelBinder : IModelBinder
         return body;
     }
 
-    private JsonConverter GetDataTypeConverter(string customEntityDefinitionCode)
+    private JsonConverter? GetDataTypeConverter(string? customEntityDefinitionCode)
     {
         // If there's no code then the model probably wasn't supplied and should be
         // considered null which will cause a validation error
-        if (string.IsNullOrWhiteSpace(customEntityDefinitionCode)) return null;
+        if (string.IsNullOrWhiteSpace(customEntityDefinitionCode))
+        {
+            return null;
+        }
 
         // If there is a code but it's not registered in the system, then thats exeptional and we should throw
         var definition = _customEntityDefinitionRepository.GetRequiredByCode(customEntityDefinitionCode);

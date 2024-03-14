@@ -4,11 +4,8 @@ using Microsoft.Extensions.Logging;
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Factory that enables ICustomEntityTemplateRegionTagBuilder implementation to be swapped out.
+/// Default implementation of <see cref="ICustomEntityTemplateRegionTagBuilderFactory"/>.
 /// </summary>
-/// <remarks>
-/// The factory is required because the HtmlHelper cannot be injected
-/// </remarks>
 public class CustomEntityTemplateRegionTagBuilderFactory : ICustomEntityTemplateRegionTagBuilderFactory
 {
     private readonly IPageBlockRenderer _blockRenderer;

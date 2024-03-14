@@ -15,7 +15,7 @@ public class CustomEntityVersionsApiController : BaseAdminApiController
 
     public async Task<JsonResult> Get(int customEntityId, GetCustomEntityVersionSummariesByCustomEntityIdQuery query)
     {
-        if (query == null) query = new GetCustomEntityVersionSummariesByCustomEntityIdQuery();
+        query ??= new GetCustomEntityVersionSummariesByCustomEntityIdQuery();
 
         query.CustomEntityId = customEntityId;
         ApiPagingHelper.SetDefaultBounds(query);
@@ -35,20 +35,31 @@ public class CustomEntityVersionsApiController : BaseAdminApiController
 
     public Task<JsonResult> DeleteDraft(int customEntityId)
     {
-        var command = new DeleteCustomEntityDraftVersionCommand() { CustomEntityId = customEntityId };
+        var command = new DeleteCustomEntityDraftVersionCommand()
+        {
+            CustomEntityId = customEntityId
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }
 
     public Task<JsonResult> Publish(int customEntityId)
     {
-        var command = new PublishCustomEntityCommand() { CustomEntityId = customEntityId };
+        var command = new PublishCustomEntityCommand()
+        {
+            CustomEntityId = customEntityId
+        };
+
         return _apiResponseHelper.RunCommandAsync(command);
     }
 
     public Task<JsonResult> UnPublish(int customEntityId)
     {
-        var command = new UnPublishCustomEntityCommand() { CustomEntityId = customEntityId };
+        var command = new UnPublishCustomEntityCommand()
+        {
+            CustomEntityId = customEntityId
+        };
+
         return _apiResponseHelper.RunCommandAsync(command);
     }
 }

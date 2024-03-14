@@ -11,7 +11,7 @@ namespace Cofoundry.Web;
 public class RazorViewRenderer : IRazorViewRenderer
 {
     private readonly IRazorViewEngine _razorViewEngine;
-    private ITempDataProvider _tempDataProvider;
+    private readonly ITempDataProvider _tempDataProvider;
 
     public RazorViewRenderer(
         IRazorViewEngine razorViewEngine,
@@ -36,7 +36,7 @@ public class RazorViewRenderer : IRazorViewRenderer
     public Task<string> RenderViewAsync(
         ViewContext viewContext,
         string viewName,
-        object model
+        object? model
         )
     {
         var viewResult = FindView(viewContext, viewName);
@@ -59,7 +59,7 @@ public class RazorViewRenderer : IRazorViewRenderer
     public Task<string> RenderViewAsync(
         ActionContext actionContext,
         string viewName,
-        object model
+        object? model
         )
     {
         var viewResult = FindView(actionContext, viewName);
@@ -89,37 +89,40 @@ public class RazorViewRenderer : IRazorViewRenderer
         return name[0] == '~' || name[0] == '/';
     }
 
-    private async Task<string> RenderViewAsync(ActionContext actionContext, ViewEngineResult viewResult, object model)
+    private async Task<string> RenderViewAsync(ActionContext actionContext, ViewEngineResult viewResult, object? model)
     {
+        ArgumentNullException.ThrowIfNull(viewResult.View);
+
         var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
         {
             Model = model
         };
 
-        using (var sw = new StringWriter())
-        {
-            var componentViewContext = new ViewContext(
-                actionContext,
-                viewResult.View,
-                viewDictionary,
-                new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
-                sw,
-                new HtmlHelperOptions()
-            );
+        using var sw = new StringWriter();
 
-            await viewResult.View.RenderAsync(componentViewContext);
+        var componentViewContext = new ViewContext(
+            actionContext,
+            viewResult.View,
+            viewDictionary,
+            new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
+            sw,
+            new HtmlHelperOptions()
+        );
 
-            return sw.ToString();
-        }
+        await viewResult.View.RenderAsync(componentViewContext);
+
+        return sw.ToString();
     }
 
-    private async Task<string> RenderViewAsync(ViewContext viewContext, ViewEngineResult viewResult, object model)
+    private static async Task<string> RenderViewAsync(ViewContext viewContext, ViewEngineResult viewResult, object? model)
     {
+        ArgumentNullException.ThrowIfNull(viewResult.View);
+
         var view = viewResult.View;
 
         var viewData = new ViewDataDictionary<object>(viewContext.ViewData, model);
 
-        using (var sw = new StringWriter())
+        using var sw = new StringWriter();
         using (view as IDisposable)
         {
             var componentViewContext = new ViewContext(
@@ -135,7 +138,7 @@ public class RazorViewRenderer : IRazorViewRenderer
         }
     }
 
-    private static void ValidateViewFound(string viewName, ViewEngineResult viewResult)
+    private static void ValidateViewFound(string viewName, ViewEngineResult? viewResult)
     {
         if (viewResult == null || viewResult.View == null)
         {

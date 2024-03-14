@@ -18,7 +18,10 @@ public class VisualEditorEmbeddedResourceRouteRegistration : IEmbeddedResourceRo
 
     public IEnumerable<EmbeddedResourcePath> GetEmbeddedResourcePaths()
     {
-        if (_adminSettings.Disabled) yield break;
+        if (_adminSettings.Disabled)
+        {
+            yield break;
+        }
 
         var assembly = GetType().Assembly;
 

@@ -44,21 +44,21 @@ public class CofoundryStartupServiceConfigurationTask : IStartupServiceConfigura
             .Enumerate(_mvcJsonOptionsConfigurations)
             .OrderByDescending(o => o is CofoundryMvcJsonOptionsConfiguration))
         {
-            mvcBuilder.Services.Configure<MvcNewtonsoftJsonOptions>(o => config.Configure(o));
+            mvcBuilder.Services.Configure<MvcNewtonsoftJsonOptions>(config.Configure);
         }
 
         mvcBuilder.AddNewtonsoftJson();
 
         foreach (var config in EnumerableHelper.Enumerate(_mvcOptionsConfigurations))
         {
-            mvcBuilder.Services.Configure<MvcOptions>(o => config.Configure(o));
+            mvcBuilder.Services.Configure<MvcOptions>(config.Configure);
         }
 
         foreach (var config in EnumerableHelper
             .Enumerate(_razorViewEngineOptionsConfigurations)
             .OrderByDescending(o => o is CofoundryMvcRazorRuntimeCompilationOptionsConfiguration))
         {
-            mvcBuilder.Services.Configure<MvcRazorRuntimeCompilationOptions>(o => config.Configure(o));
+            mvcBuilder.Services.Configure<MvcRazorRuntimeCompilationOptions>(config.Configure);
         }
     }
 }

@@ -68,7 +68,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// Optional name of the action on the controller to bind to. If the action
     /// name is not specified then the default "Get" is used.
     /// </param>
-    public AdminApiRouteBuilderContext<TController> MapGet(string path, string actionName = null)
+    public AdminApiRouteBuilderContext<TController> MapGet(string path, string? actionName = null)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
 
@@ -101,7 +101,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// Optional name of the action on the controller to bind to. If the action
     /// name is not specified then the default "Post" is used.
     /// </param>
-    public AdminApiRouteBuilderContext<TController> MapPost(string path, string actionName = null)
+    public AdminApiRouteBuilderContext<TController> MapPost(string path, string? actionName = null)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
 
@@ -134,7 +134,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// Optional name of the action on the controller to bind to. If the action
     /// name is not specified then the default "Put" is used.
     /// </param>
-    public AdminApiRouteBuilderContext<TController> MapPut(string path, string actionName = null)
+    public AdminApiRouteBuilderContext<TController> MapPut(string path, string? actionName = null)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
 
@@ -167,7 +167,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// Optional name of the action on the controller to bind to. If the action
     /// name is not specified then the default "Patch" is used.
     /// </param>
-    public AdminApiRouteBuilderContext<TController> MapPatch(string path, string actionName = null)
+    public AdminApiRouteBuilderContext<TController> MapPatch(string path, string? actionName = null)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
 
@@ -200,7 +200,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// Optional name of the action on the controller to bind to. If the action
     /// name is not specified then the default "Delete" is used.
     /// </param>
-    public AdminApiRouteBuilderContext<TController> MapDelete(string path, string actionName = null)
+    public AdminApiRouteBuilderContext<TController> MapDelete(string path, string? actionName = null)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
 
@@ -209,34 +209,38 @@ public class AdminApiRouteBuilderContext<TController>
         return this;
     }
 
-    private void AddGetRoute(string path, string actionName = null)
+    private void AddGetRoute(string path, string? actionName = null)
     {
         AddVerbRoute("Get", path, actionName);
     }
 
-    private void AddPostRoute(string path, string actionName = null)
+    private void AddPostRoute(string path, string? actionName = null)
     {
         AddVerbRoute("Post", path, actionName);
     }
 
-    private void AddPutRoute(string path, string actionName = null)
+    private void AddPutRoute(string path, string? actionName = null)
     {
         AddVerbRoute("Put", path, actionName);
     }
 
-    private void AddPatchRoute(string path, string actionName = null)
+    private void AddPatchRoute(string path, string? actionName = null)
     {
         AddVerbRoute("Patch", path, actionName);
     }
 
-    private void AddDeleteRoute(string path, string actionName = null)
+    private void AddDeleteRoute(string path, string? actionName = null)
     {
         AddVerbRoute("Delete", path, actionName);
     }
 
-    private void AddVerbRoute(string verbActionName, string path, string actionName)
+    private void AddVerbRoute(string verbActionName, string path, string? actionName)
     {
-        if (_adminSettings.Disabled) return;
+        if (_adminSettings.Disabled)
+        {
+            return;
+        }
+
         var verb = verbActionName.ToUpper();
 
         if (string.IsNullOrEmpty(actionName))

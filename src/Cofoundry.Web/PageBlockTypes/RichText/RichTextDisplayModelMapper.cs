@@ -11,8 +11,14 @@ public class RichTextDisplayModelMapper : IPageBlockTypeDisplayModelMapper<RichT
     {
         foreach (var item in context.Items)
         {
-            var displayModel = new RichTextDisplayModel();
-            displayModel.RawHtml = new HtmlString(item.DataModel.RawHtml);
+            var html = string.IsNullOrEmpty(item.DataModel.RawHtml)
+                ? null
+                : new HtmlString(item.DataModel.RawHtml);
+
+            var displayModel = new RichTextDisplayModel
+            {
+                RawHtml = html
+            };
 
             result.Add(item, displayModel);
         }

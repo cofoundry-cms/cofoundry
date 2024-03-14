@@ -1,9 +1,7 @@
 ﻿namespace Cofoundry.Web;
 
 /// <summary>
-/// A factory that creates a collection of ordered IPageActionRoutingStep to
-/// be executed in order during the PageController's Page Action. This determines
-/// the routing of dynamic page content in the site.
+/// Default implementation of <see cref="IPageActionRoutingStepFactory"/>.
 /// </summary>
 public class PageActionRoutingStepFactory : IPageActionRoutingStepFactory
 {
@@ -49,6 +47,7 @@ public class PageActionRoutingStepFactory : IPageActionRoutingStepFactory
         _routingSteps = routingSteps;
     }
 
+    /// <inheritdoc/>
     public IEnumerable<IPageActionRoutingStep> Create()
     {
         return _routingSteps;

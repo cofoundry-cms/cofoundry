@@ -27,7 +27,7 @@ public interface IRazorViewRenderer
     Task<string> RenderViewAsync(
         ActionContext actionContext,
         string viewName,
-        object model
+        object? model
         );
 
     /// <summary>
@@ -49,6 +49,6 @@ public interface IRazorViewRenderer
     Task<string> RenderViewAsync(
         ViewContext viewContext,
         string viewName,
-        object model
+        object? model
         );
 }

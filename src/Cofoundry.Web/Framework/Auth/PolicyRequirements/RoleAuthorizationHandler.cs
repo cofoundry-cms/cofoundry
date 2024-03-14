@@ -20,10 +20,11 @@ public class RoleAuthorizationHandler : AuthorizationHandler<RoleAuthorizationRe
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, RoleAuthorizationRequirement requirement)
     {
         var user = await _userContextService.GetCurrentContextAsync();
+        var signedInUser = user.ToSignedInContext();
 
-        if (user.IsSignedIn()
-            && user.UserArea.UserAreaCode == requirement.UserAreaCode
-            && EnumerableHelper.Enumerate(requirement.RoleCodes).Contains(user.RoleCode))
+        if (signedInUser != null
+            && signedInUser.UserArea.UserAreaCode == requirement.UserAreaCode
+            && EnumerableHelper.Enumerate(requirement.RoleCodes).Contains(signedInUser.RoleCode))
         {
             context.Succeed(requirement);
         }

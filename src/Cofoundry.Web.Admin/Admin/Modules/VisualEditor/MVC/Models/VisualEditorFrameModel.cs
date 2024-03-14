@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Web;
+﻿namespace Cofoundry.Web.Admin;
 
 public class VisualEditorFrameModel
 {
@@ -10,7 +10,7 @@ public class VisualEditorFrameModel
 
     public bool IsCustomEntityRoute { get; set; }
 
-    public string EntityNameSingular { get; set; }
+    public string EntityNameSingular { get; set; } = string.Empty;
 
     public int EntityId { get; set; }
 

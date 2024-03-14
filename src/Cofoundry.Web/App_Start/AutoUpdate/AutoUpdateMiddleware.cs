@@ -32,7 +32,7 @@ public class AutoUpdateMiddleware
             return;
         }
 
-        var autoUpdateState = cx.RequestServices.GetService<AutoUpdateState>();
+        var autoUpdateState = cx.RequestServices.GetRequiredService<AutoUpdateState>();
         var state = autoUpdateState.Status;
 
         switch (state)
@@ -43,7 +43,7 @@ public class AutoUpdateMiddleware
                 break;
 
             case AutoUpdateStatus.Error:
-                // Throw an error which will redirect the user to the error handling page. 
+                // Throw an error which will redirect the user to the error handling page.
                 throw new AutoUpdateFailedException(autoUpdateState.Exception);
             case AutoUpdateStatus.LockedByAnotherProcess:
             case AutoUpdateStatus.NotStarted:
@@ -64,7 +64,7 @@ public class AutoUpdateMiddleware
         )
     {
         var updatedStatus = autoUpdateState.Status;
-        var autoUpdateSettings = cx.RequestServices.GetService<AutoUpdateSettings>();
+        var autoUpdateSettings = cx.RequestServices.GetRequiredService<AutoUpdateSettings>();
         var waitTimeLimit = TimeSpan.FromSeconds(autoUpdateSettings.RequestWaitForCompletionTimeInSeconds);
         var waitInterval = TimeSpan.FromSeconds(0.3);
 

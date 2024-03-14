@@ -14,7 +14,7 @@ public class AuthStartupConfigurationTask
         get { return (int)StartupTaskOrdering.Early; }
     }
 
-    public ICollection<Type> RunAfter => new Type[] { typeof(UseRoutingStartupConfigurationTask) };
+    public IReadOnlyCollection<Type> RunAfter => [typeof(UseRoutingStartupConfigurationTask)];
 
     public void Configure(IApplicationBuilder app)
     {

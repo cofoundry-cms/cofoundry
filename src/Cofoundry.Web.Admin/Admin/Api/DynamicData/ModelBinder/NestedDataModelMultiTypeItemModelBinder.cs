@@ -25,15 +25,13 @@ public class NestedDataModelMultiTypeItemModelBinder : IModelBinder
         ArgumentNullException.ThrowIfNull(bindingContext);
 
         var settings = _dynamicDataModelJsonSerializerSettingsCache.GetInstance();
-
         var jsonString = await ReadBodyAsString(bindingContext);
-
         var result = JsonConvert.DeserializeObject(jsonString, bindingContext.ModelType, settings);
 
         bindingContext.Result = ModelBindingResult.Success(result);
     }
 
-    private async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
+    private static async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
     {
         string body;
         using (var reader = new StreamReader(bindingContext.ActionContext.HttpContext.Request.Body, Encoding.UTF8))

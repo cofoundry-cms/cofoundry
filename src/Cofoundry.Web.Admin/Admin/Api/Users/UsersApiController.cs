@@ -18,7 +18,7 @@ public class UsersApiController : BaseAdminApiController
 
     public async Task<JsonResult> Get([FromQuery] SearchUserSummariesQuery query)
     {
-        if (query == null) query = new SearchUserSummariesQuery();
+        query ??= new SearchUserSummariesQuery();
         ApiPagingHelper.SetDefaultBounds(query);
 
         return await _apiResponseHelper.RunQueryAsync(query);
@@ -37,7 +37,7 @@ public class UsersApiController : BaseAdminApiController
         {
             return await _apiResponseHelper.RunCommandAsync(new AddUserWithTemporaryPasswordCommand()
             {
-                Email = command.Email,
+                Email = command.Email ?? string.Empty,
                 FirstName = command.FirstName,
                 LastName = command.LastName,
                 RoleCode = command.RoleCode,
@@ -69,8 +69,10 @@ public class UsersApiController : BaseAdminApiController
 
     public Task<JsonResult> Delete(int userId)
     {
-        var command = new DeleteUserCommand();
-        command.UserId = userId;
+        var command = new DeleteUserCommand
+        {
+            UserId = userId
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }

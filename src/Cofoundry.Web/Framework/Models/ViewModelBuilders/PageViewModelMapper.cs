@@ -2,7 +2,10 @@
 
 namespace Cofoundry.Web;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IPageViewModelMapper"/>. You can 
+/// override this implementation to customize the mapping behaviour.
+/// </summary>
 public class PageViewModelMapper : IPageViewModelMapper
 {
     private readonly IQueryExecutor _queryExecutor;
@@ -17,6 +20,7 @@ public class PageViewModelMapper : IPageViewModelMapper
         _customEntityDisplayModelMapper = customEntityDisplayModelMapper;
     }
 
+    /// <inheritdoc/>
     public virtual Task MapPageViewModelAsync(
         IPageViewModel viewModel,
         PageViewModelBuilderParameters mappingParameters
@@ -25,6 +29,7 @@ public class PageViewModelMapper : IPageViewModelMapper
         return MapAsync(viewModel, mappingParameters);
     }
 
+    /// <inheritdoc/>
     public virtual async Task MapCustomEntityViewModelAsync<TDisplayModel>(
         ICustomEntityPageViewModel<TDisplayModel> viewModel,
         CustomEntityPageViewModelBuilderParameters mappingParameters
@@ -36,25 +41,28 @@ public class PageViewModelMapper : IPageViewModelMapper
 
         var customEntityRenderDetails = mappingParameters.CustomEntityModel;
         var publishStatusQuery = mappingParameters.VisualEditorMode.ToPublishStatusQuery();
+        var model = await _customEntityDisplayModelMapper.MapDisplayModelAsync<TDisplayModel>(customEntityRenderDetails, publishStatusQuery);
 
-        var customModel = new CustomEntityRenderDetailsViewModel<TDisplayModel>();
-        customModel.CustomEntityId = customEntityRenderDetails.CustomEntityId;
-        customModel.CustomEntityVersionId = customEntityRenderDetails.CustomEntityVersionId;
-        customModel.Locale = customEntityRenderDetails.Locale;
-        customModel.Regions = customEntityRenderDetails.Regions;
-        customModel.Title = customEntityRenderDetails.Title;
-        customModel.UrlSlug = customEntityRenderDetails.UrlSlug;
-        customModel.WorkFlowStatus = customEntityRenderDetails.WorkFlowStatus;
-        customModel.PublishDate = customEntityRenderDetails.PublishDate;
-        customModel.PublishStatus = customEntityRenderDetails.PublishStatus;
-        customModel.CreateDate = customEntityRenderDetails.CreateDate;
-        customModel.PageUrls = customEntityRenderDetails.PageUrls;
-
-        customModel.Model = await _customEntityDisplayModelMapper.MapDisplayModelAsync<TDisplayModel>(customEntityRenderDetails, publishStatusQuery);
+        var customModel = new CustomEntityRenderDetailsViewModel<TDisplayModel>
+        {
+            CustomEntityId = customEntityRenderDetails.CustomEntityId,
+            CustomEntityVersionId = customEntityRenderDetails.CustomEntityVersionId,
+            Locale = customEntityRenderDetails.Locale,
+            Regions = customEntityRenderDetails.Regions,
+            Title = customEntityRenderDetails.Title,
+            UrlSlug = customEntityRenderDetails.UrlSlug,
+            WorkFlowStatus = customEntityRenderDetails.WorkFlowStatus,
+            PublishDate = customEntityRenderDetails.PublishDate,
+            PublishStatus = customEntityRenderDetails.PublishStatus,
+            CreateDate = customEntityRenderDetails.CreateDate,
+            PageUrls = customEntityRenderDetails.PageUrls,
+            Model = model
+        };
 
         viewModel.CustomEntity = customModel;
     }
 
+    /// <inheritdoc/>
     public virtual Task MapNotFoundPageViewModelAsync(
         INotFoundPageViewModel viewModel,
         NotFoundPageViewModelBuilderParameters mappingParameters
@@ -74,6 +82,7 @@ public class PageViewModelMapper : IPageViewModelMapper
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public virtual Task MapErrorPageViewModelAsync(
         IErrorPageViewModel viewModel,
         ErrorPageViewModelBuilderParameters mappingParameters
@@ -81,7 +90,10 @@ public class PageViewModelMapper : IPageViewModelMapper
     {
         ArgumentNullException.ThrowIfNull(viewModel);
         ArgumentNullException.ThrowIfNull(mappingParameters);
-        if (mappingParameters.StatusCode < 100) throw new ArgumentOutOfRangeException(nameof(mappingParameters.StatusCode));
+        if (mappingParameters.StatusCode < 100)
+        {
+            throw new ArgumentOutOfRangeException(nameof(mappingParameters.StatusCode));
+        }
 
         viewModel.StatusCode = mappingParameters.StatusCode;
         viewModel.StatusCodeDescription = GetStatusCodeDescription(viewModel.StatusCode);
@@ -94,7 +106,7 @@ public class PageViewModelMapper : IPageViewModelMapper
         return Task.CompletedTask;
     }
 
-    private string GetStatusCodeDescription(int statusCode)
+    private static string GetStatusCodeDescription(int statusCode)
     {
         if (!Enum.IsDefined(typeof(HttpStatusCode), statusCode))
         {

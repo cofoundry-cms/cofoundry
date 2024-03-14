@@ -26,8 +26,5 @@ public class AccountModuleRegistration : IInternalAngularModuleRegistration
         return module;
     }
 
-    public string RoutePrefix
-    {
-        get { return AccountRouteLibrary.RoutePrefix; }
-    }
+    public string RoutePrefix => AccountRouteLibrary.RoutePrefix;
 }

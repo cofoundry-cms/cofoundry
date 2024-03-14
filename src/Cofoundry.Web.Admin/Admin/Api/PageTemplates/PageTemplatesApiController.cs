@@ -15,7 +15,7 @@ public class PageTemplatesApiController : BaseAdminApiController
 
     public async Task<JsonResult> Get([FromQuery] SearchPageTemplateSummariesQuery query)
     {
-        if (query == null) query = new SearchPageTemplateSummariesQuery();
+        query ??= new SearchPageTemplateSummariesQuery();
         ApiPagingHelper.SetDefaultBounds(query);
 
         return await _apiResponseHelper.RunQueryAsync(query);

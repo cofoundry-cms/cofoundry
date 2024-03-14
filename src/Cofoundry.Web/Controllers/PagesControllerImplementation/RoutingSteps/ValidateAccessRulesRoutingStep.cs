@@ -31,7 +31,7 @@ public class ValidateAccessRulesRoutingStep : IValidateAccessRulesRoutingStep
     {
         ArgumentNullException.ThrowIfNull(controller);
         ArgumentNullException.ThrowIfNull(state);
-        EntityInvalidOperationException.ThrowIfNull(state, r => r.AmbientUserContext);
+        EntityInvalidOperationException.ThrowIfNull(state, state.AmbientUserContext);
 
         // If no page (404) skip this step - it will be handled later
         // Access rules don't apply to Cofoundry admin users, so skip this step
@@ -56,8 +56,11 @@ public class ValidateAccessRulesRoutingStep : IValidateAccessRulesRoutingStep
         }
     }
 
-    private async Task<EntityAccessRuleSet> FindAccessRuleViolation(PageActionRoutingState state)
+    private async Task<EntityAccessRuleSet?> FindAccessRuleViolation(PageActionRoutingState state)
     {
+        ArgumentNullException.ThrowIfNull(state.PageRoutingInfo);
+        ArgumentNullException.ThrowIfNull(state.AmbientUserContext);
+
         var accessRuleViolation = state.PageRoutingInfo.ValidateAccess(state.AmbientUserContext);
 
         // If the user associated with the ambient context is not authorized, then we need to check
@@ -67,11 +70,15 @@ public class ValidateAccessRulesRoutingStep : IValidateAccessRulesRoutingStep
             // For user areas, only the topmost ruleset matters
             var relavantRuleSet = EnumerateAccessRuleSets(state.PageRoutingInfo).FirstOrDefault();
 
+            if (relavantRuleSet == null)
+            {
+                throw new InvalidOperationException($"{nameof(relavantRuleSet)} should not be null if an access rule violation has occured.");
+            }
+
             // Find any other user areas to check
             // more than one custom user area should be a rare occurence
             // more than two is rare indeed, but we should account for it and use determanistic ordering
-            var userAreaCodesToCheck = relavantRuleSet
-                .AccessRules
+            var userAreaCodesToCheck = relavantRuleSet.AccessRules
                 .Select(r => r.UserAreaCode)
                 .Where(r => r != state.AmbientUserContext.UserArea?.UserAreaCode)
                 .Distinct()
@@ -85,9 +92,11 @@ public class ValidateAccessRulesRoutingStep : IValidateAccessRulesRoutingStep
                 {
                     _logger.LogDebug(
                         "User is logged into non-default user area {UserAreaCode} that passes access rule validation, switching ambient context to userId {UserId}.",
-                        context.UserArea.UserAreaCode,
+                        context.UserArea?.UserAreaCode,
                         context.UserId
                         );
+
+                    EntityInvalidOperationException.ThrowIfNull(context, context.UserArea);
 
                     // the user is logged into an alternative user area that matches one of the rules
                     // so we should set it as the ambient user context. This mimics the behaviour of 
@@ -122,6 +131,8 @@ public class ValidateAccessRulesRoutingStep : IValidateAccessRulesRoutingStep
 
     private void EnforceRuleViolation(Controller controller, PageActionRoutingState state, EntityAccessRuleSet accessRuleViolation)
     {
+        ArgumentNullException.ThrowIfNull(state.AmbientUserContext);
+
         if (!state.AmbientUserContext.IsSignedIn() && accessRuleViolation.ShouldTryRedirect())
         {
             _logger.LogDebug("User not authenticated, redirecting to sign in page for user area {UserAreaCodeForLoginRedirect}.", accessRuleViolation.UserAreaCodeForSignInRedirect);

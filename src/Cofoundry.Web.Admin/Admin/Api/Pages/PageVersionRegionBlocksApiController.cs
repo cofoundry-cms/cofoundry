@@ -47,25 +47,32 @@ public class PageVersionRegionBlocksApiController : BaseAdminApiController
 
     public Task<JsonResult> Delete(int pageVersionBlockId)
     {
-        var command = new DeletePageVersionBlockCommand() { PageVersionBlockId = pageVersionBlockId };
+        var command = new DeletePageVersionBlockCommand()
+        {
+            PageVersionBlockId = pageVersionBlockId
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }
 
     public Task<JsonResult> MoveUp(int pageVersionBlockId)
     {
-        var command = new MovePageVersionBlockCommand();
-        command.PageVersionBlockId = pageVersionBlockId;
-        command.Direction = OrderedItemMoveDirection.Up;
+        var command = new MovePageVersionBlockCommand
+        {
+            PageVersionBlockId = pageVersionBlockId,
+            Direction = OrderedItemMoveDirection.Up
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }
 
     public Task<JsonResult> MoveDown(int pageVersionBlockId)
     {
-        var command = new MovePageVersionBlockCommand();
-        command.PageVersionBlockId = pageVersionBlockId;
-        command.Direction = OrderedItemMoveDirection.Down;
+        var command = new MovePageVersionBlockCommand
+        {
+            PageVersionBlockId = pageVersionBlockId,
+            Direction = OrderedItemMoveDirection.Down
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }

@@ -10,7 +10,7 @@ public static class TemplateRegionTagBuilderHelper
     /// <summary>
     /// Parses an anonymous object as key-value pairs of html attributes.
     /// </summary>
-    public static Dictionary<string, string> ParseHtmlAttributesFromAnonymousObject(object anonymousObject)
+    public static Dictionary<string, string>? ParseHtmlAttributesFromAnonymousObject(object? anonymousObject)
     {
         if (anonymousObject != null)
         {
@@ -19,7 +19,8 @@ public static class TemplateRegionTagBuilderHelper
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(anonymousObject))
             {
                 var value = propertyDescriptor.GetValue(anonymousObject);
-                attributes.Add(propertyDescriptor.Name, Convert.ToString(value));
+                var valueAsString = Convert.ToString(value) ?? string.Empty;
+                attributes.Add(propertyDescriptor.Name, valueAsString);
             }
 
             return attributes;
@@ -30,10 +31,10 @@ public static class TemplateRegionTagBuilderHelper
 
     public static string WrapInTag(
         string pageBlocksHtml,
-        string wrappingTagName,
+        string? wrappingTagName,
         bool allowMultiplePageBlocks,
-        Dictionary<string, string> additonalHtmlAttributes,
-        Dictionary<string, string> editorAttributes = null
+        Dictionary<string, string>? additonalHtmlAttributes,
+        Dictionary<string, string>? editorAttributes = null
         )
     {
         const string DEFAULT_TAG = "div";
@@ -43,17 +44,26 @@ public static class TemplateRegionTagBuilderHelper
 
         IElement wrapper;
         // No need to wrap if its a single page block with a single outer node.
-        if (!allowMultiplePageBlocks && document.Body.Children.Length == 1 && wrappingTagName == null)
+        if (!allowMultiplePageBlocks
+            && document.Body != null
+            && document.Body.Children.Length == 1
+            && wrappingTagName == null)
         {
             wrapper = document.Body.Children.First();
         }
         else
         {
             wrapper = document.CreateElement(wrappingTagName ?? DEFAULT_TAG);
-            AngleSharpHelper.WrapChildren(document.Body, wrapper);
+            if (document.Body != null)
+            {
+                AngleSharpHelper.WrapChildren(document.Body, wrapper);
+            }
         }
 
-        AngleSharpHelper.MergeAttributes(wrapper, additonalHtmlAttributes);
+        if (additonalHtmlAttributes != null)
+        {
+            AngleSharpHelper.MergeAttributes(wrapper, additonalHtmlAttributes);
+        }
 
         if (editorAttributes != null)
         {

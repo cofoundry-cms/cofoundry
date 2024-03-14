@@ -11,7 +11,7 @@ public class ApiResponseHelperResult<T> : ApiResponseHelperResult
     /// <summary>
     /// Any additional data to send back to the response.
     /// </summary>
-    public T Data { get; set; }
+    public T? Data { get; set; }
 }
 
 /// <summary>
@@ -28,5 +28,5 @@ public class ApiResponseHelperResult
     /// <summary>
     /// Collection of any validation errors discovered when executing the request
     /// </summary>
-    public ICollection<ValidationError> Errors { get; set; }
+    public IReadOnlyCollection<ValidationError> Errors { get; set; } = Array.Empty<ValidationError>();
 }

@@ -28,13 +28,13 @@ public static class ICustomEntityDefinitionExtensions
     /// Gets the combined term descriptions for the custom entity, merging
     /// any custom terms with the defaults.
     /// </summary>
-    public static Dictionary<string, string> GetTerms<TDefition>(this TDefition definition)
+    public static IReadOnlyDictionary<string, string> GetTerms<TDefition>(this TDefition definition)
         where TDefition : ICustomEntityDefinition
     {
-        var customEntityTermDefinition = definition as ICustomizedTermCustomEntityDefinition;
-        if (customEntityTermDefinition != null && customEntityTermDefinition.CustomTerms != null)
+        if (definition is ICustomizedTermCustomEntityDefinition customEntityTermDefinition
+            && customEntityTermDefinition.CustomTerms != null)
         {
-            var terms = ((ICustomizedTermCustomEntityDefinition)definition)
+            var terms = customEntityTermDefinition
                 .CustomTerms
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 

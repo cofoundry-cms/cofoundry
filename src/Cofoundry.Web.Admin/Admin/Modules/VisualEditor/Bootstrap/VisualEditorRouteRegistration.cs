@@ -17,7 +17,10 @@ public class VisualEditorRouteRegistration : IOrderedRouteRegistration
 
     public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
     {
-        if (_pagesSettings.Disabled) return;
+        if (_pagesSettings.Disabled)
+        {
+            return;
+        }
 
         routeBuilder
             .ForAdminController<VisualEditorController>(VisualEditorRouteLibrary.RoutePrefix)

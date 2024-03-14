@@ -33,7 +33,7 @@ public class DocumentsApiController : BaseAdminApiController
             });
         }
 
-        if (query == null) query = new SearchDocumentAssetSummariesQuery();
+        query ??= new SearchDocumentAssetSummariesQuery();
         ApiPagingHelper.SetDefaultBounds(query);
 
         return await _apiResponseHelper.RunQueryAsync(query);

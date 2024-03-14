@@ -73,7 +73,7 @@ public interface IApiResponseHelper
     /// </summary>
     /// <typeparam name="TActionResult">Type of result to return from the function.</typeparam>
     /// <param name="functionToExecute">The function to execute.</param>
-    Task<IActionResult> RunWithActionResultAsync<TActionResult>(Func<Task<TActionResult>> functionToExecute)
+    Task<IActionResult?> RunWithActionResultAsync<TActionResult>(Func<Task<TActionResult>> functionToExecute)
         where TActionResult : IActionResult;
 
     /// <summary>

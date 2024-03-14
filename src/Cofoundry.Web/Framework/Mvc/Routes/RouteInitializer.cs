@@ -3,9 +3,7 @@
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Used to inject all routes registered through the dependency
-/// container via IRouteRegistration. Override this if you want
-/// more control over the ordering of inject route registrations.
+/// Default implementation of <see cref="IRouteInitializer"/>.
 /// </summary>
 public class RouteInitializer : IRouteInitializer
 {
@@ -18,24 +16,7 @@ public class RouteInitializer : IRouteInitializer
         _routeRegistrations = routeRegistrations;
     }
 
-    private class RegistrationLookupItem
-    {
-        public RegistrationLookupItem(IRouteRegistration registrationLookup)
-        {
-            RouteRegistration = registrationLookup;
-        }
-        public IRouteRegistration RouteRegistration { get; set; }
-
-        public List<IRouteRegistration> Dependencies { get; set; } = new List<IRouteRegistration>();
-    }
-
-    /// <summary>
-    /// Orders and runs RegisterRoutes() on all instances of IRouteRegistration 
-    /// registered in the dependency container.
-    /// </summary>
-    /// <param name="routeBuilder">
-    /// The MVC routeBuilder to add routes to.
-    /// </param>
+    /// <inheritdoc/>
     public void Initialize(IEndpointRouteBuilder routeBuilder)
     {
         ICollection<IRouteRegistration> sortedRoutes;

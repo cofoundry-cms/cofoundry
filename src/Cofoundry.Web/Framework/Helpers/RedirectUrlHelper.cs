@@ -39,7 +39,7 @@ public class RedirectUrlHelper
     /// for redirection; otherwise <see langword="null"/> is returned.
     /// </summary>
     /// <param name="controller">Currently executing controller instance to use in validation.</param>
-    public static string GetAndValidateReturnUrl(ControllerBase controller)
+    public static string? GetAndValidateReturnUrl(ControllerBase controller)
     {
         return GetAndValidateReturnUrlInternal(controller.Request, controller.Url);
     }
@@ -49,12 +49,12 @@ public class RedirectUrlHelper
     /// for redirection; otherwise <see langword="null"/> is returned.
     /// </summary>
     /// <param name="pageModel">Currently executing razor page instance to use in validation.</param>
-    public static string GetAndValidateReturnUrl(PageModel pageModel)
+    public static string? GetAndValidateReturnUrl(PageModel pageModel)
     {
         return GetAndValidateReturnUrlInternal(pageModel.Request, pageModel.Url);
     }
 
-    private static bool IsValidInternal(HttpRequest request, IUrlHelper urlHelper, string url)
+    private static bool IsValidInternal(HttpRequest request, IUrlHelper urlHelper, string? url)
     {
         var isValid = !string.IsNullOrEmpty(url)
             && urlHelper.IsLocalUrl(url)
@@ -63,7 +63,7 @@ public class RedirectUrlHelper
         return isValid;
     }
 
-    private static string GetAndValidateReturnUrlInternal(HttpRequest request, IUrlHelper urlHelper)
+    private static string? GetAndValidateReturnUrlInternal(HttpRequest request, IUrlHelper urlHelper)
     {
         var returnUrl = request.Query["ReturnUrl"].FirstOrDefault();
 

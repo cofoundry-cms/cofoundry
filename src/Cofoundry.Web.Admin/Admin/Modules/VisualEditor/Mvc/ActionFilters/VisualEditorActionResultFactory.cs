@@ -3,9 +3,7 @@
 namespace Cofoundry.Web.Admin.Internal;
 
 /// <summary>
-/// Factory for generating the VisualEditorActionResult
-/// that wraps the current action current ActionResult
-/// and modified it to include visual editor scripts.
+/// Default implementation of <see cref="IVisualEditorActionResultFactory"/>.
 /// </summary>
 public class VisualEditorActionResultFactory : IVisualEditorActionResultFactory
 {

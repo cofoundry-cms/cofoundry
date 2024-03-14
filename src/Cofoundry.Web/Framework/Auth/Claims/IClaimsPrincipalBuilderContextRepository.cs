@@ -15,5 +15,5 @@ public interface IClaimsPrincipalBuilderContextRepository
     /// <param name="userId">
     /// The identifier of the user to return data for.
     /// </param>
-    Task<IClaimsPrincipalBuilderContext> GetAsync(int userId);
+    Task<IClaimsPrincipalBuilderContext?> GetAsync(int userId);
 }

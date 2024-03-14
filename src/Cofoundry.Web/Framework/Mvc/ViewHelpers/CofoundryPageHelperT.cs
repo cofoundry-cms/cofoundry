@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Cofoundry.Web.Framework.Mvc.ViewHelpers;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Main helper for Cofoundry functionality on pages with a 
-/// model defined. Typically accessed via @Cofoundry, this keeps 
-/// all cofoundry functionality under one helper to avoid poluting 
-/// the global namespace.
+/// Default implementation of <see cref="ICofoundryHelper<>"/>.
 /// </summary>
 public class CofoundryPageHelper<TModel> : ICofoundryHelper<TModel>, IViewContextAware
 {
@@ -30,57 +28,52 @@ public class CofoundryPageHelper<TModel> : ICofoundryHelper<TModel>, IViewContex
         Html = html;
     }
 
+    private TModel? _model;
+    /// <summary>
+    /// The view model associated with the page this helper is contained in
+    /// </summary>
+    public TModel Model
+    {
+        get
+        {
+            if (_model == null)
+            {
+                throw ViewHelperNotContextualizedException.Create<CofoundryPageHelper<TModel>>(nameof(Model));
+            }
+            return _model;
+        }
+    }
+
+    /// <inheritdoc/>
+    public IContentRouteLibrary Routing { get; }
+
+    /// <inheritdoc/>
+    public IStaticFileViewHelper StaticFiles { get; }
+
+    /// <inheritdoc/>
+    public ISettingsViewHelper Settings { get; }
+
+    /// <inheritdoc/>
+    public ICurrentUserViewHelper CurrentUser { get; }
+
+    /// <inheritdoc/>
+    public IJavascriptViewHelper Js { get; }
+
+    /// <inheritdoc/>
+    public IHtmlSanitizerHelper Sanitizer { get; }
+
+    /// <inheritdoc/>
+    public ICofoundryHtmlHelper Html { get; }
+
     public virtual void Contextualize(ViewContext viewContext)
     {
         if (viewContext.ViewData.Model is TModel model)
         {
-            Model = model;
+            _model = model;
         }
         else if (viewContext.ViewData.Model != null)
         {
-            throw new Exception($"The view model type '{viewContext.ViewData.Model?.GetType().Name }' does not match the generic type parameter '{typeof(TModel).Name}'");
+            throw new Exception($"The view model type '{viewContext.ViewData.Model?.GetType().Name}' does not match the generic type parameter '{typeof(TModel).Name}'");
         }
     }
-
-    /// <summary>
-    /// The view model associated with the page this helper is contained in
-    /// </summary>
-    public TModel Model { get; private set; }
-
-    /// <summary>
-    /// Helpers for generating links to Cofoundry content
-    /// </summary>
-    public IContentRouteLibrary Routing { get; }
-
-    /// <summary>
-    /// Helper for resolving urls to static files.
-    /// </summary>
-    public IStaticFileViewHelper StaticFiles { get; }
-
-    /// <summary>
-    /// Helper for accessing configuration settings from a view
-    /// </summary>
-    public ISettingsViewHelper Settings { get; }
-
-    /// <summary>
-    /// Helpers for accessing information about the currently logged in user
-    /// </summary>
-    public ICurrentUserViewHelper CurrentUser { get; }
-
-    /// <summary>
-    /// Helper for working with javascript from .net code
-    /// </summary>
-    public IJavascriptViewHelper Js { get; }
-
-    /// <summary>
-    /// Helper for sanitizing html before it output to the page. You'd typically
-    /// want to use this when rendering out user inputted data which may be 
-    /// vulnerable to XSS attacks.
-    /// </summary>
-    public IHtmlSanitizerHelper Sanitizer { get; }
-
-    /// <summary>
-    /// Miscellaneous helper functions to make working work html views easier.
-    /// </summary>
-    public ICofoundryHtmlHelper Html { get; }
 }

@@ -2,26 +2,37 @@
 
 public class ViewNotFoundException : Exception
 {
-    public ViewNotFoundException() { }
+    public ViewNotFoundException()
+        : this(null, null)
+    {
+    }
 
-    public ViewNotFoundException(string viewName, IEnumerable<string> searchedLocations)
+    public ViewNotFoundException(string? message)
+        : base(message)
+    {
+
+    }
+
+    public ViewNotFoundException(string? viewName, IEnumerable<string>? searchedLocations)
+        : base(FormatMessage(viewName, searchedLocations))
     {
         ViewName = viewName;
         SearchedLocations = searchedLocations;
     }
 
-    public string ViewName { get; private set; }
+    public string? ViewName { get; private set; }
 
-    public IEnumerable<string> SearchedLocations { get; private set; }
+    public IEnumerable<string>? SearchedLocations { get; private set; }
 
-    public override string Message
+    private static string FormatMessage(string? viewName, IEnumerable<string>? searchedLocations)
     {
-        get
+        if (string.IsNullOrEmpty(viewName))
         {
-            if (string.IsNullOrEmpty(ViewName)) return "View not found - ViewName not specified.";
-
-            var searchedLocations = String.Join(Environment.NewLine, EnumerableHelper.Enumerate(SearchedLocations));
-            return $"View not found '{ViewName}'. Searched locations: { searchedLocations }";
+            return "View not found - ViewName not specified.";
         }
+
+        var formattedSearchedLocations = string.Join(Environment.NewLine, EnumerableHelper.Enumerate(searchedLocations));
+
+        return $"View not found '{viewName}'. Searched locations: {formattedSearchedLocations}";
     }
 }

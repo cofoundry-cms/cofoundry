@@ -1,8 +1,7 @@
 ﻿namespace Cofoundry.Web.Admin.Internal;
 
 /// <summary>
-/// Use to injects script, CSS or meta content into an HTML 
-/// document.
+/// Default implementation of <see cref="IHtmlDocumentScriptInjector"/>.
 /// </summary>
 public class HtmlDocumentScriptInjector : IHtmlDocumentScriptInjector
 {
@@ -11,28 +10,7 @@ public class HtmlDocumentScriptInjector : IHtmlDocumentScriptInjector
     const string BODY_TAG_START = "<body";
     const string BODY_TAG_END = "</body>";
 
-    /// <summary>
-    /// Injects scripts, CSS or meta content into an HTML 
-    /// document, either in the head or just before the closing
-    /// body tag. The HTML document must at least contain a body
-    /// tag, but otherwise no validation if performed.
-    /// </summary>
-    /// <param name="html">
-    /// The HTML document to inject. This is not parsed or validated, 
-    /// but must at least contain a body tag. If no head tag is present
-    /// and headScript is supplied, then a set of head tags will automatically 
-    /// be addded.
-    /// </param>
-    /// <param name="headScript">
-    /// String content to add into the head of the document, just before the
-    /// closing head tag. If no head tags are present, a set will be added
-    /// automatically. Can be null if no head content is to be added.
-    /// </param>
-    /// <param name="bodyScript">
-    /// A script to add at the end of the document body, just before the closing 
-    /// body tag. Can be null if no body content is to be added.
-    /// </param>
-    /// <returns>The modified html document.</returns>
+    /// <inheritdoc/>
     public string InjectScripts(string html, string headScript, string bodyScript)
     {
         html = InjectHeadScript(html, headScript);
@@ -46,7 +24,10 @@ public class HtmlDocumentScriptInjector : IHtmlDocumentScriptInjector
         var insertBodyIndex = html.LastIndexOf(BODY_TAG_END, StringComparison.OrdinalIgnoreCase);
 
         // Early return if no body tag found
-        if (insertBodyIndex < 0) return html;
+        if (insertBodyIndex < 0)
+        {
+            return html;
+        }
 
         html = html.Substring(0, insertBodyIndex)
             + bodyScript
@@ -56,9 +37,12 @@ public class HtmlDocumentScriptInjector : IHtmlDocumentScriptInjector
         return html;
     }
 
-    private string InjectHeadScript(string html, string headScript)
+    private static string InjectHeadScript(string html, string headScript)
     {
-        if (string.IsNullOrWhiteSpace(headScript)) return html;
+        if (string.IsNullOrWhiteSpace(headScript))
+        {
+            return html;
+        }
 
         var insertHeadIndex = html.IndexOf(HEAD_TAG_END, StringComparison.OrdinalIgnoreCase);
 

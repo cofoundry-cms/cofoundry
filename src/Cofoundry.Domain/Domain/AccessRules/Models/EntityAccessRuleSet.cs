@@ -72,6 +72,7 @@ public class EntityAccessRuleSet
     /// Determines if this rule set requires users that unauthenticated users are
     /// redirected to a sign in page.
     /// </summary>
+    [MemberNotNullWhen(true, nameof(UserAreaCodeForSignInRedirect))]
     public bool ShouldTryRedirect()
     {
         return !string.IsNullOrEmpty(UserAreaCodeForSignInRedirect);

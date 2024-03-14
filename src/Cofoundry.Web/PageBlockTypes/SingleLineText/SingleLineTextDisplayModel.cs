@@ -4,5 +4,5 @@ namespace Cofoundry.Web;
 
 public class SingleLineTextDisplayModel : IPageBlockTypeDisplayModel
 {
-    public HtmlString Text { get; set; }
+    public HtmlString? Text { get; set; }
 }

@@ -4,11 +4,11 @@ using System.Text.Encodings.Web;
 
 namespace Cofoundry.Web;
 
-/// <inheritdoc/>
 public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplateRegionTagBuilder<TModel>
     where TModel : ICustomEntityPageDisplayModel
 {
     const string DEFAULT_TAG = "div";
+
     private readonly ICustomEntityPageViewModel<TModel> _customEntityViewModel;
     private readonly ViewContext _viewContext;
     private readonly IPageBlockRenderer _blockRenderer;
@@ -41,21 +41,23 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
         _viewContext = viewContext;
     }
 
-    private string _output = null;
-    private string _regionName;
-    private string _wrappingTagName = null;
+    private readonly string _regionName;
+    private string? _output = null;
+    private string? _wrappingTagName = null;
     private bool _allowMultipleBlocks = false;
     private int? _emptyContentMinHeight = null;
-    private Dictionary<string, string> _additonalHtmlAttributes = null;
-    private readonly HashSet<string> _permittedBlocks = new HashSet<string>();
+    private Dictionary<string, string>? _additonalHtmlAttributes = null;
+    private readonly HashSet<string> _permittedBlocks = [];
 
+    /// <inheritdoc/>
     public ICustomEntityTemplateRegionTagBuilder<TModel> AllowMultipleBlocks()
     {
         _allowMultipleBlocks = true;
         return this;
     }
 
-    public ICustomEntityTemplateRegionTagBuilder<TModel> WrapWithTag(string tagName, object htmlAttributes = null)
+    /// <inheritdoc/>
+    public ICustomEntityTemplateRegionTagBuilder<TModel> WrapWithTag(string tagName, object? htmlAttributes = null)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(tagName);
 
@@ -65,24 +67,29 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
         return this;
     }
 
+    /// <inheritdoc/>
     public ICustomEntityTemplateRegionTagBuilder<TModel> EmptyContentMinHeight(int minHeight)
     {
         _emptyContentMinHeight = minHeight;
         return this;
     }
 
-    public ICustomEntityTemplateRegionTagBuilder<TModel> AllowBlockType<TBlockType>() where TBlockType : IPageBlockTypeDataModel
+    /// <inheritdoc/>
+    public ICustomEntityTemplateRegionTagBuilder<TModel> AllowBlockType<TBlockType>()
+        where TBlockType : IPageBlockTypeDataModel
     {
         AddBlockToAllowedTypes(typeof(TBlockType).Name);
         return this;
     }
 
+    /// <inheritdoc/>
     public ICustomEntityTemplateRegionTagBuilder<TModel> AllowBlockType(string blockTypeName)
     {
         AddBlockToAllowedTypes(blockTypeName);
         return this;
     }
 
+    /// <inheritdoc/>
     public ICustomEntityTemplateRegionTagBuilder<TModel> AllowBlockTypes(params string[] blockTypeNames)
     {
         foreach (var blockTypeName in blockTypeNames)
@@ -107,6 +114,7 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
         _permittedBlocks.Add(formattedBlockTypeName);
     }
 
+    /// <inheritdoc/>
     public async Task<ICustomEntityTemplateRegionTagBuilder<TModel>> InvokeAsync()
     {
         var region = _customEntityViewModel
@@ -131,6 +139,7 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
         return this;
     }
 
+    /// <inheritdoc/>
     public void WriteTo(TextWriter writer, HtmlEncoder encoder)
     {
         if (_output == null)
@@ -170,7 +179,7 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
         regionAttributes.Add("data-cms-custom-entity-region", string.Empty);
         regionAttributes.Add("class", "cofoundry__sv-region");
 
-        if (_permittedBlocks.Any())
+        if (_permittedBlocks.Count != 0)
         {
             regionAttributes.Add("data-cms-page-region-permitted-block-types", string.Join(",", _permittedBlocks));
         }
@@ -215,7 +224,7 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
 
         string blocksHtml = string.Empty;
 
-        if (blockHtmlParts.Any())
+        if (blockHtmlParts.Count != 0)
         {
             if (!_allowMultipleBlocks)
             {

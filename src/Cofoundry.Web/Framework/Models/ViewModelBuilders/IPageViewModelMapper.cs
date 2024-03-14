@@ -2,14 +2,9 @@
 
 /// <summary>
 /// Maps raw data to the view models used by the Cofoundry dynamic page 
-/// system. You can override this implementation to customize the mapping 
+/// system. You can override the default implementation to customize the mapping 
 /// behaviour.
 /// </summary>
-/// <remarks>
-/// Note that we use async methods here not because we need it in this implementation
-/// but because it may be needed for an overriding class where data access may be 
-/// neccessary.
-/// </remarks>
 public interface IPageViewModelMapper
 {
     /// <summary>

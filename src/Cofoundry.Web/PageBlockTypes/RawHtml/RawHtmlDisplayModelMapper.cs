@@ -11,8 +11,14 @@ public class RawHtmlDisplayModelMapper : IPageBlockTypeDisplayModelMapper<RawHtm
     {
         foreach (var item in context.Items)
         {
-            var displayModel = new RawHtmlDisplayModel();
-            displayModel.RawHtml = new HtmlString(item.DataModel.RawHtml);
+            var html = string.IsNullOrEmpty(item.DataModel.RawHtml)
+                ? null
+                : new HtmlString(item.DataModel.RawHtml);
+
+            var displayModel = new RawHtmlDisplayModel
+            {
+                RawHtml = html
+            };
 
             result.Add(item, displayModel);
         }

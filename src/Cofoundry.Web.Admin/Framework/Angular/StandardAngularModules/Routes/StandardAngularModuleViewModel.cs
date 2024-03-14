@@ -2,7 +2,7 @@
 
 public class StandardAngularModuleViewModel
 {
-    public string Title { get; set; }
+    public required string Title { get; set; }
 
-    public AngularModuleRouteLibrary RouteLibrary { get; set; }
+    public required AngularModuleRouteLibrary RouteLibrary { get; set; }
 }

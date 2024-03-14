@@ -129,7 +129,7 @@ public class PublishCustomEntityCommandHandler
         {
             var message = string.Format("Cannot publish because the {1} '{0}' is not unique (symbols and spaces are ignored in the uniqueness check)",
                     dbVersion.Title,
-                    definition.GetTerms().GetOrDefault(CustomizableCustomEntityTermKeys.Title, "title").ToLower());
+                    definition.GetTerms().GetValueOrDefault(CustomizableCustomEntityTermKeys.Title, "title").ToLower());
 
             throw new UniqueConstraintViolationException(message, "Title", dbVersion.Title);
         }

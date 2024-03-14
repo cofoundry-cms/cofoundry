@@ -24,7 +24,7 @@ public class DefaultStaticFileOptionsConfiguration : IStaticFileOptionsConfigura
 
     private void OnPrepareResponse(StaticFileResponseContext context)
     {
-        bool setCachingHeaders = false;
+        bool setCachingHeaders;
 
         switch (_staticFilesSettings.CacheMode)
         {
@@ -41,7 +41,10 @@ public class DefaultStaticFileOptionsConfiguration : IStaticFileOptionsConfigura
                 throw new InvalidOperationException("StaticFileCacheMode not regonised: " + _staticFilesSettings.CacheMode);
         }
 
-        if (!setCachingHeaders) return;
+        if (!setCachingHeaders)
+        {
+            return;
+        }
 
         // cache for 1 year
         context.Context.Response.Headers[HeaderNames.CacheControl] = new[] { "public,max-age=" + _staticFilesSettings.MaxAge };

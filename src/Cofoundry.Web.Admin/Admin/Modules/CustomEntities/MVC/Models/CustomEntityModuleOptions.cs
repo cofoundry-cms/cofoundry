@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Web.Admin;
+﻿using System.Collections.Immutable;
+
+namespace Cofoundry.Web.Admin;
 
 /// <summary>
 /// A set of useful settings and options output as a js object for the front
@@ -10,7 +12,7 @@ public class CustomEntityModuleOptions
     /// <summary>
     /// Unique 6 letter code representing the entity (use uppercase)
     /// </summary>
-    public string CustomEntityDefinitionCode { get; set; }
+    public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
     /// <summary>
     /// Plural name of the entity e.g. 'Products'
@@ -20,12 +22,12 @@ public class CustomEntityModuleOptions
     /// because this was changed after an initial release and we didn't want to
     /// break existing implementations of the js layer silently.
     /// </remarks>
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Singlar name of the entity e.g. 'Product'
     /// </summary>
-    public string NameSingular { get; set; }
+    public string NameSingular { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates whether the UrlSlug property should be treated
@@ -61,5 +63,5 @@ public class CustomEntityModuleOptions
     /// <summary>
     /// Terminology to use when displaying the custom entity, e.g. Title, Url Slug
     /// </summary>
-    public Dictionary<string, string> Terms { get; set; }
+    public IReadOnlyDictionary<string, string> Terms { get; set; } = ImmutableDictionary<string, string>.Empty;
 }

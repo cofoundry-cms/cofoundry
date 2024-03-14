@@ -1,39 +1,41 @@
-﻿namespace Cofoundry.Web;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Cofoundry.Web;
 
 /// <summary>
-/// A page view model class for a custom entity page that includes detailed custom
-/// entity data. This is the default ICustomEntityPageViewModel implementation, but you
-/// can override this implementation with your own by implementing a custom IPageViewModelFactory.
+/// Default implementation of <see cref="ICustomEntityPageViewModel<>"/>. This
+/// implementation can be overridden by implementing a custom <see cref="IPageViewModelFactory"/>.
 /// </summary>
-/// <typeparam name="TDisplayModel">The type of view model used to represent the custom entity data model when formatted for display.</typeparam>
 public class CustomEntityPageViewModel<TDisplayModel> : ICustomEntityPageViewModel<TDisplayModel>
     where TDisplayModel : ICustomEntityPageDisplayModel
 {
+    public string _pageTitle = string.Empty;
     public string PageTitle
     {
         get
         {
-            if (IsCustomModelNull()) return null;
-            return CustomEntity.Model.PageTitle;
+            CustomEntityModelPropertyNullCheck();
+            return _pageTitle;
         }
         set
         {
-            SetCustomModelPropertyNullCheck("PageTitle");
-            CustomEntity.Model.PageTitle = value;
+            CustomEntityModelPropertyNullCheck();
+            _pageTitle = value;
         }
     }
 
-    public string MetaDescription
+    public string? _metaDescription;
+    public string? MetaDescription
     {
         get
         {
-            if (IsCustomModelNull()) return null;
-            return CustomEntity.Model.MetaDescription;
+            CustomEntityModelPropertyNullCheck();
+            return _metaDescription;
         }
         set
         {
-            SetCustomModelPropertyNullCheck("MetaDescription");
-            CustomEntity.Model.MetaDescription = value;
+            CustomEntityModelPropertyNullCheck();
+            _metaDescription = value;
         }
     }
 
@@ -41,24 +43,46 @@ public class CustomEntityPageViewModel<TDisplayModel> : ICustomEntityPageViewMod
     /// Data about the page this custom entity instance is hosted in. For custom
     /// entity pages the page entity forms a template for each custom entity
     /// </summary>
-    public PageRenderDetails Page { get; set; }
+    private PageRenderDetails? _page { get; set; }
+    public PageRenderDetails Page
+    {
+        get => _page ?? throw ViewModelPropertyNotInitializedException.Create<CustomEntityPageViewModel<TDisplayModel>>(nameof(Page));
+        set => _page = value;
+    }
 
-    public CustomEntityRenderDetailsViewModel<TDisplayModel> CustomEntity { get; set; }
+    private CustomEntityRenderDetailsViewModel<TDisplayModel>? _customEntity { get; set; }
+    public CustomEntityRenderDetailsViewModel<TDisplayModel> CustomEntity
+    {
+        get
+        {
+            CustomEntityModelPropertyNullCheck();
+            return _customEntity;
+        }
+        set
+        {
+            _customEntity = value;
+            _pageTitle = _customEntity.Model.PageTitle;
+            _metaDescription = _customEntity.Model.MetaDescription;
+        }
+    }
 
     public bool IsPageEditMode { get; set; }
 
-    public PageRoutingHelper PageRoutingHelper { get; set; }
-
-    private bool IsCustomModelNull()
+    private PageRoutingHelper? _pageRoutingHelper;
+    public PageRoutingHelper PageRoutingHelper
     {
-        return CustomEntity == null || CustomEntity.Model == null;
+        get => _pageRoutingHelper ?? throw ViewModelPropertyNotInitializedException.Create<CustomEntityPageViewModel<TDisplayModel>>(nameof(PageRoutingHelper));
+        set => _pageRoutingHelper = value;
     }
 
-    private void SetCustomModelPropertyNullCheck(string property)
+    [MemberNotNull(nameof(_customEntity))]
+    private void CustomEntityModelPropertyNullCheck()
     {
-        if (IsCustomModelNull())
+        if (_customEntity == null)
         {
-            throw new NullReferenceException("Cannot set the " + property + " property, the Page property has not been set.");
+            throw ViewModelPropertyNotInitializedException.Create<CustomEntityPageViewModel<TDisplayModel>>(nameof(CustomEntity));
         }
+
+        EntityInvalidOperationException.ThrowIfNull(_customEntity, _customEntity.Model);
     }
 }

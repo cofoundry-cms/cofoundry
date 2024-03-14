@@ -2,8 +2,8 @@
 
 public class DocumentDisplayModelMapper : IPageBlockTypeDisplayModelMapper<DocumentDataModel>
 {
-    private IQueryExecutor _queryExecutor;
-    private IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
+    private readonly IQueryExecutor _queryExecutor;
+    private readonly IDocumentAssetRouteLibrary _documentAssetRouteLibrary;
 
     public DocumentDisplayModelMapper(
         IQueryExecutor queryExecutor,

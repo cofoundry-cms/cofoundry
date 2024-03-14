@@ -1,23 +1,18 @@
 ﻿namespace Cofoundry.Web;
 
 /// <summary>
-/// Service for extracting and validating the visual editor state from
-/// the http request.
-/// </summary>
-/// <remarks>
+/// Default implementation of <see cref="IVisualEditorStateService"/>.
 /// The default service is used when the admin package is not installed
 /// and simply returns an empty result.
-/// </remarks>
+/// </summary>
 public class DefaultVisualEditorStateService : IVisualEditorStateService
 {
-    private VisualEditorState _visualEditorStateCache = null;
+    private VisualEditorState? _visualEditorStateCache = null;
 
+    /// <inheritdoc/>
     public Task<VisualEditorState> GetCurrentAsync()
     {
-        if (_visualEditorStateCache == null)
-        {
-            _visualEditorStateCache = new VisualEditorState();
-        }
+        _visualEditorStateCache ??= new VisualEditorState();
 
         return Task.FromResult(_visualEditorStateCache);
     }

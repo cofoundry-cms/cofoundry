@@ -18,7 +18,7 @@ public class PageVersionsApiController : BaseAdminApiController
 
     public async Task<JsonResult> Get(int pageId, GetPageVersionSummariesByPageIdQuery query)
     {
-        if (query == null) query = new GetPageVersionSummariesByPageIdQuery();
+        query ??= new GetPageVersionSummariesByPageIdQuery();
         query.PageId = pageId;
         ApiPagingHelper.SetDefaultBounds(query);
 
@@ -38,10 +38,12 @@ public class PageVersionsApiController : BaseAdminApiController
 
         if (command == null)
         {
-            var createDraftCommand = new AddPageDraftVersionCommand();
-            createDraftCommand.PageId = pageId;
-            await _domainRepository.ExecuteCommandAsync(createDraftCommand);
+            await _domainRepository.ExecuteCommandAsync(new AddPageDraftVersionCommand
+            {
+                PageId = pageId
+            });
             command = await _domainRepository.ExecuteQueryAsync(query);
+            EntityNotFoundException.ThrowIfNull(command, "draft");
         }
 
         delta.Patch(command);

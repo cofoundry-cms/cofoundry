@@ -29,49 +29,48 @@ public class VisualEditorActionResult : IActionResult
     {
         var wrappedStream = context.HttpContext.Response.Body;
 
-        using (var stream = new MemoryStream())
-        using (var streamReader = new StreamReader(stream, Encoding.UTF8))
+        using var stream = new MemoryStream();
+        using var streamReader = new StreamReader(stream, Encoding.UTF8);
+
+        context.HttpContext.Response.Body = stream;
+        string? html = null;
+
+        try
         {
-            context.HttpContext.Response.Body = stream;
-            string html = null;
+            await _wrappedActionResult.ExecuteResultAsync(context);
 
-            try
+            stream.Seek(0, SeekOrigin.Begin);
             {
-                await _wrappedActionResult.ExecuteResultAsync(context);
+                html = (await streamReader.ReadToEndAsync()).Trim();
+            }
+        }
+        finally
+        {
+            context.HttpContext.Response.Body = wrappedStream;
+        }
 
-                stream.Seek(0, SeekOrigin.Begin);
-                {
-                    html = (await streamReader.ReadToEndAsync()).Trim();
-                }
-            }
-            finally
-            {
-                context.HttpContext.Response.Body = wrappedStream;
-            }
+        // Check for not XML
+        if (IsHtmlContent(context, html))
+        {
+            var headScript = _visualEditorScriptGenerator.CreateHeadScript();
+            var bodyScript = await _visualEditorScriptGenerator.CreateBodyScriptAsync(context);
+            html = _htmlDocumentScriptInjector.InjectScripts(html, headScript, bodyScript);
+        }
 
-            // Check for not XML
-            if (IsHtmlContent(context, html))
-            {
-                var headScript = _visualEditorScriptGenerator.CreateHeadScript();
-                var bodyScript = await _visualEditorScriptGenerator.CreateBodyScriptAsync(context);
-                html = _htmlDocumentScriptInjector.InjectScripts(html, headScript, bodyScript);
-            }
-
-            var outputStream = new StreamWriter(wrappedStream, Encoding.UTF8, 1024, true);
-            try
-            {
-                await outputStream.WriteAsync(html);
-                await outputStream.FlushAsync();
-            }
-            finally
-            {
-                // The "using" pattern would cause a sync flush which throws an error in NET Core 3.1
-                await outputStream.DisposeAsync();
-            }
+        var outputStream = new StreamWriter(wrappedStream, Encoding.UTF8, 1024, true);
+        try
+        {
+            await outputStream.WriteAsync(html);
+            await outputStream.FlushAsync();
+        }
+        finally
+        {
+            // The "using" pattern would cause a sync flush which throws an error in NET Core 3.1
+            await outputStream.DisposeAsync();
         }
     }
 
-    private bool IsHtmlContent(ActionContext context, string html)
+    private static bool IsHtmlContent(ActionContext context, string html)
     {
         var isTextContent = StringHelper
             .SplitAndTrim(context.HttpContext.Response.ContentType, ';')

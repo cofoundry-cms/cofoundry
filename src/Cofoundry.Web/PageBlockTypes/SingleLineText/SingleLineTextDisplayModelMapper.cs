@@ -11,8 +11,14 @@ public class SingleLineTextDisplayModelMapper : IPageBlockTypeDisplayModelMapper
     {
         foreach (var item in context.Items)
         {
-            var displayModel = new SingleLineTextDisplayModel();
-            displayModel.Text = new HtmlString(item.DataModel.Text);
+            var html = string.IsNullOrEmpty(item.DataModel.Text)
+                ? null
+                : new HtmlString(item.DataModel.Text);
+
+            var displayModel = new SingleLineTextDisplayModel
+            {
+                Text = html
+            };
 
             result.Add(item, displayModel);
         }

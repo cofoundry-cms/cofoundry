@@ -27,8 +27,5 @@ public class SettingsModuleRegistration : IInternalAngularModuleRegistration
         return module;
     }
 
-    public string RoutePrefix
-    {
-        get { return SettingsRouteLibrary.RoutePrefix; }
-    }
+    public string RoutePrefix => SettingsRouteLibrary.RoutePrefix;
 }

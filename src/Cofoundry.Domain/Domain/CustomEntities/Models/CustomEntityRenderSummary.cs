@@ -20,7 +20,7 @@ public class CustomEntityRenderSummary : ICustomEntityRoutable
     /// <summary>
     /// The six character definition code that represents the type of custom
     /// entity e.g. Blog Post, Project, Product. The definition code is defined
-    /// in a class that inherits from ICustomEntityDefinition.
+    /// in a class that inherits from <see cref="ICustomEntityDefinition"/>.
     /// </summary>
     public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
@@ -28,14 +28,14 @@ public class CustomEntityRenderSummary : ICustomEntityRoutable
     /// The database identifier for the version that this instance
     /// represents. The version may not always be the latest version and 
     /// is dependent on the query that was used to load this instance, typically 
-    /// using a PublishStatusQuery value.
+    /// using a <see cref="PublishStatusQuery"/> value.
     /// </summary>
     public int CustomEntityVersionId { get; set; }
 
     /// <summary>
     /// A number representing any custom ordering applied to this custom 
     /// entity. Custom Entities do not have custom ordering by default and 
-    /// the IOrderableCustomEntityDefinition interface should be used on your 
+    /// the <see cref="IOrderableCustomEntityDefinition"/> interface should be used on your 
     /// definition to imply that custom ordering is available. Doing so will
     /// enable drag-drop ordering in the admin panel.
     /// </summary>
@@ -61,9 +61,9 @@ public class CustomEntityRenderSummary : ICustomEntityRoutable
     public string UrlSlug { get; set; } = string.Empty;
 
     /// <summary>
-    /// WorkFlowStatus of the version that this instance represents. The version
+    /// <see cref="WorkFlowStatus"/> of the version that this instance represents. The version
     /// may not always be the latest version and is dependent on the query that
-    /// was used to load this instance, typically using a PublishStatusQuery value.
+    /// was used to load this instance, typically using a <see cref="PublishStatusQuery"/> value.
     /// </summary>
     public WorkFlowStatus WorkFlowStatus { get; set; }
 

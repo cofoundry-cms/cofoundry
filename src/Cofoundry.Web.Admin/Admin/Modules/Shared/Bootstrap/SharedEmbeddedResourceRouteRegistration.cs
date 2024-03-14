@@ -4,8 +4,6 @@ namespace Cofoundry.Web.Admin;
 
 public class SharedEmbeddedResourceRouteRegistration : IEmbeddedResourceRouteRegistration
 {
-    const string ALTERNATIVE_ROUTE_PREFIX = "/Cofoundry";
-
     private readonly IAdminRouteLibrary _adminRouteLibrary;
     private readonly AdminSettings _adminSettings;
 

@@ -57,7 +57,9 @@ public class NestedDataModelSchemaApiController : BaseAdminApiController
             throw new Exception("Error binding model");
         }
 
-        var errors = _modelValidationService.GetErrors(item.Model).ToList();
+        var errors = _modelValidationService
+            .GetErrors(item.Model)
+            .ToArray();
 
         return _apiResponseHelper.SimpleCommandResponse(errors);
     }

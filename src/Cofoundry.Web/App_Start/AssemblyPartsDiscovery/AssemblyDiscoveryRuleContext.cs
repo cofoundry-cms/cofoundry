@@ -2,6 +2,9 @@
 
 namespace Cofoundry.Web;
 
+/// <summary>
+/// Default implementation of <see cref="IAssemblyDiscoveryRuleContext"/>.
+/// </summary>
 public class AssemblyDiscoveryRuleContext : IAssemblyDiscoveryRuleContext
 {
     public AssemblyDiscoveryRuleContext(
@@ -12,6 +15,9 @@ public class AssemblyDiscoveryRuleContext : IAssemblyDiscoveryRuleContext
         EntryAssemblyName = entryAssembly.GetName();
     }
 
+    /// <inheritdoc/>
     public AssemblyName EntryAssemblyName { get; }
+
+    /// <inheritdoc/>
     public Assembly EntryAssembly { get; }
 }

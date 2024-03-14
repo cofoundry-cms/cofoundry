@@ -11,12 +11,17 @@ public class UsersModuleController : BaseAdminMvcController
         _userAreaDefinitionRepository = userAreaDefinitionRepository;
     }
 
-    private static readonly Dictionary<string, string> EmptyTerms = new Dictionary<string, string>();
+    private static readonly Dictionary<string, string> EmptyTerms = [];
     private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
     public ActionResult Index()
     {
         var userArea = RouteData.DataTokens["UserArea"] as IUserAreaDefinition;
+        if (userArea == null)
+        {
+            throw new Exception($"RouteData.DataTokens[\"UserArea\"] is null or not castable to IUserAreaDefinition.");
+        }
+
         var userAreaOptions = _userAreaDefinitionRepository.GetOptionsByCode(userArea.UserAreaCode);
 
         var options = new UsersModuleOptions()

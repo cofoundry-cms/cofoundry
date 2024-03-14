@@ -19,8 +19,15 @@ public class ValidateEditPermissionsRoutingStep : IValidateEditPermissionsRoutin
 
     public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
     {
+        EntityInvalidOperationException.ThrowIfNull(state, state.VisualEditorState);
+
         var pageRoutingInfo = state.PageRoutingInfo;
-        if (pageRoutingInfo == null || state.VisualEditorState.VisualEditorMode != VisualEditorMode.Edit) return Task.CompletedTask;
+        if (pageRoutingInfo == null || state.VisualEditorState.VisualEditorMode != VisualEditorMode.Edit)
+        {
+            return Task.CompletedTask;
+        }
+
+        EntityInvalidOperationException.ThrowIfNull(state, state.CofoundryAdminUserContext);
 
         if (pageRoutingInfo.CustomEntityRoute != null
             && state.InputParameters.IsEditingCustomEntity

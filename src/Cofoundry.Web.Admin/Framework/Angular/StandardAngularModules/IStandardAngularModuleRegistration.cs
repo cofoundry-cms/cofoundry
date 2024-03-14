@@ -8,7 +8,7 @@
 /// </summary>
 public interface IStandardAngularModuleRegistration
 {
-    AdminModule GetModule();
+    AdminModule? GetModule();
 
     string RoutePrefix { get; }
 }

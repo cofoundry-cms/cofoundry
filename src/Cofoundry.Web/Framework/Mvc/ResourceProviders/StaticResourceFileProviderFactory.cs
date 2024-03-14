@@ -24,46 +24,47 @@ public class StaticResourceFileProviderFactory : IInjectionFactory<StaticResourc
     public StaticResourceFileProvider Create()
     {
         // Create instance in a child scope so we don't have to dictate single-instance scope to components
-        using (var scope = _serviceProvider.CreateScope())
+        using var scope = _serviceProvider.CreateScope();
+
+        var serviceProvider = scope.ServiceProvider;
+        // resolve depedencies
+        var hostingEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
+        var embeddedResourceRouteRegistrations = serviceProvider.GetRequiredService<IEnumerable<IEmbeddedResourceRouteRegistration>>();
+        var embeddedFileProviderFactory = serviceProvider.GetRequiredService<IEmbeddedFileProviderFactory>();
+
+        // build file provider list
+        var allFileProviders = GetAllFileProviders(hostingEnvironment, embeddedResourceRouteRegistrations, embeddedFileProviderFactory);
+        IFileProvider compositeFileProvider;
+
+        if (allFileProviders.Count == 1)
         {
-            var serviceProvider = scope.ServiceProvider;
-            // resolve depedencies
-            var hostingEnvironment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
-            var embeddedResourceRouteRegistrations = serviceProvider.GetRequiredService<IEnumerable<IEmbeddedResourceRouteRegistration>>();
-            var embeddedFileProviderFactory = serviceProvider.GetRequiredService<IEmbeddedFileProviderFactory>();
-
-            // build file provider list
-            var allFileProviders = GetAllFileProviders(hostingEnvironment, embeddedResourceRouteRegistrations, embeddedFileProviderFactory);
-            IFileProvider compositeFileProvider;
-
-            if (allFileProviders.Count == 1)
-            {
-                compositeFileProvider = allFileProviders.First();
-            }
-            else
-            {
-
-                compositeFileProvider = new CompositeFileProvider(allFileProviders);
-            }
-
-            return new StaticResourceFileProvider(compositeFileProvider, allFileProviders);
+            compositeFileProvider = allFileProviders.First();
         }
+        else
+        {
+
+            compositeFileProvider = new CompositeFileProvider(allFileProviders);
+        }
+
+        return new StaticResourceFileProvider(compositeFileProvider);
     }
 
-    private List<IFileProvider> GetAllFileProviders(
+    private static List<IFileProvider> GetAllFileProviders(
         IWebHostEnvironment hostingEnvironment,
         IEnumerable<IEmbeddedResourceRouteRegistration> embeddedResourceRouteRegistrations,
         IEmbeddedFileProviderFactory embeddedFileProviderFactory
         )
     {
-        var allFileProviders = new List<IFileProvider>();
-        allFileProviders.Add(hostingEnvironment.WebRootFileProvider);
+        var allFileProviders = new List<IFileProvider>
+        {
+            hostingEnvironment.WebRootFileProvider
+        };
 
         var assemblyRoutes = EnumerableHelper
             .Enumerate(embeddedResourceRouteRegistrations)
             .SelectMany(r => r.GetEmbeddedResourcePaths())
             .GroupBy(r => r.Assembly)
-            .ToList();
+            .ToArray();
 
         foreach (var assemblyRoute in assemblyRoutes)
         {

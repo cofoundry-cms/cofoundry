@@ -7,6 +7,8 @@ namespace Cofoundry.Web;
 
 public class CofoundryAssetsController : Controller
 {
+    private const string DEFAULT_CONTENT_TYPE = "application/octet-stream";
+
     private readonly IQueryExecutor _queryExecutor;
     private readonly IResizedImageAssetFileService _resizedImageAssetFileService;
     private readonly IImageAssetRouteLibrary _imageAssetRouteLibrary;
@@ -58,7 +60,7 @@ public class CofoundryAssetsController : Controller
             return RedirectPermanent(url);
         }
 
-        Stream stream = null;
+        Stream? stream;
 
         try
         {
@@ -67,7 +69,7 @@ public class CofoundryAssetsController : Controller
         catch (FileNotFoundException ex)
         {
             // If the file exists but the file has gone missing, log and return a 404
-            _logger.LogError(0, ex, "Image Asset exists, but has no file: {0}", imageAssetId);
+            _logger.LogError(ex, "Image Asset exists, but has no file: {ImageAssetId}", imageAssetId);
             return FileAssetNotFound("File not found");
         }
 
@@ -98,7 +100,15 @@ public class CofoundryAssetsController : Controller
         var file = await GetDocumentAssetFile(documentAssetId);
 
         var validationAction = ValidateDocumentFileRequest(fileStamp, verificationToken, fileName, file, false);
-        if (validationAction != null) return validationAction;
+        if (validationAction != null)
+        {
+            return validationAction;
+        }
+
+        if (file == null)
+        {
+            throw new Exception($"{nameof(ValidateDocumentFileRequest)} should return a result if {nameof(file)} is null.");
+        }
 
         // Set the filename header separately to force "inline" content 
         // disposition even though a filename is specified.
@@ -108,7 +118,7 @@ public class CofoundryAssetsController : Controller
         Response.Headers[HeaderNames.ContentDisposition] = contentDisposition.ToString();
         SetCacheHeader(_documentAssetsSettings.CacheMaxAge);
 
-        return File(file.ContentStream, file.ContentType);
+        return File(file.ContentStream, file.ContentType ?? DEFAULT_CONTENT_TYPE);
     }
 
     public async Task<ActionResult> DocumentDownload(int documentAssetId, long fileStamp, string verificationToken, string fileName, string extension)
@@ -116,11 +126,19 @@ public class CofoundryAssetsController : Controller
         var file = await GetDocumentAssetFile(documentAssetId);
 
         var validationAction = ValidateDocumentFileRequest(fileStamp, verificationToken, fileName, file, true);
-        if (validationAction != null) return validationAction;
+        if (validationAction != null)
+        {
+            return validationAction;
+        }
+
+        if (file == null)
+        {
+            throw new Exception($"{nameof(ValidateDocumentFileRequest)} should return a result if {nameof(file)} is null.");
+        }
 
         SetCacheHeader(_documentAssetsSettings.CacheMaxAge);
 
-        return File(file.ContentStream, file.ContentType, file.GetFileNameWithExtension());
+        return File(file.ContentStream, file.ContentType ?? DEFAULT_CONTENT_TYPE, file.GetFileNameWithExtension());
     }
 
     /// <summary>
@@ -157,9 +175,9 @@ public class CofoundryAssetsController : Controller
         return RedirectPermanent(url);
     }
 
-    private async Task<DocumentAssetFile> GetDocumentAssetFile(int assetId)
+    private async Task<DocumentAssetFile?> GetDocumentAssetFile(int assetId)
     {
-        DocumentAssetFile file = null;
+        DocumentAssetFile? file = null;
 
         try
         {
@@ -169,13 +187,19 @@ public class CofoundryAssetsController : Controller
         catch (FileNotFoundException ex)
         {
             // If the file exists but the file has gone missing, log and return a 404
-            _logger.LogError(0, ex, "Document Asset exists, but has no file: {0}", assetId);
+            _logger.LogError(ex, "Document Asset exists, but has no file: {AssetId}", assetId);
         }
 
         return file;
     }
 
-    private ActionResult ValidateDocumentFileRequest(long fileStamp, string verificationToken, string fileName, DocumentAssetFile file, bool isDownload)
+    private ActionResult? ValidateDocumentFileRequest(
+        long fileStamp,
+        string verificationToken,
+        string fileName,
+        DocumentAssetFile? file,
+        bool isDownload
+        )
     {
         // additionally check that filestamp is not after the curent update date
         if (file == null || !IsFileStampValid(fileStamp, file.FileUpdateDate) || file.VerificationToken != verificationToken)
@@ -197,12 +221,19 @@ public class CofoundryAssetsController : Controller
     private ContentResult FileAssetNotFound(string message)
     {
         ControllerContext.HttpContext.Response.StatusCode = 404;
-        return new ContentResult() { Content = message };
+
+        return new ContentResult()
+        {
+            Content = message
+        };
     }
 
     private static bool IsFileStampValid(long fileStamp, DateTime fileUpdateDate)
     {
-        if (fileStamp < 1) return false;
+        if (fileStamp < 1)
+        {
+            return false;
+        }
 
         var fileStampDate = AssetFileStampHelper.ToDate(fileStamp);
 

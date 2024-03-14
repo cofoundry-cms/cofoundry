@@ -4,7 +4,9 @@ using System.Text.Encodings.Web;
 
 namespace Cofoundry.Web;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IPageTemplateRegionTagBuilder"/>.
+/// </summary>
 public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
 {
     private readonly IEditablePageViewModel _pageViewModel;
@@ -39,21 +41,23 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
         _viewContext = viewContext;
     }
 
-    private string _output = null;
-    private string _regionName;
-    private string _wrappingTagName = null;
+    private readonly string _regionName;
+    private string? _output = null;
+    private string? _wrappingTagName = null;
     private bool _allowMultipleBlocks = false;
     private int? _emptyContentMinHeight = null;
-    private Dictionary<string, string> _additonalHtmlAttributes = null;
-    private HashSet<string> _permittedBlocks = new HashSet<string>();
+    private Dictionary<string, string>? _additonalHtmlAttributes = null;
+    private readonly HashSet<string> _permittedBlocks = [];
 
+    /// <inheritdoc/>
     public IPageTemplateRegionTagBuilder AllowMultipleBlocks()
     {
         _allowMultipleBlocks = true;
         return this;
     }
 
-    public IPageTemplateRegionTagBuilder WrapWithTag(string tagName, object htmlAttributes = null)
+    /// <inheritdoc/>
+    public IPageTemplateRegionTagBuilder WrapWithTag(string tagName, object? htmlAttributes = null)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(tagName);
 
@@ -63,18 +67,21 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
         return this;
     }
 
+    /// <inheritdoc/>
     public IPageTemplateRegionTagBuilder EmptyContentMinHeight(int minHeight)
     {
         _emptyContentMinHeight = minHeight;
         return this;
     }
 
+    /// <inheritdoc/>
     public IPageTemplateRegionTagBuilder AllowBlockType<TBlockType>() where TBlockType : IPageBlockTypeDataModel
     {
         AddBlockToAllowedTypes(typeof(TBlockType).Name);
         return this;
     }
 
+    /// <inheritdoc/>
     public IPageTemplateRegionTagBuilder AllowBlockType(string blockTypeName)
     {
         AddBlockToAllowedTypes(blockTypeName);
@@ -82,6 +89,7 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
         return this;
     }
 
+    /// <inheritdoc/>
     public IPageTemplateRegionTagBuilder AllowBlockTypes(params string[] blockTypeNames)
     {
         foreach (var blockTypeName in blockTypeNames)
@@ -91,21 +99,7 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
         return this;
     }
 
-    private void AddBlockToAllowedTypes(string blockTypeName)
-    {
-        // Get the file name if we haven't already got it, e.g. we could have the file name or 
-        // full type name passed into here (we shouldn't be fussy)
-        var fileName = _pageBlockTypeTypeFileNameFormatter.FormatFromDataModelName(blockTypeName);
-
-        // Validate the model type, will throw exception if not implemented
-        var blockType = _pageBlockTypeDataModelTypeFactory.CreateByPageBlockTypeFileName(fileName);
-
-        // Make sure we have the correct name casing
-        var formattedBlockypeName = _pageBlockTypeTypeFileNameFormatter.FormatFromDataModelType(blockType);
-
-        _permittedBlocks.Add(formattedBlockypeName);
-    }
-
+    /// <inheritdoc/>
     public async Task<IPageTemplateRegionTagBuilder> InvokeAsync()
     {
         var pageRegion = _pageViewModel
@@ -130,6 +124,7 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
         return this;
     }
 
+    /// <inheritdoc/>
     public void WriteTo(TextWriter writer, HtmlEncoder encoder)
     {
         if (_output == null)
@@ -140,6 +135,21 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
         {
             writer.Write(_output);
         }
+    }
+
+    private void AddBlockToAllowedTypes(string blockTypeName)
+    {
+        // Get the file name if we haven't already got it, e.g. we could have the file name or 
+        // full type name passed into here (we shouldn't be fussy)
+        var fileName = _pageBlockTypeTypeFileNameFormatter.FormatFromDataModelName(blockTypeName);
+
+        // Validate the model type, will throw exception if not implemented
+        var blockType = _pageBlockTypeDataModelTypeFactory.CreateByPageBlockTypeFileName(fileName);
+
+        // Make sure we have the correct name casing
+        var formattedBlockypeName = _pageBlockTypeTypeFileNameFormatter.FormatFromDataModelType(blockType);
+
+        _permittedBlocks.Add(formattedBlockypeName);
     }
 
     private async Task<string> RenderRegion(PageRegionRenderDetails pageRegion)
@@ -169,7 +179,7 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
         regionAttributes.Add("data-cms-page-region", string.Empty);
         regionAttributes.Add("class", "cofoundry__sv-region");
 
-        if (_permittedBlocks.Any())
+        if (_permittedBlocks.Count != 0)
         {
             regionAttributes.Add("data-cms-page-region-permitted-block-types", string.Join(",", _permittedBlocks));
         }
@@ -214,7 +224,7 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
 
         string blocksHtml = string.Empty;
 
-        if (blockHtmlParts.Any())
+        if (blockHtmlParts.Count != 0)
         {
             if (!_allowMultipleBlocks)
             {

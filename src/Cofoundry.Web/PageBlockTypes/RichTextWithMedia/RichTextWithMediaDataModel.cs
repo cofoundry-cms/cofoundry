@@ -8,5 +8,5 @@ public class RichTextWithMediaDataModel : IPageBlockTypeDataModel
     [Required, Display(Name = "Text")]
     [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings, HtmlToolbarPreset.Media)]
     //[Searchable]
-    public string RawHtml { get; set; }
+    public string RawHtml { get; set; } = string.Empty;
 }

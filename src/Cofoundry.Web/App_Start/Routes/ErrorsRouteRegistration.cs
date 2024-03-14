@@ -7,7 +7,7 @@ public class ErrorsRouteRegistration : IOrderedRouteRegistration, IRunAfterRoute
 {
     public int Ordering => (int)RouteRegistrationOrdering.Early;
 
-    public ICollection<Type> RunAfter => new Type[] { typeof(AssetsRouteRegistration) };
+    public IReadOnlyCollection<Type> RunAfter => [typeof(AssetsRouteRegistration)];
 
     public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
     {

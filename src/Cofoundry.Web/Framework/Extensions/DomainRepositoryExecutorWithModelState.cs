@@ -14,12 +14,12 @@ public class DomainRepositoryExecutorWithModelState : IDomainRepositoryExecutor
 {
     private readonly IDomainRepositoryExecutor _innerDomainRepositoryExecutor;
     private readonly ModelStateDictionary _modelState;
-    private readonly TemplateInfo _templateInfo;
+    private readonly TemplateInfo? _templateInfo;
 
     public DomainRepositoryExecutorWithModelState(
         IDomainRepositoryExecutor innerDomainRepositoryExecutor,
         ModelStateDictionary modelState,
-        TemplateInfo templateInfo
+        TemplateInfo? templateInfo
         )
     {
         _innerDomainRepositoryExecutor = innerDomainRepositoryExecutor;
@@ -27,9 +27,12 @@ public class DomainRepositoryExecutorWithModelState : IDomainRepositoryExecutor
         _templateInfo = templateInfo;
     }
 
-    public async Task ExecuteAsync(ICommand command, IExecutionContext executionContext)
+    public async Task ExecuteAsync(ICommand command, IExecutionContext? executionContext)
     {
-        if (!_modelState.IsValid) return;
+        if (!_modelState.IsValid)
+        {
+            return;
+        }
 
         try
         {
@@ -41,9 +44,12 @@ public class DomainRepositoryExecutorWithModelState : IDomainRepositoryExecutor
         }
     }
 
-    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext executionContext)
+    public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query, IExecutionContext? executionContext)
     {
-        if (!_modelState.IsValid) return default(TResult);
+        if (!_modelState.IsValid)
+        {
+            return default!;
+        }
 
         var result = default(TResult);
 
@@ -64,7 +70,7 @@ public class DomainRepositoryExecutorWithModelState : IDomainRepositoryExecutor
             }
         }
 
-        return result;
+        return result!;
     }
 
     private void AddValidationExceptionToModelState(ValidationException ex)
@@ -81,10 +87,13 @@ public class DomainRepositoryExecutorWithModelState : IDomainRepositoryExecutor
         _modelState.AddModelError(propName, error.Message);
     }
 
-    private string GetPropertyName(IEnumerable<string> memberNames)
+    private string GetPropertyName(IEnumerable<string>? memberNames)
     {
         // Note: we condense multi-property errors into a global error
-        if (EnumerableHelper.IsNullOrEmpty(memberNames) || memberNames.Count() != 1) return string.Empty;
+        if (EnumerableHelper.IsNullOrEmpty(memberNames) || memberNames.Count() != 1)
+        {
+            return string.Empty;
+        }
 
         var prefix = _templateInfo?.HtmlFieldPrefix;
 

@@ -3,10 +3,7 @@
 namespace Cofoundry.Web.Admin;
 
 /// <summary>
-/// Used to make rendering urls and tags for js and css files easier. Urls
-/// are automatically versioned using IStaticFilePathFormatter and 
-/// DebugSettings.UseUncompressedResources is used to allow unminified
-/// resources to be referenced for debugging.
+/// Default implementation of <see cref="IStaticResourceReferenceRenderer"/>.
 /// </summary>
 public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
 {
@@ -25,14 +22,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
         _debugSettings = debugSettings;
     }
 
-    /// <summary>
-    /// Returns an application relative path to a js file in the conventional 
-    /// '[modulepath]/Content/js' directory. The path is automatically versioned e.g. 'myfile.js?v=uniquehash. 
-    /// The renderer first checks for a minified file by appending '_min' to the filename and
-    /// will use that file unless DebugSettings.UseUncompressedResources is set to true.
-    /// </summary>
-    /// <param name="moduleRouteLibrary">Route library for the module to render the script for.</param>
-    /// <param name="fileName">The javascript filename without a .js extension.</param>
+    /// <inheritdoc/>
     public string JsPath(ModuleRouteLibrary moduleRouteLibrary, string fileName)
     {
         string virtualPath = JsPathWithoutVersion(moduleRouteLibrary, fileName);
@@ -40,14 +30,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
         return _staticFilePathFormatter.AppendVersion(virtualPath);
     }
 
-    /// <summary>
-    /// Returns an application relative path to a css file in the conventional 
-    /// '[modulepath]/Content/css' directory. The path is automatically versioned e.g. 'myfile.css?v=uniquehash. 
-    /// The renderer first checks for a minified file by appending '_min' to the filename and
-    /// will use that file unless DebugSettings.UseUncompressedResources is set to true.
-    /// </summary>
-    /// <param name="moduleRouteLibrary">Route library for the module to render the stylesheet for.</param>
-    /// <param name="fileName">The stylesheet filename without a .css extension.</param>
+    /// <inheritdoc/>
     public string CssPath(ModuleRouteLibrary moduleRouteLibrary, string fileName)
     {
         var virtualPath = CssPathWithoutVersion(moduleRouteLibrary, fileName);
@@ -55,14 +38,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
         return _staticFilePathFormatter.AppendVersion(virtualPath);
     }
 
-    /// <summary>
-    /// Returns a script tag with an application relative path to a js file in the conventional 
-    /// '[modulepath]/Content/js' directory. The path is automatically versioned e.g. 'myfile.js?v=uniquehash. 
-    /// The renderer first checks for a minified file by appending '_min' to the filename and
-    /// will use that file unless DebugSettings.UseUncompressedResources is set to true.
-    /// </summary>
-    /// <param name="moduleRouteLibrary">Route library for the module to render the script for.</param>
-    /// <param name="fileName">The javascript filename without a .js extension.</param>
+    /// <inheritdoc/>
     public HtmlString ScriptTag(ModuleRouteLibrary moduleRouteLibrary, string fileName)
     {
         var jsPath = JsPath(moduleRouteLibrary, fileName);
@@ -70,15 +46,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
         return FormatScriptTag(jsPath);
     }
 
-    /// <summary>
-    /// Returns a script tag with an application relative path to a js file in the conventional 
-    /// '[modulepath]/Content/js' directory if it exists, otherwise an empty HtmlString is returned. 
-    /// The path is automatically versioned e.g. 'myfile.js?v=uniquehash. The renderer first checks 
-    /// for a minified file by appending '_min' to the filename and will use that file unless 
-    /// DebugSettings.UseUncompressedResources is set to true.
-    /// </summary>
-    /// <param name="moduleRouteLibrary">Route library for the module to render the script for.</param>
-    /// <param name="fileName">The javascript filename without a .js extension.</param>
+    /// <inheritdoc/>
     public HtmlString ScriptTagIfExists(ModuleRouteLibrary moduleRouteLibrary, string fileName)
     {
         var jsPath = JsPathWithoutVersion(moduleRouteLibrary, fileName);
@@ -89,11 +57,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
         return FormatScriptTag(jsPathWithVersion);
     }
 
-    /// <summary>
-    /// Gets a collection of script tags for all the files in the js 
-    /// directory of the specified route library.
-    /// </summary>
-    /// <param name="moduleRouteLibrary">Route library containg the path to find js files in.</param>
+    /// <inheritdoc/>
     public IEnumerable<HtmlString> ScriptTagsForDirectory(ModuleRouteLibrary moduleRouteLibrary)
     {
         var directoryScripts = _staticResourceFileProvider
@@ -107,15 +71,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
         return formattedScripts;
     }
 
-    /// <summary>
-    /// Returns a link tag containing an application relative path to a css file in the conventional 
-    /// '[modulepath]/Content/css' directory. The path is automatically versioned e.g. 'myfile.css?v=uniquehash. 
-    /// The renderer first checks for a minified file by appending '_min' to the filename and
-    /// will use that file unless DebugSettings.UseUncompressedResources is set to true.
-    /// </summary>
-    /// <param name="moduleRouteLibrary"></param>
-    /// <param name="fileName"></param>
-    /// <returns></returns>
+    /// <inheritdoc/>
     public HtmlString CssTag(ModuleRouteLibrary moduleRouteLibrary, string fileName)
     {
         var cssPath = CssPath(moduleRouteLibrary, fileName);
@@ -123,15 +79,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
         return FormatCssTag(cssPath);
     }
 
-    /// <summary>
-    /// Returns a link tag containing an application relative path to a css file in the conventional 
-    /// '[modulepath]/Content/css' directory if it exists, otherwise an empty HtmlString is returned. 
-    /// The path is automatically versioned e.g. 'myfile.css?v=uniquehash. The renderer first checks 
-    /// for a minified file by appending '_min' to the filename and will use that file unless 
-    /// DebugSettings.UseUncompressedResources is set to true.
-    /// </summary>
-    /// <param name="moduleRouteLibrary">Route library for the module to render the script for.</param>
-    /// <param name="fileName">The javascript filename without a .js extension.</param>
+    /// <inheritdoc/>
     public HtmlString CssTagIfExists(ModuleRouteLibrary moduleRouteLibrary, string fileName)
     {
         var cssPath = CssPathWithoutVersion(moduleRouteLibrary, fileName);
@@ -142,11 +90,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
         return FormatCssTag(cssPathWithVersion);
     }
 
-    /// <summary>
-    /// Gets a collection of css tags for all the files in the css 
-    /// directory of the specified route library.
-    /// </summary>
-    /// <param name="moduleRouteLibrary">Route library containg the path to find css files in.</param>
+    /// <inheritdoc/>
     public IEnumerable<HtmlString> CssTagsForDirectory(ModuleRouteLibrary moduleRouteLibrary)
     {
         var directoryScripts = _staticResourceFileProvider
@@ -160,12 +104,12 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
         return formattedScripts;
     }
 
-    private HtmlString FormatScriptTag(string jsPath)
+    private static HtmlString FormatScriptTag(string jsPath)
     {
         return new HtmlString($"<script src=\"{jsPath}\"></script>");
     }
 
-    private HtmlString FormatCssTag(string cssPath)
+    private static HtmlString FormatCssTag(string cssPath)
     {
         return new HtmlString($"<link href=\"{cssPath}\" rel=\"stylesheet\">");
     }
@@ -174,14 +118,14 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
     /// Reduces a resource filename to remove the extension
     /// and any minification suffix.
     /// </summary>
-    private string ReduceResourceName(string fileName)
+    private static string ReduceResourceName(string fileName)
     {
         var name = Path.GetFileNameWithoutExtension(fileName);
 
         return StringHelper.RemoveSuffix(name, "_min");
     }
 
-    private string CssPathWithoutVersion(ModuleRouteLibrary moduleRouteLibrary, string fileName)
+    private static string CssPathWithoutVersion(ModuleRouteLibrary moduleRouteLibrary, string fileName)
     {
         fileName = Path.GetFileNameWithoutExtension(fileName);
         var virtualPath = moduleRouteLibrary.CssFile(fileName);
@@ -192,7 +136,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
     private string JsPathWithoutVersion(ModuleRouteLibrary moduleRouteLibrary, string fileName)
     {
         fileName = Path.GetFileNameWithoutExtension(fileName);
-        string virtualPath = null;
+        string? virtualPath = null;
 
         // check for a minified resource first
         if (!_debugSettings.UseUncompressedResources)
@@ -205,10 +149,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
             }
         }
 
-        if (virtualPath == null)
-        {
-            virtualPath = moduleRouteLibrary.JsFile(fileName);
-        }
+        virtualPath ??= moduleRouteLibrary.JsFile(fileName);
 
         return virtualPath;
     }

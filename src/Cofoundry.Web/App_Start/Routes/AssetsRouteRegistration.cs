@@ -19,7 +19,7 @@ public class AssetsRouteRegistration : IOrderedRouteRegistration, IRunAfterRoute
 
     public int Ordering => (int)RouteRegistrationOrdering.Early;
 
-    public ICollection<Type> RunAfter => new Type[] { typeof(RobotsRouteRegistration) };
+    public IReadOnlyCollection<Type> RunAfter => [typeof(RobotsRouteRegistration)];
 
     public void RegisterRoutes(IEndpointRouteBuilder routeBuilder)
     {

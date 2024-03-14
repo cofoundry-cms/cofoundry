@@ -35,9 +35,12 @@ public class AdminRouteBuilderContext<TController>
     /// An object that contains data tokens for the route. The object's 
     /// properties represent the names and values of the data tokens.
     /// </param>
-    public AdminRouteBuilderContext<TController> MapIndexRoute(object dataTokens = null)
+    public AdminRouteBuilderContext<TController> MapIndexRoute(object? dataTokens = null)
     {
-        if (_adminSettings.Disabled) return this;
+        if (_adminSettings.Disabled)
+        {
+            return this;
+        }
 
         string controllerName = GetControllerName();
 
@@ -69,7 +72,7 @@ public class AdminRouteBuilderContext<TController>
     /// </param>
     public AdminRouteBuilderContext<TController> MapRoute(
         string action,
-        object dataTokens = null
+        object? dataTokens = null
         )
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(action);
@@ -92,12 +95,15 @@ public class AdminRouteBuilderContext<TController>
     public AdminRouteBuilderContext<TController> MapRoute(
         string action,
         string path,
-        object dataTokens = null
+        object? dataTokens = null
         )
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(action);
 
-        if (_adminSettings.Disabled) return this;
+        if (_adminSettings.Disabled)
+        {
+            return this;
+        }
 
         var controllerName = GetControllerName();
         var fullPath = _adminSettings.DirectoryName + "/" + _basePath;

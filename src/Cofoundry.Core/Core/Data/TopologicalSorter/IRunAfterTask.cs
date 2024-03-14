@@ -11,5 +11,5 @@ public interface IRunAfterTask
     /// Indicates the types that this task should run 
     /// after when ordered.
     /// </summary>
-    ICollection<Type> RunAfter { get; }
+    IReadOnlyCollection<Type> RunAfter { get; }
 }

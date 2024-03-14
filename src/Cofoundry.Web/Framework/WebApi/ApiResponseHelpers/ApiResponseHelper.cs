@@ -4,7 +4,9 @@ using System.Reflection;
 
 namespace Cofoundry.Web.Internal;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IApiResponseHelper"/>.
+/// </summary>
 public class ApiResponseHelper : IApiResponseHelper
 {
     private readonly IQueryExecutor _queryExecutor;
@@ -25,9 +27,13 @@ public class ApiResponseHelper : IApiResponseHelper
         _jsonSerializerSettings = jsonSerializerSettings;
     }
 
+    /// <inheritdoc/>
     public JsonResult SimpleQueryResponse<T>(T result)
     {
-        var response = new ApiResponseHelperResult<T>() { Data = result };
+        var response = new ApiResponseHelperResult<T>()
+        {
+            Data = result
+        };
 
         var jsonResult = CreateJsonResult(response);
 
@@ -39,12 +45,16 @@ public class ApiResponseHelper : IApiResponseHelper
         return jsonResult;
     }
 
+    /// <inheritdoc/>
     public JsonResult SimpleQueryResponse<T>(IEnumerable<ValidationError> validationErrors, T result)
     {
-        var response = new ApiResponseHelperResult<T>();
-        response.Errors = FormatValidationErrors(validationErrors);
-        response.IsValid = !response.Errors.Any();
-        response.Data = result;
+        var errors = FormatValidationErrors(validationErrors);
+        var response = new ApiResponseHelperResult<T>
+        {
+            Errors = errors,
+            IsValid = errors.Count == 0,
+            Data = result
+        };
 
         var jsonResult = CreateJsonResult(response);
 
@@ -60,74 +70,85 @@ public class ApiResponseHelper : IApiResponseHelper
         return jsonResult;
     }
 
+    /// <inheritdoc/>
     public JsonResult SimpleCommandResponse<T>(IEnumerable<ValidationError> validationErrors, T returnData)
     {
-        var response = new ApiResponseHelperResult<T>();
-        response.Errors = FormatValidationErrors(validationErrors);
-        response.IsValid = !response.Errors.Any();
-        response.Data = returnData;
+        var errors = FormatValidationErrors(validationErrors);
+        var response = new ApiResponseHelperResult<T>
+        {
+            Errors = errors,
+            IsValid = errors.Count == 0,
+            Data = returnData
+        };
 
         return GetCommandResponse(response);
     }
 
+    /// <inheritdoc/>
     public JsonResult SimpleCommandResponse(IEnumerable<ValidationError> validationErrors)
     {
-        var response = new ApiResponseHelperResult();
-        response.Errors = FormatValidationErrors(validationErrors);
-        response.IsValid = !response.Errors.Any();
+        var errors = FormatValidationErrors(validationErrors);
+        var response = new ApiResponseHelperResult
+        {
+            Errors = errors,
+            IsValid = errors.Count == 0
+        };
 
         return GetCommandResponse(response);
     }
 
+    /// <inheritdoc/>
     public JsonResult NotPermittedResponse(NotPermittedException ex)
     {
-        var response = new ApiResponseHelperResult();
-        response.Errors = new ValidationError[] { new ValidationError(ex.Message) };
-        response.IsValid = false;
+        var response = new ApiResponseHelperResult
+        {
+            Errors = [new ValidationError(ex.Message)],
+            IsValid = false
+        };
 
         var jsonResult = CreateJsonResult(response, 403);
 
         return jsonResult;
     }
 
+    /// <inheritdoc/>
     public Task<JsonResult> RunQueryAsync<TResult>(IQuery<TResult> query)
     {
         return RunWithResultAsync(() => _queryExecutor.ExecuteAsync(query));
     }
 
+    /// <inheritdoc/>
     public async Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta)
         where TCommand : class, IPatchableByIdCommand
     {
         var query = new GetPatchableCommandByIdQuery<TCommand>(id);
         var command = await _queryExecutor.ExecuteAsync(query);
+        EntityNotFoundException.ThrowIfNull(command, id);
 
-        if (delta != null)
-        {
-            delta.Patch(command);
-        }
+        delta?.Patch(command);
 
         return await RunCommandAsync(command);
     }
 
+    /// <inheritdoc/>
     public async Task<JsonResult> RunCommandAsync<TCommand>(IDelta<TCommand> delta)
         where TCommand : class, IPatchableCommand
     {
         var query = new GetPatchableCommandQuery<TCommand>();
         var command = await _queryExecutor.ExecuteAsync(query);
+        EntityNotFoundException.ThrowIfNull(command);
 
-        if (delta != null)
-        {
-            delta.Patch(command);
-        }
+        delta?.Patch(command);
 
         return await RunCommandAsync(command);
     }
 
+    /// <inheritdoc/>
     public async Task<JsonResult> RunCommandAsync<TCommand>(TCommand command) where TCommand : ICommand
     {
         var errors = _commandValidationService.GetErrors(command).ToList();
 
-        if (!errors.Any())
+        if (errors.Count == 0)
         {
             try
             {
@@ -153,11 +174,12 @@ public class ApiResponseHelper : IApiResponseHelper
         return SimpleCommandResponse(errors);
     }
 
+    /// <inheritdoc/>
     public async Task<JsonResult> RunAsync(Func<Task> action)
     {
         var errors = new List<ValidationError>();
 
-        if (!errors.Any())
+        if (errors.Count == 0)
         {
             try
             {
@@ -176,16 +198,18 @@ public class ApiResponseHelper : IApiResponseHelper
         return SimpleCommandResponse(errors);
     }
 
+    /// <inheritdoc/>
     public async Task<JsonResult> RunWithResultAsync<TResult>(Func<Task<TResult>> functionToExecute)
     {
         var errors = new List<ValidationError>();
-        TResult result = default(TResult);
+        // null always allowed for a failed response despite nullability of TResult
 
-        if (!errors.Any())
+        if (errors.Count == 0)
         {
             try
             {
-                result = await functionToExecute();
+                var result = await functionToExecute();
+                return SimpleQueryResponse(errors, result);
             }
             catch (ValidationException ex)
             {
@@ -197,16 +221,17 @@ public class ApiResponseHelper : IApiResponseHelper
             }
         }
 
-        return SimpleQueryResponse(errors, result);
+        return SimpleQueryResponse(errors);
     }
 
-    public async Task<IActionResult> RunWithActionResultAsync<TActionResult>(Func<Task<TActionResult>> functionToExecute)
+    /// <inheritdoc/>
+    public async Task<IActionResult?> RunWithActionResultAsync<TActionResult>(Func<Task<TActionResult>> functionToExecute)
         where TActionResult : IActionResult
     {
         var errors = new List<ValidationError>();
-        IActionResult result = null;
+        IActionResult? result = null;
 
-        if (!errors.Any())
+        if (errors.Count == 0)
         {
             try
             {
@@ -238,9 +263,12 @@ public class ApiResponseHelper : IApiResponseHelper
         return jsonResult;
     }
 
-    private ICollection<ValidationError> FormatValidationErrors(IEnumerable<ValidationError> validationErrors)
+    private static IReadOnlyCollection<ValidationError> FormatValidationErrors(IEnumerable<ValidationError> validationErrors)
     {
-        if (validationErrors == null) return Array.Empty<ValidationError>();
+        if (validationErrors == null)
+        {
+            return Array.Empty<ValidationError>();
+        }
 
         // De-dup and order by prop name.
         return validationErrors
@@ -255,29 +283,31 @@ public class ApiResponseHelper : IApiResponseHelper
                 return new { e.Message, propKey };
             })
             .OrderBy(g => g.Key.propKey)
-            .Select(g => g.FirstOrDefault())
+            .Select(g => g.First())
             .ToArray();
 
     }
 
-    private object GetCommandOutputValue<TCommand>(TCommand command) where TCommand : ICommand
+    private static object? GetCommandOutputValue<TCommand>(TCommand command)
+        where TCommand : ICommand
     {
         var property = typeof(TCommand)
             .GetTypeInfo()
             .GetProperties()
             .SingleOrDefault(p => p.IsDefined(typeof(OutputValueAttribute)));
 
-        if (property == null) return null;
+        if (property == null)
+        {
+            return null;
+        }
 
         return property.GetValue(command);
     }
 
-    private void AddValidationExceptionToErrorList(ValidationException ex, List<ValidationError> errors)
+    private static void AddValidationExceptionToErrorList(ValidationException ex, List<ValidationError> errors)
     {
-        if (ex.ValidationResult is CompositeValidationResult)
+        if (ex.ValidationResult is CompositeValidationResult compositeResult)
         {
-            var compositeResult = (CompositeValidationResult)ex.ValidationResult;
-
             foreach (var result in compositeResult.Results)
             {
                 errors.Add(ToValidationError(result));
@@ -308,11 +338,11 @@ public class ApiResponseHelper : IApiResponseHelper
         }
     }
 
-    private ValidationError ToValidationError(ValidationResult result)
+    private static ValidationError ToValidationError(ValidationResult result)
     {
         var error = new ValidationError()
         {
-            Message = result.ErrorMessage,
+            Message = result.ErrorMessage ?? "Unknown Error",
             Properties = result.MemberNames.ToArray()
         };
 

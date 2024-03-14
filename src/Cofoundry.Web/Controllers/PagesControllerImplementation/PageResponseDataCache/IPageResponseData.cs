@@ -2,11 +2,9 @@
 
 /// <summary>
 /// Contains information about a page rendered dyanamically via the
-/// PagesController. This object is used to store all the information 
-/// gathered during the rendering process so that it can be cached and used 
-/// in other places. Specifically this is done for rendering the admin site
-/// viewer from SiteViewerContentFilterAttribute but this could potentially 
-/// be used in other places like other filters or view helpers.
+/// <see cref="CofoundryPagesController"/>. This object is used to store all 
+/// the information gathered during the rendering process so that it can be 
+/// cached and used in other places.
 /// </summary>
 public interface IPageResponseData
 {
@@ -35,7 +33,7 @@ public interface IPageResponseData
     /// </summary>
     IVersionRoute Version { get; set; }
 
-    CustomEntityDefinitionSummary CustomEntityDefinition { get; set; }
+    CustomEntityDefinitionSummary? CustomEntityDefinition { get; set; }
 
     /// <summary>
     /// True if the page has a draft version available.
@@ -48,5 +46,5 @@ public interface IPageResponseData
     /// from the ambient user context because the default schema may not be
     /// the Cofoundry admin auth schema.
     /// </summary>
-    IUserContext CofoundryAdminUserContext { get; set; }
+    IUserContext? CofoundryAdminUserContext { get; set; }
 }

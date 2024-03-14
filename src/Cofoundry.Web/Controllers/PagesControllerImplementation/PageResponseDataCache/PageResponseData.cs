@@ -10,43 +10,27 @@
 /// </summary>
 public class PageResponseData : IPageResponseData
 {
-    /// <summary>
-    /// The main view model sent to the template for rendering.
-    /// </summary>
-    public IEditablePageViewModel Page { get; set; }
+    /// <inheritdoc/>
+    public required IEditablePageViewModel Page { get; set; }
 
-    /// <summary>
-    /// The current VisualEditorMode.
-    /// </summary>
-    public VisualEditorMode VisualEditorMode { get; set; }
+    /// <inheritdoc/>
+    public required VisualEditorMode VisualEditorMode { get; set; }
 
-    /// <summary>
-    /// The PageRoute for the page being displayed.
-    /// </summary>
-    public PageRoutingInfo PageRoutingInfo { get; set; }
+    /// <inheritdoc/>
+    public required PageRoutingInfo PageRoutingInfo { get; set; }
 
-    /// <summary>
-    /// The PageVersionRoute for the specific version of the page being displayed.
-    /// </summary>
-    public PageVersionRoute PageVersion { get; set; }
+    /// <inheritdoc/>
+    public required PageVersionRoute PageVersion { get; set; }
 
-    /// <summary>
-    /// RouteInfo for the Version being viewed, be it a page or custom entity.
-    /// </summary>
-    public IVersionRoute Version { get; set; }
+    /// <inheritdoc/>
+    public required IVersionRoute Version { get; set; }
 
-    public CustomEntityDefinitionSummary CustomEntityDefinition { get; set; }
+    /// <inheritdoc/>
+    public CustomEntityDefinitionSummary? CustomEntityDefinition { get; set; }
 
-    /// <summary>
-    /// True if the page has a draft version available.
-    /// </summary>
+    /// <inheritdoc/>
     public bool HasDraftVersion { get; set; }
 
-    /// <summary>
-    /// User context representing the logged in Cofoundry admin user, or
-    /// null if the user is not logged into the admin auth schema. This differs
-    /// from the ambient user context because the default schema may not be
-    /// the Cofoundry admin auth schema.
-    /// </summary>
-    public IUserContext CofoundryAdminUserContext { get; set; }
+    /// <inheritdoc/>
+    public IUserContext? CofoundryAdminUserContext { get; set; }
 }

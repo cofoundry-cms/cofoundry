@@ -32,7 +32,7 @@ public class PagesApiController : BaseAdminApiController
             });
         }
 
-        if (query == null) query = new SearchPageSummariesQuery();
+        query ??= new SearchPageSummariesQuery();
         ApiPagingHelper.SetDefaultBounds(query);
 
         return await _apiResponseHelper.RunQueryAsync(query);
@@ -61,8 +61,10 @@ public class PagesApiController : BaseAdminApiController
 
     public Task<JsonResult> Delete(int pageId)
     {
-        var command = new DeletePageCommand();
-        command.PageId = pageId;
+        var command = new DeletePageCommand
+        {
+            PageId = pageId
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }

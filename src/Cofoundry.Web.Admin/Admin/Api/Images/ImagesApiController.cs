@@ -36,7 +36,7 @@ public class ImagesApiController : BaseAdminApiController
             });
         }
 
-        if (query == null) query = new SearchImageAssetSummariesQuery();
+        query ??= new SearchImageAssetSummariesQuery();
         ApiPagingHelper.SetDefaultBounds(query);
 
         return await _apiResponseHelper.RunQueryAsync(query);
@@ -79,8 +79,10 @@ public class ImagesApiController : BaseAdminApiController
 
     public Task<JsonResult> Delete(int imageAssetId)
     {
-        var command = new DeleteImageAssetCommand();
-        command.ImageAssetId = imageAssetId;
+        var command = new DeleteImageAssetCommand
+        {
+            ImageAssetId = imageAssetId
+        };
 
         return _apiResponseHelper.RunCommandAsync(command);
     }

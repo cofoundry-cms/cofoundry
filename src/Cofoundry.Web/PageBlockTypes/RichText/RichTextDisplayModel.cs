@@ -4,5 +4,5 @@ namespace Cofoundry.Web;
 
 public class RichTextDisplayModel : IPageBlockTypeDisplayModel
 {
-    public HtmlString RawHtml { get; set; }
+    public HtmlString? RawHtml { get; set; }
 }

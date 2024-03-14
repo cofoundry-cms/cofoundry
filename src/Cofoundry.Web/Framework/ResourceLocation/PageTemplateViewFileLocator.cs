@@ -6,12 +6,12 @@ using Microsoft.Extensions.FileProviders;
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Allows searching for view files in the website directory.
+/// Default (Web) implementation of <see cref="IPageTemplateViewFileLocator"/>.
 /// </summary>
 public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
 {
-    private static char[] TEMPLATE_NAME_CHAR_TO_TRIM = new char[] { '_', '-' };
-    const string VIEW_FILE_EXTENSION = ".cshtml";
+    private readonly static char[] TEMPLATE_NAME_CHAR_TO_TRIM = ['_', '-'];
+    private const string VIEW_FILE_EXTENSION = ".cshtml";
 
     private readonly IResourceLocator _resourceLocator;
     private readonly IRazorViewEngine _razorViewEngine;
@@ -31,26 +31,14 @@ public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
         _pageTemplateViewLocationRegistrations = pageTemplateViewLocationRegistrations;
     }
 
-    /// <summary>
-    /// Searches for page layout files in the website directory containing the specified
-    /// search string. Layout files should conform to the convention being located in a view folder
-    /// with the name 'layouts'.
-    /// </summary>
-    /// <param name="searchText">Optional search string to filter results.</param>
-    public IEnumerable<PageTemplateFile> GetPageTemplateFiles(string searchText = null)
+    /// <inheritdoc/>
+    public IEnumerable<PageTemplateFile> GetPageTemplateFiles(string? searchText = null)
     {
         return GetUnorderedPageTemplateFiles(searchText).OrderBy(l => l.FileName);
     }
 
-    /// <summary>
-    /// Gets the virtual path of a partial view referenced from inside a 
-    /// page template, returning null if it does not exist.
-    /// </summary>
-    /// <param name="partialName">
-    /// The name or full virtual path of the view file. If the full virtual
-    /// path is already specified and exists then that path is returned
-    /// </param>
-    public string ResolvePageTemplatePartialViewPath(string partialName)
+    /// <inheritdoc/>
+    public string? ResolvePageTemplatePartialViewPath(string partialName)
     {
         if (FileExists(partialName))
         {
@@ -69,13 +57,20 @@ public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
 
     private bool FileExists(string path)
     {
-        if (string.IsNullOrEmpty(path)) return false;
-        if (path[0] != '~' && path[0] != '/') return false;
+        if (string.IsNullOrEmpty(path))
+        {
+            return false;
+        }
+
+        if (path[0] != '~' && path[0] != '/')
+        {
+            return false;
+        }
 
         return _resourceLocator.FileExists(path);
     }
 
-    private IEnumerable<PageTemplateFile> GetUnorderedPageTemplateFiles(string searchText)
+    private IEnumerable<PageTemplateFile> GetUnorderedPageTemplateFiles(string? searchText)
     {
         var templateDirecotryPaths = _pageTemplateViewLocationRegistrations.SelectMany(r => r.GetPathPrefixes());
         var templateDirectories = templateDirecotryPaths
@@ -91,14 +86,14 @@ public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
         }
     }
 
-    private IEnumerable<PageTemplateFile> SearchDirectoryForPageTemplateFiles(string directoryPath, string searchText)
+    private IEnumerable<PageTemplateFile> SearchDirectoryForPageTemplateFiles(string directoryPath, string? searchText)
     {
         var directoryContents = _resourceLocator.GetDirectory(directoryPath);
 
         foreach (var file in directoryContents.Where(f => !f.IsDirectory))
         {
             // filename contains the search text and is located in a 'PageTemplates' folder, but not a 'partials' folder and has the extension .cshtml
-            if (Contains(file.Name, searchText)
+            if ((searchText == null || Contains(file.Name, searchText))
                 && !Contains(file.Name, "_ViewStart")
                 && !Contains(file.Name, "_ViewImports")
                 && file.Name.EndsWith(VIEW_FILE_EXTENSION, StringComparison.OrdinalIgnoreCase))
@@ -120,7 +115,7 @@ public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
         }
     }
 
-    private PageTemplateFile MapPageTemplateFile(string virtualDirectoryPath, IFileInfo file)
+    private static PageTemplateFile MapPageTemplateFile(string virtualDirectoryPath, IFileInfo file)
     {
         var fileName = Path.ChangeExtension(file.Name, null).TrimStart(TEMPLATE_NAME_CHAR_TO_TRIM);
         var virtualPath = RelativePathHelper.Combine(virtualDirectoryPath, file.Name);
@@ -136,10 +131,10 @@ public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
     /// <summary>
     /// Helper for readable case insensitive string comparing
     /// </summary>
-    private bool Contains(string compareFrom, string compareTo)
+    private static bool Contains(string compareFrom, string compareTo)
     {
         return string.IsNullOrWhiteSpace(compareFrom)
             || string.IsNullOrWhiteSpace(compareTo)
-            || compareFrom.IndexOf(compareTo, StringComparison.OrdinalIgnoreCase) >= 0;
+            || compareFrom.Contains(compareTo, StringComparison.OrdinalIgnoreCase);
     }
 }

@@ -4,36 +4,33 @@ using Microsoft.Extensions.Primitives;
 namespace Cofoundry.Web;
 
 /// <summary>
-/// A wrapper file provider that gives access to a single
-/// file provider that can access all registered static resource 
-/// locations.
+/// Default implementation of <see cref="IStaticResourceFileProvider"/>.
 /// </summary>
 public class StaticResourceFileProvider : IStaticResourceFileProvider
 {
     private readonly IFileProvider _compositeFileProvider;
 
-    private readonly IReadOnlyList<IFileProvider> _allFileProviders;
-
     public StaticResourceFileProvider(
-        IFileProvider compositeFileProvider,
-        IReadOnlyList<IFileProvider> allFileProviders
+        IFileProvider compositeFileProvider
         )
     {
         _compositeFileProvider = compositeFileProvider;
-        _allFileProviders = allFileProviders;
     }
 
+    /// <inheritdoc/>
     public IDirectoryContents GetDirectoryContents(string subpath)
     {
         return _compositeFileProvider.GetDirectoryContents(subpath);
     }
 
+    /// <inheritdoc/>
     public IFileInfo GetFileInfo(string subpath)
     {
         var fileInfo = _compositeFileProvider.GetFileInfo(subpath);
         return fileInfo;
     }
 
+    /// <inheritdoc/>
     public IChangeToken Watch(string filter)
     {
         return _compositeFileProvider.Watch(filter);

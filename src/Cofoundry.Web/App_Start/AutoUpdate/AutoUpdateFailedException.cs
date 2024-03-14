@@ -15,15 +15,18 @@ public class AutoUpdateFailedException : Exception
 
     }
 
-    public AutoUpdateFailedException(Exception autoUpdateException)
+    public AutoUpdateFailedException(Exception? autoUpdateException)
         : base(FormatMessage(autoUpdateException), autoUpdateException)
     {
 
     }
 
-    private static string FormatMessage(Exception autoUpdateException)
+    private static string FormatMessage(Exception? autoUpdateException)
     {
-        if (autoUpdateException == null) return DEFAULT_MESSAGE;
+        if (autoUpdateException == null)
+        {
+            return DEFAULT_MESSAGE;
+        }
 
         return "Error updating the system: " + autoUpdateException.Message;
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cofoundry.Core.Reflection.Internal;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Reflection;
 
@@ -10,7 +11,7 @@ namespace Cofoundry.Web;
 /// </summary>
 public class GetFinalResultRoutingStep : IGetFinalResultRoutingStep
 {
-    private static readonly MethodInfo _methodInfo_GenericBuildCustomEntityModelAsync = typeof(GetFinalResultRoutingStep).GetMethod(nameof(GenericBuildCustomEntityModelAsync), BindingFlags.NonPublic | BindingFlags.Instance);
+    private static readonly MethodInfo _methodInfo_GenericBuildCustomEntityModelAsync = MethodReferenceHelper.GetPrivateInstanceMethod<GetFinalResultRoutingStep>(nameof(GenericBuildCustomEntityModelAsync));
 
     private readonly IQueryExecutor _queryExecutor;
     private readonly IPageViewModelBuilder _pageViewModelBuilder;
@@ -37,6 +38,10 @@ public class GetFinalResultRoutingStep : IGetFinalResultRoutingStep
 
     private async Task<ActionResult> GetPageViewResult(Controller controller, PageActionRoutingState state)
     {
+        ArgumentNullException.ThrowIfNull(state.PageRoutingInfo);
+        ArgumentNullException.ThrowIfNull(state.PageData);
+        ArgumentNullException.ThrowIfNull(state.VisualEditorState);
+
         IEditablePageViewModel vm;
         var pageRoutingInfo = state.PageRoutingInfo;
 
@@ -53,7 +58,7 @@ public class GetFinalResultRoutingStep : IGetFinalResultRoutingStep
             case PageType.CustomEntityDetails:
                 var model = await GetCustomEntityModel(state);
                 var customEntityParams = new CustomEntityPageViewModelBuilderParameters(state.PageData, state.VisualEditorState.VisualEditorMode, model);
-
+                EntityInvalidOperationException.ThrowIfNull(state.PageData.Template, state.PageData.Template.CustomEntityModelType);
                 vm = await BuildCustomEntityViewModelAsync(state.PageData.Template.CustomEntityModelType, customEntityParams);
                 break;
             //case PageType.Error:
@@ -76,19 +81,38 @@ public class GetFinalResultRoutingStep : IGetFinalResultRoutingStep
 
     public async Task SetCacheAsync(IEditablePageViewModel vm, PageActionRoutingState state)
     {
+        EntityInvalidOperationException.ThrowIfNull(state, state.PageRoutingInfo);
+        EntityInvalidOperationException.ThrowIfNull(state, state.VisualEditorState);
+
         var visualEditorMode = state.VisualEditorState.VisualEditorMode;
         var publishStatusQuery = visualEditorMode.ToPublishStatusQuery();
         var pageVersions = state.PageRoutingInfo.PageRoute.Versions;
 
+        var entityVersion = state.PageRoutingInfo.GetVersionRoute(
+            state.InputParameters.IsEditingCustomEntity,
+            publishStatusQuery,
+            state.InputParameters.VersionId
+            );
+
+        if (entityVersion == null)
+        {
+            var entityDescription = state.InputParameters.IsEditingCustomEntity ? "custom entity" : "page";
+            throw new InvalidOperationException($"Could not find a valid {entityDescription} version for page '{state.PageRoutingInfo.PageRoute.PageId}', {nameof(PublishStatusQuery)}.'{publishStatusQuery}, VersionId '{state.InputParameters.VersionId}'");
+        }
+
+        var pageVersion = state.InputParameters.IsEditingCustomEntity
+            ? pageVersions.GetVersionRouting(PublishStatusQuery.Latest)
+            : pageVersions.GetVersionRouting(publishStatusQuery, state.InputParameters.VersionId);
+
+        if (pageVersion == null)
+        {
+            throw new InvalidOperationException($"Could not find a valid page version for page '{state.PageRoutingInfo.PageRoute.PageId}', {nameof(PublishStatusQuery)}.'{publishStatusQuery}, VersionId '{state.InputParameters.VersionId}'");
+        }
+
         // Force a viewer mode
         if (visualEditorMode == VisualEditorMode.Any)
         {
-            var version = state.PageRoutingInfo.GetVersionRoute(
-                state.InputParameters.IsEditingCustomEntity,
-                publishStatusQuery,
-                state.InputParameters.VersionId);
-
-            switch (version.WorkFlowStatus)
+            switch (entityVersion.WorkFlowStatus)
             {
                 case WorkFlowStatus.Draft:
                     visualEditorMode = VisualEditorMode.Preview;
@@ -97,17 +121,20 @@ public class GetFinalResultRoutingStep : IGetFinalResultRoutingStep
                     visualEditorMode = VisualEditorMode.Live;
                     break;
                 default:
-                    throw new InvalidOperationException("WorkFlowStatus." + version.WorkFlowStatus + " is not valid for VisualEditorMode.Any");
+                    throw new InvalidOperationException($"WorkFlowStatus.{entityVersion.WorkFlowStatus} is not valid for VisualEditorMode.Any");
             }
         }
 
-        var pageResponseData = new PageResponseData();
-        pageResponseData.Page = vm;
-        pageResponseData.VisualEditorMode = visualEditorMode;
-        pageResponseData.PageRoutingInfo = state.PageRoutingInfo;
-        pageResponseData.HasDraftVersion = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, PublishStatusQuery.Draft, null) != null;
-        pageResponseData.Version = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, publishStatusQuery, state.InputParameters.VersionId);
-        pageResponseData.CofoundryAdminUserContext = state.CofoundryAdminUserContext;
+        var pageResponseData = new PageResponseData
+        {
+            Page = vm,
+            VisualEditorMode = visualEditorMode,
+            PageRoutingInfo = state.PageRoutingInfo,
+            HasDraftVersion = state.PageRoutingInfo.GetVersionRoute(state.InputParameters.IsEditingCustomEntity, PublishStatusQuery.Draft, null) != null,
+            Version = entityVersion,
+            CofoundryAdminUserContext = state.CofoundryAdminUserContext,
+            PageVersion = pageVersion
+        };
 
         var customEntityDefinitionCode = state.PageRoutingInfo.PageRoute.CustomEntityDefinitionCode;
         if (!string.IsNullOrEmpty(customEntityDefinitionCode))
@@ -116,23 +143,21 @@ public class GetFinalResultRoutingStep : IGetFinalResultRoutingStep
             pageResponseData.CustomEntityDefinition = await _queryExecutor.ExecuteAsync(definitionQuery);
         }
 
-        if (state.InputParameters.IsEditingCustomEntity)
-        {
-            pageResponseData.PageVersion = pageVersions.GetVersionRouting(PublishStatusQuery.Latest);
-        }
-        else
-        {
-            pageResponseData.PageVersion = pageVersions.GetVersionRouting(publishStatusQuery, state.InputParameters.VersionId);
-        }
-
         _pageRenderDataCache.Set(pageResponseData);
     }
 
     private async Task<CustomEntityRenderDetails> GetCustomEntityModel(PageActionRoutingState state)
     {
-        var query = new GetCustomEntityRenderDetailsByIdQuery();
-        query.CustomEntityId = state.PageRoutingInfo.CustomEntityRoute.CustomEntityId;
-        query.PageId = state.PageData.PageId;
+        ArgumentNullException.ThrowIfNull(state.PageRoutingInfo);
+        ArgumentNullException.ThrowIfNull(state.VisualEditorState);
+        EntityInvalidOperationException.ThrowIfNull(state, state.PageRoutingInfo.CustomEntityRoute);
+        EntityInvalidOperationException.ThrowIfNull(state, state.PageData);
+
+        var query = new GetCustomEntityRenderDetailsByIdQuery
+        {
+            CustomEntityId = state.PageRoutingInfo.CustomEntityRoute.CustomEntityId,
+            PageId = state.PageData.PageId
+        };
 
         // If we're editing the custom entity, we need to get the version we're editing, otherwise just get latest
         if (state.InputParameters.IsEditingCustomEntity)
@@ -152,8 +177,10 @@ public class GetFinalResultRoutingStep : IGetFinalResultRoutingStep
             query.PublishStatus = PublishStatusQuery.Latest;
         }
 
-        var model = await _queryExecutor.ExecuteAsync(query);
-        return model;
+        var customEntity = await _queryExecutor.ExecuteAsync(query);
+        EntityNotFoundException.ThrowIfNull(customEntity);
+
+        return customEntity;
     }
 
     private async Task<IEditablePageViewModel> BuildCustomEntityViewModelAsync(
@@ -161,9 +188,14 @@ public class GetFinalResultRoutingStep : IGetFinalResultRoutingStep
         CustomEntityPageViewModelBuilderParameters mappingParameters
         )
     {
-        var task = (Task<IEditablePageViewModel>)_methodInfo_GenericBuildCustomEntityModelAsync
+        var task = _methodInfo_GenericBuildCustomEntityModelAsync
             .MakeGenericMethod(displayModelType)
-            .Invoke(this, new object[] { mappingParameters });
+            .Invoke(this, new object[] { mappingParameters }) as Task<IEditablePageViewModel>;
+
+        if (task == null)
+        {
+            throw new InvalidOperationException($"{nameof(GenericBuildCustomEntityModelAsync)} did not return the expected type.");
+        }
 
         return await task;
     }
