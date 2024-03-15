@@ -4,6 +4,6 @@ public class TestCustomEntityPageDisplayModel
     : TestCustomEntityDataModel
     , ICustomEntityPageDisplayModel<TestCustomEntityDataModel>
 {
-    public string PageTitle { get; set; }
-    public string MetaDescription { get; set; }
+    public string PageTitle { get; set; } = string.Empty;
+    public string? MetaDescription { get; set; }
 }

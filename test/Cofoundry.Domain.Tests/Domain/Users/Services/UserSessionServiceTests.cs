@@ -206,7 +206,7 @@ public abstract class UserSessionServiceTests
 
     protected abstract IUserSessionService CreateService(IUserAreaDefinitionRepository repository);
 
-    protected IUserAreaDefinitionRepository CreateUserAreaRepository()
+    protected static IUserAreaDefinitionRepository CreateUserAreaRepository()
     {
         var areas = new IUserAreaDefinition[]
         {

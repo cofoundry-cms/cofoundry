@@ -61,8 +61,15 @@ public class DuplicatePageCommandHandlerTests
         using (new AssertionScope())
         {
             originalPage.Should().NotBeNull();
-
             newPage.Should().NotBeNull();
+            newPageVersion.Should().NotBeNull();
+            originalPageVersion.Should().NotBeNull();
+
+            if (originalPage == null || newPage == null || newPageVersion == null || originalPageVersion == null)
+            {
+                return;
+            }
+
             newPage.LocaleId.Should().Be(command.LocaleId);
             newPage.PageDirectoryId.Should().Be(command.PageDirectoryId);
             newPage.PageTypeId.Should().Be(originalPage.PageTypeId);
@@ -72,7 +79,6 @@ public class DuplicatePageCommandHandlerTests
             newPage.PublishStatusCode.Should().Be(PublishStatusCode.Unpublished);
             newPage.UrlPath.Should().Be(command.UrlPath);
 
-            newPageVersion.Should().NotBeNull();
             newPageVersion.CreateDate.Should().BeAfter(originalPageVersion.CreateDate);
             newPageVersion.DisplayVersion.Should().Be(1);
             newPageVersion.ExcludeFromSitemap.Should().Be(originalPageVersion.ExcludeFromSitemap);
@@ -129,10 +135,10 @@ public class DuplicatePageCommandHandlerTests
             .PageVersionBlocks
             .SingleOrDefault(v => v.PageVersionBlockId == imageBlockId);
 
-        var newVersionTextBlock = newPageVersion
+        var newVersionTextBlock = newPageVersion?
             .PageVersionBlocks
             .FirstOrDefault(v => v.PageBlockTypeId == originalVersionTextBlock?.PageBlockTypeId);
-        var newVersionImageBlock = newPageVersion
+        var newVersionImageBlock = newPageVersion?
             .PageVersionBlocks
             .FirstOrDefault(v => v.PageBlockTypeId == originalVersionImageBlock?.PageBlockTypeId);
 
@@ -143,7 +149,7 @@ public class DuplicatePageCommandHandlerTests
             .UnstructuredDataDependencies
             .AsNoTracking()
             .Where(v => v.RootEntityDefinitionCode == PageVersionBlockEntityDefinition.DefinitionCode && v.RootEntityId == newVersionImageBlockId)
-            .ToListAsync();
+            .ToArrayAsync();
 
         var copiedImageDependency = unstructuredDependencies.SingleOrDefault();
 
@@ -153,6 +159,12 @@ public class DuplicatePageCommandHandlerTests
         {
             originalPageVersion.Should().NotBeNull();
             newPageVersion.Should().NotBeNull();
+
+            if (originalPageVersion == null || newPageVersion == null)
+            {
+                return;
+            }
+
             newPageVersion.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Draft);
             newPageVersion.PageVersionBlocks.Should().HaveCount(originalPageVersion.PageVersionBlocks.Count);
 
@@ -160,13 +172,20 @@ public class DuplicatePageCommandHandlerTests
             AssertBlockMatches(originalVersionImageBlock, newVersionImageBlock);
             unstructuredDependencies.Should().HaveCount(1);
             copiedImageDependency.Should().NotBeNull();
-            copiedImageDependency.RelatedEntityId.Should().Be(app.SeededEntities.TestImageId);
-            copiedImageDependency.RelatedEntityDefinitionCode.Should().Be(ImageAssetEntityDefinition.DefinitionCode);
+            copiedImageDependency?.RelatedEntityId.Should().Be(app.SeededEntities.TestImageId);
+            copiedImageDependency?.RelatedEntityDefinitionCode.Should().Be(ImageAssetEntityDefinition.DefinitionCode);
         }
 
-        static void AssertBlockMatches(PageVersionBlock publishedBlock, PageVersionBlock draftBlock)
+        static void AssertBlockMatches(PageVersionBlock? publishedBlock, PageVersionBlock? draftBlock)
         {
             draftBlock.Should().NotBeNull();
+            publishedBlock.Should().NotBeNull();
+
+            if (draftBlock == null || publishedBlock == null)
+            {
+                return;
+            }
+
             draftBlock.CreateDate.Should().BeAfter(publishedBlock.CreateDate);
             draftBlock.Ordering.Should().Be(publishedBlock.Ordering);
             draftBlock.PageBlockTypeId.Should().Be(publishedBlock.PageBlockTypeId);
@@ -236,13 +255,19 @@ public class DuplicatePageCommandHandlerTests
         {
             version2.Should().NotBeNull();
             version4.Should().NotBeNull();
+
+            if (version2 == null || version4 == null)
+            {
+                return;
+            }
+
             version4.ExcludeFromSitemap.Should().Be(version2.ExcludeFromSitemap);
             version4.MetaDescription.Should().Be(version2.MetaDescription);
             version4.OpenGraphDescription.Should().Be(version2.OpenGraphDescription);
             version4.OpenGraphImageId.Should().Be(version2.OpenGraphImageId);
             version4.OpenGraphTitle.Should().Be(version2.OpenGraphTitle);
             version4.PageTemplateId.Should().Be(version2.PageTemplateId);
-            version4.PageVersionBlocks.Should().HaveCount(version2.PageVersionBlocks.Count());
+            version4.PageVersionBlocks.Should().HaveCount(version2.PageVersionBlocks.Count);
             version4.Title.Should().Be(version2.Title);
         }
     }
@@ -279,7 +304,7 @@ public class DuplicatePageCommandHandlerTests
             .Should().Be(1);
     }
 
-    private async Task<Page> GetPageFromDb(int pageId)
+    private async Task<Page?> GetPageFromDb(int pageId)
     {
         using var app = _appFactory.Create();
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();

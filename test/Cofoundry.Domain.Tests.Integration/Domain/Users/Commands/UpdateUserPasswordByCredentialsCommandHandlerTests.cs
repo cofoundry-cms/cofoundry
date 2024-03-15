@@ -34,9 +34,9 @@ public class UpdateUserPasswordByCredentialsCommandHandlerTests
 
         var command = new UpdateUserPasswordByCredentialsCommand()
         {
-            Username = addUserCommand.Email,
+            Username = addUserCommand.Email!,
             NewPassword = newPassword,
-            OldPassword = addUserCommand.Password,
+            OldPassword = addUserCommand.Password!,
             UserAreaCode = addUserCommand.UserAreaCode
         };
         await contentRepository.Users().UpdatePasswordByCredentialsAsync(command);
@@ -71,7 +71,7 @@ public class UpdateUserPasswordByCredentialsCommandHandlerTests
 
         var command = new UpdateUserPasswordByCredentialsCommand()
         {
-            Username = addUserCommand.Email,
+            Username = addUserCommand.Email!,
             NewPassword = newPassword,
             OldPassword = "invalid",
             UserAreaCode = addUserCommand.UserAreaCode
@@ -98,9 +98,9 @@ public class UpdateUserPasswordByCredentialsCommandHandlerTests
 
         var command = new UpdateUserPasswordByCredentialsCommand()
         {
-            Username = addUserCommand.Email,
+            Username = addUserCommand.Email!,
             NewPassword = newPassword,
-            OldPassword = addUserCommand.Password,
+            OldPassword = addUserCommand.Password!,
             UserAreaCode = addUserCommand.UserAreaCode
         };
         await contentRepository.Users().UpdatePasswordByCredentialsAsync(command);
@@ -114,15 +114,24 @@ public class UpdateUserPasswordByCredentialsCommandHandlerTests
             .FilterById(addUserCommand.OutputUserId)
             .SingleOrDefaultAsync();
 
-        app.Mocks
-            .CountDispatchedMail(
-                user.Email,
-                "password",
-                "Test Site",
-                "has been changed",
-                "username for this account is " + user.Username,
-                signInUrl
-            )
-            .Should().Be(1);
+        using (new AssertionScope())
+        {
+            user.Should().NotBeNull();
+            if (user == null)
+            {
+                return;
+            }
+
+            app.Mocks
+                .CountDispatchedMail(
+                    user.Email!,
+                    "password",
+                    "Test Site",
+                    "has been changed",
+                    "username for this account is " + user.Username,
+                    signInUrl
+                )
+                .Should().Be(1);
+        }
     }
 }

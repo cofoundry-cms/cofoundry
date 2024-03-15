@@ -47,7 +47,7 @@ public class NotBePersonalDataNewPasswordValidatorTests
         var result = validator.Validate(context);
 
         result.Should().NotBeNull();
-        result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotPersonalData.Email.ErrorCode);
+        result?.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotPersonalData.Email.ErrorCode);
     }
 
     [Fact]
@@ -63,6 +63,6 @@ public class NotBePersonalDataNewPasswordValidatorTests
         var result = validator.Validate(context);
 
         result.Should().NotBeNull();
-        result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotPersonalData.Username.ErrorCode);
+        result?.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotPersonalData.Username.ErrorCode);
     }
 }

@@ -7,7 +7,7 @@ public class FilePathHelperTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("    ")]
-    public void CleanFileName_WhenNullOrWhitespace_ReturnsEmptyString(string s)
+    public void CleanFileName_WhenNullOrWhitespace_ReturnsEmptyString(string? s)
     {
         var result = FilePathHelper.CleanFileName(s);
 
@@ -105,7 +105,7 @@ public class FilePathHelperTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("    ")]
-    public void FileExtensionContainsInvalidChars_WhenNullOrWhitespace_ReturnsFalse(string s)
+    public void FileExtensionContainsInvalidChars_WhenNullOrWhitespace_ReturnsFalse(string? s)
     {
         var result = FilePathHelper.FileExtensionContainsInvalidChars(s);
 

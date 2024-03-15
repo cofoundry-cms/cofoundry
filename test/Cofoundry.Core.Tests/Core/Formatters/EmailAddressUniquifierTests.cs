@@ -4,7 +4,7 @@ namespace Cofoundry.Core.Tests.Core.Formatters;
 
 public class EmailAddressUniquifierTests
 {
-    private EmailAddressUniquifier _emailAddressUniquifier = new EmailAddressUniquifier(new EmailAddressNormalizer());
+    private readonly EmailAddressUniquifier _emailAddressUniquifier = new EmailAddressUniquifier(new EmailAddressNormalizer());
 
     [Theory]
     [InlineData(null)]
@@ -14,7 +14,7 @@ public class EmailAddressUniquifierTests
     [InlineData("@@@")]
     [InlineData("@example.com")]
     [InlineData("example@")]
-    public void WhenInvalid_ReturnsNull(string email)
+    public void WhenInvalid_ReturnsNull(string? email)
     {
         var result = _emailAddressUniquifier.Uniquify(email);
 

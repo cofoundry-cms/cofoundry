@@ -80,7 +80,7 @@ public class ValidateUserAccountVerificationByEmailQueryHandlerTests
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountVerification.RequestValidation.Expired.ErrorCode);
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.AccountVerification.RequestValidation.Expired.ErrorCode);
         }
     }
 
@@ -122,7 +122,7 @@ public class ValidateUserAccountVerificationByEmailQueryHandlerTests
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountVerification.RequestValidation.AlreadyComplete.ErrorCode);
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.AccountVerification.RequestValidation.AlreadyComplete.ErrorCode);
         }
     }
 
@@ -157,7 +157,7 @@ public class ValidateUserAccountVerificationByEmailQueryHandlerTests
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountVerification.RequestValidation.Invalidated.ErrorCode);
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.AccountVerification.RequestValidation.Invalidated.ErrorCode);
         }
     }
 
@@ -190,7 +190,7 @@ public class ValidateUserAccountVerificationByEmailQueryHandlerTests
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountVerification.RequestValidation.NotFound.ErrorCode);
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.AccountVerification.RequestValidation.NotFound.ErrorCode);
         }
     }
 
@@ -208,6 +208,7 @@ public class ValidateUserAccountVerificationByEmailQueryHandlerTests
         var token = MakeToken(authorizedTask);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdateUserCommand>(authorizedTask.UserId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, authorizedTask.UserId);
         updateCommand.Email = uniqueData + "@2.example.com";
         await contentRepository.Users().UpdateAsync(updateCommand);
 
@@ -227,7 +228,7 @@ public class ValidateUserAccountVerificationByEmailQueryHandlerTests
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountVerification.RequestValidation.EmailMismatch.ErrorCode);
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.AccountVerification.RequestValidation.EmailMismatch.ErrorCode);
         }
     }
 

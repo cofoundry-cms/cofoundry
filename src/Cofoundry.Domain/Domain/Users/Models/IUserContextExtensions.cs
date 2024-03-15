@@ -33,7 +33,7 @@ public static class IUserContextExtensions
     /// <see cref="ISignedInUserContext"/> is useful because it does not contain 
     /// nullable properties for fields that are always present for signed in users.
     /// </summary>
-    public static ISignedInUserContext? ToRequiredSignedInContext(this IUserContext userContext)
+    public static ISignedInUserContext ToRequiredSignedInContext(this IUserContext userContext)
     {
         var context = ToSignedInContext(userContext);
 

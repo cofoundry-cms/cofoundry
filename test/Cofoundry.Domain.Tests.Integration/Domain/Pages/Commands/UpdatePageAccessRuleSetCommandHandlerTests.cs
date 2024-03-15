@@ -148,7 +148,7 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.AccessRuleViolationActionId.Should().Be((int)action);
+            page?.AccessRuleViolationActionId.Should().Be((int)action);
         }
     }
 
@@ -231,6 +231,12 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
+
+            if (page == null)
+            {
+                return;
+            }
+
             page.AccessRuleViolationActionId.Should().Be((int)command.ViolationAction);
             page.UserAreaCodeForSignInRedirect.Should().Be(command.UserAreaCodeForSignInRedirect);
 
@@ -271,7 +277,7 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
-
+        EntityNotFoundException.ThrowIfNull(updateCommand, pageId);
         updateCommand.UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea2.UserAreaCode;
         var userAreaAccessRuleCommand = updateCommand.AccessRules.Single();
         userAreaAccessRuleCommand.UserAreaCode = updateCommand.UserAreaCodeForSignInRedirect;
@@ -291,6 +297,12 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
+
+            if (page == null)
+            {
+                return;
+            }
+
             page.UserAreaCodeForSignInRedirect.Should().Be(updateCommand.UserAreaCodeForSignInRedirect);
 
             var userAreaAccessRule = page.AccessRules.Single();
@@ -332,6 +344,7 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, pageId);
 
         updateCommand.UserAreaCodeForSignInRedirect = userArea2.UserAreaCode;
         var roleAccessRuleCommand = updateCommand.AccessRules.Single();
@@ -353,6 +366,12 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
+
+            if (page == null)
+            {
+                return;
+            }
+
             page.UserAreaCodeForSignInRedirect.Should().Be(updateCommand.UserAreaCodeForSignInRedirect);
 
             var userAreaAccessRule = page.AccessRules.Single();
@@ -391,6 +410,7 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, pageId);
         var userAreaAccessRuleCommand = updateCommand.AccessRules.Single();
         userAreaAccessRuleCommand.RoleId = null;
 
@@ -409,6 +429,12 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
+
+            if (page == null)
+            {
+                return;
+            }
+
             page.UserAreaCodeForSignInRedirect.Should().BeNull();
 
             var userAreaAccessRule = page.AccessRules.Single();
@@ -447,6 +473,7 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, pageId);
         updateCommand.ViolationAction = AccessRuleViolationAction.NotFound;
 
         await contentRepository
@@ -464,10 +491,10 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.UserAreaCodeForSignInRedirect.Should().BeNull();
-            page.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
+            page?.UserAreaCodeForSignInRedirect.Should().BeNull();
+            page?.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
 
-            page.AccessRules.Should().HaveCount(1);
+            page?.AccessRules.Should().HaveCount(1);
         }
     }
 
@@ -503,6 +530,7 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, pageId);
         var accessRuleCommand = updateCommand.AccessRules.Single(r => r.RoleId == app.SeededEntities.TestUserArea1.RoleA.RoleId);
         updateCommand.AccessRules = updateCommand
             .AccessRules
@@ -518,7 +546,7 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
             .PageAccessRules
             .AsNoTracking()
             .FilterByPageId(pageId)
-            .ToListAsync();
+            .ToArrayAsync();
 
         using (new AssertionScope())
         {
@@ -564,6 +592,7 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageAccessRuleSetCommand>(pageId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, pageId);
         updateCommand.UserAreaCodeForSignInRedirect = null;
         updateCommand.ViolationAction = AccessRuleViolationAction.Error;
 
@@ -594,6 +623,11 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
+            if (page == null)
+            {
+                return;
+            }
+
             page.UserAreaCodeForSignInRedirect.Should().BeNull();
             page.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
             page.AccessRules.Should().HaveCount(2);

@@ -3,7 +3,7 @@
 public class NormalizedEmailAddressTests
 {
     private const string EXAMPLE_LOCAL = "bill.ben";
-    private static readonly EmailDomainName EXAMPLE_DOMAIN = EmailDomainName.Parse("example.com");
+    private static readonly EmailDomainName EXAMPLE_DOMAIN = EmailDomainName.Parse("example.com")!;
     private static readonly NormalizedEmailAddress ORIGINAL_EMAIL = new NormalizedEmailAddress(EXAMPLE_LOCAL, EXAMPLE_DOMAIN);
 
     [Fact]

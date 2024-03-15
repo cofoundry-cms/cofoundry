@@ -33,13 +33,16 @@ public class UsersController : ControllerBase
             .Select(u => u.UserAreaCode)
             .SingleOrDefaultAsync();
 
-        if (userAreaCode == null) throw new Exception("User not found");
+        if (userAreaCode == null)
+        {
+            throw new Exception("User not found");
+        }
 
         await _userSessionService.SignInAsync(userAreaCode, id, true);
     }
 
     [HttpGet("current")]
-    public async Task<int?> Current(string userAreaCode)
+    public async Task<int?> Current(string? userAreaCode)
     {
         int? userId;
 

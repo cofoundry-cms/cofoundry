@@ -1,2 +1,8 @@
 [*.cs]
 csharp_style_namespace_declarations = file_scoped:warning
+dotnet_code_quality.CA1822.api_surface = private, internal
+
+# IDE0063: Use simple 'using' statement
+dotnet_diagnostic.IDE0063.severity = silent
+# IDE0270: Use coalesce expression
+dotnet_diagnostic.IDE0270.severity = silent

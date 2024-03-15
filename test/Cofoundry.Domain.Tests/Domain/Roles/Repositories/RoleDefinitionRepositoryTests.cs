@@ -58,12 +58,12 @@ public class RoleDefinitionRepositoryTests
     [InlineData("хороше")]
     [InlineData("      ")]
     [InlineData(null)]
-    public void Constructor_WhenInvalidCode_Throws(string code)
+    public void Constructor_WhenInvalidCode_Throws(string? code)
     {
         var roleDefinitions = GetBaseRoleDefinitions();
         roleDefinitions.Add(new TestRoleDefinition()
         {
-            RoleCode = code,
+            RoleCode = code!,
             Title = "A unique title",
             UserAreaCode = TestUserArea1.Code
         });
@@ -81,7 +81,7 @@ public class RoleDefinitionRepositoryTests
         roleDefinitions.Add(new TestRoleDefinition()
         {
             RoleCode = "UNQ",
-            Title = null,
+            Title = null!,
             UserAreaCode = TestUserArea1.Code
         });
 
@@ -138,8 +138,9 @@ public class RoleDefinitionRepositoryTests
 
         using (new AssertionScope())
         {
-            result.UserAreaCode.Should().Be(userAreaCode);
-            result.RoleCode.Should().Be(roleCode);
+            result.Should().NotBeNull();
+            result?.UserAreaCode.Should().Be(userAreaCode);
+            result?.RoleCode.Should().Be(roleCode);
         }
     }
 
@@ -166,18 +167,19 @@ public class RoleDefinitionRepositoryTests
 
         using (new AssertionScope())
         {
-            result.UserAreaCode.Should().Be(userAreaCode);
-            result.RoleCode.Should().Be(roleCode);
+            result.Should().NotBeNull();
+            result?.UserAreaCode.Should().Be(userAreaCode);
+            result?.RoleCode.Should().Be(roleCode);
         }
     }
 
     private class TestRoleDefinition : IRoleDefinition
     {
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        public string RoleCode { get; set; }
+        public string RoleCode { get; set; } = string.Empty;
 
-        public string UserAreaCode { get; set; }
+        public string UserAreaCode { get; set; } = string.Empty;
 
         public void ConfigurePermissions(IPermissionSetBuilder builder)
         {
@@ -187,8 +189,8 @@ public class RoleDefinitionRepositoryTests
 
     private List<IRoleDefinition> GetBaseRoleDefinitions()
     {
-        return new List<IRoleDefinition>()
-        {
+        return
+        [
             new TestRoleDefinition()
             {
                 RoleCode = "001",
@@ -213,6 +215,6 @@ public class RoleDefinitionRepositoryTests
                 Title = "Role 3",
                 UserAreaCode = TestUserArea2.Code
             },
-        };
+        ];
     }
 }

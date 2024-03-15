@@ -16,8 +16,13 @@ public class TestViewFileReader : IViewFileReader
         _viewFileReader = new ViewFileReader(resourceLocator);
     }
 
-    public Task<string> ReadViewFileAsync(string path)
+    public Task<string?> ReadViewFileAsync(string? path)
     {
+        if (path == null)
+        {
+            return Task.FromResult<string?>(null);
+        }
+
         // Remove any mock data fromt he path that has been appended to get around a uniqueness constraint
         var index = path.IndexOf(MOCK_DATA_POSTFIX);
 

@@ -33,7 +33,7 @@ public class InitiateUserAccountRecoveryViaEmailCommandHandlerTests
         {
             resetRequest.Should().NotBeNull();
             resetRequest.CreateDate.Should().NotBeDefault();
-            resetRequest.IPAddress.Address.Should().Be(TestIPAddresses.Localhost);
+            resetRequest.IPAddress?.Address.Should().Be(TestIPAddresses.Localhost);
             resetRequest.CompletedDate.Should().BeNull();
             resetRequest.InvalidatedDate.Should().BeNull();
             resetRequest.AuthorizationCode.Should().NotBeEmpty();
@@ -59,7 +59,7 @@ public class InitiateUserAccountRecoveryViaEmailCommandHandlerTests
         var command = new InitiateUserAccountRecoveryViaEmailCommand()
         {
             UserAreaCode = request.User.UserAreaCode,
-            Username = request.User.Email
+            Username = request.User.Email!
         };
 
         app.Mocks.MockDateTime(seedDate.AddHours(1));
@@ -105,7 +105,7 @@ public class InitiateUserAccountRecoveryViaEmailCommandHandlerTests
 
         app.Mocks
             .CountDispatchedMail(
-                resetRequest.User.Email,
+                resetRequest.User.Email!,
                 "request to reset the password for your account",
                 "Test Site",
                 recoveryUrl,
@@ -148,13 +148,13 @@ public class InitiateUserAccountRecoveryViaEmailCommandHandlerTests
     private static async Task<AuthorizedTask> AddUserAndInitiateRequest(
         string uniqueData,
         DbDependentTestApplication app,
-        Action<AddUserCommand> configration = null
+        Action<AddUserCommand>? configration = null
         )
     {
         var contentRepository = app.Services.GetContentRepository();
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
         var addUserCommand = app.TestData.Users().CreateAddCommand(uniqueData);
-        if (configration != null) configration(addUserCommand);
+        configration?.Invoke(addUserCommand);
 
         await contentRepository
             .WithElevatedPermissions()
@@ -167,7 +167,7 @@ public class InitiateUserAccountRecoveryViaEmailCommandHandlerTests
             .InitiateAsync(new InitiateUserAccountRecoveryViaEmailCommand()
             {
                 UserAreaCode = addUserCommand.UserAreaCode,
-                Username = addUserCommand.Email
+                Username = addUserCommand.Email!
             });
 
         var authorizedTask = await dbContext

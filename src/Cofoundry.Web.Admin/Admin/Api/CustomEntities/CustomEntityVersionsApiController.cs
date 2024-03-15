@@ -13,7 +13,7 @@ public class CustomEntityVersionsApiController : BaseAdminApiController
         _apiResponseHelper = apiResponseHelper;
     }
 
-    public async Task<JsonResult> Get(int customEntityId, GetCustomEntityVersionSummariesByCustomEntityIdQuery query)
+    public async Task<JsonResult> Get(int customEntityId, GetCustomEntityVersionSummariesByCustomEntityIdQuery? query)
     {
         query ??= new GetCustomEntityVersionSummariesByCustomEntityIdQuery();
 

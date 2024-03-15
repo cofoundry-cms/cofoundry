@@ -7,11 +7,17 @@ public class TestHostEnvironment : IWebHostEnvironment
 {
     public TestHostEnvironment()
     {
-        ApplicationName = typeof(TestHostEnvironment).Namespace;
+        ApplicationName = typeof(TestHostEnvironment).Namespace ?? "Unknown Namespace";
         var rootPath = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-        ContentRootPath = new Uri(Path.GetDirectoryName(rootPath)).LocalPath;
+        var directory = Path.GetDirectoryName(rootPath);
+        if (directory == null)
+        {
+            throw new Exception($"Assembly path '{rootPath}' did not translate to a directory path.");
+        }
+        ContentRootPath = new Uri(directory).LocalPath;
         ContentRootFileProvider = new PhysicalFileProvider(ContentRootPath);
         EnvironmentName = "Test";
+        WebRootFileProvider = new NullFileProvider();
     }
 
     public string ApplicationName { get; set; }
@@ -19,5 +25,5 @@ public class TestHostEnvironment : IWebHostEnvironment
     public string ContentRootPath { get; set; }
     public string EnvironmentName { get; set; }
     public IFileProvider WebRootFileProvider { get; set; }
-    public string WebRootPath { get; set; }
+    public string WebRootPath { get; set; } = string.Empty;
 }

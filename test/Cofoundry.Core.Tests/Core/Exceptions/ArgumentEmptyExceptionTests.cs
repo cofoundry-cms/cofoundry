@@ -5,7 +5,7 @@ public class ArgumentEmptyExceptionTests
     [Fact]
     public void ThrowIfNullOrWhitespace_WhenNull_ThrowsArgumentNullException()
     {
-        string testValue = null;
+        string? testValue = null;
 
         Action act = () => ArgumentEmptyException.ThrowIfNullOrWhitespace(testValue);
 

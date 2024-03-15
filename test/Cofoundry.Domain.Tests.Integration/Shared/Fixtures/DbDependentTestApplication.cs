@@ -46,9 +46,6 @@ public class DbDependentTestApplication : IDisposable
 
     public void Dispose()
     {
-        if (Services != null)
-        {
-            Services.Dispose();
-        }
+        Services?.Dispose();
     }
 }

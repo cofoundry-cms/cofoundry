@@ -42,11 +42,11 @@ public class AddPageDirectoryCommandHandlerTests
         {
             addDirectoryCommand.OutputPageDirectoryId.Should().BePositive();
             directory.Should().NotBeNull();
-            directory.PageDirectoryId.Should().Be(addDirectoryCommand.OutputPageDirectoryId);
-            directory.Name.Should().Be(directoryName);
-            directory.UrlPath.Should().Be(SlugFormatter.ToSlug(directoryName));
-            directory.ParentPageDirectoryId.Should().Be(addDirectoryCommand.ParentPageDirectoryId);
-            directory.CreateDate.Should().NotBeDefault();
+            directory?.PageDirectoryId.Should().Be(addDirectoryCommand.OutputPageDirectoryId);
+            directory?.Name.Should().Be(directoryName);
+            directory?.UrlPath.Should().Be(SlugFormatter.ToSlug(directoryName));
+            directory?.ParentPageDirectoryId.Should().Be(addDirectoryCommand.ParentPageDirectoryId);
+            directory?.CreateDate.Should().NotBeDefault();
         }
     }
 
@@ -76,8 +76,8 @@ public class AddPageDirectoryCommandHandlerTests
         {
             addChildDirectoryCommand.OutputPageDirectoryId.Should().BePositive();
             childDirectory.Should().NotBeNull();
-            childDirectory.PageDirectoryId.Should().Be(addChildDirectoryCommand.OutputPageDirectoryId);
-            childDirectory.ParentPageDirectoryId.Should().Be(parentDirectoryId);
+            childDirectory?.PageDirectoryId.Should().Be(addChildDirectoryCommand.OutputPageDirectoryId);
+            childDirectory?.ParentPageDirectoryId.Should().Be(parentDirectoryId);
         }
     }
 
@@ -151,15 +151,15 @@ public class AddPageDirectoryCommandHandlerTests
 
             var selfRefNode = directoryClosures.FilterSelfReferencing().SingleOrDefault();
             selfRefNode.Should().NotBeNull();
-            selfRefNode.Distance.Should().Be(0);
+            selfRefNode?.Distance.Should().Be(0);
 
             var parentDirectoryAncestor = directoryClosures.FilterByAncestorId(parentDirectoryId).SingleOrDefault();
             parentDirectoryAncestor.Should().NotBeNull();
-            parentDirectoryAncestor.Distance.Should().Be(1);
+            parentDirectoryAncestor?.Distance.Should().Be(1);
 
             var rootDirectoryAncestor = directoryClosures.FilterByAncestorId(app.SeededEntities.RootDirectoryId).SingleOrDefault();
             rootDirectoryAncestor.Should().NotBeNull();
-            rootDirectoryAncestor.Distance.Should().Be(2);
+            rootDirectoryAncestor?.Distance.Should().Be(2);
         }
     }
 
@@ -186,8 +186,8 @@ public class AddPageDirectoryCommandHandlerTests
         using (new AssertionScope())
         {
             directoryPath.Should().NotBeNull();
-            directoryPath.Depth.Should().Be(4);
-            directoryPath.FullUrlPath.Should().Be($"{sluggedPath}/red/blue/green");
+            directoryPath?.Depth.Should().Be(4);
+            directoryPath?.FullUrlPath.Should().Be($"{sluggedPath}/red/blue/green");
         }
     }
 

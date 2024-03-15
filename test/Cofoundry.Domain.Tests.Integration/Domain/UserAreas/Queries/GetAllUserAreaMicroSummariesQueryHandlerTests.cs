@@ -33,12 +33,11 @@ public class GetAllUserAreaMicroSummariesQueryHandlerTests
 
             var testArea1 = userAreas.SingleOrDefault(a => a.UserAreaCode == area1.UserAreaCode);
             testArea1.Should().NotBeNull();
-            testArea1.Name.Should().Be(testArea1.Name);
+            testArea1?.Name.Should().Be(testArea1.Name);
 
             var testArea2 = userAreas.SingleOrDefault(a => a.UserAreaCode == area2.UserAreaCode);
             testArea2.Should().NotBeNull();
-            testArea2.Name.Should().Be(testArea2.Name);
-
+            testArea2?.Name.Should().Be(testArea2.Name);
         }
     }
 }

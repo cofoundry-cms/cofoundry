@@ -97,6 +97,7 @@ public class ImageAsset : IUpdateAuditable
         set => _updater = value;
     }
 
+    [Obsolete("The image asset grouping system will be revised in an upcomming release.")]
     public ICollection<ImageAssetGroupItem> ImageAssetGroupItems { get; set; } = new List<ImageAssetGroupItem>();
 
     /// <summary>

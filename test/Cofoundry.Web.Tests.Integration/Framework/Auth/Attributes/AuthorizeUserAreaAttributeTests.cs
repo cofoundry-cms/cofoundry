@@ -39,7 +39,7 @@ public class AuthorizeUserAreaAttributeTests
         SignInRedirectAssertions.AssertSignInRedirect(result, app.SeededEntities.TestUserArea2);
     }
 
-    private string GetRoute(string path)
+    private static string GetRoute(string path)
     {
         return $"/{AuthAttributeTestController.RouteBase}/{path}";
     }

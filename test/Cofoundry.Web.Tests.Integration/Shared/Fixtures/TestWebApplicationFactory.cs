@@ -26,7 +26,7 @@ public class TestWebApplicationFactory<TEntryPoint>
     , IAsyncLifetime
     where TEntryPoint : class
 {
-    private SeededEntities _seededEntities;
+    private SeededEntities? _seededEntities;
 
     protected override IHostBuilder CreateHostBuilder()
     {

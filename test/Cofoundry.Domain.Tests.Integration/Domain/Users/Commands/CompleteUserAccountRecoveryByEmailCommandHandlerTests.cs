@@ -85,7 +85,7 @@ public class CompleteUserAccountRecoveryByEmailCommandHandlerTests
 
         app.Mocks
             .CountDispatchedMail(
-                resetRequest.User.Email,
+                resetRequest.User.Email!,
                 "password",
                 "Test Site",
                 "has been changed",
@@ -113,7 +113,7 @@ public class CompleteUserAccountRecoveryByEmailCommandHandlerTests
             .InitiateAsync(new InitiateUserAccountRecoveryViaEmailCommand()
             {
                 UserAreaCode = resetRequest1.User.UserAreaCode,
-                Username = resetRequest1.User.Email
+                Username = resetRequest1.User.Email!
             });
 
         await contentRepository
@@ -140,16 +140,16 @@ public class CompleteUserAccountRecoveryByEmailCommandHandlerTests
         {
             resetRequests.Should().HaveCount(3);
             resetRequest1Result.Should().NotBeNull();
-            resetRequest1Result.CompletedDate.Should().NotBeNull();
-            resetRequest1Result.InvalidatedDate.Should().BeNull();
+            resetRequest1Result?.CompletedDate.Should().NotBeNull();
+            resetRequest1Result?.InvalidatedDate.Should().BeNull();
 
             resetRequest2Result.Should().NotBeNull();
-            resetRequest2Result.CompletedDate.Should().BeNull();
-            resetRequest2Result.InvalidatedDate.Should().BeNull();
+            resetRequest2Result?.CompletedDate.Should().BeNull();
+            resetRequest2Result?.InvalidatedDate.Should().BeNull();
 
             resetRequest3Result.Should().NotBeNull();
-            resetRequest3Result.CompletedDate.Should().BeNull();
-            resetRequest3Result.InvalidatedDate.Should().NotBeNull();
+            resetRequest3Result?.CompletedDate.Should().BeNull();
+            resetRequest3Result?.InvalidatedDate.Should().NotBeNull();
         }
     }
 
@@ -212,12 +212,12 @@ public class CompleteUserAccountRecoveryByEmailCommandHandlerTests
     private static async Task<AuthorizedTask> AddUserAndInitiateRequest(
         string uniqueData,
         DbDependentTestApplication app,
-        Action<AddUserCommand> configration = null
+        Action<AddUserCommand>? configration = null
         )
     {
         var contentRepository = app.Services.GetContentRepository();
         var addUserCommand = app.TestData.Users().CreateAddCommand(uniqueData);
-        if (configration != null) configration(addUserCommand);
+        configration?.Invoke(addUserCommand);
 
         await contentRepository
             .WithElevatedPermissions()
@@ -230,7 +230,7 @@ public class CompleteUserAccountRecoveryByEmailCommandHandlerTests
             .InitiateAsync(new InitiateUserAccountRecoveryViaEmailCommand()
             {
                 UserAreaCode = addUserCommand.UserAreaCode,
-                Username = addUserCommand.Email
+                Username = addUserCommand.Email!
             });
 
         var resetRequest = await GetResetRequest(app, addUserCommand.OutputUserId);

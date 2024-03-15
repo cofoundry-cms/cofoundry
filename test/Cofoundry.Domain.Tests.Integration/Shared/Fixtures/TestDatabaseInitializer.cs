@@ -143,7 +143,10 @@ public class TestDatabaseInitializer
 
         // Images
 
-        var mockImageAssetFileService = scope.ServiceProvider.GetService<IImageAssetFileService>() as MockImageAssetFileService;
+        if (scope.ServiceProvider.GetRequiredService<IImageAssetFileService>() is not MockImageAssetFileService mockImageAssetFileService)
+        {
+            throw new InvalidOperationException($"Registered {nameof(IImageAssetFileService)} implementation is expected to be {nameof(MockImageAssetFileService)}");
+        }
         mockImageAssetFileService.SaveFile = false;
         mockImageAssetFileService.WidthInPixels = 80;
         mockImageAssetFileService.HeightInPixels = 80;
@@ -239,7 +242,7 @@ public class TestDatabaseInitializer
             });
     }
 
-    private async Task InitUserAreaAsync(
+    private static async Task InitUserAreaAsync(
         TestUserAreaInfo testUserAreaInfo,
         CofoundryDbContext dbContext,
         IAdvancedContentRepository contentRepository

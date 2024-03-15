@@ -50,8 +50,8 @@ public class UpdatePageDirectoryUrlCommandHandlerTests
 
         using (new AssertionScope())
         {
-            directory.UrlPath.Should().Be(updateCommand.UrlPath);
-            directory.ParentPageDirectoryId.Should().Be(updateCommand.ParentPageDirectoryId);
+            directory?.UrlPath.Should().Be(updateCommand.UrlPath);
+            directory?.ParentPageDirectoryId.Should().Be(updateCommand.ParentPageDirectoryId);
         }
     }
 
@@ -167,19 +167,19 @@ public class UpdatePageDirectoryUrlCommandHandlerTests
 
             var selfRefNode = directory4Closures.FilterSelfReferencing().SingleOrDefault();
             selfRefNode.Should().NotBeNull();
-            selfRefNode.Distance.Should().Be(0);
+            selfRefNode?.Distance.Should().Be(0);
 
             var dir2Ancestor = directory4Closures.FilterByAncestorId(dir2Id).SingleOrDefault();
             dir2Ancestor.Should().NotBeNull();
-            dir2Ancestor.Distance.Should().Be(1);
+            dir2Ancestor?.Distance.Should().Be(1);
 
             var dir1Ancestor = directory4Closures.FilterByAncestorId(dir1Id).SingleOrDefault();
             dir1Ancestor.Should().NotBeNull();
-            dir1Ancestor.Distance.Should().Be(2);
+            dir1Ancestor?.Distance.Should().Be(2);
 
             var rootDirectoryAncestor = directory4Closures.FilterByAncestorId(app.SeededEntities.RootDirectoryId).SingleOrDefault();
             rootDirectoryAncestor.Should().NotBeNull();
-            rootDirectoryAncestor.Distance.Should().Be(3);
+            rootDirectoryAncestor?.Distance.Should().Be(3);
         }
     }
 
@@ -222,12 +222,12 @@ public class UpdatePageDirectoryUrlCommandHandlerTests
         using (new AssertionScope())
         {
             directory3Path.Should().NotBeNull();
-            directory3Path.Depth.Should().Be(3);
-            directory3Path.FullUrlPath.Should().Be($"{sluggedPath}/delta/uniform");
+            directory3Path?.Depth.Should().Be(3);
+            directory3Path?.FullUrlPath.Should().Be($"{sluggedPath}/delta/uniform");
 
             directory4Path.Should().NotBeNull();
-            directory4Path.Depth.Should().Be(4);
-            directory4Path.FullUrlPath.Should().Be($"{sluggedPath}/delta/uniform/golf");
+            directory4Path?.Depth.Should().Be(4);
+            directory4Path?.FullUrlPath.Should().Be($"{sluggedPath}/delta/uniform/golf");
         }
     }
 
@@ -293,7 +293,7 @@ public class UpdatePageDirectoryUrlCommandHandlerTests
         }
     }
 
-    public UpdatePageDirectoryUrlCommand MapFromAddCommand(AddPageDirectoryCommand command)
+    private static UpdatePageDirectoryUrlCommand MapFromAddCommand(AddPageDirectoryCommand command)
     {
         return new UpdatePageDirectoryUrlCommand()
         {

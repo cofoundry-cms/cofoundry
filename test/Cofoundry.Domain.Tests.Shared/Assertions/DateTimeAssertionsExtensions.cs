@@ -19,6 +19,6 @@ public static class DateTimeAssertionsExtensions
     public static AndConstraint<TAssertions> NotBeDefault<TAssertions>(this DateTimeAssertions<TAssertions> parent, string because = "", params object[] becauseArgs)
         where TAssertions : DateTimeAssertions<TAssertions>
     {
-        return parent.NotBe(default(DateTime), because, becauseArgs);
+        return parent.NotBe(default, because, becauseArgs);
     }
 }

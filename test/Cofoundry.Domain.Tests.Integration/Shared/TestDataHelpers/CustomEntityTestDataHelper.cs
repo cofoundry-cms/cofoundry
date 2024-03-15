@@ -26,15 +26,12 @@ public class CustomEntityTestDataHelper
     /// <returns>The CustomEntityId of the newly created custom entity.</returns>
     public async Task<int> AddAsync(
         string uniqueData,
-        Action<AddCustomEntityCommand> configration = null
+        Action<AddCustomEntityCommand>? configration = null
         )
     {
         var command = CreateAddCommand(uniqueData);
 
-        if (configration != null)
-        {
-            configration(command);
-        }
+        configration?.Invoke(command);
 
         using var scope = _serviceProvider.CreateScope();
         var contentRepository = scope

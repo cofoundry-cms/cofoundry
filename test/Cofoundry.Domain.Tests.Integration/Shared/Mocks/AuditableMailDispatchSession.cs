@@ -6,7 +6,7 @@ namespace Cofoundry.Domain.Tests.Integration.Mocks;
 public class AuditableMailDispatchSession : IMailDispatchSession
 {
     private readonly DebugMailDispatchSession _wrappedInstance;
-    private readonly List<MailMessage> _messages = new List<MailMessage>();
+    private readonly List<MailMessage> _messages = [];
 
     public AuditableMailDispatchSession(
         MailSettings mailSettings,
@@ -49,7 +49,7 @@ public class AuditableMailDispatchSession : IMailDispatchSession
             );
     }
 
-    private bool MatchesBody(MailMessage message, string[] textToMatch)
+    private static bool MatchesBody(MailMessage message, string[] textToMatch)
     {
         var matches = EnumerableHelper.Enumerate(textToMatch);
 

@@ -16,7 +16,7 @@ public class PageVersionsApiController : BaseAdminApiController
         _apiResponseHelper = apiResponseHelper;
     }
 
-    public async Task<JsonResult> Get(int pageId, GetPageVersionSummariesByPageIdQuery query)
+    public async Task<JsonResult> Get(int pageId, GetPageVersionSummariesByPageIdQuery? query)
     {
         query ??= new GetPageVersionSummariesByPageIdQuery();
         query.PageId = pageId;

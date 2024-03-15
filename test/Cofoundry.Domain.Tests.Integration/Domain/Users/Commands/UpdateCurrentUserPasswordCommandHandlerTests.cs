@@ -38,7 +38,7 @@ public class UpdateCurrentUserPasswordCommandHandlerTests
                 c.RequirePasswordChange = true;
             });
 
-            var dbContext = app.Services.GetService<CofoundryDbContext>();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var contentRepository = app.Services.GetContentRepository();
             var userSessionService = app.Services.GetRequiredService<IUserSessionService>();
 
@@ -46,7 +46,7 @@ public class UpdateCurrentUserPasswordCommandHandlerTests
                 .Users
                 .AsNoTracking()
                 .FilterById(userId)
-                .SingleOrDefaultAsync();
+                .SingleAsync();
 
             app.Mocks.MockDateTime(updateDate);
 
@@ -60,12 +60,12 @@ public class UpdateCurrentUserPasswordCommandHandlerTests
         }
 
         UserCredentialsAuthenticationResult authResult;
-        User user = null;
+        User? user = null;
 
         using (var app = _appFactory.Create())
         {
-            var repository = app.Services.GetService<IDomainRepository>();
-            var dbContext = app.Services.GetService<CofoundryDbContext>();
+            var repository = app.Services.GetRequiredService<IDomainRepository>();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             // Use the auth query to verify the password has been changed
             authResult = await repository.ExecuteQueryAsync(new AuthenticateUserCredentialsQuery()
@@ -87,11 +87,12 @@ public class UpdateCurrentUserPasswordCommandHandlerTests
         using (new AssertionScope())
         {
             authResult.Should().NotBeNull();
-            authResult.IsSuccess.Should().BeTrue();
-            user.RequirePasswordChange.Should().BeFalse();
-            user.AccountVerifiedDate.Should().BeNull();
-            user.LastPasswordChangeDate.Should().Be(updateDate);
-            user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
+            authResult?.IsSuccess.Should().BeTrue();
+            user.Should().NotBeNull();
+            user?.RequirePasswordChange.Should().BeFalse();
+            user?.AccountVerifiedDate.Should().BeNull();
+            user?.LastPasswordChangeDate.Should().Be(updateDate);
+            user?.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
         }
     }
 
@@ -130,7 +131,7 @@ public class UpdateCurrentUserPasswordCommandHandlerTests
     public async Task WhenNotSignedIn_Throws()
     {
         using var app = _appFactory.Create();
-        var repository = app.Services.GetService<IDomainRepository>();
+        var repository = app.Services.GetRequiredService<IDomainRepository>();
 
         var command = new UpdateCurrentUserPasswordCommand()
         {
@@ -237,10 +238,11 @@ public class UpdateCurrentUserPasswordCommandHandlerTests
             .AsNoTracking()
             .FilterById(userId)
             .SingleOrDefaultAsync();
+        EntityNotFoundException.ThrowIfNull(user, userId);
 
         app.Mocks
             .CountDispatchedMail(
-                user.Email,
+                user.Email!,
                 "password",
                 "Test Site",
                 "has been changed",

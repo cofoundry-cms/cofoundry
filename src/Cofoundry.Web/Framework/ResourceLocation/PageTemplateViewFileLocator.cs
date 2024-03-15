@@ -38,8 +38,13 @@ public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
     }
 
     /// <inheritdoc/>
-    public string? ResolvePageTemplatePartialViewPath(string partialName)
+    public string? ResolvePageTemplatePartialViewPath(string? partialName)
     {
+        if (partialName == null)
+        {
+            return null;
+        }
+
         if (FileExists(partialName))
         {
             return partialName;
@@ -55,7 +60,7 @@ public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
         return null;
     }
 
-    private bool FileExists(string path)
+    private bool FileExists(string? path)
     {
         if (string.IsNullOrEmpty(path))
         {

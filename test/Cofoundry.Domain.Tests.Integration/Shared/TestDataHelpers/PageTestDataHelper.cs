@@ -38,7 +38,7 @@ public class PageTestDataHelper
     public async Task<int> AddAsync(
         string uniqueData,
         int parentDirectoryId,
-        Action<AddPageCommand> configration = null
+        Action<AddPageCommand>? configration = null
         )
     {
         var command = CreateAddCommand(uniqueData, parentDirectoryId);
@@ -75,7 +75,7 @@ public class PageTestDataHelper
     public async Task<int> AddCustomEntityPageDetailsAsync(
         string uniqueData,
         int parentDirectoryId,
-        Action<AddPageCommand> configration = null
+        Action<AddPageCommand>? configration = null
         )
     {
         var command = CreateAddCommandWithCustomEntityDetailsPage(uniqueData, parentDirectoryId);
@@ -204,7 +204,7 @@ public class PageTestDataHelper
         int pageVersionId,
         int pageTemplateRegionId,
         TDataModel dataModel,
-        Action<AddPageVersionBlockCommand, PageBlockTypeSummary> configuration = null
+        Action<AddPageVersionBlockCommand, PageBlockTypeSummary>? configuration = null
         )
         where TDataModel : IPageBlockTypeDataModel
     {
@@ -222,6 +222,7 @@ public class PageTestDataHelper
 
         var fileName = dataModel.GetType().Name.Replace("DataModel", string.Empty);
         var blockType = allBlocks.SingleOrDefault(b => b.FileName == fileName);
+        EntityNotFoundException.ThrowIfNull(blockType);
         var command = new AddPageVersionBlockCommand()
         {
             DataModel = dataModel,
@@ -290,7 +291,7 @@ public class PageTestDataHelper
         int pageId,
         string userAreaCode,
         int? roleId = null,
-        Action<UpdatePageAccessRuleSetCommand> configration = null
+        Action<UpdatePageAccessRuleSetCommand>? configration = null
         )
     {
         var command = new UpdatePageAccessRuleSetCommand()

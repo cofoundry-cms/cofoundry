@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data;
 
+[Obsolete("The image asset grouping system will be revised in an upcomming release.")]
 public class ImageAssetGroupItemMap : IEntityTypeConfiguration<ImageAssetGroupItem>
 {
     public void Configure(EntityTypeBuilder<ImageAssetGroupItem> builder)

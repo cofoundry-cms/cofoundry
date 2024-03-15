@@ -7,7 +7,7 @@ public class HttpUriParserTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("    ")]
-    public void ParseAbsoluteOrDefault_WhenNullOrEmpty_ReturnsNull(string input)
+    public void ParseAbsoluteOrDefault_WhenNullOrEmpty_ReturnsNull(string? input)
     {
         var result = HttpUriParser.ParseAbsoluteOrDefault(input);
 
@@ -23,7 +23,7 @@ public class HttpUriParserTests
         var result = HttpUriParser.ParseAbsoluteOrDefault(input);
         var expectedUri = new Uri(expected);
         Assert.Equal(expectedUri, result);
-        Assert.True(result.IsAbsoluteUri);
+        Assert.True(result?.IsAbsoluteUri);
     }
 
     [Theory]
@@ -36,7 +36,7 @@ public class HttpUriParserTests
         var result = HttpUriParser.ParseAbsoluteOrDefault(input);
         var expectedUri = new Uri(input);
         Assert.Equal(expectedUri, result);
-        Assert.True(result.IsAbsoluteUri);
+        Assert.True(result?.IsAbsoluteUri);
     }
 
     [Theory]
@@ -64,7 +64,7 @@ public class HttpUriParserTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("    ")]
-    public void ParseOrDefault_WhenNullOrEmpty_ReturnsNull(string input)
+    public void ParseOrDefault_WhenNullOrEmpty_ReturnsNull(string? input)
     {
         var result = HttpUriParser.ParseOrDefault(input);
 
@@ -80,7 +80,7 @@ public class HttpUriParserTests
         var result = HttpUriParser.ParseOrDefault(input);
         var expectedUri = new Uri(expected);
         Assert.Equal(expectedUri, result);
-        Assert.True(result.IsAbsoluteUri);
+        Assert.True(result?.IsAbsoluteUri);
     }
 
     [Theory]
@@ -93,7 +93,7 @@ public class HttpUriParserTests
         var result = HttpUriParser.ParseOrDefault(input);
         var expectedUri = new Uri(input);
         Assert.Equal(expectedUri, result);
-        Assert.True(result.IsAbsoluteUri);
+        Assert.True(result?.IsAbsoluteUri);
     }
 
     [Theory]
@@ -115,6 +115,6 @@ public class HttpUriParserTests
         var result = HttpUriParser.ParseOrDefault(input);
         var expectedUri = new Uri(input, UriKind.Relative);
         Assert.Equal(expectedUri, result);
-        Assert.True(!result.IsAbsoluteUri);
+        Assert.False(result?.IsAbsoluteUri);
     }
 }

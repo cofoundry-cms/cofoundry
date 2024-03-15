@@ -23,11 +23,11 @@ public class TopologicalSorterTests
     [Fact]
     public void Sort_NullSource_ThrowsException()
     {
-        string[] collection = null;
+        string[]? collection = null;
 
         Assert.Throws<ArgumentNullException>(() =>
         {
-            TopologicalSorter.Sort(collection, (item, source) => Array.Empty<string>(), true);
+            TopologicalSorter.Sort(collection!, (item, source) => Array.Empty<string>(), true);
         });
     }
 
@@ -36,7 +36,7 @@ public class TopologicalSorterTests
     {
         Assert.Throws<ArgumentNullException>(() =>
         {
-            TopologicalSorter.Sort(Array.Empty<string>(), null, true);
+            TopologicalSorter.Sort(Array.Empty<string>(), null!, true);
         });
     }
 

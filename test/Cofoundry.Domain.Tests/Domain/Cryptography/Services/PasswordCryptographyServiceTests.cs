@@ -52,14 +52,16 @@ public class PasswordCryptographyServiceTests
     /// Hashes a password with a specific version of the password hasher so we can check 
     /// backwards compatability.
     /// </summary>
-    private string HashPasswordWithVersion(string password, PasswordHashVersion passwordHashVersion)
+    private static string HashPasswordWithVersion(string password, PasswordHashVersion passwordHashVersion)
     {
         switch (passwordHashVersion)
         {
             case PasswordHashVersion.V1:
+#pragma warning disable CS0618 // Type or member is obsolete
                 return new PasswordCryptographyV1().CreateHash(password);
             case PasswordHashVersion.V2:
                 return Defuse.Obsolete.PasswordCryptographyV2.CreateHash(password);
+#pragma warning restore CS0618 // Type or member is obsolete
             case PasswordHashVersion.V3:
                 return new PasswordHasher<PasswordHasherUser>().HashPassword(new PasswordHasherUser(), password);
             default:

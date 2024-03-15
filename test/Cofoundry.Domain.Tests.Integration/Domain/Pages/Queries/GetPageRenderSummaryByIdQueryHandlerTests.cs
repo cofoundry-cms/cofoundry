@@ -43,8 +43,8 @@ public class GetPageRenderSummaryByIdQueryHandlerTests
             using (new AssertionScope())
             {
                 page.Should().NotBeNull();
-                page.PageId.Should().Be(pageId);
-                page.WorkFlowStatus.Should().Be(workFlowStatus);
+                page?.PageId.Should().Be(pageId);
+                page?.WorkFlowStatus.Should().Be(workFlowStatus);
             }
         }
     }
@@ -78,8 +78,8 @@ public class GetPageRenderSummaryByIdQueryHandlerTests
             using (new AssertionScope())
             {
                 page.Should().NotBeNull();
-                page.PageId.Should().Be(pageId);
-                page.WorkFlowStatus.Should().Be(workFlowStatus);
+                page?.PageId.Should().Be(pageId);
+                page?.WorkFlowStatus.Should().Be(workFlowStatus);
             }
         }
     }
@@ -111,9 +111,9 @@ public class GetPageRenderSummaryByIdQueryHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.PageId.Should().Be(pageId);
-            page.PageVersionId.Should().Be(expectedVersionId);
-            page.WorkFlowStatus.Should().Be(workFlowStatus);
+            page?.PageId.Should().Be(pageId);
+            page?.PageVersionId.Should().Be(expectedVersionId);
+            page?.WorkFlowStatus.Should().Be(workFlowStatus);
         }
     }
 
@@ -142,9 +142,9 @@ public class GetPageRenderSummaryByIdQueryHandlerTests
         {
             versionToQueryId.Should().NotBe(latestVersionId);
             page.Should().NotBeNull();
-            page.PageId.Should().Be(pageId);
-            page.PageVersionId.Should().Be(versionToQueryId);
-            page.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
+            page?.PageId.Should().Be(pageId);
+            page?.PageVersionId.Should().Be(versionToQueryId);
+            page?.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
         }
     }
 
@@ -263,10 +263,16 @@ public class GetPageRenderSummaryByIdQueryHandlerTests
     internal static void AssertBasicDataMapping(
         AddPageCommand addPageCommand,
         int versionId,
-        PageRenderSummary page
+        PageRenderSummary? page
         )
     {
         page.Should().NotBeNull();
+
+        if (page == null)
+        {
+            return;
+        }
+
         page.PageId.Should().Be(addPageCommand.OutputPageId);
         page.PageVersionId.Should().Be(versionId);
         page.CreateDate.Should().NotBeDefault();
@@ -279,7 +285,7 @@ public class GetPageRenderSummaryByIdQueryHandlerTests
         page.OpenGraph.Title.Should().Be(addPageCommand.OpenGraphTitle);
         page.OpenGraph.Description.Should().Be(addPageCommand.OpenGraphDescription);
         page.OpenGraph.Image.Should().NotBeNull();
-        page.OpenGraph.Image.ImageAssetId.Should().Be(addPageCommand.OpenGraphImageId);
+        page.OpenGraph.Image?.ImageAssetId.Should().Be(addPageCommand.OpenGraphImageId);
         page.MetaDescription.Should().Be(addPageCommand.MetaDescription);
 
         page.Title.Should().Be(addPageCommand.Title);

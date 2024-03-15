@@ -43,7 +43,7 @@ public static class HttpResponseMessageAssertionsExtensions
 
         if (success)
         {
-            var content = await messageAssertions.Subject.Content?.ReadAsStringAsync();
+            var content = await messageAssertions.Subject.Content.ReadAsStringAsync();
 
             Execute.Assertion
                 .BecauseOf(because, becauseArgs)
@@ -61,6 +61,6 @@ public static class HttpResponseMessageAssertionsExtensions
         using var scope = new AssertionScope();
 
         content.Should().Match(wildcardPattern);
-        return !scope.Discard().Any();
+        return scope.Discard().Length == 0;
     }
 }

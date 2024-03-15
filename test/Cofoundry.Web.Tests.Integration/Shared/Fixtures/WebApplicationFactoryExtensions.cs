@@ -41,15 +41,11 @@ public static class WebApplicationFactoryExtensions
     /// Option configuration for a new instance of <see cref="WebApplicationFactoryClientOptions"/>. 
     /// The default options allow for redirects and handle cookies.
     /// </param>
-    public static HttpClient CreateClient<TEntryPoint>(this WebApplicationFactory<TEntryPoint> factory, Action<WebApplicationFactoryClientOptions> configureClientOptions)
+    public static HttpClient CreateClient<TEntryPoint>(this WebApplicationFactory<TEntryPoint> factory, Action<WebApplicationFactoryClientOptions>? configureClientOptions)
        where TEntryPoint : class
     {
         var options = new WebApplicationFactoryClientOptions();
-
-        if (configureClientOptions != null)
-        {
-            configureClientOptions(options);
-        }
+        configureClientOptions?.Invoke(options);
 
         return factory.CreateClient(options);
     }

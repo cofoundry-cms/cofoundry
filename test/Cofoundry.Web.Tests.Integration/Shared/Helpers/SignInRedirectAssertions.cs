@@ -17,9 +17,11 @@ public static class SignInRedirectAssertions
         using (new AssertionScope())
         {
             result.StatusCode.Should().Be(HttpStatusCode.Redirect);
-            result.Headers.Location.OriginalString.Should().StartWith("http://localhost" + userArea.Definition.SignInPath);
-            var returnUrl = WebUtility.UrlEncode(result.RequestMessage.RequestUri.PathAndQuery.ToString());
-            result.Headers.Location.OriginalString.Should().EndWith($"ReturnUrl={returnUrl}");
+            var location = result.Headers.Location?.OriginalString ?? string.Empty;
+            location.Should().StartWith("http://localhost" + userArea.Definition.SignInPath);
+
+            var returnUrl = WebUtility.UrlEncode(result.RequestMessage?.RequestUri?.PathAndQuery.ToString());
+            location.Should().EndWith($"ReturnUrl={returnUrl}");
         }
     }
 }

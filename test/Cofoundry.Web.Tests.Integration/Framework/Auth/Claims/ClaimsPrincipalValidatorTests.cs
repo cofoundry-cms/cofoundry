@@ -64,7 +64,7 @@ public class ClaimsPrincipalValidatorTests
         client2UserId.Should().BeNull();
     }
 
-    private async Task<int?> GetCurrentlySignedInUserId(HttpClient client)
+    private static async Task<int?> GetCurrentlySignedInUserId(HttpClient client)
     {
         var response = await client.GetAsync("/tests/users/current");
         response.EnsureSuccessStatusCode();

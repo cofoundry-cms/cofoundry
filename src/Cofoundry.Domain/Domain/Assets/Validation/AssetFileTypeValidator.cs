@@ -1,9 +1,7 @@
 ﻿namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Used to validate an uploaded file by checking it's file extension
-/// and mime type. Use AssetFilesSettings to configure the validation
-/// behavior.
+/// Default implementation of <see cref="IAssetFileTypeValidator"/>.
 /// </summary>
 public class AssetFileTypeValidator : IAssetFileTypeValidator
 {
@@ -18,24 +16,10 @@ public class AssetFileTypeValidator : IAssetFileTypeValidator
         _assetFileSettings = assetFileSettings;
     }
 
-    /// <summary>
-    /// Validates a file's extension and mime type, returning validation
-    /// errors if they are invalid. Use AssetFilesSettings to configure 
-    /// the validation behavior.
-    /// </summary>
-    /// <param name="fileNameOrFileExtension">
-    /// The file name or file extension, with or without the leading dot. The
-    /// check is case-insensitive.
-    /// </param>
-    /// <param name="mimeType">
-    /// Mime type to check. The check is case-insensitive.
-    /// </param>
-    /// <param name="propertyName">
-    /// The name of the model property being validated, used in the validation error.
-    /// </param>
-    public virtual IEnumerable<ValidationResult> Validate(string fileNameOrFileExtension, string mimeType, string? propertyName)
+    /// <inheritdoc/>
+    public virtual IEnumerable<ValidationResult> Validate(string? fileNameOrFileExtension, string? mimeType, string? propertyName)
     {
-        propertyName = propertyName ?? string.Empty;
+        propertyName ??= string.Empty;
         var formattedFileExtension = fileNameOrFileExtension;
 
         if (fileNameOrFileExtension != null && fileNameOrFileExtension.Contains('.'))
@@ -50,22 +34,8 @@ public class AssetFileTypeValidator : IAssetFileTypeValidator
         }
     }
 
-    /// <summary>
-    /// Validates a file's extension and mime type, throwing a validation
-    /// exception if they are invalid. Use AssetFilesSettings to configure 
-    /// the validation behavior.
-    /// </summary>
-    /// <param name="fileNameOrFileExtension">
-    /// The file name or file extension, with or without the leading dot. The
-    /// check is case-insensitive.
-    /// </param>
-    /// <param name="mimeType">
-    /// Mime type to check. The check is case-insensitive.
-    /// </param>
-    /// <param name="propertyName">
-    /// The name of the model property being validated, used in the validation exception.
-    /// </param>
-    public virtual void ValidateAndThrow(string fileNameOrFileExtension, string mimeType, string propertyName)
+    /// <inheritdoc/>
+    public virtual void ValidateAndThrow(string? fileNameOrFileExtension, string? mimeType, string? propertyName)
     {
         var error = Validate(fileNameOrFileExtension, mimeType, propertyName).FirstOrDefault();
 
@@ -87,23 +57,26 @@ public class AssetFileTypeValidator : IAssetFileTypeValidator
     private bool IsListValid(
         AssetFileTypeValidation assetFileTypeValidation,
         IEnumerable<string> list,
-        string itemToValidate
+        string? itemToValidate
         )
     {
-        if (assetFileTypeValidation == AssetFileTypeValidation.Disabled) return true;
+        if (assetFileTypeValidation == AssetFileTypeValidation.Disabled)
+        {
+            return true;
+        }
 
-        if (string.IsNullOrWhiteSpace(itemToValidate)) return false;
+        if (string.IsNullOrWhiteSpace(itemToValidate))
+        {
+            return false;
+        }
 
         var contains = list.Any(l => l != null && itemToValidate.Equals(l, StringComparison.OrdinalIgnoreCase));
 
-        switch (assetFileTypeValidation)
+        return assetFileTypeValidation switch
         {
-            case AssetFileTypeValidation.UseAllowList:
-                return contains;
-            case AssetFileTypeValidation.UseBlockList:
-                return !contains;
-            default:
-                throw new Exception($"{nameof(AssetFileTypeValidation)} not recognised: {assetFileTypeValidation}");
-        }
+            AssetFileTypeValidation.UseAllowList => contains,
+            AssetFileTypeValidation.UseBlockList => !contains,
+            _ => throw new Exception($"{nameof(AssetFileTypeValidation)} not recognised: {assetFileTypeValidation}"),
+        };
     }
 }

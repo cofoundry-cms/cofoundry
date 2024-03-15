@@ -25,7 +25,7 @@ public class ValidateUserCredentialsQueryHandlerTests
     [InlineData("")]
     [InlineData("        ")]
     [InlineData(VALID_USERNAME)]
-    public async Task WhenUsernameNotExists_ReturnsInvalidCredentialsError(string username)
+    public async Task WhenUsernameNotExists_ReturnsInvalidCredentialsError(string? username)
     {
         await AddUserIfNotExistsAsync();
 
@@ -37,7 +37,7 @@ public class ValidateUserCredentialsQueryHandlerTests
         };
 
         using var app = _appFactory.Create();
-        var repository = app.Services.GetService<IDomainRepository>();
+        var repository = app.Services.GetRequiredService<IDomainRepository>();
 
         var result = await repository.ExecuteQueryAsync(query);
 
@@ -46,7 +46,8 @@ public class ValidateUserCredentialsQueryHandlerTests
             result.Should().NotBeNull();
             result.User.Should().BeNull();
             result.IsSuccess.Should().BeFalse();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
+            result.Error.Should().NotBeNull();
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
         }
     }
 
@@ -55,7 +56,7 @@ public class ValidateUserCredentialsQueryHandlerTests
     [InlineData("")]
     [InlineData("        ")]
     [InlineData("belf0rd")]
-    public async Task WhenPasswordInvalid_ReturnsInvalidCredentialsError(string password)
+    public async Task WhenPasswordInvalid_ReturnsInvalidCredentialsError(string? password)
     {
         await AddUserIfNotExistsAsync();
 
@@ -67,7 +68,7 @@ public class ValidateUserCredentialsQueryHandlerTests
         };
 
         using var app = _appFactory.Create();
-        var repository = app.Services.GetService<IDomainRepository>();
+        var repository = app.Services.GetRequiredService<IDomainRepository>();
 
         var result = await repository.ExecuteQueryAsync(query);
 
@@ -76,7 +77,8 @@ public class ValidateUserCredentialsQueryHandlerTests
             result.Should().NotBeNull();
             result.User.Should().BeNull();
             result.IsSuccess.Should().BeFalse();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
+            result.Error.Should().NotBeNull();
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
         }
     }
 
@@ -87,8 +89,8 @@ public class ValidateUserCredentialsQueryHandlerTests
         // set randomly during installation
         using (var app = _appFactory.Create())
         {
-            var dbContext = app.Services.GetService<CofoundryDbContext>();
-            var passwordCryptographyService = app.Services.GetService<IPasswordCryptographyService>();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
+            var passwordCryptographyService = app.Services.GetRequiredService<IPasswordCryptographyService>();
             var systemUser = await dbContext
                 .Users
                 .SingleAsync(u => u.IsSystemAccount);
@@ -111,7 +113,7 @@ public class ValidateUserCredentialsQueryHandlerTests
 
         using (var app = _appFactory.Create())
         {
-            var repository = app.Services.GetService<IDomainRepository>();
+            var repository = app.Services.GetRequiredService<IDomainRepository>();
             result = await repository.ExecuteQueryAsync(query);
         }
 
@@ -120,7 +122,8 @@ public class ValidateUserCredentialsQueryHandlerTests
             result.Should().NotBeNull();
             result.User.Should().BeNull();
             result.IsSuccess.Should().BeFalse();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
+            result.Error.Should().NotBeNull();
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
         }
     }
 
@@ -132,7 +135,7 @@ public class ValidateUserCredentialsQueryHandlerTests
 
         using (var app = _appFactory.Create())
         {
-            var repository = app.Services.GetService<IDomainRepository>();
+            var repository = app.Services.GetRequiredService<IDomainRepository>();
             await repository
                 .WithElevatedPermissions()
                 .ExecuteCommandAsync(new DeleteUserCommand(userId));
@@ -149,7 +152,7 @@ public class ValidateUserCredentialsQueryHandlerTests
 
         using (var app = _appFactory.Create())
         {
-            var repository = app.Services.GetService<IDomainRepository>();
+            var repository = app.Services.GetRequiredService<IDomainRepository>();
             result = await repository.ExecuteQueryAsync(query);
         }
 
@@ -158,7 +161,8 @@ public class ValidateUserCredentialsQueryHandlerTests
             result.Should().NotBeNull();
             result.User.Should().BeNull();
             result.IsSuccess.Should().BeFalse();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
+            result.Error.Should().NotBeNull();
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
         }
     }
 
@@ -178,7 +182,7 @@ public class ValidateUserCredentialsQueryHandlerTests
 
         using (var app = _appFactory.Create())
         {
-            var repository = app.Services.GetService<IDomainRepository>();
+            var repository = app.Services.GetRequiredService<IDomainRepository>();
             result = await repository.ExecuteQueryAsync(query);
         }
 
@@ -187,7 +191,8 @@ public class ValidateUserCredentialsQueryHandlerTests
             result.Should().NotBeNull();
             result.User.Should().BeNull();
             result.IsSuccess.Should().BeFalse();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
+            result.Error.Should().NotBeNull();
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.Authentication.InvalidCredentials.ErrorCode);
         }
     }
 
@@ -204,7 +209,7 @@ public class ValidateUserCredentialsQueryHandlerTests
         };
 
         using var app = _appFactory.Create();
-        var repository = app.Services.GetService<IDomainRepository>();
+        var repository = app.Services.GetRequiredService<IDomainRepository>();
 
         var result = await repository.ExecuteQueryAsync(query);
 
@@ -212,14 +217,14 @@ public class ValidateUserCredentialsQueryHandlerTests
         {
             result.Should().NotBeNull();
             result.User.Should().NotBeNull();
-            result.User.UserId.Should().Be(userId);
-            result.User.UserAreaCode.Should().Be(TestUserArea1.Code);
+            result.User?.UserId.Should().Be(userId);
+            result.User?.UserAreaCode.Should().Be(TestUserArea1.Code);
             result.IsSuccess.Should().BeTrue();
             result.Error.Should().BeNull();
 
             // Non-defaults for these props are covered in other tests
-            result.User.RequirePasswordChange.Should().BeFalse();
-            result.User.IsAccountVerified.Should().BeFalse();
+            result.User?.RequirePasswordChange.Should().BeFalse();
+            result.User?.IsAccountVerified.Should().BeFalse();
         }
     }
 
@@ -239,7 +244,7 @@ public class ValidateUserCredentialsQueryHandlerTests
         UserCredentialsAuthenticationResult result;
 
         using var app = _appFactory.Create();
-        var repository = app.Services.GetService<IDomainRepository>();
+        var repository = app.Services.GetRequiredService<IDomainRepository>();
 
         result = await repository.ExecuteQueryAsync(query);
 
@@ -247,10 +252,10 @@ public class ValidateUserCredentialsQueryHandlerTests
         {
             result.Should().NotBeNull();
             result.User.Should().NotBeNull();
-            result.User.UserId.Should().Be(userId);
+            result.User?.UserId.Should().Be(userId);
             result.IsSuccess.Should().BeTrue();
             result.Error.Should().BeNull();
-            result.User.RequirePasswordChange.Should().BeTrue();
+            result.User?.RequirePasswordChange.Should().BeTrue();
         }
     }
 
@@ -263,12 +268,14 @@ public class ValidateUserCredentialsQueryHandlerTests
 
         using (var app = _appFactory.Create())
         {
-            var dbContext = app.Services.GetService<CofoundryDbContext>();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
             var user = await dbContext
                 .Users
                 .SingleAsync(u => u.UserId == userId);
 
+#pragma warning disable CS0618 // Type or member is obsolete
             user.Password = Defuse.Obsolete.PasswordCryptographyV2.CreateHash(VALID_PASSWORD);
+#pragma warning restore CS0618 // Type or member is obsolete
             user.PasswordHashVersion = (int)PasswordHashVersion.V2;
             oldHash = user.Password;
 
@@ -287,8 +294,8 @@ public class ValidateUserCredentialsQueryHandlerTests
 
         using (var app = _appFactory.Create())
         {
-            var repository = app.Services.GetService<IDomainRepository>();
-            var dbContext = app.Services.GetService<CofoundryDbContext>();
+            var repository = app.Services.GetRequiredService<IDomainRepository>();
+            var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
             result = await repository.ExecuteQueryAsync(query);
             updatedUser = await dbContext
@@ -312,7 +319,7 @@ public class ValidateUserCredentialsQueryHandlerTests
         await AddUserIfNotExistsAsync();
 
         using var app = _appFactory.Create();
-        var repository = app.Services.GetService<IDomainRepository>();
+        var repository = app.Services.GetRequiredService<IDomainRepository>();
 
         var query = new AuthenticateUserCredentialsQuery()
         {
@@ -330,7 +337,7 @@ public class ValidateUserCredentialsQueryHandlerTests
             .Should().Be(1);
     }
 
-    private async Task<int> AddUserIfNotExistsAsync(string username = VALID_USERNAME, Action<AddUserCommand> commandModifier = null)
+    private async Task<int> AddUserIfNotExistsAsync(string username = VALID_USERNAME, Action<AddUserCommand>? commandModifier = null)
     {
         if (commandModifier != null && username == VALID_USERNAME)
         {
@@ -338,7 +345,7 @@ public class ValidateUserCredentialsQueryHandlerTests
         }
 
         using var app = _appFactory.Create();
-        var dbContext = app.Services.GetService<CofoundryDbContext>();
+        var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
         var userArea = app.SeededEntities.TestUserArea1;
 
         var userId = await dbContext
@@ -352,7 +359,7 @@ public class ValidateUserCredentialsQueryHandlerTests
             return userId;
         }
 
-        var repository = app.Services.GetService<IAdvancedContentRepository>();
+        var repository = app.Services.GetRequiredService<IAdvancedContentRepository>();
 
         var command = new AddUserCommand()
         {

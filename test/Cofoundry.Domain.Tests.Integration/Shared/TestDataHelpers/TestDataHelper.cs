@@ -83,6 +83,6 @@ public class TestDataHelper
     /// </summary>
     public RoleTestDataHelper Roles()
     {
-        return new RoleTestDataHelper(_rootServiceProvider, _seededEntities, _permissionRepository);
+        return new RoleTestDataHelper(_rootServiceProvider, _permissionRepository);
     }
 }

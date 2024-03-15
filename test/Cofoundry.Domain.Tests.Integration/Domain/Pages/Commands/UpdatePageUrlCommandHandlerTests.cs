@@ -53,9 +53,9 @@ public class UpdatePageUrlCommandHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.LocaleId.Should().Be(command.LocaleId);
-            page.PageDirectoryId.Should().Be(command.PageDirectoryId);
-            page.UrlPath.Should().Be(command.UrlPath);
+            page?.LocaleId.Should().Be(command.LocaleId);
+            page?.PageDirectoryId.Should().Be(command.PageDirectoryId);
+            page?.UrlPath.Should().Be(command.UrlPath);
         }
     }
 
@@ -97,9 +97,9 @@ public class UpdatePageUrlCommandHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.LocaleId.Should().Be(command.LocaleId);
-            page.PageDirectoryId.Should().Be(command.PageDirectoryId);
-            page.UrlPath.Should().Be(command.CustomEntityRoutingRule);
+            page?.LocaleId.Should().Be(command.LocaleId);
+            page?.PageDirectoryId.Should().Be(command.PageDirectoryId);
+            page?.UrlPath.Should().Be(command.CustomEntityRoutingRule);
         }
     }
 

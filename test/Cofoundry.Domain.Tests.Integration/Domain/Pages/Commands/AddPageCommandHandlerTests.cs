@@ -42,35 +42,40 @@ public class AddPageCommandHandlerTests
             .AsNoTracking()
             .SingleOrDefaultAsync();
 
-        var pageVersion = page.PageVersions.FirstOrDefault();
+        var pageVersion = page?.PageVersions.FirstOrDefault();
 
         using (new AssertionScope())
         {
             addPageCommand.OutputPageId.Should().BePositive();
             page.Should().NotBeNull();
-            page.PageId.Should().Be(addPageCommand.OutputPageId);
-            page.UrlPath.Should().Be(SlugFormatter.ToSlug(uniqueData));
-            page.PageDirectoryId.Should().Be(addPageCommand.PageDirectoryId);
-            page.LocaleId.Should().BeNull();
-            page.PageTypeId.Should().Be((int)PageType.Generic);
-            page.PublishDate.Should().BeNull();
-            page.LastPublishDate.Should().BeNull();
-            page.PublishStatusCode.Should().Be(PublishStatusCode.Unpublished);
-            page.CreateDate.Should().NotBeDefault();
-            page.PageVersions.Should().HaveCount(1);
 
-            pageVersion.Should().NotBeNull();
-            pageVersion.Title.Should().Be(addPageCommand.Title);
-            pageVersion.PageTemplateId.Should().Be(addPageCommand.PageTemplateId);
-            pageVersion.DisplayVersion.Should().Be(1);
-            pageVersion.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Draft);
-            pageVersion.PageVersionId.Should().BePositive();
-            pageVersion.MetaDescription.Should().BeEmpty();
-            pageVersion.OpenGraphDescription.Should().BeNull();
-            pageVersion.OpenGraphImageId.Should().BeNull();
-            pageVersion.OpenGraphTitle.Should().BeNull();
-            pageVersion.ExcludeFromSitemap.Should().Be(!addPageCommand.ShowInSiteMap);
-            pageVersion.CreateDate.Should().NotBeDefault();
+            if (page != null)
+            {
+                page.PageId.Should().Be(addPageCommand.OutputPageId);
+                page.UrlPath.Should().Be(SlugFormatter.ToSlug(uniqueData));
+                page.PageDirectoryId.Should().Be(addPageCommand.PageDirectoryId);
+                page.LocaleId.Should().BeNull();
+                page.PageTypeId.Should().Be((int)PageType.Generic);
+                page.PublishDate.Should().BeNull();
+                page.LastPublishDate.Should().BeNull();
+                page.PublishStatusCode.Should().Be(PublishStatusCode.Unpublished);
+                page.CreateDate.Should().NotBeDefault();
+                page.PageVersions.Should().HaveCount(1);
+
+                pageVersion.Should().NotBeNull();
+                pageVersion?.Title.Should().Be(addPageCommand.Title);
+                pageVersion?.PageTemplateId.Should().Be(addPageCommand.PageTemplateId);
+                pageVersion?.DisplayVersion.Should().Be(1);
+                pageVersion?.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Draft);
+                pageVersion?.PageVersionId.Should().BePositive();
+                pageVersion?.MetaDescription.Should().BeEmpty();
+                pageVersion?.OpenGraphDescription.Should().BeNull();
+                pageVersion?.OpenGraphImageId.Should().BeNull();
+                pageVersion?.OpenGraphTitle.Should().BeNull();
+                pageVersion?.ExcludeFromSitemap.Should().Be(!addPageCommand.ShowInSiteMap);
+                pageVersion?.CreateDate.Should().NotBeDefault();
+            }
+            { }
         }
     }
 
@@ -103,17 +108,17 @@ public class AddPageCommandHandlerTests
             .FilterById(addPageCommand.OutputPageId)
             .SingleOrDefaultAsync();
 
-        var pageVersion = page.PageVersions.FirstOrDefault();
+        var pageVersion = page?.PageVersions.FirstOrDefault();
 
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
             pageVersion.Should().NotBeNull();
-            pageVersion.MetaDescription.Should().Be(addPageCommand.MetaDescription);
-            pageVersion.OpenGraphDescription.Should().Be(addPageCommand.OpenGraphDescription);
-            pageVersion.OpenGraphImageId.Should().Be(addPageCommand.OpenGraphImageId);
-            pageVersion.OpenGraphTitle.Should().Be(addPageCommand.OpenGraphTitle);
-            pageVersion.ExcludeFromSitemap.Should().Be(!addPageCommand.ShowInSiteMap);
+            pageVersion?.MetaDescription.Should().Be(addPageCommand.MetaDescription);
+            pageVersion?.OpenGraphDescription.Should().Be(addPageCommand.OpenGraphDescription);
+            pageVersion?.OpenGraphImageId.Should().Be(addPageCommand.OpenGraphImageId);
+            pageVersion?.OpenGraphTitle.Should().Be(addPageCommand.OpenGraphTitle);
+            pageVersion?.ExcludeFromSitemap.Should().Be(!addPageCommand.ShowInSiteMap);
         }
     }
 
@@ -143,15 +148,19 @@ public class AddPageCommandHandlerTests
             .FilterById(addPageCommand.OutputPageId)
             .SingleOrDefaultAsync();
 
-        var testTag = page.PageTags.Select(t => t.TagId == app.SeededEntities.TestTag.TagId);
-        var uniqueTag = page.PageTags.Select(t => t.Tag.TagText == uniqueData);
-
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.PageTags.Should().HaveCount(2);
-            testTag.Should().NotBeNull();
-            uniqueTag.Should().NotBeNull();
+
+            if (page != null)
+            {
+                var testTag = page.PageTags.Select(t => t.TagId == app.SeededEntities.TestTag.TagId);
+                var uniqueTag = page.PageTags.Select(t => t.Tag.TagText == uniqueData);
+
+                page.PageTags.Should().HaveCount(2);
+                testTag.Should().NotBeNull();
+                uniqueTag.Should().NotBeNull();
+            }
         }
     }
 
@@ -183,16 +192,20 @@ public class AddPageCommandHandlerTests
             .FilterById(addPageCommand.OutputPageId)
             .SingleOrDefaultAsync();
 
-        var pageVersion = page.PageVersions.FirstOrDefault();
-
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.PublishDate.Should().Be(now);
-            page.LastPublishDate.Should().Be(now);
-            page.PublishStatusCode.Should().Be(PublishStatusCode.Published);
-            pageVersion.Should().NotBeNull();
-            pageVersion.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Published);
+
+            if (page != null)
+            {
+                page.PublishDate.Should().Be(now);
+                page.LastPublishDate.Should().Be(now);
+                page.PublishStatusCode.Should().Be(PublishStatusCode.Published);
+
+                var pageVersion = page.PageVersions.FirstOrDefault();
+                pageVersion.Should().NotBeNull();
+                pageVersion?.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Published);
+            }
         }
     }
 
@@ -226,16 +239,20 @@ public class AddPageCommandHandlerTests
             .FilterById(addPageCommand.OutputPageId)
             .SingleOrDefaultAsync();
 
-        var pageVersion = page.PageVersions.FirstOrDefault();
-
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.PublishDate.Should().Be(publishDate);
-            page.LastPublishDate.Should().Be(publishDate);
-            page.PublishStatusCode.Should().Be(PublishStatusCode.Published);
-            pageVersion.Should().NotBeNull();
-            pageVersion.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Published);
+
+            if (page != null)
+            {
+                page.PublishDate.Should().Be(publishDate);
+                page.LastPublishDate.Should().Be(publishDate);
+                page.PublishStatusCode.Should().Be(PublishStatusCode.Published);
+
+                var pageVersion = page.PageVersions.FirstOrDefault();
+                pageVersion.Should().NotBeNull();
+                pageVersion?.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Published);
+            }
         }
     }
 
@@ -264,9 +281,9 @@ public class AddPageCommandHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.PageTypeId.Should().Be((int)PageType.CustomEntityDetails);
-            page.CustomEntityDefinitionCode.Should().Be(TestCustomEntityDefinition.Code);
-            page.UrlPath.Should().Be(addPageCommand.CustomEntityRoutingRule);
+            page?.PageTypeId.Should().Be((int)PageType.CustomEntityDetails);
+            page?.CustomEntityDefinitionCode.Should().Be(TestCustomEntityDefinition.Code);
+            page?.UrlPath.Should().Be(addPageCommand.CustomEntityRoutingRule);
         }
     }
 

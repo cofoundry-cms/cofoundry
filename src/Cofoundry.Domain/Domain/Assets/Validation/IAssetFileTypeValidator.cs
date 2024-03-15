@@ -22,7 +22,7 @@ public interface IAssetFileTypeValidator
     /// <param name="propertyName">
     /// The name of the model property being validated, used in the validation error.
     /// </param>
-    IEnumerable<ValidationResult> Validate(string fileNameOrFileExtension, string mimeType, string propertyName);
+    IEnumerable<ValidationResult> Validate(string? fileNameOrFileExtension, string? mimeType, string? propertyName);
 
     /// <summary>
     /// Validates a file's extension and mime type, throwing a validation
@@ -39,5 +39,5 @@ public interface IAssetFileTypeValidator
     /// <param name="propertyName">
     /// The name of the model property being validated, used in the validation exception.
     /// </param>
-    void ValidateAndThrow(string fileNameOrFileExtension, string mimeType, string propertyName);
+    void ValidateAndThrow(string? fileNameOrFileExtension, string? mimeType, string? propertyName);
 }

@@ -15,7 +15,7 @@ public class EmptyDataModelFactoryTests
         {
             model.Should().NotBeNull();
             typedModel.Should().NotBeNull();
-            typedModel.ExampleProp.Should().Be(43);
+            typedModel?.ExampleProp.Should().Be(43);
         }
     }
 

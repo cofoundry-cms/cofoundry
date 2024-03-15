@@ -5,7 +5,7 @@ namespace Cofoundry.Domain.Tests.Data.DbContext.Shared;
 
 public class IEntityPublishableExtensionsTests
 {
-    private static DateTime _seedDate = new DateTime(2018, 11, 30, 09, 00, 00);
+    private static readonly DateTime _seedDate = new DateTime(2018, 11, 30, 09, 00, 00);
 
     [Fact]
     public void SetPublished_WhenNotSet_UsesCurrentDate()

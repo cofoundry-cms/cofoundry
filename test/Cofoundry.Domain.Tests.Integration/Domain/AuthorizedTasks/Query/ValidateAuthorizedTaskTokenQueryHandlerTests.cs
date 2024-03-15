@@ -54,14 +54,19 @@ public class ValidateAuthorizedTaskTokenQueryHandlerTests
 
         using (new AssertionScope())
         {
+            task.Should().NotBeNull();
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeTrue();
             result.Error.Should().BeNull();
-            result.Data.Should().NotBeNull();
-            result.Data.AuthorizedTaskId.Should().Be(task.AuthorizedTaskId);
-            result.Data.UserId.Should().Be(task.UserId);
-            result.Data.TaskData.Should().Be(uniqueData);
-            result.Data.UserAreaCode.Should().Be(TestUserArea1.Code);
+            result.Data?.Should().NotBeNull();
+            result.Data?.TaskData.Should().Be(uniqueData);
+            result.Data?.UserAreaCode.Should().Be(TestUserArea1.Code);
+
+            if (task != null)
+            {
+                result.Data?.AuthorizedTaskId.Should().Be(task.AuthorizedTaskId);
+                result.Data?.UserId.Should().Be(task.UserId);
+            }
         }
     }
 
@@ -197,7 +202,7 @@ public class ValidateAuthorizedTaskTokenQueryHandlerTests
             result.IsSuccess.Should().BeFalse();
             result.Data.Should().BeNull();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be(errorTemplate.ErrorCode);
+            result.Error?.ErrorCode.Should().Be(errorTemplate.ErrorCode);
         }
     }
 }

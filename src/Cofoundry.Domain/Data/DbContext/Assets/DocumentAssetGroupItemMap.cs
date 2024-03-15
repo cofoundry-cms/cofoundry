@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data;
 
+[Obsolete("The document asset grouping system will be revised in an upcomming release.")]
 public class DocumentAssetGroupItemMap : IEntityTypeConfiguration<DocumentAssetGroupItem>
 {
     public void Configure(EntityTypeBuilder<DocumentAssetGroupItem> builder)

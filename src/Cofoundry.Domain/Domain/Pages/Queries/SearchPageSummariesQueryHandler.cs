@@ -102,10 +102,12 @@ public class SearchPageSummariesQueryHandler
         }
 
         // Filter by group
+#pragma warning disable CS0618 // Type or member is obsolete
         if (query.PageGroupId > 0)
         {
             dbQuery = dbQuery.Where(p => p.Page.PageGroupItems.Any(i => i.PageGroupId == query.PageGroupId));
         }
+#pragma warning restore CS0618 // Type or member is obsolete
 
         return dbQuery
             .SortBy(query.SortBy, query.SortDirection)

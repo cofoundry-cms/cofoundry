@@ -29,7 +29,7 @@ public class AuthorizedTaskTestDataHelper
     public async Task<AddAuthorizedTaskCommand> AddWithNewUserAsync(
         string uniqueData,
         DateTime? mockDate,
-        Action<AddAuthorizedTaskCommand> configuration = null
+        Action<AddAuthorizedTaskCommand>? configuration = null
         )
     {
         using var scope = _serviceProvider.CreateScope();
@@ -49,7 +49,7 @@ public class AuthorizedTaskTestDataHelper
     public async Task<AddAuthorizedTaskCommand> AddAsync(
         int userId,
         DateTime? mockDate,
-        Action<AddAuthorizedTaskCommand> configuration = null
+        Action<AddAuthorizedTaskCommand>? configuration = null
         )
     {
         var command = CreateAddCommand(userId, configuration);
@@ -78,7 +78,7 @@ public class AuthorizedTaskTestDataHelper
     /// <param name="configuration">Optional configuration action to customize the command.</param>
     public AddAuthorizedTaskCommand CreateAddCommand(
         int userId,
-        Action<AddAuthorizedTaskCommand> configuration = null)
+        Action<AddAuthorizedTaskCommand>? configuration = null)
     {
         var command = new AddAuthorizedTaskCommand()
         {
@@ -86,10 +86,7 @@ public class AuthorizedTaskTestDataHelper
             UserId = userId
         };
 
-        if (configuration != null)
-        {
-            configuration(command);
-        }
+        configuration?.Invoke(command);
 
         return command;
     }

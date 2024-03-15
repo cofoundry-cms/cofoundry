@@ -37,8 +37,8 @@ public class GetUpdatePageCommandByIdQueryHandlerTests
         using (new AssertionScope())
         {
             command.Should().NotBeNull();
-            command.PageId.Should().Be(addPageCommand.OutputPageId);
-            command.Tags.Should().OnlyContain(t => addPageCommand.Tags.Contains(t));
+            command?.PageId.Should().Be(addPageCommand.OutputPageId);
+            command?.Tags.Should().OnlyContain(t => addPageCommand.Tags.Contains(t));
         }
     }
 }

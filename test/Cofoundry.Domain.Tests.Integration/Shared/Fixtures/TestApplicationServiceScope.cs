@@ -23,7 +23,7 @@ public class TestApplicationServiceScope : IServiceProvider, IDisposable
     /// A service object of type serviceType. -or- null if there is no service object
     /// of type serviceType.
     /// </returns>
-    public object GetService(Type serviceType)
+    public object? GetService(Type serviceType)
     {
         return _baseServiceProviderScope.ServiceProvider.GetService(serviceType);
     }

@@ -64,7 +64,7 @@ public class RandomStringGeneratorTests
         // technically can produce a false positive but very unlikely.
         var result = generator.Generate(1000, alphabet, untrustworthyCharacters);
         var reversed = new string(untrustworthyCharacters.Reverse().ToArray());
-        var containsAdjacentUntrustworthyCharacters = result.IndexOf(untrustworthyCharacters) != -1 || result.IndexOf(reversed) != -1;
+        var containsAdjacentUntrustworthyCharacters = result.Contains(untrustworthyCharacters) || result.Contains(reversed);
         Assert.False(containsAdjacentUntrustworthyCharacters);
     }
 

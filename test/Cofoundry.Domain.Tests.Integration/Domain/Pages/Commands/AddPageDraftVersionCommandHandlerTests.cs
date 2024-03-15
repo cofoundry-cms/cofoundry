@@ -51,25 +51,30 @@ public class AddPageDraftVersionCommandHandlerTests
             .FilterByPageId(pageId)
             .ToListAsync();
 
-        var publishedVersion = versions.FirstOrDefault(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
-        var draftVersion = versions.SingleOrDefault(v => v.PageVersionId == draftVersionId);
 
         using (new AssertionScope())
         {
             versions.Should().HaveCount(2);
+
+            var publishedVersion = versions.FirstOrDefault(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
             publishedVersion.Should().NotBeNull();
-            draftVersion.Should().NotBeNull();
-            draftVersion.CreateDate.Should().BeAfter(publishedVersion.CreateDate);
-            draftVersion.DisplayVersion.Should().Be(2);
-            draftVersion.ExcludeFromSitemap.Should().BeTrue();
-            draftVersion.MetaDescription.Should().Be(publishedVersion.MetaDescription);
-            draftVersion.OpenGraphDescription.Should().Be(publishedVersion.OpenGraphDescription);
-            draftVersion.OpenGraphImageId.Should().Be(publishedVersion.OpenGraphImageId);
-            draftVersion.OpenGraphTitle.Should().Be(publishedVersion.OpenGraphTitle);
-            draftVersion.PageTemplateId.Should().Be(publishedVersion.PageTemplateId);
-            draftVersion.PageVersionBlocks.Should().BeEmpty();
-            draftVersion.Title.Should().Be(publishedVersion.Title);
-            draftVersion.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Draft);
+
+            if (publishedVersion != null)
+            {
+                var draftVersion = versions.SingleOrDefault(v => v.PageVersionId == draftVersionId);
+                draftVersion.Should().NotBeNull();
+                draftVersion?.CreateDate.Should().BeAfter(publishedVersion.CreateDate);
+                draftVersion?.DisplayVersion.Should().Be(2);
+                draftVersion?.ExcludeFromSitemap.Should().BeTrue();
+                draftVersion?.MetaDescription.Should().Be(publishedVersion.MetaDescription);
+                draftVersion?.OpenGraphDescription.Should().Be(publishedVersion.OpenGraphDescription);
+                draftVersion?.OpenGraphImageId.Should().Be(publishedVersion.OpenGraphImageId);
+                draftVersion?.OpenGraphTitle.Should().Be(publishedVersion.OpenGraphTitle);
+                draftVersion?.PageTemplateId.Should().Be(publishedVersion.PageTemplateId);
+                draftVersion?.PageVersionBlocks.Should().BeEmpty();
+                draftVersion?.Title.Should().Be(publishedVersion.Title);
+                draftVersion?.WorkFlowStatusId.Should().Be((int)WorkFlowStatus.Draft);
+            }
         }
     }
 
@@ -119,53 +124,68 @@ public class AddPageDraftVersionCommandHandlerTests
             .AsNoTracking()
             .Include(v => v.PageVersionBlocks)
             .FilterByPageId(pageId)
-            .ToListAsync();
-
-        var publishedVersion = versions.FirstOrDefault(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
-        var publishedVersionTextBlock = publishedVersion
-            .PageVersionBlocks
-            .SingleOrDefault(v => v.PageVersionBlockId == textBlockId);
-        var publishedVersionImageBlock = publishedVersion
-            .PageVersionBlocks
-            .SingleOrDefault(v => v.PageVersionBlockId == imageBlockId);
-
-        var draftVersion = versions.SingleOrDefault(v => v.PageVersionId == draftVersionId);
-        var draftVersionTextBlock = publishedVersion
-            .PageVersionBlocks
-            .FirstOrDefault(v => v.PageBlockTypeId == publishedVersionTextBlock?.PageBlockTypeId);
-        var draftVersionImageBlock = publishedVersion
-            .PageVersionBlocks
-            .FirstOrDefault(v => v.PageBlockTypeId == publishedVersionImageBlock?.PageBlockTypeId);
-
-        var unstructuredDependencies = await dbContext
-            .UnstructuredDataDependencies
-            .AsNoTracking()
-            .Where(v => v.RootEntityDefinitionCode == PageVersionBlockEntityDefinition.DefinitionCode && v.RootEntityId == draftVersionImageBlock.PageVersionBlockId)
-            .ToListAsync();
-
-        var copiedImageDependency = unstructuredDependencies.SingleOrDefault();
+            .ToArrayAsync();
 
         // Assert
 
         using (new AssertionScope())
         {
             versions.Should().HaveCount(2);
-            publishedVersion.Should().NotBeNull();
-            draftVersion.Should().NotBeNull();
-            publishedVersion.PageVersionBlocks.Should().HaveCount(2);
-            draftVersion.PageVersionBlocks.Should().HaveCount(publishedVersion.PageVersionBlocks.Count);
 
-            AssertBlockMatches(publishedVersionTextBlock, draftVersionTextBlock);
-            AssertBlockMatches(publishedVersionImageBlock, draftVersionImageBlock);
-            unstructuredDependencies.Should().HaveCount(1);
-            copiedImageDependency.Should().NotBeNull();
-            copiedImageDependency.RelatedEntityId.Should().Be(app.SeededEntities.TestImageId);
-            copiedImageDependency.RelatedEntityDefinitionCode.Should().Be(ImageAssetEntityDefinition.DefinitionCode);
+            var publishedVersion = versions.FirstOrDefault(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Published);
+            publishedVersion.Should().NotBeNull();
+
+            if (publishedVersion != null)
+            {
+                publishedVersion.PageVersionBlocks.Should().HaveCount(2);
+
+                var draftVersion = versions.SingleOrDefault(v => v.PageVersionId == draftVersionId);
+                draftVersion.Should().NotBeNull();
+                draftVersion?.PageVersionBlocks.Should().HaveCount(publishedVersion.PageVersionBlocks.Count);
+
+
+                var publishedVersionTextBlock = publishedVersion
+                    .PageVersionBlocks
+                    .SingleOrDefault(v => v.PageVersionBlockId == textBlockId);
+                var publishedVersionImageBlock = publishedVersion
+                    .PageVersionBlocks
+                    .SingleOrDefault(v => v.PageVersionBlockId == imageBlockId);
+                var draftVersionTextBlock = publishedVersion
+                    .PageVersionBlocks
+                    .FirstOrDefault(v => v.PageBlockTypeId == publishedVersionTextBlock?.PageBlockTypeId);
+                var draftVersionImageBlock = publishedVersion
+                    .PageVersionBlocks
+                    .FirstOrDefault(v => v.PageBlockTypeId == publishedVersionImageBlock?.PageBlockTypeId);
+
+                AssertBlockMatches(publishedVersionTextBlock, draftVersionTextBlock);
+                AssertBlockMatches(publishedVersionImageBlock, draftVersionImageBlock);
+
+                if (draftVersionImageBlock != null)
+                {
+                    var unstructuredDependencies = await dbContext
+                        .UnstructuredDataDependencies
+                        .AsNoTracking()
+                        .Where(v => v.RootEntityDefinitionCode == PageVersionBlockEntityDefinition.DefinitionCode && v.RootEntityId == draftVersionImageBlock.PageVersionBlockId)
+                        .ToArrayAsync();
+
+                    var copiedImageDependency = unstructuredDependencies.SingleOrDefault();
+
+                    unstructuredDependencies.Should().HaveCount(1);
+                    copiedImageDependency.Should().NotBeNull();
+                    copiedImageDependency?.RelatedEntityId.Should().Be(app.SeededEntities.TestImageId);
+                    copiedImageDependency?.RelatedEntityDefinitionCode.Should().Be(ImageAssetEntityDefinition.DefinitionCode);
+                }
+            }
         }
 
-        static void AssertBlockMatches(PageVersionBlock publishedBlock, PageVersionBlock draftBlock)
+        static void AssertBlockMatches(PageVersionBlock? publishedBlock, PageVersionBlock? draftBlock)
         {
             draftBlock.Should().NotBeNull();
+            publishedBlock.Should().NotBeNull();
+            if (draftBlock == null || publishedBlock == null)
+            {
+                return;
+            }
             draftBlock.CreateDate.Should().Be(publishedBlock.CreateDate);
             draftBlock.Ordering.Should().Be(publishedBlock.Ordering);
             draftBlock.PageBlockTypeId.Should().Be(publishedBlock.PageBlockTypeId);
@@ -226,7 +246,7 @@ public class AddPageDraftVersionCommandHandlerTests
             .Include(v => v.PageVersionBlocks)
             .FilterActive()
             .FilterByPageId(pageId)
-            .ToListAsync();
+            .ToArrayAsync();
 
         var version2 = versions.SingleOrDefault(v => v.PageVersionId == version2Id);
         var version4 = versions.Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft).SingleOrDefault();
@@ -235,14 +255,18 @@ public class AddPageDraftVersionCommandHandlerTests
         {
             version2.Should().NotBeNull();
             version4.Should().NotBeNull();
-            version4.ExcludeFromSitemap.Should().Be(version2.ExcludeFromSitemap);
-            version4.MetaDescription.Should().Be(version2.MetaDescription);
-            version4.OpenGraphDescription.Should().Be(version2.OpenGraphDescription);
-            version4.OpenGraphImageId.Should().Be(version2.OpenGraphImageId);
-            version4.OpenGraphTitle.Should().Be(version2.OpenGraphTitle);
-            version4.PageTemplateId.Should().Be(version2.PageTemplateId);
-            version4.PageVersionBlocks.Should().HaveCount(version2.PageVersionBlocks.Count());
-            version4.Title.Should().Be(version2.Title);
+
+            if (version2 != null && version4 != null)
+            {
+                version4.ExcludeFromSitemap.Should().Be(version2.ExcludeFromSitemap);
+                version4.MetaDescription.Should().Be(version2.MetaDescription);
+                version4.OpenGraphDescription.Should().Be(version2.OpenGraphDescription);
+                version4.OpenGraphImageId.Should().Be(version2.OpenGraphImageId);
+                version4.OpenGraphTitle.Should().Be(version2.OpenGraphTitle);
+                version4.PageTemplateId.Should().Be(version2.PageTemplateId);
+                version4.PageVersionBlocks.Should().HaveCount(version2.PageVersionBlocks.Count);
+                version4.Title.Should().Be(version2.Title);
+            }
         }
     }
 

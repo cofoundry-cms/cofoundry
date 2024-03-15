@@ -51,7 +51,7 @@ public class CleanupUsersCommandHandlerTests
             .UserAuthenticationLogs
             .AsNoTracking()
             .Where(u => u.UserId == userId)
-            .ToListAsync();
+            .ToArrayAsync();
 
         using (new AssertionScope())
         {

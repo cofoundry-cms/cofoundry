@@ -10,7 +10,7 @@ public class UpdateCurrentUserAccountCommandHandlerTests
 {
     private const string UNIQUE_PREFIX = "UpdCurUsrAccCHT-";
     private const string PASSWORD = "neverbr3@kthechange";
-    private static string EMAIL_DOMAIN = $"@{UNIQUE_PREFIX}.example.com";
+    private const string EMAIL_DOMAIN = $"@{UNIQUE_PREFIX}.example.com";
     private readonly DbDependentTestApplicationFactory _appFactory;
 
     public UpdateCurrentUserAccountCommandHandlerTests(
@@ -44,6 +44,7 @@ public class UpdateCurrentUserAccountCommandHandlerTests
             .AddAsync(addCommand);
 
         var originalUserState = await GetUserByIdAsync(app, userId);
+        EntityNotFoundException.ThrowIfNull(originalUserState, userId);
 
         await contentRepository
             .Users()
@@ -71,11 +72,11 @@ public class UpdateCurrentUserAccountCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.FirstName.Should().Be(updateCommand.FirstName);
-            user.LastName.Should().Be(updateCommand.LastName);
-            user.DisplayName.Should().Be(updateCommand.DisplayName);
-            user.SecurityStamp.Should().Be(originalUserState.SecurityStamp);
-            user.Email.Should().Be(addCommand.Email.ToLowerInvariant());
+            user?.FirstName.Should().Be(updateCommand.FirstName);
+            user?.LastName.Should().Be(updateCommand.LastName);
+            user?.DisplayName.Should().Be(updateCommand.DisplayName);
+            user?.SecurityStamp.Should().Be(originalUserState.SecurityStamp);
+            user?.Email.Should().Be(addCommand.Email.ToLowerInvariant());
         }
     }
 
@@ -101,6 +102,7 @@ public class UpdateCurrentUserAccountCommandHandlerTests
             .AddAsync(addCommand);
 
         var originalUserState = await GetUserByIdAsync(app, userId);
+        EntityNotFoundException.ThrowIfNull(originalUserState, userId);
 
         await contentRepository
             .Users()
@@ -135,14 +137,15 @@ public class UpdateCurrentUserAccountCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.FirstName.Should().Be(updateCommand.FirstName);
-            user.LastName.Should().Be(updateCommand.LastName);
-            user.Email.Should().Be(newNormalizedEmail);
-            user.UniqueEmail.Should().Be(newEmailLower);
-            user.Username.Should().Be(newNormalizedEmail);
-            user.UniqueUsername.Should().Be(newEmailLower);
-            user.EmailDomain.Name.Should().Be(normalizedDomain);
-            user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
+            user?.FirstName.Should().Be(updateCommand.FirstName);
+            user?.LastName.Should().Be(updateCommand.LastName);
+            user?.Email.Should().Be(newNormalizedEmail);
+            user?.UniqueEmail.Should().Be(newEmailLower);
+            user?.Username.Should().Be(newNormalizedEmail);
+            user?.UniqueUsername.Should().Be(newEmailLower);
+            user?.EmailDomain.Should().NotBeNull();
+            user?.EmailDomain?.Name.Should().Be(normalizedDomain);
+            user?.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
         }
     }
 
@@ -171,6 +174,7 @@ public class UpdateCurrentUserAccountCommandHandlerTests
             .AddAsync(addCommand);
 
         var originalUserState = await GetUserByIdAsync(app, userId);
+        EntityNotFoundException.ThrowIfNull(originalUserState, userId);
 
         await contentRepository
             .Users()
@@ -196,9 +200,9 @@ public class UpdateCurrentUserAccountCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.Username.Should().Be(updateCommand.Username);
-            user.UniqueUsername.Should().Be(updateCommand.Username.ToLowerInvariant());
-            user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
+            user?.Username.Should().Be(updateCommand.Username);
+            user?.UniqueUsername.Should().Be(updateCommand.Username.ToLowerInvariant());
+            user?.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
         }
     }
 
@@ -253,7 +257,7 @@ public class UpdateCurrentUserAccountCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.DisplayName.Should().Be(updateCommand.Username);
+            user?.DisplayName.Should().Be(updateCommand.Username);
         }
     }
 
@@ -303,13 +307,13 @@ public class UpdateCurrentUserAccountCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.FirstName.Should().BeNull();
-            user.LastName.Should().BeNull();
-            user.Email.Should().BeNull();
-            user.UniqueEmail.Should().BeNull();
-            user.EmailDomainId.Should().BeNull();
-            user.Username.Should().Be(addCommand.Username);
-            user.UniqueUsername.Should().Be(addCommand.Username.ToLowerInvariant());
+            user?.FirstName.Should().BeNull();
+            user?.LastName.Should().BeNull();
+            user?.Email.Should().BeNull();
+            user?.UniqueEmail.Should().BeNull();
+            user?.EmailDomainId.Should().BeNull();
+            user?.Username.Should().Be(addCommand.Username);
+            user?.UniqueUsername.Should().Be(addCommand.Username.ToLowerInvariant());
         }
     }
 
@@ -596,7 +600,7 @@ public class UpdateCurrentUserAccountCommandHandlerTests
         }
     }
 
-    private static async Task<User> GetUserByIdAsync(DbDependentTestApplication app, int userId)
+    private static async Task<User?> GetUserByIdAsync(DbDependentTestApplication app, int userId)
     {
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 

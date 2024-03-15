@@ -1,14 +1,14 @@
 ﻿using Cofoundry.Web.Admin.Internal;
 using System.Text;
 
-namespace Cofoundry.Web.Admin.Tests.VisuaEditor;
+namespace Cofoundry.Web.Admin.Tests.VisualEditor;
 
 public class HtmlDocumentScriptInjectorTests
 {
-    private static string _headScript;
-    private static string _bodyScript;
+    private static readonly string _headScript;
+    private static readonly string _bodyScript;
 
-    public HtmlDocumentScriptInjectorTests()
+    static HtmlDocumentScriptInjectorTests()
     {
         _headScript = LoadFile("HeadScript");
         _bodyScript = LoadFile("BodyScript");
@@ -17,7 +17,7 @@ public class HtmlDocumentScriptInjectorTests
     [Theory]
     [InlineData("EmptyHeadAndBody", null)]
     [InlineData("EmptyHeadAndBody", "")]
-    public void InjectScripts_WhenNoScripts_NotAltered(string fileName, string injectData)
+    public void InjectScripts_WhenNoScripts_NotAltered(string fileName, string? injectData)
     {
         var input = LoadFile(fileName);
         var htmlDocumentScriptInjector = new HtmlDocumentScriptInjector();
@@ -66,15 +66,22 @@ public class HtmlDocumentScriptInjectorTests
         Assert.Equal(input, result);
     }
 
-    private string LoadFile(string name)
+    private static string LoadFile(string name)
     {
         const string RESOURCE_POSTFIX = ".html";
-        const string RESOURCE_PREFIX = "Cofoundry.Web.Admin.Tests.Admin.Modules.VisuaEditor.Resources.";
+        const string RESOURCE_PREFIX = "Cofoundry.Web.Admin.Tests.Admin.Modules.VisualEditor.Resources.";
 
-        using (var stream = GetType().Assembly.GetManifestResourceStream(RESOURCE_PREFIX + name + RESOURCE_POSTFIX))
-        using (var reader = new StreamReader(stream, Encoding.UTF8))
+        var filename = RESOURCE_PREFIX + name + RESOURCE_POSTFIX;
+        var assembly = typeof(HtmlDocumentScriptInjectorTests).Assembly;
+
+        using var stream = assembly.GetManifestResourceStream(filename);
+        var names = assembly.GetManifestResourceNames();
+        if (stream == null)
         {
-            return reader.ReadToEnd();
+            throw new FileNotFoundException($"Could not find embedded resource {filename}", filename);
         }
+
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        return reader.ReadToEnd();
     }
 }

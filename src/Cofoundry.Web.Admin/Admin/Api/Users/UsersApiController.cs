@@ -16,7 +16,7 @@ public class UsersApiController : BaseAdminApiController
         _userAreaDefinitionRepository = userAreaDefinitionRepository;
     }
 
-    public async Task<JsonResult> Get([FromQuery] SearchUserSummariesQuery query)
+    public async Task<JsonResult> Get([FromQuery] SearchUserSummariesQuery? query)
     {
         query ??= new SearchUserSummariesQuery();
         ApiPagingHelper.SetDefaultBounds(query);

@@ -17,11 +17,11 @@ public class PagesApiController : BaseAdminApiController
     }
 
     public async Task<JsonResult> Get(
-        [FromQuery] SearchPageSummariesQuery query,
-        [FromQuery] GetPageSummariesByIdRangeQuery rangeQuery
+        [FromQuery] SearchPageSummariesQuery? query,
+        [FromQuery] GetPageSummariesByIdRangeQuery? rangeQuery
         )
     {
-        if (rangeQuery != null && rangeQuery.PageIds != null)
+        if (rangeQuery != null && !EnumerableHelper.IsNullOrEmpty(rangeQuery.PageIds))
         {
             return await _apiResponseHelper.RunWithResultAsync(async () =>
             {

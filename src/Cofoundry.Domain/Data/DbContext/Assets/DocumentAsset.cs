@@ -96,6 +96,7 @@ public class DocumentAsset : IUpdateAuditable
         set => _updater = value;
     }
 
+    [Obsolete("The document asset grouping system will be revised in an upcomming release.")]
     public ICollection<DocumentAssetGroupItem> DocumentAssetGroupItems { get; set; } = new List<DocumentAssetGroupItem>();
 
     public ICollection<DocumentAssetTag> DocumentAssetTags { get; set; } = new List<DocumentAssetTag>();

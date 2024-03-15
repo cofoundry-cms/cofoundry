@@ -97,6 +97,7 @@ public class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable,
         set => _creator = value;
     }
 
+    [Obsolete("The page grouping system will be revised in an upcomming release.")]
     public ICollection<PageGroupItem> PageGroupItems { get; set; } = new List<PageGroupItem>();
 
     /// <summary>

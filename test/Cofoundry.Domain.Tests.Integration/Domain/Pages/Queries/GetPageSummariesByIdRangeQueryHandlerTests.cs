@@ -113,17 +113,22 @@ public class GetPageSummariesByIdRangeQueryHandlerTests
     internal static void AssertBasicDataMapping(
         string uniqueData,
         AddPageCommand addPageCommand,
-        PageSummary page
+        PageSummary? page
         )
     {
         var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
         page.Should().NotBeNull();
+        if (page == null)
+        {
+            return;
+        }
+
         page.PageId.Should().Be(addPageCommand.OutputPageId);
 
         page.AuditData.Should().NotBeNull();
         page.AuditData.Creator.Should().NotBeNull();
-        page.AuditData.Creator.UserId.Should().BePositive();
+        page.AuditData.Creator?.UserId.Should().BePositive();
 
         page.FullUrlPath.Should().Be($"/{sluggedUniqueData}/{addPageCommand.UrlPath}");
 

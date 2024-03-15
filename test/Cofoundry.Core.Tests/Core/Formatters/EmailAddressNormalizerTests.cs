@@ -4,7 +4,7 @@ namespace Cofoundry.Core.Tests.Core.Formatters;
 
 public class EmailAddressNormalizerTests
 {
-    private EmailAddressNormalizer _emailAddressNormalizer = new EmailAddressNormalizer();
+    private readonly EmailAddressNormalizer _emailAddressNormalizer = new EmailAddressNormalizer();
 
     [Theory]
     [InlineData(null)]
@@ -14,7 +14,7 @@ public class EmailAddressNormalizerTests
     [InlineData("@@@")]
     [InlineData("@example.com")]
     [InlineData("example@")]
-    public void Normalize_WhenInvalid_ReturnsNull(string email)
+    public void Normalize_WhenInvalid_ReturnsNull(string? email)
     {
         var result = _emailAddressNormalizer.Normalize(email);
 
@@ -55,7 +55,7 @@ public class EmailAddressNormalizerTests
     [InlineData("@@@")]
     [InlineData("@example.com")]
     [InlineData("example@")]
-    public void NormalizeAsParts_WhenInvalid_ReturnsNull(string email)
+    public void NormalizeAsParts_WhenInvalid_ReturnsNull(string? email)
     {
         var result = _emailAddressNormalizer.NormalizeAsParts(email);
 
@@ -71,12 +71,15 @@ public class EmailAddressNormalizerTests
         using (new AssertionScope())
         {
             result.Should().NotBeNull();
-            result.Local.Should().Be("MÜller");
-            result.Domain.Should().NotBeNull();
-            result.Domain.Name.Should().Be("müller.example.com");
-            result.Domain.IdnName.Should().Be("xn--mller-kva.example.com");
-            result.ToEmailAddress().Should().Be(FORMATTED_RESULT);
-            result.ToString().Should().Be(FORMATTED_RESULT);
+            if (result != null)
+            {
+                result.Local.Should().Be("MÜller");
+                result.Domain.Should().NotBeNull();
+                result.Domain.Name.Should().Be("müller.example.com");
+                result.Domain.IdnName.Should().Be("xn--mller-kva.example.com");
+                result.ToEmailAddress().Should().Be(FORMATTED_RESULT);
+                result.ToString().Should().Be(FORMATTED_RESULT);
+            }
         }
     }
 }

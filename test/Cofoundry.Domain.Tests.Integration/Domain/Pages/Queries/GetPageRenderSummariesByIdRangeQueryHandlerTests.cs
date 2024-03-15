@@ -65,8 +65,8 @@ public class GetPageRenderSummariesByIdRangeQueryHandlerTests
                 using (new AssertionScope())
                 {
                     page.Should().NotBeNull();
-                    page.PageId.Should().Be(pageId);
-                    page.WorkFlowStatus.Should().Be(workFlowStatus);
+                    page?.PageId.Should().Be(pageId);
+                    page?.WorkFlowStatus.Should().Be(workFlowStatus);
                 }
             }
         }
@@ -81,7 +81,7 @@ public class GetPageRenderSummariesByIdRangeQueryHandlerTests
         await contentRepository
             .Awaiting(r => r
                 .Pages()
-                .GetByIdRange(new int[] { 1 })
+                .GetByIdRange([1])
                 .AsRenderSummaries(PublishStatusQuery.SpecificVersion)
                 .ExecuteAsync()
                 )

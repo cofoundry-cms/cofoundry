@@ -42,9 +42,9 @@ public class SearchImageAssetSummariesQueryHandler
                 string localTag = tag;
 
                 dbQuery = dbQuery.Where(p => p.ImageAssetTags
-                                              .Select(t => t.Tag.TagText)
-                                              .Contains(localTag)
-                                       );
+                    .Select(t => t.Tag.TagText)
+                    .Contains(localTag)
+                    );
             }
         }
 
@@ -74,7 +74,7 @@ public class SearchImageAssetSummariesQueryHandler
         var mappedResults = dbPagedResults
             .Items
             .Select(_imageAssetSummaryMapper.Map)
-            .ToList();
+            .ToArray();
 
         return dbPagedResults.ChangeType(mappedResults);
     }

@@ -42,13 +42,13 @@ public class GetPageRoutesByIdRangeQueryHandlerTests
         using (new AssertionScope())
         {
             page1.Should().NotBeNull();
-            page1.PageId.Should().Be(page1Id);
+            page1?.PageId.Should().Be(page1Id);
 
             page3.Should().NotBeNull();
-            page3.PageId.Should().Be(page3Id);
+            page3?.PageId.Should().Be(page3Id);
 
             page4.Should().NotBeNull();
-            page4.PageId.Should().Be(page4Id);
+            page4?.PageId.Should().Be(page4Id);
         }
     }
 

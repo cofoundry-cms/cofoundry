@@ -13,7 +13,7 @@ public class PageTemplatesApiController : BaseAdminApiController
         _apiResponseHelper = apiResponseHelper;
     }
 
-    public async Task<JsonResult> Get([FromQuery] SearchPageTemplateSummariesQuery query)
+    public async Task<JsonResult> Get([FromQuery] SearchPageTemplateSummariesQuery? query)
     {
         query ??= new SearchPageTemplateSummariesQuery();
         ApiPagingHelper.SetDefaultBounds(query);

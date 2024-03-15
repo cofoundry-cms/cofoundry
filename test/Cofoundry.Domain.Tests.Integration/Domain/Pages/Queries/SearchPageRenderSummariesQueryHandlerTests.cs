@@ -67,8 +67,8 @@ public class SearchPageRenderSummariesQueryHandlerTests
                 using (new AssertionScope())
                 {
                     page.Should().NotBeNull();
-                    page.PageId.Should().Be(pageId);
-                    page.WorkFlowStatus.Should().Be(workFlowStatus);
+                    page?.PageId.Should().Be(pageId);
+                    page?.WorkFlowStatus.Should().Be(workFlowStatus);
                 }
             }
         }

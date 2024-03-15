@@ -21,11 +21,11 @@ public class ImagesApiController : BaseAdminApiController
     }
 
     public async Task<JsonResult> Get(
-        [FromQuery] SearchImageAssetSummariesQuery query,
-        [FromQuery] GetImageAssetRenderDetailsByIdRangeQuery rangeQuery
+        [FromQuery] SearchImageAssetSummariesQuery? query,
+        [FromQuery] GetImageAssetRenderDetailsByIdRangeQuery? rangeQuery
         )
     {
-        if (rangeQuery != null && rangeQuery.ImageAssetIds != null)
+        if (rangeQuery != null && !EnumerableHelper.IsNullOrEmpty(rangeQuery.ImageAssetIds))
         {
             return await _apiResponseHelper.RunWithResultAsync(async () =>
             {

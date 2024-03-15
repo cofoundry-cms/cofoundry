@@ -56,7 +56,7 @@ public class DeleteCurrentUserCommandHandlerTests
         using (new AssertionScope())
         {
             deletedUser.Should().NotBeNull();
-            deletedUser.DeletedDate.Should().NotBeNull();
+            deletedUser?.DeletedDate.Should().NotBeNull();
             signedInUser.IsSignedIn().Should().BeFalse();
 
             app.Mocks
@@ -68,7 +68,7 @@ public class DeleteCurrentUserCommandHandlerTests
         }
     }
 
-    private async Task<User> GetUserAsync(CofoundryDbContext dbContext, int userId)
+    private static async Task<User?> GetUserAsync(CofoundryDbContext dbContext, int userId)
     {
         return await dbContext
             .Users

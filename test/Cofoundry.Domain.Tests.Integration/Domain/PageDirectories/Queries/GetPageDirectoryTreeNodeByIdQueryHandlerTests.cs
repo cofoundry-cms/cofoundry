@@ -42,17 +42,17 @@ public class GetPageDirectoryTreeNodeByIdQueryHandlerTests
         using (new AssertionScope())
         {
             directory.Should().NotBeNull();
-            directory.AuditData.Should().NotBeNull();
-            directory.AuditData.Creator.Should().NotBeNull();
-            directory.AuditData.CreateDate.Should().NotBeDefault();
-            directory.ChildPageDirectories.Should().NotBeNull().And.HaveCount(3);
-            directory.Depth.Should().Be(2);
-            directory.Name.Should().Be("Dir-1");
-            directory.UrlPath.Should().Be("dir-1");
-            directory.FullUrlPath.Should().Be(parentFullPath + "/dir-1");
-            directory.ParentPageDirectoryId.Should().Be(parentDirectoryId);
-            directory.ParentPageDirectory.Should().NotBeNull();
-            directory.ParentPageDirectory.FullUrlPath.Should().Be(parentFullPath);
+            directory?.AuditData.Should().NotBeNull();
+            directory?.AuditData.Creator.Should().NotBeNull();
+            directory?.AuditData.CreateDate.Should().NotBeDefault();
+            directory?.ChildPageDirectories.Should().NotBeNull().And.HaveCount(3);
+            directory?.Depth.Should().Be(2);
+            directory?.Name.Should().Be("Dir-1");
+            directory?.UrlPath.Should().Be("dir-1");
+            directory?.FullUrlPath.Should().Be(parentFullPath + "/dir-1");
+            directory?.ParentPageDirectoryId.Should().Be(parentDirectoryId);
+            directory?.ParentPageDirectory.Should().NotBeNull();
+            directory?.ParentPageDirectory?.FullUrlPath.Should().Be(parentFullPath);
         }
     }
 }

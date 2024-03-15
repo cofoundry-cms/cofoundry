@@ -60,11 +60,14 @@ public class IdAndUrlSlugCustomEntityRoutingRuleTests
 
         var query = _rule.ExtractRoutingQuery(url, _pageRoute) as GetCustomEntityRouteByPathQuery;
 
-        query.Should().NotBeNull();
-        query.CustomEntityDefinitionCode.Should().Be(_pageRoute.CustomEntityDefinitionCode);
-        query.CustomEntityId.Should().Be(expectedId);
-        query.LocaleId.Should().Be(_pageRoute.Locale.LocaleId);
-        query.UrlSlug.Should().BeNull();
+        using (new AssertionScope())
+        {
+            query.Should().NotBeNull();
+            query?.CustomEntityDefinitionCode.Should().Be(_pageRoute.CustomEntityDefinitionCode);
+            query?.CustomEntityId.Should().Be(expectedId);
+            query?.LocaleId.Should().Be(_pageRoute.Locale!.LocaleId);
+            query?.UrlSlug.Should().BeNull();
+        }
     }
 
     [Fact]

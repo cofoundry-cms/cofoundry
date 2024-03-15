@@ -43,7 +43,7 @@ public class GetUserAreaMicroSummaryByCodeQueryHandlerTests
         using (new AssertionScope())
         {
             testArea1.Should().NotBeNull();
-            testArea1.Name.Should().Be(testArea1.Name);
+            testArea1?.Name.Should().Be(testArea1.Name);
         }
     }
 }

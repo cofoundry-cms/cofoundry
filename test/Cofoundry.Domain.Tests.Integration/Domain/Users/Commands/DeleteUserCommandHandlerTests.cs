@@ -38,15 +38,20 @@ public class DeleteUserCommandHandlerTests
         using (new AssertionScope())
         {
             deletedUser.Should().NotBeNull();
+            if (deletedUser == null)
+            {
+                return;
+            }
+
             deletedUser.Email.Should().BeNull();
             deletedUser.UniqueEmail.Should().BeNull();
             deletedUser.FirstName.Should().BeNull();
             deletedUser.LastName.Should().BeNull();
             deletedUser.DisplayName.Should().BeNull();
             deletedUser.EmailDomainId.Should().BeNull();
-            deletedUser.Password.Should().NotBeNull().And.NotBe(originalUser.Username);
-            deletedUser.Username.Should().NotBeNull().And.NotBe(originalUser.Username);
-            deletedUser.UniqueUsername.Should().NotBeNull().And.NotBe(originalUser.UniqueUsername);
+            deletedUser.Password.Should().NotBeNull().And.NotBe(originalUser?.Username);
+            deletedUser.Username.Should().NotBeNull().And.NotBe(originalUser?.Username);
+            deletedUser.UniqueUsername.Should().NotBeNull().And.NotBe(originalUser?.UniqueUsername);
             deletedUser.DeactivatedDate.Should().NotBeNull();
             deletedUser.DeletedDate.Should().NotBeNull();
         }
@@ -72,7 +77,7 @@ public class DeleteUserCommandHandlerTests
         var emailDomainExists = await dbContext
             .EmailDomains
             .AsNoTracking()
-            .AnyAsync(e => e.EmailDomainId == originalUser.EmailDomainId);
+            .AnyAsync(e => e.EmailDomainId == originalUser!.EmailDomainId);
 
         emailDomainExists.Should().BeFalse();
     }
@@ -99,7 +104,7 @@ public class DeleteUserCommandHandlerTests
         var emailDomainExists = await dbContext
             .EmailDomains
             .AsNoTracking()
-            .AnyAsync(e => e.EmailDomainId == originalUser1.EmailDomainId);
+            .AnyAsync(e => e.EmailDomainId == originalUser1!.EmailDomainId);
 
         emailDomainExists.Should().BeTrue();
     }
@@ -162,7 +167,7 @@ public class DeleteUserCommandHandlerTests
         var credentialLog = await dbContext
             .UserAuthenticationFailLogs
             .AsNoTracking()
-            .Where(u => u.Username == deletedUser.Username)
+            .Where(u => u.Username == deletedUser!.Username)
             .SingleOrDefaultAsync();
 
         credentialLog.Should().NotBeNull();
@@ -254,7 +259,7 @@ public class DeleteUserCommandHandlerTests
             .Should().Be(1);
     }
 
-    private async Task<User> GetUserAsync(CofoundryDbContext dbContext, int userId)
+    private static async Task<User?> GetUserAsync(CofoundryDbContext dbContext, int userId)
     {
         return await dbContext
             .Users

@@ -40,6 +40,11 @@ public class GetUpdatePageDraftVersionCommandByIdQueryHandlerTests
         using (new AssertionScope())
         {
             command.Should().NotBeNull();
+            if (command == null)
+            {
+                return;
+            }
+
             command.PageId.Should().Be(addPageCommand.OutputPageId);
             command.MetaDescription.Should().Be(command.MetaDescription);
             command.OpenGraphDescription.Should().Be(command.OpenGraphDescription);

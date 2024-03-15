@@ -11,7 +11,7 @@ public class HtmlDocumentScriptInjector : IHtmlDocumentScriptInjector
     const string BODY_TAG_END = "</body>";
 
     /// <inheritdoc/>
-    public string InjectScripts(string html, string headScript, string bodyScript)
+    public string InjectScripts(string html, string? headScript, string? bodyScript)
     {
         html = InjectHeadScript(html, headScript);
 
@@ -37,7 +37,7 @@ public class HtmlDocumentScriptInjector : IHtmlDocumentScriptInjector
         return html;
     }
 
-    private static string InjectHeadScript(string html, string headScript)
+    private static string InjectHeadScript(string html, string? headScript)
     {
         if (string.IsNullOrWhiteSpace(headScript))
         {

@@ -42,7 +42,7 @@ public class PageDirectoryTestDataHelper
     /// <returns>The PageDirectoryId of the newly created directory.</returns>
     public async Task<int> AddAsync(
         string uniqueData,
-        Action<AddPageDirectoryCommand> configration = null
+        Action<AddPageDirectoryCommand>? configration = null
         )
     {
         var command = await CreateAddCommandAsync(uniqueData);
@@ -77,7 +77,7 @@ public class PageDirectoryTestDataHelper
     public Task<int> AddAsync(
         string uniqueData,
         int parentDirectoryId,
-        Action<AddPageDirectoryCommand> configration = null
+        Action<AddPageDirectoryCommand>? configration = null
         )
     {
         return AddAsync(uniqueData, command =>
@@ -145,7 +145,7 @@ public class PageDirectoryTestDataHelper
         int pageDirectoryId,
         string userAreaCode,
         int? roleId = null,
-        Action<UpdatePageDirectoryAccessRuleSetCommand> configration = null
+        Action<UpdatePageDirectoryAccessRuleSetCommand>? configration = null
         )
     {
         var command = new UpdatePageDirectoryAccessRuleSetCommand()

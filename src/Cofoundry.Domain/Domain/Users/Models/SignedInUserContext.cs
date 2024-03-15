@@ -45,8 +45,8 @@ public class SignedInUserContext : ISignedInUserContext
         }
 
         ThrowIfNull(userContext.RoleId, nameof(userContext.RoleId));
-        ThrowIfNull(userContext.UserArea, nameof(userContext.RoleId));
-        ThrowIfNull(userContext.UserId, nameof(userContext.RoleId));
+        ThrowIfNull(userContext.UserArea, nameof(userContext.UserArea));
+        ThrowIfNull(userContext.UserId, nameof(userContext.UserId));
 
         var mapped = new SignedInUserContext()
         {
@@ -60,7 +60,7 @@ public class SignedInUserContext : ISignedInUserContext
 
         return mapped;
 
-        void ThrowIfNull<T>([NotNull] T? value, [CallerArgumentExpression(nameof(value))] string? propName = null)
+        static void ThrowIfNull<T>([NotNull] T? value, [CallerArgumentExpression(nameof(value))] string? propName = null)
         {
             if (value == null)
             {

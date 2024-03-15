@@ -6,17 +6,14 @@
 public class RoleTestDataHelper
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly SeededEntities _seededEntities;
     private readonly IPermissionRepository _permissionRepository;
 
     public RoleTestDataHelper(
         IServiceProvider serviceProvider,
-        SeededEntities seededEntities,
         IPermissionRepository permissionRepository
         )
     {
         _serviceProvider = serviceProvider;
-        _seededEntities = seededEntities;
         _permissionRepository = permissionRepository;
     }
 
@@ -32,7 +29,7 @@ public class RoleTestDataHelper
     public async Task<int> AddAsync(
         string uniqueData,
         string userAreaCode,
-        Func<IEnumerable<IPermission>, IEnumerable<IPermission>> permissionInitializer = null
+        Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? permissionInitializer = null
         )
     {
         var command = CreateAddCommand(uniqueData, userAreaCode, permissionInitializer);
@@ -55,7 +52,7 @@ public class RoleTestDataHelper
     /// A filter function to indicate which permissions to add. If this is <see langword="null"/> 
     /// then all permissions are added. This is the equivalent of an <see cref="IRoleInitializer"/>.
     /// </param>
-    public AddRoleCommand CreateAddCommand(string uniqueData, string userAreaCode, Func<IEnumerable<IPermission>, IEnumerable<IPermission>> permissionInitializer = null)
+    public AddRoleCommand CreateAddCommand(string uniqueData, string userAreaCode, Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? permissionInitializer = null)
     {
         var command = new AddRoleCommand()
         {

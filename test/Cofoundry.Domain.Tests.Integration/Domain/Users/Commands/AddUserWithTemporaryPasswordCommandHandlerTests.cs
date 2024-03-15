@@ -53,14 +53,14 @@ public class AddUserWithTemporaryPasswordCommandHandlerTests
         {
             command.OutputUserId.Should().BePositive();
             user.Should().NotBeNull();
-            user.FirstName.Should().Be(command.FirstName);
-            user.LastName.Should().Be(command.LastName);
-            user.Email.Should().Be(command.Email);
-            user.Password.Should().NotBeNullOrWhiteSpace();
-            user.RequirePasswordChange.Should().BeTrue();
-            user.Role.RoleCode.Should().Be(command.RoleCode);
-            user.UserAreaCode.Should().Be(command.UserAreaCode);
-            user.Username.Should().Be(user.Email);
+            user?.FirstName.Should().Be(command.FirstName);
+            user?.LastName.Should().Be(command.LastName);
+            user?.Email.Should().Be(command.Email);
+            user?.Password.Should().NotBeNullOrWhiteSpace();
+            user?.RequirePasswordChange.Should().BeTrue();
+            user?.Role.RoleCode.Should().Be(command.RoleCode);
+            user?.UserAreaCode.Should().Be(command.UserAreaCode);
+            user?.Username.Should().Be(user.Email);
         }
     }
 

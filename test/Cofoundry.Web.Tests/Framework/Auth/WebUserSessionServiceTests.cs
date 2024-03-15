@@ -18,13 +18,7 @@ public class WebUserSessionServiceTests : UserSessionServiceTests
         mockHttpContextAccessor.Setup(m => m.HttpContext).Returns(context);
 
         var mockClaimsPrincipalBuilderContextRepository = new Mock<IClaimsPrincipalBuilderContextRepository>();
-        Func<int, IClaimsPrincipalBuilderContext> builderContext = i => new ClaimsPrincipalBuilderContext()
-        {
-            UserId = i,
-            UserAreaCode = i == UserSessionServiceTests.AREA1_USERID ? TestUserArea1.Code : TestUserArea2.Code,
-            SecurityStamp = "TEST" + i
-        };
-        mockClaimsPrincipalBuilderContextRepository.Setup(m => m.GetAsync(It.IsAny<int>())).ReturnsAsync(builderContext);
+        mockClaimsPrincipalBuilderContextRepository.Setup(m => m.GetAsync(It.IsAny<int>())).ReturnsAsync((Func<int, IClaimsPrincipalBuilderContext>)builderContext);
 
         return new WebUserSessionService(
             mockHttpContextAccessor.Object,
@@ -33,12 +27,19 @@ public class WebUserSessionServiceTests : UserSessionServiceTests
             new ClaimsPrincipalFactory(),
             mockClaimsPrincipalBuilderContextRepository.Object
             );
+
+        static IClaimsPrincipalBuilderContext builderContext(int i) => new ClaimsPrincipalBuilderContext()
+        {
+            UserId = i,
+            UserAreaCode = i == UserSessionServiceTests.AREA1_USERID ? TestUserArea1.Code : TestUserArea2.Code,
+            SecurityStamp = "TEST" + i
+        };
     }
 
     /// <summary>
     /// Creates a minimal service provider to support authentication
     /// </summary>
-    private ServiceProvider CreateServiceProvider(IUserAreaDefinitionRepository userAreaDefinitionRepository)
+    private static ServiceProvider CreateServiceProvider(IUserAreaDefinitionRepository userAreaDefinitionRepository)
     {
         var allUserAreas = userAreaDefinitionRepository.GetAll();
 

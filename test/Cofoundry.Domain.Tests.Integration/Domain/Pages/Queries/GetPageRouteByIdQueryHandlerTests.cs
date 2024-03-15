@@ -36,6 +36,12 @@ public class GetPageRouteByIdQueryHandlerTests
         using (new AssertionScope())
         {
             page2.Should().NotBeNull();
+
+            if (page2 == null)
+            {
+                return;
+            }
+
             page2.PageId.Should().Be(page2Id);
 
             page2.FullUrlPath.Should().Be($"/{sluggedUniqueData}/{sluggedUniqueData}2");
@@ -60,14 +66,14 @@ public class GetPageRouteByIdQueryHandlerTests
             page2.PageDirectory.UrlPath.Should().Be(sluggedUniqueData);
 
             var version = page2.Versions.FirstOrDefault();
-            version.CreateDate.Should().NotBeDefault();
-            version.HasCustomEntityRegions.Should().BeFalse();
-            version.HasPageRegions.Should().BeTrue();
-            version.IsLatestPublishedVersion.Should().BeFalse();
-            version.PageTemplateId.Should().Be(app.SeededEntities.TestPageTemplate.PageTemplateId);
-            version.Title.Should().Be(uniqueData + "2");
-            version.VersionId.Should().BePositive();
-            version.WorkFlowStatus.Should().Be(WorkFlowStatus.Draft);
+            version?.CreateDate.Should().NotBeDefault();
+            version?.HasCustomEntityRegions.Should().BeFalse();
+            version?.HasPageRegions.Should().BeTrue();
+            version?.IsLatestPublishedVersion.Should().BeFalse();
+            version?.PageTemplateId.Should().Be(app.SeededEntities.TestPageTemplate.PageTemplateId);
+            version?.Title.Should().Be(uniqueData + "2");
+            version?.VersionId.Should().BePositive();
+            version?.WorkFlowStatus.Should().Be(WorkFlowStatus.Draft);
         }
     }
 
@@ -100,6 +106,11 @@ public class GetPageRouteByIdQueryHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
+            if (page == null)
+            {
+                return;
+            }
+
             page.HasDraftVersion.Should().BeFalse();
             page.HasPublishedVersion.Should().BeTrue();
             page.PublishStatus.Should().Be(PublishStatus.Published);
@@ -107,8 +118,8 @@ public class GetPageRouteByIdQueryHandlerTests
             page.LastPublishDate.Should().Be(publishDate);
 
             var version = page.Versions.FirstOrDefault();
-            version.IsLatestPublishedVersion.Should().BeTrue();
-            version.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
+            version?.IsLatestPublishedVersion.Should().BeTrue();
+            version?.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
         }
     }
 

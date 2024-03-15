@@ -45,7 +45,8 @@ public class AddAuthorizedTaskCommandTests
             addAuthorizedTaskCommand.OutputToken.Should().Be(token);
             dbTask.Should().NotBeNull();
             dbTask.CreateDate.Should().NotBeDefault();
-            dbTask.IPAddress.Address.Should().Be(TestIPAddresses.Localhost);
+            dbTask.IPAddress.Should().NotBeNull();
+            dbTask.IPAddress?.Address.Should().Be(TestIPAddresses.Localhost);
             dbTask.CompletedDate.Should().BeNull();
             dbTask.InvalidatedDate.Should().BeNull();
             dbTask.AuthorizationCode.Should().NotBeEmpty();
@@ -67,9 +68,9 @@ public class AddAuthorizedTaskCommandTests
         app.Mocks.MockDateTime(seedDate);
 
         var initialCommand = await app
-                .TestData
-                .AuthorizedTasks()
-                .AddWithNewUserAsync(uniqueData, seedDate);
+            .TestData
+            .AuthorizedTasks()
+            .AddWithNewUserAsync(uniqueData, seedDate);
 
         app.Mocks.MockDateTime(seedDate.AddHours(1));
         await contentRepository.AuthorizedTasks().AddAsync(CreateCommand());

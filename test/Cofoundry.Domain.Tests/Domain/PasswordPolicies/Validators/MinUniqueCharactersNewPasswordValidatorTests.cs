@@ -40,6 +40,6 @@ public class MinUniqueCharactersNewPasswordValidatorTests
         var result = validator.Validate(context);
 
         result.Should().NotBeNull();
-        result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.MinUniqueCharacters.ErrorCode);
+        result?.ErrorCode.Should().Be(PasswordPolicyValidationErrors.MinUniqueCharacters.ErrorCode);
     }
 }

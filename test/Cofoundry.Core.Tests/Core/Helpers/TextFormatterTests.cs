@@ -5,7 +5,7 @@ public class TextFormatterTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void PascalCaseToSentence_WhenNullOrEmpty_ReturnsEmptyString(string input)
+    public void PascalCaseToSentence_WhenNullOrEmpty_ReturnsEmptyString(string? input)
     {
         var result = TextFormatter.PascalCaseToSentence(input);
 
@@ -47,7 +47,7 @@ public class TextFormatterTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("   ")]
-    public void Camelize_WhenNullOrWhitespace_ReturnsEmptyString(string input)
+    public void Camelize_WhenNullOrWhitespace_ReturnsEmptyString(string? input)
     {
         var result = TextFormatter.Camelize(input);
 
@@ -70,7 +70,7 @@ public class TextFormatterTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("   ")]
-    public void Pascalize_WhenNullOrWhitespace_ReturnsEmptyString(string input)
+    public void Pascalize_WhenNullOrWhitespace_ReturnsEmptyString(string? input)
     {
         var result = TextFormatter.Pascalize(input);
 
@@ -92,7 +92,7 @@ public class TextFormatterTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void Limit_WhenNullOrEmpty_ReturnsEmptyString(string input)
+    public void Limit_WhenNullOrEmpty_ReturnsEmptyString(string? input)
     {
         var result = TextFormatter.Limit(input, 10);
 
@@ -134,7 +134,7 @@ public class TextFormatterTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void LimitWithElipses_WhenNullOrEmpty_ReturnsEmptyString(string input)
+    public void LimitWithElipses_WhenNullOrEmpty_ReturnsEmptyString(string? input)
     {
         var result = TextFormatter.LimitWithElipses(input, 10);
 
@@ -176,7 +176,7 @@ public class TextFormatterTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void LimitWithElipsesOnWordBoundary_WhenNullOrEmpty_ReturnsEmptyString(string input)
+    public void LimitWithElipsesOnWordBoundary_WhenNullOrEmpty_ReturnsEmptyString(string? input)
     {
         var result = TextFormatter.LimitWithElipsesOnWordBoundary(input, 10);
 
@@ -218,7 +218,7 @@ public class TextFormatterTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void FirstLetterToUpperCase_WhenNullOrEmpty_ReturnsEmptyString(string input)
+    public void FirstLetterToUpperCase_WhenNullOrEmpty_ReturnsEmptyString(string? input)
     {
         var result = TextFormatter.FirstLetterToUpperCase(input);
 
@@ -249,7 +249,7 @@ public class TextFormatterTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void RemoveDiacritics_WhenNullOrEmpty_ReturnsEmptyString(string input)
+    public void RemoveDiacritics_WhenNullOrEmpty_ReturnsEmptyString(string? input)
     {
         var result = TextFormatter.PascalCaseToSentence(input);
 

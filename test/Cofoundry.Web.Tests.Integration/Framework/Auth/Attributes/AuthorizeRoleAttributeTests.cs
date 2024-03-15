@@ -51,7 +51,7 @@ public class AuthorizeRoleAttributeTests
         result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    private string GetRoute(string path)
+    private static string GetRoute(string path)
     {
         return $"/{AuthAttributeTestController.RouteBase}/{path}";
     }

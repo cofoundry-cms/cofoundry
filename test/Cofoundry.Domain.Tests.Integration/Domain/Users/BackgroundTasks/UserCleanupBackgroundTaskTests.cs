@@ -17,7 +17,7 @@ public class UserCleanupBackgroundTaskTests
     [Fact]
     public async Task WhenEnabled_Runs()
     {
-        CleanupUsersCommand executedCommand = null;
+        CleanupUsersCommand? executedCommand = null;
         using var app = _appFactory.Create(s =>
         {
             s.Configure<UsersSettings>(c =>
@@ -35,16 +35,16 @@ public class UserCleanupBackgroundTaskTests
         using (new AssertionScope())
         {
             executedCommand.Should().NotBeNull();
-            executedCommand.DefaultRetentionPeriod.Should().Be(TimeSpan.FromDays(11));
-            executedCommand.AuthenticationLogRetentionPeriod.Should().Be(TimeSpan.FromDays(12));
-            executedCommand.AuthenticationFailLogRetentionPeriod.Should().Be(TimeSpan.FromDays(13));
+            executedCommand?.DefaultRetentionPeriod.Should().Be(TimeSpan.FromDays(11));
+            executedCommand?.AuthenticationLogRetentionPeriod.Should().Be(TimeSpan.FromDays(12));
+            executedCommand?.AuthenticationFailLogRetentionPeriod.Should().Be(TimeSpan.FromDays(13));
         }
     }
 
     [Fact]
     public async Task WhenDisabled_DoesNotRun()
     {
-        CleanupUsersCommand executedCommand = null;
+        CleanupUsersCommand? executedCommand = null;
         using var app = _appFactory.Create(s =>
         {
             s.Configure<UsersSettings>(c => c.Cleanup.Enabled = false);

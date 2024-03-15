@@ -46,6 +46,7 @@ public class AssetFileStampHelperTests
 
         var result = AssetFileStampHelper.ToDate(fileStamp);
 
+        Assert.NotNull(result);
         Assert.Equal(expectedDate, result);
         Assert.Equal(DateTimeKind.Utc, result.Value.Kind);
     }

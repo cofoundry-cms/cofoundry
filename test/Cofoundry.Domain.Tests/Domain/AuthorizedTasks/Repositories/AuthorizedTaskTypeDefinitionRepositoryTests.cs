@@ -56,12 +56,12 @@ public class AuthorizedTaskTypeDefinitionRepositoryTests
     [InlineData("хороше")]
     [InlineData("      ")]
     [InlineData(null)]
-    public void Constructor_WhenInvalidCode_Throws(string code)
+    public void Constructor_WhenInvalidCode_Throws(string? code)
     {
         var definitions = GetDefinitions();
         definitions.Add(new TestAuthorizedTaskTypeDefinition()
         {
-            AuthorizedTaskTypeCode = code,
+            AuthorizedTaskTypeCode = code!,
             Name = "A unique name"
         });
 
@@ -78,7 +78,7 @@ public class AuthorizedTaskTypeDefinitionRepositoryTests
         definitions.Add(new TestAuthorizedTaskTypeDefinition()
         {
             AuthorizedTaskTypeCode = "UNIQUE",
-            Name = null
+            Name = null!
         });
 
         FluentActions
@@ -134,7 +134,8 @@ public class AuthorizedTaskTypeDefinitionRepositoryTests
 
         using (new AssertionScope())
         {
-            result.AuthorizedTaskTypeCode.Should().Be(AuthorizedTaskTypeCode);
+            result.Should().NotBeNull();
+            result?.AuthorizedTaskTypeCode.Should().Be(AuthorizedTaskTypeCode);
         }
     }
 
@@ -161,21 +162,22 @@ public class AuthorizedTaskTypeDefinitionRepositoryTests
 
         using (new AssertionScope())
         {
-            result.AuthorizedTaskTypeCode.Should().Be(AuthorizedTaskTypeCode);
+            result.Should().NotBeNull();
+            result?.AuthorizedTaskTypeCode.Should().Be(AuthorizedTaskTypeCode);
         }
     }
 
     private class TestAuthorizedTaskTypeDefinition : IAuthorizedTaskTypeDefinition
     {
-        public string AuthorizedTaskTypeCode { get; set; }
+        public required string AuthorizedTaskTypeCode { get; set; }
 
-        public string Name { get; set; }
+        public required string Name { get; set; }
     }
 
     private List<IAuthorizedTaskTypeDefinition> GetDefinitions()
     {
-        return new List<IAuthorizedTaskTypeDefinition>()
-        {
+        return
+        [
             new TestAuthorizedTaskTypeDefinition()
             {
                 AuthorizedTaskTypeCode = "TST001",
@@ -191,6 +193,6 @@ public class AuthorizedTaskTypeDefinitionRepositoryTests
                 AuthorizedTaskTypeCode = "TST003",
                 Name = "Task 3"
             },
-        };
+        ];
     }
 }

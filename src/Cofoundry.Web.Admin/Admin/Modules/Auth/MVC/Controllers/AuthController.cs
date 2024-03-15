@@ -58,7 +58,10 @@ public class AuthController : Controller
     [AllowAnonymous]
     public async Task<ActionResult> Login()
     {
-        if (await IsLoggedInAsync()) return await GetLoggedInDefaultRedirectActionAsync();
+        if (await IsLoggedInAsync())
+        {
+            return await GetLoggedInDefaultRedirectActionAsync();
+        }
 
         var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(Login));
         var vm = new SignInViewModel();
@@ -68,7 +71,7 @@ public class AuthController : Controller
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<ActionResult> Login(string returnUrl, SignInViewModel viewModel)
+    public async Task<ActionResult> Login(string? returnUrl, SignInViewModel viewModel)
     {
         var authResult = await _contentRepository
             .WithModelState(this)
@@ -128,7 +131,11 @@ public class AuthController : Controller
     [AllowAnonymous]
     public async Task<ActionResult> ForgotPassword(string email)
     {
-        if (await IsLoggedInAsync()) return await GetLoggedInDefaultRedirectActionAsync();
+        if (await IsLoggedInAsync())
+        {
+            return await GetLoggedInDefaultRedirectActionAsync();
+        }
+
 
         var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
         return View(viewPath, new ForgotPasswordViewModel { Username = email });
@@ -155,7 +162,10 @@ public class AuthController : Controller
     [AllowAnonymous]
     public async Task<ActionResult> ResetPassword()
     {
-        if (await IsLoggedInAsync()) return await GetLoggedInDefaultRedirectActionAsync();
+        if (await IsLoggedInAsync())
+        {
+            return await GetLoggedInDefaultRedirectActionAsync();
+        }
 
         var token = _authorizedTaskTokenUrlHelper.ParseTokenFromQuery(Request.Query);
 
@@ -229,7 +239,10 @@ public class AuthController : Controller
     public async Task<ActionResult> ChangePassword(string returnUrl, ChangePasswordViewModel vm)
     {
         var redirectAction = await ValidateChangePasswordRouteAsync();
-        if (redirectAction != null) return redirectAction;
+        if (redirectAction != null)
+        {
+            return redirectAction;
+        }
 
         await _contentRepository
             .WithModelState(this)

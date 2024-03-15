@@ -61,7 +61,7 @@ public class UserAuthenticationHelperTests
         Assert.Throws<InvalidOperationException>(() => helper.VerifyPassword(user, "not required"));
     }
 
-    private IUserAreaDefinition CreateUserAreaDefinition(string code, bool allowPasswordLogin)
+    private static IUserAreaDefinition CreateUserAreaDefinition(string code, bool allowPasswordLogin)
     {
         var userAreaDefinition = new Mock<IUserAreaDefinition>();
         userAreaDefinition.SetupGet(o => o.AllowPasswordSignIn).Returns(allowPasswordLogin);
@@ -71,7 +71,7 @@ public class UserAuthenticationHelperTests
         return userAreaDefinition.Object;
     }
 
-    public UserAuthenticationHelper CreateUserAuthenticationHelper(params IUserAreaDefinition[] userAreaDefinitions)
+    public static UserAuthenticationHelper CreateUserAuthenticationHelper(params IUserAreaDefinition[] userAreaDefinitions)
     {
         // Admin user area needs to be added to always ensure ther eis a default
         var allDefinitions = userAreaDefinitions.Append(new CofoundryAdminUserArea(new AdminSettings()));

@@ -27,9 +27,9 @@ public class CompleteAuthorizedTaskCommandHandlerTests
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
         var addAuthorizedTaskCommand = await app
-                .TestData
-                .AuthorizedTasks()
-                .AddWithNewUserAsync(uniqueData, null);
+            .TestData
+            .AuthorizedTasks()
+            .AddWithNewUserAsync(uniqueData, null);
 
         await contentRepository
             .AuthorizedTasks()
@@ -67,9 +67,9 @@ public class CompleteAuthorizedTaskCommandHandlerTests
             .InvalidateBatchAsync(new InvalidateAuthorizedTaskBatchCommand(addAuthorizedTaskCommand.UserId));
 
         await contentRepository
-                .Awaiting(r => r.AuthorizedTasks().CompleteAsync(new CompleteAuthorizedTaskCommand(addAuthorizedTaskCommand.OutputAuthorizedTaskId)))
-                .Should()
-                .ThrowAsync<InvalidOperationException>()
-                .WithMessage("* marked as invalid.");
+            .Awaiting(r => r.AuthorizedTasks().CompleteAsync(new CompleteAuthorizedTaskCommand(addAuthorizedTaskCommand.OutputAuthorizedTaskId)))
+            .Should()
+            .ThrowAsync<InvalidOperationException>()
+            .WithMessage("* marked as invalid.");
     }
 }

@@ -35,10 +35,7 @@ public class UserTestDataHelper
     {
         var command = CreateAddCommand(uniqueData);
 
-        if (configration != null)
-        {
-            configration(command);
-        }
+        configration?.Invoke(command);
 
         using var scope = _serviceProvider.CreateScope();
         var contentRepository = scope.ServiceProvider.GetRequiredService<IAdvancedContentRepository>();
@@ -65,16 +62,13 @@ public class UserTestDataHelper
     /// <returns>The UserId of the newly created user.</returns>
     public async Task<int> AddAsync(
         string uniqueData,
-        string domainUniqueData = null,
-        Action<AddUserCommand> configration = null
+        string? domainUniqueData = null,
+        Action<AddUserCommand>? configration = null
         )
     {
         var command = CreateAddCommand(uniqueData, domainUniqueData);
 
-        if (configration != null)
-        {
-            configration(command);
-        }
+        configration?.Invoke(command);
 
         using var scope = _serviceProvider.CreateScope();
         var contentRepository = scope.ServiceProvider.GetRequiredService<IAdvancedContentRepository>();
@@ -95,7 +89,7 @@ public class UserTestDataHelper
     /// <param name="domainUniqueData">
     /// Optional unique data to use in creating the email domain and last name properties. 
     /// </param>
-    public AddUserCommand CreateAddCommand(string uniqueData, string domainUniqueData = null)
+    public AddUserCommand CreateAddCommand(string uniqueData, string? domainUniqueData = null)
     {
         var domain = "example.com";
 

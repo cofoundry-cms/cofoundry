@@ -28,19 +28,19 @@ public class InvalidateAuthorizedTaskBatchCommandTests
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 
         var addAuthorizedTaskCommand = await app
-                .TestData
-                .AuthorizedTasks()
-                .AddWithNewUserAsync(uniqueData, null);
+            .TestData
+            .AuthorizedTasks()
+            .AddWithNewUserAsync(uniqueData, null);
 
         var addAuthorizedTaskCommand2 = await app
-                .TestData
-                .AuthorizedTasks()
-                .AddWithNewUserAsync(uniqueData + "2", null);
+            .TestData
+            .AuthorizedTasks()
+            .AddWithNewUserAsync(uniqueData + "2", null);
 
         var command = await app
-                .TestData
-                .AuthorizedTasks()
-                .AddAsync(addAuthorizedTaskCommand.UserId, null);
+            .TestData
+            .AuthorizedTasks()
+            .AddAsync(addAuthorizedTaskCommand.UserId, null);
 
         await contentRepository
             .AuthorizedTasks()
@@ -50,7 +50,7 @@ public class InvalidateAuthorizedTaskBatchCommandTests
             .AuthorizedTasks
             .AsNoTracking()
             .Where(t => t.UserId == addAuthorizedTaskCommand.UserId || t.UserId == addAuthorizedTaskCommand2.UserId)
-            .ToListAsync();
+            .ToArrayAsync();
 
         var invalidatedTasks = authorizedTasks.Where(t => t.UserId == addAuthorizedTaskCommand.UserId && t.InvalidatedDate.HasValue);
         var ignoredTask = authorizedTasks.Where(t => t.UserId == addAuthorizedTaskCommand2.UserId && !t.InvalidatedDate.HasValue);

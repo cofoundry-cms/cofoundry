@@ -16,7 +16,7 @@ public class RolesApiController : BaseAdminApiController
         _apiResponseHelper = apiResponseHelper;
     }
 
-    public async Task<JsonResult> Get([FromQuery] SearchRolesQuery query)
+    public async Task<JsonResult> Get([FromQuery] SearchRolesQuery? query)
     {
         query ??= new SearchRolesQuery();
         ApiPagingHelper.SetDefaultBounds(query);

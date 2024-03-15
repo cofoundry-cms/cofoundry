@@ -36,11 +36,11 @@ public class GetPageAccessRuleSetDetailsByIdPageQueryHandlerTests
         using (new AssertionScope())
         {
             accessDetails.Should().NotBeNull();
-            accessDetails.PageId.Should().Be(pageId);
-            accessDetails.AccessRules.Should().NotBeNull().And.BeEmpty();
-            accessDetails.InheritedAccessRules.Should().NotBeNull().And.BeEmpty();
-            accessDetails.UserAreaForSignInRedirect.Should().BeNull();
-            accessDetails.ViolationAction.Should().Be(AccessRuleViolationAction.Error);
+            accessDetails?.PageId.Should().Be(pageId);
+            accessDetails?.AccessRules.Should().NotBeNull().And.BeEmpty();
+            accessDetails?.InheritedAccessRules.Should().NotBeNull().And.BeEmpty();
+            accessDetails?.UserAreaForSignInRedirect.Should().BeNull();
+            accessDetails?.ViolationAction.Should().Be(AccessRuleViolationAction.Error);
         }
     }
 
@@ -119,9 +119,15 @@ public class GetPageAccessRuleSetDetailsByIdPageQueryHandlerTests
         using (new AssertionScope())
         {
             accessDetails.Should().NotBeNull();
+
+            if (accessDetails == null)
+            {
+                return;
+            }
+
             accessDetails.UserAreaForSignInRedirect.Should().NotBeNull();
-            accessDetails.UserAreaForSignInRedirect.UserAreaCode.Should().Be(userArea1.UserAreaCode);
-            accessDetails.UserAreaForSignInRedirect.Name.Should().Be(userArea1.Definition.Name);
+            accessDetails.UserAreaForSignInRedirect?.UserAreaCode.Should().Be(userArea1.UserAreaCode);
+            accessDetails.UserAreaForSignInRedirect?.Name.Should().Be(userArea1.Definition.Name);
             accessDetails.ViolationAction.Should().Be(command.ViolationAction);
             accessDetails.InheritedAccessRules.Should().NotBeNull().And.BeEmpty();
             accessDetails.AccessRules.Should().HaveCount(3);
@@ -137,13 +143,19 @@ public class GetPageAccessRuleSetDetailsByIdPageQueryHandlerTests
         }
 
         static void ValidateRuleMapping(
-            PageAccessRuleSummary rule,
+            PageAccessRuleSummary? rule,
             SeedData.TestUserAreaInfo userArea,
             int pageId,
             bool hasRole
             )
         {
             rule.Should().NotBeNull();
+
+            if (rule == null)
+            {
+                return;
+            }
+
             rule.PageAccessRuleId.Should().BePositive();
             rule.PageId.Should().Be(pageId);
 
@@ -154,8 +166,8 @@ public class GetPageAccessRuleSetDetailsByIdPageQueryHandlerTests
             if (hasRole)
             {
                 rule.Role.Should().NotBeNull();
-                rule.Role.RoleId.Should().Be(userArea.RoleA.RoleId);
-                rule.Role.Title.Should().NotBeNullOrWhiteSpace();
+                rule.Role?.RoleId.Should().Be(userArea.RoleA.RoleId);
+                rule.Role?.Title.Should().NotBeNullOrWhiteSpace();
             }
             else
             {
@@ -201,13 +213,24 @@ public class GetPageAccessRuleSetDetailsByIdPageQueryHandlerTests
         using (new AssertionScope())
         {
             accessDetails.Should().NotBeNull();
+
+            if (accessDetails == null)
+            {
+                return;
+            }
+
             accessDetails.AccessRules.Should().NotBeNull().And.BeEmpty();
             accessDetails.InheritedAccessRules.Should().HaveCount(2);
 
             var ruleSet1 = accessDetails.InheritedAccessRules.FirstOrDefault();
+            if (ruleSet1 == null)
+            {
+                return;
+            }
+
             ruleSet1.UserAreaForSignInRedirect.Should().NotBeNull();
-            ruleSet1.UserAreaForSignInRedirect.UserAreaCode.Should().Be(userArea2.UserAreaCode);
-            ruleSet1.UserAreaForSignInRedirect.Name.Should().Be(userArea2.Definition.Name);
+            ruleSet1.UserAreaForSignInRedirect?.UserAreaCode.Should().Be(userArea2.UserAreaCode);
+            ruleSet1.UserAreaForSignInRedirect?.Name.Should().Be(userArea2.Definition.Name);
             ruleSet1.ViolationAction.Should().Be(AccessRuleViolationAction.NotFound);
             ruleSet1.AccessRules.Should().HaveCount(2);
 
@@ -218,6 +241,10 @@ public class GetPageAccessRuleSetDetailsByIdPageQueryHandlerTests
             ValidateRuleMapping(rule2, userArea2, directory1Id, false);
 
             var ruleSet2 = accessDetails.InheritedAccessRules.Skip(1).FirstOrDefault();
+            if (ruleSet2 == null)
+            {
+                return;
+            }
             ruleSet2.UserAreaForSignInRedirect.Should().BeNull();
             ruleSet2.ViolationAction.Should().Be(AccessRuleViolationAction.Error);
             ruleSet2.AccessRules.Should().HaveCount(1);
@@ -227,13 +254,19 @@ public class GetPageAccessRuleSetDetailsByIdPageQueryHandlerTests
         }
 
         static void ValidateRuleMapping(
-            PageDirectoryAccessRuleSummary rule,
+            PageDirectoryAccessRuleSummary? rule,
             SeedData.TestUserAreaInfo userArea,
             int directoryId,
             bool hasRole
             )
         {
             rule.Should().NotBeNull();
+
+            if (rule == null)
+            {
+                return;
+            }
+
             rule.PageDirectoryAccessRuleId.Should().BePositive();
             rule.PageDirectoryId.Should().Be(directoryId);
 
@@ -244,8 +277,8 @@ public class GetPageAccessRuleSetDetailsByIdPageQueryHandlerTests
             if (hasRole)
             {
                 rule.Role.Should().NotBeNull();
-                rule.Role.RoleId.Should().Be(userArea.RoleA.RoleId);
-                rule.Role.Title.Should().NotBeNullOrWhiteSpace();
+                rule.Role?.RoleId.Should().Be(userArea.RoleA.RoleId);
+                rule.Role?.Title.Should().NotBeNullOrWhiteSpace();
             }
             else
             {

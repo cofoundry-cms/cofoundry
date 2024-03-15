@@ -17,7 +17,7 @@ public class AuthorizedTaskCleanupBackgroundTaskTests
     [Fact]
     public async Task WhenEnabled_Runs()
     {
-        CleanupAuthorizedTasksCommand executedCommand = null;
+        CleanupAuthorizedTasksCommand? executedCommand = null;
         using var app = _appFactory.Create(s =>
         {
             s.Configure<AuthorizedTaskCleanupSettings>(c => c.RetentionPeriodInDays = 11);
@@ -30,14 +30,14 @@ public class AuthorizedTaskCleanupBackgroundTaskTests
         using (new AssertionScope())
         {
             executedCommand.Should().NotBeNull();
-            executedCommand.RetentionPeriod.Should().Be(TimeSpan.FromDays(11));
+            executedCommand?.RetentionPeriod.Should().Be(TimeSpan.FromDays(11));
         }
     }
 
     [Fact]
     public async Task WhenDisabled_DoesNotRun()
     {
-        CleanupAuthorizedTasksCommand executedCommand = null;
+        CleanupAuthorizedTasksCommand? executedCommand = null;
         using var app = _appFactory.Create(s =>
         {
             s.Configure<AuthorizedTaskCleanupSettings>(c => c.Enabled = false);
@@ -58,7 +58,7 @@ public class AuthorizedTaskCleanupBackgroundTaskTests
     [InlineData(-1)]
     public async Task WhenInvalidRetentionPeriod_DoesNotRun(int? retentionPeriodInDays)
     {
-        CleanupAuthorizedTasksCommand executedCommand = null;
+        CleanupAuthorizedTasksCommand? executedCommand = null;
         using var app = _appFactory.Create(s =>
         {
             s.Configure<AuthorizedTaskCleanupSettings>(c => c.RetentionPeriodInDays = retentionPeriodInDays);

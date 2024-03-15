@@ -35,11 +35,11 @@ public class GetPageEntityMicroSummariesByIdRangeQueryHandlerTests
 
             var page1 = pageLookup.GetValueOrDefault(page1Id);
             page1.Should().NotBeNull();
-            page1.EntityDefinitionCode.Should().Be(PageEntityDefinition.DefinitionCode);
-            page1.EntityDefinitionName.Should().Be(new PageEntityDefinition().Name);
-            page1.IsPreviousVersion.Should().BeFalse();
-            page1.RootEntityId.Should().Be(page1Id);
-            page1.RootEntityTitle.Should().Be(uniqueData + "1");
+            page1?.EntityDefinitionCode.Should().Be(PageEntityDefinition.DefinitionCode);
+            page1?.EntityDefinitionName.Should().Be(new PageEntityDefinition().Name);
+            page1?.IsPreviousVersion.Should().BeFalse();
+            page1?.RootEntityId.Should().Be(page1Id);
+            page1?.RootEntityTitle.Should().Be(uniqueData + "1");
 
             var page2 = pageLookup.GetValueOrDefault(page2Id);
             page2.Should().NotBeNull();

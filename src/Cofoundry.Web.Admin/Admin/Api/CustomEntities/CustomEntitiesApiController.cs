@@ -16,9 +16,12 @@ public class CustomEntitiesApiController : BaseAdminApiController
         _apiResponseHelper = apiResponseHelper;
     }
 
-    public async Task<JsonResult> Get([FromQuery] SearchCustomEntitySummariesQuery query, [FromQuery] GetCustomEntitySummariesByIdRangeQuery rangeQuery)
+    public async Task<JsonResult> Get(
+        [FromQuery] SearchCustomEntitySummariesQuery? query,
+        [FromQuery] GetCustomEntitySummariesByIdRangeQuery? rangeQuery
+        )
     {
-        if (rangeQuery != null && rangeQuery.CustomEntityIds != null)
+        if (rangeQuery != null && !EnumerableHelper.IsNullOrEmpty(rangeQuery.CustomEntityIds))
         {
             return await _apiResponseHelper.RunWithResultAsync(async () =>
             {

@@ -93,7 +93,7 @@ public class UnstructuredDataTestDataHelper
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task<UnstructuredDataDependency> GetAsync<TEntityDefinition>(int entityId)
+    public async Task<UnstructuredDataDependency?> GetAsync<TEntityDefinition>(int entityId)
         where TEntityDefinition : IEntityDefinition, new()
     {
         using var scope = _serviceProvider.CreateScope();

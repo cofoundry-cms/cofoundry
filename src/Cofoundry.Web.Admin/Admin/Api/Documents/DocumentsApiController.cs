@@ -18,11 +18,11 @@ public class DocumentsApiController : BaseAdminApiController
     }
 
     public async Task<JsonResult> Get(
-        [FromQuery] SearchDocumentAssetSummariesQuery query,
-        [FromQuery] GetDocumentAssetRenderDetailsByIdRangeQuery rangeQuery
+        [FromQuery] SearchDocumentAssetSummariesQuery? query,
+        [FromQuery] GetDocumentAssetRenderDetailsByIdRangeQuery? rangeQuery
         )
     {
-        if (rangeQuery != null && rangeQuery.DocumentAssetIds != null)
+        if (rangeQuery != null && !EnumerableHelper.IsNullOrEmpty(rangeQuery.DocumentAssetIds))
         {
             return await _apiResponseHelper.RunWithResultAsync(async () =>
             {

@@ -32,7 +32,8 @@ public class InitiateUserAccountVerificationViaEmailCommandHandlerTests
         {
             authenticatedTask.Should().NotBeNull();
             authenticatedTask.CreateDate.Should().NotBeDefault();
-            authenticatedTask.IPAddress.Address.Should().Be(TestIPAddresses.Localhost);
+            authenticatedTask.IPAddress.Should().NotBeNull();
+            authenticatedTask.IPAddress?.Address.Should().Be(TestIPAddresses.Localhost);
             authenticatedTask.CompletedDate.Should().BeNull();
             authenticatedTask.InvalidatedDate.Should().BeNull();
             authenticatedTask.AuthorizationCode.Should().NotBeEmpty();
@@ -122,7 +123,7 @@ public class InitiateUserAccountVerificationViaEmailCommandHandlerTests
 
         app.Mocks
             .CountDispatchedMail(
-                authenticatedTask.User.Email,
+                authenticatedTask.User.Email!,
                 "Please verify your account ",
                 "Test Site",
                 TestUserArea1.VerificationUrlBase,
@@ -164,13 +165,13 @@ public class InitiateUserAccountVerificationViaEmailCommandHandlerTests
     private static async Task<AuthorizedTask> AddUserAndInitiate(
         string uniqueData,
         DbDependentTestApplication app,
-        Action<AddUserCommand> configration = null
+        Action<AddUserCommand>? configration = null
         )
     {
         var contentRepository = app.Services.GetContentRepository();
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
         var addUserCommand = app.TestData.Users().CreateAddCommand(uniqueData);
-        if (configration != null) configration(addUserCommand);
+        configration?.Invoke(addUserCommand);
 
         var userId = await contentRepository
             .WithElevatedPermissions()

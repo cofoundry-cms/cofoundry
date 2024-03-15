@@ -7,7 +7,7 @@ public class RelativePathHelperTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("    ")]
-    public void Combine_WhenNullOrWhitespace_ReturnsEmptyPath(string s)
+    public void Combine_WhenNullOrWhitespace_ReturnsEmptyPath(string? s)
     {
         var result = RelativePathHelper.Combine(s);
 
@@ -19,7 +19,7 @@ public class RelativePathHelperTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("    ")]
-    public void Combine_WhenMultipleNullOrWhitespace_ReturnsPath(string s)
+    public void Combine_WhenMultipleNullOrWhitespace_ReturnsPath(string? s)
     {
         var result = RelativePathHelper.Combine(s, s, s);
 
@@ -43,7 +43,7 @@ public class RelativePathHelperTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("    ")]
-    public void IsWellFormattedAndEqual_WhenNullOrEmpty_ReturnsFalse(string path)
+    public void IsWellFormattedAndEqual_WhenNullOrEmpty_ReturnsFalse(string? path)
     {
         var bothResult = RelativePathHelper.IsWellFormattedAndEqual(path, path);
         var path1Result = RelativePathHelper.IsWellFormattedAndEqual(path, "/mypath");

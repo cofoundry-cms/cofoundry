@@ -142,8 +142,8 @@ public class ValidateUsernameQueryHandlerTests
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be("cf-user-username-" + codeSuffix);
-            result.Error.Message.Should().Match(messagePattern);
+            result.Error?.ErrorCode.Should().Be("cf-user-username-" + codeSuffix);
+            result.Error?.Message.Should().Match(messagePattern);
         }
     }
 

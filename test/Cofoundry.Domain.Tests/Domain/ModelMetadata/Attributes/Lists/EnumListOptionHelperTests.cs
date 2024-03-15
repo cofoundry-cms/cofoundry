@@ -15,20 +15,20 @@ public class EnumListOptionHelperTests
             result.Should().NotBeNullOrEmpty();
             result.Should().HaveCount(5);
 
-            result[0].Text.Should().Be("None");
-            result[0].Value.Should().Be("None");
+            result?[0].Text.Should().Be("None");
+            result?[0].Value.Should().Be("None");
 
-            result[1].Text.Should().Be("Item one");
-            result[1].Value.Should().Be("ItemOne");
+            result?[1].Text.Should().Be("Item one");
+            result?[1].Value.Should().Be("ItemOne");
 
-            result[2].Text.Should().Be("Item 2");
-            result[2].Value.Should().Be("ItemTwo");
+            result?[2].Text.Should().Be("Item 2");
+            result?[2].Value.Should().Be("ItemTwo");
 
-            result[3].Text.Should().Be("Item three and four");
-            result[3].Value.Should().Be("ItemThreeAndFour");
+            result?[3].Text.Should().Be("Item three and four");
+            result?[3].Value.Should().Be("ItemThreeAndFour");
 
-            result[4].Text.Should().Be("88");
-            result[4].Value.Should().Be("ItemEightyEight");
+            result?[4].Text.Should().Be("88");
+            result?[4].Value.Should().Be("ItemEightyEight");
         }
     }
 

@@ -77,7 +77,7 @@ public class ValidateUserAccountRecoveryByEmailQueryHandlerTests
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.Expired.ErrorCode);
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.Expired.ErrorCode);
         }
     }
 
@@ -118,7 +118,7 @@ public class ValidateUserAccountRecoveryByEmailQueryHandlerTests
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.AlreadyComplete.ErrorCode);
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.AlreadyComplete.ErrorCode);
         }
     }
 
@@ -152,7 +152,7 @@ public class ValidateUserAccountRecoveryByEmailQueryHandlerTests
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.Invalidated.ErrorCode);
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.Invalidated.ErrorCode);
         }
     }
 
@@ -184,7 +184,7 @@ public class ValidateUserAccountRecoveryByEmailQueryHandlerTests
             result.Should().NotBeNull();
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().NotBeNull();
-            result.Error.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.NotFound.ErrorCode);
+            result.Error?.ErrorCode.Should().Be(UserValidationErrors.AccountRecovery.RequestValidation.NotFound.ErrorCode);
         }
     }
 
@@ -218,7 +218,7 @@ public class ValidateUserAccountRecoveryByEmailQueryHandlerTests
             .InitiateAsync(new InitiateUserAccountRecoveryViaEmailCommand()
             {
                 UserAreaCode = addUserCommand.UserAreaCode,
-                Username = addUserCommand.Email
+                Username = addUserCommand.Email!
             });
 
         var authorizedTask = await dbContext

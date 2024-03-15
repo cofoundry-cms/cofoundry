@@ -20,7 +20,7 @@ public class GetPageRoutingInfoByPathQueryHandlerTests
     [InlineData("/bad-pa^th/")]
     [InlineData("")]
     [InlineData(null)]
-    public async Task WhenMalformedPath_ReturnsNull(string path)
+    public async Task WhenMalformedPath_ReturnsNull(string? path)
     {
         using var app = _appFactory.Create();
 
@@ -30,7 +30,7 @@ public class GetPageRoutingInfoByPathQueryHandlerTests
             .GetByPath()
             .AsRoutingInfo(new GetPageRoutingInfoByPathQuery()
             {
-                Path = path
+                Path = path!
             })
             .ExecuteAsync();
 
@@ -109,7 +109,7 @@ public class GetPageRoutingInfoByPathQueryHandlerTests
             .ExecuteAsync();
 
         page.Should().NotBeNull();
-        page.PageRoute.PageId.Should().Be(pageId);
+        page?.PageRoute.PageId.Should().Be(pageId);
     }
 
     [Fact]
@@ -135,10 +135,10 @@ public class GetPageRoutingInfoByPathQueryHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.CustomEntityRoute.Should().BeNull();
-            page.CustomEntityRouteRule.Should().BeNull();
-            page.PageRoute.Should().NotBeNull();
-            page.PageRoute.PageId.Should().Be(pageId);
+            page?.CustomEntityRoute.Should().BeNull();
+            page?.CustomEntityRouteRule.Should().BeNull();
+            page?.PageRoute.Should().NotBeNull();
+            page?.PageRoute.PageId.Should().Be(pageId);
         }
     }
 
@@ -166,12 +166,12 @@ public class GetPageRoutingInfoByPathQueryHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.CustomEntityRoute.Should().NotBeNull();
-            page.CustomEntityRoute.CustomEntityId.Should().Be(customEntityId);
-            page.CustomEntityRouteRule.Should().NotBeNull();
-            page.CustomEntityRouteRule.Should().BeOfType<IdAndUrlSlugCustomEntityRoutingRule>();
-            page.PageRoute.Should().NotBeNull();
-            page.PageRoute.PageId.Should().Be(pageId);
+            page?.CustomEntityRoute.Should().NotBeNull();
+            page?.CustomEntityRoute?.CustomEntityId.Should().Be(customEntityId);
+            page?.CustomEntityRouteRule.Should().NotBeNull();
+            page?.CustomEntityRouteRule.Should().BeOfType<IdAndUrlSlugCustomEntityRoutingRule>();
+            page?.PageRoute.Should().NotBeNull();
+            page?.PageRoute.PageId.Should().Be(pageId);
         }
     }
 
@@ -198,9 +198,9 @@ public class GetPageRoutingInfoByPathQueryHandlerTests
             .ExecuteAsync();
 
         page.Should().NotBeNull();
-        page.PageRoute.PageId.Should().Be(pageId);
-        page.CustomEntityRoute.Should().NotBeNull();
-        page.CustomEntityRoute.CustomEntityId.Should().Be(customEntityId);
+        page?.PageRoute.PageId.Should().Be(pageId);
+        page?.CustomEntityRoute.Should().NotBeNull();
+        page?.CustomEntityRoute?.CustomEntityId.Should().Be(customEntityId);
     }
 
     [Fact]

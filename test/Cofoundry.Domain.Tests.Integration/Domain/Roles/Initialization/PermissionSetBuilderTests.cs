@@ -172,7 +172,7 @@ public class PermissionSetBuilderTests
         }
     }
 
-    private IEnumerable<IPermission> GetPermissions(IServiceProvider serviceProvider)
+    private static IEnumerable<IPermission> GetPermissions(IServiceProvider serviceProvider)
     {
         var permissionsRepository = serviceProvider.GetRequiredService<IPermissionRepository>();
         var permissions = permissionsRepository.GetAll();
@@ -180,7 +180,7 @@ public class PermissionSetBuilderTests
         return permissions;
     }
 
-    private IPermissionSetBuilder CreateBuilder(IServiceProvider serviceProvider, IEnumerable<IPermission> permissions)
+    private static IPermissionSetBuilder CreateBuilder(IServiceProvider serviceProvider, IEnumerable<IPermission> permissions)
     {
         var factory = serviceProvider.GetRequiredService<IPermissionSetBuilderFactory>();
         var builder = factory.Create(permissions);

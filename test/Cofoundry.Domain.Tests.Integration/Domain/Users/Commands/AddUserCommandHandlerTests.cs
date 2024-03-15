@@ -54,6 +54,11 @@ public class AddUserCommandHandlerTests
         {
             command.OutputUserId.Should().BePositive();
             user.Should().NotBeNull();
+            if (user == null)
+            {
+                return;
+            }
+
             user.FirstName.Should().BeNull();
             user.LastName.Should().BeNull();
             user.DisplayName.Should().BeNull();
@@ -76,7 +81,7 @@ public class AddUserCommandHandlerTests
             user.UserAreaCode.Should().Be(command.UserAreaCode);
             user.Username.Should().Be(command.Email);
             user.UniqueUsername.Should().Be(lowerEmail);
-            user.EmailDomain.Name.Should().Be("example.com");
+            user.EmailDomain?.Name.Should().Be("example.com");
             user.SecurityStamp.Should().NotBeNullOrEmpty().And.HaveLength(32);
         }
     }
@@ -113,9 +118,9 @@ public class AddUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.FirstName.Should().Be(command.FirstName);
-            user.LastName.Should().Be(command.LastName);
-            user.DisplayName.Should().Be(command.DisplayName);
+            user?.FirstName.Should().Be(command.FirstName);
+            user?.LastName.Should().Be(command.LastName);
+            user?.DisplayName.Should().Be(command.DisplayName);
         }
     }
 
@@ -151,7 +156,7 @@ public class AddUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.DisplayName.Should().Be(user.Username);
+            user?.DisplayName.Should().Be(user.Username);
         }
     }
 
@@ -190,7 +195,7 @@ public class AddUserCommandHandlerTests
         {
             command.OutputUserId.Should().BePositive();
             user.Should().NotBeNull();
-            user.RoleId.Should().Be(roleId);
+            user?.RoleId.Should().Be(roleId);
         }
     }
 
@@ -227,7 +232,7 @@ public class AddUserCommandHandlerTests
         {
             command.OutputUserId.Should().BePositive();
             user.Should().NotBeNull();
-            user.RequirePasswordChange.Should().BeTrue();
+            user?.RequirePasswordChange.Should().BeTrue();
         }
     }
 
@@ -264,7 +269,7 @@ public class AddUserCommandHandlerTests
         {
             command.OutputUserId.Should().BePositive();
             user.Should().NotBeNull();
-            user.AccountVerifiedDate.Should().NotBeNull().And.NotBeDefault();
+            user?.AccountVerifiedDate.Should().NotBeNull().And.NotBeDefault();
         }
     }
 
@@ -377,8 +382,8 @@ public class AddUserCommandHandlerTests
         {
             command.OutputUserId.Should().BePositive();
             user.Should().NotBeNull();
-            user.Username.Should().Be(command.Username);
-            user.Email.Should().Be(command.Email);
+            user?.Username.Should().Be(command.Username);
+            user?.Email.Should().Be(command.Email);
         }
     }
 
@@ -507,8 +512,8 @@ public class AddUserCommandHandlerTests
         {
             command.OutputUserId.Should().BePositive();
             user.Should().NotBeNull();
-            user.Username.Should().Be(command.Username);
-            user.Email.Should().BeNull();
+            user?.Username.Should().Be(command.Username);
+            user?.Email.Should().BeNull();
         }
     }
 

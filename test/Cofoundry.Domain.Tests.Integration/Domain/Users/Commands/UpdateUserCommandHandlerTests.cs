@@ -10,7 +10,7 @@ public class UpdateUserCommandHandlerTests
 {
     private const string UNIQUE_PREFIX = "UpdUsrCHT-";
     private const string PASSWORD = "neverbr3@kthechange";
-    private static string EMAIL_DOMAIN = $"@{UNIQUE_PREFIX}.example.com";
+    private const string EMAIL_DOMAIN = $"@{UNIQUE_PREFIX}.example.com";
     private readonly DbDependentTestApplicationFactory _appFactory;
 
     public UpdateUserCommandHandlerTests(
@@ -46,6 +46,7 @@ public class UpdateUserCommandHandlerTests
             .AddAsync(addCommand);
 
         var originalUserState = await GetUserByIdAsync(app, userId);
+        EntityNotFoundException.ThrowIfNull(originalUserState, userId);
 
         var updateCommand = MapUpdateCommand(addCommand);
         updateCommand.Email = "E.john@" + alternateDomain;
@@ -66,19 +67,20 @@ public class UpdateUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.FirstName.Should().Be(updateCommand.FirstName);
-            user.LastName.Should().Be(updateCommand.LastName);
-            user.DisplayName.Should().Be(updateCommand.DisplayName);
-            user.Email.Should().Be(normalizedEmail);
-            user.UniqueEmail.Should().Be(lowerEmail);
-            user.Username.Should().Be(normalizedEmail);
-            user.UniqueUsername.Should().Be(lowerEmail);
-            user.AccountVerifiedDate.Should().BeNull();
-            user.DeactivatedDate.Should().BeNull();
-            user.RequirePasswordChange.Should().BeFalse();
-            user.EmailDomain.Name.Should().Be(normalizedDomain);
-            user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
-            user.AccountVerifiedDate.Should().BeNull();
+            user?.FirstName.Should().Be(updateCommand.FirstName);
+            user?.LastName.Should().Be(updateCommand.LastName);
+            user?.DisplayName.Should().Be(updateCommand.DisplayName);
+            user?.Email.Should().Be(normalizedEmail);
+            user?.UniqueEmail.Should().Be(lowerEmail);
+            user?.Username.Should().Be(normalizedEmail);
+            user?.UniqueUsername.Should().Be(lowerEmail);
+            user?.AccountVerifiedDate.Should().BeNull();
+            user?.DeactivatedDate.Should().BeNull();
+            user?.RequirePasswordChange.Should().BeFalse();
+            user?.EmailDomain.Should().NotBeNull();
+            user?.EmailDomain?.Name.Should().Be(normalizedDomain);
+            user?.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
+            user?.AccountVerifiedDate.Should().BeNull();
         }
     }
 
@@ -118,7 +120,7 @@ public class UpdateUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.DisplayName.Should().Be(updateCommand.DisplayName);
+            user?.DisplayName.Should().Be(updateCommand.DisplayName);
         }
     }
 
@@ -148,6 +150,7 @@ public class UpdateUserCommandHandlerTests
             .AddAsync(addCommand);
 
         var originalUserState = await GetUserByIdAsync(app, userId);
+        EntityNotFoundException.ThrowIfNull(originalUserState, userId);
 
         var updateCommand = MapUpdateCommand(addCommand);
         updateCommand.Email = null;
@@ -163,15 +166,15 @@ public class UpdateUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.FirstName.Should().BeNull();
-            user.LastName.Should().BeNull();
-            user.DisplayName.Should().BeNull();
-            user.Email.Should().BeNull();
-            user.UniqueEmail.Should().BeNull();
-            user.EmailDomainId.Should().BeNull();
-            user.Username.Should().Be(addCommand.Username);
-            user.UniqueUsername.Should().Be(addCommand.Username.ToLowerInvariant());
-            user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
+            user?.FirstName.Should().BeNull();
+            user?.LastName.Should().BeNull();
+            user?.DisplayName.Should().BeNull();
+            user?.Email.Should().BeNull();
+            user?.UniqueEmail.Should().BeNull();
+            user?.EmailDomainId.Should().BeNull();
+            user?.Username.Should().Be(addCommand.Username);
+            user?.UniqueUsername.Should().Be(addCommand.Username.ToLowerInvariant());
+            user?.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
         }
     }
 
@@ -210,7 +213,7 @@ public class UpdateUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.RoleId.Should().Be(updateCommand.RoleId);
+            user?.RoleId.Should().Be(updateCommand.RoleId);
         }
     }
 
@@ -247,7 +250,7 @@ public class UpdateUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.Role.RoleCode.Should().Be(updateCommand.RoleCode);
+            user?.Role.RoleCode.Should().Be(updateCommand.RoleCode);
         }
     }
 
@@ -331,6 +334,7 @@ public class UpdateUserCommandHandlerTests
             .AddAsync(addCommand);
 
         var originalUser = await GetUserByIdAsync(app, userId);
+        EntityNotFoundException.ThrowIfNull(originalUser, userId);
 
         var updateCommand = MapUpdateCommand(addCommand);
         updateCommand.RequirePasswordChange = true;
@@ -344,8 +348,8 @@ public class UpdateUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.RequirePasswordChange.Should().BeTrue();
-            user.SecurityStamp.Should().NotBe(originalUser.SecurityStamp);
+            user?.RequirePasswordChange.Should().BeTrue();
+            user?.SecurityStamp.Should().NotBe(originalUser.SecurityStamp);
             app.Mocks
                 .CountMessagesPublished<UserSecurityStampUpdatedMessage>()
                 .Should().Be(1);
@@ -379,7 +383,7 @@ public class UpdateUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.AccountVerifiedDate.Should().HaveValue();
+            user?.AccountVerifiedDate.Should().HaveValue();
             app.Mocks
                 .CountMessagesPublished<UserAccountVerificationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode && m.IsVerified)
                 .Should().Be(1);
@@ -413,7 +417,7 @@ public class UpdateUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.AccountVerifiedDate.Should().BeNull();
+            user?.AccountVerifiedDate.Should().BeNull();
             app.Mocks
                 .CountMessagesPublished<UserAccountVerificationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode && !m.IsVerified)
                 .Should().Be(1);
@@ -447,7 +451,7 @@ public class UpdateUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.DeactivatedDate.Should().BeNull();
+            user?.DeactivatedDate.Should().BeNull();
             app.Mocks
                 .CountMessagesPublished<UserActivationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode && m.IsActive)
                 .Should().Be(1);
@@ -472,6 +476,7 @@ public class UpdateUserCommandHandlerTests
             .AddAsync(addCommand);
 
         var originalUserState = await GetUserByIdAsync(app, userId);
+        EntityNotFoundException.ThrowIfNull(originalUserState, userId);
 
         var updateCommand = MapUpdateCommand(addCommand);
         updateCommand.IsActive = false;
@@ -485,8 +490,8 @@ public class UpdateUserCommandHandlerTests
         using (new AssertionScope())
         {
             user.Should().NotBeNull();
-            user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
-            user.DeactivatedDate.Should().NotBeNull();
+            user?.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
+            user?.DeactivatedDate.Should().NotBeNull();
             app.Mocks
                 .CountMessagesPublished<UserActivationStatusUpdatedMessage>(m => m.UserId == addCommand.OutputUserId && m.UserAreaCode == addCommand.UserAreaCode && !m.IsActive)
                 .Should().Be(1);
@@ -541,13 +546,14 @@ public class UpdateUserCommandHandlerTests
     {
         using var app = _appFactory.Create();
         var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
-        var userContextService = app.Services.GetService<IUserContextService>();
+        var userContextService = app.Services.GetRequiredService<IUserContextService>();
 
         var systemUser = await userContextService.GetSystemUserContextAsync();
+        EntityNotFoundException.ThrowIfNull(systemUser);
 
         var command = new UpdateUserCommand()
         {
-            UserId = systemUser.UserId.Value,
+            UserId = systemUser.UserId!.Value,
             RoleId = systemUser.RoleId,
             FirstName = "Trolo",
             LastName = "Lo"
@@ -694,7 +700,7 @@ public class UpdateUserCommandHandlerTests
         }
     }
 
-    private UpdateUserCommand MapUpdateCommand(AddUserCommand command)
+    private static UpdateUserCommand MapUpdateCommand(AddUserCommand command)
     {
         return new UpdateUserCommand()
         {
@@ -711,7 +717,7 @@ public class UpdateUserCommandHandlerTests
         };
     }
 
-    private async Task<User> GetUserByIdAsync(DbDependentTestApplication app, int userId)
+    private static async Task<User?> GetUserByIdAsync(DbDependentTestApplication app, int userId)
     {
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 

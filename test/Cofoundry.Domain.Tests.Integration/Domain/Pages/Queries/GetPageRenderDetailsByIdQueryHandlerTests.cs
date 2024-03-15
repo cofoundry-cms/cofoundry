@@ -43,8 +43,8 @@ public class GetPageRenderDetailsByIdQueryHandlerTests
             using (new AssertionScope())
             {
                 page.Should().NotBeNull();
-                page.PageId.Should().Be(pageId);
-                page.WorkFlowStatus.Should().Be(workFlowStatus);
+                page?.PageId.Should().Be(pageId);
+                page?.WorkFlowStatus.Should().Be(workFlowStatus);
             }
         }
     }
@@ -78,8 +78,8 @@ public class GetPageRenderDetailsByIdQueryHandlerTests
             using (new AssertionScope())
             {
                 page.Should().NotBeNull();
-                page.PageId.Should().Be(pageId);
-                page.WorkFlowStatus.Should().Be(workFlowStatus);
+                page?.PageId.Should().Be(pageId);
+                page?.WorkFlowStatus.Should().Be(workFlowStatus);
             }
         }
     }
@@ -111,9 +111,9 @@ public class GetPageRenderDetailsByIdQueryHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.PageId.Should().Be(pageId);
-            page.PageVersionId.Should().Be(expectedVersionId);
-            page.WorkFlowStatus.Should().Be(workFlowStatus);
+            page?.PageId.Should().Be(pageId);
+            page?.PageVersionId.Should().Be(expectedVersionId);
+            page?.WorkFlowStatus.Should().Be(workFlowStatus);
         }
     }
 
@@ -142,9 +142,9 @@ public class GetPageRenderDetailsByIdQueryHandlerTests
         {
             versionToQueryId.Should().NotBe(latestVersionId);
             page.Should().NotBeNull();
-            page.PageId.Should().Be(pageId);
-            page.PageVersionId.Should().Be(versionToQueryId);
-            page.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
+            page?.PageId.Should().Be(pageId);
+            page?.PageVersionId.Should().Be(versionToQueryId);
+            page?.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
         }
     }
 
@@ -289,14 +289,14 @@ public class GetPageRenderDetailsByIdQueryHandlerTests
     internal static void AssertBasicDataMapping(
         AddPageCommand addPageCommand,
         int versionId,
-        PageRenderDetails page
+        PageRenderDetails? page
         )
     {
         GetPageRenderSummaryByIdQueryHandlerTests.AssertBasicDataMapping(addPageCommand, versionId, page);
 
-        page.Template.Should().NotBeNull();
-        page.Regions.Should().NotBeNull();
-        page.Regions.Should().HaveCount(1);
+        page?.Template.Should().NotBeNull();
+        page?.Regions.Should().NotBeNull();
+        page?.Regions.Should().HaveCount(1);
     }
 
     /// <summary>
@@ -308,10 +308,14 @@ public class GetPageRenderDetailsByIdQueryHandlerTests
         string uniqueData,
         int plainTextBlockId,
         int imageBlockId,
-        PageRenderDetails page
+        PageRenderDetails? page
         )
     {
         page.Should().NotBeNull();
+        if (page == null)
+        {
+            return;
+        }
 
         page.Regions.Should().NotBeNull();
         page.Regions.Should().HaveCount(1);
@@ -322,24 +326,26 @@ public class GetPageRenderDetailsByIdQueryHandlerTests
         bodyRegion.Blocks.Should().HaveCount(2);
 
         var plainTextBlock = bodyRegion.Blocks.SingleOrDefault(b => b.PageVersionBlockId == plainTextBlockId);
-        plainTextBlock.BlockType.Should().NotBeNull();
-        plainTextBlock.BlockType.FileName.Should().Be("PlainText");
-        plainTextBlock.DisplayModel.Should().NotBeNull();
-        plainTextBlock.DisplayModel.Should().BeOfType<PlainTextDataModel>();
-        var plainTextDisplayModel = plainTextBlock.DisplayModel as PlainTextDataModel;
-        plainTextDisplayModel.PlainText.Should().Be(uniqueData);
-        plainTextBlock.EntityVersionPageBlockId.Should().Be(plainTextBlockId);
-        plainTextBlock.Template.Should().BeNull();
+        plainTextBlock.Should().NotBeNull();
+        plainTextBlock?.BlockType.Should().NotBeNull();
+        plainTextBlock?.BlockType.FileName.Should().Be("PlainText");
+        plainTextBlock?.DisplayModel.Should().NotBeNull();
+        plainTextBlock?.DisplayModel.Should().BeOfType<PlainTextDataModel>();
+        var plainTextDisplayModel = plainTextBlock?.DisplayModel as PlainTextDataModel;
+        plainTextDisplayModel?.PlainText.Should().Be(uniqueData);
+        plainTextBlock?.EntityVersionPageBlockId.Should().Be(plainTextBlockId);
+        plainTextBlock?.Template.Should().BeNull();
 
         var imageBlock = bodyRegion.Blocks.SingleOrDefault(b => b.PageVersionBlockId == imageBlockId);
-        imageBlock.BlockType.Should().NotBeNull();
-        imageBlock.BlockType.FileName.Should().Be("Image");
-        imageBlock.DisplayModel.Should().NotBeNull();
-        imageBlock.DisplayModel.Should().BeOfType<ImageDisplayModel>();
-        var imageDisplayModel = imageBlock.DisplayModel as ImageDisplayModel;
-        imageDisplayModel.AltText.Should().NotBeNull();
-        imageDisplayModel.Source.Should().NotBeNull();
-        imageBlock.EntityVersionPageBlockId.Should().Be(imageBlockId);
-        imageBlock.Template.Should().BeNull();
+        imageBlock.Should().NotBeNull();
+        imageBlock?.BlockType.Should().NotBeNull();
+        imageBlock?.BlockType.FileName.Should().Be("Image");
+        imageBlock?.DisplayModel.Should().NotBeNull();
+        imageBlock?.DisplayModel.Should().BeOfType<ImageDisplayModel>();
+        var imageDisplayModel = imageBlock?.DisplayModel as ImageDisplayModel;
+        imageDisplayModel?.AltText.Should().NotBeNull();
+        imageDisplayModel?.Source.Should().NotBeNull();
+        imageBlock?.EntityVersionPageBlockId.Should().Be(imageBlockId);
+        imageBlock?.Template.Should().BeNull();
     }
 }

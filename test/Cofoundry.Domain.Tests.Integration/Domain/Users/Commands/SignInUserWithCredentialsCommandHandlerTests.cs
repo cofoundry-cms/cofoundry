@@ -152,7 +152,7 @@ public class SignInUserWithCredentialsCommandHandlerTests
         sessionUserId.Should().Be(sessionUserId);
     }
 
-    private static async Task<User> AddUser(DbDependentTestApplication app, string uniqueData, Action<AddUserCommand> configureCommand = null)
+    private static async Task<User> AddUser(DbDependentTestApplication app, string uniqueData, Action<AddUserCommand>? configureCommand = null)
     {
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 

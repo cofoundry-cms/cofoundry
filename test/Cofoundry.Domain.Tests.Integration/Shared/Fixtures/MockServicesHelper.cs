@@ -29,8 +29,7 @@ public class MockServicesHelper
     /// <param name="utcNow">The UTC time to set as the current time.</param>
     public void MockIPAddress(string ipAddress)
     {
-        var clientConnectionService = _serviceScope.GetService<IClientConnectionService>() as MockClientConnectionService;
-        if (clientConnectionService == null)
+        if (_serviceScope.GetService<IClientConnectionService>() is not MockClientConnectionService clientConnectionService)
         {
             throw new Exception($"{nameof(IClientConnectionService)} is expected to be an instance of {nameof(MockClientConnectionService)} in testing");
         }
@@ -55,8 +54,7 @@ public class MockServicesHelper
     /// <param name="utcNow">The UTC time to set as the current time.</param>
     public static void MockDateTime(IServiceProvider serviceProvider, DateTime utcNow)
     {
-        var dateTimeService = serviceProvider.GetService<IDateTimeService>() as MockDateTimeService;
-        if (dateTimeService == null)
+        if (serviceProvider.GetService<IDateTimeService>() is not MockDateTimeService dateTimeService)
         {
             throw new Exception($"{nameof(IDateTimeService)} is expected to be an instance of {nameof(MockDateTimeService)} in testing");
         }
@@ -71,10 +69,9 @@ public class MockServicesHelper
     /// <typeparam name="TMessage">Type of message to look for.</typeparam>
     /// <param name="expression">An expression to filter messages by.</param>
     /// <returns>The number of messages matched by the <paramref name="predicate"/>.</returns>
-    public int CountMessagesPublished<TMessage>(Func<TMessage, bool> predicate)
+    public int CountMessagesPublished<TMessage>(Func<TMessage, bool>? predicate)
     {
-        var auditableMessageAggregator = _serviceScope.GetService<IMessageAggregator>() as AuditableMessageAggregator;
-        if (auditableMessageAggregator == null)
+        if (_serviceScope.GetService<IMessageAggregator>() is not AuditableMessageAggregator auditableMessageAggregator)
         {
             throw new Exception($"{nameof(IMessageAggregator)} is expected to be an instance of {nameof(AuditableMessageAggregator)} in testing");
         }
@@ -111,8 +108,7 @@ public class MockServicesHelper
     /// </param>
     public int CountDispatchedMail(string toEmail, params string[] textPartsToMatch)
     {
-        var auditableMailDispatchSession = _serviceScope.GetService<IMailDispatchSession>() as AuditableMailDispatchSession;
-        if (auditableMailDispatchSession == null)
+        if (_serviceScope.GetService<IMailDispatchSession>() is not AuditableMailDispatchSession auditableMailDispatchSession)
         {
             throw new Exception($"{nameof(IMailDispatchSession)} is expected to be an instance of {nameof(AuditableMailDispatchSession)} in testing");
         }

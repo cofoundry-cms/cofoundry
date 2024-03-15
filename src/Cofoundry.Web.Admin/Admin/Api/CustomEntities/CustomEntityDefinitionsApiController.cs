@@ -43,7 +43,7 @@ public class CustomEntityDefinitionsApiController : BaseAdminApiController
         return jsonResponse;
     }
 
-    public async Task<JsonResult> GetCustomEntities(string customEntityDefinitionCode, [FromQuery] SearchCustomEntitySummariesQuery query)
+    public async Task<JsonResult> GetCustomEntities(string customEntityDefinitionCode, [FromQuery] SearchCustomEntitySummariesQuery? query)
     {
         query ??= new SearchCustomEntitySummariesQuery();
         query.CustomEntityDefinitionCode = customEntityDefinitionCode;

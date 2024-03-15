@@ -8,8 +8,8 @@
 /// </summary>
 public class DbDependentTestApplicationFactory : IAsyncLifetime
 {
-    private SeededEntities _seededEntities;
-    private IServiceProvider _serviceProvider;
+    private SeededEntities? _seededEntities;
+    private IServiceProvider? _serviceProvider;
 
     /// <summary>
     /// Creates a new test application instance with a new DI
@@ -22,9 +22,9 @@ public class DbDependentTestApplicationFactory : IAsyncLifetime
     /// services.
     /// </param>
     /// <returns>The newly created application instance.</returns>
-    public virtual DbDependentTestApplication Create(Action<IServiceCollection> serviceConfiguration = null)
+    public virtual DbDependentTestApplication Create(Action<IServiceCollection>? serviceConfiguration = null)
     {
-        if (_serviceProvider == null)
+        if (_serviceProvider == null || _seededEntities == null)
         {
             throw new InvalidOperationException(nameof(DbDependentTestApplicationFactory) + " has not been initialized.");
         }
@@ -59,8 +59,7 @@ public class DbDependentTestApplicationFactory : IAsyncLifetime
     {
         (_serviceProvider as IDisposable)?.Dispose();
 
-        var asyncDisposableServiceProvider = _serviceProvider as IAsyncDisposable;
-        if (asyncDisposableServiceProvider != null)
+        if (_serviceProvider is IAsyncDisposable asyncDisposableServiceProvider)
         {
             await asyncDisposableServiceProvider.DisposeAsync();
         }

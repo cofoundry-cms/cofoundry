@@ -7,7 +7,7 @@ namespace Cofoundry.Domain.Tests.Users.Helpers;
 public class UserAccountRecoveryUrlHelperTests
 {
     private const string SIMPLE_TOKEN = "8cbe40a37b274e02af7c6905f2463c31-1poewiwen4n4";
-    private static string ABSOLUTE_BASE_URI = "https://www.cofoundry.com/auth/forgot-password";
+    private const string ABSOLUTE_BASE_URI = "https://www.cofoundry.com/auth/forgot-password";
 
     [Theory]
     [InlineData("/auth/forgot-password", "/auth/forgot-password?t=" + SIMPLE_TOKEN)]
@@ -23,7 +23,7 @@ public class UserAccountRecoveryUrlHelperTests
     [Fact]
     public void MakeUrl_WhenUrlAbsolute_ReturnsCorrectUrl()
     {
-        var expected = $"{ ABSOLUTE_BASE_URI }?t={ SIMPLE_TOKEN }";
+        var expected = $"{ABSOLUTE_BASE_URI}?t={SIMPLE_TOKEN}";
 
         var userAccountRecoveryUrlHelper = new AuthorizedTaskTokenUrlHelper();
         var result = userAccountRecoveryUrlHelper.MakeUrl(ABSOLUTE_BASE_URI, SIMPLE_TOKEN);

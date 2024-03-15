@@ -64,46 +64,50 @@ public class GetPageDirectoryTreeQueryHandlerTests
             .ExecuteAsync();
 
         var parentDirectory = tree.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == parentDirectoryId);
-        var directory1 = parentDirectory.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == directory1Id);
-        var directory2 = parentDirectory.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == directory2Id);
-        var directory2A = directory2.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == directory2AId);
+        var directory1 = parentDirectory?.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == directory1Id);
+        var directory2 = parentDirectory?.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == directory2Id);
+        var directory2A = directory2?.ChildPageDirectories.SingleOrDefault(d => d.PageDirectoryId == directory2AId);
 
         var parentFullPath = "/" + parentDirectoryCommand.UrlPath;
 
         using (new AssertionScope())
         {
             parentDirectory.Should().NotBeNull();
-            parentDirectory.AuditData.Should().NotBeNull();
-            parentDirectory.AuditData.Creator.Should().NotBeNull();
-            parentDirectory.AuditData.CreateDate.Should().NotBeDefault();
-            parentDirectory.ChildPageDirectories.Should().NotBeNull().And.HaveCount(2);
-            parentDirectory.Depth.Should().Be(1);
-            parentDirectory.Name.Should().Be(parentDirectoryCommand.Name);
-            parentDirectory.UrlPath.Should().Be(parentDirectoryCommand.UrlPath);
-            parentDirectory.FullUrlPath.Should().Be(parentFullPath);
-            parentDirectory.ParentPageDirectoryId.Should().Be(tree.PageDirectoryId);
-            parentDirectory.ParentPageDirectory.Should().Be(tree);
 
-            directory1.Should().NotBeNull();
-            directory1.Depth.Should().Be(2);
-            directory1.ChildPageDirectories.Should().NotBeNull().And.BeEmpty();
-            directory1.ParentPageDirectory.Should().Be(parentDirectory);
-            directory1.ParentPageDirectoryId.Should().Be(parentDirectoryId);
-            directory1.FullUrlPath.Should().Be(parentFullPath + "/dir-1");
+            if (parentDirectory != null)
+            {
+                parentDirectory.AuditData.Should().NotBeNull();
+                parentDirectory.AuditData.Creator.Should().NotBeNull();
+                parentDirectory.AuditData.CreateDate.Should().NotBeDefault();
+                parentDirectory.ChildPageDirectories.Should().NotBeNull().And.HaveCount(2);
+                parentDirectory.Depth.Should().Be(1);
+                parentDirectory.Name.Should().Be(parentDirectoryCommand.Name);
+                parentDirectory.UrlPath.Should().Be(parentDirectoryCommand.UrlPath);
+                parentDirectory.FullUrlPath.Should().Be(parentFullPath);
+                parentDirectory.ParentPageDirectoryId.Should().Be(tree.PageDirectoryId);
+                parentDirectory.ParentPageDirectory.Should().Be(tree);
 
-            directory2.Should().NotBeNull();
-            directory2.Depth.Should().Be(2);
-            directory2.ChildPageDirectories.Should().NotBeNull().And.HaveCount(1);
-            directory2.ParentPageDirectory.Should().Be(parentDirectory);
-            directory2.ParentPageDirectoryId.Should().Be(parentDirectoryId);
-            directory2.FullUrlPath.Should().Be(parentFullPath + "/dir-2");
+                directory1.Should().NotBeNull();
+                directory1?.Depth.Should().Be(2);
+                directory1?.ChildPageDirectories.Should().NotBeNull().And.BeEmpty();
+                directory1?.ParentPageDirectory.Should().Be(parentDirectory);
+                directory1?.ParentPageDirectoryId.Should().Be(parentDirectoryId);
+                directory1?.FullUrlPath.Should().Be(parentFullPath + "/dir-1");
 
-            directory2A.Should().NotBeNull();
-            directory2A.Depth.Should().Be(3);
-            directory2A.ChildPageDirectories.Should().NotBeNull().And.BeEmpty();
-            directory2A.ParentPageDirectory.Should().Be(directory2);
-            directory2A.ParentPageDirectoryId.Should().Be(directory2Id);
-            directory2A.FullUrlPath.Should().Be(parentFullPath + "/dir-2/dir-2-a");
+                directory2.Should().NotBeNull();
+                directory2?.Depth.Should().Be(2);
+                directory2?.ChildPageDirectories.Should().NotBeNull().And.HaveCount(1);
+                directory2?.ParentPageDirectory.Should().Be(parentDirectory);
+                directory2?.ParentPageDirectoryId.Should().Be(parentDirectoryId);
+                directory2?.FullUrlPath.Should().Be(parentFullPath + "/dir-2");
+
+                directory2A.Should().NotBeNull();
+                directory2A?.Depth.Should().Be(3);
+                directory2A?.ChildPageDirectories.Should().NotBeNull().And.BeEmpty();
+                directory2A?.ParentPageDirectory.Should().Be(directory2);
+                directory2A?.ParentPageDirectoryId.Should().Be(directory2Id);
+                directory2A?.FullUrlPath.Should().Be(parentFullPath + "/dir-2/dir-2-a");
+            }
         }
     }
 }

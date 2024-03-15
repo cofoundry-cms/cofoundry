@@ -110,7 +110,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdQueryHandlerTests
             dependencies.Should().HaveCount(3);
             var pageDependency = dependencies.SingleOrDefault(e => e.Entity.RootEntityId == pageId && e.Entity.EntityDefinitionCode == PageEntityDefinition.DefinitionCode);
             pageDependency.Should().NotBeNull();
-            pageDependency.CanDelete.Should().BeFalse();
+            pageDependency?.CanDelete.Should().BeFalse();
             dependencies.Should().ContainSingle(e => e.Entity.RootEntityId == customEntity1Id && e.Entity.EntityDefinitionCode == TestCustomEntityDefinition.Code);
             dependencies.Should().ContainSingle(e => e.Entity.RootEntityId == customEntity2Id && e.Entity.EntityDefinitionCode == TestCustomEntityDefinition.Code);
         }

@@ -35,7 +35,7 @@ public static class DbDependentTestApplicationServiceProviderFactory
     /// <param name="customServiceConfiguration">
     /// Optional service configuration to run after the tets services are added.
     /// </param>
-    public static ServiceProvider CreateTestHostProvider(Action<IServiceCollection> customServiceConfiguration = null)
+    public static ServiceProvider CreateTestHostProvider(Action<IServiceCollection>? customServiceConfiguration = null)
     {
         var configuration = GetConfiguration();
         var services = new ServiceCollection();
@@ -67,7 +67,7 @@ public static class DbDependentTestApplicationServiceProviderFactory
     /// <param name="customServiceConfiguration">
     /// Optional service configuration to run after the tets services are added.
     /// </param>
-    public static void ConfigureTestServices(IServiceCollection services, Action<IServiceCollection> customServiceConfiguration = null)
+    public static void ConfigureTestServices(IServiceCollection services, Action<IServiceCollection>? customServiceConfiguration = null)
     {
         services.AddScoped<IDateTimeService, MockDateTimeService>();
         services.AddScoped<IUserSessionService, InMemoryUserSessionService>();
@@ -78,10 +78,7 @@ public static class DbDependentTestApplicationServiceProviderFactory
         services.AddScoped<IClientConnectionService, MockClientConnectionService>();
         services.AddTransient<IViewFileReader, TestViewFileReader>();
 
-        if (customServiceConfiguration != null)
-        {
-            customServiceConfiguration(services);
-        }
+        customServiceConfiguration?.Invoke(services);
     }
 
     private static IConfiguration GetConfiguration()

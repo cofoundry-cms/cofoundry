@@ -32,6 +32,6 @@ public class NotCurrentPasswordNewPasswordValidatorTests
         var result = validator.Validate(context);
 
         result.Should().NotBeNull();
-        result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotCurrentPassword.ErrorCode);
+        result?.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotCurrentPassword.ErrorCode);
     }
 }

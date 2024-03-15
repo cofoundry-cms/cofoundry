@@ -5,11 +5,11 @@ public class OrderableTaskSorterTests
     [Fact]
     public void Sort_NullSource_ThrowsException()
     {
-        string[] collection = null;
+        string[]? collection = null;
 
         Assert.Throws<ArgumentNullException>(() =>
         {
-            OrderableTaskSorter.Sort(collection);
+            OrderableTaskSorter.Sort(collection!);
         });
     }
 
@@ -80,21 +80,21 @@ public class OrderableTaskSorterTests
 
     private class FirstTask : ITestSortableTask, IRunAfterTask, IOrderedTask
     {
-        public IReadOnlyCollection<Type> RunAfter { get; set; }
+        public IReadOnlyCollection<Type> RunAfter { get; set; } = Array.Empty<Type>();
 
         public int Ordering { get; set; }
     }
 
     private class SecondTask : ITestSortableTask, IRunBeforeTask, IOrderedTask
     {
-        public IReadOnlyCollection<Type> RunBefore { get; set; }
+        public IReadOnlyCollection<Type> RunBefore { get; set; } = Array.Empty<Type>();
 
         public int Ordering { get; set; }
     }
 
     private class ThirdTask : ITestSortableTask, IRunAfterTask, IOrderedTask
     {
-        public IReadOnlyCollection<Type> RunAfter { get; set; }
+        public IReadOnlyCollection<Type> RunAfter { get; set; } = Array.Empty<Type>();
 
         public int Ordering { get; set; }
     }

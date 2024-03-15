@@ -124,7 +124,7 @@ public class UserContextServiceTests
             systemUserContext.RoleCode.Should().Be(SuperAdminRole.Code);
             systemUserContext.RoleId.Should().Be(dbSystemUser.RoleId);
             systemUserContext.UserArea.Should().NotBeNull();
-            systemUserContext.UserArea.UserAreaCode.Should().Be(CofoundryAdminUserArea.Code);
+            systemUserContext.UserArea?.UserAreaCode.Should().Be(CofoundryAdminUserArea.Code);
             systemUserContext.IsPasswordChangeRequired.Should().BeFalse();
             systemUserContext.IsAccountVerified.Should().BeFalse();
             systemUserContext.IsCofoundryUser().Should().BeTrue();
@@ -170,7 +170,7 @@ public class UserContextServiceTests
         currentUser.RoleCode.Should().Be(userArea.RoleA.RoleCode);
         currentUser.RoleId.Should().Be(userArea.RoleA.RoleId);
         currentUser.UserArea.Should().NotBeNull();
-        currentUser.UserArea.UserAreaCode.Should().Be(userArea.UserAreaCode);
+        currentUser.UserArea?.UserAreaCode.Should().Be(userArea.UserAreaCode);
         currentUser.IsPasswordChangeRequired.Should().BeFalse();
         currentUser.IsCofoundryUser().Should().BeFalse();
     }

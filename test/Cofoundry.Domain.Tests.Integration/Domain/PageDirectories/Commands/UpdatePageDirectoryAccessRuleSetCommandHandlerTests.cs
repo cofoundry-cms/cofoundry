@@ -145,7 +145,7 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             directory.Should().NotBeNull();
-            directory.AccessRuleViolationActionId.Should().Be((int)action);
+            directory?.AccessRuleViolationActionId.Should().Be((int)action);
         }
     }
 
@@ -226,14 +226,18 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             directory.Should().NotBeNull();
-            directory.AccessRuleViolationActionId.Should().Be((int)command.ViolationAction);
-            directory.UserAreaCodeForSignInRedirect.Should().Be(command.UserAreaCodeForSignInRedirect);
 
-            var userAreaAccessRule = directory.AccessRules.Single(a => !a.RoleId.HasValue);
-            userAreaAccessRule.Should().NotBeNull();
-            var roleAccessArea = directory.AccessRules.Single(a => a.RoleId.HasValue);
-            roleAccessArea.Should().NotBeNull();
-            roleAccessArea.UserAreaCode.Should().Be(userArea.UserAreaCode);
+            if (directory != null)
+            {
+                directory.AccessRuleViolationActionId.Should().Be((int)command.ViolationAction);
+                directory.UserAreaCodeForSignInRedirect.Should().Be(command.UserAreaCodeForSignInRedirect);
+
+                var userAreaAccessRule = directory.AccessRules.SingleOrDefault(a => !a.RoleId.HasValue);
+                userAreaAccessRule.Should().NotBeNull();
+                var roleAccessArea = directory.AccessRules.SingleOrDefault(a => a.RoleId.HasValue);
+                roleAccessArea.Should().NotBeNull();
+                roleAccessArea?.UserAreaCode.Should().Be(userArea.UserAreaCode);
+            }
         }
     }
 
@@ -265,6 +269,7 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, directoryId);
 
         updateCommand.UserAreaCodeForSignInRedirect = app.SeededEntities.TestUserArea2.UserAreaCode;
         var userAreaAccessRuleCommand = updateCommand.AccessRules.Single();
@@ -285,12 +290,15 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             directory.Should().NotBeNull();
-            directory.UserAreaCodeForSignInRedirect.Should().Be(updateCommand.UserAreaCodeForSignInRedirect);
+            if (directory != null)
+            {
+                directory.UserAreaCodeForSignInRedirect.Should().Be(updateCommand.UserAreaCodeForSignInRedirect);
 
-            var userAreaAccessRule = directory.AccessRules.Single();
-            userAreaAccessRule.Should().NotBeNull();
-            userAreaAccessRule.UserAreaCode.Should().Be(userAreaAccessRuleCommand.UserAreaCode);
-            userAreaAccessRule.RoleId.Should().BeNull();
+                var userAreaAccessRule = directory.AccessRules.SingleOrDefault();
+                userAreaAccessRule.Should().NotBeNull();
+                userAreaAccessRule?.UserAreaCode.Should().Be(userAreaAccessRuleCommand.UserAreaCode);
+                userAreaAccessRule?.RoleId.Should().BeNull();
+            }
         }
     }
 
@@ -325,6 +333,7 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, directoryId);
 
         updateCommand.UserAreaCodeForSignInRedirect = userArea2.UserAreaCode;
         var roleAccessRuleCommand = updateCommand.AccessRules.Single();
@@ -345,13 +354,17 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
 
         using (new AssertionScope())
         {
-            directory.Should().NotBeNull();
-            directory.UserAreaCodeForSignInRedirect.Should().Be(updateCommand.UserAreaCodeForSignInRedirect);
 
-            var userAreaAccessRule = directory.AccessRules.Single();
-            userAreaAccessRule.Should().NotBeNull();
-            userAreaAccessRule.UserAreaCode.Should().Be(roleAccessRuleCommand.UserAreaCode);
-            userAreaAccessRule.RoleId.Should().Be(roleAccessRuleCommand.RoleId);
+            directory.Should().NotBeNull();
+            if (directory != null)
+            {
+                directory.UserAreaCodeForSignInRedirect.Should().Be(updateCommand.UserAreaCodeForSignInRedirect);
+
+                var userAreaAccessRule = directory.AccessRules.SingleOrDefault();
+                userAreaAccessRule.Should().NotBeNull();
+                userAreaAccessRule?.UserAreaCode.Should().Be(roleAccessRuleCommand.UserAreaCode);
+                userAreaAccessRule?.RoleId.Should().Be(roleAccessRuleCommand.RoleId);
+            }
         }
     }
 
@@ -383,6 +396,7 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, directoryId);
         var userAreaAccessRuleCommand = updateCommand.AccessRules.Single();
         userAreaAccessRuleCommand.RoleId = null;
 
@@ -401,12 +415,15 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             directory.Should().NotBeNull();
-            directory.UserAreaCodeForSignInRedirect.Should().BeNull();
+            if (directory != null)
+            {
+                directory.UserAreaCodeForSignInRedirect.Should().BeNull();
 
-            var userAreaAccessRule = directory.AccessRules.Single();
-            userAreaAccessRule.Should().NotBeNull();
-            userAreaAccessRule.UserAreaCode.Should().Be(userAreaAccessRuleCommand.UserAreaCode);
-            userAreaAccessRule.RoleId.Should().BeNull();
+                var userAreaAccessRule = directory.AccessRules.SingleOrDefault();
+                userAreaAccessRule.Should().NotBeNull();
+                userAreaAccessRule?.UserAreaCode.Should().Be(userAreaAccessRuleCommand.UserAreaCode);
+                userAreaAccessRule?.RoleId.Should().BeNull();
+            }
         }
     }
 
@@ -438,6 +455,7 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, directoryId);
         updateCommand.ViolationAction = AccessRuleViolationAction.NotFound;
 
         await contentRepository
@@ -455,10 +473,10 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             directory.Should().NotBeNull();
-            directory.UserAreaCodeForSignInRedirect.Should().BeNull();
-            directory.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
+            directory?.UserAreaCodeForSignInRedirect.Should().BeNull();
+            directory?.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
 
-            directory.AccessRules.Should().HaveCount(1);
+            directory?.AccessRules.Should().HaveCount(1);
         }
     }
 
@@ -493,6 +511,7 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, directoryId);
         var accessRuleCommand = updateCommand.AccessRules.Single(r => r.RoleId == app.SeededEntities.TestUserArea1.RoleA.RoleId);
         updateCommand.AccessRules = updateCommand
             .AccessRules
@@ -513,9 +532,9 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             accessRules.Should().HaveCount(1);
-            var accessRule = accessRules.Single();
-            accessRule.UserAreaCode.Should().Be(app.SeededEntities.TestUserArea2.UserAreaCode);
-            accessRule.RoleId.Should().BeNull();
+            var accessRule = accessRules.SingleOrDefault();
+            accessRule?.UserAreaCode.Should().Be(app.SeededEntities.TestUserArea2.UserAreaCode);
+            accessRule?.RoleId.Should().BeNull();
         }
     }
 
@@ -553,6 +572,7 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
             .UpdateAsync(command);
 
         var updateCommand = await contentRepository.ExecuteQueryAsync(new GetPatchableCommandByIdQuery<UpdatePageDirectoryAccessRuleSetCommand>(directoryId));
+        EntityNotFoundException.ThrowIfNull(updateCommand, directoryId);
         updateCommand.UserAreaCodeForSignInRedirect = null;
         updateCommand.ViolationAction = AccessRuleViolationAction.Error;
 
@@ -586,17 +606,21 @@ public class UpdatePageDirectoryAccessRuleSetCommandHandlerTests
         using (new AssertionScope())
         {
             directory.Should().NotBeNull();
-            directory.UserAreaCodeForSignInRedirect.Should().BeNull();
-            directory.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
-            directory.AccessRules.Should().HaveCount(2);
 
-            var userArea1AccessRule = directory.AccessRules.Single(r => r.UserAreaCode == app.SeededEntities.TestUserArea1.UserAreaCode);
-            userArea1AccessRule.Should().NotBeNull();
-            userArea1AccessRule.RoleId.Should().BeNull();
+            if (directory != null)
+            {
+                directory.UserAreaCodeForSignInRedirect.Should().BeNull();
+                directory.AccessRuleViolationActionId.Should().Be((int)updateCommand.ViolationAction);
+                directory.AccessRules.Should().HaveCount(2);
 
-            var userArea2AccessRule = directory.AccessRules.Single(r => r.UserAreaCode == app.SeededEntities.TestUserArea2.UserAreaCode);
-            userArea2AccessRule.Should().NotBeNull();
-            userArea2AccessRule.RoleId.Should().Be(app.SeededEntities.TestUserArea2.RoleA.RoleId);
+                var userArea1AccessRule = directory.AccessRules.SingleOrDefault(r => r.UserAreaCode == app.SeededEntities.TestUserArea1.UserAreaCode);
+                userArea1AccessRule.Should().NotBeNull();
+                userArea1AccessRule?.RoleId.Should().BeNull();
+
+                var userArea2AccessRule = directory.AccessRules.SingleOrDefault(r => r.UserAreaCode == app.SeededEntities.TestUserArea2.UserAreaCode);
+                userArea2AccessRule.Should().NotBeNull();
+                userArea2AccessRule?.RoleId.Should().Be(app.SeededEntities.TestUserArea2.RoleA.RoleId);
+            }
         }
     }
 

@@ -46,13 +46,13 @@ public class UpdatePageDirectoryCommandHandlerTests
         using (new AssertionScope())
         {
             directory.Should().NotBeNull();
-            directory.Name.Should().Be(updateCommand.Name);
-            directory.UrlPath.Should().Be(addDirectoryCommand.UrlPath);
-            directory.ParentPageDirectoryId.Should().Be(addDirectoryCommand.ParentPageDirectoryId);
+            directory?.Name.Should().Be(updateCommand.Name);
+            directory?.UrlPath.Should().Be(addDirectoryCommand.UrlPath);
+            directory?.ParentPageDirectoryId.Should().Be(addDirectoryCommand.ParentPageDirectoryId);
         }
     }
 
-    public UpdatePageDirectoryCommand MapFromAddCommand(AddPageDirectoryCommand command)
+    private static UpdatePageDirectoryCommand MapFromAddCommand(AddPageDirectoryCommand command)
     {
         return new UpdatePageDirectoryCommand()
         {

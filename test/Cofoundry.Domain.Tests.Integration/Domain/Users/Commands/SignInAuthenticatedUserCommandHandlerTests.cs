@@ -47,7 +47,7 @@ public class SignInAuthenticatedUserCommandHandlerTests
         using (new AssertionScope())
         {
             sessionUserId.Should().Be(sessionUserId);
-            user.LastSignInDate.Should().Be(now);
+            user?.LastSignInDate.Should().Be(now);
 
             app.Mocks
                 .CountMessagesPublished<UserSignednMessage>(m =>

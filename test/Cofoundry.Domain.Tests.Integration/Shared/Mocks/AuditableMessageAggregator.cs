@@ -9,7 +9,7 @@ namespace Cofoundry.Domain.Tests.Integration.Mocks;
 /// </summary>
 public class AuditableMessageAggregator : IMessageAggregator
 {
-    private readonly List<object> _messages = new List<object>();
+    private readonly List<object> _messages = [];
     private readonly MessageAggregator _messageAggregator;
 
 

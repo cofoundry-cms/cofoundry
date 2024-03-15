@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cofoundry.Domain.Data;
 
+[Obsolete("The page grouping system will be revised in an upcomming release.")]
 public class PageGroupItemMap : IEntityTypeConfiguration<PageGroupItem>
 {
     public void Configure(EntityTypeBuilder<PageGroupItem> builder)

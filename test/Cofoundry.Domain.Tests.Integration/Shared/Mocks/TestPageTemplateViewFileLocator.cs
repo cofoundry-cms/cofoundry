@@ -11,7 +11,7 @@ namespace Cofoundry.Domain.Tests.Integration.Mocks;
 public class TestPageTemplateViewFileLocator : IPageTemplateViewFileLocator
 {
     private readonly PageTemplateViewFileLocator _pageTemplateViewFileLocator;
-    private List<PageTemplateFile> _mockTemplates = new List<PageTemplateFile>();
+    private readonly List<PageTemplateFile> _mockTemplates = [];
 
     public TestPageTemplateViewFileLocator(
         IRazorViewEngine razorViewEngine,
@@ -32,7 +32,7 @@ public class TestPageTemplateViewFileLocator : IPageTemplateViewFileLocator
         _mockTemplates.Add(templateFile);
     }
 
-    public IEnumerable<PageTemplateFile> GetPageTemplateFiles(string searchText = null)
+    public IEnumerable<PageTemplateFile> GetPageTemplateFiles(string? searchText = null)
     {
         var matchingMockTemplates = _mockTemplates
             .Where(t => searchText == null || t.FileName.Contains(searchText, StringComparison.OrdinalIgnoreCase));
@@ -43,7 +43,7 @@ public class TestPageTemplateViewFileLocator : IPageTemplateViewFileLocator
             .OrderBy(f => f.FileName);
     }
 
-    public string ResolvePageTemplatePartialViewPath(string partialName)
+    public string? ResolvePageTemplatePartialViewPath(string partialName)
     {
         return _pageTemplateViewFileLocator.ResolvePageTemplatePartialViewPath(partialName);
     }

@@ -12,8 +12,8 @@ public class AssetFileTypeValidatorTests
     const string CSV_MIME_TYPE = "text/csv";
     const string VALIDATOR_PROP_NAME = "Test";
 
-    private string[] FileTypeList = new string[] { JPEG_FILE_EXTENSION, "zip", CSV_FILE_EXTENSION };
-    private string[] MimeTypeList = new string[] { JPEG_MIME_TYPE, "application/zip", CSV_MIME_TYPE };
+    private static readonly string[] FileTypeList = [JPEG_FILE_EXTENSION, "zip", CSV_FILE_EXTENSION];
+    private static readonly string[] MimeTypeList = [JPEG_MIME_TYPE, "application/zip", CSV_MIME_TYPE];
 
     [Fact]
     public void Validate_WhenDisabled_IsValid()
@@ -32,7 +32,7 @@ public class AssetFileTypeValidatorTests
     public void Validate_WhenNullExtension_IsInvalid()
     {
         var validator = CreateValidator(AssetFileTypeValidation.UseBlockList, AssetFileTypeValidation.Disabled);
-        string fileExtension = null;
+        string? fileExtension = null;
         var mimeType = JPEG_MIME_TYPE;
 
         var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);
@@ -46,7 +46,7 @@ public class AssetFileTypeValidatorTests
     {
         var validator = CreateValidator(AssetFileTypeValidation.UseBlockList, AssetFileTypeValidation.UseAllowList);
         string fileExtension = JPEG_FILE_EXTENSION;
-        string mimeType = null;
+        string? mimeType = null;
 
         var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);
 
@@ -226,7 +226,7 @@ public class AssetFileTypeValidatorTests
         Assert.Throws<ValidationErrorException>(() => validator.ValidateAndThrow(fileExtension, mimeType, VALIDATOR_PROP_NAME));
     }
 
-    private AssetFileTypeValidator CreateValidator(
+    private static AssetFileTypeValidator CreateValidator(
         AssetFileTypeValidation fileExtensionValidation,
         AssetFileTypeValidation mimeTypeValidation
         )

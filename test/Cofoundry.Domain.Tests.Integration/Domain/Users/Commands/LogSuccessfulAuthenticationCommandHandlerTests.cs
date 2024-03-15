@@ -42,7 +42,7 @@ public class LogSuccessfulAuthenticationCommandHandlerTests
         using (new AssertionScope())
         {
             log.Should().NotBeNull();
-            log.IPAddress.Address.Should().Be(uniqueData);
+            log?.IPAddress.Address.Should().Be(uniqueData);
         }
     }
 }

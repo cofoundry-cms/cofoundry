@@ -7,7 +7,7 @@ public class SlugFormatterTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("    ")]
-    public void ToSlug_WhenNullOrWhitespace_ReturnsEmptyString(string s)
+    public void ToSlug_WhenNullOrWhitespace_ReturnsEmptyString(string? s)
     {
         var result = SlugFormatter.ToSlug(s);
 
@@ -89,7 +89,7 @@ public class SlugFormatterTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("    ")]
-    public void CamelCaseToSlug_WhenNullOrWhitespace_ReturnsEmptyString(string s)
+    public void CamelCaseToSlug_WhenNullOrWhitespace_ReturnsEmptyString(string? s)
     {
         var result = SlugFormatter.CamelCaseToSlug(s);
 

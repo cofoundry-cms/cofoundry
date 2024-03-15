@@ -8,7 +8,7 @@ public class SqlCharValidatorTests
     [InlineData(" ")]
     [InlineData("      ")]
     [InlineData("               ")]
-    public void IsValid_WhenNullOrWhitespace_ReturnsFalse(string s)
+    public void IsValid_WhenNullOrWhitespace_ReturnsFalse(string? s)
     {
         var result = SqlCharValidator.IsValid(s, 6);
 

@@ -29,14 +29,13 @@ public class PageTemplateTestDataHelper
     public async Task<int> AddMockTemplateAsync(string uniqueData)
     {
         using var scope = _serviceProvider.CreateScope();
-        var pageTemplateViewFileLocator = scope.ServiceProvider.GetService<IPageTemplateViewFileLocator>() as TestPageTemplateViewFileLocator;
         var dbContext = scope.ServiceProvider.GetRequiredService<CofoundryDbContext>();
         var contentRepository = scope
             .ServiceProvider
             .GetRequiredService<IAdvancedContentRepository>()
             .WithElevatedPermissions();
 
-        if (pageTemplateViewFileLocator == null)
+        if (scope.ServiceProvider.GetService<IPageTemplateViewFileLocator>() is not TestPageTemplateViewFileLocator pageTemplateViewFileLocator)
         {
             throw new InvalidOperationException($"In testing, {nameof(IPageTemplateViewFileLocator)} should be an instance of {nameof(TestPageTemplateViewFileLocator)}");
         }

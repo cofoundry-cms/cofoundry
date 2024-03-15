@@ -13,6 +13,8 @@ public class CurrentUserViewHelperTests
         UserArea = new CofoundryAdminUserArea(new AdminSettings())
     };
 
+    private static readonly ISignedInUserContext _signedInUserAreaContext = _userAreaContext.ToRequiredSignedInContext();
+
     [Fact]
     public async Task GetAsync_WhenNotLoggedIn_ReturnsAnonymous()
     {
@@ -33,7 +35,8 @@ public class CurrentUserViewHelperTests
         var userContext = new UserContext()
         {
             UserId = 20,
-            RoleId = 55
+            RoleId = 55,
+            UserArea = new CofoundryAdminUserArea(new AdminSettings())
         };
 
         var currentUserViewHelper = CreateCurrentUserViewHelper(userContext);
@@ -44,7 +47,7 @@ public class CurrentUserViewHelperTests
         Assert.True(result.IsSignedIn);
         Assert.False(result.Role.IsAnonymousRole);
         Assert.Equal(userContext.RoleId, result.Role.RoleId);
-        Assert.Equal(userContext.UserId, result.Data.UserId);
+        Assert.Equal(userContext.UserId, result.Data?.UserId);
         Assert.Equal(result, cachedResult);
     }
 
@@ -54,17 +57,17 @@ public class CurrentUserViewHelperTests
         var currentUserViewHelper = CreateCurrentUserViewHelper();
 
         await currentUserViewHelper.GetAsync();
-        var result = await currentUserViewHelper.GetAsync(_userAreaContext.UserArea.UserAreaCode);
-        var cachedResult = await currentUserViewHelper.GetAsync(_userAreaContext.UserArea.UserAreaCode);
+        var result = await currentUserViewHelper.GetAsync(_signedInUserAreaContext.UserArea.UserAreaCode);
+        var cachedResult = await currentUserViewHelper.GetAsync(_signedInUserAreaContext.UserArea.UserAreaCode);
 
         Assert.True(result.IsSignedIn);
         Assert.False(result.Role.IsAnonymousRole);
         Assert.Equal(_userAreaContext.RoleId, result.Role.RoleId);
-        Assert.Equal(_userAreaContext.UserId, result.Data.UserId);
+        Assert.Equal(_userAreaContext.UserId, result.Data?.UserId);
         Assert.Equal(result, cachedResult);
     }
 
-    private CurrentUserViewHelper CreateCurrentUserViewHelper(IUserContext defaultUserContext = null)
+    private static CurrentUserViewHelper CreateCurrentUserViewHelper(IUserContext? defaultUserContext = null)
     {
         defaultUserContext ??= new UserContext();
 
@@ -83,7 +86,7 @@ public class CurrentUserViewHelperTests
             .ReturnsAsync(() => defaultUserContext);
 
         userContextService
-            .Setup(r => r.GetCurrentContextByUserAreaAsync(It.Is<string>(s => s == _userAreaContext.UserArea.UserAreaCode)))
+            .Setup(r => r.GetCurrentContextByUserAreaAsync(It.Is<string>(s => s == _signedInUserAreaContext.UserArea.UserAreaCode)))
             .ReturnsAsync(() => _userAreaContext);
 
         return userContextService.Object;
@@ -106,7 +109,7 @@ public class CurrentUserViewHelperTests
             .ReturnsAsync(() => new RoleDetails()
             {
                 IsAnonymousRole = false,
-                RoleId = _userAreaContext.RoleId.Value,
+                RoleId = _signedInUserAreaContext.RoleId,
                 Title = "Test Role",
                 UserArea = UserAreaMicroSummary.Uninitialized
             });
@@ -115,26 +118,27 @@ public class CurrentUserViewHelperTests
             .Setup(r => r.ExecuteAsync(It.Is<GetUserSummaryByIdQuery>(m => m.UserId == _userAreaContext.UserId), It.Is<IUserContext>(m => m == _userAreaContext)))
             .ReturnsAsync(() => new UserSummary()
             {
-                UserId = _userAreaContext.UserId.Value
+                UserId = _signedInUserAreaContext.UserId
             });
 
-        if (defaultUserContext.UserId.HasValue)
+        var defualtSignedInUser = defaultUserContext.ToSignedInContext();
+        if (defualtSignedInUser != null)
         {
             queryExecutor
-                .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == defaultUserContext.RoleId.Value), It.Is<IUserContext>(m => m == defaultUserContext)))
+                .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == defualtSignedInUser.RoleId), It.Is<IUserContext>(m => m == defaultUserContext)))
                 .ReturnsAsync(() => new RoleDetails()
                 {
                     IsAnonymousRole = false,
-                    RoleId = defaultUserContext.RoleId.Value,
+                    RoleId = defualtSignedInUser.RoleId,
                     Title = "Test Role",
                     UserArea = UserAreaMicroSummary.Uninitialized
                 });
 
             queryExecutor
-                .Setup(r => r.ExecuteAsync(It.Is<GetUserSummaryByIdQuery>(m => m.UserId == defaultUserContext.UserId.Value), It.Is<IUserContext>(m => m == defaultUserContext)))
+                .Setup(r => r.ExecuteAsync(It.Is<GetUserSummaryByIdQuery>(m => m.UserId == defualtSignedInUser.UserId), It.Is<IUserContext>(m => m == defaultUserContext)))
                 .ReturnsAsync(new UserSummary()
                 {
-                    UserId = defaultUserContext.UserId.Value
+                    UserId = defualtSignedInUser.UserId
                 });
         }
 

@@ -36,6 +36,6 @@ public class MaxLengthNewPasswordValidatotTests
         var result = validator.Validate(context);
 
         result.Should().NotBeNull();
-        result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.MaxLengthExceeded.ErrorCode);
+        result?.ErrorCode.Should().Be(PasswordPolicyValidationErrors.MaxLengthExceeded.ErrorCode);
     }
 }

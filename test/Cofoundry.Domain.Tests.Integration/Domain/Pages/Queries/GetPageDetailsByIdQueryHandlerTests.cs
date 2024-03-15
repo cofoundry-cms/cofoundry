@@ -33,8 +33,8 @@ public class GetPageDetailsByIdQueryHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
-            page.PageId.Should().Be(pageId);
-            page.PageRoute.Should().NotBeNull();
+            page?.PageId.Should().Be(pageId);
+            page?.PageRoute.Should().NotBeNull();
         }
     }
 
@@ -93,11 +93,16 @@ public class GetPageDetailsByIdQueryHandlerTests
         using (new AssertionScope())
         {
             page.Should().NotBeNull();
+            if (page == null)
+            {
+                return;
+            }
+
             page.PageId.Should().Be(pageId);
 
             page.AuditData.Should().NotBeNull();
             page.AuditData.Creator.Should().NotBeNull();
-            page.AuditData.Creator.UserId.Should().BePositive();
+            page.AuditData.Creator?.UserId.Should().BePositive();
 
             page.PageRoute.Should().NotBeNull();
             page.PageRoute.PageId.Should().Be(pageId);
@@ -111,12 +116,12 @@ public class GetPageDetailsByIdQueryHandlerTests
             page.LatestVersion.OpenGraph.Title.Should().Be(addPageCommand.OpenGraphTitle);
             page.LatestVersion.OpenGraph.Description.Should().Be(addPageCommand.OpenGraphDescription);
             page.LatestVersion.OpenGraph.Image.Should().NotBeNull();
-            page.LatestVersion.OpenGraph.Image.ImageAssetId.Should().Be(addPageCommand.OpenGraphImageId);
+            page.LatestVersion.OpenGraph.Image?.ImageAssetId.Should().Be(addPageCommand.OpenGraphImageId);
             page.LatestVersion.MetaDescription.Should().Be(addPageCommand.MetaDescription);
 
             page.LatestVersion.AuditData.Should().NotBeNull();
             page.LatestVersion.AuditData.Creator.Should().NotBeNull();
-            page.LatestVersion.AuditData.Creator.UserId.Should().BePositive();
+            page.LatestVersion.AuditData.Creator?.UserId.Should().BePositive();
             page.LatestVersion.DisplayVersion.Should().Be(2);
             page.LatestVersion.ShowInSiteMap.Should().Be(addPageCommand.ShowInSiteMap);
             page.LatestVersion.Title.Should().Be(addPageCommand.Title);
@@ -151,9 +156,10 @@ public class GetPageDetailsByIdQueryHandlerTests
 
         using (new AssertionScope())
         {
-            page.LatestVersion.Should().NotBeNull();
-            page.LatestVersion.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
-            page.LatestVersion.PageVersionId.Should().Be(latestVersionId);
+            page.Should().NotBeNull();
+            page?.LatestVersion.Should().NotBeNull();
+            page?.LatestVersion.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
+            page?.LatestVersion.PageVersionId.Should().Be(latestVersionId);
         }
     }
 }

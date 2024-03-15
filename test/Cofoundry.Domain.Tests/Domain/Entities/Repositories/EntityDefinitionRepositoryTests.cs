@@ -38,13 +38,13 @@ public class EntityDefinitionRepositoryTests
     [InlineData("хороше")]
     [InlineData("      ")]
     [InlineData(null)]
-    public void Constructor_WhenInvalidCode_Throws(string code)
+    public void Constructor_WhenInvalidCode_Throws(string? code)
     {
         var customEntityRepository = GetCustomEntityRepository();
         var entityDefinitions = GetBaseEntityDefinitions();
         entityDefinitions.Add(new TestEntityDefinition()
         {
-            EntityDefinitionCode = code,
+            EntityDefinitionCode = code!,
             Name = "A unique name"
         });
 
@@ -59,7 +59,7 @@ public class EntityDefinitionRepositoryTests
         entityDefinitions.Add(new TestEntityDefinition()
         {
             EntityDefinitionCode = "UNIQUE",
-            Name = null
+            Name = null!
         });
 
         Assert.Throws<InvalidEntityDefinitionException>(() => new EntityDefinitionRepository(entityDefinitions, customEntityRepository));
@@ -116,7 +116,11 @@ public class EntityDefinitionRepositoryTests
         var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
         var result = repo.GetByCode(definitionCode);
 
-        result.EntityDefinitionCode.Should().Be(definitionCode);
+        using (new AssertionScope())
+        {
+            result.Should().NotBeNull();
+            result?.EntityDefinitionCode.Should().Be(definitionCode);
+        }
     }
 
     [Fact]
@@ -143,21 +147,25 @@ public class EntityDefinitionRepositoryTests
         var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
         var result = repo.GetByCode(definitionCode);
 
-        result.EntityDefinitionCode.Should().Be(definitionCode);
+        using (new AssertionScope())
+        {
+            result.Should().NotBeNull();
+            result?.EntityDefinitionCode.Should().Be(definitionCode);
+        }
     }
 
     private class TestEntityDefinition : IEntityDefinition
     {
-        public string EntityDefinitionCode { get; set; }
+        public string EntityDefinitionCode { get; set; } = string.Empty;
 
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 
     private class TestCustomEntityDefinition : ICustomEntityDefinition
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
-        public string CustomEntityDefinitionCode { get; set; }
+        public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
         public string NamePlural => throw new NotImplementedException();
 
@@ -174,8 +182,8 @@ public class EntityDefinitionRepositoryTests
 
     private List<ICustomEntityDefinition> GetBaseCustomEntityDefinitions()
     {
-        return new List<ICustomEntityDefinition>()
-        {
+        return
+        [
             new TestCustomEntityDefinition()
             {
                 CustomEntityDefinitionCode = "CUS001",
@@ -191,13 +199,13 @@ public class EntityDefinitionRepositoryTests
                 CustomEntityDefinitionCode = "CUS003",
                 Name = "Test CE 3"
             },
-        };
+        ];
     }
 
     private List<IEntityDefinition> GetBaseEntityDefinitions()
     {
-        return new List<IEntityDefinition>()
-        {
+        return
+        [
             new TestEntityDefinition()
             {
                 EntityDefinitionCode = "TST001",
@@ -213,7 +221,7 @@ public class EntityDefinitionRepositoryTests
                 EntityDefinitionCode = "TST003",
                 Name = "Test 3"
             },
-        };
+        ];
     }
 
     private ICustomEntityDefinitionRepository GetCustomEntityRepository()

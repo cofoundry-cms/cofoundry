@@ -40,12 +40,12 @@ public class GetPageDirectoryRouteByIdQueryHandlerTests
         {
 
             directory.Should().NotBeNull();
-            directory.IsSiteRoot().Should().BeFalse();
-            directory.LocaleVariations.Should().NotBeNull().And.BeEmpty();
-            directory.Name.Should().Be("Dir-1");
-            directory.ParentPageDirectoryId.Should().Be(parentDirectoryId);
-            directory.FullUrlPath.Should().Be(parentFullPath + "/dir-1");
-            directory.UrlPath.Should().Be("dir-1");
+            directory?.IsSiteRoot().Should().BeFalse();
+            directory?.LocaleVariations.Should().NotBeNull().And.BeEmpty();
+            directory?.Name.Should().Be("Dir-1");
+            directory?.ParentPageDirectoryId.Should().Be(parentDirectoryId);
+            directory?.FullUrlPath.Should().Be(parentFullPath + "/dir-1");
+            directory?.UrlPath.Should().Be("dir-1");
         }
     }
 }

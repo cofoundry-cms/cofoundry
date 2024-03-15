@@ -14,19 +14,19 @@ public class MimeTypeServiceTests
     [InlineData(null)]
     [InlineData(" ")]
     [InlineData("     ")]
-    public void MapFromFileName_WhenEmpty_ThrowsArgumentException(string fileName)
+    public void MapFromFileName_WhenEmpty_ThrowsArgumentException(string? fileName)
     {
         var contentTypeProvider = new Mock<IContentTypeProvider>();
         var service = new MimeTypeService(contentTypeProvider.Object);
 
-        Assert.ThrowsAny<ArgumentException>(() => service.MapFromFileName(fileName));
+        Assert.ThrowsAny<ArgumentException>(() => service.MapFromFileName(fileName!));
     }
 
     [Fact]
     public void MapFromFileName_WhenContentTypeFound_ReturnsMatch()
     {
         string fileName = "my-file.jpg";
-        string contentType = JPEG_MIME_TYPE;
+        string? contentType = JPEG_MIME_TYPE;
 
         var contentTypeProvider = new Mock<IContentTypeProvider>();
         contentTypeProvider.Setup(p => p.TryGetContentType(fileName, out contentType)).Returns(true);
@@ -41,7 +41,7 @@ public class MimeTypeServiceTests
     public void MapFromFileName_WhenContentTypeNotFound_ReturnsDefault()
     {
         string fileName = "my-file.jpg";
-        string contentType = null;
+        string? contentType = null;
 
         var contentTypeProvider = new Mock<IContentTypeProvider>();
         contentTypeProvider.Setup(p => p.TryGetContentType(fileName, out contentType)).Returns(false);
@@ -57,19 +57,19 @@ public class MimeTypeServiceTests
     [InlineData(null)]
     [InlineData(" ")]
     [InlineData("     ")]
-    public void MapFromFileNameWithDefault_WhenEmpty_ThrowsArgumentException(string fileName)
+    public void MapFromFileNameWithDefault_WhenEmpty_ThrowsArgumentException(string? fileName)
     {
         var contentTypeProvider = new Mock<IContentTypeProvider>();
         var service = new MimeTypeService(contentTypeProvider.Object);
 
-        Assert.ThrowsAny<ArgumentException>(() => service.MapFromFileName(fileName, TEST_DEFAULT_MIME_TYPE));
+        Assert.ThrowsAny<ArgumentException>(() => service.MapFromFileName(fileName!, TEST_DEFAULT_MIME_TYPE));
     }
 
     [Fact]
     public void MapFromFileNameWithDefault_WhenContentTypeFound_ReturnsMatch()
     {
         string fileName = "my-file.jpg";
-        string contentType = JPEG_MIME_TYPE;
+        string? contentType = JPEG_MIME_TYPE;
 
         var contentTypeProvider = new Mock<IContentTypeProvider>();
         contentTypeProvider.Setup(p => p.TryGetContentType(fileName, out contentType)).Returns(true);
@@ -84,7 +84,7 @@ public class MimeTypeServiceTests
     public void MapFromFileNameWithDefault_WhenContentTypeNotFound_ReturnsDefault()
     {
         string fileName = "my-file.jpg";
-        string contentType = null;
+        string? contentType = null;
 
         var contentTypeProvider = new Mock<IContentTypeProvider>();
         contentTypeProvider.Setup(p => p.TryGetContentType(fileName, out contentType)).Returns(false);

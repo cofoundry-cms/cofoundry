@@ -37,6 +37,6 @@ public class NotSequentialNewPasswordValidatorTests
         var result = validator.Validate(context);
 
         result.Should().NotBeNull();
-        result.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotSequential.ErrorCode);
+        result?.ErrorCode.Should().Be(PasswordPolicyValidationErrors.NotSequential.ErrorCode);
     }
 }

@@ -144,8 +144,10 @@ public partial class CofoundryDbContext : DbContext
     /// </summary>
     public DbSet<EmailDomain> EmailDomains { get; set; }
 
+    [Obsolete("The document asset grouping system will be revised in an upcomming release.")]
     public DbSet<DocumentAssetGroupItem> DocumentAssetGroupItems { get; set; }
 
+    [Obsolete("The document asset grouping system will be revised in an upcomming release.")]
     public DbSet<DocumentAssetGroup> DocumentAssetGroups { get; set; }
 
     /// <summary>
@@ -158,8 +160,10 @@ public partial class CofoundryDbContext : DbContext
 
     public DbSet<DocumentAssetTag> DocumentAssetTags { get; set; }
 
+    [Obsolete("The image asset grouping system will be revised in an upcomming release.")]
     public DbSet<ImageAssetGroupItem> ImageAssetGroupItems { get; set; }
 
+    [Obsolete("The image asset grouping system will be revised in an upcomming release.")]
     public DbSet<ImageAssetGroup> ImageAssetGroups { get; set; }
 
     /// <summary>
@@ -275,8 +279,10 @@ public partial class CofoundryDbContext : DbContext
     /// </summary>
     public DbSet<PageBlockType> PageBlockTypes { get; set; }
 
+    [Obsolete("The page grouping system will be revised in an upcomming release.")]
     public DbSet<PageGroupItem> PageGroupItems { get; set; }
 
+    [Obsolete("The page grouping system will be revised in an upcomming release.")]
     public DbSet<PageGroup> PageGroups { get; set; }
 
     public DbSet<PageTag> PageTags { get; set; }

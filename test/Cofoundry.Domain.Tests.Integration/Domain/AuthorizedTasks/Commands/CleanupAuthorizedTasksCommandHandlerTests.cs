@@ -90,7 +90,7 @@ public class CleanupAuthorizedTasksCommandHandlerTests
         using (new AssertionScope())
         {
             authorizedTask.Should().NotBeNull();
-            authorizedTask.CompletedDate.Should().BeNull();
+            authorizedTask?.CompletedDate.Should().BeNull();
         }
     }
 

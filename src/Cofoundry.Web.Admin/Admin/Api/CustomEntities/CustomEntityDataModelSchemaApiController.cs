@@ -22,7 +22,7 @@ public class CustomEntityDataModelSchemaApiController : BaseAdminApiController
 
     public async Task<JsonResult> Get([FromQuery] GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery rangeQuery)
     {
-        if (rangeQuery.CustomEntityDefinitionCodes == null)
+        if (EnumerableHelper.IsNullOrEmpty(rangeQuery.CustomEntityDefinitionCodes))
         {
             return _apiResponseHelper.SimpleQueryResponse(Enumerable.Empty<CustomEntityDataModelSchema>());
         }

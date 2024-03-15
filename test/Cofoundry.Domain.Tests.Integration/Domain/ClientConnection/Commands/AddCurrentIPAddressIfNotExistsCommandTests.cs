@@ -40,8 +40,8 @@ public class AddCurrentIPAddressIfNotExistsCommandTests
         using (new AssertionScope())
         {
             dbIPAddress.Should().NotBeNull();
-            dbIPAddress.Address.Should().Be(address);
-            dbIPAddress.CreateDate.Should().NotBeDefault();
+            dbIPAddress?.Address.Should().Be(address);
+            dbIPAddress?.CreateDate.Should().NotBeDefault();
         }
     }
 

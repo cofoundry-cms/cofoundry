@@ -37,8 +37,8 @@ public class GetUpdatePageDirectoryCommandByIdQueryHandlerTests
         using (new AssertionScope())
         {
             command.Should().NotBeNull();
-            command.Name.Should().Be(addDirectoryCommand.Name);
-            command.PageDirectoryId.Should().Be(addDirectoryCommand.OutputPageDirectoryId);
+            command?.Name.Should().Be(addDirectoryCommand.Name);
+            command?.PageDirectoryId.Should().Be(addDirectoryCommand.OutputPageDirectoryId);
         }
     }
 

@@ -50,9 +50,9 @@ public class ResetUserPasswordCommandHandlerTests
         {
             user.Should().NotBeNull();
             originalUserState.Password.Should().NotBeNull();
-            user.Password.Should().NotBe(originalUserState.Password);
-            user.LastPasswordChangeDate.Should().BeAfter(originalUserState.LastPasswordChangeDate);
-            user.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
+            user?.Password.Should().NotBe(originalUserState.Password);
+            user?.LastPasswordChangeDate.Should().BeAfter(originalUserState.LastPasswordChangeDate);
+            user?.SecurityStamp.Should().NotBeNull().And.NotBe(originalUserState.SecurityStamp);
         }
     }
 
@@ -88,16 +88,25 @@ public class ResetUserPasswordCommandHandlerTests
             .FilterById(userId)
             .SingleOrDefaultAsync();
 
-        app.Mocks
-            .CountDispatchedMail(
-                user.Email,
-                "Test Site",
-                "has reset your password",
-                "username is: " + user.Username,
-                "password is: " + password2,
-                signInUrl
-            )
-            .Should().Be(1);
+        using (new AssertionScope())
+        {
+            user.Should().NotBeNull();
+            if (user == null)
+            {
+                return;
+            }
+
+            app.Mocks
+                .CountDispatchedMail(
+                    user.Email!,
+                    "Test Site",
+                    "has reset your password",
+                    "username is: " + user.Username,
+                    "password is: " + password2,
+                    signInUrl
+                )
+                .Should().Be(1);
+        }
     }
 
     [Fact]

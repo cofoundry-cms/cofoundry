@@ -35,11 +35,11 @@ public class GetPageDirectoryEntityMicroSummariesByIdRangeQueryHandlerTests
             directoryLookup.Count.Should().Be(2);
 
             directory1.Should().NotBeNull();
-            directory1.EntityDefinitionCode.Should().Be(PageDirectoryEntityDefinition.DefinitionCode);
-            directory1.EntityDefinitionName.Should().Be(new PageDirectoryEntityDefinition().Name);
-            directory1.IsPreviousVersion.Should().BeFalse();
-            directory1.RootEntityId.Should().Be(directory1Id);
-            directory1.RootEntityTitle.Should().Be(uniqueData);
+            directory1?.EntityDefinitionCode.Should().Be(PageDirectoryEntityDefinition.DefinitionCode);
+            directory1?.EntityDefinitionName.Should().Be(new PageDirectoryEntityDefinition().Name);
+            directory1?.IsPreviousVersion.Should().BeFalse();
+            directory1?.RootEntityId.Should().Be(directory1Id);
+            directory1?.RootEntityTitle.Should().Be(uniqueData);
 
             directory2.Should().NotBeNull();
         }
