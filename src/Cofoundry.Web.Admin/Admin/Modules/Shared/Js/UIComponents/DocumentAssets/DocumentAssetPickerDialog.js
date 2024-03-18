@@ -41,7 +41,7 @@ function (
         vm.query = new SearchQuery({
             onChanged: onQueryChanged,
             useHistory: false,
-            defaultParams: vm.filter
+            defaultParams: options.filter
         });
         vm.presetFilter = options.filter;
 

@@ -28,12 +28,12 @@
             </cms-form-field-readonly>
 
             <cms-form-field-document-type-selector cms-model="filter.fileExtension"
-                                                   ng-if="!filter.fileExtension"></cms-form-field-document-type-selector>
+                                                   ng-if="!filter.fileExtensions"></cms-form-field-document-type-selector>
 
         </cms-search-filter>
 
-        <cms-pager result="result"
-                   query="query"></cms-pager>
+        <cms-pager cms-result="result"
+                   cms-query="query"></cms-pager>
 
     </cms-page-actions>
 

@@ -26,9 +26,8 @@ function (
         /* Init */
 
         function init() {
-
-            /* Actions */
             vm.setPage = setPage;
+            scope.$watch('vm.result', setResult);
         }
 
         /* Actions */
@@ -42,8 +41,7 @@ function (
         }
 
         /* Watches*/
-        scope.$watch('vm.result', function (newResult) {
-
+        function setResult(newResult) {
             if (!newResult) {
                 vm.isFirstPage = true;
                 vm.isLastPage = true;
@@ -52,7 +50,7 @@ function (
                 vm.isFirstPage = newResult.pageNumber <= 1
                 vm.isLastPage = newResult.pageNumber === newResult.pageCount;
             }
-        });
+        }
     }
 
 }]);

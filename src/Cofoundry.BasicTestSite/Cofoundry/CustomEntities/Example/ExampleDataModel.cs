@@ -107,4 +107,16 @@ public class ExampleDataModel : ICustomEntityDataModel
         MaxItems = 6
         )]
     public ICollection<NestedDataModelMultiTypeItem> TestCollection { get; set; }
+
+    [Image]
+    public int? Image { get; set; }
+
+    [DocumentCollection]
+    public ICollection<int> Documents { get; set; }
+
+    [Document]
+    public int? Document { get; set; }
+
+    [ImageCollection]
+    public ICollection<int> Images { get; set; }
 }
