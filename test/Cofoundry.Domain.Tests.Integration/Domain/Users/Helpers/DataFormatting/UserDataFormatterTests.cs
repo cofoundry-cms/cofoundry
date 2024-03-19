@@ -1,5 +1,5 @@
 ﻿using Cofoundry.Domain.Tests.Shared;
-using Moq;
+using NSubstitute;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Helpers;
 
@@ -26,10 +26,10 @@ public class UserDataFormatterTests
     {
         const string OUTPUT = "Tada! Ha ha ha...";
 
-        var uniquifierMock = new Mock<IUsernameUniquifier<CofoundryAdminUserArea>>();
-        uniquifierMock.Setup(m => m.Uniquify(It.IsAny<string>())).Returns(OUTPUT);
+        var uniquifierMock = Substitute.For<IUsernameUniquifier<CofoundryAdminUserArea>>();
+        uniquifierMock.Uniquify(Arg.Any<string>()).Returns(OUTPUT);
 
-        using var app = _appFactory.Create(s => s.AddSingleton(uniquifierMock.Object));
+        using var app = _appFactory.Create(s => s.AddSingleton(uniquifierMock));
         var formatter = app.Services.GetRequiredService<IUserDataFormatter>();
 
         var cofoundryAdminResult = formatter.UniquifyUsername(CofoundryAdminUserArea.Code, "George Sanderson");

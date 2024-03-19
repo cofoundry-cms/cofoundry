@@ -2,8 +2,7 @@
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared;
 using Microsoft.EntityFrameworkCore;
-using Moq;
-
+using NSubstitute;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
@@ -65,11 +64,11 @@ public class ResetUserPasswordCommandHandlerTests
 
         using var app = _appFactory.Create(s =>
         {
-            var mockPasswordGenerator = new Mock<IPasswordGenerationService>();
+            var mockPasswordGenerator = Substitute.For<IPasswordGenerationService>();
             mockPasswordGenerator
-                .SetupSequence(m => m.Generate(It.IsAny<int>()))
-                .Returns(password2);
-            s.AddSingleton(mockPasswordGenerator.Object);
+                .Generate(Arg.Any<int>())
+                .Returns(password2, string.Empty);
+            s.AddSingleton(mockPasswordGenerator);
         });
 
         var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();

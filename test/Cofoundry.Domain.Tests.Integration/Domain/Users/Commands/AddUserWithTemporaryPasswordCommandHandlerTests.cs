@@ -2,7 +2,7 @@
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared.SeedData;
 using Microsoft.EntityFrameworkCore;
-using Moq;
+using NSubstitute;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
@@ -96,9 +96,9 @@ public class AddUserWithTemporaryPasswordCommandHandlerTests
         var password = "3110n3wm@n";
         using var app = _appFactory.Create(s =>
         {
-            var mockPasswordGenerator = new Mock<IPasswordGenerationService>();
-            mockPasswordGenerator.Setup(m => m.Generate(It.IsAny<int>())).Returns(password);
-            s.AddSingleton(mockPasswordGenerator.Object);
+            var mockPasswordGenerator = Substitute.For<IPasswordGenerationService>();
+            mockPasswordGenerator.Generate(Arg.Any<int>()).Returns(password);
+            s.AddSingleton(mockPasswordGenerator);
         });
         var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();

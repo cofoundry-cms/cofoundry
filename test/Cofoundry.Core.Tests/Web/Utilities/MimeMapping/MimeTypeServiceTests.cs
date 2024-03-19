@@ -1,6 +1,6 @@
 ﻿using Cofoundry.Core.Web.Internal;
 using Microsoft.AspNetCore.StaticFiles;
-using Moq;
+using NSubstitute;
 
 namespace Cofoundry.Core.Tests;
 
@@ -16,8 +16,8 @@ public class MimeTypeServiceTests
     [InlineData("     ")]
     public void MapFromFileName_WhenEmpty_ThrowsArgumentException(string? fileName)
     {
-        var contentTypeProvider = new Mock<IContentTypeProvider>();
-        var service = new MimeTypeService(contentTypeProvider.Object);
+        var contentTypeProvider = Substitute.For<IContentTypeProvider>();
+        var service = new MimeTypeService(contentTypeProvider);
 
         Assert.ThrowsAny<ArgumentException>(() => service.MapFromFileName(fileName!));
     }
@@ -28,9 +28,15 @@ public class MimeTypeServiceTests
         string fileName = "my-file.jpg";
         string? contentType = JPEG_MIME_TYPE;
 
-        var contentTypeProvider = new Mock<IContentTypeProvider>();
-        contentTypeProvider.Setup(p => p.TryGetContentType(fileName, out contentType)).Returns(true);
-        var service = new MimeTypeService(contentTypeProvider.Object);
+        var contentTypeProvider = Substitute.For<IContentTypeProvider>();
+        contentTypeProvider
+            .TryGetContentType(Arg.Is(fileName), out Arg.Any<string?>())
+            .Returns(x =>
+            {
+                x[1] = contentType;
+                return true;
+            });
+        var service = new MimeTypeService(contentTypeProvider);
 
         var result = service.MapFromFileName(fileName);
 
@@ -43,9 +49,15 @@ public class MimeTypeServiceTests
         string fileName = "my-file.jpg";
         string? contentType = null;
 
-        var contentTypeProvider = new Mock<IContentTypeProvider>();
-        contentTypeProvider.Setup(p => p.TryGetContentType(fileName, out contentType)).Returns(false);
-        var service = new MimeTypeService(contentTypeProvider.Object);
+        var contentTypeProvider = Substitute.For<IContentTypeProvider>();
+        contentTypeProvider
+            .TryGetContentType(Arg.Is(fileName), out Arg.Any<string?>())
+            .Returns(x =>
+            {
+                x[1] = contentType;
+                return false;
+            });
+        var service = new MimeTypeService(contentTypeProvider);
 
         var result = service.MapFromFileName(fileName);
 
@@ -59,8 +71,8 @@ public class MimeTypeServiceTests
     [InlineData("     ")]
     public void MapFromFileNameWithDefault_WhenEmpty_ThrowsArgumentException(string? fileName)
     {
-        var contentTypeProvider = new Mock<IContentTypeProvider>();
-        var service = new MimeTypeService(contentTypeProvider.Object);
+        var contentTypeProvider = Substitute.For<IContentTypeProvider>();
+        var service = new MimeTypeService(contentTypeProvider);
 
         Assert.ThrowsAny<ArgumentException>(() => service.MapFromFileName(fileName!, TEST_DEFAULT_MIME_TYPE));
     }
@@ -71,9 +83,15 @@ public class MimeTypeServiceTests
         string fileName = "my-file.jpg";
         string? contentType = JPEG_MIME_TYPE;
 
-        var contentTypeProvider = new Mock<IContentTypeProvider>();
-        contentTypeProvider.Setup(p => p.TryGetContentType(fileName, out contentType)).Returns(true);
-        var service = new MimeTypeService(contentTypeProvider.Object);
+        var contentTypeProvider = Substitute.For<IContentTypeProvider>();
+        contentTypeProvider
+            .TryGetContentType(Arg.Is(fileName), out Arg.Any<string?>())
+            .Returns(x =>
+            {
+                x[1] = contentType;
+                return true;
+            });
+        var service = new MimeTypeService(contentTypeProvider);
 
         var result = service.MapFromFileName(fileName, TEST_DEFAULT_MIME_TYPE);
 
@@ -86,9 +104,15 @@ public class MimeTypeServiceTests
         string fileName = "my-file.jpg";
         string? contentType = null;
 
-        var contentTypeProvider = new Mock<IContentTypeProvider>();
-        contentTypeProvider.Setup(p => p.TryGetContentType(fileName, out contentType)).Returns(false);
-        var service = new MimeTypeService(contentTypeProvider.Object);
+        var contentTypeProvider = Substitute.For<IContentTypeProvider>();
+        contentTypeProvider
+            .TryGetContentType(Arg.Is(fileName), out Arg.Any<string?>())
+            .Returns(x =>
+            {
+                x[1] = contentType;
+                return false;
+            });
+        var service = new MimeTypeService(contentTypeProvider);
 
         var result = service.MapFromFileName(fileName, TEST_DEFAULT_MIME_TYPE);
 

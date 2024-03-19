@@ -1,7 +1,7 @@
 ﻿using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Identity;
-using Moq;
+using NSubstitute;
 
 namespace Cofoundry.Domain.Tests.Users.Helpers;
 
@@ -63,12 +63,12 @@ public class UserAuthenticationHelperTests
 
     private static IUserAreaDefinition CreateUserAreaDefinition(string code, bool allowPasswordLogin)
     {
-        var userAreaDefinition = new Mock<IUserAreaDefinition>();
-        userAreaDefinition.SetupGet(o => o.AllowPasswordSignIn).Returns(allowPasswordLogin);
-        userAreaDefinition.SetupGet(o => o.UserAreaCode).Returns(code);
-        userAreaDefinition.SetupGet(o => o.Name).Returns(code);
+        var userAreaDefinition = Substitute.For<IUserAreaDefinition>();
+        userAreaDefinition.AllowPasswordSignIn.Returns(allowPasswordLogin);
+        userAreaDefinition.UserAreaCode.Returns(code);
+        userAreaDefinition.Name.Returns(code);
 
-        return userAreaDefinition.Object;
+        return userAreaDefinition;
     }
 
     public static UserAuthenticationHelper CreateUserAuthenticationHelper(params IUserAreaDefinition[] userAreaDefinitions)
@@ -78,12 +78,12 @@ public class UserAuthenticationHelperTests
 
         var userAreaRepository = new UserAreaDefinitionRepository(allDefinitions, new UsersSettings());
 
-        var passwordCryptographyServiceMock = new Mock<IPasswordCryptographyService>();
+        var passwordCryptographyServiceMock = Substitute.For<IPasswordCryptographyService>();
         passwordCryptographyServiceMock
-            .Setup(c => c.Verify(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
+            .Verify(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>())
             .Returns(PasswordVerificationResult.Success);
 
-        var helper = new UserAuthenticationHelper(passwordCryptographyServiceMock.Object, userAreaRepository);
+        var helper = new UserAuthenticationHelper(passwordCryptographyServiceMock, userAreaRepository);
 
         return helper;
     }

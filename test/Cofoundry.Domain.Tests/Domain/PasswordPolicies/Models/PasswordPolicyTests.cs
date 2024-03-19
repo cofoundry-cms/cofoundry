@@ -1,6 +1,6 @@
 ﻿using Cofoundry.Core.Validation;
 using Cofoundry.Domain.Internal;
-using Moq;
+using NSubstitute;
 
 namespace Cofoundry.Domain.Tests.PasswordPolicies.Models;
 
@@ -12,11 +12,11 @@ public class PasswordPolicyTests
         var validators = new List<INewPasswordValidatorBase>();
         var asyncValidationError = new ValidationError("test-async");
 
-        var mockAsyncValidator = new Mock<IAsyncNewPasswordValidator>();
+        var mockAsyncValidator = Substitute.For<IAsyncNewPasswordValidator>();
         mockAsyncValidator
-            .Setup(v => v.ValidateAsync(It.IsAny<INewPasswordValidationContext>()))
-            .ReturnsAsync(asyncValidationError);
-        validators.Add(mockAsyncValidator.Object);
+            .ValidateAsync(Arg.Any<INewPasswordValidationContext>())
+            .Returns(asyncValidationError);
+        validators.Add(mockAsyncValidator);
 
         var maxLengthValidator = new MaxLengthNewPasswordValidator();
         maxLengthValidator.Configure(6);

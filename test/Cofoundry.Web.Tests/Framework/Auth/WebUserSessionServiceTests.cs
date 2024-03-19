@@ -4,7 +4,7 @@ using Cofoundry.Domain.Tests.Users.Services;
 using Cofoundry.Web.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Moq;
+using NSubstitute;
 
 namespace Cofoundry.Web.Tests.Framework.ClientConnection;
 
@@ -12,20 +12,22 @@ public class WebUserSessionServiceTests : UserSessionServiceTests
 {
     protected override IUserSessionService CreateService(IUserAreaDefinitionRepository userAreaDefinitionRepository)
     {
-        var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+        var mockHttpContextAccessor = Substitute.For<IHttpContextAccessor>();
         var context = new DefaultHttpContext();
         context.RequestServices = CreateServiceProvider(userAreaDefinitionRepository);
-        mockHttpContextAccessor.Setup(m => m.HttpContext).Returns(context);
+        mockHttpContextAccessor.HttpContext.Returns(context);
 
-        var mockClaimsPrincipalBuilderContextRepository = new Mock<IClaimsPrincipalBuilderContextRepository>();
-        mockClaimsPrincipalBuilderContextRepository.Setup(m => m.GetAsync(It.IsAny<int>())).ReturnsAsync((Func<int, IClaimsPrincipalBuilderContext>)builderContext);
+        var mockClaimsPrincipalBuilderContextRepository = Substitute.For<IClaimsPrincipalBuilderContextRepository>();
+        mockClaimsPrincipalBuilderContextRepository
+            .GetAsync(Arg.Any<int>())
+            .Returns(x => builderContext(x.Arg<int>()));
 
         return new WebUserSessionService(
-            mockHttpContextAccessor.Object,
+            mockHttpContextAccessor,
             userAreaDefinitionRepository,
             new UserContextCache(),
             new ClaimsPrincipalFactory(),
-            mockClaimsPrincipalBuilderContextRepository.Object
+            mockClaimsPrincipalBuilderContextRepository
             );
 
         static IClaimsPrincipalBuilderContext builderContext(int i) => new ClaimsPrincipalBuilderContext()

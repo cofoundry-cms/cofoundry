@@ -1,6 +1,6 @@
 using Cofoundry.Domain.CQS;
 using Cofoundry.Web.Internal;
-using Moq;
+using NSubstitute;
 
 namespace Cofoundry.Web.Tests;
 
@@ -79,25 +79,25 @@ public class CurrentUserViewHelperTests
 
     private static IUserContextService MockUserContextService(IUserContext defaultUserContext)
     {
-        var userContextService = new Mock<IUserContextService>();
+        var userContextService = Substitute.For<IUserContextService>();
 
         userContextService
-            .Setup(r => r.GetCurrentContextAsync())
-            .ReturnsAsync(() => defaultUserContext);
+            .GetCurrentContextAsync()
+            .Returns(defaultUserContext);
 
         userContextService
-            .Setup(r => r.GetCurrentContextByUserAreaAsync(It.Is<string>(s => s == _signedInUserAreaContext.UserArea.UserAreaCode)))
-            .ReturnsAsync(() => _userAreaContext);
+            .GetCurrentContextByUserAreaAsync(Arg.Is(_signedInUserAreaContext.UserArea.UserAreaCode))
+            .Returns(_userAreaContext);
 
-        return userContextService.Object;
+        return userContextService;
     }
 
     private static IQueryExecutor MockQueryExecutor(IUserContext defaultUserContext)
     {
-        var queryExecutor = new Mock<IQueryExecutor>();
+        var queryExecutor = Substitute.For<IQueryExecutor>();
         queryExecutor
-            .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == null), It.Is<IUserContext>(m => m == defaultUserContext)))
-            .ReturnsAsync(() => new RoleDetails()
+            .ExecuteAsync(Arg.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == null), Arg.Is(defaultUserContext))
+            .Returns(new RoleDetails()
             {
                 RoleId = -1,
                 IsAnonymousRole = true,
@@ -105,8 +105,8 @@ public class CurrentUserViewHelperTests
                 UserArea = UserAreaMicroSummary.Uninitialized
             });
         queryExecutor
-            .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == _userAreaContext.RoleId), It.Is<IUserContext>(m => m == _userAreaContext)))
-            .ReturnsAsync(() => new RoleDetails()
+            .ExecuteAsync(Arg.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == _userAreaContext.RoleId), Arg.Is(_userAreaContext))
+            .Returns(new RoleDetails()
             {
                 IsAnonymousRole = false,
                 RoleId = _signedInUserAreaContext.RoleId,
@@ -115,8 +115,8 @@ public class CurrentUserViewHelperTests
             });
 
         queryExecutor
-            .Setup(r => r.ExecuteAsync(It.Is<GetUserSummaryByIdQuery>(m => m.UserId == _userAreaContext.UserId), It.Is<IUserContext>(m => m == _userAreaContext)))
-            .ReturnsAsync(() => new UserSummary()
+            .ExecuteAsync(Arg.Is<GetUserSummaryByIdQuery>(m => m.UserId == _userAreaContext.UserId), Arg.Is(_userAreaContext))
+            .Returns(new UserSummary()
             {
                 UserId = _signedInUserAreaContext.UserId
             });
@@ -125,8 +125,8 @@ public class CurrentUserViewHelperTests
         if (defualtSignedInUser != null)
         {
             queryExecutor
-                .Setup(r => r.ExecuteAsync(It.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == defualtSignedInUser.RoleId), It.Is<IUserContext>(m => m == defaultUserContext)))
-                .ReturnsAsync(() => new RoleDetails()
+                .ExecuteAsync(Arg.Is<GetRoleDetailsByIdQuery>(m => m.RoleId == defualtSignedInUser.RoleId), Arg.Is(defaultUserContext))
+                .Returns(new RoleDetails()
                 {
                     IsAnonymousRole = false,
                     RoleId = defualtSignedInUser.RoleId,
@@ -135,13 +135,13 @@ public class CurrentUserViewHelperTests
                 });
 
             queryExecutor
-                .Setup(r => r.ExecuteAsync(It.Is<GetUserSummaryByIdQuery>(m => m.UserId == defualtSignedInUser.UserId), It.Is<IUserContext>(m => m == defaultUserContext)))
-                .ReturnsAsync(new UserSummary()
+                .ExecuteAsync(Arg.Is<GetUserSummaryByIdQuery>(m => m.UserId == defualtSignedInUser.UserId), Arg.Is(defaultUserContext))
+                .Returns(new UserSummary()
                 {
                     UserId = defualtSignedInUser.UserId
                 });
         }
 
-        return queryExecutor.Object;
+        return queryExecutor;
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Cofoundry.Domain.Internal;
-using Moq;
+using NSubstitute;
 
 namespace Cofoundry.Domain.Tests;
 
@@ -68,10 +68,10 @@ public class EntityDefinitionRepositoryTests
     [Fact]
     public void GetAll_WhenEmpty_ReturnsNone()
     {
-        var mock = new Mock<ICustomEntityDefinitionRepository>();
-        mock.Setup(r => r.GetAll()).Returns(() => Enumerable.Empty<ICustomEntityDefinition>());
+        var mock = Substitute.For<ICustomEntityDefinitionRepository>();
+        mock.GetAll().Returns(Enumerable.Empty<ICustomEntityDefinition>());
 
-        var customEntityRepository = mock.Object;
+        var customEntityRepository = mock;
         var entityDefinitions = Enumerable.Empty<IEntityDefinition>();
 
         var repo = new EntityDefinitionRepository(entityDefinitions, customEntityRepository);
@@ -226,10 +226,10 @@ public class EntityDefinitionRepositoryTests
 
     private ICustomEntityDefinitionRepository GetCustomEntityRepository()
     {
-        var mock = new Mock<ICustomEntityDefinitionRepository>();
+        var mock = Substitute.For<ICustomEntityDefinitionRepository>();
         var customEntityDefinitions = GetBaseCustomEntityDefinitions();
-        mock.Setup(r => r.GetAll()).Returns(() => customEntityDefinitions);
+        mock.GetAll().Returns(customEntityDefinitions);
 
-        return mock.Object;
+        return mock;
     }
 }
