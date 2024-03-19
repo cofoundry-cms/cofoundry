@@ -20,26 +20,24 @@ public class PageRenderSummaryMapper : IPageRenderSummaryMapper
     }
 
     /// <inheritdoc/>
-    public virtual T Map<T>(PageVersion dbPageVersion, PageRoute pageRoute)
-        where T : PageRenderSummary, new()
+    public virtual PageRenderSummary Map(PageVersion dbPageVersion, PageRoute pageRoute)
     {
         ArgumentNullException.ThrowIfNull(dbPageVersion);
         ArgumentNullException.ThrowIfNull(pageRoute);
 
-        var page = MapInternal<T>(dbPageVersion);
+        var page = MapInternal(dbPageVersion);
         page.PageRoute = pageRoute;
 
         return page;
     }
 
     /// <inheritdoc/>
-    public virtual T Map<T>(PageVersion dbPageVersion, IReadOnlyDictionary<int, PageRoute> pageRouteLookup)
-        where T : PageRenderSummary, new()
+    public virtual PageRenderSummary Map(PageVersion dbPageVersion, IReadOnlyDictionary<int, PageRoute> pageRouteLookup)
     {
         ArgumentNullException.ThrowIfNull(dbPageVersion);
         ArgumentNullException.ThrowIfNull(pageRouteLookup);
 
-        var page = MapInternal<T>(dbPageVersion);
+        var page = MapInternal(dbPageVersion);
 
         var pageRoute = pageRouteLookup.GetValueOrDefault(page.PageId);
         if (pageRoute == null)
@@ -52,9 +50,9 @@ public class PageRenderSummaryMapper : IPageRenderSummaryMapper
         return page;
     }
 
-    protected T MapInternal<T>(PageVersion dbPageVersion) where T : PageRenderSummary, new()
+    protected PageRenderSummary MapInternal(PageVersion dbPageVersion)
     {
-        var page = new T()
+        var page = new PageRenderSummary()
         {
             MetaDescription = dbPageVersion.MetaDescription,
             PageId = dbPageVersion.PageId,

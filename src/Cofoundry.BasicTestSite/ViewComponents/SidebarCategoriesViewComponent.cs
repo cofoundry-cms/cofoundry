@@ -15,12 +15,6 @@ public class SidebarCategoriesViewComponent : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var query = new SearchCustomEntityRenderSummariesQuery();
-        query.CustomEntityDefinitionCode = CategoryCustomEntityDefinition.DefinitionCode;
-        query.PageSize = 20;
-        query.SortBy = CustomEntityQuerySortType.Title;
-        query.PublishStatus = PublishStatusQuery.Published;
-
         var entities = await _contentRepository
             .CustomEntities()
             .Search()
@@ -38,18 +32,20 @@ public class SidebarCategoriesViewComponent : ViewComponent
         return View(viewModel);
     }
 
-    private ICollection<CategorySummary> MapCategories(PagedQueryResult<CustomEntityRenderSummary> customEntityResult)
+    private static IReadOnlyCollection<CategorySummary> MapCategories(PagedQueryResult<CustomEntityRenderSummary> customEntityResult)
     {
-        var categories = new List<CategorySummary>(customEntityResult.Items.Count());
+        var categories = new List<CategorySummary>(customEntityResult.Items.Count);
 
         foreach (var customEntity in customEntityResult.Items)
         {
             var model = (CategoryDataModel)customEntity.Model;
 
-            var category = new CategorySummary();
-            category.CategoryId = customEntity.CustomEntityId;
-            category.Title = customEntity.Title;
-            category.ShortDescription = model.ShortDescription;
+            var category = new CategorySummary
+            {
+                CategoryId = customEntity.CustomEntityId,
+                Title = customEntity.Title,
+                ShortDescription = model.ShortDescription
+            };
 
             categories.Add(category);
         }

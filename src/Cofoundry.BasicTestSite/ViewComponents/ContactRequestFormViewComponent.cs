@@ -21,18 +21,20 @@ public class ContactRequestFormViewComponent : ViewComponent
     {
         var contactRequest = new ContactRequest();
 
-        if (this.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+        if (Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
         {
-            contactRequest.Name = Request.Form[nameof(contactRequest.Name)];
-            contactRequest.EmailAddress = Request.Form[nameof(contactRequest.EmailAddress)];
-            contactRequest.Message = Request.Form[nameof(contactRequest.Message)];
+            contactRequest.Name = GetFormValueOrDefault(nameof(contactRequest.Name));
+            contactRequest.EmailAddress = GetFormValueOrDefault(nameof(contactRequest.EmailAddress));
+            contactRequest.Message = GetFormValueOrDefault(nameof(contactRequest.Message));
 
             // TODO: Update model binding, Validate model
             if (ModelState.IsValid)
             {
                 // Send admin confirmation
-                var template = new ContactRequestMailTemplate();
-                template.Request = contactRequest;
+                var template = new ContactRequestMailTemplate
+                {
+                    Request = contactRequest
+                };
                 await _mailService.SendAsync(_simpleTestSiteSettings.ContactRequestNotificationToAddress, template);
 
                 return View("ContactSuccess");
@@ -40,6 +42,12 @@ public class ContactRequestFormViewComponent : ViewComponent
         }
 
         return View(contactRequest);
-    }
 
+        string GetFormValueOrDefault(string propertyName)
+        {
+            string? value = Request.Form[propertyName];
+
+            return value ?? string.Empty;
+        }
+    }
 }

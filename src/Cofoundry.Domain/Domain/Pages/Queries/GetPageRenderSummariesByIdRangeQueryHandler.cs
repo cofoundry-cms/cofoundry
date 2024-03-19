@@ -37,7 +37,7 @@ public class GetPageRenderSummariesByIdRangeQueryHandler
         var pageRoutes = await _queryExecutor.ExecuteAsync(pageRoutesQuery, executionContext);
 
         var pages = dbPages
-            .Select(p => _pageRenderSummaryMapper.Map<PageRenderSummary>(p, pageRoutes))
+            .Select(p => _pageRenderSummaryMapper.Map(p, pageRoutes))
             .ToArray();
 
         return pages.ToImmutableDictionary(d => d.PageId);

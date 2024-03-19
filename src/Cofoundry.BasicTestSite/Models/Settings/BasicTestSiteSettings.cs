@@ -10,5 +10,5 @@ public class BasicTestSiteSettings : IConfigurationSettings
     /// </summary>
     [Required]
     [EmailAddress]
-    public string ContactRequestNotificationToAddress { get; set; }
+    public string ContactRequestNotificationToAddress { get; set; } = string.Empty;
 }

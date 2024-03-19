@@ -5,6 +5,7 @@ namespace Cofoundry.Domain.Internal;
 /// <summary>
 /// Simple mapper for mapping to PageGroupSummary objects.
 /// </summary>
+[Obsolete("The page grouping system will be revised in an upcomming release.")]
 public interface IPageGroupSummaryMapper
 {
     /// <summary>

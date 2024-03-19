@@ -14,9 +14,9 @@ namespace Cofoundry.BasicTestSite;
 /// </summary>
 public class ContentSectionDisplayModel : IPageBlockTypeDisplayModel, IPageBlockWithParentPageData
 {
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
-    public IHtmlContent HtmlText { get; set; }
+    public IHtmlContent HtmlText { get; set; } = HtmlString.Empty;
 
-    public IEditablePageViewModel ParentPage { get; set; }
+    public IEditablePageViewModel ParentPage { get; set; } = UninitializedEditablePageViewModel.Instance;
 }

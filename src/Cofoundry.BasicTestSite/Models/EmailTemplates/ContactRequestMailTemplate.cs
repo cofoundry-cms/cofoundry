@@ -8,5 +8,5 @@ public class ContactRequestMailTemplate : IMailTemplate
 
     public string Subject => "New Contact Request";
 
-    public ContactRequest Request { get; set; }
+    public required ContactRequest Request { get; set; }
 }

@@ -3,6 +3,7 @@ using Cofoundry.Domain.QueryModels;
 
 namespace Cofoundry.Domain.Internal;
 
+[Obsolete("The page grouping system will be revised in an upcomming release.")]
 public class GetAllPageGroupSummariesQueryHandler
     : IQueryHandler<GetAllPageGroupSummariesQuery, IReadOnlyCollection<PageGroupSummary>>
     , IPermissionRestrictedQueryHandler<GetAllPageGroupSummariesQuery, IReadOnlyCollection<PageGroupSummary>>

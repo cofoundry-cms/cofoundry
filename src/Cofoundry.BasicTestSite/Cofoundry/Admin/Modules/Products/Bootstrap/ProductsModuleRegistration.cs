@@ -28,8 +28,5 @@ public class ProductsModuleRegistration : IStandardAngularModuleRegistration
         return module;
     }
 
-    public string RoutePrefix
-    {
-        get { return "products"; }
-    }
+    public string RoutePrefix => "products";
 }

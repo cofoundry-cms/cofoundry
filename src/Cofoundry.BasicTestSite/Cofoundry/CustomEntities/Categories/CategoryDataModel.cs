@@ -12,7 +12,7 @@ public class CategoryDataModel : ICustomEntityDataModel
     [MaxLength(500)]
     [Display(Description = "A short description that appears as a tooltip when hovering over the category.")]
     [MultiLineText]
-    public string ShortDescription { get; set; }
+    public string? ShortDescription { get; set; }
 
     [PreviewImage]
     [Image(MinWidth = 460, MinHeight = 460)]

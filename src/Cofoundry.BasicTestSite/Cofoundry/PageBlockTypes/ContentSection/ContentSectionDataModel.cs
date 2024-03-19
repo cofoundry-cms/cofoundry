@@ -16,17 +16,17 @@ namespace Cofoundry.BasicTestSite;
 public class ContentSectionDataModel : IPageBlockTypeDataModel
 {
     [Display(Description = "Optional title to display at the top of the section")]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     [Required]
     [Display(Name = "Text", Description = "Rich text displayed at full width")]
     [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings, HtmlToolbarPreset.Media)]
-    public string HtmlText { get; set; }
+    public string HtmlText { get; set; } = string.Empty;
 
 
     [CustomEntityMultiTypeCollection(
         CategoryCustomEntityDefinition.DefinitionCode,
         BlogPostCustomEntityDefinition.DefinitionCode,
         IsOrderable = true)]
-    public ICollection<CustomEntityIdentity> Entities { get; set; }
+    public IReadOnlyCollection<CustomEntityIdentity> Entities { get; set; } = Array.Empty<CustomEntityIdentity>();
 }

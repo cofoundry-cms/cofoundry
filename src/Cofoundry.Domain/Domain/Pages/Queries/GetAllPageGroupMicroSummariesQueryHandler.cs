@@ -2,6 +2,7 @@
 
 namespace Cofoundry.Domain.Internal;
 
+[Obsolete("The page grouping system will be revised in an upcomming release.")]
 public class GetAllPageGroupMicroSummariesQueryHandler
     : IQueryHandler<GetAllPageGroupMicroSummariesQuery, IReadOnlyCollection<PageGroupMicroSummary>>
     , IPermissionRestrictedQueryHandler<GetAllPageGroupMicroSummariesQuery, IReadOnlyCollection<PageGroupMicroSummary>>

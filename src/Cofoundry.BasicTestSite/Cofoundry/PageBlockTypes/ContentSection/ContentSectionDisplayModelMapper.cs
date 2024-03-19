@@ -20,9 +20,11 @@ public class ContentSectionDisplayModelMapper : IPageBlockTypeDisplayModelMapper
     {
         foreach (var input in context.Items)
         {
-            var output = new ContentSectionDisplayModel();
-            output.HtmlText = new HtmlString(input.DataModel.HtmlText);
-            output.Title = input.DataModel.Title;
+            var output = new ContentSectionDisplayModel
+            {
+                HtmlText = new HtmlString(input.DataModel.HtmlText),
+                Title = input.DataModel.Title
+            };
 
             result.Add(input, output);
         }

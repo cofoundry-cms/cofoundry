@@ -6,9 +6,9 @@ public class CarouselDataModel : IPageBlockTypeDataModel, IPageBlockTypeDisplayM
 {
     [MaxLength(100)]
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     [Required]
     [NestedDataModelCollection(IsOrderable = true, MinItems = 2, MaxItems = 6)]
-    public ICollection<CarouselItemDataModel> Items { get; set; }
+    public IReadOnlyCollection<CarouselItemDataModel> Items { get; set; } = Array.Empty<CarouselItemDataModel>();
 }

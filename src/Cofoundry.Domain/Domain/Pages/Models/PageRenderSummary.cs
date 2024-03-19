@@ -49,4 +49,14 @@ public class PageRenderSummary
     /// The date the custom entity was created.
     /// </summary>
     public DateTime CreateDate { get; set; }
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly PageRenderSummary Uninitialized = new()
+    {
+        PageId = int.MinValue
+    };
 }

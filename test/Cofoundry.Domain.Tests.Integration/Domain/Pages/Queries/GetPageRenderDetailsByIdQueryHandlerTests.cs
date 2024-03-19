@@ -292,7 +292,31 @@ public class GetPageRenderDetailsByIdQueryHandlerTests
         PageRenderDetails? page
         )
     {
-        GetPageRenderSummaryByIdQueryHandlerTests.AssertBasicDataMapping(addPageCommand, versionId, page);
+        page.Should().NotBeNull();
+
+        if (page == null)
+        {
+            return;
+        }
+
+        page.PageId.Should().Be(addPageCommand.OutputPageId);
+        page.PageVersionId.Should().Be(versionId);
+        page.CreateDate.Should().NotBeDefault();
+
+        page.PageRoute.Should().NotBeNull();
+        page.PageRoute.PageId.Should().Be(addPageCommand.OutputPageId);
+
+        page.Should().NotBeNull();
+        page.OpenGraph.Should().NotBeNull();
+        page.OpenGraph.Title.Should().Be(addPageCommand.OpenGraphTitle);
+        page.OpenGraph.Description.Should().Be(addPageCommand.OpenGraphDescription);
+        page.OpenGraph.Image.Should().NotBeNull();
+        page.OpenGraph.Image?.ImageAssetId.Should().Be(addPageCommand.OpenGraphImageId);
+        page.MetaDescription.Should().Be(addPageCommand.MetaDescription);
+
+        page.Title.Should().Be(addPageCommand.Title);
+        page.PageVersionId.Should().Be(versionId);
+        page.WorkFlowStatus.Should().Be(WorkFlowStatus.Published);
 
         page?.Template.Should().NotBeNull();
         page?.Regions.Should().NotBeNull();

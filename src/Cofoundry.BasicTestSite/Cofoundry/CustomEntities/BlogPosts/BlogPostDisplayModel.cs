@@ -8,15 +8,15 @@
 /// </summary>
 public class BlogPostDisplayModel : ICustomEntityPageDisplayModel<BlogPostDataModel>
 {
-    public string PageTitle { get; set; }
+    public string PageTitle { get; set; } = string.Empty;
 
-    public string MetaDescription { get; set; }
+    public string? MetaDescription { get; set; }
 
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     public DateTime Date { get; set; }
 
-    public string FullPath { get; set; }
+    public string? FullPath { get; set; }
 
-    public IReadOnlyCollection<CategorySummary> Categories { get; set; }
+    public IReadOnlyCollection<CategorySummary> Categories { get; set; } = Array.Empty<CategorySummary>();
 }

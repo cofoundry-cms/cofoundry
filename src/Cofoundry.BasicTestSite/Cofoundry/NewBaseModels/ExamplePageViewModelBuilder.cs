@@ -57,7 +57,7 @@ public class ExamplePageViewModelBuilder : IPageViewModelBuilder
         return viewModel;
     }
 
-    private Task ExampleCustomMappingAsync<TDisplayModel>(ICustomEntityPageViewModel<TDisplayModel> model)
+    private static Task ExampleCustomMappingAsync<TDisplayModel>(ICustomEntityPageViewModel<TDisplayModel> model)
         where TDisplayModel : ICustomEntityPageDisplayModel
     {
         return Task.CompletedTask;

@@ -1,10 +1,10 @@
 ﻿namespace Cofoundry.BasicTestSite;
 
-public class CategorySummary
+public record CategorySummary
 {
-    public int CategoryId { get; set; }
+    public required int CategoryId { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string ShortDescription { get; set; }
+    public required string? ShortDescription { get; init; }
 }

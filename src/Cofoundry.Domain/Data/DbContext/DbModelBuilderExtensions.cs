@@ -31,8 +31,10 @@ public static class DbModelBuilderExtensions
     {
         modelBuilder
             .ApplyConfiguration(new ImageAssetMap())
+#pragma warning disable CS0618 // Type or member is obsolete
             .ApplyConfiguration(new ImageAssetGroupMap())
             .ApplyConfiguration(new ImageAssetGroupItemMap())
+#pragma warning restore CS0618 // Type or member is obsolete
             .ApplyConfiguration(new ImageAssetTagMap());
 
         return modelBuilder;
@@ -46,8 +48,10 @@ public static class DbModelBuilderExtensions
     {
         modelBuilder
             .ApplyConfiguration(new DocumentAssetMap())
+#pragma warning disable CS0618 // Type or member is obsolete
             .ApplyConfiguration(new DocumentAssetGroupMap())
             .ApplyConfiguration(new DocumentAssetGroupItemMap())
+#pragma warning restore CS0618 // Type or member is obsolete
             .ApplyConfiguration(new DocumentAssetTagMap());
 
         return modelBuilder;
@@ -116,8 +120,10 @@ public static class DbModelBuilderExtensions
             .ApplyConfiguration(new PageTemplateRegionMap())
             .ApplyConfiguration(new PageBlockTypeTemplateMap())
             .ApplyConfiguration(new PageBlockTypeMap())
+#pragma warning disable CS0618 // Type or member is obsolete
             .ApplyConfiguration(new PageGroupItemMap())
             .ApplyConfiguration(new PageGroupMap())
+#pragma warning restore CS0618 // Type or member is obsolete
             .ApplyConfiguration(new PageVersionBlockMap())
             .ApplyConfiguration(new PageMap())
             .ApplyConfiguration(new PageAccessRuleMap())

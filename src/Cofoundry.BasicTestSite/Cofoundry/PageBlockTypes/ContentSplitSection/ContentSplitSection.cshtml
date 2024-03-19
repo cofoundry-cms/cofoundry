@@ -21,8 +21,10 @@
         }
         @Model.HtmlText
     </div>
-
-    <div class="col-sm-6">
-        <img src="@Cofoundry.Routing.ImageAsset(Model.Image)" class="img-responsive img-thumbnail">
-    </div>
+    @if (Model.Image != null)
+    {
+        <div class="col-sm-6">
+            <img src="@Cofoundry.Routing.ImageAsset(Model.Image)" class="img-responsive img-thumbnail">
+        </div>
+    }
 </div>

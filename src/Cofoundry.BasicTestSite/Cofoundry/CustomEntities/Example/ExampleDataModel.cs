@@ -68,13 +68,13 @@ public class HtmlWithCustomEditorAttribute : HtmlAttribute
 public class HeaderBlock : INestedDataModel
 {
     [Required]
-    public string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
 }
 
 public class TeaserBlockDataModel : INestedDataModel
 {
     [Required]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     [PreviewImage]
     [Display(Name = "Image")]
@@ -86,10 +86,10 @@ public class TeaserBlockDataModel : INestedDataModel
 public class ContentBlock : INestedDataModel
 {
     [PreviewTitle]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     [PreviewDescription]
-    public string Text { get; set; }
+    public string? Text { get; set; }
 }
 
 public class ExampleDataModel : ICustomEntityDataModel
@@ -98,25 +98,25 @@ public class ExampleDataModel : ICustomEntityDataModel
         IsOrderable = true,
         MinItems = 2,
         MaxItems = 6)]
-    public ICollection<TeaserBlockDataModel> Blocks { get; set; }
+    public IReadOnlyCollection<TeaserBlockDataModel> Blocks { get; set; } = Array.Empty<TeaserBlockDataModel>();
 
     [NestedDataModelMultiTypeCollection(
-        new Type[] { typeof(ContentBlock), typeof(TeaserBlockDataModel), typeof(HeaderBlock) },
+        [typeof(ContentBlock), typeof(TeaserBlockDataModel), typeof(HeaderBlock)],
         IsOrderable = true,
         //MinItems = 2, 
         MaxItems = 6
         )]
-    public ICollection<NestedDataModelMultiTypeItem> TestCollection { get; set; }
+    public IReadOnlyCollection<NestedDataModelMultiTypeItem> TestCollection { get; set; } = Array.Empty<NestedDataModelMultiTypeItem>();
 
     [Image]
     public int? Image { get; set; }
 
     [DocumentCollection]
-    public ICollection<int> Documents { get; set; }
+    public IReadOnlyCollection<int> Documents { get; set; } = Array.Empty<int>();
 
     [Document]
     public int? Document { get; set; }
 
     [ImageCollection]
-    public ICollection<int> Images { get; set; }
+    public IReadOnlyCollection<int> Images { get; set; } = Array.Empty<int>();
 }

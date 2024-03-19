@@ -2,5 +2,5 @@
 
 public class ExamplePageViewModel : PageViewModel
 {
-    public string ExampleMessage { get; set; }
+    public string? ExampleMessage { get; set; }
 }

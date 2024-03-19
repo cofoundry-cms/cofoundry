@@ -43,7 +43,7 @@ public class GetPageRenderSummaryByIdQueryHandler
             return null;
         }
 
-        var page = _pageRenderSummaryMapper.Map<PageRenderSummary>(dbPage, pageRoute);
+        var page = _pageRenderSummaryMapper.Map(dbPage, pageRoute);
 
         return page;
     }

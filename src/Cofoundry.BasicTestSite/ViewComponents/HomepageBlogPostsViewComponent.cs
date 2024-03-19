@@ -38,7 +38,7 @@ public class HomepageBlogPostsViewComponent : ViewComponent
 
     private async Task<PagedQueryResult<BlogPostSummary>> MapBlogPostsAsync(PagedQueryResult<CustomEntityRenderSummary> customEntityResult)
     {
-        var blogPosts = new List<BlogPostSummary>(customEntityResult.Items.Count());
+        var blogPosts = new List<BlogPostSummary>(customEntityResult.Items.Count);
 
         var imageAssetIds = customEntityResult
             .Items
@@ -56,12 +56,14 @@ public class HomepageBlogPostsViewComponent : ViewComponent
         {
             var model = (BlogPostDataModel)customEntity.Model;
 
-            var blogPost = new BlogPostSummary();
-            blogPost.Title = customEntity.Title;
-            blogPost.ShortDescription = model.ShortDescription;
-            blogPost.ThumbnailImageAsset = images.GetValueOrDefault(model.ThumbnailImageAssetId);
-            blogPost.FullPath = customEntity.PageUrls.FirstOrDefault();
-            blogPost.PostDate = customEntity.CreateDate;
+            var blogPost = new BlogPostSummary
+            {
+                Title = customEntity.Title,
+                ShortDescription = model.ShortDescription,
+                ThumbnailImageAsset = images.GetValueOrDefault(model.ThumbnailImageAssetId),
+                FullPath = customEntity.PageUrls.FirstOrDefault(),
+                PostDate = customEntity.CreateDate
+            };
 
             blogPosts.Add(blogPost);
         }

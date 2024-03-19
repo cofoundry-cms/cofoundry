@@ -75,4 +75,14 @@ public class ImageAssetRenderDetails : IImageAssetRenderable
     /// The base url to display the image.
     /// </summary>
     public string Url { get; set; } = string.Empty;
+
+    /// <summary>
+    /// A placeholder value to use for not-nullable values that you
+    /// know will be initialized in later code. This value should not
+    /// be used in data post-initialization.
+    /// </summary>
+    public static readonly ImageAssetRenderDetails Uninitialized = new()
+    {
+        ImageAssetId = int.MinValue
+    };
 }

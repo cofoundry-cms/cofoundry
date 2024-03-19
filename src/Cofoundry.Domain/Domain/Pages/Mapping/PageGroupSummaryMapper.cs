@@ -5,6 +5,7 @@ namespace Cofoundry.Domain.Internal;
 /// <summary>
 /// Default implementation of <see cref="IPageGroupSummaryMapper"/>.
 /// </summary>
+[Obsolete("The page grouping system will be revised in an upcomming release.")]
 public class PageGroupSummaryMapper : IPageGroupSummaryMapper
 {
     private readonly IAuditDataMapper _auditDataMapper;

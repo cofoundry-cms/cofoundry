@@ -8,7 +8,9 @@
 public interface IPageBlockWithParentPageData : IPageBlockTypeDisplayModel
 {
     /// <summary>
-    /// Provides access to the page containing the block. 
+    /// Provides access to the page containing the block. You can safely
+    /// initialize this value with <see cref="UninitializedEditablePageViewModel.Instance"/>
+    /// to work around nullable reference type warnings.
     /// </summary>
     IEditablePageViewModel ParentPage { get; set; }
 }

@@ -2,5 +2,5 @@
 
 public class ExampleErrorPageViewModel : NotFoundPageViewModel
 {
-    public string TestMessage { get; set; }
+    public string? TestMessage { get; set; }
 }

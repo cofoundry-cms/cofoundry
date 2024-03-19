@@ -12,5 +12,5 @@
 /// </summary>
 public class PageListDisplayModel : IPageBlockTypeDisplayModel
 {
-    public ICollection<PageRenderSummary> Pages { get; set; }
+    public IReadOnlyCollection<PageRenderSummary> Pages { get; set; } = Array.Empty<PageRenderSummary>();
 }

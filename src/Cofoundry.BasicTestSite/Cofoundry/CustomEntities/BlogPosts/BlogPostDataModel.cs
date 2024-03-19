@@ -37,7 +37,7 @@ public class BlogPostDataModel : ICustomEntityDataModel
     [Required]
     [Display(Description = "A description for display in search results and in the details page meta description.")]
     [MultiLineText(Rows = 10)]
-    public string ShortDescription { get; set; }
+    public string ShortDescription { get; set; } = string.Empty;
 
     [Image(MinWidth = 460, MinHeight = 460)]
     [Display(Name = "Thumbnail Image", Description = "Square image that displays against the blog in the listing page.")]
@@ -46,7 +46,7 @@ public class BlogPostDataModel : ICustomEntityDataModel
     [Required]
     [Display(Name = "Categories", Description = "Drag and drop to customize the category ordering.")]
     [CustomEntityCollection(CategoryCustomEntityDefinition.DefinitionCode, IsOrderable = true)]
-    public ICollection<int> CategoryIds { get; set; }
+    public IReadOnlyCollection<int> CategoryIds { get; set; } = Array.Empty<int>();
 
     [Display(Name = "Category", Description = "Test Single Category.")]
     [CustomEntity(CategoryCustomEntityDefinition.DefinitionCode)]
@@ -54,13 +54,13 @@ public class BlogPostDataModel : ICustomEntityDataModel
 
     //[Required]
     //[CheckboxList(typeof(TestOptionSource), NoValueText = "None")]
-    //public ICollection<int> TestCheckboxList1 { get; set; }
+    //public IReadOnlyCollection<int> TestCheckboxList1 { get; set; } = Array.Empty<int>();
 
     //[CheckboxList(typeof(PublishStatus))]
-    //public ICollection<PublishStatus> TestCheckboxList2 { get; set; }
+    //public IReadOnlyCollection<PublishStatus> TestCheckboxList2 { get; set; } = Array.Empty<int>();
 
     [SelectList(typeof(TestApiOptionSource))]
-    public ICollection<int> TestCheckboxList3 { get; set; }
+    public IReadOnlyCollection<int> TestCheckboxList3 { get; set; } = Array.Empty<int>();
 
     //[RadioList(typeof(TestOptionSource), DefaultItemText ="OffNot")]
     //public int TestOption1 { get; set; }
@@ -83,11 +83,11 @@ public class BlogPostDataModel : ICustomEntityDataModel
     [Required]
     [ImageCollection]
     [Display(Name = "Images")]
-    public ICollection<int> ThumbnailImageAssets { get; set; }
+    public IReadOnlyCollection<int> ThumbnailImageAssets { get; set; } = Array.Empty<int>();
 
     [Display(Name = "Html")]
     [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings, HtmlToolbarPreset.Media, HtmlToolbarPreset.Source)]
-    public string TestHtml { get; set; }
+    public string? TestHtml { get; set; }
 
     [Document]
     [Display(Name = "Document")]
@@ -103,6 +103,6 @@ public class BlogPostDataModel : ICustomEntityDataModel
 
     [PageCollection]
     [Display(Name = "Page Collection Test")]
-    public ICollection<int> PageIds { get; set; }
+    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
 
 }

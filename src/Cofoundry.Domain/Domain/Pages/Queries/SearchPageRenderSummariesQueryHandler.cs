@@ -39,7 +39,7 @@ public class SearchPageRenderSummariesQueryHandler
 
         foreach (var dbResult in dbPagedResult.Items)
         {
-            var mappedResult = _pageRenderSummaryMapper.Map<PageRenderSummary>(dbResult, allPageRoutes);
+            var mappedResult = _pageRenderSummaryMapper.Map(dbResult, allPageRoutes);
             results.Add(mappedResult);
         }
 

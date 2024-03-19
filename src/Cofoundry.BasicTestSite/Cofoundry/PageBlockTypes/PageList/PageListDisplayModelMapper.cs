@@ -47,7 +47,7 @@ public class PageListDisplayModelMapper : IPageBlockTypeDisplayModelMapper<PageL
             // Here will get the relevant pages and order them correctly.
             mapped.Pages = allPageRoutes
                 .FilterAndOrderByKeys(item.DataModel.PageIds)
-                .ToList();
+                .ToArray();
 
             result.Add(item, mapped);
         }

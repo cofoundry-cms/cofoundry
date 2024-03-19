@@ -1,14 +1,14 @@
 ﻿namespace Cofoundry.BasicTestSite;
 
-public class BlogPostSummary
+public record BlogPostSummary()
 {
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string ShortDescription { get; set; }
+    public required string ShortDescription { get; init; }
 
-    public ImageAssetRenderDetails ThumbnailImageAsset { get; set; }
+    public required ImageAssetRenderDetails? ThumbnailImageAsset { get; init; }
 
-    public string FullPath { get; set; }
+    public required string? FullPath { get; init; }
 
-    public DateTime PostDate { get; set; }
+    public required DateTime PostDate { get; init; }
 }

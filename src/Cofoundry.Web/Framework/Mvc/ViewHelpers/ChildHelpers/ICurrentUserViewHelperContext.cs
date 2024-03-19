@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Web;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Cofoundry.Web;
 
 /// <summary>
 /// Collects together information about a user that can be
@@ -10,6 +12,7 @@ public interface ICurrentUserViewHelperContext
     /// <see langword="true"/> whether the user is signed in; otherwise
     /// <see langword="false"/>.
     /// </summary>
+    [MemberNotNullWhen(true, nameof(Data))]
     bool IsSignedIn { get; }
 
     /// <summary>

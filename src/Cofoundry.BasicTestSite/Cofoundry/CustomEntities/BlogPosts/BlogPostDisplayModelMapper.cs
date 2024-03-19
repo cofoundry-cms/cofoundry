@@ -24,13 +24,14 @@ public class BlogPostDetailsDisplayModelMapper
         PublishStatusQuery publishStatusQuery
         )
     {
-        var vm = new BlogPostDisplayModel();
-
-        vm.MetaDescription = dataModel.ShortDescription;
-        vm.PageTitle = renderDetails.Title;
-        vm.Title = renderDetails.Title;
-        vm.Date = renderDetails.CreateDate;
-        vm.FullPath = renderDetails.PageUrls.FirstOrDefault();
+        var vm = new BlogPostDisplayModel
+        {
+            MetaDescription = dataModel.ShortDescription,
+            PageTitle = renderDetails.Title,
+            Title = renderDetails.Title,
+            Date = renderDetails.CreateDate,
+            FullPath = renderDetails.PageUrls.FirstOrDefault()
+        };
 
         if (!EnumerableHelper.IsNullOrEmpty(dataModel.CategoryIds))
         {
@@ -56,10 +57,12 @@ public class BlogPostDetailsDisplayModelMapper
         // A CustomEntityRenderSummary will always contain the data model for the custom entity 
         var model = renderSummary.Model as CategoryDataModel;
 
-        var category = new CategorySummary();
-        category.CategoryId = renderSummary.CustomEntityId;
-        category.Title = renderSummary.Title;
-        category.ShortDescription = model?.ShortDescription;
+        var category = new CategorySummary
+        {
+            CategoryId = renderSummary.CustomEntityId,
+            Title = renderSummary.Title,
+            ShortDescription = model?.ShortDescription ?? string.Empty
+        };
 
         return category;
     }

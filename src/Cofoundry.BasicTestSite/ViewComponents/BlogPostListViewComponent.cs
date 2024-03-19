@@ -5,17 +5,14 @@ namespace Cofoundry.BasicTestSite;
 public class BlogPostListViewComponent : ViewComponent
 {
     private readonly IContentRepository _contentRepository;
-    private readonly IPageResponseDataCache _pageRenderDataCache;
     private readonly IVisualEditorStateService _visualEditorStateService;
 
     public BlogPostListViewComponent(
         IContentRepository contentRepository,
-        IPageResponseDataCache pageRenderDataCache,
         IVisualEditorStateService visualEditorStateService
         )
     {
         _contentRepository = contentRepository;
-        _pageRenderDataCache = pageRenderDataCache;
         _visualEditorStateService = visualEditorStateService;
     }
 
@@ -27,15 +24,9 @@ public class BlogPostListViewComponent : ViewComponent
         var webQuery = new SearchBlogPostsQuery();
         //---------
 
-        var query = new SearchCustomEntityRenderSummariesQuery();
-        query.CustomEntityDefinitionCode = BlogPostCustomEntityDefinition.DefinitionCode;
-        query.PageNumber = webQuery.PageNumber;
-        query.PageSize = 30;
-
         // Publish status defaults to live, but we can use the current visual editor
         // state to allow us to show draft blog posts when previewing a draft page.
         var state = await _visualEditorStateService.GetCurrentAsync();
-        query.PublishStatus = state.GetAmbientEntityPublishStatusQuery();
 
         // TODO: Filtering by Category (webQuery.CategoryId)
         // Searching/filtering custom entities is not implemented yet, but it
@@ -45,7 +36,13 @@ public class BlogPostListViewComponent : ViewComponent
         var entities = await _contentRepository
             .CustomEntities()
             .Search()
-            .AsRenderSummaries(query)
+            .AsRenderSummaries(new()
+            {
+                CustomEntityDefinitionCode = BlogPostCustomEntityDefinition.DefinitionCode,
+                PageNumber = webQuery.PageNumber,
+                PageSize = 30,
+                PublishStatus = state.GetAmbientEntityPublishStatusQuery()
+            })
             .ExecuteAsync();
         var viewModel = await MapBlogPostsAsync(entities);
 
@@ -54,7 +51,7 @@ public class BlogPostListViewComponent : ViewComponent
 
     private async Task<PagedQueryResult<BlogPostSummary>> MapBlogPostsAsync(PagedQueryResult<CustomEntityRenderSummary> customEntityResult)
     {
-        var blogPosts = new List<BlogPostSummary>(customEntityResult.Items.Count());
+        var blogPosts = new List<BlogPostSummary>(customEntityResult.Items.Count);
 
         var imageAssetIds = customEntityResult
             .Items
@@ -72,12 +69,14 @@ public class BlogPostListViewComponent : ViewComponent
         {
             var model = (BlogPostDataModel)customEntity.Model;
 
-            var blogPost = new BlogPostSummary();
-            blogPost.Title = customEntity.Title;
-            blogPost.ShortDescription = model.ShortDescription;
-            blogPost.ThumbnailImageAsset = images.GetValueOrDefault(model.ThumbnailImageAssetId);
-            blogPost.FullPath = customEntity.PageUrls.FirstOrDefault();
-            blogPost.PostDate = customEntity.CreateDate;
+            var blogPost = new BlogPostSummary()
+            {
+                Title = customEntity.Title,
+                ShortDescription = model.ShortDescription,
+                ThumbnailImageAsset = images.GetValueOrDefault(model.ThumbnailImageAssetId),
+                FullPath = customEntity.PageUrls.FirstOrDefault(),
+                PostDate = customEntity.CreateDate
+            };
 
             blogPosts.Add(blogPost);
         }
