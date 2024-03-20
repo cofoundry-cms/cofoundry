@@ -17,5 +17,5 @@ public class PageListDataModel : IPageBlockTypeDataModel
 {
     [Display(Name = "Pages", Description = "The pages to display, orderable by drag and drop.")]
     [PageCollection(IsOrderable = true)]
-    public IReadOnlyCollection<int> PageIds { get; set; }
+    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
 }

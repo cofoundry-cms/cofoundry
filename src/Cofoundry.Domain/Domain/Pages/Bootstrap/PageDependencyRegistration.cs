@@ -16,7 +16,9 @@ public class PageDependencyRegistration : IDependencyRegistration
             .RegisterAll<ICustomEntityDataModel>()
             .Register<IPageRouteLibrary, PageRouteLibrary>()
             .Register<IPageRenderDetailsMapper, PageRenderDetailsMapper>()
+#pragma warning disable CS0618 // Type or member is obsolete
             .Register<IPageGroupSummaryMapper, PageGroupSummaryMapper>()
+#pragma warning restore CS0618 // Type or member is obsolete
             .Register<IPageSummaryMapper, PageSummaryMapper>()
             .Register<IOpenGraphDataMapper, OpenGraphDataMapper>()
             .Register<IPageVersionSummaryMapper, PageVersionSummaryMapper>()

@@ -60,7 +60,7 @@ public class ImageSharpImageAssetFileService : IImageAssetFileService
             if ((!string.IsNullOrEmpty(ext) && !ImageAssetConstants.PermittedImageTypes.ContainsKey(ext))
                 || (!string.IsNullOrEmpty(uploadedFile.MimeType) && !ImageAssetConstants.PermittedImageTypes.ContainsValue(uploadedFile.MimeType)))
             {
-                throw new PropertyValidationException("The file is not a supported image type.", propertyName);
+                throw ValidationErrorException.CreateWithProperties("The file is not a supported image type.", propertyName);
             }
 
             throw;
@@ -129,16 +129,16 @@ public class ImageSharpImageAssetFileService : IImageAssetFileService
     {
         if (imageFormat == null)
         {
-            throw new PropertyValidationException("Unable to determine image type.", propertyName);
+            throw ValidationErrorException.CreateWithProperties("Unable to determine image type.", propertyName);
         }
 
         if (imageFile.Width > _imageAssetsSettings.MaxUploadWidth)
         {
-            throw new PropertyValidationException($"Image exceeds the maximum permitted width of {_imageAssetsSettings.MaxUploadWidth} pixels.", propertyName);
+            throw ValidationErrorException.CreateWithProperties($"Image exceeds the maximum permitted width of {_imageAssetsSettings.MaxUploadWidth} pixels.", propertyName);
         }
         if (imageFile.Height > _imageAssetsSettings.MaxUploadHeight)
         {
-            throw new PropertyValidationException($"Image exceeds the maximum permitted height of {_imageAssetsSettings.MaxUploadHeight} pixels.", propertyName);
+            throw ValidationErrorException.CreateWithProperties($"Image exceeds the maximum permitted height of {_imageAssetsSettings.MaxUploadHeight} pixels.", propertyName);
         }
     }
 }
