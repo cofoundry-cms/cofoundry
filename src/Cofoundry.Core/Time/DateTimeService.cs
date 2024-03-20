@@ -2,36 +2,22 @@
 
 public class DateTimeService : IDateTimeService
 {
-    private TimeSpan? _dateModifier;
+    private readonly TimeProvider _timeProvider;
 
     public DateTimeService(
-        DateTimeSettings dateTimeSettings
+        TimeProvider timeProvider
         )
     {
-        if (!dateTimeSettings.BaseDate.HasValue) return;
-
-        var dateTimeNow = DateTime.UtcNow;
-
-        _dateModifier = dateTimeSettings.BaseDate - dateTimeNow;
+        _timeProvider = timeProvider;
     }
 
     public virtual DateTime UtcNow()
     {
-        var dateTimeNow = DateTime.UtcNow;
-        if (!_dateModifier.HasValue) return dateTimeNow;
-
-        var modifiedDate = dateTimeNow.Add(_dateModifier.Value);
-
-        return modifiedDate;
+        return OffsetUtcNow().DateTime;
     }
 
     public virtual DateTimeOffset OffsetUtcNow()
     {
-        var dateTimeNow = DateTimeOffset.UtcNow;
-        if (!_dateModifier.HasValue) return dateTimeNow;
-
-        var modifiedDate = dateTimeNow.Add(_dateModifier.Value);
-
-        return modifiedDate;
+        return _timeProvider.GetUtcNow();
     }
 }
