@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// <para>
@@ -16,23 +16,23 @@ public interface IPagedQueryResult
     /// <summary>
     /// Total number of items in the result before paging was applied.
     /// </summary>
-    int TotalItems { get; set; }
+    int TotalItems { get; }
 
     /// <summary>
     /// Total number of pages.
     /// </summary>
-    int PageCount { get; set; }
+    int PageCount { get; }
 
     /// <summary>
     /// Current (1-based) page number being returned.
     /// </summary>
-    int PageNumber { get; set; }
+    int PageNumber { get; }
 
     /// <summary>
     /// Number of items requested in the page (may not be equal to
     /// the actual number of items returned).
     /// </summary>
-    int PageSize { get; set; }
+    int PageSize { get; }
 }
 
 /// <summary>
@@ -51,5 +51,5 @@ public interface IPagedQueryResult<TResult> : IPagedQueryResult
     /// <summary>
     /// The items returned.
     /// </summary>
-    IReadOnlyCollection<TResult> Items { get; set; }
+    IReadOnlyCollection<TResult> Items { get; }
 }

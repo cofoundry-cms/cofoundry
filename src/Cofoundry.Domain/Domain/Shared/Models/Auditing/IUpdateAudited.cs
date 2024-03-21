@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Marks a model that contains simple audit data for
@@ -9,5 +9,5 @@ public interface IUpdateAudited
     /// <summary>
     /// Simple audit data for the last entity update.
     /// </summary>
-    UpdateAuditData AuditData { get; set; }
+    UpdateAuditData AuditData { get; }
 }

@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Marks an entity that has audit data for entity creation.
@@ -8,5 +8,5 @@ public interface ICreateAudited
     /// <summary>
     /// Simple audit data for entity creation.
     /// </summary>
-    CreateAuditData AuditData { get; set; }
+    CreateAuditData AuditData { get; }
 }
