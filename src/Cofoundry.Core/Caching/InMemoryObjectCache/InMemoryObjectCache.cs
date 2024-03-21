@@ -5,8 +5,8 @@
 /// </summary>
 public class InMemoryObjectCache : IObjectCache
 {
-    private string _cacheNamespace;
-    private ClearableMemoryCache _cache;
+    private readonly string _cacheNamespace;
+    private readonly ClearableMemoryCache _cache;
 
     /// <summary>
     /// Creates a new instance of an InMemoryObjectCache object.

@@ -24,7 +24,7 @@ public static class IEntityPublishableExtensions
         ArgumentNullException.ThrowIfNull(entity);
         ArgumentEmptyException.ThrowIfDefault(currentDate);
 
-        bool hasPublishStatusChanged = false;
+        var hasPublishStatusChanged = false;
 
         if (entity.PublishStatusCode != PublishStatusCode.Published)
         {

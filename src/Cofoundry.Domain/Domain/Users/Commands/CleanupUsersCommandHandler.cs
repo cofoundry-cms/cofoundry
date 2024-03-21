@@ -24,12 +24,15 @@ public class CleanupUsersCommandHandler
         var authenticationLogRetentionPeriodInSeconds = GetPeriodInSeconds(command, command.AuthenticationLogRetentionPeriod);
         var authenticationFailLogRetentionPeriodInSeconds = GetPeriodInSeconds(command, command.AuthenticationFailLogRetentionPeriod);
 
-        if (authenticationLogRetentionPeriodInSeconds < 0 && authenticationFailLogRetentionPeriodInSeconds < 0) return;
+        if (authenticationLogRetentionPeriodInSeconds < 0 && authenticationFailLogRetentionPeriodInSeconds < 0)
+        {
+            return;
+        }
 
         await _userStoredProcedures.CleanupAsync(command.UserAreaCode, authenticationLogRetentionPeriodInSeconds, authenticationFailLogRetentionPeriodInSeconds, executionContext.ExecutionDate);
     }
 
-    private double GetPeriodInSeconds(CleanupUsersCommand command, TimeSpan? period)
+    private static double GetPeriodInSeconds(CleanupUsersCommand command, TimeSpan? period)
     {
         if (!period.HasValue)
         {

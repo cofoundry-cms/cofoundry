@@ -25,7 +25,10 @@ public class CompositePermissionApplication : IPermissionApplication
 
     public override string? ToString()
     {
-        if (EnumerableHelper.IsNullOrEmpty(Permissions)) return base.ToString();
+        if (EnumerableHelper.IsNullOrEmpty(Permissions))
+        {
+            return base.ToString();
+        }
 
         return string.Join(", ", Permissions.Select(p => p.ToString()));
     }

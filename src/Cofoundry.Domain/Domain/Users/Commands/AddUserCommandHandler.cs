@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -166,7 +166,7 @@ public class AddUserCommandHandler
               .Roles
               .FilterByIdOrCode(command.RoleId, command.RoleCode)
               .SingleOrDefaultAsync();
-        EntityNotFoundException.ThrowIfNull(role, command.RoleId?.ToString() ?? command.RoleCode);
+        EntityNotFoundException.ThrowIfNull(role, command.RoleId?.ToString(CultureInfo.InvariantCulture) ?? command.RoleCode);
 
         await _userCommandPermissionsHelper.ValidateNewRoleAsync(role, null, command.UserAreaCode, executionContext);
 

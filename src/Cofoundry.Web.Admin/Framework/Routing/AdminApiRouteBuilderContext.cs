@@ -248,7 +248,7 @@ public class AdminApiRouteBuilderContext<TController>
             actionName = verbActionName;
         }
 
-        string controllerName = GetControllerName();
+        var controllerName = GetControllerName();
 
         _routeBuilder.MapControllerRoute(
             $"Cofoundry Admin Module - {verb}: {path}",

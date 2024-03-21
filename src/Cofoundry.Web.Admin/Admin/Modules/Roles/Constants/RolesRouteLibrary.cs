@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Web.Admin;
+namespace Cofoundry.Web.Admin;
 
 public class RolesRouteLibrary : ModuleRouteLibrary
 {
@@ -21,6 +21,6 @@ public class RolesRouteLibrary : ModuleRouteLibrary
 
     public string Details(int id)
     {
-        return AngularRoute(id.ToString());
+        return AngularRoute(id.ToString(CultureInfo.InvariantCulture));
     }
 }

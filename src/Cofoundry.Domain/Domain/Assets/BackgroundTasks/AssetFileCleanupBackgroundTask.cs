@@ -21,7 +21,10 @@ public class AssetFileCleanupBackgroundTask : IAsyncRecurringBackgroundTask
 
     public async Task ExecuteAsync()
     {
-        if (_assetFileCleanupSettings.Disabled) return;
+        if (_assetFileCleanupSettings.Disabled)
+        {
+            return;
+        }
 
         var executionContext = await _executionContextFactory.CreateSystemUserExecutionContextAsync();
 

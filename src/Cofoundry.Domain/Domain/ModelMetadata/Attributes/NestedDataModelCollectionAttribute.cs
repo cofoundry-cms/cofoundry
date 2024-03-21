@@ -31,7 +31,7 @@ public class NestedDataModelCollectionAttribute : ValidateObjectAttribute, IMeta
 
     public void Process(DisplayMetadataProviderContext context)
     {
-        string nestedModelTypeName = GetNestedModelTypeName(context);
+        var nestedModelTypeName = GetNestedModelTypeName(context);
         var modelMetaData = context.DisplayMetadata;
 
         modelMetaData

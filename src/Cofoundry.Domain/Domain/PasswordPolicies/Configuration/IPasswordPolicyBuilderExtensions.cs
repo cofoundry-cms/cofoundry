@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 
 namespace Cofoundry.Domain;
 
@@ -63,7 +63,7 @@ public static class IPasswordPolicyBuilderExtensions
     /// <param name="value">The value of the attribute as an integer e.g. 10.</param>
     public static IPasswordPolicyBuilder AddAttribute(this IPasswordPolicyBuilder builder, string attribute, int value)
     {
-        return builder.AddAttribute(attribute, value.ToString());
+        return builder.AddAttribute(attribute, value.ToString(CultureInfo.InvariantCulture));
     }
 
     /// <summary>

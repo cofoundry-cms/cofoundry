@@ -26,7 +26,10 @@ public class GetCurrentUserDetailsQueryHandler
     public async Task<UserDetails?> ExecuteAsync(GetCurrentUserDetailsQuery query, IExecutionContext executionContext)
     {
         var userId = executionContext.UserContext.UserId;
-        if (!userId.HasValue) return null;
+        if (!userId.HasValue)
+        {
+            return null;
+        }
 
         var user = await _domainRepository
             .WithContext(executionContext)

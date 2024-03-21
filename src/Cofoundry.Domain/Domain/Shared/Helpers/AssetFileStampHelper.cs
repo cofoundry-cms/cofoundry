@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Used for converting the asset file update date to a filestamp
@@ -32,7 +32,7 @@ public static class AssetFileStampHelper
         var ticks = fileUpdateDate.Ticks - COFOUNDRY_EPOCH.Ticks;
         var nanoSeconds = ticks / TICKS_MULTIPLIER;
 
-        return nanoSeconds.ToString();
+        return nanoSeconds.ToString(CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -42,7 +42,10 @@ public static class AssetFileStampHelper
     /// <param name="fileStamp">Filestamp created with ToFileStamp, to be converted back to a UTC datetime.</param>
     public static DateTime? ToDate(long fileStamp)
     {
-        if (fileStamp < 0 || fileStamp > long.MaxValue / TICKS_MULTIPLIER) return null;
+        if (fileStamp < 0 || fileStamp > long.MaxValue / TICKS_MULTIPLIER)
+        {
+            return null;
+        }
 
         var stampTicks = fileStamp * TICKS_MULTIPLIER;
         var ticks = stampTicks + COFOUNDRY_EPOCH.Ticks;

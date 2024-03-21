@@ -1,7 +1,7 @@
-﻿using Cofoundry.Core.AutoUpdate.Internal;
+using System.Text;
+using Cofoundry.Core.AutoUpdate.Internal;
 using Cofoundry.Core.Configuration;
 using Microsoft.Extensions.Configuration;
-using System.Text;
 
 namespace Cofoundry.Domain.Install;
 
@@ -12,7 +12,7 @@ public class MigratedConfigurationStartupValidator : IStartupValidator
 {
     private readonly IConfiguration _configuration;
 
-    private readonly Dictionary<string, string> ConfigMappings = new()
+    private readonly Dictionary<string, string> _configMappings = new()
     {
         { "Cofoundry:Authentication:NumHoursPasswordResetLinkValid", "Cofoundry:Users:AccountRecovery:ExpireAfter" },
         { "Cofoundry:Authentication:MaxUsernameAttemptsBoundaryInMinutes", "Cofoundry:Users:Authentication:UsernameRateLimit:Window" },
@@ -31,7 +31,7 @@ public class MigratedConfigurationStartupValidator : IStartupValidator
 
     public void Validate()
     {
-        var invalidSettings = ConfigMappings
+        var invalidSettings = _configMappings
             .Where(kvp => _configuration.GetValue<string>(kvp.Key) != null)
             .OrderBy(kvp => kvp.Key)
             .ToArray();
@@ -42,7 +42,7 @@ public class MigratedConfigurationStartupValidator : IStartupValidator
             sb.AppendLine("Invalid configuration detected. The following configuration settings have been moved to a new location:");
             foreach (var setting in invalidSettings)
             {
-                sb.AppendLine($"-'{setting.Key}' has moved to '{setting.Value}'");
+                sb.AppendLine(CultureInfo.CurrentCulture, $"-'{setting.Key}' has moved to '{setting.Value}'");
             }
             sb.AppendLine("For up to date information on configuration settings, see the config reference docs at https://www.cofoundry.org/docs/references/common-config-settings");
 

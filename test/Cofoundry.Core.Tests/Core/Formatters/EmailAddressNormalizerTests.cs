@@ -4,7 +4,7 @@ namespace Cofoundry.Core.Tests.Core.Formatters;
 
 public class EmailAddressNormalizerTests
 {
-    private readonly EmailAddressNormalizer _emailAddressNormalizer = new EmailAddressNormalizer();
+    private readonly EmailAddressNormalizer _emailAddressNormalizer = new();
 
     [Theory]
     [InlineData(null)]

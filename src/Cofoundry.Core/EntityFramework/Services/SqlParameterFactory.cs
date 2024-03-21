@@ -27,7 +27,7 @@ public class SqlParameterFactory : ISqlParameterFactory
         // If this is a non-null value nullable type, return the converted base type
         var type = Nullable.GetUnderlyingType(t) ?? t;
 
-        if (_dbTypeMap.TryGetValue(type, out SqlDbType value))
+        if (_dbTypeMap.TryGetValue(type, out var value))
         {
             outputParam.SqlDbType = value;
         }

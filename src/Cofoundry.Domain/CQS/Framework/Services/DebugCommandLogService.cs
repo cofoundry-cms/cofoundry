@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.CQS.Internal;
 
@@ -24,7 +24,7 @@ public class DebugCommandLogService : ICommandLogService
             "{ExecutionDate} SUCCESS executing command {CommandName}. User {UserId}",
             executionContext.ExecutionDate,
             typeof(TCommand).FullName,
-            executionContext.UserContext.UserId?.ToString()
+            executionContext.UserContext.UserId
             );
 
         return Task.CompletedTask;
@@ -41,7 +41,7 @@ public class DebugCommandLogService : ICommandLogService
                 "{ExecutionDate} FAILED executing command {CommandName}. User {UserId}, Exception '{ExceptionMessage}'",
                 executionContext.ExecutionDate,
                 typeof(TCommand).FullName,
-                executionContext.UserContext.UserId?.ToString(),
+                executionContext.UserContext.UserId,
                 ex?.Message
                 );
         }

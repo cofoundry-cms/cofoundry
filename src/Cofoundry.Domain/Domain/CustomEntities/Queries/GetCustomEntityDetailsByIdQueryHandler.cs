@@ -132,7 +132,10 @@ public class GetCustomEntityDetailsByIdQueryHandler
         var routings = (await _queryExecutor.ExecuteAsync(routingsQuery, executionContext))
             .Where(r => r.CustomEntityRouteRule != null);
 
-        if (!routings.Any()) return;
+        if (!routings.Any())
+        {
+            return;
+        }
 
         // Map templates
 

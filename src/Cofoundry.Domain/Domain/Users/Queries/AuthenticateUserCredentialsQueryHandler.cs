@@ -114,7 +114,10 @@ public class AuthenticateUserCredentialsQueryHandler
                 Username = uniqueUsername
             });
 
-        if (!hasExceededMaxAuthenticationAttempts) return null;
+        if (!hasExceededMaxAuthenticationAttempts)
+        {
+            return null;
+        }
 
         _logger.LogDebug("Authentication failed due to too many failed attempts {UserAreaCode}", query.UserAreaCode);
 
@@ -181,7 +184,10 @@ public class AuthenticateUserCredentialsQueryHandler
 
     private async Task RehashPasswordIfNeededAsync(AuthenticateUserCredentialsQuery query, PasswordVerificationResult passwordVerificationResult, User user)
     {
-        if (passwordVerificationResult != PasswordVerificationResult.SuccessRehashNeeded) return;
+        if (passwordVerificationResult != PasswordVerificationResult.SuccessRehashNeeded)
+        {
+            return;
+        }
 
         // This breaks CQS principle somewhat but we need to ensure that we rehash the 
         // password at first opportunity irrespective of how the API is used

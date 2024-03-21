@@ -50,7 +50,14 @@ public static class IPageableQueryExtensions
     {
         ArgumentNullException.ThrowIfNull(query);
 
-        if (query.PageSize <= 0) query.PageSize = defaultSize;
-        if (query.PageSize > maxSize) query.PageSize = maxSize;
+        if (query.PageSize <= 0)
+        {
+            query.PageSize = defaultSize;
+        }
+
+        if (query.PageSize > maxSize)
+        {
+            query.PageSize = maxSize;
+        }
     }
 }

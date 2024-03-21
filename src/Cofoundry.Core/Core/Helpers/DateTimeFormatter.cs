@@ -2,7 +2,7 @@
 
 public static class DateTimeFormatter
 {
-    private static readonly Lazy<SortedList<double, Func<TimeSpan, string>>> relativeDateOffsets = new Lazy<SortedList<double, Func<TimeSpan, string>>>(() =>
+    private static readonly Lazy<SortedList<double, Func<TimeSpan, string>>> relativeDateOffsets = new(() =>
     {
         return new SortedList<double, Func<TimeSpan, string>>
         {
@@ -28,7 +28,7 @@ public static class DateTimeFormatter
     public static string ToRelativeDateString(DateTime dateTime)
     {
         var timeDifference = DateTime.Now - dateTime;
-        string suffix = timeDifference.TotalMinutes > 0 ? " ago" : " from now";
+        var suffix = timeDifference.TotalMinutes > 0 ? " ago" : " from now";
         timeDifference = new TimeSpan(Math.Abs(timeDifference.Ticks));
 
         return relativeDateOffsets

@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.DistributedLocks;
+using Cofoundry.Core.DistributedLocks;
 using Cofoundry.Domain.Data;
 using Microsoft.Extensions.Logging;
 
@@ -61,7 +61,7 @@ public class CleanUpAssetFilesCommandHandler
         {
             var queueItems = await GetQueueBatch(command.BatchSize, executionContext);
 
-            if (queueItems.Any())
+            if (queueItems.Count != 0)
             {
                 await ProcessQueueAsync(queueItems);
             }
@@ -109,10 +109,10 @@ public class CleanUpAssetFilesCommandHandler
         }
     }
 
-    private Task MarkCompleteAsync(AssetFileCleanupQueueItem item)
+    private async Task MarkCompleteAsync(AssetFileCleanupQueueItem item)
     {
         item.CompletedDate = DateTime.UtcNow;
-        return _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
     private async Task MarkFailedAsync(AssetFileCleanupQueueItem item)
@@ -138,10 +138,10 @@ public class CleanUpAssetFilesCommandHandler
         await _dbContext.SaveChangesAsync();
     }
 
-    private Task MarkCannotRetryAsync(AssetFileCleanupQueueItem item)
+    private async Task MarkCannotRetryAsync(AssetFileCleanupQueueItem item)
     {
         item.CanRetry = false;
-        return _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
     private Task<List<AssetFileCleanupQueueItem>> GetQueueBatch(int batchSize, IExecutionContext executionContext)

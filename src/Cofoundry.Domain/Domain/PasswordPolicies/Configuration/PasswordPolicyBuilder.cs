@@ -8,7 +8,7 @@ public class PasswordPolicyBuilder : IExtendablePasswordPolicyBuilder
 {
     private readonly Dictionary<Type, OptionsConfigurationAction?> _descriptors = [];
     private readonly Dictionary<string, string> _attributes = [];
-    private string? _description = null;
+    private string? _description;
 
     public PasswordPolicyBuilder(
         IServiceProvider serviceProvider,

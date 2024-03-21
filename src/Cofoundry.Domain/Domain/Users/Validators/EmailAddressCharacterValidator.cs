@@ -19,7 +19,10 @@ public static class EmailAddressCharacterValidator
         ArgumentNullException.ThrowIfNull(emailAddress);
         ArgumentNullException.ThrowIfNull(options);
 
-        if (options.AllowAnyCharacter) return Array.Empty<char>();
+        if (options.AllowAnyCharacter)
+        {
+            return Array.Empty<char>();
+        }
 
         // Always allow @ because an email is invalid without it
         var badCharacters = emailAddress
@@ -28,12 +31,12 @@ public static class EmailAddressCharacterValidator
 
         if (options.AllowAnyDigit)
         {
-            badCharacters = badCharacters.Where(c => !Char.IsDigit(c));
+            badCharacters = badCharacters.Where(c => !char.IsDigit(c));
         }
 
         if (options.AllowAnyLetter)
         {
-            badCharacters = badCharacters.Where(c => !Char.IsLetter(c));
+            badCharacters = badCharacters.Where(c => !char.IsLetter(c));
         }
 
         if (!string.IsNullOrEmpty(options.AdditionalAllowedCharacters))

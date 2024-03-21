@@ -9,7 +9,7 @@ namespace Cofoundry.Web.Admin;
 [AdminAuthorize]
 public class AuthController : Controller
 {
-    private static readonly string CONTROLLER_NAME = "Auth";
+    private const string CONTROLLER_NAME = "Auth";
 
     private readonly IAdvancedContentRepository _contentRepository;
     private readonly IAuthorizedTaskTokenUrlHelper _authorizedTaskTokenUrlHelper;
@@ -136,7 +136,6 @@ public class AuthController : Controller
             return await GetLoggedInDefaultRedirectActionAsync();
         }
 
-
         var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ForgotPassword));
         return View(viewPath, new ForgotPasswordViewModel { Username = email });
     }
@@ -228,7 +227,10 @@ public class AuthController : Controller
     public async Task<ActionResult> ChangePassword(string returnUrl)
     {
         var redirectAction = await ValidateChangePasswordRouteAsync();
-        if (redirectAction != null) return redirectAction;
+        if (redirectAction != null)
+        {
+            return redirectAction;
+        }
 
         var viewPath = ViewPathFormatter.View(CONTROLLER_NAME, nameof(ChangePassword));
         return View(viewPath, new ChangePasswordViewModel());

@@ -31,7 +31,7 @@ public class PermissionRepository : IPermissionRepository
         }
     }
 
-    private IEnumerable<IPermission> GetCustomEntityPermissions(IEnumerable<IPermission> permissions, ICustomEntityDefinitionRepository customEntityDefinitionRepository)
+    private static IEnumerable<IPermission> GetCustomEntityPermissions(IEnumerable<IPermission> permissions, ICustomEntityDefinitionRepository customEntityDefinitionRepository)
     {
         var customEntityDefinitions = customEntityDefinitionRepository.GetAll();
 
@@ -64,14 +64,20 @@ public class PermissionRepository : IPermissionRepository
 
     public IPermission? GetByEntityAndPermissionType(IEntityDefinition entityDefinition, PermissionType permissionType)
     {
-        if (entityDefinition == null || permissionType == null) return null;
+        if (entityDefinition == null || permissionType == null)
+        {
+            return null;
+        }
 
         return GetByEntityAndPermissionType(entityDefinition.EntityDefinitionCode, permissionType.Code);
     }
 
     public IPermission? GetByEntityAndPermissionType(string entityDefinitionCode, string permissionTypeCode)
     {
-        if (string.IsNullOrEmpty(entityDefinitionCode) || string.IsNullOrEmpty(permissionTypeCode)) return null;
+        if (string.IsNullOrEmpty(entityDefinitionCode) || string.IsNullOrEmpty(permissionTypeCode))
+        {
+            return null;
+        }
 
         var key = PermissionIdentifierFormatter.GetUniqueIdentifier(permissionTypeCode, entityDefinitionCode);
         return _permissions.GetOrDefault(key);

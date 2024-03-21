@@ -2,5 +2,5 @@
 
 public static class UserPermissionTypes
 {
-    public static PermissionType ResetPassword = new PermissionType("RSTPWD", "Reset Password", "Reset another users password");
+    public static PermissionType ResetPassword = new("RSTPWD", "Reset Password", "Reset another users password");
 }

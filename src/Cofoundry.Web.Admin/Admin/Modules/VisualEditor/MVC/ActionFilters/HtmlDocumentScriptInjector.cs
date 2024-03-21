@@ -29,10 +29,12 @@ public class HtmlDocumentScriptInjector : IHtmlDocumentScriptInjector
             return html;
         }
 
-        html = html.Substring(0, insertBodyIndex)
-            + bodyScript
-            + Environment.NewLine
-            + html.Substring(insertBodyIndex);
+        html = string.Concat(
+            html.AsSpan(0, insertBodyIndex),
+            bodyScript,
+            Environment.NewLine,
+            html.AsSpan(insertBodyIndex)
+            );
 
         return html;
     }
@@ -48,10 +50,11 @@ public class HtmlDocumentScriptInjector : IHtmlDocumentScriptInjector
 
         if (insertHeadIndex > 0)
         {
-            html = html.Substring(0, insertHeadIndex)
-                + headScript
-                + Environment.NewLine
-                + html.Substring(insertHeadIndex);
+            html = string.Concat(
+                html.AsSpan(0, insertHeadIndex),
+                headScript, Environment.NewLine,
+                html.AsSpan(insertHeadIndex)
+                );
         }
         else
         {

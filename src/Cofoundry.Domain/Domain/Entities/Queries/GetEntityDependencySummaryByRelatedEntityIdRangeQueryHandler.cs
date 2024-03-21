@@ -13,7 +13,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandler
     , IPermissionRestrictedQueryHandler<GetEntityDependencySummaryByRelatedEntityIdRangeQuery, IReadOnlyCollection<EntityDependencySummary>>
 {
     private readonly CofoundryDbContext _dbContext;
-    private IQueryExecutor _queryExecutor;
+    private readonly IQueryExecutor _queryExecutor;
     private readonly IEntityDefinitionRepository _entityDefinitionRepository;
     private readonly IPermissionRepository _permissionRepository;
 
@@ -93,9 +93,15 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandler
     public IEnumerable<IPermissionApplication> GetPermissions(GetEntityDependencySummaryByRelatedEntityIdRangeQuery query)
     {
         var entityDefinition = _entityDefinitionRepository.GetRequiredByCode(query.EntityDefinitionCode);
-        if (entityDefinition == null) yield break;
+        if (entityDefinition == null)
+        {
+            yield break;
+        }
 
         var permission = _permissionRepository.GetByEntityAndPermissionType(entityDefinition, CommonPermissionTypes.Read("Entity"));
-        if (permission != null) yield return permission;
+        if (permission != null)
+        {
+            yield return permission;
+        }
     }
 }

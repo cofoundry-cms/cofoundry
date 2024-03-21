@@ -43,7 +43,7 @@ public class CustomEntityDataModelCommandModelBinder : IModelBinder
         bindingContext.Result = ModelBindingResult.Success(result);
     }
 
-    private async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
+    private static async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
     {
         string body;
         using (var reader = new StreamReader(bindingContext.ActionContext.HttpContext.Request.Body, Encoding.UTF8))

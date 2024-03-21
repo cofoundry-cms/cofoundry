@@ -25,11 +25,11 @@ public class CustomEntityVersionSummaryMapper : ICustomEntityVersionSummaryMappe
     public PagedQueryResult<CustomEntityVersionSummary> MapVersions(int customEntityId, PagedQueryResult<CustomEntityVersion> dbResult)
     {
         ArgumentNullException.ThrowIfNull(dbResult);
-        if (customEntityId <= 0) throw new ArgumentOutOfRangeException(nameof(customEntityId));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(customEntityId);
 
         // We should only check for the latested published version on the first page
         // as it will only be 1st or 2nd in the list (depending on whether there is a draft)
-        bool hasLatestPublishVersion = dbResult.PageNumber > 1;
+        var hasLatestPublishVersion = dbResult.PageNumber > 1;
         var results = new List<CustomEntityVersionSummary>(dbResult.Items.Count);
 
         foreach (var dbVersion in dbResult.Items.OrderByLatest())

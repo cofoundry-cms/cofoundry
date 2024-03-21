@@ -16,7 +16,7 @@ namespace Cofoundry.Core.ResourceFiles;
 public class CofoundryEmbeddedFileProvider : IFileProvider
 {
     private readonly EmbeddedFileProvider _embeddedFileProvider;
-    private readonly PhysicalFileProvider? _physicalFileProvider = null;
+    private readonly PhysicalFileProvider? _physicalFileProvider;
 
     public CofoundryEmbeddedFileProvider(
         Assembly assembly,
@@ -56,7 +56,10 @@ public class CofoundryEmbeddedFileProvider : IFileProvider
             .Where(f => f.Name.StartsWith(resourcePath, StringComparison.OrdinalIgnoreCase))
             ;
 
-        if (!allFiles.Any()) return new NotFoundDirectoryContents();
+        if (!allFiles.Any())
+        {
+            return new NotFoundDirectoryContents();
+        }
 
         var directoryContents = new EmbeddedDirectoryContents(resourcePath, allFiles);
 

@@ -32,7 +32,11 @@ public class GetUpdateCustomEntityDraftVersionCommandByIdQueryHandler
             .Where(v => v.WorkFlowStatusId == (int)WorkFlowStatus.Draft)
             .SingleOrDefaultAsync();
 
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
+
         _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntity.CustomEntityDefinitionCode, executionContext.UserContext);
 
         var command = new UpdateCustomEntityDraftVersionCommand()

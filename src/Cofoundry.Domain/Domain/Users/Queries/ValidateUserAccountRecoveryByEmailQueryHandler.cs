@@ -72,7 +72,7 @@ public class ValidateUserAccountRecoveryByEmailQueryHandler
         }
     }
 
-    private AuthorizedTaskTokenValidationResult MapResult(AuthorizedTaskTokenValidationResult tokenResult)
+    private static AuthorizedTaskTokenValidationResult MapResult(AuthorizedTaskTokenValidationResult tokenResult)
     {
         if (tokenResult.IsSuccess)
         {

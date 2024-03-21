@@ -1,6 +1,6 @@
-﻿using Cofoundry.Domain.Data;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -68,7 +68,7 @@ public class ValidateAuthorizedTaskTokenQueryHandler
         return result;
     }
 
-    private AuthorizedTaskTokenValidationResult Validate(
+    private static AuthorizedTaskTokenValidationResult Validate(
         AuthorizedTask? authorizedTask,
         AuthorizedTaskTokenParts tokenParts,
         ValidateAuthorizedTaskTokenQuery query,
@@ -111,7 +111,7 @@ public class ValidateAuthorizedTaskTokenQueryHandler
         return new AuthorizedTaskTokenValidationResult(AuthorizedTaskValidationErrors.TokenValidation.NotFound.Create());
     }
 
-    private bool ConstantEquals(string a, string b)
+    private static bool ConstantEquals(string a, string b)
     {
         var bytesA = Encoding.UTF8.GetBytes(a);
         var bytesB = Encoding.UTF8.GetBytes(b);
@@ -119,10 +119,13 @@ public class ValidateAuthorizedTaskTokenQueryHandler
         return CryptographicOperations.FixedTimeEquals(bytesA, bytesB);
     }
 
-    private bool IsExpired(AuthorizedTask task, IExecutionContext executionContext)
+    private static bool IsExpired(AuthorizedTask task, IExecutionContext executionContext)
     {
         // Null indicates expiry disabled
-        if (!task.ExpiryDate.HasValue) return false;
+        if (!task.ExpiryDate.HasValue)
+        {
+            return false;
+        }
 
         return task.ExpiryDate < executionContext.ExecutionDate;
     }

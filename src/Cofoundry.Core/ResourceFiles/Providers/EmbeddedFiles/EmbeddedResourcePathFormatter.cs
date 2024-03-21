@@ -14,8 +14,8 @@ public static class EmbeddedResourcePathFormatter
     /// words but until proven otherwise we'll assume that don't need 
     /// to be covered.
     /// </remarks>
-    private static char[] INVALID_CHARS = new char[] { ' ', '\u00A0', ',', ';', '~', '@', '#', '%', '^', '&', '*', '+', '-', '/', '\\', '<', '>', '?', '[', ']', '(', ')', '{', '}', '"', '\'', ':', '!' };
-    private static char[] PATH_DELIMITERS = new char[] { '/', '\\' };
+    private static readonly char[] INVALID_CHARS = new char[] { ' ', '\u00A0', ',', ';', '~', '@', '#', '%', '^', '&', '*', '+', '-', '/', '\\', '<', '>', '?', '[', ']', '(', ')', '{', '}', '"', '\'', ':', '!' };
+    private static readonly char[] PATH_DELIMITERS = new char[] { '/', '\\' };
     const string VIRTUAL_PATH_PREFIX = "~/";
     const char EMBEDDED_DIRECTORY_DELIMITER = '.';
     const char INVALID_CHARACTER_REPLACEMENT = '_';
@@ -37,7 +37,11 @@ public static class EmbeddedResourcePathFormatter
     [return: NotNullIfNotNull(nameof(path))]
     public static string? ConvertFromVirtualDirectory(string? path)
     {
-        if (path == null) return null;
+        if (path == null)
+        {
+            return null;
+        }
+
         var result = path;
 
         if (path.StartsWith(VIRTUAL_PATH_PREFIX))
@@ -79,7 +83,10 @@ public static class EmbeddedResourcePathFormatter
     /// </returns>
     public static string? CleanPath(string? path)
     {
-        if (path == null) return null;
+        if (path == null)
+        {
+            return null;
+        }
 
         var result = path;
 

@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Html;
-using Newtonsoft.Json;
+using System.Globalization;
 using System.Reflection;
+using Microsoft.AspNetCore.Html;
+using Newtonsoft.Json;
 
 namespace Cofoundry.Core.Json;
 
@@ -25,6 +26,6 @@ public class HtmlStringJsonConverter : JsonConverter
 
     public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
-        serializer.Serialize(writer, Convert.ToString(value));
+        serializer.Serialize(writer, Convert.ToString(value, CultureInfo.InvariantCulture));
     }
 }

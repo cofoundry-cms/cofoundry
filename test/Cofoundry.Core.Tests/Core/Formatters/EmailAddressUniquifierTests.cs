@@ -4,7 +4,7 @@ namespace Cofoundry.Core.Tests.Core.Formatters;
 
 public class EmailAddressUniquifierTests
 {
-    private readonly EmailAddressUniquifier _emailAddressUniquifier = new EmailAddressUniquifier(new EmailAddressNormalizer());
+    private readonly EmailAddressUniquifier _emailAddressUniquifier = new(new EmailAddressNormalizer());
 
     [Theory]
     [InlineData(null)]

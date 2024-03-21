@@ -7,9 +7,9 @@ namespace Cofoundry.Domain.Internal;
 /// </summary>
 public class PermissionSetBuilder : IExtendablePermissionSetBuilder
 {
-    private PermissionEqualityComparer _permissionEqualityComparer = new PermissionEqualityComparer();
+    private readonly PermissionEqualityComparer _permissionEqualityComparer = new();
     private IEnumerable<IPermission> _permissions = Array.Empty<IPermission>();
-    private CircularDependencyGuard? _circularDependencyGuard = null;
+    private readonly CircularDependencyGuard? _circularDependencyGuard;
 
     private readonly IRolePermissionInitializerFactory _rolePermissionInitializerFactory;
     private readonly IEntityDefinitionRepository _entityDefinitionRepository;
@@ -282,8 +282,8 @@ public class PermissionSetBuilder : IExtendablePermissionSetBuilder
     /// </summary>
     private class CircularDependencyGuard
     {
-        private Type baseRoleType;
-        private HashSet<Type> _executingRoles { get; } = new HashSet<Type>();
+        private readonly Type baseRoleType;
+        private HashSet<Type> _executingRoles { get; } = [];
 
         public CircularDependencyGuard(IRoleDefinition roleDefinition)
         {

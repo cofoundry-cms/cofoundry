@@ -26,7 +26,10 @@ public class GetCurrentUserSummaryQueryHandler
     public async Task<UserSummary?> ExecuteAsync(GetCurrentUserSummaryQuery query, IExecutionContext executionContext)
     {
         var userId = executionContext.UserContext.UserId;
-        if (!userId.HasValue) return null;
+        if (!userId.HasValue)
+        {
+            return null;
+        }
 
         var user = await _domainRepository
             .WithContext(executionContext)

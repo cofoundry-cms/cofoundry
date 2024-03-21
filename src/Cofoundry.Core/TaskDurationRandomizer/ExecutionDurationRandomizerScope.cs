@@ -8,7 +8,7 @@ public class ExecutionDurationRandomizerScope : IExecutionDurationRandomizerScop
 {
     private readonly Stopwatch _stopwatch = new();
     private readonly ExecutionDurationRandomizerSettings _executionDurationRandomizerSettings;
-    private bool _isCompleteCalled = false;
+    private bool _isCompleteCalled;
 
     public ExecutionDurationRandomizerScope(
         ExecutionDurationRandomizerSettings executionDurationRandomizerSettings
@@ -31,7 +31,10 @@ public class ExecutionDurationRandomizerScope : IExecutionDurationRandomizerScop
 
     public void UpdateDuration(RandomizedExecutionDuration newDuration)
     {
-        if (newDuration == null || !newDuration.IsEnabled()) return;
+        if (newDuration == null || !newDuration.IsEnabled())
+        {
+            return;
+        }
 
         var updatedDuration = Duration == null ? new RandomizedExecutionDuration() : Duration.Clone();
         updatedDuration.Update(newDuration);
@@ -48,7 +51,10 @@ public class ExecutionDurationRandomizerScope : IExecutionDurationRandomizerScop
 
         _isCompleteCalled = true;
 
-        if (!_executionDurationRandomizerSettings.Enabled || Duration == null || !Duration.IsEnabled()) return;
+        if (!_executionDurationRandomizerSettings.Enabled || Duration == null || !Duration.IsEnabled())
+        {
+            return;
+        }
 
         int duration;
         if (Duration.IsConstant())
@@ -71,7 +77,7 @@ public class ExecutionDurationRandomizerScope : IExecutionDurationRandomizerScop
 
     private static int LongToInt(long olong)
     {
-        if (olong > Int32.MaxValue)
+        if (olong > int.MaxValue)
         {
             throw new InvalidCastException("elapsed time too long");
         }

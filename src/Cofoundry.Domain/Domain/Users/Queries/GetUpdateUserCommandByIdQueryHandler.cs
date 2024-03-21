@@ -31,7 +31,10 @@ public class GetUpdateUserCommandByIdQueryHandler
             .FilterById(query.Id)
             .SingleOrDefaultAsync();
 
-        if (dbUser == null) return null;
+        if (dbUser == null)
+        {
+            return null;
+        }
 
         if (dbUser.UserAreaCode == CofoundryAdminUserArea.Code)
         {

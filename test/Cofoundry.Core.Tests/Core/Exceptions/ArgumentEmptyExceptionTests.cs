@@ -45,7 +45,7 @@ public class ArgumentEmptyExceptionTests
     [Fact]
     public void ThrowIfDefault_WhenNotDefault_DoesNotThrow()
     {
-        DateTime testValue = DateTime.MaxValue;
+        var testValue = DateTime.MaxValue;
 
         Action act = () => ArgumentEmptyException.ThrowIfDefault(testValue);
 

@@ -19,7 +19,10 @@ public class RoleMicroSummaryMapper : IRoleMicroSummaryMapper
     /// <inheritdoc/>
     public virtual RoleMicroSummary? Map(Role? dbRole)
     {
-        if (dbRole == null) return null;
+        if (dbRole == null)
+        {
+            return null;
+        }
 
         var userArea = _userAreaRepository.GetRequiredByCode(dbRole.UserAreaCode);
         var role = new RoleMicroSummary()
@@ -39,7 +42,10 @@ public class RoleMicroSummaryMapper : IRoleMicroSummaryMapper
     /// <inheritdoc/>
     public RoleMicroSummary? Map(RoleDetails? roleDetails)
     {
-        if (roleDetails == null) return null;
+        if (roleDetails == null)
+        {
+            return null;
+        }
 
         return new RoleMicroSummary()
         {

@@ -36,7 +36,7 @@ public class UpdatePackageOrderer : IUpdatePackageOrderer
         return topologicallySortedPackages;
     }
 
-    private IEnumerable<UpdatePackage> FindDependencies(UpdatePackage packageToGetDependenciesFor, Dictionary<string, IEnumerable<UpdatePackage>> dependentModuleLookup)
+    private static IEnumerable<UpdatePackage> FindDependencies(UpdatePackage packageToGetDependenciesFor, Dictionary<string, IEnumerable<UpdatePackage>> dependentModuleLookup)
     {
         var dependencies = EnumerableHelper
             .Enumerate(packageToGetDependenciesFor.DependentModules)

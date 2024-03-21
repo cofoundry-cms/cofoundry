@@ -42,7 +42,10 @@ public class GetUserSummaryByIdQueryHandler
 
     private void ValidatePermission(GetUserSummaryByIdQuery query, IExecutionContext executionContext, UserSummary? user)
     {
-        if (user == null) return;
+        if (user == null)
+        {
+            return;
+        }
 
         if (user.UserArea.UserAreaCode == CofoundryAdminUserArea.Code)
         {

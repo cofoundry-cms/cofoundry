@@ -9,11 +9,14 @@ public static class EnumParser
     /// Parses a string into an enum, returning null if the
     /// string could not be parsed.
     /// </summary>
-    /// <param name="value"><see cref="String"/> to parse.</param>
+    /// <param name="value"><see cref="string"/> to parse.</param>
     /// <returns><typeparamref name="TEnum"/> value if <paramref name="value"/> could be parsed; otherwise <see langword="null"/>.</returns>
     public static TEnum? ParseOrNull<TEnum>(string? value) where TEnum : struct
     {
-        if (string.IsNullOrWhiteSpace(value)) return null;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
 
         if (Enum.TryParse(value, true, out TEnum e))
         {
@@ -54,7 +57,10 @@ public static class EnumParser
     private static TEnum? ParseNumericOrNull<TEnum>(object? value)
         where TEnum : struct
     {
-        if (value == null) return null;
+        if (value == null)
+        {
+            return null;
+        }
 
         if (!Enum.IsDefined(typeof(TEnum), value))
         {

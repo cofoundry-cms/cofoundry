@@ -6,8 +6,6 @@ namespace Cofoundry.Domain.Tests.Integration.ClientConnection.Commands;
 [Collection(nameof(DbDependentFixtureCollection))]
 public class AddCurrentIPAddressIfNotExistsCommandTests
 {
-    const string UNIQUE_PREFIX = "AddCurrentIPAddressIfNotExistsCHT-";
-
     private readonly DbDependentTestApplicationFactory _appFactory;
 
     public AddCurrentIPAddressIfNotExistsCommandTests(

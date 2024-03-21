@@ -11,7 +11,7 @@ namespace Cofoundry.Core.Web;
 /// </summary>
 public class DefaultHtmlSanitizationRuleSetFactory : IDefaultHtmlSanitizationRuleSetFactory
 {
-    private Lazy<HtmlSanitizationRuleSet> _defaultRulset = new Lazy<HtmlSanitizationRuleSet>(Initizalize);
+    private readonly Lazy<HtmlSanitizationRuleSet> _defaultRulset = new(Initizalize);
 
     public IHtmlSanitizationRuleSet Create()
     {

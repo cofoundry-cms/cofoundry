@@ -28,7 +28,7 @@ public class GetActiveLocaleByIETFLanguageTagQueryHandler
         return result;
     }
 
-    private bool IsTagValid(string languageTag)
+    private static bool IsTagValid(string languageTag)
     {
         if (string.IsNullOrEmpty(languageTag))
         {

@@ -27,7 +27,7 @@ namespace Cofoundry.Core.Data.Internal;
 /// </remarks>
 public class DefaultTransactionScopeManager : IDefaultTransactionScopeManager
 {
-    private Dictionary<int, PrimaryTransactionScope> _primaryTransactionScopes = new Dictionary<int, PrimaryTransactionScope>();
+    private readonly Dictionary<int, PrimaryTransactionScope> _primaryTransactionScopes = [];
     private readonly ITransactionScopeFactory _transactionScopeFactory;
 
     public DefaultTransactionScopeManager(
@@ -255,7 +255,10 @@ public class DefaultTransactionScopeManager : IDefaultTransactionScopeManager
         var scope = _primaryTransactionScopes.GetOrDefault(connectionHash);
 
         // No scope, execute immediately
-        if (scope == null) return actionToQueue();
+        if (scope == null)
+        {
+            return actionToQueue();
+        }
 
         scope.QueueCompletionTask(actionToQueue);
 

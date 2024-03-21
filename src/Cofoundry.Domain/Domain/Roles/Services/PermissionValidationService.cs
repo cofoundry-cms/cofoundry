@@ -37,7 +37,7 @@ public class PermissionValidationService : IPermissionValidationService
     /// </summary>
     public virtual void EnforceIsSuperAdminRole(IUserContext userContext)
     {
-        bool isSuperAdmin = false;
+        var isSuperAdmin = false;
 
         if (userContext != null && userContext.UserArea is CofoundryAdminUserArea)
         {
@@ -119,9 +119,12 @@ public class PermissionValidationService : IPermissionValidationService
     /// <param name="currentUserContext">An IUserContext representing the currently logged in user.</param>
     public virtual bool IsCurrentUserOrHasPermission<TPermission>(int userId, IUserContext currentUserContext) where TPermission : IPermissionApplication, new()
     {
-        if (currentUserContext == null) return false;
+        if (currentUserContext == null)
+        {
+            return false;
+        }
 
-        bool isPermitted = currentUserContext.UserId == userId || HasPermission<TPermission>(currentUserContext);
+        var isPermitted = currentUserContext.UserId == userId || HasPermission<TPermission>(currentUserContext);
 
         return isPermitted;
     }
@@ -180,9 +183,15 @@ public class PermissionValidationService : IPermissionValidationService
 
     public virtual bool HasPermission(IPermissionApplication? permissionApplication, IUserContext userContext)
     {
-        if (permissionApplication == null) return true;
+        if (permissionApplication == null)
+        {
+            return true;
+        }
 
-        if (userContext == null) return false;
+        if (userContext == null)
+        {
+            return false;
+        }
 
         var role = _internalRoleRepository.GetById(userContext.RoleId);
         EntityNotFoundException.ThrowIfNull(role, userContext.RoleId);
@@ -195,7 +204,10 @@ public class PermissionValidationService : IPermissionValidationService
         {
             foreach (var permission in ((CompositePermissionApplication)permissionApplication).Permissions)
             {
-                if (role.HasPermission(permission)) return true;
+                if (role.HasPermission(permission))
+                {
+                    return true;
+                }
             }
 
             return false;

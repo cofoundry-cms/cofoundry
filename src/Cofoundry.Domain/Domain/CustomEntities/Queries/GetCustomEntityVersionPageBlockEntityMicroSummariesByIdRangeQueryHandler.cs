@@ -32,7 +32,7 @@ public class GetCustomEntityVersionPageBlockEntityMicroSummariesByIdRangeQueryHa
                 RootEntityTitle = m.CustomEntityVersion.Title,
                 EntityDefinitionCode = m.CustomEntityVersion.CustomEntity.CustomEntityDefinition.EntityDefinition.EntityDefinitionCode,
                 EntityDefinitionName = m.CustomEntityVersion.CustomEntity.CustomEntityDefinition.EntityDefinition.Name,
-                IsPreviousVersion = !m.CustomEntityVersion.CustomEntityPublishStatusQueries.Any()
+                IsPreviousVersion = m.CustomEntityVersion.CustomEntityPublishStatusQueries.Count == 0
             })
             .ToDictionaryAsync(e => e.ChildEntityId, e => (RootEntityMicroSummary)e);
 

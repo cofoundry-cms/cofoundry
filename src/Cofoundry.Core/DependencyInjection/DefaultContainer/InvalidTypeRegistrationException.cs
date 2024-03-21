@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.DependencyInjection;
+namespace Cofoundry.Core.DependencyInjection;
 
 /// <summary>
 /// Thrown when there is an invalid registration configuration
@@ -26,9 +26,7 @@ public class InvalidTypeRegistrationException : Exception
 
     private static string MakeDefaultMessage(Type type)
     {
-        const string DEFAULT_MESSAGE = "The configuration for type {0} is invalid.";
-
-        return string.Format(DEFAULT_MESSAGE, type.FullName);
+        return $"The configuration for type {type.FullName} is invalid.";
     }
 
     public Type RegisteredType { get; set; }

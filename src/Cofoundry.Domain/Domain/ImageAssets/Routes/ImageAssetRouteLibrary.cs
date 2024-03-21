@@ -23,7 +23,10 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
     /// <param name="settings">Optional resizing settings for the image</param>
     public async Task<string> ImageAssetAsync(int? imageAssetId, IImageResizeSettings? settings = null)
     {
-        if (!imageAssetId.HasValue) return string.Empty;
+        if (!imageAssetId.HasValue)
+        {
+            return string.Empty;
+        }
 
         var getImageQuery = new GetImageAssetRenderDetailsByIdQuery(imageAssetId.Value);
         var asset = await _queryExecutor.ExecuteAsync(getImageQuery);
@@ -41,11 +44,17 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
     /// <param name="height">height to resize the image to</param>
     public async Task<string> ImageAssetAsync(int? imageAssetId, int? width, int? height = null)
     {
-        if (!imageAssetId.HasValue) return string.Empty;
+        if (!imageAssetId.HasValue)
+        {
+            return string.Empty;
+        }
 
         var getImageQuery = new GetImageAssetRenderDetailsByIdQuery(imageAssetId.Value);
         var asset = await _queryExecutor.ExecuteAsync(getImageQuery);
-        if (asset == null) return string.Empty;
+        if (asset == null)
+        {
+            return string.Empty;
+        }
 
         var settings = GetResizeSettings(asset, width, height);
 
@@ -59,7 +68,11 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
     /// <param name="settings">Optional resizing settings for the image</param>
     public string ImageAsset(IImageAssetRenderable? asset, IImageResizeSettings? settings = null)
     {
-        if (asset == null) return string.Empty;
+        if (asset == null)
+        {
+            return string.Empty;
+        }
+
         SetDefaultCrop(asset, settings);
 
         return GetUrl(asset, settings);
@@ -73,7 +86,11 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
     /// <param name="height">height to resize the image to</param>
     public string ImageAsset(IImageAssetRenderable? asset, int? width, int? height = null)
     {
-        if (asset == null) return string.Empty;
+        if (asset == null)
+        {
+            return string.Empty;
+        }
+
         var settings = GetResizeSettings(asset, width, height);
 
         return GetUrl(asset, settings);
@@ -114,7 +131,10 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
 
     private static void SetDefaultCrop(IImageAssetRenderable asset, IImageResizeSettings? settings)
     {
-        if (settings == null) return;
+        if (settings == null)
+        {
+            return;
+        }
 
         if (isDefinedAndChanged(settings.Width, asset.Width) || isDefinedAndChanged(settings.Height, asset.Height))
         {

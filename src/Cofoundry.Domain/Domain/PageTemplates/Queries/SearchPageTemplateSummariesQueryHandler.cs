@@ -28,7 +28,7 @@ public class SearchPageTemplateSummariesQueryHandler
             .ToArray();
 
         var templatePageCounts = await GetPageCounts(allPageTemplateIds);
-        Dictionary<int, int> pageRegionCounts = await GetTemplateRegionCounts();
+        var pageRegionCounts = await GetTemplateRegionCounts();
 
         foreach (var dbPagedResultItem in dbPagedResult.Items)
         {

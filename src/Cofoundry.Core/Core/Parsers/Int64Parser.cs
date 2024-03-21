@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Core;
+using System.Globalization;
+
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Utility class for parsing Int64s.
@@ -13,15 +15,16 @@ public static class Int64Parser
     /// <returns>Int64 value if the string could be parsed; otherwise null.</returns>
     public static long? ParseOrNull(string? s)
     {
-        if (string.IsNullOrWhiteSpace(s)) return null;
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return null;
+        }
 
-        long l = 0;
-        decimal d = 0;
-        if (long.TryParse(s, out l))
+        if (long.TryParse(s, out var l))
         {
             return l;
         }
-        else if (decimal.TryParse(s, out d))
+        else if (decimal.TryParse(s, out var d))
         {
             return Convert.ToInt64(d);
         }
@@ -37,16 +40,20 @@ public static class Int64Parser
     /// <returns>Int64 value if the object could be parsed; otherwise null.</returns>
     public static long? ParseOrNull(object? o)
     {
-        if (o == null) return null;
+        if (o == null)
+        {
+            return null;
+        }
+
         if (o is long || o is long?)
         {
             return o as long?;
         }
         if (o is decimal || o is decimal?)
         {
-            return Convert.ToInt64(o);
+            return Convert.ToInt64(o, CultureInfo.InvariantCulture);
         }
-        return ParseOrNull(Convert.ToString(o));
+        return ParseOrNull(Convert.ToString(o, CultureInfo.InvariantCulture));
     }
 
     /// <summary>

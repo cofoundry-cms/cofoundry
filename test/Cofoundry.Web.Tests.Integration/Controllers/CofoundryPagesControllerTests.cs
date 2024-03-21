@@ -67,7 +67,7 @@ public class CofoundryPagesControllerTests
         using var app = _webApplicationFactory.CreateApp();
 
         var page = app.SeededEntities.TestDirectory.CustomEntityPage;
-        var result = await client.GetAsync(page.GetFullPath(Int32.MaxValue));
+        var result = await client.GetAsync(page.GetFullPath(int.MaxValue));
         var content = await result.Content.ReadAsStringAsync();
 
         result.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -130,7 +130,7 @@ public class CofoundryPagesControllerTests
     [InlineData(AccessRuleViolationAction.NotFound)]
     public async Task WhenPageAccessRuleForUserAreaAndUserInvalid_ReturnsCorrectAction(AccessRuleViolationAction routeAccessRuleViolationAction)
     {
-        var uniqueData = UNIQUE_PREFIX + "PAR4UserAreaAndUserInv" + routeAccessRuleViolationAction.ToString().Substring(0, 2);
+        var uniqueData = $"{UNIQUE_PREFIX}PAR4UserAreaAndUserInv{routeAccessRuleViolationAction.ToString().AsSpan(0, 2)}";
         var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
         using var app = _webApplicationFactory.CreateApp();
@@ -170,7 +170,7 @@ public class CofoundryPagesControllerTests
     [InlineData(AccessRuleViolationAction.NotFound)]
     public async Task WhenPageAccessRuleForRoleAndUserInvalid_ReturnsCorrectAction(AccessRuleViolationAction routeAccessRuleViolationAction)
     {
-        var uniqueData = UNIQUE_PREFIX + "PAR4RoleAndUserInv" + routeAccessRuleViolationAction.ToString().Substring(0, 2);
+        var uniqueData = $"{UNIQUE_PREFIX}PAR4RoleAndUserInv{routeAccessRuleViolationAction.ToString().AsSpan(0, 2)}";
         var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
         using var app = _webApplicationFactory.CreateApp();
@@ -257,7 +257,7 @@ public class CofoundryPagesControllerTests
     [InlineData(AccessRuleViolationAction.NotFound)]
     public async Task WhenDirectoryAccessRuleForUserAreaAndUserInvalid_ReturnsCorrectAction(AccessRuleViolationAction routeAccessRuleViolationAction)
     {
-        var uniqueData = UNIQUE_PREFIX + "DAR4UserAreaAndUserInv" + routeAccessRuleViolationAction.ToString().Substring(0, 2);
+        var uniqueData = $"{UNIQUE_PREFIX}DAR4UserAreaAndUserInv{routeAccessRuleViolationAction.ToString().AsSpan(0, 2)}";
         var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
         using var app = _webApplicationFactory.CreateApp();
@@ -303,7 +303,7 @@ public class CofoundryPagesControllerTests
     [InlineData(AccessRuleViolationAction.NotFound)]
     public async Task WhenDirectoryAccessRuleForRoleAndUserInvalid_ReturnsCorrectAction(AccessRuleViolationAction routeAccessRuleViolationAction)
     {
-        var uniqueData = UNIQUE_PREFIX + "DAR4RoleAndUserInv" + routeAccessRuleViolationAction.ToString().Substring(0, 2);
+        var uniqueData = $"{UNIQUE_PREFIX}DAR4RoleAndUserInv{routeAccessRuleViolationAction.ToString().AsSpan(0, 2)}";
         var sluggedUniqueData = SlugFormatter.ToSlug(uniqueData);
 
         using var app = _webApplicationFactory.CreateApp();
@@ -384,7 +384,6 @@ public class CofoundryPagesControllerTests
         result.StatusCode.Should().Be(HttpStatusCode.OK);
         content.Should().Match($"*<h1>{uniqueData}</h1>*");
     }
-
 
     private async Task AssertAccessRuleResponseAsync(
         HttpResponseMessage result,

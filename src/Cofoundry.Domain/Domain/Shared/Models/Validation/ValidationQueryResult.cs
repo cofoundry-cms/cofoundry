@@ -30,7 +30,10 @@ public class ValidationQueryResult : IValidationQueryResult
     /// </summary>
     public virtual void ThrowIfNotSuccess()
     {
-        if (IsSuccess) return;
+        if (IsSuccess)
+        {
+            return;
+        }
 
         if (Error == null)
         {

@@ -9,16 +9,16 @@ public class InstanceLifetime
     /// <summary>
     /// A single instance is returned in the parent and all nested containers.
     /// </summary>
-    public static readonly InstanceLifetime Singleton = new InstanceLifetime();
+    public static readonly InstanceLifetime Singleton = new();
 
     /// <summary>
     /// A new instance will be returned each time.
     /// </summary>
-    public static readonly InstanceLifetime Transient = new InstanceLifetime();
+    public static readonly InstanceLifetime Transient = new();
 
     /// <summary>
     /// This lifetime applies to nested scopes. A component with scoped lifetime will have at most a single 
     /// instance per nested scope. Equivalent to ServiceLifetime.Scoped in .net core.
     /// </summary>
-    public static readonly InstanceLifetime Scoped = new InstanceLifetime();
+    public static readonly InstanceLifetime Scoped = new();
 }

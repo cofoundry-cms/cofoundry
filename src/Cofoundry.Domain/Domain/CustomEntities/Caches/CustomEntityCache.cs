@@ -48,7 +48,7 @@ public class CustomEntityCache : ICustomEntityCache
         _cache.Clear(GetEntityTypeRoutesCacheKey(customEntityTypeCode));
     }
 
-    private string GetEntityTypeRoutesCacheKey(string customEntityTypeCode)
+    private static string GetEntityTypeRoutesCacheKey(string customEntityTypeCode)
     {
         return ROUTES_CACHEKEY + customEntityTypeCode;
     }

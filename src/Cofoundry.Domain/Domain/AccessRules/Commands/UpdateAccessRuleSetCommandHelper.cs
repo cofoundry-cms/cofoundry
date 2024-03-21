@@ -94,7 +94,7 @@ public class UpdateAccessRuleSetCommandHelper : IUpdateAccessRuleSetCommandHelpe
         }
     }
 
-    private void UpdateRules<TAccessRule>(
+    private static void UpdateRules<TAccessRule>(
         IEntityAccessRestrictable<TAccessRule> entity,
         IEnumerable<AddOrUpdateAccessRuleCommandBase> accessRules,
         Dictionary<int, Role> roles,
@@ -184,7 +184,7 @@ public class UpdateAccessRuleSetCommandHelper : IUpdateAccessRuleSetCommandHelpe
         }
     }
 
-    private void ValidateRoleIsInUserArea(IUserAreaDefinition userAreaDefinition, Role role)
+    private static void ValidateRoleIsInUserArea(IUserAreaDefinition userAreaDefinition, Role role)
     {
         if (role != null && role.UserAreaCode != userAreaDefinition.UserAreaCode)
         {

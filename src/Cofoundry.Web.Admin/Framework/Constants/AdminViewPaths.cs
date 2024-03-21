@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Web.Admin;
+namespace Cofoundry.Web.Admin;
 
 /// <summary>
 /// This is a little helper to make it easier to reference views by
@@ -8,13 +8,12 @@
 /// </summary>
 internal static class ViewPathFormatter
 {
-    private const string VIEW_FORMAT = "~" + RouteConstants.InternalModuleResourcePathPrefix + "{0}/MVC/Views/{1}.cshtml";
-
     public static string View(string controllerName, string viewName)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(controllerName);
         ArgumentEmptyException.ThrowIfNullOrWhitespace(viewName);
 
-        return string.Format(VIEW_FORMAT, controllerName, viewName);
+        var viewPath = $"~{RouteConstants.InternalModuleResourcePathPrefix}{controllerName}/MVC/Views/{viewName}.cshtml";
+        return viewPath;
     }
 }

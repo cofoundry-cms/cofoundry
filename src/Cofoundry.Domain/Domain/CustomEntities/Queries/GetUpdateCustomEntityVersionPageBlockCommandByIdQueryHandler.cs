@@ -35,7 +35,11 @@ public class GetUpdateCustomEntityVersionPageBlockCommandByIdQueryHandler
             })
             .SingleOrDefaultAsync();
 
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
+
         _permissionValidationService.EnforceCustomEntityPermission<CustomEntityReadPermission>(dbResult.CustomEntityDefinitionCode, executionContext.UserContext);
 
         var result = Map(dbResult.PageBlock, dbResult.PageBlockTypeFileName);

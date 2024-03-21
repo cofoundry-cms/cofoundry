@@ -21,7 +21,10 @@ public class VisualEditorStateCache : IVisualEditorStateCache
     public VisualEditorState? Get()
     {
         var cache = _httpContextAccessor.HttpContext?.Items;
-        if (cache == null) return null;
+        if (cache == null)
+        {
+            return null;
+        }
 
         return cache[CACHE_KEY] as VisualEditorState;
     }

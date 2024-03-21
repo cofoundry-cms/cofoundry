@@ -46,7 +46,10 @@ public class PasswordPolicy : IPasswordPolicy
             else if (validator is IAsyncNewPasswordValidator asyncValidator)
             {
                 // Only aggregate sync errors because async errors are likely slow
-                if (errors.Any()) return errors;
+                if (errors.Count != 0)
+                {
+                    return errors;
+                }
 
                 error = await asyncValidator.ValidateAsync(newPasswordValidatonContext);
             }

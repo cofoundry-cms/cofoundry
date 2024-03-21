@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 
 namespace Cofoundry.Core.Mail.Internal;
 
@@ -51,7 +51,7 @@ public class MailMessageRenderer : IMailMessageRenderer
         return message;
     }
 
-    private void FormatFromAddress(IMailTemplate template, MailMessage message)
+    private static void FormatFromAddress(IMailTemplate template, MailMessage message)
     {
         if (template is IMailTemplateWithCustomFromAddress mailTemplateWithCustomFromAddress)
         {
@@ -61,9 +61,8 @@ public class MailMessageRenderer : IMailMessageRenderer
 
     private async Task<string?> RenderViewAsync(IMailTemplate template, string type)
     {
-        var path = string.Format("{0}_{1}.cshtml", template.ViewFile, type);
-        string? view = null;
-
+        var path = $"{template.ViewFile}_{type}.cshtml";
+        string? view;
         try
         {
             view = await _viewRenderer.RenderAsync(path, template);

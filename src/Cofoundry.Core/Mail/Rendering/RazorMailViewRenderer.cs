@@ -20,9 +20,9 @@ namespace Cofoundry.Core.Mail.Internal;
 /// </remarks>
 public class RazorMailViewRenderer : IMailViewRenderer
 {
-    private IRazorViewEngine _viewEngine;
-    private ITempDataProvider _tempDataProvider;
-    private IServiceProvider _serviceProvider;
+    private readonly IRazorViewEngine _viewEngine;
+    private readonly ITempDataProvider _tempDataProvider;
+    private readonly IServiceProvider _serviceProvider;
 
     public RazorMailViewRenderer(
         IRazorViewEngine viewEngine,

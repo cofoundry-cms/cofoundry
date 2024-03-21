@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+using System.Globalization;
+using System.Security.Claims;
 
 namespace Cofoundry.Web.Internal;
 
@@ -15,7 +16,7 @@ public class ClaimsPrincipalFactory : IClaimsPrincipalFactory
         var scheme = AuthenticationSchemeNames.UserArea(context.UserAreaCode);
         var claims = new[]
         {
-            new Claim(CofoundryClaimTypes.UserId, Convert.ToString(context.UserId)),
+            new Claim(CofoundryClaimTypes.UserId, Convert.ToString(context.UserId, CultureInfo.InvariantCulture)),
             new Claim(CofoundryClaimTypes.SecurityStamp, context.SecurityStamp),
             new Claim(CofoundryClaimTypes.UserAreaCode, context.UserAreaCode),
         };

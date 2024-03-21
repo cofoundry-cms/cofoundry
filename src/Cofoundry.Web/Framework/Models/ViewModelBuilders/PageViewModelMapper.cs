@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 
 namespace Cofoundry.Web;
 
@@ -90,10 +90,7 @@ public class PageViewModelMapper : IPageViewModelMapper
     {
         ArgumentNullException.ThrowIfNull(viewModel);
         ArgumentNullException.ThrowIfNull(mappingParameters);
-        if (mappingParameters.StatusCode < 100)
-        {
-            throw new ArgumentOutOfRangeException(nameof(mappingParameters.StatusCode));
-        }
+        ArgumentOutOfRangeException.ThrowIfLessThan(mappingParameters.StatusCode, 100);
 
         viewModel.StatusCode = mappingParameters.StatusCode;
         viewModel.StatusCodeDescription = GetStatusCodeDescription(viewModel.StatusCode);

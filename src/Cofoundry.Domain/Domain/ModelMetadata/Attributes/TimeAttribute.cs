@@ -55,8 +55,8 @@ public class TimeAttribute : ValidationAttribute, IMetadataAttribute
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        TimeSpan? minTime = ParseTime(Min, validationContext);
-        TimeSpan? maxTime = ParseTime(Max, validationContext);
+        var minTime = ParseTime(Min, validationContext);
+        var maxTime = ParseTime(Max, validationContext);
 
         if (value == null || !minTime.HasValue || !maxTime.HasValue)
         {
@@ -80,14 +80,14 @@ public class TimeAttribute : ValidationAttribute, IMetadataAttribute
         return ValidationResult.Success;
     }
 
-    private TimeSpan? ParseTime(string? timeAsString, ValidationContext validationContext)
+    private static TimeSpan? ParseTime(string? timeAsString, ValidationContext validationContext)
     {
         if (string.IsNullOrEmpty(timeAsString))
         {
             return null;
         }
 
-        if (!TimeSpan.TryParse(timeAsString, out TimeSpan time))
+        if (!TimeSpan.TryParse(timeAsString, out var time))
         {
             throw new InvalidOperationException($"{validationContext.MemberName} is not a valid time value: {timeAsString}");
         }
@@ -95,7 +95,7 @@ public class TimeAttribute : ValidationAttribute, IMetadataAttribute
         return time;
     }
 
-    private TimeSpan? ParseValueForValidation(object value)
+    private static TimeSpan? ParseValueForValidation(object value)
     {
         if (value == null)
         {

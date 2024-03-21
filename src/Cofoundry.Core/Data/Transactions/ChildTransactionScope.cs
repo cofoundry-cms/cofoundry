@@ -11,7 +11,7 @@ namespace Cofoundry.Core.Data.Internal;
 public class ChildTransactionScope : ITransactionScope, IDisposable
 {
     private readonly PrimaryTransactionScope _primaryTransactionScope;
-    private TransactionScope _innerScope;
+    private readonly TransactionScope _innerScope;
 
     public ChildTransactionScope(
         PrimaryTransactionScope primaryTransactionScope,

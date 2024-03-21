@@ -191,13 +191,13 @@ public class GetPageRouteLookupQueryHandler
         return routes;
     }
 
-    private void SetPageVersions(
+    private static void SetPageVersions(
         PageRoute pageRoute,
         Dictionary<int, IOrderedEnumerable<PageVersionQueryResult>> dbPageVersionLookup,
         Dictionary<int, PageTemplateQueryResult> templates
         )
     {
-        bool hasLatestPublishVersion = false;
+        var hasLatestPublishVersion = false;
 
         var orderedDbVersions = dbPageVersionLookup.GetOrDefault(pageRoute.PageId);
 

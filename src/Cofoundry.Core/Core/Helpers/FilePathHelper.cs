@@ -7,9 +7,9 @@ namespace Cofoundry.Core;
 /// </summary>
 public static class FilePathHelper
 {
-    private static char[] FILE_NAME_INVALID_CHARS = new char[] { '\0', '*', '<', '>', '/', '\\', ':', '?', '|', '\"' };
-    private static char[] FILE_NAME_TRIM_CHARS = new char[] { '$', ' ' };
-    private static string[] FILE_NAME_INVALID_VALUES = new string[]
+    private static readonly char[] FILE_NAME_INVALID_CHARS = new char[] { '\0', '*', '<', '>', '/', '\\', ':', '?', '|', '\"' };
+    private static readonly char[] FILE_NAME_TRIM_CHARS = new char[] { '$', ' ' };
+    private static readonly string[] FILE_NAME_INVALID_VALUES = new string[]
     {
             "CON", "PRN", "AUX", "NUL",
             "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
@@ -40,14 +40,17 @@ public static class FilePathHelper
     /// <returns>Cleaned file name, or the emptyReplacement value if the fileName is null or whitespace.</returns>
     public static string CleanFileName(string? fileName, string emptyReplacement)
     {
-        if (string.IsNullOrWhiteSpace(fileName)) return emptyReplacement;
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return emptyReplacement;
+        }
 
         var validChars = fileName.Where(x =>
-            !Char.IsControl(x)
+            !char.IsControl(x)
             && !FILE_NAME_INVALID_CHARS.Contains(x)
             );
 
-        var newName = String.Concat(validChars).Trim(FILE_NAME_TRIM_CHARS);
+        var newName = string.Concat(validChars).Trim(FILE_NAME_TRIM_CHARS);
 
         if (string.IsNullOrWhiteSpace(newName) || FILE_NAME_INVALID_VALUES.Contains(newName))
         {
@@ -74,11 +77,14 @@ public static class FilePathHelper
     {
         var trimmedExtension = fileExtension?.TrimStart('.');
 
-        if (string.IsNullOrWhiteSpace(trimmedExtension)) return false;
+        if (string.IsNullOrWhiteSpace(trimmedExtension))
+        {
+            return false;
+        }
 
         var hasInvalidChars = trimmedExtension.Any(x =>
             x == '.'
-            || Char.IsControl(x)
+            || char.IsControl(x)
             || FILE_NAME_INVALID_CHARS.Contains(x)
             );
 

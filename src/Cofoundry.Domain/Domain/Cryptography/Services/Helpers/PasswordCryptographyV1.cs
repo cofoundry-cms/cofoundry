@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Cofoundry.Domain.Internal;
@@ -48,7 +48,7 @@ public class PasswordCryptographyV1
 
     private int GenerateSalt()
     {
-        Byte[] _saltBytes = new Byte[4];
+        var _saltBytes = new byte[4];
         using (var generator = RandomNumberGenerator.Create())
         {
             generator.GetBytes(_saltBytes);
@@ -61,29 +61,29 @@ public class PasswordCryptographyV1
     private string CreateHash(string password, int salt)
     {
         // Create Byte array of password string
-        Byte[] _secretBytes = UTF8Encoding.UTF8.GetBytes(password);
+        var _secretBytes = UTF8Encoding.UTF8.GetBytes(password);
 
         // Create a new salt
-        Byte[] _saltBytes = new Byte[4];
+        var _saltBytes = new byte[4];
         _saltBytes[0] = (byte)(salt >> 24);
         _saltBytes[1] = (byte)(salt >> 16);
         _saltBytes[2] = (byte)(salt >> 8);
         _saltBytes[3] = (byte)(salt);
 
         // append the two arrays
-        Byte[] toHash = new Byte[_secretBytes.Length + _saltBytes.Length];
+        var toHash = new byte[_secretBytes.Length + _saltBytes.Length];
         Array.Copy(_secretBytes, 0, toHash, 0, _secretBytes.Length);
         Array.Copy(_saltBytes, 0, toHash, _secretBytes.Length, _saltBytes.Length);
 
-        SHA1 sha1 = SHA1.Create();
-        Byte[] computedHash = sha1.ComputeHash(toHash);
+        var sha1 = SHA1.Create();
+        var computedHash = sha1.ComputeHash(toHash);
 
         return EncodeSalt(salt) + Convert.ToBase64String(computedHash);
     }
 
     private string EncodeSalt(int salt)
     {
-        var saltInBytes = UTF8Encoding.UTF8.GetBytes(salt.ToString());
+        var saltInBytes = UTF8Encoding.UTF8.GetBytes(salt.ToString(CultureInfo.InvariantCulture));
         var encodedPaddedSalt = Convert.ToBase64String(saltInBytes).PadRight(SALT_LENGTH, SALT_PAD_CHAR);
 
         return encodedPaddedSalt;

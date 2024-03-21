@@ -35,7 +35,10 @@ public class DbUnstructuredDataSerializer : IDbUnstructuredDataSerializer
 
     public T? Deserialize<T>(string? serialized)
     {
-        if (string.IsNullOrEmpty(serialized)) return default;
+        if (string.IsNullOrEmpty(serialized))
+        {
+            return default;
+        }
 
         return JsonConvert.DeserializeObject<T>(serialized, GetDeserializerSettings());
     }

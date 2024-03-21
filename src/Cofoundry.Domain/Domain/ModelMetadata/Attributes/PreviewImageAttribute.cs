@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -7,6 +7,7 @@ namespace Cofoundry.Domain;
 /// main image when displaying the model. Typically this is
 /// used in a grid of items to show an image representation of the row.
 /// </summary>
+[AttributeUsage(AttributeTargets.Property)]
 public class PreviewImageAttribute : Attribute, IMetadataAttribute
 {
     public void Process(DisplayMetadataProviderContext context)

@@ -1,5 +1,3 @@
-﻿using Cofoundry.Domain.Data;
-
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
@@ -7,19 +5,16 @@ namespace Cofoundry.Domain.Internal;
 /// </summary>
 public class SimpleResizedImageAssetFileService : IResizedImageAssetFileService
 {
-    private readonly IFileStoreService _fileService;
     private readonly IQueryExecutor _queryExecutor;
 
     public SimpleResizedImageAssetFileService(
-        IFileStoreService fileService,
         IQueryExecutor queryExecutor
         )
     {
-        _fileService = fileService;
         _queryExecutor = queryExecutor;
     }
 
-    public Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings inputSettings)
+    public Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings settings)
     {
         // Resizing only supported via plugin
         return GetFileStreamAsync(asset.ImageAssetId);
@@ -38,7 +33,7 @@ public class SimpleResizedImageAssetFileService : IResizedImageAssetFileService
 
         if (result == null || result.ContentStream == null)
         {
-            throw new FileNotFoundException(imageAssetId.ToString());
+            throw new FileNotFoundException(imageAssetId.ToString(CultureInfo.InvariantCulture));
         }
 
         return result.ContentStream;

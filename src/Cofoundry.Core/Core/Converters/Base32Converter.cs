@@ -40,10 +40,10 @@ public static class Base32Converter
             RandomNumberGenerator.Fill(bytes);
 
             var index = 0;
-            for (int offset = 0; offset < bytes.Length;)
+            for (var offset = 0; offset < bytes.Length;)
             {
                 byte a, b, c, d, e, f, g, h;
-                int numCharsToOutput = GetNextGroup(bytes, ref offset, out a, out b, out c, out d, out e, out f, out g, out h);
+                var numCharsToOutput = GetNextGroup(bytes, ref offset, out a, out b, out c, out d, out e, out f, out g, out h);
 
                 buffer[index + 7] = ((numCharsToOutput >= 8) ? _base32Chars[h] : '=');
                 buffer[index + 6] = ((numCharsToOutput >= 7) ? _base32Chars[g] : '=');
@@ -62,11 +62,11 @@ public static class Base32Converter
     {
         ArgumentNullException.ThrowIfNull(input);
 
-        StringBuilder sb = new StringBuilder();
-        for (int offset = 0; offset < input.Length;)
+        var sb = new StringBuilder();
+        for (var offset = 0; offset < input.Length;)
         {
             byte a, b, c, d, e, f, g, h;
-            int numCharsToOutput = GetNextGroup(input, ref offset, out a, out b, out c, out d, out e, out f, out g, out h);
+            var numCharsToOutput = GetNextGroup(input, ref offset, out a, out b, out c, out d, out e, out f, out g, out h);
 
             sb.Append((numCharsToOutput >= 1) ? _base32Chars[a] : '=');
             sb.Append((numCharsToOutput >= 2) ? _base32Chars[b] : '=');

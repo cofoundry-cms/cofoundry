@@ -27,7 +27,7 @@ public class AutoUpdateHostedService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        bool isComplete = false;
+        var isComplete = false;
 
         _logger.LogInformation("Starting service");
         uint numAttempts = 0;

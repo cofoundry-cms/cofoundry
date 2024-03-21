@@ -8,7 +8,7 @@ namespace Cofoundry.Domain.Internal;
 public class CustomEntityDisplayModelMapper : ICustomEntityDisplayModelMapper
 {
     private readonly IServiceProvider _serviceProvider;
-    private static readonly string mapDisplayModelMethodName = nameof(ICustomEntityDisplayModelMapper<ICustomEntityDataModel, ICustomEntityDisplayModel<ICustomEntityDataModel>>.MapDisplayModelAsync);
+    private const string MapDisplayModelMethodName = nameof(ICustomEntityDisplayModelMapper<ICustomEntityDataModel, ICustomEntityDisplayModel<ICustomEntityDataModel>>.MapDisplayModelAsync);
 
     public CustomEntityDisplayModelMapper(
         IServiceProvider serviceProvider
@@ -38,17 +38,17 @@ public class CustomEntityDisplayModelMapper : ICustomEntityDisplayModelMapper
         var mapperType = typeof(ICustomEntityDisplayModelMapper<,>).MakeGenericType(renderDetails.Model.GetType(), typeof(TDisplayModel));
         var mapper = _serviceProvider.GetRequiredService(mapperType);
 
-        var method = mapperType.GetMethod(mapDisplayModelMethodName);
+        var method = mapperType.GetMethod(MapDisplayModelMethodName);
         if (method == null)
         {
-            throw new Exception($"Could not find method {mapDisplayModelMethodName} on type {mapperType.FullName}");
+            throw new Exception($"Could not find method {MapDisplayModelMethodName} on type {mapperType.FullName}");
         }
 
         var result = method.Invoke(mapper, new object[] { renderDetails, renderDetails.Model, publishStatusQuery });
         var typedResult = result as Task<TDisplayModel>;
         if (typedResult == null)
         {
-            throw new Exception($"Unexpected result type when invoking {mapDisplayModelMethodName} on type {mapperType.FullName}. Expected Task of type '{typeof(TDisplayModel).FullName}' but got '{result?.GetType().FullName}'");
+            throw new Exception($"Unexpected result type when invoking {MapDisplayModelMethodName} on type {mapperType.FullName}. Expected Task of type '{typeof(TDisplayModel).FullName}' but got '{result?.GetType().FullName}'");
         }
 
         return await typedResult;

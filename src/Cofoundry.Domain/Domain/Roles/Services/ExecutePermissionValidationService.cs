@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// Service to validate the permissions of command/query handler prior to execution.
@@ -18,9 +18,9 @@ public class ExecutePermissionValidationService : IExecutePermissionValidationSe
     {
         ValidateCommmandImplementation<TCommand>(commandHandler);
 
-        if (commandHandler is IPermissionRestrictedCommandHandler<TCommand>)
+        if (commandHandler is IPermissionRestrictedCommandHandler<TCommand> permissionRestrictredHandler)
         {
-            var permissions = ((IPermissionRestrictedCommandHandler<TCommand>)commandHandler).GetPermissions(command);
+            var permissions = permissionRestrictredHandler.GetPermissions(command);
             _permissionValidationService.EnforcePermission(permissions, executionContext.UserContext);
         }
 
@@ -31,9 +31,9 @@ public class ExecutePermissionValidationService : IExecutePermissionValidationSe
     {
         ValidateQueryImplementation<TQuery, TResult>(queryHandler);
 
-        if (queryHandler is IPermissionRestrictedQueryHandler<TQuery, TResult>)
+        if (queryHandler is IPermissionRestrictedQueryHandler<TQuery, TResult> permissionRestrictedHandler)
         {
-            var permissions = ((IPermissionRestrictedQueryHandler<TQuery, TResult>)queryHandler).GetPermissions(query);
+            var permissions = permissionRestrictedHandler.GetPermissions(query);
             _permissionValidationService.EnforcePermission(permissions, executionContext.UserContext);
         }
 
@@ -48,7 +48,7 @@ public class ExecutePermissionValidationService : IExecutePermissionValidationSe
             // Check for invalid implementation
             if (!(handler is IPermissionRestrictedCommandHandler<TCommand>))
             {
-                var msg = string.Format("Invalid implementation: {0} imeplements IPermissionRestrictedCommandHandler but not IPermissionRestrictedCommandHandler<{1}>", handler.GetType().FullName, typeof(TCommand).FullName);
+                var msg = $"Invalid implementation: {handler.GetType().FullName} imeplements IPermissionRestrictedCommandHandler but not IPermissionRestrictedCommandHandler<{typeof(TCommand).FullName}>";
                 throw new InvalidOperationException(msg);
             }
         }
@@ -66,7 +66,7 @@ public class ExecutePermissionValidationService : IExecutePermissionValidationSe
             // Check for invalid implementation
             if (!(handler is IPermissionRestrictedQueryHandler<TQuery, TResult>))
             {
-                var msg = string.Format("Invalid implementation: {0} imeplements IPermissionRestrictedCommandHandler but not IPermissionRestrictedCommandHandler<{1}>", handler.GetType().FullName, typeof(TQuery).FullName);
+                var msg = $"Invalid implementation: {handler.GetType().FullName} imeplements IPermissionRestrictedCommandHandler but not IPermissionRestrictedCommandHandler<{typeof(TQuery).FullName}>";
                 throw new InvalidOperationException(msg);
             }
         }
@@ -99,7 +99,7 @@ public class ExecutePermissionValidationService : IExecutePermissionValidationSe
     {
         if (!(handler is IPermissionCheckHandler))
         {
-            var msg = string.Format("{0} does not implement an IPermissionCheckHandler. Either implement one of the permission checking interfaces or use IIgnorePermissionCheckHandler if no permission handling is required.", handler.GetType().FullName);
+            var msg = $"{handler.GetType().FullName} does not implement an IPermissionCheckHandler. Either implement one of the permission checking interfaces or use IIgnorePermissionCheckHandler if no permission handling is required.";
             throw new InvalidOperationException(msg);
         }
     }

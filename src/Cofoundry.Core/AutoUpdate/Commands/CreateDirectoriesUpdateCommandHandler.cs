@@ -2,7 +2,7 @@
 
 public class CreateDirectoriesUpdateCommandHandler : ISyncVersionedUpdateCommandHandler<CreateDirectoriesUpdateCommand>
 {
-    IPathResolver _pathResolver;
+    private readonly IPathResolver _pathResolver;
 
     public CreateDirectoriesUpdateCommandHandler(
         IPathResolver pathResolver

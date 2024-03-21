@@ -111,7 +111,7 @@ public class GetPageBlockTypeFileDetailsByFileNameQueryHandler
     {
         var startFunc = functionName + "(\"";
 
-        int start = textLine.IndexOf(startFunc) + startFunc.Length;
+        var start = textLine.IndexOf(startFunc) + startFunc.Length;
         var parameterValue = textLine.Substring(start);
         parameterValue = parameterValue.Substring(0, parameterValue.IndexOf('"'));
 

@@ -15,7 +15,10 @@ public class OutputValueAttribute : ValidationAttribute
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (value == null) return ValidationResult.Success;
+        if (value == null)
+        {
+            return ValidationResult.Success;
+        }
 
         var type = value.GetType();
 

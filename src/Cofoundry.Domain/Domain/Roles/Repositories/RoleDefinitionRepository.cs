@@ -52,7 +52,7 @@ public class RoleDefinitionRepository : IRoleDefinitionRepository
         return _roleDefinitions.Select(p => p.Value);
     }
 
-    private void DetectInvalidDefinitions(IEnumerable<IRoleDefinition> definitions)
+    private static void DetectInvalidDefinitions(IEnumerable<IRoleDefinition> definitions)
     {
         const string WHY_VALID_CODE_MESSAGE = "All role codes must be 3 characters and contain only non-unicode characters.";
 
@@ -132,7 +132,7 @@ public class RoleDefinitionRepository : IRoleDefinitionRepository
         }
     }
 
-    private string CreateLookupKey(string userAreaCode, string code)
+    private static string CreateLookupKey(string userAreaCode, string code)
     {
         return userAreaCode + code;
     }

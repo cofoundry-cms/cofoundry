@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// In-memory implementation of IUserSessionService for non-web
@@ -8,8 +8,8 @@
 public class InMemoryUserSessionService : IUserSessionService
 {
     private const string AMBIENT_USER_AREA_KEY = "AMBIENT_KEY";
-    private Dictionary<string, int?> _userIdCache = new Dictionary<string, int?>();
-    private object _lock = new object();
+    private readonly Dictionary<string, int?> _userIdCache = [];
+    private readonly object _lock = new();
     private string _ambientUserAreaCode;
 
     private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
@@ -44,13 +44,13 @@ public class InMemoryUserSessionService : IUserSessionService
         return _userIdCache.GetValueOrDefault(userAreaCode);
     }
 
-    public Task SignInAsync(string userAreaCode, int userId, bool rememberUser)
+    public Task SignInAsync(string userAreaDefinitionCode, int userId, bool rememberUser)
     {
-        ArgumentNullException.ThrowIfNull(userAreaCode);
-        if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId));
+        ArgumentNullException.ThrowIfNull(userAreaDefinitionCode);
+        ArgumentOutOfRangeException.ThrowIfLessThan(userId, 1);
 
-        var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
-        EntityNotFoundException.ThrowIfNull(userArea, userAreaCode);
+        var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaDefinitionCode);
+        EntityNotFoundException.ThrowIfNull(userArea, userAreaDefinitionCode);
         var isAmbientUserArea = IsAmbientUserArea(userArea);
 
         lock (_lock)
@@ -66,12 +66,12 @@ public class InMemoryUserSessionService : IUserSessionService
         return Task.CompletedTask;
     }
 
-    public Task SignOutAsync(string userAreaCode)
+    public Task SignOutAsync(string userAreaDefinitionCode)
     {
-        ArgumentNullException.ThrowIfNull(userAreaCode);
+        ArgumentNullException.ThrowIfNull(userAreaDefinitionCode);
 
-        var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
-        EntityNotFoundException.ThrowIfNull(userArea, userAreaCode);
+        var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaDefinitionCode);
+        EntityNotFoundException.ThrowIfNull(userArea, userAreaDefinitionCode);
         var isAmbientUserArea = IsAmbientUserArea(userArea);
 
         var userId = _userIdCache.GetOrDefault(userArea.UserAreaCode);
@@ -119,7 +119,10 @@ public class InMemoryUserSessionService : IUserSessionService
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
 
-        if (_ambientUserAreaCode == userAreaCode) return Task.CompletedTask;
+        if (_ambientUserAreaCode == userAreaCode)
+        {
+            return Task.CompletedTask;
+        }
 
         lock (_lock)
         {

@@ -9,14 +9,17 @@ public class UserContextCache : IUserContextCache
     /// In-memory cache scoped to the lifetime of the instance, which
     /// should be per-scope for web requests.
     /// </summary>
-    private Dictionary<int, IUserContext> _userContextCache = new Dictionary<int, IUserContext>();
+    private readonly Dictionary<int, IUserContext> _userContextCache = [];
     private const int SYSTEM_CACHE_KEY = int.MinValue;
 
     /// <inheritdoc/>
     public async Task<IUserContext> GetOrAddAsync(int userId, Func<Task<IUserContext>> getter)
     {
         ArgumentNullException.ThrowIfNull(getter);
-        if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId), nameof(userId) + " must be positive.");
+        if (userId < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(userId), nameof(userId) + " must be positive.");
+        }
 
         var userContext = _userContextCache.GetValueOrDefault(userId);
 
@@ -48,7 +51,10 @@ public class UserContextCache : IUserContextCache
     /// <inheritdoc/>
     public void Clear(int userId)
     {
-        if (userId < 1) throw new ArgumentOutOfRangeException(nameof(userId), nameof(userId) + " must be positive.");
+        if (userId < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(userId), nameof(userId) + " must be positive.");
+        }
 
         _userContextCache.Remove(userId);
     }

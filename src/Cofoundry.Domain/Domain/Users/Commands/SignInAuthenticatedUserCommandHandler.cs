@@ -100,7 +100,7 @@ public class SignInAuthenticatedUserCommandHandler
         }
     }
 
-    private void SetLoggedIn(User user, IExecutionContext executionContext)
+    private static void SetLoggedIn(User user, IExecutionContext executionContext)
     {
         user.PreviousSignInDate = user.LastSignInDate;
         user.LastSignInDate = executionContext.ExecutionDate;

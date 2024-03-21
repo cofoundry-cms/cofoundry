@@ -38,13 +38,16 @@ public class MimeTypeRegistrationContext : IMimeTypeRegistrationContext
     /// <param name="mimeType">The mime type to assign to the file extension e.g. 'image/jpeg'</param>
     public virtual void AddOrUpdate(string fileExtension, string mimeType)
     {
-        if (string.IsNullOrWhiteSpace(mimeType)) throw new ArgumentException("Mime type cannot be empty.", nameof(mimeType));
+        if (string.IsNullOrWhiteSpace(mimeType))
+        {
+            throw new ArgumentException("Mime type cannot be empty.", nameof(mimeType));
+        }
 
         var formattedExtension = FormatFileExtension(fileExtension);
         _fileExtensionContentTypeProvider.Mappings[formattedExtension] = mimeType;
     }
 
-    private string FormatFileExtension(string? fileExtension)
+    private static string FormatFileExtension(string? fileExtension)
     {
         var trimmedExtension = fileExtension?.Trim('.');
 

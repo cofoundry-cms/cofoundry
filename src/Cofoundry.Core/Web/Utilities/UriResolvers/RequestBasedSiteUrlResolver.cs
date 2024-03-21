@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace Cofoundry.Core.Web.Internal;
 
@@ -26,13 +26,7 @@ public class RequestBasedSiteUrlResolver : SiteUrlResolverBase
         }
 
         var request = _httpContextAccessor.HttpContext.Request;
-
-        var siteRoot = string.Format("{0}://{1}{2}{3}",
-            request.Scheme,
-            request.Host.Host,
-            GetPortUrlPart(request),
-            request.PathBase
-            );
+        var siteRoot = $"{request.Scheme}://{request.Host.Host}{GetPortUrlPart(request)}{request.PathBase}";
 
         return siteRoot;
     }
@@ -46,7 +40,7 @@ public class RequestBasedSiteUrlResolver : SiteUrlResolverBase
         return _httpContextAccessor?.HttpContext?.Request != null;
     }
 
-    private string GetPortUrlPart(HttpRequest request)
+    private static string GetPortUrlPart(HttpRequest request)
     {
         if (!request.Host.Port.HasValue
             || request.Host.Port == 80

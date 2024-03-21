@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin;
 
@@ -11,7 +11,6 @@ public class UsersModuleController : BaseAdminMvcController
         _userAreaDefinitionRepository = userAreaDefinitionRepository;
     }
 
-    private static readonly Dictionary<string, string> EmptyTerms = [];
     private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
 
     public ActionResult Index()

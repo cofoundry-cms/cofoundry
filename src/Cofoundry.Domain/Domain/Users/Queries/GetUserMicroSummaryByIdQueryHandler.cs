@@ -45,7 +45,10 @@ public class GetUserMicroSummaryByIdQueryHandler
 
     private void ValidatePermission(GetUserMicroSummaryByIdQuery query, IExecutionContext executionContext, UserMicroSummary? user)
     {
-        if (user == null) return;
+        if (user == null)
+        {
+            return;
+        }
 
         if (user.UserArea.UserAreaCode == CofoundryAdminUserArea.Code)
         {

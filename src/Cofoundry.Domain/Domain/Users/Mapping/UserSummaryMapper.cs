@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -23,12 +23,12 @@ public class UserSummaryMapper : IUserSummaryMapper
     [return: NotNullIfNotNull(nameof(dbUser))]
     public virtual UserSummary? Map(User? dbUser)
     {
-        if (dbUser == null) return null;
-
-        if (dbUser.Role == null)
+        if (dbUser == null)
         {
-            throw new ArgumentException("dbUser.Role must be included in the query to map to use the UserSummaryMapper");
+            return null;
         }
+
+        MissingIncludeException.ThrowIfNull(dbUser, u => u.Role);
 
         var role = _roleMicroSummaryMapper.Map(dbUser.Role);
         EntityNotFoundException.ThrowIfNull(role, dbUser.Role.RoleId);

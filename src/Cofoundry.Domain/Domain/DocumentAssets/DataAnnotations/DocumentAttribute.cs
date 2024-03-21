@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using System.Reflection;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -24,7 +24,7 @@ public class DocumentAttribute : RegularExpressionAttribute, IMetadataAttribute
         : base(@"^[1-9]\d*$")
     {
         ErrorMessage = "The {0} field is required";
-        Tags = tags ?? new string[0];
+        Tags = tags ?? [];
     }
 
     public void Process(DisplayMetadataProviderContext context)

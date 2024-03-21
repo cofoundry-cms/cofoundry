@@ -20,15 +20,18 @@ public class MaxLengthNewPasswordValidator
 
     public void Configure(int maxLength)
     {
-        if (maxLength < PasswordOptions.MIN_LENGTH_BOUNDARY) throw new ArgumentOutOfRangeException(nameof(maxLength));
-        if (maxLength > PasswordOptions.MAX_LENGTH_BOUNDARY) throw new ArgumentOutOfRangeException(nameof(maxLength));
+        ArgumentOutOfRangeException.ThrowIfLessThan(maxLength, PasswordOptions.MIN_LENGTH_BOUNDARY);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(maxLength, PasswordOptions.MAX_LENGTH_BOUNDARY);
 
         MaxLength = maxLength;
     }
 
     public ValidationError? Validate(INewPasswordValidationContext context)
     {
-        if (MaxLength == 0) throw new InvalidOperationException($"{nameof(Configure)} has not been called.");
+        if (MaxLength == 0)
+        {
+            throw new InvalidOperationException($"{nameof(Configure)} has not been called.");
+        }
 
         if (context.Password.Length > MaxLength)
         {

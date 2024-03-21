@@ -12,7 +12,7 @@ namespace Cofoundry.Core.Web.Internal;
 /// </summary>
 public class HtmlSanitizer : IHtmlSanitizer
 {
-    private Ganss.Xss.HtmlSanitizer _defaultSanitizer;
+    private readonly Ganss.Xss.HtmlSanitizer _defaultSanitizer;
     private readonly string _defaultBaseUrl = string.Empty;
 
     public HtmlSanitizer(
@@ -28,7 +28,10 @@ public class HtmlSanitizer : IHtmlSanitizer
     public virtual string? Sanitize(IHtmlContent? source)
     {
         var stringContent = source?.ToString()?.Trim();
-        if (stringContent == null) return null;
+        if (stringContent == null)
+        {
+            return null;
+        }
 
         IHtmlSanitizationRuleSet? ruleSet = null;
         if (source is ICustomSanitizationHtmlString)
@@ -42,8 +45,15 @@ public class HtmlSanitizer : IHtmlSanitizer
     [return: NotNullIfNotNull(nameof(source))]
     public virtual string? Sanitize(string? source, IHtmlSanitizationRuleSet? ruleSet = null)
     {
-        if (source == null) return null;
-        if (string.IsNullOrWhiteSpace(source)) return string.Empty;
+        if (source == null)
+        {
+            return null;
+        }
+
+        if (string.IsNullOrWhiteSpace(source))
+        {
+            return string.Empty;
+        }
 
         string result;
 
@@ -68,7 +78,10 @@ public class HtmlSanitizer : IHtmlSanitizer
     [return: NotNullIfNotNull(nameof(source))]
     public virtual string? StripHtml(IHtmlContent? source)
     {
-        if (source == null) return null;
+        if (source == null)
+        {
+            return null;
+        }
 
         return StripHtml(source?.ToString());
     }
@@ -82,15 +95,18 @@ public class HtmlSanitizer : IHtmlSanitizer
     [return: NotNullIfNotNull(nameof(source))]
     public virtual string? StripHtml(string? source)
     {
-        if (source == null) return null;
-
-        char[] array = new char[source.Length];
-        int arrayIndex = 0;
-        bool inside = false;
-
-        for (int i = 0; i < source.Length; i++)
+        if (source == null)
         {
-            char let = source[i];
+            return null;
+        }
+
+        var array = new char[source.Length];
+        var arrayIndex = 0;
+        var inside = false;
+
+        for (var i = 0; i < source.Length; i++)
+        {
+            var let = source[i];
             if (let == '<')
             {
                 inside = true;
@@ -114,7 +130,10 @@ public class HtmlSanitizer : IHtmlSanitizer
     protected string GetBaseUrl(IHtmlSanitizationRuleSet ruleSet)
     {
         var ganssRuleSet = ruleSet as IGanssHtmlSanitizationRuleSet;
-        if (ganssRuleSet == null) return string.Empty;
+        if (ganssRuleSet == null)
+        {
+            return string.Empty;
+        }
 
         return ganssRuleSet.BaseUrl;
     }

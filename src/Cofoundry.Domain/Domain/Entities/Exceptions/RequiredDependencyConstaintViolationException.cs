@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Exception thrown when an entity cannot be deleted because another
@@ -65,13 +65,26 @@ public class RequiredDependencyConstaintViolationException : ValidationErrorExce
 
             if (numInvalidDependencies == 1)
             {
-                message = string.Format(MESSAGE_TEMPLATE, definitionOfEntityBeingDeleted.Name.ToLower(), requiredDependency.Entity.EntityDefinitionName.ToLower(), requiredDependency.Entity.RootEntityTitle);
+                message = string.Format(
+                    CultureInfo.CurrentCulture,
+                    MESSAGE_TEMPLATE,
+                    definitionOfEntityBeingDeleted.Name.ToLower(),
+                    requiredDependency.Entity.EntityDefinitionName.ToLower(),
+                    requiredDependency.Entity.RootEntityTitle
+                    );
             }
             else
             {
                 var numberOfOtherInvalidEntityies = numInvalidDependencies - 1;
                 var numberText = numberOfOtherInvalidEntityies == 2 ? "one other" : numberOfOtherInvalidEntityies + " other entities";
-                message = string.Format(MESSAGE_TEMPLATE_WITH_COUNT, definitionOfEntityBeingDeleted.Name.ToLower(), requiredDependency.Entity.EntityDefinitionName.ToLower(), requiredDependency.Entity.RootEntityTitle, numberText);
+                message = string.Format(
+                    CultureInfo.CurrentCulture,
+                    MESSAGE_TEMPLATE_WITH_COUNT,
+                    definitionOfEntityBeingDeleted.Name.ToLower(),
+                    requiredDependency.Entity.EntityDefinitionName.ToLower(),
+                    requiredDependency.Entity.RootEntityTitle,
+                    numberText
+                    );
             }
 
             throw new RequiredDependencyConstaintViolationException(message);

@@ -7,7 +7,7 @@ namespace Cofoundry.Core.MessageAggregator.Internal;
 /// </summary>
 public class MessageAggregatorState : IMessageAggregatorState
 {
-    private readonly ConcurrentBag<IMessageSubscription> _subscriptions = new ConcurrentBag<IMessageSubscription>();
+    private readonly ConcurrentBag<IMessageSubscription> _subscriptions = [];
 
     /// <summary>
     /// Gets a collection of subscriptions for the specified message

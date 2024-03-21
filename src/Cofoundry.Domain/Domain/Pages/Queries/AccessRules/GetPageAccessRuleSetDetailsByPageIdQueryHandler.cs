@@ -65,7 +65,7 @@ public class GetPageAccessRuleSetDetailsByPageIdQueryHandler
             .Include(d => d.AncestorPageDirectory)
             .ThenInclude(d => d.PageDirectoryPath)
             .FilterByDescendantId(dbPage.PageDirectoryId)
-            .Where(d => d.DescendantPageDirectoryId == dbPage.PageDirectoryId && d.AncestorPageDirectory.AccessRules.Any())
+            .Where(d => d.DescendantPageDirectoryId == dbPage.PageDirectoryId && d.AncestorPageDirectory.AccessRules.Count != 0)
             .OrderByDescending(d => d.Distance)
             .ToArrayAsync();
 

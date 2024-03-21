@@ -33,7 +33,7 @@ public class GetPageVersionBlockEntityMicroSummariesByIdRangeQueryHandler
                 RootEntityTitle = m.PageVersion.Title,
                 EntityDefinitionCode = definition.EntityDefinitionCode,
                 EntityDefinitionName = definition.Name,
-                IsPreviousVersion = !m.PageVersion.PagePublishStatusQueries.Any()
+                IsPreviousVersion = m.PageVersion.PagePublishStatusQueries.Count == 0
             })
             .ToDictionaryAsync(e => e.ChildEntityId, e => (RootEntityMicroSummary)e);
 

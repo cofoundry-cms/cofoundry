@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -176,7 +176,7 @@ public class PageRouteLibrary : IPageRouteLibrary
         var baseUrl = Page(route);
         var queryParams = new Dictionary<string, string?>(2)
         {
-            { "version", versionRoute.VersionId.ToString() }
+            { "version", versionRoute.VersionId.ToString(CultureInfo.InvariantCulture) }
         };
 
         if (isEditingCustomEntity)

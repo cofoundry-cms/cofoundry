@@ -21,11 +21,17 @@ public class UserDataFormatter : IUserDataFormatter
     {
         var emailAddressNormalizer = CreateServiceForUserArea<IEmailAddressNormalizer>(userAreaDefinition, typeof(IEmailAddressNormalizer<>));
         var normalized = emailAddressNormalizer.NormalizeAsParts(emailAddress);
-        if (normalized == null) return null;
+        if (normalized == null)
+        {
+            return null;
+        }
 
         var emailAddressUniquifier = CreateServiceForUserArea<IEmailAddressUniquifier>(userAreaDefinition, typeof(IEmailAddressUniquifier<>));
         var uniquified = emailAddressUniquifier.UniquifyAsParts(normalized);
-        if (uniquified == null) return null;
+        if (uniquified == null)
+        {
+            return null;
+        }
 
         var result = new EmailAddressFormattingResult()
         {
@@ -45,16 +51,25 @@ public class UserDataFormatter : IUserDataFormatter
             throw new InvalidOperationException($"{nameof(FormatUsername)} can only be called with an email address if the user area supports using an email as a username.");
         }
 
-        if (emailAddress == null) return null;
+        if (emailAddress == null)
+        {
+            return null;
+        }
 
         var usernameNormalizer = CreateServiceForUserArea<IUsernameNormalizer>(userAreaDefinition, typeof(IUsernameNormalizer<>));
         var usernameUniquifier = CreateServiceForUserArea<IUsernameUniquifier>(userAreaDefinition, typeof(IUsernameUniquifier<>));
 
         var normalizedUsername = usernameNormalizer.Normalize(emailAddress.NormalizedEmailAddress);
-        if (normalizedUsername == null) return null;
+        if (normalizedUsername == null)
+        {
+            return null;
+        }
 
         var uniqueUsername = usernameUniquifier.Uniquify(emailAddress.NormalizedEmailAddress);
-        if (uniqueUsername == null) return null;
+        if (uniqueUsername == null)
+        {
+            return null;
+        }
 
         var result = new UsernameFormattingResult()
         {
@@ -77,10 +92,16 @@ public class UserDataFormatter : IUserDataFormatter
         }
 
         var normalizedUsername = usernameNormalizer.Normalize(username);
-        if (normalizedUsername == null) return null;
+        if (normalizedUsername == null)
+        {
+            return null;
+        }
 
         var uniqueUsername = usernameUniquifier.Uniquify(username);
-        if (uniqueUsername == null) return null;
+        if (uniqueUsername == null)
+        {
+            return null;
+        }
 
         var result = new UsernameFormattingResult()
         {
@@ -197,7 +218,10 @@ public class UserDataFormatter : IUserDataFormatter
         var genericType = genericServiceType.MakeGenericType(definitionType);
         var genericInstance = _serviceProvider.GetService(genericType);
 
-        if (genericInstance != null) return (T)genericInstance;
+        if (genericInstance != null)
+        {
+            return (T)genericInstance;
+        }
 
         return (T)_serviceProvider.GetRequiredService<T>();
     }

@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Core;
+using System.Globalization;
+
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Utility class for parsing decimals.
@@ -13,7 +15,7 @@ public class DecimalParser
     /// <returns>Decimal value if the string could be parsed; otherwise <see langword="null"/>.</returns>
     public static decimal? ParseOrNull(string? s)
     {
-        return decimal.TryParse(s, out decimal d) ? d : default(decimal?);
+        return decimal.TryParse(s, out var d) ? d : default(decimal?);
     }
 
     /// <summary>
@@ -28,7 +30,7 @@ public class DecimalParser
         {
             return o as decimal?;
         }
-        return ParseOrNull(Convert.ToString(o));
+        return ParseOrNull(Convert.ToString(o, CultureInfo.InvariantCulture));
     }
 
     /// <summary>
@@ -40,7 +42,11 @@ public class DecimalParser
     public static int? ParseToRoundedInt(object? o)
     {
         var d = ParseOrNull(o);
-        if (!d.HasValue) return null;
+        if (!d.HasValue)
+        {
+            return null;
+        }
+
         return Convert.ToInt32(Math.Round(d.Value));
     }
 }

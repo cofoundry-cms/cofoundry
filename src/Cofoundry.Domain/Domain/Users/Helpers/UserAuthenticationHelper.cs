@@ -22,7 +22,10 @@ public class UserAuthenticationHelper
 
     public PasswordVerificationResult VerifyPassword(User? user, string? password)
     {
-        if (user == null) return PasswordVerificationResult.Failed;
+        if (user == null)
+        {
+            return PasswordVerificationResult.Failed;
+        }
 
         var userArea = _userAreaRepository.GetRequiredByCode(user.UserAreaCode);
 

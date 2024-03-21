@@ -8,9 +8,9 @@ public class TestOptionSource : IListOptionSource
     {
         var options = new List<ListOption>
         {
-            new ListOption("Test1", 1),
-            new ListOption("Test2", 2),
-            new ListOption("Test3", 3)
+            new("Test1", 1),
+            new("Test2", 2),
+            new("Test3", 3)
         };
 
         return options;

@@ -88,7 +88,7 @@ public class ValidateDraftVersionRoutingStep : IValidateDraftVersionRoutingStep
         state.PageRoutingInfo = pageRoutingInfo;
     }
 
-    private GetPageRoutingInfoByPathQuery GetPageRoutingInfoQuery(PageActionRoutingState state)
+    private static GetPageRoutingInfoByPathQuery GetPageRoutingInfoQuery(PageActionRoutingState state)
     {
         ArgumentNullException.ThrowIfNull(state.VisualEditorState);
 

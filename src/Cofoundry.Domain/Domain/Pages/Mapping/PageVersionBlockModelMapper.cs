@@ -38,7 +38,7 @@ public class PageVersionBlockModelMapper : IPageVersionBlockModelMapper
         )
     {
         // Find the data-provider class for this block type
-        Type modelType = _pageBlockDataModelTypeFactory.CreateByPageBlockTypeFileName(typeName);
+        var modelType = _pageBlockDataModelTypeFactory.CreateByPageBlockTypeFileName(typeName);
 
         if (typeof(IPageBlockTypeDisplayModel).IsAssignableFrom(modelType))
         {
@@ -110,7 +110,7 @@ public class PageVersionBlockModelMapper : IPageVersionBlockModelMapper
     /// <inheritdoc/>
     public virtual IPageBlockTypeDataModel MapDataModel(string typeName, IEntityVersionPageBlock pageBlock)
     {
-        Type modelType = _pageBlockDataModelTypeFactory.CreateByPageBlockTypeFileName(typeName);
+        var modelType = _pageBlockDataModelTypeFactory.CreateByPageBlockTypeFileName(typeName);
         var model = _dbUnstructuredDataSerializer.Deserialize(pageBlock.SerializedData, modelType) as IPageBlockTypeDataModel;
 
         if (model == null)
@@ -131,7 +131,7 @@ public class PageVersionBlockModelMapper : IPageVersionBlockModelMapper
         var mapper = (IPageBlockTypeDisplayModelMapper<TDataModel>?)_serviceProvider.GetService(mapperType);
         if (mapper == null)
         {
-            string msg = $"{typeof(TDataModel).Name} does not implement IPageBlockDisplayModel and no custom mapper could be found. You must create a class that implements IPageBlockDisplayModelMapper<{typeof(TDataModel).Name}> if you are using a custom display model. Full type name: {typeof(TDataModel).FullName}";
+            var msg = $"{typeof(TDataModel).Name} does not implement IPageBlockDisplayModel and no custom mapper could be found. You must create a class that implements IPageBlockDisplayModelMapper<{typeof(TDataModel).Name}> if you are using a custom display model. Full type name: {typeof(TDataModel).FullName}";
             throw new Exception(msg);
         }
 

@@ -2,8 +2,8 @@
 
 public static class ContainerRegisterExtensions
 {
-    private static RegistrationOptions SCOPED_OPTIONS = RegistrationOptions.Scoped();
-    private static RegistrationOptions SINGLETON_OPTIONS = RegistrationOptions.SingletonScope();
+    private static readonly RegistrationOptions SCOPED_OPTIONS = RegistrationOptions.Scoped();
+    private static readonly RegistrationOptions SINGLETON_OPTIONS = RegistrationOptions.SingletonScope();
 
     /// <summary>
     /// Registers a service as its concrete type only, using InstanceLifetime.Scoped.

@@ -28,7 +28,10 @@ public class AddCurrentIPAddressIfNotExistsCommandHandler
         var connectionInfo = _clientConnectionService.GetConnectionInfo();
         EntityNotFoundException.ThrowIfNull(connectionInfo);
 
-        if (string.IsNullOrWhiteSpace(connectionInfo.IPAddress)) return;
+        if (string.IsNullOrWhiteSpace(connectionInfo.IPAddress))
+        {
+            return;
+        }
 
         command.OutputIPAddressId = await _ipAddressStoredProcedures.AddIfNotExistsAsync(connectionInfo.IPAddress, executionContext.ExecutionDate);
     }

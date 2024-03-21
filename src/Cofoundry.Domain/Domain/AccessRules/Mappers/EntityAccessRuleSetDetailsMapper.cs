@@ -37,7 +37,10 @@ public class EntityAccessRuleSetDetailsMapper : IEntityAccessRuleSetDetailsMappe
 
         result.ViolationAction = ParseViolationAction(dbEntity);
 
-        if (!dbEntity.AccessRules.Any()) return;
+        if (dbEntity.AccessRules.Count == 0)
+        {
+            return;
+        }
 
         await MapAccessRules(dbEntity, result, executionContext, ruleMapper);
         MapUserAreaForSignInRedirect(dbEntity, result);
@@ -62,7 +65,7 @@ public class EntityAccessRuleSetDetailsMapper : IEntityAccessRuleSetDetailsMappe
 
         IDictionary<int, RoleMicroSummary>? roles = null;
 
-        if (roleIds.Any())
+        if (roleIds.Length != 0)
         {
             roles = await _queryExecutor.ExecuteAsync(new GetRoleMicroSummariesByIdRangeQuery(roleIds), executionContext);
         }

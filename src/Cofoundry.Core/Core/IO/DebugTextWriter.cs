@@ -12,7 +12,7 @@ public class DebugTextWriter : System.IO.TextWriter
 {
     public override void Write(char[] buffer, int index, int count)
     {
-        Write(new String(buffer, index, count));
+        Write(new string(buffer, index, count));
     }
 
     public override void Write(string? value)

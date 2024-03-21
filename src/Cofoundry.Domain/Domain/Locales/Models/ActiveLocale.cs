@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// A locale supported by the site. Although there is an integer primary key the unique idetifier for a locale is an 
@@ -22,8 +22,15 @@ public class ActiveLocale : IEquatable<ActiveLocale>
 
     public bool Equals(ActiveLocale? other)
     {
-        if (other == null) return false;
-        if (other == this) return true;
+        if (other == null)
+        {
+            return false;
+        }
+
+        if (other == this)
+        {
+            return true;
+        }
 
         return other.LocaleId == LocaleId;
     }
@@ -40,7 +47,7 @@ public class ActiveLocale : IEquatable<ActiveLocale>
 
     public override string ToString()
     {
-        return string.Format("{0} ({1})", Name, IETFLanguageTag);
+        return $"{Name} ({IETFLanguageTag})";
     }
 
     /// <summary>

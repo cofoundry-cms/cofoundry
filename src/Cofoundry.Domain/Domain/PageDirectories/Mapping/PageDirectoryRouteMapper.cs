@@ -105,7 +105,7 @@ public class PageDirectoryRouteMapper : IPageDirectoryRouteMapper
     /// using the parent info. This is so we have all locale permutations of this directory even if 
     /// locales are defined further down the directory tree.
     /// </summary>
-    private void ExpandDirectoryLocales(PageDirectoryRoute parent, PageDirectoryRoute routingInfo)
+    private static void ExpandDirectoryLocales(PageDirectoryRoute parent, PageDirectoryRoute routingInfo)
     {
         var locales = routingInfo.LocaleVariations.ToList();
 

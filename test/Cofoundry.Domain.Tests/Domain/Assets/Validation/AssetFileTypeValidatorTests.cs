@@ -45,7 +45,7 @@ public class AssetFileTypeValidatorTests
     public void Validate_WhenNullMimeType_IsInvalid()
     {
         var validator = CreateValidator(AssetFileTypeValidation.UseBlockList, AssetFileTypeValidation.UseAllowList);
-        string fileExtension = JPEG_FILE_EXTENSION;
+        var fileExtension = JPEG_FILE_EXTENSION;
         string? mimeType = null;
 
         var result = validator.Validate(fileExtension, mimeType, VALIDATOR_PROP_NAME);

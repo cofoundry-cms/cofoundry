@@ -1,4 +1,7 @@
-﻿using Cofoundry.Domain.CQS;
+using System.Diagnostics;
+using System.Globalization;
+using System.Net;
+using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
@@ -7,8 +10,6 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using System.Diagnostics;
-using System.Net;
 
 namespace Cofoundry.Plugins.Imaging.ImageSharp;
 
@@ -17,7 +18,7 @@ namespace Cofoundry.Plugins.Imaging.ImageSharp;
 /// </summary>
 public class ImageSharpResizedImageAssetFileService : IResizedImageAssetFileService
 {
-    internal static readonly string IMAGE_ASSET_CACHE_CONTAINER_NAME = "ImageAssetCache";
+    internal const string IMAGE_ASSET_CACHE_CONTAINER_NAME = "ImageAssetCache";
 
     private readonly IFileStoreService _fileService;
     private readonly IQueryExecutor _queryExecutor;
@@ -37,22 +38,22 @@ public class ImageSharpResizedImageAssetFileService : IResizedImageAssetFileServ
         _imageAssetsSettings = imageAssetsSettings;
     }
 
-    public async Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings inputSettings)
+    public async Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings settings)
     {
-        if ((inputSettings.Width < 1 && inputSettings.Height < 1)
-            || (inputSettings.Width == asset.Width && inputSettings.Height == asset.Height))
+        if ((settings.Width < 1 && settings.Height < 1)
+            || (settings.Width == asset.Width && settings.Height == asset.Height))
         {
             return await GetFileStreamAsync(asset.ImageAssetId);
         }
 
         if (_imageAssetsSettings.DisableResizing)
         {
-            throw new InvalidImageResizeSettingsException("Image resizing has been requested but is disabled.", inputSettings);
+            throw new InvalidImageResizeSettingsException("Image resizing has been requested but is disabled.", settings);
         }
 
-        var fullFileName = asset.FileNameOnDisk + "/" + CreateCacheFileName(inputSettings, asset);
+        var fullFileName = asset.FileNameOnDisk + "/" + CreateCacheFileName(settings, asset);
         Stream imageStream = null;
-        ValidateSettings(inputSettings);
+        ValidateSettings(settings);
 
         if (await _fileService.ExistsAsync(IMAGE_ASSET_CACHE_CONTAINER_NAME, fullFileName))
         {
@@ -65,18 +66,25 @@ public class ImageSharpResizedImageAssetFileService : IResizedImageAssetFileServ
             using (var originalStream = await GetFileStreamAsync(asset.ImageAssetId))
             using (var image = Image.Load(originalStream, out imageFormat))
             {
-                if (imageFormat == null) throw new Exception("Unable to determine image type for image asset " + asset.ImageAssetId);
-                var encoder = Configuration.Default.ImageFormatsManager.FindEncoder(imageFormat);
-                if (encoder == null) throw new InvalidOperationException("Encoder not found for image format " + imageFormat.Name);
+                if (imageFormat == null)
+                {
+                    throw new Exception("Unable to determine image type for image asset " + asset.ImageAssetId);
+                }
 
-                var resizeOptions = ConvertSettings(inputSettings);
+                var encoder = Configuration.Default.ImageFormatsManager.FindEncoder(imageFormat);
+                if (encoder == null)
+                {
+                    throw new InvalidOperationException("Encoder not found for image format " + imageFormat.Name);
+                }
+
+                var resizeOptions = ConvertSettings(settings);
                 image.Mutate(cx =>
                 {
                     cx.Resize(resizeOptions);
 
-                    if (!string.IsNullOrWhiteSpace(inputSettings.BackgroundColor))
+                    if (!string.IsNullOrWhiteSpace(settings.BackgroundColor))
                     {
-                        var color = Rgba32.ParseHex(inputSettings.BackgroundColor);
+                        var color = Rgba32.ParseHex(settings.BackgroundColor);
                         cx.BackgroundColor(color);
                     }
                     else if (CanPad(resizeOptions))
@@ -136,13 +144,13 @@ public class ImageSharpResizedImageAssetFileService : IResizedImageAssetFileServ
 
         if (result == null || result.ContentStream == null)
         {
-            throw new FileNotFoundException(imageAssetId.ToString());
+            throw new FileNotFoundException(imageAssetId.ToString(CultureInfo.InvariantCulture));
         }
 
         return result.ContentStream;
     }
 
-    private ResizeOptions ConvertSettings(IImageResizeSettings inputSettings)
+    private static ResizeOptions ConvertSettings(IImageResizeSettings inputSettings)
     {
         var resizeSettings = new ResizeOptions();
         resizeSettings.Size = new Size(inputSettings.Width, inputSettings.Height);
@@ -150,60 +158,32 @@ public class ImageSharpResizedImageAssetFileService : IResizedImageAssetFileServ
         // Scale options not supported yet
         //resizeSettings.Scale = (ScaleMode)inputSettings.Scale;
 
-        switch (inputSettings.Mode)
+        resizeSettings.Mode = inputSettings.Mode switch
         {
-            case ImageFitMode.Default:
-            case ImageFitMode.Crop:
-                resizeSettings.Mode = ResizeMode.Crop;
-                break;
-            case ImageFitMode.Max:
-                resizeSettings.Mode = ResizeMode.Max;
-                break;
-            case ImageFitMode.Pad:
-                resizeSettings.Mode = ResizeMode.Pad;
-                break;
-            default:
-                throw new NotSupportedException("ImageFitMode not supported: " + inputSettings.Mode);
-        }
+            ImageFitMode.Default or ImageFitMode.Crop => ResizeMode.Crop,
+            ImageFitMode.Max => ResizeMode.Max,
+            ImageFitMode.Pad => ResizeMode.Pad,
+            _ => throw new NotSupportedException("ImageFitMode not supported: " + inputSettings.Mode),
+        };
 
-        switch (inputSettings.Anchor)
+        resizeSettings.Position = inputSettings.Anchor switch
         {
-            case ImageAnchorLocation.BottomCenter:
-                resizeSettings.Position = AnchorPositionMode.Bottom;
-                break;
-            case ImageAnchorLocation.BottomLeft:
-                resizeSettings.Position = AnchorPositionMode.BottomLeft;
-                break;
-            case ImageAnchorLocation.BottomRight:
-                resizeSettings.Position = AnchorPositionMode.BottomRight;
-                break;
-            case ImageAnchorLocation.MiddleCenter:
-                resizeSettings.Position = AnchorPositionMode.Center;
-                break;
-            case ImageAnchorLocation.MiddleLeft:
-                resizeSettings.Position = AnchorPositionMode.Left;
-                break;
-            case ImageAnchorLocation.MiddleRight:
-                resizeSettings.Position = AnchorPositionMode.Right;
-                break;
-            case ImageAnchorLocation.TopCenter:
-                resizeSettings.Position = AnchorPositionMode.Top;
-                break;
-            case ImageAnchorLocation.TopLeft:
-                resizeSettings.Position = AnchorPositionMode.TopLeft;
-                break;
-            case ImageAnchorLocation.TopRight:
-                resizeSettings.Position = AnchorPositionMode.TopRight;
-                break;
-            default:
-                throw new NotSupportedException("ImageAnchorLocation not supported: " + inputSettings.Anchor);
-        }
+            ImageAnchorLocation.BottomCenter => AnchorPositionMode.Bottom,
+            ImageAnchorLocation.BottomLeft => AnchorPositionMode.BottomLeft,
+            ImageAnchorLocation.BottomRight => AnchorPositionMode.BottomRight,
+            ImageAnchorLocation.MiddleCenter => AnchorPositionMode.Center,
+            ImageAnchorLocation.MiddleLeft => AnchorPositionMode.Left,
+            ImageAnchorLocation.MiddleRight => AnchorPositionMode.Right,
+            ImageAnchorLocation.TopCenter => AnchorPositionMode.Top,
+            ImageAnchorLocation.TopLeft => AnchorPositionMode.TopLeft,
+            ImageAnchorLocation.TopRight => AnchorPositionMode.TopRight,
+            _ => throw new NotSupportedException("ImageAnchorLocation not supported: " + inputSettings.Anchor),
+        };
 
         return resizeSettings;
     }
 
-
-    private IImageEncoder EnsureEncoderSupportsTransparency(IImageEncoder encoder)
+    private static IImageEncoder EnsureEncoderSupportsTransparency(IImageEncoder encoder)
     {
         if (encoder is PngEncoder pngEncoder)
         {
@@ -226,7 +206,7 @@ public class ImageSharpResizedImageAssetFileService : IResizedImageAssetFileServ
         return encoder;
     }
 
-    private bool CanPad(ResizeOptions resizeOptions)
+    private static bool CanPad(ResizeOptions resizeOptions)
     {
         switch (resizeOptions.Mode)
         {
@@ -256,12 +236,11 @@ public class ImageSharpResizedImageAssetFileService : IResizedImageAssetFileServ
         }
     }
 
-    private string CreateCacheFileName(IImageResizeSettings settings, IImageAssetRenderable asset)
+    private static string CreateCacheFileName(IImageResizeSettings settings, IImageAssetRenderable asset)
     {
-        const string format = "w{0}h{1}c{2}s{3}bg{4}a{5}";
-        string s = string.Format(format, settings.Width, settings.Height, settings.Mode, settings.Scale, settings.BackgroundColor, settings.Anchor);
-        s = WebUtility.UrlEncode(s);
+        var fileName = $"w{settings.Width}h{settings.Height}c{settings.Mode}s{settings.Scale}bg{settings.BackgroundColor}a{settings.Anchor}";
+        fileName = WebUtility.UrlEncode(fileName);
 
-        return Path.ChangeExtension(s, asset.FileExtension);
+        return Path.ChangeExtension(fileName, asset.FileExtension);
     }
 }

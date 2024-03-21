@@ -29,9 +29,15 @@ public class UserCommandPermissionsHelper
         )
     {
         var userContext = executionContext.UserContext;
-        if (!userContext.IsSignedIn()) throw new InvalidOperationException("User expected to be signed in to do role management validation");
+        if (!userContext.IsSignedIn())
+        {
+            throw new InvalidOperationException("User expected to be signed in to do role management validation");
+        }
 
-        if (userContext.IsSuperAdmin()) return;
+        if (userContext.IsSuperAdmin())
+        {
+            return;
+        }
 
         var userRole = await _internalRoleRepository.GetByIdAsync(user.RoleId);
         EntityNotFoundException.ThrowIfNull(userRole, user.RoleId);
@@ -63,7 +69,7 @@ public class UserCommandPermissionsHelper
         return executorRole;
     }
 
-    private void ValidateNewRole(string userAreaCode, Role newUserRole, RoleDetails executorRole)
+    private static void ValidateNewRole(string userAreaCode, Role newUserRole, RoleDetails executorRole)
     {
         // Anonymous role is not assignable to users, it's used when there is no user.
         if (newUserRole.IsAnonymousRole())

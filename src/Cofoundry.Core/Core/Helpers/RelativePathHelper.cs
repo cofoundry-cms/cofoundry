@@ -8,7 +8,7 @@ public class RelativePathHelper
     private const char VIRTUAL_PATH_SEPARATOR = '/';
     private const string VIRTUAL_PATH_SEPARATOR_AS_STRING = "/";
 
-    private static char[] ALL_PATH_SEPARATORS = [VIRTUAL_PATH_SEPARATOR, '\\'];
+    private static readonly char[] ALL_PATH_SEPARATORS = [VIRTUAL_PATH_SEPARATOR, '\\'];
 
     /// <summary>
     /// Combines a series of path parts into a single virtual path
@@ -39,8 +39,15 @@ public class RelativePathHelper
     /// <param name="path2">Path to compare to.</param>
     public static bool IsWellFormattedAndEqual(string? path1, string? path2)
     {
-        if (string.IsNullOrWhiteSpace(path1)) return false;
-        if (string.IsNullOrWhiteSpace(path2)) return false;
+        if (string.IsNullOrWhiteSpace(path1))
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(path2))
+        {
+            return false;
+        }
 
         var cleanPath1 = CleanAndRemoveQueryFromPath(path1);
         var cleanPath2 = CleanAndRemoveQueryFromPath(path2);

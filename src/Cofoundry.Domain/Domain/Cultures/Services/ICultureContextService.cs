@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Cofoundry.Domain;
+﻿namespace Cofoundry.Domain;
 
 /// <summary>
 /// Service abstraction over the culture of the current request.

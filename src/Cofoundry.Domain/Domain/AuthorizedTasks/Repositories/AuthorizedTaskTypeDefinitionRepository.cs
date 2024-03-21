@@ -38,7 +38,7 @@ public class AuthorizedTaskTypeDefinitionRepository : IAuthorizedTaskTypeDefinit
         return _definitions.Select(a => a.Value);
     }
 
-    private void DetectInvalidDefinitions(IEnumerable<IAuthorizedTaskTypeDefinition> definitions)
+    private static void DetectInvalidDefinitions(IEnumerable<IAuthorizedTaskTypeDefinition> definitions)
     {
         var nullCode = definitions
             .Where(d => string.IsNullOrWhiteSpace(d.AuthorizedTaskTypeCode))

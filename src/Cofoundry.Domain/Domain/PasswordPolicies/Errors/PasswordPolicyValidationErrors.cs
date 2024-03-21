@@ -12,7 +12,7 @@ public static class PasswordPolicyValidationErrors
     /// repeated character sets in passwords e.g. the password "YYZ-YYZ-YYZ" contains 3 unique characters.
     /// Principally used by <see cref="MinUniqueCharactersNewPasswordValidator"/>.
     /// </summary>
-    public static readonly ValidationErrorTemplate MinUniqueCharacters = new ValidationErrorTemplate(
+    public static readonly ValidationErrorTemplate MinUniqueCharacters = new(
         AddNamespace("min-unique-characters-not-met"),
         "Password must have at least {0} unique characters."
         );
@@ -21,7 +21,7 @@ public static class PasswordPolicyValidationErrors
     /// The password is shorter then the limit configured limit.
     /// Principally used by <see cref="MinLengthNewPasswordValidator"/>.
     /// </summary>
-    public static readonly ValidationErrorTemplate MinLengthNotMet = new ValidationErrorTemplate(
+    public static readonly ValidationErrorTemplate MinLengthNotMet = new(
         AddNamespace("min-length-not-met"),
         "Password must be at least {0} characters"
         );
@@ -30,7 +30,7 @@ public static class PasswordPolicyValidationErrors
     /// The password is longer then the limit configured limit.
     /// Principally used by <see cref="MaxLengthNewPasswordValidator"/>.
     /// </summary>
-    public static readonly ValidationErrorTemplate MaxLengthExceeded = new ValidationErrorTemplate(
+    public static readonly ValidationErrorTemplate MaxLengthExceeded = new(
         AddNamespace("max-length-exceeded"),
         "Password must be {0} characters or less"
         );
@@ -40,7 +40,7 @@ public static class PasswordPolicyValidationErrors
     /// password is supplied with a command to authenticate the change, because the password is otherwise 
     /// unknown. Principally used by <see cref="NotCurrentPasswordNewPasswordValidator"/>.
     /// </summary>
-    public static readonly ValidationErrorTemplate NotCurrentPassword = new ValidationErrorTemplate(
+    public static readonly ValidationErrorTemplate NotCurrentPassword = new(
         AddNamespace("not-current-password"),
         "Password must not be the same as your current password."
         );
@@ -49,7 +49,7 @@ public static class PasswordPolicyValidationErrors
     /// The password is a sequence, or reverse sequence of characters
     /// e.g. "abcde", "54321". Principally used by <see cref="NotSequentialNewPasswordValidator"/>.
     /// </summary>
-    public static readonly ValidationErrorTemplate NotSequential = new ValidationErrorTemplate(
+    public static readonly ValidationErrorTemplate NotSequential = new(
         AddNamespace("not-sequential"),
         "Password must not be a sequence of numbers or characters."
         );
@@ -64,7 +64,7 @@ public static class PasswordPolicyValidationErrors
         /// The password matches the users email address, based on a case-insenstivie equality comparison.
         /// Principally used by <see cref="NotBePersonalDataNewPasswordValidator"/>.
         /// </summary>
-        public static readonly ValidationErrorTemplate Email = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate Email = new(
             AddNotPersonalDataNamespace("not-personal-data-email"),
             "Password cannot be your email."
             );
@@ -73,7 +73,7 @@ public static class PasswordPolicyValidationErrors
         /// The password matches the users username, based on a case-insenstivie equality comparison.
         /// Principally used by <see cref="NotBePersonalDataNewPasswordValidator"/>.
         /// </summary>
-        public static readonly ValidationErrorTemplate Username = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate Username = new(
             AddNotPersonalDataNamespace("username"),
             "Password cannot be your username"
             );

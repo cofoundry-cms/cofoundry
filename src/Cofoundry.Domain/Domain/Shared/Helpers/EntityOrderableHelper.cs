@@ -40,7 +40,7 @@ public class EntityOrderableHelper
                 throw new NotSupportedException("OrderedItemInsertMode not recognised");
         }
 
-        int i = 1;
+        var i = 1;
         foreach (var entity in entities)
         {
             if (entity.Ordering != i)
@@ -62,10 +62,18 @@ public class EntityOrderableHelper
         {
             throw new ArgumentException("Cannot insert before/after because the adjacentItem is not in the collection");
         }
-        int newIndex = index + velocity;
+        var newIndex = index + velocity;
 
-        if (newIndex < 0) newIndex = 0;
-        if (newIndex > entities.Count) newIndex = entities.Count;
+        if (newIndex < 0)
+        {
+            newIndex = 0;
+        }
+
+        if (newIndex > entities.Count)
+        {
+            newIndex = entities.Count;
+        }
+
         entities.Insert(newIndex, entityToAdd);
     }
 }

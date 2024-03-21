@@ -1,4 +1,5 @@
-﻿using System.Text;
+using System.Globalization;
+using System.Text;
 
 namespace Cofoundry.Core.Data.SimpleDatabase;
 
@@ -7,11 +8,11 @@ namespace Cofoundry.Core.Data.SimpleDatabase;
 /// </summary>
 internal class SqlStringBuilder
 {
-    StringBuilder _sql = new StringBuilder();
+    private readonly StringBuilder _sql = new();
 
     public void AppendLine(string text, params object[] args)
     {
-        _sql.AppendFormat(text, args);
+        _sql.AppendFormat(CultureInfo.InvariantCulture, text, args);
     }
 
     public void Go()
@@ -38,13 +39,13 @@ internal class SqlStringBuilder
 
     public void IfNotExists(string query, params object[] args)
     {
-        var formattedQuery = string.Format(query, args);
+        var formattedQuery = string.Format(CultureInfo.InvariantCulture, query, args);
         AppendLine("if not exists({0})", formattedQuery);
     }
 
     public void IfExists(string query, params object[] args)
     {
-        var formattedQuery = string.Format(query, args);
+        var formattedQuery = string.Format(CultureInfo.InvariantCulture, query, args);
         AppendLine("if exists({0}) ", formattedQuery);
     }
 

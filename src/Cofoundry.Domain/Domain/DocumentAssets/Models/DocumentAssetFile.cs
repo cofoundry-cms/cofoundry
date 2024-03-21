@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Represents the file associated with a document asset, including
@@ -74,7 +74,7 @@ public class DocumentAssetFile : IDocumentAssetRenderable
             return string.Empty;
         }
 
-        var fileName = FilePathHelper.CleanFileName(FileName, DocumentAssetId.ToString());
+        var fileName = FilePathHelper.CleanFileName(FileName, DocumentAssetId.ToString(CultureInfo.InvariantCulture));
         var fileNameWithExtension = Path.ChangeExtension(fileName, FileExtension);
 
         return fileNameWithExtension;

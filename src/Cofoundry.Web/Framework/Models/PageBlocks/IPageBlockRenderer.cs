@@ -16,7 +16,7 @@ public interface IPageBlockRenderer
     /// <param name="blockViewModel">The view model for the module being rendered.</param>
     /// <returns>The rendered module html.</returns>
     Task<string> RenderBlockAsync(
-        ViewContext controllerContext,
+        ViewContext viewContext,
         IEditablePageViewModel pageViewModel,
         IEntityVersionPageBlockRenderDetails blockViewModel
         );

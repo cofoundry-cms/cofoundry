@@ -137,7 +137,10 @@ public class AddUserWithTemporaryPasswordCommandHandler
         var mailTemplate = await mailTemplateBuilder.BuildNewUserWithTemporaryPasswordTemplateAsync(context);
 
         // Null template means don't send a notification
-        if (mailTemplate == null) return;
+        if (mailTemplate == null)
+        {
+            return;
+        }
 
         await _mailService.SendAsync(newUserCommand.Email, mailTemplate);
     }

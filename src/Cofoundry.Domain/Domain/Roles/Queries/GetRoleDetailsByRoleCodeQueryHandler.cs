@@ -38,7 +38,10 @@ public class GetRoleDetailsByRoleCodeQueryHandler
         });
 
         var id = roleCodeLookup.GetOrDefault(query.RoleCode);
-        if (id <= 0) return null;
+        if (id <= 0)
+        {
+            return null;
+        }
 
         return await _internalRoleRepository.GetByIdAsync(id);
     }

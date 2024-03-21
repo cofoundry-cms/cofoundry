@@ -42,7 +42,7 @@ public class AdminRouteBuilderContext<TController>
             return this;
         }
 
-        string controllerName = GetControllerName();
+        var controllerName = GetControllerName();
 
         _routeBuilder.MapControllerRoute(
             "Cofoundry Admin - " + _basePath,

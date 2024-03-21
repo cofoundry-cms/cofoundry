@@ -74,7 +74,7 @@ public class MovePageVersionBlockCommandHandler
             return;
         }
 
-        int oldOrdering = block.Ordering;
+        var oldOrdering = block.Ordering;
         block.Ordering = blockToSwapWith.Ordering;
         block.UpdateDate = executionContext.ExecutionDate;
         blockToSwapWith.Ordering = oldOrdering;

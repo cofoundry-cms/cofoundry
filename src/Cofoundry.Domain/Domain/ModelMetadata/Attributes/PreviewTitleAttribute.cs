@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -7,6 +7,7 @@ namespace Cofoundry.Domain;
 /// title, name or short textual identifier. Typically this is
 /// used in a grid of items to identify the row.
 /// </summary>
+[AttributeUsage(AttributeTargets.Property)]
 public class PreviewTitleAttribute : Attribute, IMetadataAttribute
 {
     public void Process(DisplayMetadataProviderContext context)

@@ -1,7 +1,7 @@
-﻿using Cofoundry.Domain.Internal;
+using System.Security.Claims;
+using Cofoundry.Domain.Internal;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 
 namespace Cofoundry.Web.Internal;
 
@@ -24,7 +24,7 @@ public class WebUserSessionService : IUserSessionService
     /// issues if the user is requested after sign out has occurred (e.g. in 
     /// view rendering). This is used to track sign-outs and prevent this occuring.
     /// </summary>
-    private HashSet<string> _signedOutUserAreas = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _signedOutUserAreas = new(StringComparer.OrdinalIgnoreCase);
 
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
@@ -120,17 +120,14 @@ public class WebUserSessionService : IUserSessionService
         return userId;
     }
 
-    public async Task SignInAsync(string userAreaCode, int userId, bool rememberUser)
+    public async Task SignInAsync(string userAreaDefinitionCode, int userId, bool rememberUser)
     {
-        ArgumentNullException.ThrowIfNull(userAreaCode);
-        if (userId < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(userId));
-        }
+        ArgumentNullException.ThrowIfNull(userAreaDefinitionCode);
+        ArgumentOutOfRangeException.ThrowIfLessThan(userId, 1);
 
         var httpContext = GetHttpContext("sign in a user");
 
-        var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaCode);
+        var userArea = _userAreaDefinitionRepository.GetRequiredByCode(userAreaDefinitionCode);
         var userPrincipal = await CreateUserPrincipal(userId, userArea);
         var scheme = AuthenticationSchemeNames.UserArea(userArea.UserAreaCode);
 
@@ -144,22 +141,22 @@ public class WebUserSessionService : IUserSessionService
             await httpContext.SignInAsync(scheme, userPrincipal);
         }
 
-        await _inMemoryUserSessionService.SignInAsync(userAreaCode, userId, rememberUser);
+        await _inMemoryUserSessionService.SignInAsync(userAreaDefinitionCode, userId, rememberUser);
 
         // remove if signed out and back in during the same request: odd but let's handle it.
-        _signedOutUserAreas.Remove(userAreaCode);
+        _signedOutUserAreas.Remove(userAreaDefinitionCode);
     }
 
-    public async Task SignOutAsync(string userAreaCode)
+    public async Task SignOutAsync(string userAreaDefinitionCode)
     {
-        ArgumentNullException.ThrowIfNull(userAreaCode);
+        ArgumentNullException.ThrowIfNull(userAreaDefinitionCode);
         var httpContext = GetHttpContext("sign out a user");
 
-        await _inMemoryUserSessionService.SignOutAsync(userAreaCode);
+        await _inMemoryUserSessionService.SignOutAsync(userAreaDefinitionCode);
 
-        var scheme = AuthenticationSchemeNames.UserArea(userAreaCode);
+        var scheme = AuthenticationSchemeNames.UserArea(userAreaDefinitionCode);
         await httpContext.SignOutAsync(scheme);
-        TrackSignOut(userAreaCode);
+        TrackSignOut(userAreaDefinitionCode);
     }
 
     public async Task SignOutOfAllUserAreasAsync()
@@ -191,10 +188,7 @@ public class WebUserSessionService : IUserSessionService
     public async Task RefreshAsync(string userAreaCode, int userId)
     {
         ArgumentNullException.ThrowIfNull(userAreaCode);
-        if (userId < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(userId));
-        }
+        ArgumentOutOfRangeException.ThrowIfLessThan(userId, 1);
 
         var httpContext = GetHttpContext("refresh a user sign in");
 

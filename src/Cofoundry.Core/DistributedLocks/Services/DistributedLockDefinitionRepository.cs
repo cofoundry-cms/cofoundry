@@ -19,7 +19,7 @@ public class DistributedLockDefinitionRepository : IDistributedLockDefinitionRep
         _definitionLookup = distributedLockDefinitions.ToDictionary(k => k.GetType());
     }
 
-    private void DetectInvalidDefinitions(IEnumerable<IDistributedLockDefinition> definitions)
+    private static void DetectInvalidDefinitions(IEnumerable<IDistributedLockDefinition> definitions)
     {
         var dulpicateIds = definitions
             .GroupBy(e => e.DistributedLockId, StringComparer.OrdinalIgnoreCase)

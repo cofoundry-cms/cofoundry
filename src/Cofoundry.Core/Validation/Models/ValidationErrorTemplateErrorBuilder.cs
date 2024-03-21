@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace Cofoundry.Core.Validation.Internal;
 
@@ -60,7 +61,7 @@ public class ValidationErrorTemplateErrorBuilder
             throw new ArgumentEmptyException(nameof(messageFormatParameters));
         }
 
-        var message = string.Format(_validationError.Message, messageFormatParameters);
+        var message = string.Format(CultureInfo.CurrentCulture, _validationError.Message, messageFormatParameters);
         return WithMessage(message);
     }
 
@@ -78,8 +79,8 @@ public class ValidationErrorTemplateErrorBuilder
             throw new ArgumentEmptyException(nameof(messageFormatParameters));
         }
 
-        var parameters = messageFormatParameters.Select(p => p.ToString()).ToArray();
-        var message = string.Format(_validationError.Message, parameters);
+        var parameters = messageFormatParameters.Select(p => p.ToString(CultureInfo.InvariantCulture)).ToArray();
+        var message = string.Format(CultureInfo.CurrentCulture, _validationError.Message, parameters);
 
         return WithMessage(message);
     }

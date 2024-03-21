@@ -87,7 +87,7 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
         return blockTypeLocation;
     }
 
-    private string FormatCacheKey(string fileName)
+    private static string FormatCacheKey(string fileName)
     {
         // Make this case insensitive by converting to lowercase
         return fileName.ToLowerInvariant();
@@ -113,7 +113,10 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
         foreach (var directoryPath in viewDirectoryPaths)
         {
             var directory = _resourceLocator.GetDirectory(directoryPath);
-            if (!directory.Exists) continue;
+            if (!directory.Exists)
+            {
+                continue;
+            }
 
             foreach (var viewFile in FilterViewFiles(directory))
             {
@@ -140,7 +143,7 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
     {
         var templateLocation = CreateTemplateFile(directoryPath, viewFile);
         var key = FormatCacheKey(templateLocation.FileName);
-        bool isUnique = !templateFiles.ContainsKey(key);
+        var isUnique = !templateFiles.ContainsKey(key);
 
         if (isUnique)
         {
@@ -162,7 +165,7 @@ public class PageBlockTypeViewFileLocator : IPageBlockTypeViewFileLocator
         }
     }
 
-    private IEnumerable<IFileInfo> FilterViewFiles(IDirectoryContents directory)
+    private static IEnumerable<IFileInfo> FilterViewFiles(IDirectoryContents directory)
     {
         return directory
             .Where(f => !f.IsDirectory

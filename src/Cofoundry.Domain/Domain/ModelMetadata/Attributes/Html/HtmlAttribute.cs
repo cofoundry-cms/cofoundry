@@ -72,7 +72,10 @@ public class HtmlAttribute : Attribute, IMetadataAttribute
             modelMetaData.AdditionalValues.Add("ConfigPath", ConfigFilePath);
         }
 
-        if (ConfigSource == null) return;
+        if (ConfigSource == null)
+        {
+            return;
+        }
 
         if (ConfigSource.GetConstructor(Type.EmptyTypes) == null)
         {

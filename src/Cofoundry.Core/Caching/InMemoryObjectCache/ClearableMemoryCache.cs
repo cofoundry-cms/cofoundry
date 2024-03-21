@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
 namespace Cofoundry.Core.Caching.Internal;
@@ -16,8 +16,8 @@ namespace Cofoundry.Core.Caching.Internal;
 public class ClearableMemoryCache : IDisposable
 {
     private readonly MemoryCache _memoryCache;
-    private readonly HashSet<string> _keys = new HashSet<string>();
-    private readonly object _lock = new object();
+    private readonly HashSet<string> _keys = [];
+    private readonly object _lock = new();
 
     public ClearableMemoryCache(
         IOptions<MemoryCacheOptions> optionsAccessor
@@ -34,9 +34,7 @@ public class ClearableMemoryCache : IDisposable
 
     public T? GetOrAdd<T>(string key, Func<T> getter, DateTimeOffset? expiry = null)
     {
-        T? entry;
-
-        if (_memoryCache.TryGetValue(key, out entry))
+        if (_memoryCache.TryGetValue(key, out T? entry))
         {
             return entry;
         }
@@ -46,10 +44,7 @@ public class ClearableMemoryCache : IDisposable
             {
                 // No need to double lock, we're just making sure 
                 // _keys and _memoryCache have consistent state
-                if (!_keys.Contains(key))
-                {
-                    _keys.Add(key);
-                }
+                _keys.Add(key);
 
                 entry = _memoryCache.GetOrCreate(key, e =>
                 {
@@ -74,11 +69,7 @@ public class ClearableMemoryCache : IDisposable
 
             lock (_lock)
             {
-                if (!_keys.Contains(key))
-                {
-                    _keys.Add(key);
-
-                }
+                _keys.Add(key);
                 newEntry = _memoryCache.GetOrCreateAsync(key, e =>
                 {
                     e.AbsoluteExpiration = expiry;

@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.CQS;
+namespace Cofoundry.Domain.CQS;
 
 /// <summary>
 /// An exception for when a handler cannot be found for an <see cref="IQuery"/> 
@@ -6,8 +6,6 @@
 /// </summary>
 public class MissingHandlerMappingException : Exception
 {
-    private const string errorMessage = "Could not locate a handler for type: '{0}'.";
-
     public MissingHandlerMappingException()
     {
     }
@@ -24,7 +22,13 @@ public class MissingHandlerMappingException : Exception
 
     private static string FormatMessage(Type t)
     {
-        if (t == null) return string.Format(errorMessage, "NULL");
-        return string.Format(errorMessage, t.FullName);
+        const string ERROR_MESSAGE = "Could not locate a handler for type: '{0}'.";
+
+        if (t == null)
+        {
+            return string.Format(CultureInfo.InvariantCulture, ERROR_MESSAGE, "NULL");
+        }
+
+        return string.Format(CultureInfo.InvariantCulture, ERROR_MESSAGE, t.FullName);
     }
 }

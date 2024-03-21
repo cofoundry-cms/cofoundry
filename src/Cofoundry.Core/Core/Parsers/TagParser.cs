@@ -17,21 +17,24 @@ public static class TagParser
     /// <returns>The list of separate tags</returns>
     public static IEnumerable<string> Split(string? tags)
     {
-        List<string> tagList = new List<string>();
+        var tagList = new List<string>();
 
-        if (string.IsNullOrWhiteSpace(tags)) return tagList;
+        if (string.IsNullOrWhiteSpace(tags))
+        {
+            return tagList;
+        }
 
         // Split by double quotes first
-        MatchCollection doubleQuoteMatches = Regex.Matches(tags, "\"[\\S\\s]*?\"");
-        foreach (Match match in doubleQuoteMatches.Cast<Match>().Reverse())
+        var doubleQuoteMatches = Regex.Matches(tags, "\"[\\S\\s]*?\"");
+        foreach (var match in doubleQuoteMatches.Cast<Match>().Reverse())
         {
             tagList.Add(match.Value.Trim(new char[] { '"' }));
             tags = tags.Remove(match.Index, match.Length);
         }
 
         // Then split by single quotes
-        MatchCollection singleQuoteMatches = Regex.Matches(tags, "'[\\S\\s]*?'");
-        foreach (Match match in singleQuoteMatches.Cast<Match>().Reverse())
+        var singleQuoteMatches = Regex.Matches(tags, "'[\\S\\s]*?'");
+        foreach (var match in singleQuoteMatches.Cast<Match>().Reverse())
         {
             tagList.Add(match.Value.Trim(new char[] { '\'' }));
             tags = tags.Remove(match.Index, match.Length);

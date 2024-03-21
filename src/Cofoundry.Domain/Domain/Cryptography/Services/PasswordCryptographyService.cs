@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Cryptography;
+using Cofoundry.Domain.Cryptography;
 using Microsoft.AspNetCore.Identity;
 
 namespace Cofoundry.Domain.Internal;
@@ -19,7 +19,10 @@ public class PasswordCryptographyService : IPasswordCryptographyService
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(hash);
 
-        if (string.IsNullOrWhiteSpace(password)) return PasswordVerificationResult.Failed;
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            return PasswordVerificationResult.Failed;
+        }
 
         switch (hashVersion)
         {
@@ -37,7 +40,7 @@ public class PasswordCryptographyService : IPasswordCryptographyService
                 var v3Result = _passwordHasher.VerifyHashedPassword(new PasswordHasherUser(), hash, password);
                 return v3Result;
             default:
-                throw new NotSupportedException("PasswordEncryptionVersion not recognised: " + hashVersion.ToString());
+                throw new NotSupportedException("PasswordEncryptionVersion not recognised: " + hashVersion.ToString(CultureInfo.InvariantCulture));
         }
     }
 

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 
 namespace Cofoundry.Web;
 
@@ -30,9 +30,9 @@ public class JsonDeltaModelBinder : IModelBinder
             .GetTypeInfo()
             .GetGenericArguments();
 
-        if (genericArguments.Count() != 1)
+        if (genericArguments.Length != 1)
         {
-            throw new InvalidOperationException($"JsonDeltaModelBinder can only act on a type of IDelta<TModel>. Incorrect number of generic arguments found on type '{bindingContext.ModelType.FullName}' ({genericArguments.Count()})");
+            throw new InvalidOperationException($"JsonDeltaModelBinder can only act on a type of IDelta<TModel>. Incorrect number of generic arguments found on type '{bindingContext.ModelType.FullName}' ({genericArguments.Length})");
         }
 
         var deltaType = typeof(JsonDelta<>).MakeGenericType(genericArguments.Single());
@@ -41,7 +41,7 @@ public class JsonDeltaModelBinder : IModelBinder
         bindingContext.Result = ModelBindingResult.Success(result);
     }
 
-    private async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
+    private static async Task<string> ReadBodyAsString(ModelBindingContext bindingContext)
     {
         string body;
         using (var reader = new StreamReader(bindingContext.ActionContext.HttpContext.Request.Body, Encoding.UTF8))

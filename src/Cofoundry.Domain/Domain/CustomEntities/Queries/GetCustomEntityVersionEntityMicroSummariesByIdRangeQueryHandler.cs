@@ -31,7 +31,7 @@ public class GetCustomEntityVersionEntityMicroSummariesByIdRangeQueryHandler
                 RootEntityTitle = v.Title,
                 EntityDefinitionName = v.CustomEntity.CustomEntityDefinition.EntityDefinition.Name,
                 EntityDefinitionCode = v.CustomEntity.CustomEntityDefinition.EntityDefinition.EntityDefinitionCode,
-                IsPreviousVersion = !v.CustomEntityPublishStatusQueries.Any()
+                IsPreviousVersion = v.CustomEntityPublishStatusQueries.Count == 0
             })
             .ToDictionaryAsync(e => e.ChildEntityId, e => (RootEntityMicroSummary)e);
 

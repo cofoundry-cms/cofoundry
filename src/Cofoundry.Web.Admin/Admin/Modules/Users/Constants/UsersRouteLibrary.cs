@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Web.Admin;
+namespace Cofoundry.Web.Admin;
 
 public class UsersRouteLibrary : AngularModuleRouteLibrary
 {
@@ -33,7 +33,7 @@ public class UsersRouteLibrary : AngularModuleRouteLibrary
             return string.Empty;
         }
 
-        return List(definition) + id.ToString();
+        return List(definition) + id.ToString(CultureInfo.InvariantCulture);
     }
 
     private string GetUserAreaRoute(IUserAreaDefinition definition, string? route = null)

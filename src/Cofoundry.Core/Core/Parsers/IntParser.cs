@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Core;
+using System.Globalization;
+
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Utility class for parsing integers.
@@ -13,13 +15,16 @@ public static class IntParser
     /// <returns>Integer value if the string could be parsed; otherwise null.</returns>
     public static int? ParseOrNull(string? s)
     {
-        if (string.IsNullOrWhiteSpace(s)) return null;
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return null;
+        }
 
-        if (int.TryParse(s, out int i))
+        if (int.TryParse(s, out var i))
         {
             return i;
         }
-        else if (decimal.TryParse(s, out decimal d))
+        else if (decimal.TryParse(s, out var d))
         {
             return Convert.ToInt32(d);
         }
@@ -35,16 +40,20 @@ public static class IntParser
     /// <returns>Integer value if the object could be parsed; otherwise null.</returns>
     public static int? ParseOrNull(object? o)
     {
-        if (o == null) return null;
+        if (o == null)
+        {
+            return null;
+        }
+
         if (o is int || o is int?)
         {
             return o as int?;
         }
         if (o is decimal || o is decimal?)
         {
-            return Convert.ToInt32(o);
+            return Convert.ToInt32(o, CultureInfo.InvariantCulture);
         }
-        return ParseOrNull(Convert.ToString(o));
+        return ParseOrNull(Convert.ToString(o, CultureInfo.InvariantCulture));
     }
 
     /// <summary>
@@ -90,11 +99,14 @@ public static class IntParser
     /// <returns>Collection of parsed integers (with unparsable entries removed)</returns>
     public static IEnumerable<int> ParseFromDelimitedString(string? str, params char[] delimiter)
     {
-        if (string.IsNullOrEmpty(str)) return Enumerable.Empty<int>();
+        if (string.IsNullOrEmpty(str))
+        {
+            return Enumerable.Empty<int>();
+        }
 
         return StringHelper
             .SplitAndTrim(str, delimiter)
-            .Select(s => ParseOrNull(s))
+            .Select(ParseOrNull)
             .WhereNotNull();
     }
 }

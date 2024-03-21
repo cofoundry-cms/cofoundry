@@ -14,7 +14,10 @@ public static class AngleSharpHelper
         ArgumentNullException.ThrowIfNull(wrapperElement);
 
         // The parent element could be null if the result of a query
-        if (parentElement == null) return;
+        if (parentElement == null)
+        {
+            return;
+        }
 
         while (parentElement.Children?.Length > 0)
         {
@@ -36,7 +39,10 @@ public static class AngleSharpHelper
     /// <param name="dataAttributes">Attributes to merge.</param>
     public static void MergeAttributes(IElement element, IDictionary<string, string> dataAttributes)
     {
-        if (dataAttributes == null) return;
+        if (dataAttributes == null)
+        {
+            return;
+        }
 
         foreach (var attr in dataAttributes)
         {

@@ -58,7 +58,7 @@ public class UpdateDocumentAssetCommandHandler
 
         using (var scope = _transactionScopeFactory.Create(_dbContext))
         {
-            bool hasNewFile = false;
+            var hasNewFile = false;
             if (command.File != null)
             {
                 var deleteOldFileCommand = new QueueAssetFileDeletionCommand()

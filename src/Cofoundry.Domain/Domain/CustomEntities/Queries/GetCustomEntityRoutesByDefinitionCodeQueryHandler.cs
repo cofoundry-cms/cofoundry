@@ -1,6 +1,6 @@
-﻿using Cofoundry.Core.Reflection.Internal;
-using Cofoundry.Domain.Data;
 using System.Reflection;
+using Cofoundry.Core.Reflection.Internal;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -150,7 +150,7 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
                 // Bind routing data properties 
                 foreach (var routingDataProperty in routingDataProperties)
                 {
-                    var value = Convert.ToString(routingDataProperty.GetValue(dataModel));
+                    var value = Convert.ToString(routingDataProperty.GetValue(dataModel), CultureInfo.InvariantCulture);
                     if (value != null)
                     {
                         builderParam.AdditionalRoutingData.Add(routingDataProperty.Name, value);

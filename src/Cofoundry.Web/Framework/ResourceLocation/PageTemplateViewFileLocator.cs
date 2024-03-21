@@ -10,7 +10,7 @@ namespace Cofoundry.Web;
 /// </summary>
 public class PageTemplateViewFileLocator : IPageTemplateViewFileLocator
 {
-    private readonly static char[] TEMPLATE_NAME_CHAR_TO_TRIM = ['_', '-'];
+    private static readonly char[] TEMPLATE_NAME_CHAR_TO_TRIM = ['_', '-'];
     private const string VIEW_FILE_EXTENSION = ".cshtml";
 
     private readonly IResourceLocator _resourceLocator;

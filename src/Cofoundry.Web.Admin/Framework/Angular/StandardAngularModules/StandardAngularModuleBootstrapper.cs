@@ -40,7 +40,10 @@ public class StandardAngularModuleRegistrationBootstrapper
         {
             var module = registration.GetModule();
             // if module null, then may be disabled
-            if (module == null) continue;
+            if (module == null)
+            {
+                continue;
+            }
 
             var routeLibrary = GetRouteLibrary(registration);
 

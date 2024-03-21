@@ -30,7 +30,10 @@ public class NotFoundViewHelper : INotFoundViewHelper
         var vmParameters = GetViewModelBuilderParameters(controller);
 
         var result = await GetRewriteResultAsync(vmParameters);
-        if (result != null) return result;
+        if (result != null)
+        {
+            return result;
+        }
 
         var vm = await _pageViewModelBuilder.BuildNotFoundPageViewModelAsync(vmParameters);
 

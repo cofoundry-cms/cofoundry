@@ -12,7 +12,7 @@ namespace Cofoundry.Core.DependencyInjection;
 public class DefaultContainerRegister : IContainerRegister
 {
     private static readonly MethodInfo _registerFactoryMethod = MethodReferenceHelper.GetPrivateInstanceMethod<DefaultContainerRegister>(nameof(RegisterFactoryReflectionDelegate));
-    private static InstanceLifetime DEFAULT_LIFETIME = InstanceLifetime.Transient;
+    private static readonly InstanceLifetime DEFAULT_LIFETIME = InstanceLifetime.Transient;
 
     private readonly IDiscoveredTypesProvider _discoveredTypesProvider;
     private readonly IServiceCollection _serviceCollection;

@@ -13,10 +13,12 @@ public static class BoolParser
     /// <returns>Boolean value if the string could be parsed; otherwise null.</returns>
     public static bool? ParseOrNull(string? s)
     {
-        if (string.IsNullOrWhiteSpace(s)) return null;
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return null;
+        }
 
-        bool b = false;
-        if (bool.TryParse(s, out b))
+        if (bool.TryParse(s, out var b))
         {
             return b;
         }
@@ -32,10 +34,12 @@ public static class BoolParser
     /// <returns>Boolean value if the string could be parsed; otherwise null.</returns>
     public static bool ParseOrDefault(string? s, bool def = false)
     {
-        if (string.IsNullOrWhiteSpace(s)) return def;
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return def;
+        }
 
-        bool b = false;
-        if (bool.TryParse(s, out b))
+        if (bool.TryParse(s, out var b))
         {
             return b;
         }

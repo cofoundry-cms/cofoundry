@@ -36,10 +36,10 @@ public class SearchImageAssetSummariesQueryHandler
         if (!string.IsNullOrEmpty(query.Tags))
         {
             var tags = TagParser.Split(query.Tags).ToList();
-            foreach (string tag in tags)
+            foreach (var tag in tags)
             {
                 // See http://stackoverflow.com/a/7288269/486434 for why this is copied into a new variable
-                string localTag = tag;
+                var localTag = tag;
 
                 dbQuery = dbQuery.Where(p => p.ImageAssetTags
                     .Select(t => t.Tag.TagText)

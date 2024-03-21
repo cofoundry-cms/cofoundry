@@ -66,7 +66,10 @@ public class AutoUpdateService : IAutoUpdateService
             throw new DatabaseLockedException();
         }
 
-        if (IsCancelled(cancellationToken)) return;
+        if (IsCancelled(cancellationToken))
+        {
+            return;
+        }
 
         await RunUpdates(packages, cancellationToken);
     }
@@ -83,7 +86,10 @@ public class AutoUpdateService : IAutoUpdateService
 
     public async Task<bool> IsLockedAsync()
     {
-        if (_autoUpdateSettings.Disabled) return true;
+        if (_autoUpdateSettings.Disabled)
+        {
+            return true;
+        }
 
         return await _autoUpdateStore.IsDatabaseLockedAsync();
     }

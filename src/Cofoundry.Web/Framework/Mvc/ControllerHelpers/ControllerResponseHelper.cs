@@ -33,7 +33,7 @@ public class ControllerResponseHelper : IControllerResponseHelper
 
     private static void AddValidationExceptionToModelState(Controller controller, ValidationException ex)
     {
-        string propName = string.Empty;
+        var propName = string.Empty;
         var prefix = controller.ViewData.TemplateInfo.HtmlFieldPrefix;
         if (!string.IsNullOrEmpty(prefix))
         {

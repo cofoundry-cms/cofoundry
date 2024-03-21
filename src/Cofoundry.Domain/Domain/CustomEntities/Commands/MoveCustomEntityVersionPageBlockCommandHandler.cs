@@ -83,7 +83,7 @@ public class MoveCustomEntityVersionPageBlockCommandHandler
             return;
         }
 
-        int oldOrdering = block.Ordering;
+        var oldOrdering = block.Ordering;
         block.Ordering = blockToSwapWith.Ordering;
         blockToSwapWith.Ordering = oldOrdering;
 

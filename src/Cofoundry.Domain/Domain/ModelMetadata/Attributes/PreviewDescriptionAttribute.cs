@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -7,6 +7,7 @@ namespace Cofoundry.Domain;
 /// description field. Typically this is used in a grid of items 
 /// to describe the item.
 /// </summary>
+[AttributeUsage(AttributeTargets.Property)]
 public class PreviewDescriptionAttribute : Attribute, IMetadataAttribute
 {
     public void Process(DisplayMetadataProviderContext context)

@@ -43,7 +43,7 @@ public class SqlDatabase : IDisposable, IDatabase
 
         using (var sqlCmd = new SqlCommand(sql, _sqlConnection))
         {
-            if (sqlParams != null && sqlParams.Any())
+            if (sqlParams != null && sqlParams.Length != 0)
             {
                 sqlCmd.Parameters.AddRange(sqlParams);
             }
@@ -80,11 +80,11 @@ public class SqlDatabase : IDisposable, IDatabase
             _sqlConnection.Open();
         }
 
-        List<TEntity> result = new List<TEntity>();
+        var result = new List<TEntity>();
 
         using (var sqlCmd = new SqlCommand(sql, _sqlConnection))
         {
-            if (sqlParams != null && sqlParams.Any())
+            if (sqlParams != null && sqlParams.Length != 0)
             {
                 sqlCmd.Parameters.AddRange(sqlParams);
             }

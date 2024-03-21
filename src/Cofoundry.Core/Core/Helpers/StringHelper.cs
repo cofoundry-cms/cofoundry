@@ -29,7 +29,10 @@ public static class StringHelper
     /// </summary>
     public static string NullAsEmptyAndTrim(string? s)
     {
-        if (s == null) return string.Empty;
+        if (s == null)
+        {
+            return string.Empty;
+        }
 
         return s.Trim();
     }
@@ -39,7 +42,10 @@ public static class StringHelper
     /// </summary>
     public static string? TrimOrNull(string? s)
     {
-        if (s == null) return s;
+        if (s == null)
+        {
+            return s;
+        }
 
         return s.Trim();
     }
@@ -49,7 +55,11 @@ public static class StringHelper
     /// </summary>
     public static string? EmptyAsNull(string? s)
     {
-        if (s == null || !string.IsNullOrWhiteSpace(s)) return s;
+        if (s == null || !string.IsNullOrWhiteSpace(s))
+        {
+            return s;
+        }
+
         return null;
     }
 
@@ -58,7 +68,11 @@ public static class StringHelper
     /// </summary>
     public static bool IsNullOrWhiteSpace([NotNullWhen(false)] params string?[]? strings)
     {
-        if (strings == null) return true;
+        if (strings == null)
+        {
+            return true;
+        }
+
         return strings.Any(s => string.IsNullOrWhiteSpace(s));
     }
 
@@ -88,7 +102,10 @@ public static class StringHelper
     /// <returns>Collection of string results.</returns>
     public static IEnumerable<string> SplitAndTrim(string? source, params char[] separator)
     {
-        if (source == null) return Enumerable.Empty<string>();
+        if (source == null)
+        {
+            return Enumerable.Empty<string>();
+        }
 
         return source
             .Split(separator, StringSplitOptions.RemoveEmptyEntries)
@@ -104,8 +121,12 @@ public static class StringHelper
     /// <returns>True if the entire string is upper case; otherwise false.</returns>
     public static bool IsUpperCase([NotNullWhen(true)] string? s)
     {
-        if (s == null) return false;
-        return !s.Any(c => !Char.IsUpper(c));
+        if (s == null)
+        {
+            return false;
+        }
+
+        return !s.Any(c => !char.IsUpper(c));
     }
 
     /// <summary>
@@ -118,7 +139,10 @@ public static class StringHelper
     [return: NotNullIfNotNull(nameof(source))]
     public static string? RemoveSuffix(string? source, string suffix)
     {
-        if (source == null) return source;
+        if (source == null)
+        {
+            return source;
+        }
 
         if (source.EndsWith(suffix))
         {
@@ -138,7 +162,10 @@ public static class StringHelper
     [return: NotNullIfNotNull(nameof(source))]
     public static string? RemoveSuffix(string? source, string suffix, StringComparison stringComparison)
     {
-        if (source == null) return source;
+        if (source == null)
+        {
+            return source;
+        }
 
         if (source.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
         {

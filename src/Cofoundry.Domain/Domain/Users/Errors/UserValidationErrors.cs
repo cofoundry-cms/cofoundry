@@ -16,7 +16,7 @@ public static class UserValidationErrors
         /// <summary>
         /// Either the username or password is invalid.
         /// </summary>
-        public static readonly ValidationErrorTemplate InvalidCredentials = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate InvalidCredentials = new(
             AddAuthenticationNamespace("invalid-credentials"),
             "Invalid username or password.",
             e => new InvalidCredentialsAuthenticationException(e)
@@ -26,7 +26,7 @@ public static class UserValidationErrors
         /// To be used when only authenticating the password for a logged in user 
         /// and authentication fails e.g. when updating a password
         /// </summary>
-        public static readonly ValidationErrorTemplate InvalidPassword = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate InvalidPassword = new(
             AddAuthenticationNamespace("invalid-password"),
             "Incorrect password.",
             e => new InvalidCredentialsAuthenticationException(e)
@@ -36,7 +36,7 @@ public static class UserValidationErrors
         /// Too many failed authentication attempts have occurred either for the
         /// username or IP address.
         /// </summary>
-        public static readonly ValidationErrorTemplate TooManyFailedAttempts = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate TooManyFailedAttempts = new(
             AddAuthenticationNamespace("rate-limit-exceeded"),
             "Too many failed authentication attempts have been detected, please try again later."
             );
@@ -47,7 +47,7 @@ public static class UserValidationErrors
         /// in MVC if the ModelState is invalid and the result is returned
         /// before authentication is attempted.
         /// </summary>
-        public static readonly ValidationErrorTemplate NotSpecified = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate NotSpecified = new(
             AddAuthenticationNamespace("not-specified"),
             "The authentication attempt was unsuccessful."
             );
@@ -57,7 +57,7 @@ public static class UserValidationErrors
         /// This error isn't expected to be shown to the user but is instead expected to be intercepted 
         /// and handled in the UI.
         /// </summary>
-        public static readonly ValidationErrorTemplate PasswordChangeRequired = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate PasswordChangeRequired = new(
             AddAuthenticationNamespace("password-change-required"),
             "A password change is required before you can log in.",
             e => new PasswordChangeRequiredException(e)
@@ -67,7 +67,7 @@ public static class UserValidationErrors
         /// The credentials are valid but the account has not been verified, and the user area is configured to
         /// not allow sign ins for unverified users.
         /// </summary>
-        public static readonly ValidationErrorTemplate AccountNotVerified = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate AccountNotVerified = new(
             AddAuthenticationNamespace("account-not-verified"),
             "You account needs to be verified before you can log in.",
             e => new AccountNotVerifiedException(e)
@@ -94,7 +94,7 @@ public static class UserValidationErrors
             /// <summary>
             /// The configured IP address rate limit has been exceeded.
             /// </summary>
-            public static readonly ValidationErrorTemplate RateLimitExceeded = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate RateLimitExceeded = new(
                 AddInitiationNamespace("rate-limit-exceeded"),
                 "Maximum password reset attempts exceeded."
                 );
@@ -116,7 +116,7 @@ public static class UserValidationErrors
             /// situations where the id or token are not correctly
             /// formatted, or if the request cannot be located in the database.
             /// </summary>
-            public static readonly ValidationErrorTemplate NotFound = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate NotFound = new(
                 AddRequestValidationNamespace("not-found"),
                 "The account recovery request is not valid."
                 );
@@ -126,7 +126,7 @@ public static class UserValidationErrors
             /// password has already been updated, or a valid sign in
             /// has occurred.
             /// </summary>
-            public static readonly ValidationErrorTemplate Invalidated = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate Invalidated = new(
                 AddRequestValidationNamespace("invalidated"),
                 "The account recovery request is no longer valid."
                 );
@@ -134,7 +134,7 @@ public static class UserValidationErrors
             /// <summary>
             /// The request exists but has already been completed.
             /// </summary>
-            public static readonly ValidationErrorTemplate AlreadyComplete = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate AlreadyComplete = new(
                 AddRequestValidationNamespace("already-complete"),
                 "The account recovery request has already been completed."
                 );
@@ -142,12 +142,12 @@ public static class UserValidationErrors
             /// <summary>
             /// The request exists but has expired.
             /// </summary>
-            public static readonly ValidationErrorTemplate Expired = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate Expired = new(
                 AddRequestValidationNamespace("expired"),
                 "The account recovery request has expired."
                 );
 
-            private static readonly Dictionary<string, Func<ValidationErrorTemplate>> ErrorMap = new Dictionary<string, Func<ValidationErrorTemplate>>()
+            private static readonly Dictionary<string, Func<ValidationErrorTemplate>> ErrorMap = new()
             {
                 { AuthorizedTaskValidationErrors.TokenValidation.NotFound.ErrorCode , () => NotFound },
                 { AuthorizedTaskValidationErrors.TokenValidation.Invalidated.ErrorCode , () => Invalidated },
@@ -199,7 +199,7 @@ public static class UserValidationErrors
             /// <summary>
             /// The configured IP address rate limit has been exceeded.
             /// </summary>
-            public static readonly ValidationErrorTemplate RateLimitExceeded = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate RateLimitExceeded = new(
                 AddInitiationNamespace("rate-limit-exceeded"),
                 "Maximum account verification requests exceeded."
                 );
@@ -208,7 +208,7 @@ public static class UserValidationErrors
             /// The user account aready contains an AcccountVerificationDate
             /// indicating that it has already been verified.
             /// </summary>
-            public static readonly ValidationErrorTemplate AlreadyVerified = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate AlreadyVerified = new(
                 AddInitiationNamespace("already-verified"),
                 "The account is already verified."
                 );
@@ -230,7 +230,7 @@ public static class UserValidationErrors
             /// situations where the id or token are not correctly
             /// formatted, or if the request cannot be located in the database.
             /// </summary>
-            public static readonly ValidationErrorTemplate NotFound = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate NotFound = new(
                 AddRequestValidationNamespace("not-found"),
                 "The account verification request is not valid."
                 );
@@ -239,7 +239,7 @@ public static class UserValidationErrors
             /// The request has been invalidated, likely because the
             /// account has already been verified by another request.
             /// </summary>
-            public static readonly ValidationErrorTemplate Invalidated = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate Invalidated = new(
                 AddRequestValidationNamespace("invalidated"),
                 "The account verification request is no longer valid."
                 );
@@ -247,7 +247,7 @@ public static class UserValidationErrors
             /// <summary>
             /// The request exists but has already been completed.
             /// </summary>
-            public static readonly ValidationErrorTemplate AlreadyComplete = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate AlreadyComplete = new(
                 AddRequestValidationNamespace("already-complete"),
                 "The account verification request has already been completed."
                 );
@@ -255,7 +255,7 @@ public static class UserValidationErrors
             /// <summary>
             /// The request exists but has expired.
             /// </summary>
-            public static readonly ValidationErrorTemplate Expired = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate Expired = new(
                 AddRequestValidationNamespace("expired"),
                 "The account verification request has expired."
                 );
@@ -264,12 +264,12 @@ public static class UserValidationErrors
             /// The request exists but the user has updated their email since the request was sent and is 
             /// therefore considered expired.
             /// </summary>
-            public static readonly ValidationErrorTemplate EmailMismatch = new ValidationErrorTemplate(
+            public static readonly ValidationErrorTemplate EmailMismatch = new(
                 AddRequestValidationNamespace("email-mismatch"),
                 "The account verification request has expired."
                 );
 
-            private static readonly Dictionary<string, Func<ValidationErrorTemplate>> ErrorMap = new Dictionary<string, Func<ValidationErrorTemplate>>()
+            private static readonly Dictionary<string, Func<ValidationErrorTemplate>> ErrorMap = new()
             {
                 { AuthorizedTaskValidationErrors.TokenValidation.NotFound.ErrorCode , () => NotFound },
                 { AuthorizedTaskValidationErrors.TokenValidation.Invalidated.ErrorCode , () => Invalidated },
@@ -316,7 +316,7 @@ public static class UserValidationErrors
         /// is <see langword="null"/>, which typically indicaztes that the <see cref="IEmailAddressNormalizer{TUserArea}"/> 
         /// could not parse the email address and did not return a result.
         /// </summary>
-        public static readonly ValidationErrorTemplate InvalidFormat = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate InvalidFormat = new(
             AddEmailAddressNamespace("invalid-format"),
             "Email is in an invalid format."
             );
@@ -325,7 +325,7 @@ public static class UserValidationErrors
         /// The email is shorter then the limit defined in the 
         /// <see cref="EmailAddressOptions"/> configuration settings.
         /// </summary>
-        public static readonly ValidationErrorTemplate MinLengthNotMet = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate MinLengthNotMet = new(
             AddEmailAddressNamespace("min-length-not-met"),
             "Email cannot be less than {0} characters."
             );
@@ -334,7 +334,7 @@ public static class UserValidationErrors
         /// The email is longer then the limit defined in the 
         /// <see cref="EmailAddressOptions"/> configuration settings.
         /// </summary>
-        public static readonly ValidationErrorTemplate MaxLengthExceeded = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate MaxLengthExceeded = new(
             AddEmailAddressNamespace("max-length-exceeded"),
             "Email cannot be more than {0} characters."
             );
@@ -343,7 +343,7 @@ public static class UserValidationErrors
         /// The email contains characters that are not permitted by the 
         /// <see cref="EmailAddressOptions"/> configuration settings.
         /// </summary>
-        public static readonly ValidationErrorTemplate InvalidCharacters = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate InvalidCharacters = new(
             AddEmailAddressNamespace("invalid-characters"),
             "Email cannot contain '{0}'."
             );
@@ -351,7 +351,7 @@ public static class UserValidationErrors
         /// <summary>
         /// The email is already registered with another user.
         /// </summary>
-        public static readonly ValidationErrorTemplate NotUnique = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate NotUnique = new(
             AddEmailAddressNamespace("not-unique"),
             "This email is already registered."
             );
@@ -372,7 +372,7 @@ public static class UserValidationErrors
         /// is <see langword="null"/>. This should rarely happen, only if the username 
         /// contains only characters stripped out through a custom <see cref="IUsernameNormalizer{TUserArea}"/>.
         /// </summary>
-        public static readonly ValidationErrorTemplate InvalidFormat = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate InvalidFormat = new(
             AddEmailAddressNamespace("invalid-format"),
             "Username is in an invalid format."
             );
@@ -381,7 +381,7 @@ public static class UserValidationErrors
         /// The username is shorter then the limit defined in the 
         /// <see cref="UsernameOptions"/> configuration settings.
         /// </summary>
-        public static readonly ValidationErrorTemplate MinLengthNotMet = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate MinLengthNotMet = new(
             AddEmailAddressNamespace("min-length-not-met"),
             "Username cannot be less than {0} characters."
             );
@@ -390,7 +390,7 @@ public static class UserValidationErrors
         /// The username is longer then the limit defined in the 
         /// <see cref="UsernameOptions"/> configuration settings.
         /// </summary>
-        public static readonly ValidationErrorTemplate MaxLengthExceeded = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate MaxLengthExceeded = new(
             AddEmailAddressNamespace("max-length-exceeded"),
             "Username cannot be more than {0} characters."
             );
@@ -399,7 +399,7 @@ public static class UserValidationErrors
         /// The username contains characters that are not permitted by the 
         /// <see cref="UsernameOptions"/> configuration settings.
         /// </summary>
-        public static readonly ValidationErrorTemplate InvalidCharacters = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate InvalidCharacters = new(
             AddEmailAddressNamespace("invalid-characters"),
             "Username cannot contain '{0}'."
             );
@@ -407,7 +407,7 @@ public static class UserValidationErrors
         /// <summary>
         /// The username is already registered with another user.
         /// </summary>
-        public static readonly ValidationErrorTemplate NotUnique = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate NotUnique = new(
             AddEmailAddressNamespace("not-unique"),
             "This username is already registered."
             );

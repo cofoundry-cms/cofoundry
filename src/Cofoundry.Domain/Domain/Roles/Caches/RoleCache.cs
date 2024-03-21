@@ -1,5 +1,5 @@
-﻿using Cofoundry.Core.Caching;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
+using Cofoundry.Core.Caching;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -62,7 +62,10 @@ public class RoleCache : IRoleCache
 
         foreach (var roleId in roleIds)
         {
-            if (result.ContainsKey(roleId)) continue;
+            if (result.ContainsKey(roleId))
+            {
+                continue;
+            }
 
             var role = _cache.Get<RoleDetails>(CreateRoleCacheKey(roleId));
 
@@ -70,19 +73,22 @@ public class RoleCache : IRoleCache
             {
                 result.Add(roleId, role);
             }
-            else if (!missingIds.Contains(roleId))
+            else
             {
                 missingIds.Add(roleId);
             }
         }
 
-        if (missingIds.Any())
+        if (missingIds.Count != 0)
         {
             var missingRoles = await missingRolesGetter.Invoke(missingIds);
 
             foreach (var role in missingRoles)
             {
-                if (result.ContainsKey(role.RoleId)) continue;
+                if (result.ContainsKey(role.RoleId))
+                {
+                    continue;
+                }
 
                 _cache.GetOrAdd(CreateRoleCacheKey(role.RoleId), () => role);
                 result.Add(role.RoleId, role);

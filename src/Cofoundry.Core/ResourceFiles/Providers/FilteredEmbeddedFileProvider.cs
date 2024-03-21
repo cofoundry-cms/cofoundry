@@ -13,7 +13,7 @@ public class FilteredEmbeddedFileProvider : IFileProvider
     private readonly IFileProvider _assemblyProvider;
     private readonly IFileProvider? _overrideProvider;
     private readonly string _restrictToPath;
-    private readonly string? _rewriteFromPath = null;
+    private readonly string? _rewriteFromPath;
 
     /// <summary>
     /// A file provider that wraps an EmbeddedFileProvider and restricts
@@ -123,7 +123,10 @@ public class FilteredEmbeddedFileProvider : IFileProvider
 
     private string RewritePath(string path)
     {
-        if (_rewriteFromPath == null) return path;
+        if (_rewriteFromPath == null)
+        {
+            return path;
+        }
 
         var newPath = _restrictToPath + path.Remove(0, _rewriteFromPath.Length);
 
@@ -132,7 +135,10 @@ public class FilteredEmbeddedFileProvider : IFileProvider
 
     private bool StartsWithPath(string subpath)
     {
-        if (string.IsNullOrEmpty(subpath)) return false;
+        if (string.IsNullOrEmpty(subpath))
+        {
+            return false;
+        }
 
         var pathToTest = _rewriteFromPath ?? _restrictToPath;
 

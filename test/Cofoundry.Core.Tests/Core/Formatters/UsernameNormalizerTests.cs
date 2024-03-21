@@ -4,7 +4,7 @@ namespace Cofoundry.Core.Tests.Core.Formatters;
 
 public class UsernameNormalizerTests
 {
-    private readonly UsernameNormalizer _usernameNormalizer = new UsernameNormalizer();
+    private readonly UsernameNormalizer _usernameNormalizer = new();
 
     [Theory]
     [InlineData(null)]

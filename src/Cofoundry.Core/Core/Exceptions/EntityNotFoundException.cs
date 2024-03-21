@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace Cofoundry.Core;
 
@@ -153,11 +154,11 @@ public class EntityNotFoundException<TEntity> : EntityNotFoundException
 
     private static string FormatDefaultMessage(string? message)
     {
-        return string.Format(message ?? DEFAULT_MESSAGE, typeof(TEntity));
+        return string.Format(CultureInfo.InvariantCulture, message ?? DEFAULT_MESSAGE, typeof(TEntity));
     }
 
     private static string FormatMessageWithId(string? message, object? id)
     {
-        return string.Format(message ?? MESSAGE_WITH_ID, typeof(TEntity), id);
+        return string.Format(CultureInfo.InvariantCulture, message ?? MESSAGE_WITH_ID, typeof(TEntity), id);
     }
 }

@@ -27,7 +27,7 @@ public static class EnumListOptionHelper
         foreach (Enum value in values)
         {
             var stringValue = value.ToString();
-            string description = GetDescription(value, stringValue);
+            var description = GetDescription(value, stringValue);
 
             options.Add(new ListOption(description, stringValue));
         }
@@ -40,11 +40,11 @@ public static class EnumListOptionHelper
         var field = value.GetType().GetField(stringValue);
         if (field == null)
         {
-            throw new NullReferenceException($"'{nameof(field)}' not expected to be null for enum value {stringValue}");
+            throw new InvalidOperationException($"'{nameof(field)}' not expected to be null for enum value {stringValue}");
         }
         var attributes = (DescriptionAttribute[])field.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
-        if (attributes.Any())
+        if (attributes.Length != 0)
         {
             return attributes[0].Description;
         }

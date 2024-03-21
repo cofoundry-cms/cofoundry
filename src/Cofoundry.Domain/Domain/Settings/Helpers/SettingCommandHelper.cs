@@ -25,7 +25,7 @@ public class SettingCommandHelper
         IExecutionContext executionContext
         )
     {
-        Type type = typeof(TCommand);
+        var type = typeof(TCommand);
 
         var member = propertyLambda.Body as MemberExpression;
         var propInfo = member?.Member as PropertyInfo;

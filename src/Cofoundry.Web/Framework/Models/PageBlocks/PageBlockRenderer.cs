@@ -1,4 +1,5 @@
-﻿using AngleSharp.Dom;
+using System.Globalization;
+using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -36,7 +37,7 @@ public class PageBlockRenderer : IPageBlockRenderer
             throw new ViewNotFoundException($"View path could not be determined for block {blockViewModel.EntityVersionPageBlockId}");
         }
 
-        string html = await _razorViewRenderer.RenderViewAsync(viewContext, viewPath, displayData);
+        var html = await _razorViewRenderer.RenderViewAsync(viewContext, viewPath, displayData);
 
         if (pageViewModel.IsPageEditMode)
         {
@@ -49,7 +50,7 @@ public class PageBlockRenderer : IPageBlockRenderer
     /// <inheritdoc/>
     public string RenderPlaceholderBlock(int? minHeight = null)
     {
-        string styles = string.Empty;
+        var styles = string.Empty;
         if (minHeight.HasValue)
         {
             styles = " style='min-height:" + minHeight + "px'";
@@ -72,7 +73,7 @@ public class PageBlockRenderer : IPageBlockRenderer
     private string? GetViewPath(IEntityVersionPageBlockRenderDetails blockViewModel)
     {
         string? viewPath;
-        string fileName = blockViewModel.BlockType.FileName;
+        var fileName = blockViewModel.BlockType.FileName;
 
         if (blockViewModel.Template == null)
         {
@@ -97,7 +98,7 @@ public class PageBlockRenderer : IPageBlockRenderer
     /// </summary>
     private static string ParseBlockHtmlForEditing(string blockHtml, IEntityVersionPageBlockRenderDetails? blockViewModel)
     {
-        string entityType = blockViewModel is CustomEntityVersionPageBlockRenderDetails ? "custom-entity" : "page";
+        var entityType = blockViewModel is CustomEntityVersionPageBlockRenderDetails ? "custom-entity" : "page";
 
         var attrs = new Dictionary<string, string>
         {
@@ -107,9 +108,9 @@ public class PageBlockRenderer : IPageBlockRenderer
 
         if (blockViewModel != null)
         {
-            attrs.Add("data-cms-version-block-id", blockViewModel.EntityVersionPageBlockId.ToString());
-            attrs.Add("data-cms-page-block-type-id", blockViewModel.BlockType.PageBlockTypeId.ToString());
-            attrs.Add("data-cms-page-block-title", blockViewModel.BlockType.Name.ToString());
+            attrs.Add("data-cms-version-block-id", blockViewModel.EntityVersionPageBlockId.ToString(CultureInfo.InvariantCulture));
+            attrs.Add("data-cms-page-block-type-id", blockViewModel.BlockType.PageBlockTypeId.ToString(CultureInfo.InvariantCulture));
+            attrs.Add("data-cms-page-block-title", blockViewModel.BlockType.Name);
         }
 
         var parser = new HtmlParser();

@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace Cofoundry.Domain;
+﻿namespace Cofoundry.Domain;
 
 /// <summary>
 /// This model is a projection of the data defined in a custom entity 

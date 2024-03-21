@@ -60,7 +60,10 @@ public class GetImageAssetRenderDetailsByIdRangeQueryHandler
             .Select(r => r.ImageAssetId)
             .ToArray();
 
-        if (!missingIds.Any()) return null;
+        if (missingIds.Length == 0)
+        {
+            return null;
+        }
 
         return _dbContext
             .ImageAssets

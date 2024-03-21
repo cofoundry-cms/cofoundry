@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Cofoundry.Domain;
 
@@ -232,9 +232,9 @@ public class MissingIncludeException<TEntity> : MissingIncludeException where TE
     {
         if (memberName != null)
         {
-            return string.Format(message ?? DEFAULT_MESSAGE, typeof(TEntity).Name);
+            return string.Format(CultureInfo.InvariantCulture, message ?? DEFAULT_MESSAGE, typeof(TEntity).Name);
         }
 
-        return string.Format(message ?? MESSAGE_WITH_MEMBERNAME, typeof(TEntity).Name, memberName);
+        return string.Format(CultureInfo.InvariantCulture, message ?? MESSAGE_WITH_MEMBERNAME, typeof(TEntity).Name, memberName);
     }
 }

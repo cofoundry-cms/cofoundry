@@ -31,7 +31,10 @@ public class CompleteAuthorizedTaskCommandHandler
         EntityNotFoundException.ThrowIfNull(request, command.AuthorizedTaskId);
 
         // Complete already, no action
-        if (request.CompletedDate.HasValue) return;
+        if (request.CompletedDate.HasValue)
+        {
+            return;
+        }
 
         if (request.InvalidatedDate.HasValue)
         {

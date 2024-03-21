@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// A routing rule that uses only the CustomEntityId property to match the
@@ -22,7 +22,10 @@ public class IdCustomEntityRoutingRule : ICustomEntityRoutingRule
         ArgumentNullException.ThrowIfNull(pageRoute);
 
         var routingPart = GetRoutingPart(url, pageRoute);
-        if (string.IsNullOrEmpty(routingPart)) return false;
+        if (string.IsNullOrEmpty(routingPart))
+        {
+            return false;
+        }
 
         var isMatch = IntParser.ParseOrDefault(routingPart) > 0;
 
@@ -70,7 +73,7 @@ public class IdCustomEntityRoutingRule : ICustomEntityRoutingRule
 
         return pageRoute
             .FullUrlPath
-            .Replace("{Id}", entityRoute.CustomEntityId.ToString());
+            .Replace("{Id}", entityRoute.CustomEntityId.ToString(CultureInfo.InvariantCulture));
     }
 
     /// <summary>
@@ -80,7 +83,7 @@ public class IdCustomEntityRoutingRule : ICustomEntityRoutingRule
     /// </summary>
     private string? GetRoutingPart(string url, PageRoute pageRoute)
     {
-        if (pageRoute.FullUrlPath.IndexOf(RouteFormat) == -1)
+        if (!pageRoute.FullUrlPath.Contains(RouteFormat))
         {
             return null;
         }

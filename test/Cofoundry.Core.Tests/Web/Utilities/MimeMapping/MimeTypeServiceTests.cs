@@ -25,8 +25,8 @@ public class MimeTypeServiceTests
     [Fact]
     public void MapFromFileName_WhenContentTypeFound_ReturnsMatch()
     {
-        string fileName = "my-file.jpg";
-        string? contentType = JPEG_MIME_TYPE;
+        var fileName = "my-file.jpg";
+        var contentType = JPEG_MIME_TYPE;
 
         var contentTypeProvider = Substitute.For<IContentTypeProvider>();
         contentTypeProvider
@@ -46,7 +46,7 @@ public class MimeTypeServiceTests
     [Fact]
     public void MapFromFileName_WhenContentTypeNotFound_ReturnsDefault()
     {
-        string fileName = "my-file.jpg";
+        var fileName = "my-file.jpg";
         string? contentType = null;
 
         var contentTypeProvider = Substitute.For<IContentTypeProvider>();
@@ -80,8 +80,8 @@ public class MimeTypeServiceTests
     [Fact]
     public void MapFromFileNameWithDefault_WhenContentTypeFound_ReturnsMatch()
     {
-        string fileName = "my-file.jpg";
-        string? contentType = JPEG_MIME_TYPE;
+        var fileName = "my-file.jpg";
+        var contentType = JPEG_MIME_TYPE;
 
         var contentTypeProvider = Substitute.For<IContentTypeProvider>();
         contentTypeProvider
@@ -101,7 +101,7 @@ public class MimeTypeServiceTests
     [Fact]
     public void MapFromFileNameWithDefault_WhenContentTypeNotFound_ReturnsDefault()
     {
-        string fileName = "my-file.jpg";
+        var fileName = "my-file.jpg";
         string? contentType = null;
 
         var contentTypeProvider = Substitute.For<IContentTypeProvider>();

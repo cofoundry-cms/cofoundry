@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
 namespace Cofoundry.Domain;
 
@@ -66,7 +66,7 @@ public partial class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingR
         var query = new GetCustomEntityRouteByPathQuery
         {
             CustomEntityDefinitionCode = pageRoute.CustomEntityDefinitionCode,
-            CustomEntityId = Convert.ToInt32(match.Groups[1].Value)
+            CustomEntityId = Convert.ToInt32(match.Groups[1].Value, CultureInfo.InvariantCulture)
         };
 
         if (pageRoute.Locale != null)
@@ -84,7 +84,7 @@ public partial class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingR
         ArgumentNullException.ThrowIfNull(entityRoute);
 
         return pageRoute.FullUrlPath
-            .Replace("{Id}", entityRoute.CustomEntityId.ToString())
+            .Replace("{Id}", entityRoute.CustomEntityId.ToString(CultureInfo.InvariantCulture))
             .Replace("{UrlSlug}", entityRoute.UrlSlug);
     }
 
@@ -95,7 +95,7 @@ public partial class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingR
     /// </summary>
     private string? GetRoutingPart(string url, PageRoute pageRoute)
     {
-        if (pageRoute.FullUrlPath.IndexOf(RouteFormat) == -1)
+        if (!pageRoute.FullUrlPath.Contains(RouteFormat))
         {
             return null;
         }

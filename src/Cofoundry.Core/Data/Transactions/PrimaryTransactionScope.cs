@@ -7,7 +7,7 @@
 public class PrimaryTransactionScope : ITransactionScope, IDisposable
 {
     private readonly DefaultTransactionScopeManager _transactionScopeManager;
-    private Queue<Func<Task>> _runOnCompleteActions = new Queue<Func<Task>>();
+    private readonly Queue<Func<Task>> _runOnCompleteActions = new();
     private System.Transactions.TransactionScope? _innerScope;
 
     public PrimaryTransactionScope(

@@ -1,7 +1,8 @@
-﻿using AngleSharp.Dom;
+using System.ComponentModel;
+using System.Globalization;
+using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 using Cofoundry.Core.Web;
-using System.ComponentModel;
 
 namespace Cofoundry.Web;
 
@@ -19,7 +20,7 @@ public static class TemplateRegionTagBuilderHelper
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(anonymousObject))
             {
                 var value = propertyDescriptor.GetValue(anonymousObject);
-                var valueAsString = Convert.ToString(value) ?? string.Empty;
+                var valueAsString = Convert.ToString(value, CultureInfo.InvariantCulture) ?? string.Empty;
                 attributes.Add(propertyDescriptor.Name, valueAsString);
             }
 

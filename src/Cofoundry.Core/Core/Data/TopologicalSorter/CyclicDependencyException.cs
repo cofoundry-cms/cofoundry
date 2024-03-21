@@ -25,7 +25,11 @@ public class CyclicDependencyException : Exception
     {
         const string DEFAULT_MESSAGE = "Cyclic dependency detected.";
 
-        if (string.IsNullOrWhiteSpace(message)) return DEFAULT_MESSAGE;
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return DEFAULT_MESSAGE;
+        }
+
         return message;
     }
 }

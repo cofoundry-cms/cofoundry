@@ -57,7 +57,7 @@ public class EntityDefinitionRepository : IEntityDefinitionRepository
         return _entityDefinitions.Values;
     }
 
-    private void DetectInvalidDefinitions(IEnumerable<IEntityDefinition> definitions)
+    private static void DetectInvalidDefinitions(IEnumerable<IEntityDefinition> definitions)
     {
         const string WHY_VALID_CODE_MESSAGE = "All entity definition codes must be 6 characters and contain only non-unicode characters.";
 

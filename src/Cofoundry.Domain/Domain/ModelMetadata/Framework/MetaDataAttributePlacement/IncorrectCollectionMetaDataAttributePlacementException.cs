@@ -44,8 +44,8 @@ public class IncorrectCollectionMetaDataAttributePlacementException : IncorrectM
         IReadOnlyCollection<Type> validParamTypes
         )
     {
-        string typeNameText = FormatTypeNamesText(validParamTypes);
-        string propertyName = FormatPropertyName(context);
+        var typeNameText = FormatTypeNamesText(validParamTypes);
+        var propertyName = FormatPropertyName(context);
         var attributeName = attribute.GetType().Name;
         var firstParamType = validParamTypes.Select(t => t.Name).First();
 

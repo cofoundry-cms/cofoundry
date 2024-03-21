@@ -92,7 +92,10 @@ public class ContentRouteLibrary : IContentRouteLibrary
 
     public string? ToAbsolute(string? url)
     {
-        if (string.IsNullOrWhiteSpace(url)) return url;
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return url;
+        }
 
         return _siteUriResolver.MakeAbsolute(url);
     }

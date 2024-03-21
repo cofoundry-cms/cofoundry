@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Web;
+using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Http;
 
 namespace Cofoundry.Domain;
@@ -72,12 +72,35 @@ public class ImageResizeSettings : IImageResizeSettings
     {
         var qs = new QueryStringBuilder();
 
-        if (Anchor != DEFAULT_ANCHOR_LOCATION) qs.Add(QS_ANCHOR, Anchor.ToString());
-        if (Width > 0) qs.Add(QS_WIDTH, Width.ToString());
-        if (Height > 0) qs.Add(QS_HEIGHT, Height.ToString());
-        if (Mode != ImageFitMode.Default) qs.Add(QS_MODE, Mode.ToString().ToLower());
-        if (Scale != ImageScaleMode.DownscaleOnly) qs.Add(QS_SCALE, Scale.ToString().ToLower());
-        if (!string.IsNullOrWhiteSpace(BackgroundColor)) qs.Add(QS_BACKGROUND_COLOR, BackgroundColor.ToLower());
+        if (Anchor != DEFAULT_ANCHOR_LOCATION)
+        {
+            qs.Add(QS_ANCHOR, Anchor.ToString());
+        }
+
+        if (Width > 0)
+        {
+            qs.Add(QS_WIDTH, Width.ToString(CultureInfo.InvariantCulture));
+        }
+
+        if (Height > 0)
+        {
+            qs.Add(QS_HEIGHT, Height.ToString(CultureInfo.InvariantCulture));
+        }
+
+        if (Mode != ImageFitMode.Default)
+        {
+            qs.Add(QS_MODE, Mode.ToString().ToLower());
+        }
+
+        if (Scale != ImageScaleMode.DownscaleOnly)
+        {
+            qs.Add(QS_SCALE, Scale.ToString().ToLower());
+        }
+
+        if (!string.IsNullOrWhiteSpace(BackgroundColor))
+        {
+            qs.Add(QS_BACKGROUND_COLOR, BackgroundColor.ToLower());
+        }
 
         return qs.OrderAndRender();
     }

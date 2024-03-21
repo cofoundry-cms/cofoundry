@@ -6,7 +6,7 @@ namespace Cofoundry.Core;
 /// <summary>
 /// A range of helper methods for formatting text string
 /// </summary>
-public static class TextFormatter
+public static partial class TextFormatter
 {
     private const string ELIPSIS = "…";
 
@@ -17,9 +17,12 @@ public static class TextFormatter
     /// <param name="s">String instance to format.</param>
     public static string PascalCaseToSentence(string? s)
     {
-        if (s == null) return string.Empty;
+        if (s == null)
+        {
+            return string.Empty;
+        }
 
-        var conveted = Regex.Replace(s, "(?<=.)[A-Z](?![A-Z])|[A-Z]+(?![a-z])", m =>
+        var conveted = PascalCaseToSentenceRegex().Replace(s, m =>
         {
             var transformed = m.Value.Length > 1 ? m.Value : m.Value.ToLowerInvariant();
             return " " + transformed;
@@ -39,9 +42,12 @@ public static class TextFormatter
     /// <param name="s">String instance to format.</param>
     public static string Pascalize(string? s)
     {
-        if (s == null) return string.Empty;
+        if (s == null)
+        {
+            return string.Empty;
+        }
 
-        return Regex.Replace(s.Trim(), @"(?:^|[_\s-])(.)", match => match.Groups[1].Value.ToUpper());
+        return PascalizeRegex().Replace(s.Trim(), match => match.Groups[1].Value.ToUpper());
     }
 
     /// <summary>
@@ -55,15 +61,22 @@ public static class TextFormatter
     /// <param name="s">String instance to format.</param>
     public static string Camelize(string? s)
     {
-        if (string.IsNullOrWhiteSpace(s)) return string.Empty;
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return string.Empty;
+        }
 
         var word = Pascalize(s);
 
-        if (string.IsNullOrEmpty(word)) return string.Empty;
+        if (string.IsNullOrEmpty(word))
+        {
+            return string.Empty;
+        }
 
-        return word
-            .Substring(0, 1)
-            .ToLower() + word.Substring(1);
+        return string.Concat(
+            word.Substring(0, 1).ToLower(),
+            word.AsSpan(1)
+            );
     }
 
     /// <summary>
@@ -72,9 +85,19 @@ public static class TextFormatter
     /// <param name="s">String instance to format.</param>
     public static string Limit(string? s, int charCount)
     {
-        if (s == null) return string.Empty;
-        if (s.Length <= charCount) return s;
-        else return s.Substring(0, charCount).TrimEnd();
+        if (s == null)
+        {
+            return string.Empty;
+        }
+
+        if (s.Length <= charCount)
+        {
+            return s;
+        }
+        else
+        {
+            return s.Substring(0, charCount).TrimEnd();
+        }
     }
 
     /// <summary>
@@ -83,10 +106,24 @@ public static class TextFormatter
     /// <param name="s">String instance to format.</param>
     public static string LimitWithElipses(string? s, int characterCount)
     {
-        if (s == null) return string.Empty;
-        if (characterCount < 3) return Limit(s, characterCount);       // Can’t do much with such a short limit
-        if (s.Length <= characterCount) return s;
-        else return s.Substring(0, characterCount - ELIPSIS.Length).TrimEnd() + ELIPSIS;
+        if (s == null)
+        {
+            return string.Empty;
+        }
+
+        if (characterCount < 3)
+        {
+            return Limit(s, characterCount);       // Can’t do much with such a short limit
+        }
+
+        if (s.Length <= characterCount)
+        {
+            return s;
+        }
+        else
+        {
+            return s.Substring(0, characterCount - ELIPSIS.Length).TrimEnd() + ELIPSIS;
+        }
     }
 
     /// <summary>
@@ -96,23 +133,31 @@ public static class TextFormatter
     /// <param name="s">String instance to format.</param>
     public static string LimitWithElipsesOnWordBoundary(string? s, int characterCount)
     {
-        if (s == null) return string.Empty;
-        if (characterCount < 3) return Limit(s, characterCount);       // Can’t do much with such a short limit
+        if (s == null)
+        {
+            return string.Empty;
+        }
+
+        if (characterCount < 3)
+        {
+            return Limit(s, characterCount);       // Can’t do much with such a short limit
+        }
+
         if (s.Length <= characterCount)
         {
             return s;
         }
         else
         {
-            int lastspace = s.Substring(0, characterCount - (1 - ELIPSIS.Length)).LastIndexOf(" ");
+            var lastspace = s.Substring(0, characterCount - (1 - ELIPSIS.Length)).LastIndexOf(' ');
             if (lastspace > 0 && lastspace > characterCount - 10)
             {
-                return s.Substring(0, lastspace) + ELIPSIS;
+                return string.Concat(s.AsSpan(0, lastspace), ELIPSIS);
             }
             else
             {
                 // No suitable space was found
-                return s.Substring(0, characterCount - ELIPSIS.Length) + ELIPSIS;
+                return string.Concat(s.AsSpan(0, characterCount - ELIPSIS.Length), ELIPSIS);
             }
         }
     }
@@ -124,9 +169,12 @@ public static class TextFormatter
     /// <param name="s">String instance to format.</param>
     public static string FirstLetterToUpperCase(string? s)
     {
-        if (string.IsNullOrEmpty(s)) return string.Empty;
+        if (string.IsNullOrEmpty(s))
+        {
+            return string.Empty;
+        }
 
-        char[] a = s.ToCharArray();
+        var a = s.ToCharArray();
         a[0] = char.ToUpper(a[0]);
 
         return new string(a);
@@ -143,21 +191,24 @@ public static class TextFormatter
     /// <param name="s">The string from which to remove diacratics.</param>
     public static string RemoveDiacritics(string? s)
     {
-        if (s == null) return string.Empty;
+        if (s == null)
+        {
+            return string.Empty;
+        }
 
         var characters = s.SelectMany(TranslateCharacter);
-        string result = new string(characters.ToArray());
+        var result = new string(characters.ToArray());
 
         return result;
     }
 
-    private static Lazy<Dictionary<char, string>> _charcterLookup = new Lazy<Dictionary<char, string>>(CreateCharacterCache);
+    private static readonly Lazy<Dictionary<char, string>> _charcterLookup = new(CreateCharacterCache);
 
     private static Dictionary<char, string> CreateCharacterCache()
     {
         #region lookup source
 
-        Dictionary<string, string> sourceMappings = new Dictionary<string, string>
+        var sourceMappings = new Dictionary<string, string>
         {
             { "äæǽ", "ae" },
             { "öœ", "oe" },
@@ -255,19 +306,21 @@ public static class TextFormatter
         var characterLookup = new Dictionary<char, string>();
 
         foreach (var sourceMapping in sourceMappings)
+        {
             foreach (var originalChar in sourceMapping.Key)
             {
                 characterLookup.Add(originalChar, sourceMapping.Value);
             }
+        }
 
         return characterLookup;
     }
 
     private static IEnumerable<char> TranslateCharacter(char characterToTranslate)
     {
-        if (_charcterLookup.Value.ContainsKey(characterToTranslate))
+        if (_charcterLookup.Value.TryGetValue(characterToTranslate, out var value))
         {
-            foreach (var character in _charcterLookup.Value[characterToTranslate])
+            foreach (var character in value)
             {
                 yield return character;
             }
@@ -279,4 +332,10 @@ public static class TextFormatter
     }
 
     #endregion
+
+    [GeneratedRegex("(?<=.)[A-Z](?![A-Z])|[A-Z]+(?![a-z])")]
+    private static partial Regex PascalCaseToSentenceRegex();
+
+    [GeneratedRegex(@"(?:^|[_\s-])(.)")]
+    private static partial Regex PascalizeRegex();
 }

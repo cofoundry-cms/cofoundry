@@ -16,7 +16,10 @@ public class UserContextMapper
     [return: NotNullIfNotNull(nameof(dbUser))]
     public UserContext? Map(User dbUser)
     {
-        if (dbUser == null) return null;
+        if (dbUser == null)
+        {
+            return null;
+        }
 
         if (dbUser.Role == null)
         {

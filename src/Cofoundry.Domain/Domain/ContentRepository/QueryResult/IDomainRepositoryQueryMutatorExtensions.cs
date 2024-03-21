@@ -24,7 +24,10 @@ public static class IDomainRepositoryQueryMutatorExtensions
             async () =>
             {
                 var result = await innerMutator.ExecuteAsync();
-                if (result == null) return default;
+                if (result == null)
+                {
+                    return default;
+                }
 
                 return mapper(result);
             });
@@ -52,7 +55,10 @@ public static class IDomainRepositoryQueryMutatorExtensions
             async () =>
             {
                 var result = await innerMutator.ExecuteAsync();
-                if (result == null) return default;
+                if (result == null)
+                {
+                    return default;
+                }
 
                 return await mapper(result);
             });
@@ -267,7 +273,10 @@ public static class IDomainRepositoryQueryMutatorExtensions
             async () =>
             {
                 var result = await innerMutator.ExecuteAsync();
-                if (result == null) return new List<TValue>();
+                if (result == null)
+                {
+                    return new List<TValue>();
+                }
 
                 return result
                     .FilterAndOrderByKeys(orderedKeys)

@@ -153,7 +153,7 @@ public class UpdateAccessRuleSetCommandBaseTests
         var command = new UpdatePageAccessRuleSetCommand
         {
             PageId = 1,
-            ViolationAction = (AccessRuleViolationAction)Int32.MinValue,
+            ViolationAction = (AccessRuleViolationAction)int.MinValue,
             AccessRules = [new() { UserAreaCode = "TST" }]
         };
 

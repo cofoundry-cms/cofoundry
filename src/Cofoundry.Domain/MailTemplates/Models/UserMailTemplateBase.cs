@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Mail;
+using Cofoundry.Core.Mail;
 
 namespace Cofoundry.Domain.MailTemplates;
 
@@ -25,7 +25,7 @@ public abstract class UserMailTemplateBase : IMailTemplate, IMailTemplateWithApp
     /// </summary>
     public string Subject
     {
-        get { return string.Format(SubjectFormat, ApplicationName); }
+        get { return string.Format(CultureInfo.CurrentCulture, SubjectFormat, ApplicationName); }
     }
 
     /// <summary>

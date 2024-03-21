@@ -124,8 +124,8 @@ public class EntityVersionPageBlockMapper : IEntityVersionPageBlockMapper
     private IEnumerable<TBlockRenderDetails> ToBlockRenderDetails<TBlockRenderDetails>(IEnumerable<MappedPageBlock> dbBlocks)
         where TBlockRenderDetails : IEntityVersionPageBlockRenderDetails, new()
     {
-        int index = 0;
-        int size = dbBlocks.Count();
+        var index = 0;
+        var size = dbBlocks.Count();
 
         foreach (var dbBlock in dbBlocks)
         {

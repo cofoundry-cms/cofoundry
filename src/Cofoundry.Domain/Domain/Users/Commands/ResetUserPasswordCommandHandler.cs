@@ -142,7 +142,10 @@ public class ResetUserPasswordCommandHandler
         var mailTemplate = await mailTemplateBuilder.BuildPasswordResetTemplateAsync(context);
 
         // Null template means don't send a notification
-        if (mailTemplate == null) return;
+        if (mailTemplate == null)
+        {
+            return;
+        }
 
         await _mailService.SendAsync(user.Email, mailTemplate);
     }

@@ -61,7 +61,10 @@ public class NormalizedEmailAddress
         ArgumentNullException.ThrowIfNull(predicate);
         ArgumentNullException.ThrowIfNull(modifier);
 
-        if (!predicate(this)) return this;
+        if (!predicate(this))
+        {
+            return this;
+        }
 
         return AlterLocal(modifier);
     }
@@ -80,7 +83,10 @@ public class NormalizedEmailAddress
 
         var newDomainName = modifier(Domain.Name);
         var newDomain = EmailDomainName.Parse(newDomainName);
-        if (newDomain == null) throw new InvalidOperationException($"Domain name {newDomain} could not be parsed.");
+        if (newDomain == null)
+        {
+            throw new InvalidOperationException($"Domain name {newDomain} could not be parsed.");
+        }
 
         return new NormalizedEmailAddress(
             Local,
@@ -103,7 +109,10 @@ public class NormalizedEmailAddress
         ArgumentNullException.ThrowIfNull(predicate);
         ArgumentNullException.ThrowIfNull(modifier);
 
-        if (!predicate(this)) return this;
+        if (!predicate(this))
+        {
+            return this;
+        }
 
         return AlterDomain(modifier);
     }
@@ -126,7 +135,10 @@ public class NormalizedEmailAddress
         ArgumentNullException.ThrowIfNull(predicate);
         ArgumentNullException.ThrowIfNull(modifier);
 
-        if (!predicate(this)) return this;
+        if (!predicate(this))
+        {
+            return this;
+        }
 
         return modifier(this);
     }
@@ -165,7 +177,10 @@ public class NormalizedEmailAddress
     {
         var aliasIndex = Local.IndexOf('+');
         // if the first character is +, we shouldn't alter anything
-        if (aliasIndex < 1) return this;
+        if (aliasIndex < 1)
+        {
+            return this;
+        }
 
         var newLocal = Local.Substring(0, aliasIndex);
 
@@ -208,7 +223,11 @@ public class NormalizedEmailAddress
         if (HasDomain(otherDomains))
         {
             var domain = EmailDomainName.Parse(primaryDomain);
-            if (domain == null) throw new InvalidOperationException($"Domain name {primaryDomain} could not be parsed.");
+            if (domain == null)
+            {
+                throw new InvalidOperationException($"Domain name {primaryDomain} could not be parsed.");
+            }
+
             return new NormalizedEmailAddress(Local, domain);
         }
 

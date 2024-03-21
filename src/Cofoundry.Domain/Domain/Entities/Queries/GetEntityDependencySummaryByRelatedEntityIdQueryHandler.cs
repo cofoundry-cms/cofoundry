@@ -10,7 +10,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdQueryHandler
     : IQueryHandler<GetEntityDependencySummaryByRelatedEntityIdQuery, IReadOnlyCollection<EntityDependencySummary>>
     , IIgnorePermissionCheckHandler
 {
-    private IQueryExecutor _queryExecutor;
+    private readonly IQueryExecutor _queryExecutor;
 
     public GetEntityDependencySummaryByRelatedEntityIdQueryHandler(
         IQueryExecutor queryExecutor

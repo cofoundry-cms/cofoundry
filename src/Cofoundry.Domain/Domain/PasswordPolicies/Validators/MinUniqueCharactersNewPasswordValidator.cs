@@ -17,7 +17,7 @@ public class MinUniqueCharactersNewPasswordValidator
 
     public void Configure(int minUniqueCharacters)
     {
-        if (minUniqueCharacters > PasswordOptions.MAX_LENGTH_BOUNDARY) throw new ArgumentOutOfRangeException(nameof(minUniqueCharacters));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(minUniqueCharacters, PasswordOptions.MAX_LENGTH_BOUNDARY);
 
         MinUniqueCharacters = minUniqueCharacters;
     }

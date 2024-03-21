@@ -1,6 +1,6 @@
-﻿using Cofoundry.Core.Web;
+﻿using System.Text;
+using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
 
 namespace Cofoundry.Web;
 
@@ -42,7 +42,7 @@ public class CofoundryFilesController : Controller
 
             robotsTxt = settings.RobotsTxt;
 
-            if (robotsTxt.IndexOf("sitemap", StringComparison.OrdinalIgnoreCase) == -1)
+            if (!robotsTxt.Contains("sitemap", StringComparison.OrdinalIgnoreCase))
             {
                 robotsTxt += "\r\nSitemap: " + _siteUriResolver.MakeAbsolute("/sitemap.xml");
             }

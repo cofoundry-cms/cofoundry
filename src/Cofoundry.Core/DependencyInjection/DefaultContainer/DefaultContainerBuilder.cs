@@ -9,7 +9,7 @@ namespace Cofoundry.Core.DependencyInjection;
 /// </summary>
 public class DefaultContainerBuilder : IContainerBuilder
 {
-    bool hasBuilt = false;
+    bool hasBuilt;
 
     private readonly Dictionary<Type, RegistrationOverride> RegistrationOverrides = [];
     private readonly IServiceCollection _serviceCollection;
@@ -51,7 +51,7 @@ public class DefaultContainerBuilder : IContainerBuilder
     internal void QueueRegistration<TTo>(Action registration, int priority)
     {
         var typeToRegister = typeof(TTo);
-        if (RegistrationOverrides.TryGetValue(typeToRegister, out RegistrationOverride value))
+        if (RegistrationOverrides.TryGetValue(typeToRegister, out var value))
         {
             var existingOverride = value;
 

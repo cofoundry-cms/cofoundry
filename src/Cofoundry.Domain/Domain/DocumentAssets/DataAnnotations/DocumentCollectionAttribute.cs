@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using System.Reflection;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -22,7 +22,7 @@ public class DocumentCollectionAttribute : Attribute, IMetadataAttribute
     public DocumentCollectionAttribute(params string[] tags)
         : base()
     {
-        Tags = tags ?? new string[0];
+        Tags = tags ?? [];
     }
 
     public void Process(DisplayMetadataProviderContext context)

@@ -44,7 +44,10 @@ public class ContentRepository
         ArgumentNullException.ThrowIfNull(domainRepositoryExecutorFactory);
 
         var newExecutor = domainRepositoryExecutorFactory.Invoke(_domainRepositoryExecutor);
-        if (newExecutor == null) throw new InvalidOperationException(nameof(domainRepositoryExecutorFactory) + " did not return an instance.");
+        if (newExecutor == null)
+        {
+            throw new InvalidOperationException(nameof(domainRepositoryExecutorFactory) + " did not return an instance.");
+        }
 
         _domainRepositoryExecutor = newExecutor;
     }

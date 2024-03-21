@@ -24,7 +24,10 @@ public class ViewFileReader : IViewFileReader
         }
 
         var file = _resourceLocator.GetFile(path);
-        if (file == null || !file.Exists || file.IsDirectory) return null;
+        if (file == null || !file.Exists || file.IsDirectory)
+        {
+            return null;
+        }
 
         using (var stream = file.CreateReadStream())
         using (var reader = new StreamReader(stream))

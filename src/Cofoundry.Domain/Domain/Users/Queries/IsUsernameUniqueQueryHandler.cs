@@ -25,7 +25,10 @@ public class IsUsernameUniqueQueryHandler
     public async Task<bool> ExecuteAsync(IsUsernameUniqueQuery query, IExecutionContext executionContext)
     {
         var uniqueUsername = _userDataFormatter.UniquifyUsername(query.UserAreaCode, query.Username);
-        if (string.IsNullOrWhiteSpace(uniqueUsername)) return true;
+        if (string.IsNullOrWhiteSpace(uniqueUsername))
+        {
+            return true;
+        }
 
         var exists = await _dbContext
             .Users

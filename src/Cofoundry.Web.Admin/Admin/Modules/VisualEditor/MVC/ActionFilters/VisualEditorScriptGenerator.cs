@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Json;
+using Cofoundry.Core.Json;
 using Cofoundry.Core.ResourceFiles;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -51,7 +51,7 @@ public class VisualEditorScriptGenerator : IVisualEditorScriptGenerator
     /// <inheritdoc/>
     public async Task<string> CreateBodyScriptAsync(ActionContext context)
     {
-        string responseJson = "null";
+        var responseJson = "null";
 
         var pageResponseData = _pageResponseDataCache.Get();
         if (pageResponseData != null)
@@ -64,7 +64,7 @@ public class VisualEditorScriptGenerator : IVisualEditorScriptGenerator
 
         var script = "<script>var Cofoundry = { 'PageResponseData': " + responseJson + " }</script>"
             + toolbarHtml
-            + string.Format("<!-- SVG ICONS --><div style='{0}'>{1}</div><!-- END SVG ICONS -->", "display:none", svgIcons);
+            + $"<!-- SVG ICONS --><div style='display:none'>{svgIcons}</div><!-- END SVG ICONS -->";
 
         return script;
     }
@@ -84,7 +84,7 @@ public class VisualEditorScriptGenerator : IVisualEditorScriptGenerator
         settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         settings.StringEscapeHandling = StringEscapeHandling.EscapeHtml;
 
-        bool isCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
+        var isCustomEntityRoute = pageResponseData.Version is CustomEntityVersionRoute;
         bool hasEntityUpdatePermission;
         bool hasEntityPublishPermission;
 

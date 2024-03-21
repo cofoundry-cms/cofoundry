@@ -7,7 +7,7 @@
 /// <inheritdoc/>
 public class ChildExecutionDurationRandomizerScope : IExecutionDurationRandomizerScope
 {
-    private bool _isCompleteCalled = false;
+    private bool _isCompleteCalled;
 
     public Task CompleteAsync()
     {

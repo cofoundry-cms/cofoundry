@@ -22,7 +22,10 @@ public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
         IExecutionContext executionContext
         )
     {
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
 
         var routingQuery = GetPageRoutingQuery(dbResult);
         var routing = await _queryExecutor.ExecuteAsync(routingQuery, executionContext);

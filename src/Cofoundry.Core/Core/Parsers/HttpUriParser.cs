@@ -14,14 +14,17 @@ public static class HttpUriParser
     /// <returns>Uri if parsing was successful, otherwise null.</returns>
     public static Uri? ParseAbsoluteOrDefault(string? s)
     {
-        if (string.IsNullOrWhiteSpace(s)) return null;
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return null;
+        }
 
         if (!s.Contains("://"))
         {
             s = "http://" + s;
         }
 
-        if (!Uri.TryCreate(s, UriKind.Absolute, out Uri? uri))
+        if (!Uri.TryCreate(s, UriKind.Absolute, out var uri))
         {
             return null;
         }
@@ -43,11 +46,17 @@ public static class HttpUriParser
     /// <returns>Uri if parsing was successful, otherwise null</returns>
     public static Uri? ParseOrDefault(string? s)
     {
-        if (string.IsNullOrWhiteSpace(s)) return null;
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return null;
+        }
 
         var uri = ParseAbsoluteOrDefault(s);
 
-        if (uri != null) return uri;
+        if (uri != null)
+        {
+            return uri;
+        }
 
         if (!Uri.TryCreate(s, UriKind.Relative, out uri))
         {
@@ -65,7 +74,10 @@ public static class HttpUriParser
     /// <returns>Uri if parsing was successful, otherwise null</returns>
     public static Uri? ParseOrDefault(string? s, UriKind kind)
     {
-        if (string.IsNullOrWhiteSpace(s)) return null;
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return null;
+        }
 
         Uri? uri = null;
 
@@ -74,7 +86,10 @@ public static class HttpUriParser
             uri = ParseAbsoluteOrDefault(s);
         }
 
-        if (uri != null || kind == UriKind.Absolute) return uri;
+        if (uri != null || kind == UriKind.Absolute)
+        {
+            return uri;
+        }
 
         if (!Uri.TryCreate(s, kind, out uri))
         {

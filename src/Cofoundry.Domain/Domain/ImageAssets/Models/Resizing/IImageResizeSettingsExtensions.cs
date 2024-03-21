@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 
 namespace Cofoundry.Domain;
 
@@ -46,15 +46,11 @@ public static class IImageResizeSettingsExtensions
     /// </summary>
     public static string CreateCacheFileName(this IImageResizeSettings settings)
     {
-        if (settings == null)
-        {
-            throw new ArgumentNullException(nameof(settings));
-        }
+        ArgumentNullException.ThrowIfNull(settings);
 
-        const string format = "w{0}h{1}c{2}s{3}bg{4}a{5}";
-        string s = string.Format(format, settings.Width, settings.Height, settings.Mode, settings.Scale, settings.BackgroundColor, settings.Anchor);
-        s = WebUtility.UrlEncode(s);
+        var fileName = $"w{settings.Width}h{settings.Height}c{settings.Mode}s{settings.Scale}bg{settings.BackgroundColor}a{settings.Anchor}";
+        fileName = WebUtility.UrlEncode(fileName);
 
-        return s;
+        return fileName;
     }
 }

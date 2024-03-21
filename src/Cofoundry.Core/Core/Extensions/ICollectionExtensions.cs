@@ -18,9 +18,9 @@ public static class ICollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(collection);
 
-        int count = 0;
+        var count = 0;
 
-        for (int i = collection.Count - 1; i >= 0; i--)
+        for (var i = collection.Count - 1; i >= 0; i--)
         {
             var el = collection.ElementAt(i);
             if (predicate == null || predicate(el))

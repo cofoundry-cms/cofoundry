@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using System.Globalization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -48,7 +47,7 @@ public abstract class DateTimeAttributeBase : ValidationAttribute, IMetadataAttr
             return null;
         }
 
-        return date.Value.ToString(_minMaxFormat);
+        return date.Value.ToString(_minMaxFormat, CultureInfo.InvariantCulture);
     }
 
     protected static DateTime? ParseDate(string property, string? value)
@@ -58,7 +57,7 @@ public abstract class DateTimeAttributeBase : ValidationAttribute, IMetadataAttr
             return null;
         }
 
-        if (!DateTime.TryParse(value, out DateTime result))
+        if (!DateTime.TryParse(value, out var result))
         {
             throw new InvalidOperationException($"{property} is not a valid date value: {value}");
         }
@@ -94,7 +93,7 @@ public abstract class DateTimeAttributeBase : ValidationAttribute, IMetadataAttr
     /// Casts or parses the object supplied by the IsValid method to
     /// a datetime so it can be validated.
     /// </summary>
-    private DateTime? ParseValueForValidation(object? value)
+    private static DateTime? ParseValueForValidation(object? value)
     {
         if (value == null)
         {

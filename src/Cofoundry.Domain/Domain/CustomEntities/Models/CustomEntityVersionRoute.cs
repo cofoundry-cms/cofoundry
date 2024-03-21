@@ -39,5 +39,5 @@ public class CustomEntityVersionRoute : IVersionRoute
     /// to this entity. To add data to this collection you need to 
     /// annotate the property with CustomEntityRouteDataAttribute. 
     /// </summary>
-    public Dictionary<string, string> AdditionalRoutingData { get; set; } = new();
+    public Dictionary<string, string> AdditionalRoutingData { get; set; } = [];
 }

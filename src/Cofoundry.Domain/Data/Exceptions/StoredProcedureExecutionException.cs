@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace Cofoundry.Domain.Data;
 
@@ -28,7 +28,7 @@ public class StoredProcedureExecutionException : Exception
     /// <see cref="StoredProcedureErrorNumbers"/>. 
     /// </param>
     public StoredProcedureExecutionException(string storedProcedureName, int errorNumber)
-        : base(string.Format(DEFAULT_MESSAGE, storedProcedureName, errorNumber))
+        : base(string.Format(CultureInfo.InvariantCulture, DEFAULT_MESSAGE, storedProcedureName, errorNumber))
     {
         ErrorNumber = errorNumber;
     }
@@ -45,7 +45,7 @@ public class StoredProcedureExecutionException : Exception
     /// Additional information that can be added on to the end of the error message.
     /// </param>
     public StoredProcedureExecutionException(string storedProcedureName, int errorNumber, string explaination)
-        : base(string.Format(DEFAULT_MESSAGE, storedProcedureName, errorNumber) + " " + explaination)
+        : base(string.Format(CultureInfo.InvariantCulture, DEFAULT_MESSAGE, storedProcedureName, errorNumber) + " " + explaination)
     {
         ErrorNumber = errorNumber;
     }
@@ -56,7 +56,7 @@ public class StoredProcedureExecutionException : Exception
     /// </summary>
     /// <param name="innerException">The inner exception thrown by the database.</param>
     public StoredProcedureExecutionException(SqlException innerException)
-        : base(string.Format(DEFAULT_MESSAGE, innerException.Procedure, innerException.Number) + " " + innerException.Message, innerException)
+        : base(string.Format(CultureInfo.InvariantCulture, DEFAULT_MESSAGE, innerException.Procedure, innerException.Number) + " " + innerException.Message, innerException)
     {
         ErrorNumber = innerException.Number;
     }

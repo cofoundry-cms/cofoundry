@@ -29,7 +29,7 @@ public class DbUpdateCommandFactory
 
         var scriptFiles = GetScripts(assembly, scriptPath);
         var commands = new List<IVersionedUpdateCommand>();
-        int maxVersionNumber = 0;
+        var maxVersionNumber = 0;
 
         // Get schema scripts we need so we know the version number.
         foreach (var scriptFile in scriptFiles.Where(s => s.Contains(".Schema.")))
@@ -62,7 +62,10 @@ public class DbUpdateCommandFactory
             }
         }
 
-        if (!commands.Any()) return Array.Empty<IVersionedUpdateCommand>();
+        if (commands.Count == 0)
+        {
+            return Array.Empty<IVersionedUpdateCommand>();
+        }
 
         foreach (var scriptFile in scriptFiles.Where(s => !s.Contains(".Schema.")))
         {
@@ -80,7 +83,7 @@ public class DbUpdateCommandFactory
         return commands;
     }
 
-    private string GetScriptFileName(string path)
+    private static string GetScriptFileName(string path)
     {
         var dbScriptTypeNames = Enum.GetNames(typeof(DbScriptType));
 
@@ -104,7 +107,7 @@ public class DbUpdateCommandFactory
         return Path.GetFileNameWithoutExtension(fileName);
     }
 
-    private ICollection<string> GetScripts(Assembly assembly, string scriptPath)
+    private static ICollection<string> GetScripts(Assembly assembly, string scriptPath)
     {
         var scripts = assembly
             .GetManifestResourceNames()
@@ -115,13 +118,32 @@ public class DbUpdateCommandFactory
         return scripts;
     }
 
-    private DbScriptType MapScriptType(string scriptFile)
+    private static DbScriptType MapScriptType(string scriptFile)
     {
-        if (scriptFile.Contains(".Views.")) return DbScriptType.Views;
-        if (scriptFile.Contains(".Functions.")) return DbScriptType.Functions;
-        if (scriptFile.Contains(".StoredProcedures.")) return DbScriptType.StoredProcedures;
-        if (scriptFile.Contains(".Triggers.")) return DbScriptType.Triggers;
-        if (scriptFile.Contains(".Finalize.")) return DbScriptType.Finalize;
+        if (scriptFile.Contains(".Views."))
+        {
+            return DbScriptType.Views;
+        }
+
+        if (scriptFile.Contains(".Functions."))
+        {
+            return DbScriptType.Functions;
+        }
+
+        if (scriptFile.Contains(".StoredProcedures."))
+        {
+            return DbScriptType.StoredProcedures;
+        }
+
+        if (scriptFile.Contains(".Triggers."))
+        {
+            return DbScriptType.Triggers;
+        }
+
+        if (scriptFile.Contains(".Finalize."))
+        {
+            return DbScriptType.Finalize;
+        }
 
         throw new NotSupportedException("Script type not recognised and will not be run: " + scriptFile);
     }
@@ -129,7 +151,7 @@ public class DbUpdateCommandFactory
     /// <remarks>
     /// See http://www.codeproject.com/Articles/7432/Create-String-Variables-from-Embedded-Resources-Fi
     /// </remarks>
-    private string GetResource(Assembly assembly, string resourceName)
+    private static string GetResource(Assembly assembly, string resourceName)
     {
         using var stream = assembly.GetManifestResourceStream(resourceName);
 

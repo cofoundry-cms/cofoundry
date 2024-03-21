@@ -16,7 +16,10 @@ public static class TypeHelper
     /// </summary>
     public static Type? GetCollectionTypeOrNull(Type? collectionType)
     {
-        if (collectionType == null) return null;
+        if (collectionType == null)
+        {
+            return null;
+        }
 
         if (!typeof(IEnumerable).IsAssignableFrom(collectionType))
         {

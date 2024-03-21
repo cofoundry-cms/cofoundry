@@ -29,10 +29,16 @@ public class GetUserMicroSummaryByUsernameQueryHandler
 
     public async Task<UserMicroSummary?> ExecuteAsync(GetUserMicroSummaryByUsernameQuery query, IExecutionContext executionContext)
     {
-        if (string.IsNullOrWhiteSpace(query.Username)) return null;
+        if (string.IsNullOrWhiteSpace(query.Username))
+        {
+            return null;
+        }
 
         var uniqueUsername = _userDataFormatter.UniquifyUsername(query.UserAreaCode, query.Username);
-        if (uniqueUsername == null) return null;
+        if (uniqueUsername == null)
+        {
+            return null;
+        }
 
         var dbResult = await _dbContext
             .Users

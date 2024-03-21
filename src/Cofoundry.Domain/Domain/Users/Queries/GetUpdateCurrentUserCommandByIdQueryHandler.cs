@@ -17,7 +17,10 @@ public class GetUpdateCurrentUserCommandByIdQueryHandler
 
     public async Task<UpdateCurrentUserCommand?> ExecuteAsync(GetPatchableCommandQuery<UpdateCurrentUserCommand> query, IExecutionContext executionContext)
     {
-        if (!executionContext.UserContext.UserId.HasValue) return null;
+        if (!executionContext.UserContext.UserId.HasValue)
+        {
+            return null;
+        }
 
         var user = await _dbContext
             .Users

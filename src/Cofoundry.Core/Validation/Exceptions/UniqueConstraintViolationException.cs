@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace Cofoundry.Core.Validation;
 
@@ -130,14 +131,21 @@ public class UniqueConstraintViolationException<TEntity> : UniqueConstraintViola
 
     private static string FormatMessage(string? message, string? property, object? value)
     {
-        if (!string.IsNullOrWhiteSpace(message)) return message;
-        if (string.IsNullOrWhiteSpace(property)) return MESSAGE_WITHOUT_PROPERTY;
+        if (!string.IsNullOrWhiteSpace(message))
+        {
+            return message;
+        }
+
+        if (string.IsNullOrWhiteSpace(property))
+        {
+            return MESSAGE_WITHOUT_PROPERTY;
+        }
 
         if (value == null)
         {
-            return string.Format(MESSAGE_WITH_PROPERTY, typeof(TEntity).Name, property);
+            return string.Format(CultureInfo.CurrentCulture, MESSAGE_WITH_PROPERTY, typeof(TEntity).Name, property);
         }
 
-        return string.Format(MESSAGE_WITH_VPROPERTY_AND_VALUE, typeof(TEntity).Name, property, value.ToString());
+        return string.Format(CultureInfo.CurrentCulture, MESSAGE_WITH_VPROPERTY_AND_VALUE, typeof(TEntity).Name, property, value.ToString());
     }
 }

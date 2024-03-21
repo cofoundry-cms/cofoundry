@@ -1,7 +1,7 @@
-﻿using Cofoundry.Domain.CQS;
+﻿using System.ComponentModel.DataAnnotations;
+using Cofoundry.Domain.CQS;
 using Cofoundry.Domain.Data;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Commands;
 
@@ -113,7 +113,7 @@ public class UpdatePageAccessRuleSetCommandHandlerTests
     [InlineData(AccessRuleViolationAction.NotFound)]
     public async Task CanAddViolationAction(AccessRuleViolationAction action)
     {
-        var uniqueData = UNIQUE_PREFIX + nameof(CanAddViolationAction) + action.ToString().Substring(0, 2);
+        var uniqueData = $"{UNIQUE_PREFIX}{nameof(CanAddViolationAction)}{action.ToString().AsSpan(0, 2)}";
 
         using var app = _appFactory.Create();
         var contentRepository = app.Services.GetContentRepositoryWithElevatedPermissions();

@@ -39,9 +39,12 @@ public class UserCleanupBackgroundTask : IAsyncRecurringBackgroundTask
         }
     }
 
-    private TimeSpan? DaysToTimeSpan(int? numDays)
+    private static TimeSpan? DaysToTimeSpan(int? numDays)
     {
-        if (!numDays.HasValue || numDays < 0) return null;
+        if (!numDays.HasValue || numDays < 0)
+        {
+            return null;
+        }
 
         return TimeSpan.FromDays(numDays.Value);
     }

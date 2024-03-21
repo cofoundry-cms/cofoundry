@@ -48,7 +48,7 @@ public class UpdateRoleCommandHandler
         _transactionScopeFactory.QueueCompletionTask(_dbContext, () => _roleCache.Clear(command.RoleId));
     }
 
-    private void MapRole(UpdateRoleCommand command, Role role)
+    private static void MapRole(UpdateRoleCommand command, Role role)
     {
         if (role.RoleCode != AnonymousRole.Code)
         {
@@ -56,7 +56,7 @@ public class UpdateRoleCommandHandler
         }
     }
 
-    private void ValidateIsUnique(bool isUnique)
+    private static void ValidateIsUnique(bool isUnique)
     {
         if (!isUnique)
         {
@@ -64,7 +64,7 @@ public class UpdateRoleCommandHandler
         }
     }
 
-    private IsRoleTitleUniqueQuery GetUniqueQuery(UpdateRoleCommand command, Role role)
+    private static IsRoleTitleUniqueQuery GetUniqueQuery(UpdateRoleCommand command, Role role)
     {
         return new IsRoleTitleUniqueQuery()
         {
@@ -138,9 +138,9 @@ public class UpdateRoleCommandHandler
                     dbPermission = new Permission();
                     dbPermission.PermissionCode = codePermission.PermissionType.Code;
 
-                    if (codePermission is IEntityPermission)
+                    if (codePermission is IEntityPermission entityPermission)
                     {
-                        var definitionCode = ((IEntityPermission)codePermission).EntityDefinition.EntityDefinitionCode;
+                        var definitionCode = entityPermission.EntityDefinition.EntityDefinitionCode;
                         await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(definitionCode), executionContext);
                         dbPermission.EntityDefinitionCode = definitionCode;
                     }
@@ -177,7 +177,7 @@ public class UpdateRoleCommandHandler
                 var entityCode = entity.First().EntityDefinitionCode;
                 if (entityCode == null)
                 {
-                    throw new NullReferenceException($"{nameof(entityCode)} should not be null.");
+                    throw new InvalidOperationException($"{nameof(entityCode)} should not be null.");
                 }
                 var readPermission = _permissionRepository.GetByEntityAndPermissionType(entityCode, CommonPermissionTypes.ReadPermissionCode);
 

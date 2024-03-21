@@ -46,7 +46,7 @@ public class UpdateUnstructuredDataDependenciesCommandHandler
             .Where(d => d.RootEntityDefinitionCode == command.RootEntityDefinitionCode && d.RootEntityId == command.RootEntityId);
     }
 
-    private IEnumerable<EntityDependency> GetDistinctRelations(object model)
+    private static IEnumerable<EntityDependency> GetDistinctRelations(object model)
     {
         var relations = EntityRelationAttributeHelper.GetRelations(model);
 
@@ -77,7 +77,7 @@ public class UpdateUnstructuredDataDependenciesCommandHandler
         }
     }
 
-    private IEnumerable<EnsureEntityDefinitionExistsCommand> GetEntityCheckCommands(UpdateUnstructuredDataDependenciesCommand command, List<UnstructuredDataDependency> existingDependencies, IEnumerable<EntityDependency> relations)
+    private static IEnumerable<EnsureEntityDefinitionExistsCommand> GetEntityCheckCommands(UpdateUnstructuredDataDependenciesCommand command, List<UnstructuredDataDependency> existingDependencies, IEnumerable<EntityDependency> relations)
     {
         var commands = relations
             .Select(r => r.EntityDefinitionCode)

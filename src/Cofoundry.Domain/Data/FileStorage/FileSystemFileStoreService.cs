@@ -22,7 +22,7 @@ public class FileSystemFileStoreService : IFileStoreService
 
     private string SetFilePath()
     {
-        string fileRoot = _pathResolver.MapPath(_fileSystemFileStorageSettings.FileRoot);
+        var fileRoot = _pathResolver.MapPath(_fileSystemFileStorageSettings.FileRoot);
 
         if (!Directory.Exists(fileRoot))
         {
@@ -69,7 +69,10 @@ public class FileSystemFileStoreService : IFileStoreService
     public Task CreateIfNotExistsAsync(string containerName, string fileName, System.IO.Stream stream)
     {
         var path = Path.Combine(_fileRoot.Value, containerName, fileName);
-        if (File.Exists(path)) return Task.CompletedTask;
+        if (File.Exists(path))
+        {
+            return Task.CompletedTask;
+        }
 
         return CreateFileAsync(containerName, fileName, stream, FileMode.CreateNew);
     }
@@ -107,7 +110,11 @@ public class FileSystemFileStoreService : IFileStoreService
             var directory = new DirectoryInfo(dir);
             foreach (var file in directory.GetFiles())
             {
-                if (file.IsReadOnly) file.IsReadOnly = false;
+                if (file.IsReadOnly)
+                {
+                    file.IsReadOnly = false;
+                }
+
                 file.Delete();
             }
             foreach (var childDirectory in directory.GetDirectories())

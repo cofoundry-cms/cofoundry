@@ -31,7 +31,7 @@ public class PasswordPolicyService : IPasswordPolicyService
         var passwordPolicy = _passwordPolicyConfigurationFactory.Create(context.UserAreaCode);
         var errors = await passwordPolicy.ValidateAsync(context);
 
-        if (errors.Any())
+        if (errors.Count != 0)
         {
             throw new ValidationErrorException(errors.First());
         }

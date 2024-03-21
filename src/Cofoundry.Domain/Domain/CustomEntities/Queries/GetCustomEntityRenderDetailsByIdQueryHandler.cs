@@ -39,7 +39,10 @@ public class GetCustomEntityRenderDetailsByIdQueryHandler
     public async Task<CustomEntityRenderDetails?> ExecuteAsync(GetCustomEntityRenderDetailsByIdQuery query, IExecutionContext executionContext)
     {
         var dbResult = await QueryCustomEntityAsync(query, executionContext);
-        if (dbResult == null) return null;
+        if (dbResult == null)
+        {
+            return null;
+        }
 
         var entity = MapCustomEntity(dbResult, executionContext);
 
@@ -162,7 +165,7 @@ public class GetCustomEntityRenderDetailsByIdQueryHandler
         return result;
     }
 
-    private IReadOnlyCollection<string> MapPageRoutings(IReadOnlyCollection<PageRoutingInfo> allRoutings)
+    private static IReadOnlyCollection<string> MapPageRoutings(IReadOnlyCollection<PageRoutingInfo> allRoutings)
     {
         if (allRoutings == null)
         {

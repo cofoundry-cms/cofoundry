@@ -3,7 +3,7 @@
 /// <summary>
 /// Library of useful regular expressions.
 /// </summary>
-public static class RegexLibary
+public static partial class RegexLibary
 {
     /// <summary>
     /// Matches a valid url slug of lowercase characters, numbers, hyphens and underscores.

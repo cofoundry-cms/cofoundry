@@ -17,7 +17,7 @@ public static class AuthorizedTaskValidationErrors
         /// If rate limiting is specified, then this is the error that will occur
         /// if that rate limit is exceeded.
         /// </summary>
-        public static readonly ValidationErrorTemplate RateLimitExceeded = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate RateLimitExceeded = new(
             AddTokenGenerationNamespace("rate-limit-exceeded"),
             "The maximum permitted requests has been exceeded."
             );
@@ -39,7 +39,7 @@ public static class AuthorizedTaskValidationErrors
         /// situations where the id or token are not correctly
         /// formatted, or if the task cannot be located in the database.
         /// </summary>
-        public static readonly ValidationErrorTemplate NotFound = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate NotFound = new(
             AddRequestValidationNamespace("not-found"),
             "The token is not valid."
             );
@@ -49,7 +49,7 @@ public static class AuthorizedTaskValidationErrors
         /// task performing the same action, or the action having been completed
         /// through a separate route.
         /// </summary>
-        public static readonly ValidationErrorTemplate Invalidated = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate Invalidated = new(
             AddRequestValidationNamespace("invalidated"),
             "The token is no longer valid."
             );
@@ -57,7 +57,7 @@ public static class AuthorizedTaskValidationErrors
         /// <summary>
         /// The task exists but has already been completed.
         /// </summary>
-        public static readonly ValidationErrorTemplate AlreadyComplete = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate AlreadyComplete = new(
             AddRequestValidationNamespace("already-complete"),
             "The request has already been completed."
             );
@@ -65,7 +65,7 @@ public static class AuthorizedTaskValidationErrors
         /// <summary>
         /// The task exists but has expired.
         /// </summary>
-        public static readonly ValidationErrorTemplate Expired = new ValidationErrorTemplate(
+        public static readonly ValidationErrorTemplate Expired = new(
             AddRequestValidationNamespace("expired"),
             "The token has expired."
             );
@@ -83,7 +83,10 @@ public static class AuthorizedTaskValidationErrors
 
             var ns = AddRequestValidationNamespace(string.Empty);
 
-            if (!errorCode.StartsWith(ns)) return errorCode;
+            if (!errorCode.StartsWith(ns))
+            {
+                return errorCode;
+            }
 
             return errorCode.Remove(0, ns.Length);
         }

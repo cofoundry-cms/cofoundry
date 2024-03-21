@@ -92,7 +92,10 @@ public class UpdateCustomEntityDraftVersionCommandHandler
         IExecutionContext executionContext
         )
     {
-        if (!command.Publish || !definition.ForceUrlSlugUniqueness || SlugFormatter.ToSlug(dbVersion.Title) == dbVersion.CustomEntity.UrlSlug) return;
+        if (!command.Publish || !definition.ForceUrlSlugUniqueness || SlugFormatter.ToSlug(dbVersion.Title) == dbVersion.CustomEntity.UrlSlug)
+        {
+            return;
+        }
 
         var query = GetUniquenessQuery(command, definition, dbVersion);
         var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
@@ -106,7 +109,7 @@ public class UpdateCustomEntityDraftVersionCommandHandler
         }
     }
 
-    private IsCustomEntityUrlSlugUniqueQuery GetUniquenessQuery(UpdateCustomEntityDraftVersionCommand command, ICustomEntityDefinition definition, CustomEntityVersion dbVersion)
+    private static IsCustomEntityUrlSlugUniqueQuery GetUniquenessQuery(UpdateCustomEntityDraftVersionCommand command, ICustomEntityDefinition definition, CustomEntityVersion dbVersion)
     {
         var query = new IsCustomEntityUrlSlugUniqueQuery();
         query.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;

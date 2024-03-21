@@ -64,7 +64,7 @@ public static class ModelMetadataExtensions
     /// <returns>ModelMetadata instance for method chaining</returns>
     public static DisplayMetadata AddAdditionalValueIfNotEmpty<T>(this DisplayMetadata modelMetaData, string property, IReadOnlyCollection<T>? value)
     {
-        if (value != null && value.Any())
+        if (value != null && value.Count != 0)
         {
             modelMetaData.AdditionalValues.Add(property, value);
         }

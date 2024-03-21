@@ -6,6 +6,8 @@
 /// </summary>
 public abstract class SiteUrlResolverBase : ISiteUrlResolver
 {
+    private const string PATH_DELIMITER = "/";
+
     /// <summary>
     /// Maps a relative path to an absolute path.
     /// </summary>
@@ -24,19 +26,31 @@ public abstract class SiteUrlResolverBase : ISiteUrlResolver
     /// <returns>The absolute path, or an empty string if the supplied path is null or empty.</returns>
     public string MakeAbsolute(string? path, bool forceSsl)
     {
-        if (string.IsNullOrWhiteSpace(path)) return string.Empty;
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return string.Empty;
+        }
 
         var trimmedPath = path.Trim();
-        if (trimmedPath.StartsWith("~/")) trimmedPath = trimmedPath.Substring(1);
-        if (!trimmedPath.StartsWith("/")) return MakeSsl(trimmedPath, forceSsl);
-        string absolutePath = CleanPath(GetSiteRoot()) + trimmedPath.Substring(1);
+        if (trimmedPath.StartsWith("~/"))
+        {
+            trimmedPath = trimmedPath.Substring(1);
+        }
+
+        if (!trimmedPath.StartsWith(PATH_DELIMITER))
+        {
+            return MakeSsl(trimmedPath, forceSsl);
+        }
+
+        var siteRoot = CleanPath(GetSiteRoot());
+        var absolutePath = string.Concat(siteRoot, trimmedPath.AsSpan(1));
 
         return MakeSsl(absolutePath, forceSsl);
     }
 
     protected abstract string GetSiteRoot();
 
-    private string MakeSsl(string path, bool forceSsl)
+    private static string MakeSsl(string path, bool forceSsl)
     {
         if (forceSsl && path.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
         {
@@ -46,14 +60,14 @@ public abstract class SiteUrlResolverBase : ISiteUrlResolver
         return path;
     }
 
-    private string CleanPath(string siteRoot)
+    private static string CleanPath(string siteRoot)
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(siteRoot);
 
         siteRoot = siteRoot.Trim();
-        if (!siteRoot.EndsWith("/"))
+        if (!siteRoot.EndsWith(PATH_DELIMITER))
         {
-            siteRoot += "/";
+            siteRoot += PATH_DELIMITER;
         }
         return siteRoot;
     }

@@ -36,7 +36,7 @@ public sealed class CofoundryAdminUserArea : IUserAreaDefinition
     /// <summary>
     /// Although this is set to false, it is the fall-back schema if no default schema is set.
     /// </summary>
-    public bool IsDefaultAuthScheme { get; } = false;
+    public bool IsDefaultAuthScheme { get; }
 
     public void ConfigureOptions(UserAreaOptions options)
     {

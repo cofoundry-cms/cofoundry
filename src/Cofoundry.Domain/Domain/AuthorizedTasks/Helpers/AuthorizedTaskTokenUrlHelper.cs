@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Primitives;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -36,7 +35,7 @@ public class AuthorizedTaskTokenUrlHelper : IAuthorizedTaskTokenUrlHelper
 
     public string? ParseTokenFromQuery(IQueryCollection queryCollection)
     {
-        if (queryCollection.TryGetValue(TOKEN_PARAM_NAME, out StringValues value))
+        if (queryCollection.TryGetValue(TOKEN_PARAM_NAME, out var value))
         {
             var result = Uri.UnescapeDataString(value.ToString());
 

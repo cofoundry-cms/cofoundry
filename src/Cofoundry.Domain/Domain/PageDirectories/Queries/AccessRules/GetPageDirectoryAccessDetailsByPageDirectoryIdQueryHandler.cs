@@ -64,7 +64,7 @@ public class GetPageDirectoryAccessDetailsByPageDirectoryIdQueryHandler
             .ThenInclude(d => d.PageDirectoryPath)
             .FilterByDescendantId(dbPageDirectory.PageDirectoryId)
             .FilterNotSelfReferencing()
-            .Where(d => d.DescendantPageDirectoryId == dbPageDirectory.PageDirectoryId && d.AncestorPageDirectory.AccessRules.Any())
+            .Where(d => d.DescendantPageDirectoryId == dbPageDirectory.PageDirectoryId && d.AncestorPageDirectory.AccessRules.Count != 0)
             .OrderByDescending(d => d.Distance)
             .ToArrayAsync();
 

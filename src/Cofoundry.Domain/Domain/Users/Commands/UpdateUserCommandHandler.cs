@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -159,7 +159,7 @@ public class UpdateUserCommandHandler
                   .Roles
                   .FilterByIdOrCode(command.RoleId, command.RoleCode)
                   .SingleOrDefaultAsync();
-            EntityNotFoundException.ThrowIfNull(newRole, command.RoleId?.ToString() ?? command.RoleCode);
+            EntityNotFoundException.ThrowIfNull(newRole, command.RoleId?.ToString(CultureInfo.InvariantCulture) ?? command.RoleCode);
 
             await _userCommandPermissionsHelper.ValidateNewRoleAsync(
                 newRole,
@@ -230,7 +230,10 @@ public class UpdateUserCommandHandler
     {
         updateStatus.HasVerificationStatusChanged = user.AccountVerifiedDate.HasValue != command.IsAccountVerified;
 
-        if (!updateStatus.HasVerificationStatusChanged) return;
+        if (!updateStatus.HasVerificationStatusChanged)
+        {
+            return;
+        }
 
         if (command.IsAccountVerified)
         {
@@ -253,7 +256,10 @@ public class UpdateUserCommandHandler
     {
         var isCurrentlyActive = !user.DeactivatedDate.HasValue;
         updateStatus.HasActivationStatusChanged = isCurrentlyActive != command.IsActive;
-        if (!updateStatus.HasActivationStatusChanged) return;
+        if (!updateStatus.HasActivationStatusChanged)
+        {
+            return;
+        }
 
         if (!command.IsActive && user.UserId == executionContext.UserContext.UserId)
         {

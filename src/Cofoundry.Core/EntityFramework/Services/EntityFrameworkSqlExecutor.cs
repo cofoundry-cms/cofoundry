@@ -1,10 +1,11 @@
-﻿using Cofoundry.Core.Data;
+using System.Data;
+using System.Globalization;
+using System.Xml.Linq;
+using Cofoundry.Core.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Data;
-using System.Xml.Linq;
 
 namespace Cofoundry.Core.EntityFramework.Internal;
 
@@ -34,7 +35,7 @@ public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
     /// <returns>
     /// An array of the results of the query.
     /// </returns>
-    public async virtual Task<T[]> ExecuteQueryAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
+    public virtual async Task<T[]> ExecuteQueryAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         where T : class
     {
         var results = await CreateQuery<T>(dbContext, spName, sqlParams).ToArrayAsync();
@@ -44,7 +45,7 @@ public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
     private static IQueryable<T> CreateQuery<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
         where T : class
     {
-        if (sqlParams.Any())
+        if (sqlParams.Length != 0)
         {
             var cmd = FormatSqlCommand(spName, sqlParams);
 
@@ -74,7 +75,7 @@ public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
     /// <returns>
     /// The result of the query. Throws an exception if more than one result is returned.
     /// </returns>
-    public async virtual Task<T?> ExecuteScalarAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
+    public virtual async Task<T?> ExecuteScalarAsync<T>(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
     {
         // Derived from code in https://github.com/dotnet/efcore/issues/1862
         // Needs to be updated when EF Core finally supports ad-hoc queries again
@@ -107,15 +108,18 @@ public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
 
     private static T? ParseScalarResult<T>(object? result)
     {
-        if (result == DBNull.Value) return default;
+        if (result == DBNull.Value)
+        {
+            return default;
+        }
 
         // If this is a non-null value nullable type, return the converted base type
         var nullableType = Nullable.GetUnderlyingType(typeof(T));
         if (nullableType != null)
         {
-            return (T?)Convert.ChangeType(result, nullableType);
+            return (T?)Convert.ChangeType(result, nullableType, CultureInfo.InvariantCulture);
         }
-        return (T?)Convert.ChangeType(result, typeof(T));
+        return (T?)Convert.ChangeType(result, typeof(T), CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -130,15 +134,15 @@ public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
     /// Either the number of rows affected or optionally returning the value of the 
     /// first output parameter passed in the parameters collection.
     /// </returns>
-    public async virtual Task<object?> ExecuteCommandAsync(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
+    public virtual async Task<object?> ExecuteCommandAsync(DbContext dbContext, string spName, params SqlParameter[] sqlParams)
     {
         object? result = null;
 
-        if (sqlParams.Any())
+        if (sqlParams.Length != 0)
         {
             var cmd = FormatSqlCommand(spName, sqlParams);
             FormatSqlParameters(sqlParams);
-            int rowsAffected = 0;
+            var rowsAffected = 0;
 
             await dbContext.Database.CreateExecutionStrategy().Execute(async () =>
             {
@@ -188,7 +192,7 @@ public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
     /// <returns>
     /// The value of the first output parameter in the executed query.
     /// </returns>
-    public async virtual Task<T?> ExecuteCommandWithOutputAsync<T>(DbContext dbContext, string spName, string outputParameterName, params SqlParameter[] sqlParams)
+    public virtual async Task<T?> ExecuteCommandWithOutputAsync<T>(DbContext dbContext, string spName, string outputParameterName, params SqlParameter[] sqlParams)
     {
         var outputParam = CreateOutputParameter<T>(outputParameterName);
         var modifiedParams = MergeParameters(sqlParams, outputParam);
@@ -209,21 +213,23 @@ public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
 
     private static T? ParseOutputParameter<T>(SqlParameter outputParam)
     {
-        if (outputParam.Value == DBNull.Value) return default;
+        if (outputParam.Value == DBNull.Value)
+        {
+            return default;
+        }
 
         // If this is a non-null value nullable type, return the converted base type
         var nullableType = Nullable.GetUnderlyingType(typeof(T));
         if (nullableType != null)
         {
-            return (T)Convert.ChangeType(outputParam.Value, nullableType);
+            return (T)Convert.ChangeType(outputParam.Value, nullableType, CultureInfo.InvariantCulture);
         }
-        return (T)Convert.ChangeType(outputParam.Value, typeof(T));
+        return (T)Convert.ChangeType(outputParam.Value, typeof(T), CultureInfo.InvariantCulture);
     }
 
     private SqlParameter CreateOutputParameter<T>(string outputParameterName)
     {
         var outputParam = _sqlParameterFactory.CreateOutputParameterByType(outputParameterName, typeof(T));
-
 
         return outputParam;
     }
@@ -249,7 +255,7 @@ public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
     private static string FormatSqlCommand(string spName, SqlParameter[] sqlParams)
     {
         var formattedParams = sqlParams
-            .Select(p => string.Format("@{0} {1}", p.ParameterName.Trim('@'), GetParameterDirection(p)).TrimEnd())
+            .Select(p => $"@{p.ParameterName.Trim('@')} {GetParameterDirection(p)}".TrimEnd())
             .ToArray();
         var cmd = spName + " " + string.Join(", ", formattedParams);
         return cmd;

@@ -11,8 +11,8 @@ public class AdminVisualEditorStateService : IVisualEditorStateService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserContextService _userContextService;
     private readonly ContentSettings _contentSettings;
-    private IVisualEditorStateCache _visualEditorStateCache;
-    private AdminSettings _adminSettings;
+    private readonly IVisualEditorStateCache _visualEditorStateCache;
+    private readonly AdminSettings _adminSettings;
 
     public AdminVisualEditorStateService(
         IHttpContextAccessor httpContextAccessor,

@@ -45,7 +45,7 @@ public class MimeTypeService : IMimeTypeService
     {
         ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
 
-        if (_contentTypeProvider.TryGetContentType(fileName, out string? contentType))
+        if (_contentTypeProvider.TryGetContentType(fileName, out var contentType))
         {
             return contentType;
         }

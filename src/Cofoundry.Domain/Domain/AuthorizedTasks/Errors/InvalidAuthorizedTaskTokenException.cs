@@ -16,7 +16,10 @@ public class InvalidAuthorizedTaskTokenException : Exception
     public InvalidAuthorizedTaskTokenException(ValidateAuthorizedTaskTokenQuery? query, string? message)
         : base(message)
     {
-        if (query == null) return;
+        if (query == null)
+        {
+            return;
+        }
 
         Token = query.Token;
         AuthorizedTaskTypeCode = query.AuthorizedTaskTypeCode;

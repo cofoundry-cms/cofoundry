@@ -1,7 +1,7 @@
-﻿using Cofoundry.Core.Reflection.Internal;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using Cofoundry.Core.Reflection.Internal;
 
 namespace Cofoundry.Domain.CQS.Internal;
 
@@ -15,7 +15,7 @@ namespace Cofoundry.Domain.CQS.Internal;
 public class CommandExecutor : ICommandExecutor
 {
     private static readonly MethodInfo _executeAsyncMethod = MethodReferenceHelper.GetPrivateInstanceMethod<CommandExecutor>(nameof(ExecuteCommandAsync));
-    private static readonly ConcurrentDictionary<Type, MethodInfo> _cachedAsyncMethods = new ConcurrentDictionary<Type, MethodInfo>();
+    private static readonly ConcurrentDictionary<Type, MethodInfo> _cachedAsyncMethods = new();
 
     private readonly IModelValidationService _modelValidationService;
     private readonly DbContext _dbContext;
@@ -94,7 +94,7 @@ public class CommandExecutor : ICommandExecutor
     /// in cases where a class inherits from a Command to add additional 
     /// information (e.g. in a ViewModel) but doesnt implement its own handler.
     /// </summary>
-    private MethodInfo CreateExecuteMethod(MethodInfo executeMethod, Type type, Type? previousType = null)
+    private static MethodInfo CreateExecuteMethod(MethodInfo executeMethod, Type type, Type? previousType = null)
     {
         var isAssignable = typeof(ICommand).IsAssignableFrom(type);
         var typeInfo = type.GetTypeInfo();
@@ -115,13 +115,16 @@ public class CommandExecutor : ICommandExecutor
             return executeMethod.MakeGenericMethod(previousType);
         }
 
-        var msg = string.Format("Unexpected condition creating a generic CommandHandler for type '{0}'. Previous Type: '{1}'. IsAssignable: '{2}'", type, previousType, isAssignable);
+        var msg = $"Unexpected condition creating a generic CommandHandler for type '{type}'. Previous Type: '{previousType}'. IsAssignable: '{isAssignable}'";
         throw new InvalidOperationException(msg);
     }
 
     private async Task ExecuteCommandAsync<TCommand>(TCommand command, IExecutionContext? executionContext) where TCommand : ICommand
     {
-        if (command == null) return;
+        if (command == null)
+        {
+            return;
+        }
 
         var cx = await CreateExecutionContextAsync(executionContext);
         var handler = _commandHandlerFactory.CreateAsyncHandler<TCommand>();
@@ -166,7 +169,7 @@ public class CommandExecutor : ICommandExecutor
     }
 
     [DoesNotReturn]
-    private void HandleException(Exception innerEx)
+    private static void HandleException(Exception innerEx)
     {
         var info = ExceptionDispatchInfo.Capture(innerEx);
         info.Throw();

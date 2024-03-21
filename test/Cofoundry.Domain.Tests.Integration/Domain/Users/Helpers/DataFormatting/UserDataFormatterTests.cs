@@ -10,7 +10,6 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Helpers;
 [Collection(nameof(DbDependentFixtureCollection))]
 public class UserDataFormatterTests
 {
-    private const string UNIQUE_PREFIX = "UsrDatFmtT-";
     private readonly DbDependentTestApplicationFactory _appFactory;
 
     public UserDataFormatterTests(
@@ -19,7 +18,6 @@ public class UserDataFormatterTests
     {
         _appFactory = appFactory;
     }
-
 
     [Fact]
     public void CanUseCustomUniquifier()

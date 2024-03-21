@@ -18,8 +18,8 @@ public class MinLengthNewPasswordValidator
 
     public void Configure(int minLength)
     {
-        if (minLength < PasswordOptions.MIN_LENGTH_BOUNDARY) throw new ArgumentOutOfRangeException(nameof(minLength));
-        if (minLength > PasswordOptions.MAX_LENGTH_BOUNDARY) throw new ArgumentOutOfRangeException(nameof(minLength));
+        ArgumentOutOfRangeException.ThrowIfLessThan(minLength, PasswordOptions.MIN_LENGTH_BOUNDARY);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(minLength, PasswordOptions.MAX_LENGTH_BOUNDARY);
 
         MinLength = minLength;
     }
@@ -28,7 +28,10 @@ public class MinLengthNewPasswordValidator
 
     public ValidationError? Validate(INewPasswordValidationContext context)
     {
-        if (MinLength == 0) throw new InvalidOperationException($"{nameof(Configure)} has not been called.");
+        if (MinLength == 0)
+        {
+            throw new InvalidOperationException($"{nameof(Configure)} has not been called.");
+        }
 
         if (context.Password.Length < MinLength)
         {

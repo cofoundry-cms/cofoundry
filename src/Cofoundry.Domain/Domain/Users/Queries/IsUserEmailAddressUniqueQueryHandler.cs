@@ -26,7 +26,10 @@ public class IsUserEmailAddressUniqueQueryHandler
     public async Task<bool> ExecuteAsync(IsUserEmailAddressUniqueQuery query, IExecutionContext executionContext)
     {
         var uniqueEmailAddress = _userDataFormatter.UniquifyEmail(query.UserAreaCode, query.Email);
-        if (string.IsNullOrWhiteSpace(uniqueEmailAddress)) return true;
+        if (string.IsNullOrWhiteSpace(uniqueEmailAddress))
+        {
+            return true;
+        }
 
         var exists = await _dbContext
             .Users

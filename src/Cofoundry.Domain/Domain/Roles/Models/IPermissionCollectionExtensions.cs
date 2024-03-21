@@ -6,7 +6,7 @@ public static class IPermissionCollectionExtensions
     /// This hashset is used to group all the common permission types you'd associate 
     /// with "write" permissions.
     /// </summary>
-    private static HashSet<string> _writePermissionTypeCodes = new HashSet<string>() {
+    private static readonly HashSet<string> _writePermissionTypeCodes = new() {
         { CommonPermissionTypes.WritePermissionCode },
         { CommonPermissionTypes.CreatePermissionCode },
         { CommonPermissionTypes.UpdatePermissionCode },

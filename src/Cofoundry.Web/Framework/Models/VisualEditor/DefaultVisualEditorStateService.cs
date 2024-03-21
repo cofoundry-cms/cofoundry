@@ -7,7 +7,7 @@
 /// </summary>
 public class DefaultVisualEditorStateService : IVisualEditorStateService
 {
-    private VisualEditorState? _visualEditorStateCache = null;
+    private VisualEditorState? _visualEditorStateCache;
 
     /// <inheritdoc/>
     public Task<VisualEditorState> GetCurrentAsync()

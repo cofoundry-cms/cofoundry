@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -103,10 +103,17 @@ public class PublishCustomEntityCommandHandler
     /// </summary>
     private async Task UpdateUrlSlugIfRequiredAsync(CustomEntityVersion dbVersion, ICustomEntityDefinition definition, IExecutionContext executionContext)
     {
-        if (!definition.AutoGenerateUrlSlug) return;
+        if (!definition.AutoGenerateUrlSlug)
+        {
+            return;
+        }
+
         var slug = SlugFormatter.ToSlug(dbVersion.Title);
 
-        if (slug == dbVersion.CustomEntity.UrlSlug) return;
+        if (slug == dbVersion.CustomEntity.UrlSlug)
+        {
+            return;
+        }
 
         var urlCommand = new UpdateCustomEntityUrlCommand()
         {
@@ -120,22 +127,24 @@ public class PublishCustomEntityCommandHandler
 
     private async Task ValidateTitleAsync(CustomEntityVersion dbVersion, ICustomEntityDefinition definition, IExecutionContext executionContext)
     {
-        if (!definition.ForceUrlSlugUniqueness || SlugFormatter.ToSlug(dbVersion.Title) == dbVersion.CustomEntity.UrlSlug) return;
+        if (!definition.ForceUrlSlugUniqueness || SlugFormatter.ToSlug(dbVersion.Title) == dbVersion.CustomEntity.UrlSlug)
+        {
+            return;
+        }
 
         var query = GetUniquenessQuery(dbVersion, definition);
         var isUnique = await _queryExecutor.ExecuteAsync(query, executionContext);
 
         if (!isUnique)
         {
-            var message = string.Format("Cannot publish because the {1} '{0}' is not unique (symbols and spaces are ignored in the uniqueness check)",
-                    dbVersion.Title,
-                    definition.GetTerms().GetValueOrDefault(CustomizableCustomEntityTermKeys.Title, "title").ToLower());
+            var titleTerm = definition.GetTerms().GetValueOrDefault(CustomizableCustomEntityTermKeys.Title, "title").ToLower();
+            var message = $"Cannot publish because the {titleTerm} '{dbVersion.Title}' is not unique (symbols and spaces are ignored in the uniqueness check)";
 
             throw new UniqueConstraintViolationException(message, "Title", dbVersion.Title);
         }
     }
 
-    private IsCustomEntityUrlSlugUniqueQuery GetUniquenessQuery(CustomEntityVersion dbVersion, ICustomEntityDefinition definition)
+    private static IsCustomEntityUrlSlugUniqueQuery GetUniquenessQuery(CustomEntityVersion dbVersion, ICustomEntityDefinition definition)
     {
         var query = new IsCustomEntityUrlSlugUniqueQuery();
         query.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;

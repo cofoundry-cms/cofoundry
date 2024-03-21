@@ -119,7 +119,7 @@ public class AddAuthorizedTaskCommandHandler
         IExecutionContext executionContext
         )
     {
-        string token = _authorizedTaskAuthorizationCodeGenerator.Generate();
+        var token = _authorizedTaskAuthorizationCodeGenerator.Generate();
 
         var authorizedTask = new AuthorizedTask()
         {

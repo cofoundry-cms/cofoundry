@@ -23,7 +23,10 @@ public class RoleDetailsMapper : IRoleDetailsMapper
     [return: NotNullIfNotNull(nameof(dbRole))]
     public virtual RoleDetails? Map(Role? dbRole)
     {
-        if (dbRole == null) return null;
+        if (dbRole == null)
+        {
+            return null;
+        }
 
         var userArea = _userAreaRepository.GetRequiredByCode(dbRole.UserAreaCode);
         var role = new RoleDetails()

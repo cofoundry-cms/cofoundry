@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace Cofoundry.Domain;
+﻿namespace Cofoundry.Domain;
 
 /// <summary>
 /// Represents a property of a data model, including UI display details

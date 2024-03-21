@@ -27,7 +27,7 @@ public class PageVersionSummaryMapper : IPageVersionSummaryMapper
 
         // We should only check for the latested published version on the first page
         // as it will only be 1st or 2nd in the list (depending on whether there is a draft)
-        bool hasLatestPublishVersion = dbResult.PageNumber > 1;
+        var hasLatestPublishVersion = dbResult.PageNumber > 1;
         var results = new List<PageVersionSummary>(dbResult.Items.Count);
 
         foreach (var dbVersion in dbResult.Items.OrderByLatest())

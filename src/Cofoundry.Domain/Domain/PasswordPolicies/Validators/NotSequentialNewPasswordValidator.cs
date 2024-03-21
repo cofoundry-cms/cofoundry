@@ -25,21 +25,35 @@ public class NotSequentialNewPasswordValidator : INewPasswordValidator
         return null;
     }
 
-    private bool IsCodeSequence(string password)
+    private static bool IsCodeSequence(string password)
     {
-        if (string.IsNullOrWhiteSpace(password)) return false;
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            return false;
+        }
 
         var isSequence = true;
         var isReverseSequence = true;
 
-        char lastChar = password[0];
+        var lastChar = password[0];
 
-        for (int i = 1; i < password.Length; i++)
+        for (var i = 1; i < password.Length; i++)
         {
-            if (lastChar != (password[i] + 1)) isReverseSequence = false;
-            if (lastChar != (password[i] - 1)) isSequence = false;
+            if (lastChar != (password[i] + 1))
+            {
+                isReverseSequence = false;
+            }
 
-            if (!isSequence && !isReverseSequence) return false;
+            if (lastChar != (password[i] - 1))
+            {
+                isSequence = false;
+            }
+
+            if (!isSequence && !isReverseSequence)
+            {
+                return false;
+            }
+
             lastChar = password[i];
         }
 

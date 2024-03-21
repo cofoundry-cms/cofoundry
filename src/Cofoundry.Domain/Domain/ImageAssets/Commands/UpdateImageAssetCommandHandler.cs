@@ -54,7 +54,7 @@ public class UpdateImageAssetCommandHandler
 
     public async Task ExecuteAsync(UpdateImageAssetCommand command, IExecutionContext executionContext)
     {
-        bool hasNewFile = command.File != null;
+        var hasNewFile = command.File != null;
         if (hasNewFile)
         {
             ValidateFileType(command);

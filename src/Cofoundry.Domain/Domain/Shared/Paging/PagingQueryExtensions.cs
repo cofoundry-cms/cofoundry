@@ -10,7 +10,10 @@ public static class PagingQueryExtensions
     /// <param name="query">The paging settings to apply to the source data.</param>
     public static IQueryable<T> Page<T>(this IQueryable<T> source, IPageableQuery query)
     {
-        if (query == null || query.PageSize <= 0) return source;
+        if (query == null || query.PageSize <= 0)
+        {
+            return source;
+        }
 
         var pageNumber = query.PageNumber < 1 ? 0 : query.PageNumber - 1;
         var itemsToSkip = pageNumber * query.PageSize;

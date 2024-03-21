@@ -19,7 +19,10 @@ public static class UsernameCharacterValidator
         ArgumentNullException.ThrowIfNull(username);
         ArgumentNullException.ThrowIfNull(options);
 
-        if (options.AllowAnyCharacter) return Array.Empty<char>();
+        if (options.AllowAnyCharacter)
+        {
+            return Array.Empty<char>();
+        }
 
         var badCharacters = username.Distinct();
 

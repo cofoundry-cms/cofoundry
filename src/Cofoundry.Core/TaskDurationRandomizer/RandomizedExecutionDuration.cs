@@ -52,8 +52,10 @@ public class RandomizedExecutionDuration : IValidatableObject, IFeatureEnableabl
     public void Update(RandomizedExecutionDuration newDuration)
     {
         // if duration not enabled, then there is nothing to update
-        if (newDuration == null || !newDuration.IsEnabled()) return;
-
+        if (newDuration == null || !newDuration.IsEnabled())
+        {
+            return;
+        }
 
         if (!Enabled)
         {

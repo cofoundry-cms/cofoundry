@@ -141,7 +141,10 @@ public class UserUpdateCommandHelper : IUserUpdateCommandHelper
         }
 
         result.HasEmailChanged = user.Email != emailFormatResult.NormalizedEmailAddress || user.UniqueEmail != emailFormatResult.UniqueEmailAddress;
-        if (!result.HasEmailChanged) return result;
+        if (!result.HasEmailChanged)
+        {
+            return result;
+        }
 
         await ValidateNewEmailAsync(userArea, emailFormatResult, user, executionContext);
 
@@ -233,7 +236,10 @@ public class UserUpdateCommandHelper : IUserUpdateCommandHelper
 
     private async Task<int?> GetEmailDomainIdAsync(EmailAddressFormattingResult emailAddress, IExecutionContext executionContext)
     {
-        if (emailAddress == null) return null;
+        if (emailAddress == null)
+        {
+            return null;
+        }
 
         var emailDomainId = await _userStoredProcedures.AddEmailDomainIfNotExistsAsync(
             emailAddress.Domain.Name,

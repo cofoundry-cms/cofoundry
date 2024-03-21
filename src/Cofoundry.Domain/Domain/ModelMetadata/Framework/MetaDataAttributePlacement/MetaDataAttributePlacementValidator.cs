@@ -36,7 +36,7 @@ public static class MetaDataAttributePlacementValidator
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(validParamTypes);
 
-        if (!validParamTypes.Any())
+        if (validParamTypes.Length == 0)
         {
             throw new ArgumentEmptyException(nameof(validParamTypes));
         }
@@ -75,7 +75,7 @@ public static class MetaDataAttributePlacementValidator
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(validParamTypes);
 
-        if (!validParamTypes.Any())
+        if (validParamTypes.Length == 0)
         {
             throw new ArgumentEmptyException(nameof(validParamTypes));
         }

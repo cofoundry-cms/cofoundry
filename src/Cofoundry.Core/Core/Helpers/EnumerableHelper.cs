@@ -18,7 +18,10 @@ public static class EnumerableHelper
     /// </summary>
     public static IEnumerable<T> UnionAll<T>(params IEnumerable<T>[]? enumerables)
     {
-        if (IsNullOrEmpty(enumerables)) yield break;
+        if (IsNullOrEmpty(enumerables))
+        {
+            yield break;
+        }
 
         foreach (var enumerable in enumerables)
         {
@@ -47,7 +50,10 @@ public static class EnumerableHelper
     /// </summary>
     public static IEnumerable<T> Enumerate<T>(IEnumerable<T>? enumerable)
     {
-        if (enumerable == null) return Enumerable.Empty<T>();
+        if (enumerable == null)
+        {
+            return Enumerable.Empty<T>();
+        }
 
         return enumerable;
     }

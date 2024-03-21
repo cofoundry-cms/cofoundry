@@ -22,11 +22,11 @@ public class GetAllPageRoutesQueryHandlerTests
         using var app = _appFactory.Create();
         var testPages = new Dictionary<int, string>();
 
-        for (int i = 1; i < 3; i++)
+        for (var i = 1; i < 3; i++)
         {
             var parentDirectoryId = await app.TestData.PageDirectories().AddAsync(uniqueData + i);
 
-            for (int j = 1; j < 4; j++)
+            for (var j = 1; j < 4; j++)
             {
                 var pageTitle = uniqueData + j;
                 var pageId = await app.TestData.Pages().AddAsync(pageTitle, parentDirectoryId);

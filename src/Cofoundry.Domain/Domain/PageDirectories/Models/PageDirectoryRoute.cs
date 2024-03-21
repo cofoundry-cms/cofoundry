@@ -64,8 +64,8 @@ public class PageDirectoryRoute : IEquatable<PageDirectoryRoute>
     /// </summary>
     public bool MatchesPath(string path)
     {
-        string trimmedPath = path.Trim('/');
-        bool containsPath = FullUrlPath.Equals(trimmedPath, StringComparison.OrdinalIgnoreCase);
+        var trimmedPath = path.Trim('/');
+        var containsPath = FullUrlPath.Equals(trimmedPath, StringComparison.OrdinalIgnoreCase);
 
         return containsPath;
     }
@@ -76,12 +76,12 @@ public class PageDirectoryRoute : IEquatable<PageDirectoryRoute>
     /// </summary>
     public bool MatchesPath(string path, int localeId)
     {
-        bool containsPath = false;
+        var containsPath = false;
 
         var localePath = LocaleVariations.SingleOrDefault(l => l.LocaleId == localeId);
         if (localePath != null)
         {
-            string trimmedPath = path.Trim('/');
+            var trimmedPath = path.Trim('/');
             containsPath = localePath.FullUrlPath.Equals(trimmedPath, StringComparison.OrdinalIgnoreCase);
         }
         else
@@ -100,8 +100,15 @@ public class PageDirectoryRoute : IEquatable<PageDirectoryRoute>
 
     public bool Equals(PageDirectoryRoute? other)
     {
-        if (other == null) return false;
-        if (other == this) return true;
+        if (other == null)
+        {
+            return false;
+        }
+
+        if (other == this)
+        {
+            return true;
+        }
 
         return other.PageDirectoryId == PageDirectoryId;
     }

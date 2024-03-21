@@ -36,7 +36,7 @@ public class EmbeddedDirectoryContents : IDirectoryContents
         return _entries.GetEnumerator();
     }
 
-    private IReadOnlyCollection<IFileInfo> ParseDirectories(string resourceDirectoryPath, IEnumerable<IFileInfo> allDirectoryFiles)
+    private static IReadOnlyCollection<IFileInfo> ParseDirectories(string resourceDirectoryPath, IEnumerable<IFileInfo> allDirectoryFiles)
     {
         var directoryFiles = new List<IFileInfo>();
         var directories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -81,7 +81,10 @@ public class EmbeddedDirectoryContents : IDirectoryContents
         var directoryParts = path
             .Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
 
-        if (directoryParts.Length <= 2) return null;
+        if (directoryParts.Length <= 2)
+        {
+            return null;
+        }
 
         return directoryParts.First();
     }

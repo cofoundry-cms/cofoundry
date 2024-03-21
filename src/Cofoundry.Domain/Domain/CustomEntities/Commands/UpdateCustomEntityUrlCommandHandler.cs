@@ -78,7 +78,10 @@ public class UpdateCustomEntityUrlCommandHandler
         IExecutionContext executionContext
         )
     {
-        if (!definition.ForceUrlSlugUniqueness) return;
+        if (!definition.ForceUrlSlugUniqueness)
+        {
+            return;
+        }
 
         var query = new IsCustomEntityUrlSlugUniqueQuery();
         query.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;
@@ -95,7 +98,7 @@ public class UpdateCustomEntityUrlCommandHandler
         }
     }
 
-    private void Map(UpdateCustomEntityUrlCommand command, CustomEntity entity)
+    private static void Map(UpdateCustomEntityUrlCommand command, CustomEntity entity)
     {
         entity.UrlSlug = command.UrlSlug;
         entity.LocaleId = command.LocaleId;

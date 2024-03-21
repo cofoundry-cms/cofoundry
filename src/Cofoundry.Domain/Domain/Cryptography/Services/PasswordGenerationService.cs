@@ -18,7 +18,11 @@ public class PasswordGenerationService : IPasswordGenerationService
     /// <inheritdoc/>
     public string Generate(int passwordLength)
     {
-        if (passwordLength < 6) throw new ArgumentOutOfRangeException(nameof(passwordLength), "Password length cannot be less than 6 characters");
+        if (passwordLength < 6)
+        {
+            throw new ArgumentOutOfRangeException(nameof(passwordLength), "Password length cannot be less than 6 characters");
+        }
+
         var generator = new RandomStringGenerator();
 
         return generator.Generate(passwordLength, ALLOWED_CHARACTERS);

@@ -24,7 +24,10 @@ public class DocumentAssetRouteLibrary : IDocumentAssetRouteLibrary
     /// <param name="documentAssetId">Id of the document asset to get the url for</param>
     public async Task<string> DocumentAssetAsync(int? documentAssetId)
     {
-        if (!documentAssetId.HasValue) return string.Empty;
+        if (!documentAssetId.HasValue)
+        {
+            return string.Empty;
+        }
 
         var asset = await GetDocumentAssetAsync(documentAssetId.Value);
 
@@ -38,7 +41,10 @@ public class DocumentAssetRouteLibrary : IDocumentAssetRouteLibrary
     /// <param name="asset">asset to get the url for</param>
     public string DocumentAsset(IDocumentAssetRenderable? asset)
     {
-        if (asset == null) return string.Empty;
+        if (asset == null)
+        {
+            return string.Empty;
+        }
 
         var pathName = MakeFolderName(asset);
         var filename = MakeFileName(asset);
@@ -56,7 +62,10 @@ public class DocumentAssetRouteLibrary : IDocumentAssetRouteLibrary
     /// <param name="documentAssetId">Id of the document asset to get the url for</param>
     public async Task<string> DocumentAssetDownloadAsync(int? documentAssetId)
     {
-        if (!documentAssetId.HasValue) return string.Empty;
+        if (!documentAssetId.HasValue)
+        {
+            return string.Empty;
+        }
 
         var asset = await GetDocumentAssetAsync(documentAssetId.Value);
 
@@ -70,7 +79,10 @@ public class DocumentAssetRouteLibrary : IDocumentAssetRouteLibrary
     /// <param name="asset">asset to get the url for</param>
     public string DocumentAssetDownload(IDocumentAssetRenderable? asset)
     {
-        if (asset == null) return string.Empty;
+        if (asset == null)
+        {
+            return string.Empty;
+        }
 
         var pathName = MakeFolderName(asset);
         var filename = MakeFileName(asset);

@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.Web;
+using System.Globalization;
+using Cofoundry.Core.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
@@ -54,7 +55,7 @@ public class CofoundryAssetsController : Controller
 
         // if the title or filestamp is different, redirect to the correct url
         var sluggedFileName = SlugFormatter.ToSlug(asset.FileName);
-        if (sluggedFileName != fileName || fileStamp.ToString() != asset.FileStamp)
+        if (sluggedFileName != fileName || fileStamp.ToString(CultureInfo.InvariantCulture) != asset.FileStamp)
         {
             var url = _imageAssetRouteLibrary.ImageAsset(asset, settings);
             return RedirectPermanent(url);
@@ -209,7 +210,7 @@ public class CofoundryAssetsController : Controller
 
         // if the title or filestamp is different, redirect to the correct url
         var sluggedFileName = SlugFormatter.ToSlug(file.FileName);
-        if (sluggedFileName != fileName || fileStamp.ToString() != file.FileStamp)
+        if (sluggedFileName != fileName || fileStamp.ToString(CultureInfo.InvariantCulture) != file.FileStamp)
         {
             var url = isDownload ? _documentAssetRouteLibrary.DocumentAssetDownload(file) : _documentAssetRouteLibrary.DocumentAsset(file);
             return RedirectPermanent(url);

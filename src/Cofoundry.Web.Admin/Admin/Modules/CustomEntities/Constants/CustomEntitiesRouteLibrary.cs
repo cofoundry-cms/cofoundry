@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Web.Admin;
+namespace Cofoundry.Web.Admin;
 
 public class CustomEntitiesRouteLibrary : AngularModuleRouteLibrary
 {
@@ -38,7 +38,7 @@ public class CustomEntitiesRouteLibrary : AngularModuleRouteLibrary
             return string.Empty;
         }
 
-        return List(definition) + id.ToString();
+        return List(definition) + id.ToString(CultureInfo.InvariantCulture);
     }
 
     private string GetCustomEntityRoute(string? namePlural, string? route = null)

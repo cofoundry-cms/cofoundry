@@ -11,7 +11,7 @@ namespace Cofoundry.Core.Mail.Internal;
 /// </summary>
 public class DebugMailDispatchSession : IMailDispatchSession
 {
-    private readonly Queue<string> _mailQueue = new Queue<string>();
+    private readonly Queue<string> _mailQueue = new();
     private readonly MailSettings _mailSettings;
     private readonly IPathResolver _pathResolver;
     private readonly string _debugDropPath;
@@ -131,7 +131,7 @@ public class DebugMailDispatchSession : IMailDispatchSession
         return fromAddress;
     }
 
-    private void ValidateMessageBody(MailMessage message)
+    private static void ValidateMessageBody(MailMessage message)
     {
         var hasHtmlBody = !string.IsNullOrWhiteSpace(message.HtmlBody);
         var hasTextBody = !string.IsNullOrWhiteSpace(message.TextBody);
@@ -142,7 +142,7 @@ public class DebugMailDispatchSession : IMailDispatchSession
         }
     }
 
-    private string CreateMailAddress(string email, string? displayName)
+    private static string CreateMailAddress(string email, string? displayName)
     {
         if (string.IsNullOrWhiteSpace(displayName))
         {

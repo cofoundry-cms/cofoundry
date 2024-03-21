@@ -1,7 +1,7 @@
-﻿using Cofoundry.Core.AutoUpdate;
+using System.Text;
+using Cofoundry.Core.AutoUpdate;
 using Cofoundry.Core.Data;
 using Cofoundry.Core.Data.SimpleDatabase;
-using System.Text;
 
 namespace Cofoundry.Domain.Installation;
 
@@ -27,7 +27,6 @@ public class ImportPermissionsCommandHandler : IAsyncVersionedUpdateCommandHandl
         _transactionScopeManager = transactionScopeManager;
     }
 
-
     public async Task ExecuteAsync(ImportPermissionsCommand command)
     {
         var sb = new StringBuilder();
@@ -38,15 +37,15 @@ public class ImportPermissionsCommandHandler : IAsyncVersionedUpdateCommandHandl
             {
                 var entityDefinition = entityPermission.EntityDefinition;
 
-                sb.AppendLine(string.Format("if not exists (select * from Cofoundry.[EntityDefinition] where EntityDefinitionCode = '{0}')", entityDefinition.EntityDefinitionCode));
+                sb.AppendLine(CultureInfo.InvariantCulture, $"if not exists (select * from Cofoundry.[EntityDefinition] where EntityDefinitionCode = '{entityDefinition.EntityDefinitionCode}')");
                 sb.AppendLine("begin");
-                sb.AppendLine(string.Format("insert into Cofoundry.[EntityDefinition] (EntityDefinitionCode, Name) values ('{0}', '{1}')", entityDefinition.EntityDefinitionCode, entityDefinition.Name));
+                sb.AppendLine(CultureInfo.InvariantCulture, $"insert into Cofoundry.[EntityDefinition] (EntityDefinitionCode, Name) values ('{entityDefinition.EntityDefinitionCode}', '{entityDefinition.Name}')");
                 sb.AppendLine("end");
-                sb.AppendLine(string.Format("insert into Cofoundry.[Permission] (EntityDefinitionCode, PermissionCode) values ('{0}', '{1}')", entityDefinition.EntityDefinitionCode, permission.PermissionType.Code));
+                sb.AppendLine(CultureInfo.InvariantCulture, $"insert into Cofoundry.[Permission] (EntityDefinitionCode, PermissionCode) values ('{entityDefinition.EntityDefinitionCode}', '{permission.PermissionType.Code}')");
             }
             else
             {
-                sb.AppendLine(string.Format("insert into Cofoundry.[Permission] (PermissionCode) values ('{0}')", permission.PermissionType.Code));
+                sb.AppendLine(CultureInfo.InvariantCulture, $"insert into Cofoundry.[Permission] (PermissionCode) values ('{permission.PermissionType.Code}')");
             }
         }
 

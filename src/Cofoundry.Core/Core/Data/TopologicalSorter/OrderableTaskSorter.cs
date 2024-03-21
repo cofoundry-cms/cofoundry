@@ -14,7 +14,7 @@ public static class OrderableTaskSorter
         }
         public TTask Task { get; set; }
 
-        public List<TTask> Dependencies { get; set; } = new List<TTask>();
+        public List<TTask> Dependencies { get; set; } = [];
     }
 
     /// <summary>

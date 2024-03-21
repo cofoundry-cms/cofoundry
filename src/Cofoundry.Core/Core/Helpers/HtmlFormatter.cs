@@ -43,12 +43,15 @@ public static class HtmlFormatter
 
         var matchEval = new MatchEvaluator((match) =>
         {
-            string href = match.Value;
+            var href = match.Value;
 
             // if string starts within an HREF don't expand it
-            if (href.StartsWith("=") || href.StartsWith("'") || href.StartsWith("\"")) return href;
+            if (href.StartsWith("=") || href.StartsWith("'") || href.StartsWith("\""))
+            {
+                return href;
+            }
 
-            string displayText = href;
+            var displayText = href;
 
             if (href.IndexOf("://") < 0)
             {
@@ -66,7 +69,7 @@ public static class HtmlFormatter
                 }
             }
 
-            string additionalAttributes = string.Empty;
+            var additionalAttributes = string.Empty;
 
             if (formatOptions.HasFlag(BasicHtmlFormatOption.LinksNoFollow) && formatOptions.HasFlag(BasicHtmlFormatOption.LinksToNewWindow))
             {
@@ -98,7 +101,11 @@ public static class HtmlFormatter
     /// <returns>HtmlString version of the input string formatted to basic html.</returns>
     public static IHtmlContent ConvertToBasicHtml(string? s, BasicHtmlFormatOption formatOptions = BasicHtmlFormatOption.None)
     {
-        if (string.IsNullOrEmpty(s)) return new HtmlString(string.Empty);
+        if (string.IsNullOrEmpty(s))
+        {
+            return new HtmlString(string.Empty);
+        }
+
         var html = ConvertLineBreaksToBrTags(s);
         html = ConvertUrlsToLinks(html, formatOptions);
 

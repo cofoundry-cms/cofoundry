@@ -27,7 +27,10 @@ public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeQueryHandler
     {
         var definitionQuery = new GetCustomEntityDefinitionSummaryByCodeQuery(query.CustomEntityDefinitionCode);
         var definition = await _queryExecutor.ExecuteAsync(definitionQuery, executionContext);
-        if (definition == null) return null;
+        if (definition == null)
+        {
+            return null;
+        }
 
         var result = new CustomEntityDataModelSchema();
         result.CustomEntityDefinitionCode = definition.CustomEntityDefinitionCode;

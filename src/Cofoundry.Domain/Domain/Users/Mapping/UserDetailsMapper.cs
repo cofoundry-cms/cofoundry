@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -23,12 +23,12 @@ public class UserDetailsMapper : IUserDetailsMapper
     [return: NotNullIfNotNull(nameof(dbUser))]
     public virtual UserDetails? Map(User? dbUser)
     {
-        if (dbUser == null) return null;
-
-        if (dbUser.Role == null)
+        if (dbUser == null)
         {
-            throw new ArgumentException("dbUser.Role must be included in the query to map to use the UserDetailsMapper");
+            return null;
         }
+
+        MissingIncludeException.ThrowIfNull(dbUser, u => u.Role);
 
         var role = _roleDetailsMapper.Map(dbUser.Role);
         EntityNotFoundException.ThrowIfNull(role, dbUser.Role.RoleId);

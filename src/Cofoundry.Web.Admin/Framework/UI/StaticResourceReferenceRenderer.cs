@@ -25,7 +25,7 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
     /// <inheritdoc/>
     public string JsPath(ModuleRouteLibrary moduleRouteLibrary, string fileName)
     {
-        string virtualPath = JsPathWithoutVersion(moduleRouteLibrary, fileName);
+        var virtualPath = JsPathWithoutVersion(moduleRouteLibrary, fileName);
 
         return _staticFilePathFormatter.AppendVersion(virtualPath);
     }
@@ -51,7 +51,10 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
     {
         var jsPath = JsPathWithoutVersion(moduleRouteLibrary, fileName);
 
-        if (!FileExists(jsPath)) return HtmlString.Empty;
+        if (!FileExists(jsPath))
+        {
+            return HtmlString.Empty;
+        }
 
         var jsPathWithVersion = _staticFilePathFormatter.AppendVersion(jsPath);
         return FormatScriptTag(jsPathWithVersion);
@@ -84,7 +87,10 @@ public class StaticResourceReferenceRenderer : IStaticResourceReferenceRenderer
     {
         var cssPath = CssPathWithoutVersion(moduleRouteLibrary, fileName);
 
-        if (!FileExists(cssPath)) return HtmlString.Empty;
+        if (!FileExists(cssPath))
+        {
+            return HtmlString.Empty;
+        }
 
         var cssPathWithVersion = _staticFilePathFormatter.AppendVersion(cssPath);
         return FormatCssTag(cssPathWithVersion);

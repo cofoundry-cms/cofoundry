@@ -40,7 +40,7 @@ public class DocumentAssetCommandHelper
         var fileStamp = AssetFileStampHelper.ToFileStamp(documentAsset.FileUpdateDate);
 
         using var inputSteam = await uploadedFile.OpenReadStreamAsync();
-        bool isNew = documentAsset.DocumentAssetId < 1;
+        var isNew = documentAsset.DocumentAssetId < 1;
 
         documentAsset.FileSizeInBytes = inputSteam.Length;
 

@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web.Admin;
 
 public class CustomEntityModuleController : BaseAdminMvcController
 {
-    private static readonly Dictionary<string, string> EmptyTerms = [];
-
     public ActionResult Index()
     {
         var definition = RouteData.DataTokens["Definition"] as ICustomEntityDefinition;

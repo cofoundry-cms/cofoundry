@@ -4,7 +4,7 @@ namespace Cofoundry.Core.Tests.Core.Formatters;
 
 public class UsernameUniquifierTests
 {
-    private readonly UsernameUniquifier _usernameUniquifier = new UsernameUniquifier(new UsernameNormalizer());
+    private readonly UsernameUniquifier _usernameUniquifier = new(new UsernameNormalizer());
 
     [Theory]
     [InlineData(null)]

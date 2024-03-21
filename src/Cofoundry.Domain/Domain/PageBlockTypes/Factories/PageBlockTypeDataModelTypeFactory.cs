@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// Default implementation of <see cref="IPageBlockTypeDataModelTypeFactory"/>.
@@ -33,12 +33,12 @@ public class PageBlockTypeDataModelTypeFactory : IPageBlockTypeDataModelTypeFact
 
         if (!dataModelTypes.Any())
         {
-            throw new InvalidOperationException(string.Format("DataModel for page block type {0} not yet implemented", pageBlockTypeFileName));
+            throw new InvalidOperationException($"DataModel for page block type {pageBlockTypeFileName} not yet implemented");
         }
 
         if (dataModelTypes.Count() > 1)
         {
-            throw new InvalidOperationException(string.Format("DataModel for page block type {0} is registered multiple times. Please use unique class names.", pageBlockTypeFileName));
+            throw new InvalidOperationException($"DataModel for page block type {pageBlockTypeFileName} is registered multiple times. Please use unique class names.");
         }
 
         return dataModelTypes.First();

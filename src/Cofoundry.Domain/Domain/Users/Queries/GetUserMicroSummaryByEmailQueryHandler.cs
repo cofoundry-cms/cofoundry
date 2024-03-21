@@ -28,10 +28,16 @@ public class GetUserMicroSummaryByEmailQueryHandler
 
     public async Task<UserMicroSummary?> ExecuteAsync(GetUserMicroSummaryByEmailQuery query, IExecutionContext executionContext)
     {
-        if (string.IsNullOrWhiteSpace(query.Email)) return null;
+        if (string.IsNullOrWhiteSpace(query.Email))
+        {
+            return null;
+        }
 
         var email = _userDataFormatter.NormalizeEmail(query.UserAreaCode, query.Email);
-        if (email == null) return null;
+        if (email == null)
+        {
+            return null;
+        }
 
         var dbResult = await _dbContext
             .Users

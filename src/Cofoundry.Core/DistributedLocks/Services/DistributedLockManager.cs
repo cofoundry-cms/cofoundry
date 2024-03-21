@@ -121,7 +121,10 @@ public class DistributedLockManager : IDistributedLockManager
     private DistributedLock? MapDistributedLock(SqlDataReader reader)
     {
         var distributedLockId = reader[nameof(DistributedLock.DistributedLockId)] as string;
-        if (distributedLockId == null) return null;
+        if (distributedLockId == null)
+        {
+            return null;
+        }
 
         var result = new DistributedLock()
         {

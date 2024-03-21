@@ -49,7 +49,10 @@ public class ValidateUserAccountVerificationByEmailQueryHandler
             throw new InvalidUserAccountVerificationRequestException(query, $"{nameof(ValidateAuthorizedTaskTokenQuery)} should never return null.");
         }
 
-        if (!tokenResult.IsSuccess) return;
+        if (!tokenResult.IsSuccess)
+        {
+            return;
+        }
 
         if (tokenResult.Data.UserAreaCode != query.UserAreaCode)
         {
@@ -69,7 +72,7 @@ public class ValidateUserAccountVerificationByEmailQueryHandler
         }
     }
 
-    private AuthorizedTaskTokenValidationResult MapResult(AuthorizedTaskTokenValidationResult tokenResult)
+    private static AuthorizedTaskTokenValidationResult MapResult(AuthorizedTaskTokenValidationResult tokenResult)
     {
         if (tokenResult.IsSuccess)
         {

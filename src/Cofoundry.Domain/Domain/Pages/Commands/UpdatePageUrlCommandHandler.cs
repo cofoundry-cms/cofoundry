@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -128,7 +128,7 @@ public class UpdatePageUrlCommandHandler
 
         if (!isUnique)
         {
-            var message = string.Format("A page already exists with the path '{0}' in that directory", path);
+            var message = $"A page already exists with the path '{path}' in that directory";
             throw new UniqueConstraintViolationException(message, propertyName, path);
         }
     }

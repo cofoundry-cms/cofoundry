@@ -84,7 +84,10 @@ public class RegisterPageTemplatesCommandHandler
             dbPageTemplate = await UpdateTemplate(executionContext, dbPageTemplate, fileTemplate, fileTemplateDetails);
 
             // No need to update archived template regions
-            if (dbPageTemplate.IsArchived) continue;
+            if (dbPageTemplate.IsArchived)
+            {
+                continue;
+            }
 
             // Update Regions
             UpdateRegions(fileTemplate, fileTemplateDetails, dbPageTemplate, executionContext);
@@ -160,7 +163,7 @@ public class RegisterPageTemplatesCommandHandler
         PageTemplateFileInfo fileTemplateDetails
         )
     {
-        bool isNew = false;
+        var isNew = false;
 
         if (dbPageTemplate == null)
         {

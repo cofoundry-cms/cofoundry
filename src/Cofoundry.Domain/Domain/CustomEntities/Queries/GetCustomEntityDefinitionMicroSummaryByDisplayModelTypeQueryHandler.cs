@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -39,7 +39,7 @@ public class GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQueryHandler
 
         if (dataModelType == null)
         {
-            throw new ArgumentException("query.DisplayModelType is not of type ICustomEntityDisplayModel<>");
+            throw new ArgumentException("DisplayModelType is not of type ICustomEntityDisplayModel<>", $"{nameof(query)}.{nameof(query.DisplayModelType)}");
         }
 
         var allDefinitions = await _queryExecutor.ExecuteAsync(new GetAllCustomEntityDefinitionSummariesQuery(), executionContext);
@@ -48,7 +48,7 @@ public class GetCustomEntityDefinitionMicroSummaryByDisplayModelTypeQueryHandler
             .Where(d => d.DataModelType == dataModelType)
             .ToList();
 
-        if (!definitions.Any())
+        if (definitions.Count == 0)
         {
             return null;
         }

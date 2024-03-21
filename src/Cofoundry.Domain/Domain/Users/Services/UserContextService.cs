@@ -76,7 +76,10 @@ public class UserContextService : IUserContextService
 
     private async Task<IUserContext> GetUserContextByIdAsync(int? userId)
     {
-        if (!userId.HasValue) return UserContext.Empty;
+        if (!userId.HasValue)
+        {
+            return UserContext.Empty;
+        }
 
         var userContext = await _userContextCache.GetOrAddAsync(userId.Value, () => QueryUserContextByIdAsync(userId.Value));
 

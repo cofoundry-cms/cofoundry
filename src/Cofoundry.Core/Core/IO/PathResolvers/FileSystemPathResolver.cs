@@ -10,7 +10,10 @@ public class FileSystemPathResolver : IPathResolver
     {
         var basePath = AppContext.BaseDirectory;
 
-        if (string.IsNullOrWhiteSpace(path)) return basePath;
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return basePath;
+        }
 
         path = path.TrimStart(['~', '/']);
 

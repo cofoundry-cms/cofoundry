@@ -13,7 +13,7 @@ public class TestCustomEntityPageInfo
 
     public string Title = "Test Page with Custom Entity Template";
 
-    public IdCustomEntityRoutingRule RoutingRule = new IdCustomEntityRoutingRule();
+    public IdCustomEntityRoutingRule RoutingRule = new();
 
     public string GetFullPath(int customEntityId)
     {

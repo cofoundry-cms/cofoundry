@@ -27,7 +27,7 @@ public class EntityAccessRuleSetMapper : IEntityAccessRuleSetMapper
         ArgumentNullException.ThrowIfNull(entity);
         MissingIncludeException.ThrowIfNull(entity, e => e.AccessRules);
 
-        if (!entity.AccessRules.Any())
+        if (entity.AccessRules.Count == 0)
         {
             // no rules, so return null rather than an empty ruleset
             return null;

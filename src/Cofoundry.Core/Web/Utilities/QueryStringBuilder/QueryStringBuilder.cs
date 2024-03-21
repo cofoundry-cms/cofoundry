@@ -1,11 +1,13 @@
-﻿namespace Cofoundry.Core.Web;
+using System.Globalization;
+
+namespace Cofoundry.Core.Web;
 
 /// <summary>
 /// Simple builder class for creating query strings in a neat and concise way.
 /// </summary>
 public class QueryStringBuilder
 {
-    private List<Tuple<string, string>> _values = new List<Tuple<string, string>>();
+    private readonly List<Tuple<string, string>> _values = [];
 
     /// <summary>
     /// Shorthand for creating a querystring from just one parameter
@@ -29,7 +31,7 @@ public class QueryStringBuilder
     /// <returns>The full querystring including the leading ?</returns>
     public static string Create<T>(string key, T value)
     {
-        return Create(key, Convert.ToString(value));
+        return Create(key, Convert.ToString(value, CultureInfo.InvariantCulture));
     }
 
     /// <summary>
@@ -59,7 +61,7 @@ public class QueryStringBuilder
     /// <returns>QueryStringBuilder instance for method chaining.</returns>
     public QueryStringBuilder Add<T>(string key, T value)
     {
-        return Add(key, Convert.ToString(value));
+        return Add(key, Convert.ToString(value, CultureInfo.InvariantCulture));
     }
 
     /// <summary>
@@ -80,7 +82,7 @@ public class QueryStringBuilder
     /// <returns>The rendered querystring.</returns>
     public string OrderAndRender()
     {
-        if (!_values.Any())
+        if (_values.Count == 0)
         {
             return string.Empty;
         }

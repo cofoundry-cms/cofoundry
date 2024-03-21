@@ -22,7 +22,10 @@ public class ValidateEntityEditModeRoutingStep : IValidateEntityEditModeRoutingS
     public Task ExecuteAsync(Controller controller, PageActionRoutingState state)
     {
         var pageRoutingInfo = state.PageRoutingInfo;
-        if (pageRoutingInfo == null) return Task.CompletedTask;
+        if (pageRoutingInfo == null)
+        {
+            return Task.CompletedTask;
+        }
 
         if (state.InputParameters.IsEditingCustomEntity &&
             (pageRoutingInfo.CustomEntityRoute == null

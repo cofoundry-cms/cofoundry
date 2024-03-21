@@ -68,11 +68,11 @@ public class SearchUserSummariesQueryHandler
         // Filter by name
         if (!string.IsNullOrEmpty(query.Name))
         {
-            var names = query.Name.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string name in names)
+            var names = query.Name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var name in names)
             {
                 // See http://stackoverflow.com/a/7288269/486434 for why this is copied into a new variable
-                string localName = name;
+                var localName = name;
 
                 dbQuery = dbQuery.Where(u =>
                     (u.FirstName != null && u.FirstName.Contains(localName))
@@ -98,7 +98,7 @@ public class SearchUserSummariesQueryHandler
         ArgumentNullException.ThrowIfNull(query.Email);
 
         var email = query.Email;
-        var isPartialEmail = !email.Contains("@");
+        var isPartialEmail = !email.Contains('@');
 
         if (isPartialEmail)
         {

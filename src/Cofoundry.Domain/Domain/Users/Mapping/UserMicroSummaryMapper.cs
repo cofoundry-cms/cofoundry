@@ -17,7 +17,10 @@ public class UserMicroSummaryMapper : IUserMicroSummaryMapper
     [return: NotNullIfNotNull(nameof(dbUser))]
     public virtual UserMicroSummary? Map(User? dbUser)
     {
-        if (dbUser == null) return null;
+        if (dbUser == null)
+        {
+            return null;
+        }
 
         var userArea = _userAreaRepository.GetRequiredByCode(dbUser.UserAreaCode);
         EntityNotFoundException.ThrowIfNull(userArea, dbUser.UserAreaCode);

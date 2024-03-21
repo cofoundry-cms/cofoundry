@@ -72,7 +72,7 @@ public class RegisterPageBlockTypesCommandHandler
         {
             var fileName = model.Key;
             var existingBlock = dbPageBlockTypes.GetOrDefault(fileName);
-            bool isUpdated = false;
+            var isUpdated = false;
 
             var fileDetails = await GetAndValidateBlockTypeFileDetails(fileName, model.Value, executionContext);
 
@@ -307,7 +307,7 @@ public class RegisterPageBlockTypesCommandHandler
             .PageBlockTypes
             .AsNoTracking()
             .Where(m => m.PageBlockTypeId == pageBlockTypeId)
-            .AnyAsync(m => m.PageVersionBlocks.Any() || m.CustomEntityVersionPageBlocks.Any());
+            .AnyAsync(m => m.PageVersionBlocks.Count != 0 || m.CustomEntityVersionPageBlocks.Count != 0);
 
         return isInUse;
     }

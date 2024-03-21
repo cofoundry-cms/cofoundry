@@ -16,7 +16,10 @@ public class GetUpdateRoleCommandByIdQueryHandler
     public async Task<UpdateRoleCommand?> ExecuteAsync(GetPatchableCommandByIdQuery<UpdateRoleCommand> query, IExecutionContext executionContext)
     {
         var role = await _internalRoleRepository.GetByIdAsync(query.Id);
-        if (role == null) return null;
+        if (role == null)
+        {
+            return null;
+        }
 
         var command = new UpdateRoleCommand()
         {

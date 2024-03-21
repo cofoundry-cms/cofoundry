@@ -52,16 +52,22 @@ public class HasExceededMaxAuthenticationAttemptsQueryHandler
         return !isValid;
     }
 
-    private int? GetRateLimitQuantityIfValid(RateLimitConfiguration? rateLimit)
+    private static int? GetRateLimitQuantityIfValid(RateLimitConfiguration? rateLimit)
     {
-        if (rateLimit == null || !rateLimit.HasValidQuantityAndWindow()) return null;
+        if (rateLimit == null || !rateLimit.HasValidQuantityAndWindow())
+        {
+            return null;
+        }
 
         return rateLimit.Quantity;
     }
 
-    private int? RateLimitWindowToSeconds(RateLimitConfiguration? rateLimit)
+    private static int? RateLimitWindowToSeconds(RateLimitConfiguration? rateLimit)
     {
-        if (rateLimit == null || !rateLimit.HasValidQuantityAndWindow()) return null;
+        if (rateLimit == null || !rateLimit.HasValidQuantityAndWindow())
+        {
+            return null;
+        }
 
         if (rateLimit.Window.TotalSeconds > int.MaxValue)
         {

@@ -6,7 +6,7 @@ public class ContentRepositoryCustomEntityDataModelSchemaByCustomEntityDefinitio
     : IAdvancedContentRepositoryCustomEntityDataModelSchemaByCustomEntityDefinitionCodeRangeQueryBuilder
     , IExtendableContentRepositoryPart
 {
-    private IEnumerable<string> _customEntityDefinitionCodes;
+    private readonly IEnumerable<string> _customEntityDefinitionCodes;
 
     public ContentRepositoryCustomEntityDataModelSchemaByCustomEntityDefinitionCodeRangeQueryBuilder(
         IExtendableContentRepository contentRepository,

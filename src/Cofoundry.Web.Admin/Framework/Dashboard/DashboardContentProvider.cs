@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.ResourceFiles;
+using Cofoundry.Core.ResourceFiles;
 using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Web.Admin;
@@ -27,7 +27,6 @@ public class DashboardContentProvider : IDashboardContentProvider
     public async Task<IHtmlContent> GetAsync()
     {
         const string CUSTOM_DASHBOARD_CONTENT_PATH = "/Cofoundry/Admin/Dashboard/Dashboard.html";
-        const string DEFAULT_CONTENT = "<h2>{0}</h2><p>Welcome to the administration panel.</p> ";
 
         var result = _resourceLocator.GetFile(CUSTOM_DASHBOARD_CONTENT_PATH);
         string html;
@@ -35,7 +34,7 @@ public class DashboardContentProvider : IDashboardContentProvider
         if (!result.Exists)
         {
             var settings = await _queryExecutor.ExecuteAsync(new GetSettingsQuery<GeneralSiteSettings>());
-            html = string.Format(DEFAULT_CONTENT, settings.ApplicationName);
+            html = $"<h2>{settings.ApplicationName}</h2><p>Welcome to the administration panel.</p> ";
         }
         else
         {

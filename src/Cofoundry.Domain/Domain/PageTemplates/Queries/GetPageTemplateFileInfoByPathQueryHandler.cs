@@ -66,7 +66,7 @@ public partial class GetPageTemplateFileInfoByPathQueryHandler
 
         using var sr = new StringReader(viewFile);
         string? line;
-        bool parseCustomModelType = isRootFile;
+        var parseCustomModelType = isRootFile;
 
         while ((line = sr.ReadLine()) != null)
         {
@@ -112,7 +112,7 @@ public partial class GetPageTemplateFileInfoByPathQueryHandler
         return pageTemplateFileInfo;
     }
 
-    private string? TrimLineAndRemoveComments(string? line)
+    private static string? TrimLineAndRemoveComments(string? line)
     {
         if (line == null)
         {
@@ -191,11 +191,11 @@ public partial class GetPageTemplateFileInfoByPathQueryHandler
         return templateFileInfo.Regions;
     }
 
-    private string ParseFunctionParameter(string textLine, string functionName)
+    private static string ParseFunctionParameter(string textLine, string functionName)
     {
         var startFunc = functionName + FUNC_OPENER;
 
-        int start = textLine.IndexOf(startFunc) + startFunc.Length;
+        var start = textLine.IndexOf(startFunc) + startFunc.Length;
         var parameterValue = textLine.Substring(start);
         parameterValue = parameterValue.Substring(0, parameterValue.IndexOf('"'));
 

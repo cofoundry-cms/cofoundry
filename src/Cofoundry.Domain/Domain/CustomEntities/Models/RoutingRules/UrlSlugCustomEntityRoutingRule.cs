@@ -7,7 +7,7 @@ namespace Cofoundry.Domain;
 /// custom entity. This rule requires the custom entity definition
 /// forces url slugs to be unique.
 /// </summary>
-public class UrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
+public partial class UrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
 {
     /// <inheritdoc/>
     public string RouteFormat => "{UrlSlug}";
@@ -30,7 +30,7 @@ public class UrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
             return false;
         }
 
-        var isMatch = Regex.IsMatch(slugUrlPart, RegexLibary.SlugCaseInsensitive);
+        var isMatch = SlugCaseInsensitiveRegex().IsMatch(slugUrlPart);
 
         return isMatch;
     }
@@ -83,7 +83,7 @@ public class UrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
     /// </summary>
     private string? GetRoutingPart(string url, PageRoute pageRoute)
     {
-        if (pageRoute.FullUrlPath.IndexOf(RouteFormat) == -1)
+        if (!pageRoute.FullUrlPath.Contains(RouteFormat, StringComparison.Ordinal))
         {
             return null;
         }
@@ -97,4 +97,7 @@ public class UrlSlugCustomEntityRoutingRule : ICustomEntityRoutingRule
 
         return url.Substring(pathRoot.Length - 1).Trim('/');
     }
+
+    [GeneratedRegex(RegexLibary.SlugCaseInsensitive)]
+    private static partial Regex SlugCaseInsensitiveRegex();
 }

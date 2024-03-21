@@ -29,7 +29,11 @@ public class StaticFileViewHelper : IStaticFileViewHelper
     /// <inheritdoc/>
     public string ToAbsoluteWithFileVersion(string applicationRelativePath)
     {
-        if (string.IsNullOrWhiteSpace(applicationRelativePath)) return applicationRelativePath;
+        if (string.IsNullOrWhiteSpace(applicationRelativePath))
+        {
+            return applicationRelativePath;
+        }
+
         var appenedUrl = AppendVersion(applicationRelativePath);
         var resolvedUrl = _siteUriResolver.MakeAbsolute(appenedUrl);
 

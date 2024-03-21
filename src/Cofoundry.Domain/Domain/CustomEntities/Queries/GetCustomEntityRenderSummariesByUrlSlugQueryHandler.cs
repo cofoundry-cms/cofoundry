@@ -40,7 +40,7 @@ public class GetCustomEntityRenderSummariesByUrlSlugQueryHandler
             .Select(e => e.CustomEntityVersion)
             .ToArrayAsync();
 
-        if (!dbResult.Any())
+        if (dbResult.Length == 0)
         {
             return Array.Empty<CustomEntityRenderSummary>();
         }

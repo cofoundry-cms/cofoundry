@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Cofoundry.Domain.Internal;
+﻿namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// Default implementation of <see cref="ICultureContextService"/>.

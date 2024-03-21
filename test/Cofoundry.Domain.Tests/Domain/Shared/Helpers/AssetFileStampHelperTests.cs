@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Domain.Tests;
+﻿using System.Globalization;
+
+namespace Cofoundry.Domain.Tests;
 
 public class AssetFileStampHelperTests
 {
@@ -7,7 +9,7 @@ public class AssetFileStampHelperTests
     [InlineData("1872/04/01 00:00:59.0012")]
     public void CreateFileStamp_WhenPriorToEpoch_Throws(string fileUpdateDate)
     {
-        var dateToTest = DateTime.Parse(fileUpdateDate);
+        var dateToTest = DateTime.Parse(fileUpdateDate, CultureInfo.InvariantCulture);
 
         Assert.Throws<ArgumentException>(() => AssetFileStampHelper.ToFileStamp(dateToTest));
     }
@@ -18,7 +20,7 @@ public class AssetFileStampHelperTests
     [InlineData("2018/08/16 13:22:43.1234", "2721217631234")]
     public void CreateFileStamp_WithValidData_CreatesCorrectFileStamp(string fileUpdateDate, string expected)
     {
-        var dateToTest = DateTime.Parse(fileUpdateDate);
+        var dateToTest = DateTime.Parse(fileUpdateDate, CultureInfo.InvariantCulture);
 
         var result = AssetFileStampHelper.ToFileStamp(dateToTest);
 
@@ -42,7 +44,7 @@ public class AssetFileStampHelperTests
     [InlineData(2721217631234, "2018/08/16 13:22:43.1234")]
     public void ToDate_WithValidData_ReturnsCorrectResult(long fileStamp, string expected)
     {
-        var expectedDate = DateTime.Parse(expected);
+        var expectedDate = DateTime.Parse(expected, CultureInfo.InvariantCulture);
 
         var result = AssetFileStampHelper.ToDate(fileStamp);
 

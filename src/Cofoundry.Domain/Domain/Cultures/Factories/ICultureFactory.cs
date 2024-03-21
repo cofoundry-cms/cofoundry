@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Cofoundry.Domain;
+﻿namespace Cofoundry.Domain;
 
 /// <summary>
 /// A culture factory that allows the creation and registration of custom cultures.

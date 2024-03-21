@@ -104,7 +104,7 @@ public class UpdateUserAccountVerificationStatusCommandHandlerTests
     {
         var uniqueData = UNIQUE_PREFIX + "NoChgNoMsg";
 
-        int userId = 0;
+        var userId = 0;
 
         using (var app = _appFactory.Create())
         {

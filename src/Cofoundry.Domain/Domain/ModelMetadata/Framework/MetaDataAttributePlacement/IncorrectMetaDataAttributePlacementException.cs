@@ -70,8 +70,8 @@ public class IncorrectMetaDataAttributePlacementException : Exception
         IReadOnlyCollection<Type> validParamTypes
         )
     {
-        string typeNameText = FormatTypeNamesText(validParamTypes);
-        string propertyName = FormatPropertyName(context);
+        var typeNameText = FormatTypeNamesText(validParamTypes);
+        var propertyName = FormatPropertyName(context);
         var attributeName = attribute.GetType().Name;
 
         return $"{attributeName} can only be placed on properties of {typeNameText} type. Property name is {propertyName} and the type is {context.Key.ModelType}.";

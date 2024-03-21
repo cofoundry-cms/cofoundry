@@ -80,7 +80,10 @@ public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
         }
 
         var options = _userAreaDefinitionRepository.GetOptionsByCode(user.UserAreaCode).Password;
-        if (!options.SendNotificationOnUpdate) return;
+        if (!options.SendNotificationOnUpdate)
+        {
+            return;
+        }
 
         var userSummary = _userSummaryMapper.Map(user);
         var context = _userMailTemplateBuilderContextFactory.CreatePasswordChangedContext(userSummary);
@@ -88,7 +91,10 @@ public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
         var mailTemplate = await mailTemplateBuilder.BuildPasswordChangedTemplateAsync(context);
 
         // Null template means don't send a notification
-        if (mailTemplate == null) return;
+        if (mailTemplate == null)
+        {
+            return;
+        }
 
         await _mailService.SendAsync(user.Email, mailTemplate);
     }

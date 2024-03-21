@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Web.Admin;
+namespace Cofoundry.Web.Admin;
 
 public class PagesModuleRouteLibrary : AngularModuleRouteLibrary
 {
@@ -24,7 +24,7 @@ public class PagesModuleRouteLibrary : AngularModuleRouteLibrary
 
     public string Details(int id)
     {
-        return AngularRoute(id.ToString());
+        return AngularRoute(id.ToString(CultureInfo.InvariantCulture));
     }
 
     public string PageDirectoryList()

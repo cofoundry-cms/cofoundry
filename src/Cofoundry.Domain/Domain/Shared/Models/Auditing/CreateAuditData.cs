@@ -21,5 +21,5 @@ public class CreateAuditData
     /// know will be initialized in later code. This value should not
     /// be used in data post-initialization.
     /// </summary>
-    public readonly static CreateAuditData Uninitialized = new();
+    public static readonly CreateAuditData Uninitialized = new();
 }

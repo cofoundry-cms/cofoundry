@@ -1,6 +1,4 @@
-﻿using Cofoundry.Domain.QueryModels;
-
-namespace Cofoundry.Domain.Internal;
+﻿namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// A mapper for mapping a tree structure of PageDirectoryNode objects.

@@ -274,7 +274,7 @@ public class ApiResponseHelper : IApiResponseHelper
         return validationErrors
             .GroupBy(e =>
             {
-                string propKey = string.Empty;
+                var propKey = string.Empty;
                 if (e.Properties != null)
                 {
                     propKey = string.Join("+", e.Properties);

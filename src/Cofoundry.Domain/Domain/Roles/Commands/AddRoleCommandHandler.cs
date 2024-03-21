@@ -95,7 +95,7 @@ public class AddRoleCommandHandler
         }
     }
 
-    private void ValidateIsUnique(bool isUnique)
+    private static void ValidateIsUnique(bool isUnique)
     {
         if (!isUnique)
         {
@@ -103,7 +103,7 @@ public class AddRoleCommandHandler
         }
     }
 
-    private IsRoleTitleUniqueQuery GetUniqueQuery(AddRoleCommand command)
+    private static IsRoleTitleUniqueQuery GetUniqueQuery(AddRoleCommand command)
     {
         return new IsRoleTitleUniqueQuery()
         {
@@ -138,9 +138,9 @@ public class AddRoleCommandHandler
                     dbPermission = new Permission();
                     dbPermission.PermissionCode = codePermission.PermissionType.Code;
 
-                    if (codePermission is IEntityPermission)
+                    if (codePermission is IEntityPermission entityPermission)
                     {
-                        var definitionCode = ((IEntityPermission)codePermission).EntityDefinition.EntityDefinitionCode;
+                        var definitionCode = entityPermission.EntityDefinition.EntityDefinitionCode;
                         await _commandExecutor.ExecuteAsync(new EnsureEntityDefinitionExistsCommand(definitionCode), executionContext);
                         dbPermission.EntityDefinitionCode = definitionCode;
                     }

@@ -7,7 +7,7 @@ public class DeletePageDirectoryCommandHandler
     : ICommandHandler<DeletePageDirectoryCommand>
     , IPermissionRestrictedCommandHandler<DeletePageDirectoryCommand>
 {
-    private static PageDirectoryEntityDefinition DIRECTORY_ENTITY_DEFINITION = new PageDirectoryEntityDefinition();
+    private static readonly PageDirectoryEntityDefinition DIRECTORY_ENTITY_DEFINITION = new();
 
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;

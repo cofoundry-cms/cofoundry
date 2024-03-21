@@ -12,9 +12,12 @@ public static class SlugFormatter
     /// <returns>Empty string if the specified string is null or whitespace; otherwise the slugified string is returned.</returns>
     public static string ToSlug(string? s)
     {
-        if (string.IsNullOrWhiteSpace(s)) return string.Empty;
+        if (string.IsNullOrWhiteSpace(s))
+        {
+            return string.Empty;
+        }
 
-        string str = TextFormatter.RemoveDiacritics(s)
+        var str = TextFormatter.RemoveDiacritics(s)
             .ToLower()
             .Replace("&", " and ");
         str = Regex.Replace(str, @"[/\\\.,\+=–—:_]", " ");
@@ -34,7 +37,10 @@ public static class SlugFormatter
     /// <param name="s">String instance to format.</param>
     public static string CamelCaseToSlug(string? s)
     {
-        if (s == null) return string.Empty;
+        if (s == null)
+        {
+            return string.Empty;
+        }
 
         // first separate any upper case characters
         var conveted = Regex.Replace(s, "[A-Z](?![A-Z])|[A-Z]+(?![a-z])", m => $"-{m.Value.ToLowerInvariant()}");

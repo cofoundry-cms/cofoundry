@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
-using System.Net;
 
 namespace Cofoundry.Web;
 
@@ -69,7 +69,6 @@ public class CofoundryErrorController : Controller
             return await _notFoundViewHelper.GetViewAsync(this);
         }
 
-
         var vmParameters = new ErrorPageViewModelBuilderParameters()
         {
             StatusCode = statusCode,
@@ -91,11 +90,10 @@ public class CofoundryErrorController : Controller
 
     private string FindView(int statusCode)
     {
-        const string VIEW_FORMAT = "~/Views/Shared/{0}.cshtml";
         const string GENERIC_ERROR_VIEW = "~/Views/Shared/Error.cshtml";
 
         // Check first for exact status code match, e.g. "403.cshtml"
-        var statusCodePath = string.Format(VIEW_FORMAT, statusCode.ToString());
+        var statusCodePath = $"~/Views/Shared/{statusCode}.cshtml";
         if (DoesViewExist(statusCodePath))
         {
             return statusCodePath;

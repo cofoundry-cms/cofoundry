@@ -14,7 +14,10 @@ public class UsernameUniquifier : IUsernameUniquifier
 
     public virtual string? Uniquify(string? username)
     {
-        if (string.IsNullOrWhiteSpace(username)) return null;
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return null;
+        }
 
         var result = _usernameNormalizer
             .Normalize(username)

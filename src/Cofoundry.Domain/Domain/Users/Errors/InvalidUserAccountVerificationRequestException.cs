@@ -16,7 +16,10 @@ public class InvalidUserAccountVerificationRequestException : Exception
     public InvalidUserAccountVerificationRequestException(ValidateUserAccountVerificationByEmailQuery query, string? message)
         : base(message)
     {
-        if (query == null) return;
+        if (query == null)
+        {
+            return;
+        }
 
         Token = query.Token;
         UserAreaCode = query.UserAreaCode;

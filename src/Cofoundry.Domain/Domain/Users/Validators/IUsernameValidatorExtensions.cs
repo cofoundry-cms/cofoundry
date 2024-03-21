@@ -12,7 +12,7 @@ public static class IUsernameValidatorExtensions
     {
         var result = await usernameValidator.GetErrorsAsync(context);
 
-        if (result.Any())
+        if (result.Count != 0)
         {
             throw new ValidationErrorException(result.First());
         }

@@ -9,9 +9,12 @@ public static class IDictionaryExtensions
     /// <param name="key">Key of the dictionary item to get</param>
     public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey? key)
     {
-        if (key == null) return default;
-        TValue? value;
-        return source.TryGetValue(key, out value) ? value : default;
+        if (key == null)
+        {
+            return default;
+        }
+
+        return source.TryGetValue(key, out var value) ? value : default;
     }
 
     /// <summary>
@@ -23,9 +26,12 @@ public static class IDictionaryExtensions
     public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey? key)
         where TKey : struct
     {
-        if (!key.HasValue) return default;
-        TValue? value;
-        return source.TryGetValue(key.Value, out value) ? value : default;
+        if (!key.HasValue)
+        {
+            return default;
+        }
+
+        return source.TryGetValue(key.Value, out var value) ? value : default;
     }
 
     /// <summary>
@@ -36,9 +42,12 @@ public static class IDictionaryExtensions
     /// <param name="def">Default value to return if it is missing.</param>
     public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey? key, TValue def)
     {
-        if (key == null) return def;
-        TValue? value;
-        return source.TryGetValue(key, out value) ? value : def;
+        if (key == null)
+        {
+            return def;
+        }
+
+        return source.TryGetValue(key, out var value) ? value : def;
     }
 
     /// <summary>
@@ -51,9 +60,12 @@ public static class IDictionaryExtensions
     public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey? key, TValue def)
         where TKey : struct
     {
-        if (!key.HasValue) return def;
-        TValue? value;
-        return source.TryGetValue(key.Value, out value) ? value : def;
+        if (!key.HasValue)
+        {
+            return def;
+        }
+
+        return source.TryGetValue(key.Value, out var value) ? value : def;
     }
 
     /// <summary>
@@ -94,12 +106,15 @@ public static class IDictionaryExtensions
     /// </param>
     public static IEnumerable<TValue> FilterAndOrderByKeys<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> orderedKeys)
     {
-        if (orderedKeys == null) yield break;
-        TValue? value;
+        if (orderedKeys == null)
+        {
+            yield break;
+        }
+
 
         foreach (var key in orderedKeys)
         {
-            if (source.TryGetValue(key, out value))
+            if (source.TryGetValue(key, out var value))
             {
                 yield return value;
             }
@@ -120,12 +135,15 @@ public static class IDictionaryExtensions
     /// </param>
     public static IEnumerable<TValue> FilterAndOrderByKeys<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> source, IEnumerable<TKey> orderedKeys)
     {
-        if (orderedKeys == null) yield break;
-        TValue? value;
+        if (orderedKeys == null)
+        {
+            yield break;
+        }
+
 
         foreach (var key in orderedKeys)
         {
-            if (source.TryGetValue(key, out value))
+            if (source.TryGetValue(key, out var value))
             {
                 yield return value;
             }

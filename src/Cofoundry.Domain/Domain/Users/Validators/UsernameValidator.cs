@@ -17,7 +17,7 @@ public class UsernameValidator : IUsernameValidator
         _domainRepository = domainRepository;
     }
 
-    public async virtual Task<IReadOnlyCollection<ValidationError>> GetErrorsAsync(IUsernameValidationContext context)
+    public virtual async Task<IReadOnlyCollection<ValidationError>> GetErrorsAsync(IUsernameValidationContext context)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -37,13 +37,19 @@ public class UsernameValidator : IUsernameValidator
         foreach (var validator in validators)
         {
             var error = validator(context);
-            if (error != null) return WrapError(error);
+            if (error != null)
+            {
+                return WrapError(error);
+            }
         }
 
         foreach (var asyncValidator in asyncValidators)
         {
             var error = await asyncValidator(context);
-            if (error != null) return WrapError(error);
+            if (error != null)
+            {
+                return WrapError(error);
+            }
         }
 
         return new List<ValidationError>();

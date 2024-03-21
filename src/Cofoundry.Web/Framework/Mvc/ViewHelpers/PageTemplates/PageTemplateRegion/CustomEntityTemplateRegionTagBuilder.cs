@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
+using System.Globalization;
 using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Web;
 
 public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplateRegionTagBuilder<TModel>
     where TModel : ICustomEntityPageDisplayModel
 {
-    const string DEFAULT_TAG = "div";
-
     private readonly ICustomEntityPageViewModel<TModel> _customEntityViewModel;
     private readonly ViewContext _viewContext;
     private readonly IPageBlockRenderer _blockRenderer;
@@ -42,11 +41,11 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
     }
 
     private readonly string _regionName;
-    private string? _output = null;
-    private string? _wrappingTagName = null;
-    private bool _allowMultipleBlocks = false;
-    private int? _emptyContentMinHeight = null;
-    private Dictionary<string, string>? _additonalHtmlAttributes = null;
+    private string? _output;
+    private string? _wrappingTagName;
+    private bool _allowMultipleBlocks;
+    private int? _emptyContentMinHeight;
+    private Dictionary<string, string>? _additonalHtmlAttributes;
     private readonly HashSet<string> _permittedBlocks = [];
 
     /// <inheritdoc/>
@@ -174,7 +173,7 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
             return blocksHtml;
         }
 
-        regionAttributes.Add("data-cms-page-template-region-id", pageRegion.PageTemplateRegionId.ToString());
+        regionAttributes.Add("data-cms-page-template-region-id", pageRegion.PageTemplateRegionId.ToString(CultureInfo.InvariantCulture));
         regionAttributes.Add("data-cms-page-region-name", pageRegion.Name);
         regionAttributes.Add("data-cms-custom-entity-region", string.Empty);
         regionAttributes.Add("class", "cofoundry__sv-region");
@@ -222,7 +221,7 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
             blockHtmlParts.Add(renderedBlock);
         }
 
-        string blocksHtml = string.Empty;
+        var blocksHtml = string.Empty;
 
         if (blockHtmlParts.Count != 0)
         {

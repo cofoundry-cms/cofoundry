@@ -32,7 +32,7 @@ public class UsernameOptions : IValidatableObject
     /// <summary>
     /// <para>
     /// Allows a username to contain any character classed as a unicode letter as 
-    /// determined by <see cref="Char.IsLetter"/>. This setting is ignored when
+    /// determined by <see cref="char.IsLetter"/>. This setting is ignored when
     /// <see cref="AllowAnyCharacter"/> is set to <see langword="true"/>, which is the 
     /// default behaviour.
     /// </para>
@@ -48,7 +48,7 @@ public class UsernameOptions : IValidatableObject
     /// <summary>
     /// <para>
     /// Allows a username to contain any character classed as a decimal digit as 
-    /// determined by <see cref="Char.IsDigit"/> i.e 0-9. This setting is ignored when
+    /// determined by <see cref="char.IsDigit"/> i.e 0-9. This setting is ignored when
     /// <see cref="AllowAnyCharacter"/> is set to <see langword="true"/>, which is the 
     /// default behaviour.
     /// </para>

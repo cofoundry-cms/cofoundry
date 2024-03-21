@@ -35,7 +35,10 @@ public class EmailDomainName
     /// </param>
     public static EmailDomainName? Parse(string? domainName)
     {
-        if (string.IsNullOrWhiteSpace(domainName)) return null;
+        if (string.IsNullOrWhiteSpace(domainName))
+        {
+            return null;
+        }
 
         // rely on the .NET Uri class to case the host properly and parse the idn domain
         if (!Uri.TryCreate("http://" + domainName.TrimStart('@'), UriKind.Absolute, out var uri))

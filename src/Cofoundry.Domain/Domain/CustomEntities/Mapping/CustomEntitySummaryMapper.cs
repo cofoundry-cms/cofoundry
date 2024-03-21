@@ -36,7 +36,11 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
         foreach (var dbCustomEntity in dbCustomEntities)
         {
             // Validate the input data
-            if (!hasCheckedQueryValid) ValidateQuery(dbCustomEntity);
+            if (!hasCheckedQueryValid)
+            {
+                ValidateQuery(dbCustomEntity);
+            }
+
             hasCheckedQueryValid = true;
 
             // Easy mappings
@@ -131,7 +135,7 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
             .Where(e => !e.HasPublishedVersion)
             .ToDictionary(e => e.CustomEntityId);
 
-        if (entitiesWithUnconfirmedPublishRecord.Any())
+        if (entitiesWithUnconfirmedPublishRecord.Count != 0)
         {
             var publishedEntityIds = await _dbContext
                 .CustomEntityPublishStatusQueries
@@ -152,7 +156,7 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
     /// <summary>
     /// Validates any required object properties are included in the EF query result.
     /// </summary>
-    private void ValidateQuery(CustomEntityPublishStatusQuery dbStatusQuery)
+    private static void ValidateQuery(CustomEntityPublishStatusQuery dbStatusQuery)
     {
         if (dbStatusQuery.CustomEntity == null)
         {

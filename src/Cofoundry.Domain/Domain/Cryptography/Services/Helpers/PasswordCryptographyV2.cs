@@ -72,7 +72,7 @@ public class PasswordCryptographyV2
     public static string GenerateSalt()
     {
         // Generate a random salt
-        byte[] salt = new byte[SALT_BYTES];
+        var salt = new byte[SALT_BYTES];
         try
         {
             using (var generator = RandomNumberGenerator.Create())
@@ -105,7 +105,7 @@ public class PasswordCryptographyV2
         var salt = GenerateSalt();
 
         var saltBytes = Convert.FromBase64String(salt);
-        byte[] hash = PBKDF2(password, saltBytes, PBKDF2_ITERATIONS, HASH_BYTES);
+        var hash = PBKDF2(password, saltBytes, PBKDF2_ITERATIONS, HASH_BYTES);
 
         return salt + Convert.ToBase64String(hash);
     }
@@ -120,12 +120,12 @@ public class PasswordCryptographyV2
             throw new ArgumentException($"The length of {nameof(hash)} cannot be shorter than the salt length.", nameof(hash));
         }
 
-        string salt = hash.Substring(0, SALT_BASE64_LENGTH);
-        string hashWithoutSalt = hash.Substring(SALT_BASE64_LENGTH);
-        byte[] saltBytes = Convert.FromBase64String(salt);
-        byte[] hashBytes = Convert.FromBase64String(hashWithoutSalt);
+        var salt = hash.Substring(0, SALT_BASE64_LENGTH);
+        var hashWithoutSalt = hash.Substring(SALT_BASE64_LENGTH);
+        var saltBytes = Convert.FromBase64String(salt);
+        var hashBytes = Convert.FromBase64String(hashWithoutSalt);
 
-        byte[] testHash = PBKDF2(password, saltBytes, PBKDF2_ITERATIONS, hashBytes.Length);
+        var testHash = PBKDF2(password, saltBytes, PBKDF2_ITERATIONS, hashBytes.Length);
         return SlowEquals(hashBytes, testHash);
     }
 
@@ -305,8 +305,8 @@ public class PasswordCryptographyV2
 
     private static bool SlowEquals(byte[] a, byte[] b)
     {
-        uint diff = (uint)a.Length ^ (uint)b.Length;
-        for (int i = 0; i < a.Length && i < b.Length; i++)
+        var diff = (uint)a.Length ^ (uint)b.Length;
+        for (var i = 0; i < a.Length && i < b.Length; i++)
         {
             diff |= (uint)(a[i] ^ b[i]);
         }
@@ -316,7 +316,7 @@ public class PasswordCryptographyV2
     private static byte[] PBKDF2(string password, byte[] salt, int iterations, int outputBytes)
     {
 #pragma warning disable SYSLIB0041 // Class is obsolete and provided for backwards compatibility only
-        using (Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(password, salt))
+        using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt))
         {
             pbkdf2.IterationCount = iterations;
             return pbkdf2.GetBytes(outputBytes);

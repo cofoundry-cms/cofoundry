@@ -25,7 +25,7 @@ public class CustomEntityRouteMapper : ICustomEntityRouteMapper
             Ordering = dbCustomEntity.Ordering
         };
 
-        bool hasLatestPublishVersion = false;
+        var hasLatestPublishVersion = false;
         var versions = new List<CustomEntityVersionRoute>();
 
         foreach (var dbVersion in dbCustomEntity

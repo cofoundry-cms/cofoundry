@@ -45,16 +45,16 @@ public class TopologicalSorterTests
     {
         var list = new List<SortableEntity>()
         {
-            new SortableEntity(1, 2),
-            new SortableEntity(2, 10),
-            new SortableEntity(3, 10),
-            new SortableEntity(4, 10),
-            new SortableEntity(5, null),
-            new SortableEntity(6, 5),
-            new SortableEntity(7, 5),
-            new SortableEntity(8, null),
-            new SortableEntity(9, 8),
-            new SortableEntity(10, 5),
+            new(1, 2),
+            new(2, 10),
+            new(3, 10),
+            new(4, 10),
+            new(5, null),
+            new(6, 5),
+            new(7, 5),
+            new(8, null),
+            new(9, 8),
+            new(10, 5),
         };
 
         var result = TopologicalSorter.Sort(
@@ -73,11 +73,11 @@ public class TopologicalSorterTests
     {
         var list = new List<SortableEntity>()
         {
-            new SortableEntity(1, 2),
-            new SortableEntity(2, 3),
-            new SortableEntity(3, 4),
-            new SortableEntity(4, 5),
-            new SortableEntity(5, 1),
+            new(1, 2),
+            new(2, 3),
+            new(3, 4),
+            new(4, 5),
+            new(5, 1),
         };
 
         Assert.Throws<CyclicDependencyException>(() =>
@@ -95,11 +95,11 @@ public class TopologicalSorterTests
     {
         var list = new List<SortableEntity>()
         {
-            new SortableEntity(1, 5),
-            new SortableEntity(2, 4),
-            new SortableEntity(3, 3),
-            new SortableEntity(4, 2),
-            new SortableEntity(5, 1),
+            new(1, 5),
+            new(2, 4),
+            new(3, 3),
+            new(4, 2),
+            new(5, 1),
         };
 
         var result = TopologicalSorter.Sort(

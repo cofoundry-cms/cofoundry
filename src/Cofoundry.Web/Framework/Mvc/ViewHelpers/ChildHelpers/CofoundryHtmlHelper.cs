@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Web;
 
@@ -10,18 +10,14 @@ public class CofoundryHtmlHelper : ICofoundryHtmlHelper
     /// <inheritdoc/>
     public IHtmlContent ClassIf(bool condition, string cls, string? elseCls = null)
     {
-        string formatStr = "class=\"{0}\"";
+        var classToAdd = condition ? cls : elseCls;
 
-        if (condition)
+        if (string.IsNullOrEmpty(classToAdd))
         {
-            return new HtmlString(string.Format(formatStr, cls));
-        }
-        else if (elseCls != null)
-        {
-            return new HtmlString(string.Format(formatStr, elseCls));
+            return HtmlString.Empty;
         }
 
-        return HtmlString.Empty;
+        return new HtmlString($"class=\"{elseCls}\"");
     }
 
     /// <inheritdoc/>

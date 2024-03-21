@@ -5,7 +5,7 @@
 /// </summary>
 public class CurrentUserViewHelper : ICurrentUserViewHelper
 {
-    private ICurrentUserViewHelperContext? _helperContext = null;
+    private ICurrentUserViewHelperContext? _helperContext;
     private readonly Dictionary<string, ICurrentUserViewHelperContext> _alternativeHelperContextCache = [];
 
     private readonly IUserContextService _userContextService;

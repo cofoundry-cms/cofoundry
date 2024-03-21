@@ -52,7 +52,7 @@ public class DefaultContainerConfigurationInitializer
     {
         const string SETTINGS_SUFFIX = "Settings";
 
-        string name = settingsType.Name;
+        var name = settingsType.Name;
 
         if (name.EndsWith(SETTINGS_SUFFIX))
         {

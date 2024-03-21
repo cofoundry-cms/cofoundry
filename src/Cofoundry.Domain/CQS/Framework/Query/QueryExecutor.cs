@@ -118,7 +118,7 @@ public class QueryExecutor : IQueryExecutor
         return cx;
     }
 
-    private TResult HandleException<TResult>(Exception innerEx)
+    private static TResult HandleException<TResult>(Exception innerEx)
     {
         var info = ExceptionDispatchInfo.Capture(innerEx);
         info.Throw();

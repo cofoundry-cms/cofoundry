@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -29,12 +29,12 @@ public class RandomStringGenerator : IRandomStringGenerator
     /// <inheritdoc/>
     public string Generate(int length, string allowedCharacters, string? untrustworthyCharacters)
     {
-        if (length < 1) throw new ArgumentOutOfRangeException($"{nameof(length)} must be a positive integer.", nameof(length));
+        ArgumentOutOfRangeException.ThrowIfLessThan(length, 1);
         ArgumentNullException.ThrowIfNull(allowedCharacters);
 
-        if (untrustworthyCharacters == null) untrustworthyCharacters = string.Empty;
+        untrustworthyCharacters ??= string.Empty;
 
-        var randomBytes = new Byte[length];
+        var randomBytes = new byte[length];
         var generatedCharacters = new char[length];
         char? previousCharacter = null;
         var safeCharacterSet = allowedCharacters
@@ -48,7 +48,7 @@ public class RandomStringGenerator : IRandomStringGenerator
 
         RandomNumberGenerator.Fill(randomBytes);
 
-        for (int i = 0; i < length; i++)
+        for (var i = 0; i < length; i++)
         {
             if (previousCharacter.HasValue && untrustworthyCharacters.Contains(previousCharacter.Value))
             {

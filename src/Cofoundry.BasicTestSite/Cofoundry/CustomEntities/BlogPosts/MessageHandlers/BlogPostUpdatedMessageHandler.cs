@@ -16,7 +16,10 @@ public class BlogPostUpdatedMessageHandler : IMessageHandler<ICustomEntityConten
 
     public Task HandleAsync(ICustomEntityContentUpdatedMessage message)
     {
-        if (message.CustomEntityDefinitionCode != BlogPostCustomEntityDefinition.DefinitionCode) return Task.CompletedTask;
+        if (message.CustomEntityDefinitionCode != BlogPostCustomEntityDefinition.DefinitionCode)
+        {
+            return Task.CompletedTask;
+        }
 
         // TODO: Add logic here
 
