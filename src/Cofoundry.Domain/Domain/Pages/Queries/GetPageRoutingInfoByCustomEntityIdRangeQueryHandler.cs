@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -42,10 +42,7 @@ public class GetPageRoutingInfoByCustomEntityIdRangeQueryHandler
             var routes = await _queryExecutor.ExecuteAsync(customEntityRoutesQuery, executionContext);
             foreach (var route in routes)
             {
-                if (!customEntityRoutes.ContainsKey(route.CustomEntityId))
-                {
-                    customEntityRoutes.Add(route.CustomEntityId, route);
-                }
+                customEntityRoutes.TryAdd(route.CustomEntityId, route);
             }
         }
 
@@ -107,7 +104,7 @@ public class GetPageRoutingInfoByCustomEntityIdRangeQueryHandler
             EntityNotFoundException.ThrowIfNull(pageRoute, idSet.PageId);
             routingInfo.PageRoute = pageRoute;
 
-            routingInfo.CustomEntityRoute = customEntityRoutes.GetOrDefault(idSet.CustomEntityId);
+            routingInfo.CustomEntityRoute = customEntityRoutes.GetValueOrDefault(idSet.CustomEntityId);
             EntityNotFoundException.ThrowIfNull(routingInfo.CustomEntityRoute, idSet.PageId);
 
             routingInfo.CustomEntityRouteRule = allRules.FirstOrDefault(r => r.RouteFormat == routingInfo.PageRoute.UrlPath);

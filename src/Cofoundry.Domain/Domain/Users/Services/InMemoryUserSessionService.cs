@@ -74,7 +74,7 @@ public class InMemoryUserSessionService : IUserSessionService
         EntityNotFoundException.ThrowIfNull(userArea, userAreaDefinitionCode);
         var isAmbientUserArea = IsAmbientUserArea(userArea);
 
-        var userId = _userIdCache.GetOrDefault(userArea.UserAreaCode);
+        var userId = _userIdCache.GetValueOrDefault(userArea.UserAreaCode);
 
         lock (_lock)
         {

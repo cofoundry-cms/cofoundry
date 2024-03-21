@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Finds a set of roles using a collection of database ids, returning them as a 
@@ -15,5 +15,5 @@ public interface IContentRepositoryRoleByIdRangeQueryBuilder
     /// Roles are cached, so repeat uses of this query is inexpensive.
     /// </para>
     /// </summary>
-    IDomainRepositoryQueryContext<IDictionary<int, RoleMicroSummary>> AsMicroSummaries();
+    IDomainRepositoryQueryContext<IReadOnlyDictionary<int, RoleMicroSummary>> AsMicroSummaries();
 }

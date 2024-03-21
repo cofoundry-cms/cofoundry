@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -19,7 +19,7 @@ public class ContentRepositoryRoleByIdRangeQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<IDictionary<int, RoleMicroSummary>> AsMicroSummaries()
+    public IDomainRepositoryQueryContext<IReadOnlyDictionary<int, RoleMicroSummary>> AsMicroSummaries()
     {
         var query = new GetRoleMicroSummariesByIdRangeQuery(_roleIds);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

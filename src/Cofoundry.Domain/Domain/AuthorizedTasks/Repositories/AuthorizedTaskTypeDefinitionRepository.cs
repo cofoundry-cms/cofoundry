@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <inheritdoc/>
 public class AuthorizedTaskTypeDefinitionRepository : IAuthorizedTaskTypeDefinitionRepository
@@ -16,7 +16,7 @@ public class AuthorizedTaskTypeDefinitionRepository : IAuthorizedTaskTypeDefinit
 
     public IAuthorizedTaskTypeDefinition? GetByCode(string authorizedTaskTypeCode)
     {
-        var area = _definitions.GetOrDefault(authorizedTaskTypeCode);
+        var area = _definitions.GetValueOrDefault(authorizedTaskTypeCode);
 
         return area;
     }

@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.AutoUpdate.Internal;
+namespace Cofoundry.Core.AutoUpdate.Internal;
 
 /// <summary>
 /// Order UpdatePackage instances into the correct execution order, making
@@ -40,7 +40,7 @@ public class UpdatePackageOrderer : IUpdatePackageOrderer
     {
         var dependencies = EnumerableHelper
             .Enumerate(packageToGetDependenciesFor.DependentModules)
-            .SelectMany(moduleCode => dependentModuleLookup.GetOrDefault(moduleCode, Enumerable.Empty<UpdatePackage>()));
+            .SelectMany(moduleCode => dependentModuleLookup.GetValueOrDefault(moduleCode, Enumerable.Empty<UpdatePackage>()));
 
         return dependencies;
     }

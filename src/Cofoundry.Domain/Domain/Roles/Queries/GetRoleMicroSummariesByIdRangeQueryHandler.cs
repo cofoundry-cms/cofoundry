@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// <para>
@@ -10,8 +10,8 @@
 /// </para>
 /// </summary>
 public class GetRoleMicroSummariesByIdRangeQueryHandler
-    : IQueryHandler<GetRoleMicroSummariesByIdRangeQuery, IDictionary<int, RoleMicroSummary>>
-    , IPermissionRestrictedQueryHandler<GetRoleMicroSummariesByIdRangeQuery, IDictionary<int, RoleMicroSummary>>
+    : IQueryHandler<GetRoleMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RoleMicroSummary>>
+    , IPermissionRestrictedQueryHandler<GetRoleMicroSummariesByIdRangeQuery, IReadOnlyDictionary<int, RoleMicroSummary>>
 {
     private readonly IInternalRoleRepository _internalRoleRepository;
     private readonly IRoleMicroSummaryMapper _roleMicroSummaryMapper;
@@ -25,7 +25,7 @@ public class GetRoleMicroSummariesByIdRangeQueryHandler
         _roleMicroSummaryMapper = roleMicroSummaryMapper;
     }
 
-    public async Task<IDictionary<int, RoleMicroSummary>> ExecuteAsync(GetRoleMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
+    public async Task<IReadOnlyDictionary<int, RoleMicroSummary>> ExecuteAsync(GetRoleMicroSummariesByIdRangeQuery query, IExecutionContext executionContext)
     {
         if (EnumerableHelper.IsNullOrEmpty(query.RoleIds))
         {
@@ -37,7 +37,7 @@ public class GetRoleMicroSummariesByIdRangeQueryHandler
         var result = roleDetails
             .Select(d => _roleMicroSummaryMapper.Map(d.Value))
             .WhereNotNull()
-            .ToDictionary(k => k.RoleId);
+            .ToImmutableDictionary(k => k.RoleId);
 
         return result;
     }

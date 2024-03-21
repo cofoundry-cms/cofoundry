@@ -73,7 +73,7 @@ public static class StringHelper
             return true;
         }
 
-        return strings.Any(s => string.IsNullOrWhiteSpace(s));
+        return strings.Any(string.IsNullOrWhiteSpace);
     }
 
     /// <summary>

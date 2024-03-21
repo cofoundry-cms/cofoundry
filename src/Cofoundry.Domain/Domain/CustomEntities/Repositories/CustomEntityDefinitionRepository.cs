@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// Default implementation of <see cref="ICustomEntityDefinitionRepository"/>.
@@ -23,7 +23,7 @@ public class CustomEntityDefinitionRepository : ICustomEntityDefinitionRepositor
             return null;
         }
 
-        return _customEntityDefinitions.GetOrDefault(customEntityDefinitionCode);
+        return _customEntityDefinitions.GetValueOrDefault(customEntityDefinitionCode);
     }
 
     /// <inheritdoc/>

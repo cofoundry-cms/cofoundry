@@ -1,8 +1,8 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 public class PermissionRepository : IPermissionRepository
 {
-    private readonly IDictionary<string, IPermission> _permissions;
+    private readonly IReadOnlyDictionary<string, IPermission> _permissions;
 
     public PermissionRepository(
         IEnumerable<IPermission> permissions,
@@ -12,7 +12,7 @@ public class PermissionRepository : IPermissionRepository
         var customEntityPermissions = GetCustomEntityPermissions(permissions, customEntityDefinitionRepository).ToList();
 
         var allPermissions = permissions
-            .Where(p => !(p is ICustomEntityPermissionTemplate))
+            .Where(p => p is not ICustomEntityPermissionTemplate)
             .Union(customEntityPermissions);
 
         DetectDuplicates(allPermissions);
@@ -54,7 +54,7 @@ public class PermissionRepository : IPermissionRepository
         }
 
         var key = PermissionIdentifierFormatter.GetUniqueIdentifier(permissionTypeCode, entityDefinitionCode);
-        return _permissions.GetOrDefault(key);
+        return _permissions.GetValueOrDefault(key);
     }
 
     public IEnumerable<IPermission> GetAll()
@@ -80,7 +80,7 @@ public class PermissionRepository : IPermissionRepository
         }
 
         var key = PermissionIdentifierFormatter.GetUniqueIdentifier(permissionTypeCode, entityDefinitionCode);
-        return _permissions.GetOrDefault(key);
+        return _permissions.GetValueOrDefault(key);
     }
 
     private string GetUniqueKey(IPermission permission)

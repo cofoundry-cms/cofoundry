@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -71,7 +71,7 @@ public class RegisterPageBlockTypesCommandHandler
         foreach (var model in blockTypeDataModels)
         {
             var fileName = model.Key;
-            var existingBlock = dbPageBlockTypes.GetOrDefault(fileName);
+            var existingBlock = dbPageBlockTypes.GetValueOrDefault(fileName);
             var isUpdated = false;
 
             var fileDetails = await GetAndValidateBlockTypeFileDetails(fileName, model.Value, executionContext);
@@ -249,7 +249,6 @@ public class RegisterPageBlockTypesCommandHandler
         }
     }
 
-
     private async Task DeleteBlockTypes(
         IExecutionContext executionContext,
         Dictionary<string, PageBlockType> dbPageBlockTypes,
@@ -284,7 +283,7 @@ public class RegisterPageBlockTypesCommandHandler
     private void DetectDuplicateBlockTypes()
     {
         var duplicateBlockTypeDefinitions = _allPageBlockTypeDataModels
-            .GroupBy(m => FormatBlockTypeFileName(m))
+            .GroupBy(FormatBlockTypeFileName)
             .Where(m => m.Count() > 1)
             .FirstOrDefault();
 

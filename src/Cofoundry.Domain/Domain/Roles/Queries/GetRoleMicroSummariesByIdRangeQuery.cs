@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// <para>
@@ -9,7 +9,7 @@
 /// Roles are cached, so repeat uses of this query is inexpensive.
 /// </para>
 /// </summary>
-public class GetRoleMicroSummariesByIdRangeQuery : IQuery<IDictionary<int, RoleMicroSummary>>
+public class GetRoleMicroSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, RoleMicroSummary>>
 {
     public GetRoleMicroSummariesByIdRangeQuery()
     {

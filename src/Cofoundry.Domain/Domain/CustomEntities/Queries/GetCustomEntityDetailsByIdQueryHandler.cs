@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal;
@@ -67,7 +67,7 @@ public class GetCustomEntityDetailsByIdQueryHandler
             return null;
         }
 
-        var entity = MapInitialData(dbVersion, executionContext);
+        var entity = MapInitialData(dbVersion);
 
         if (entity.LatestVersion.WorkFlowStatus == WorkFlowStatus.Published)
         {
@@ -97,7 +97,7 @@ public class GetCustomEntityDetailsByIdQueryHandler
         return entity;
     }
 
-    private CustomEntityDetails MapInitialData(CustomEntityVersion dbVersion, IExecutionContext executionContext)
+    private CustomEntityDetails MapInitialData(CustomEntityVersion dbVersion)
     {
         var entity = new CustomEntityDetails()
         {
@@ -172,7 +172,7 @@ public class GetCustomEntityDetailsByIdQueryHandler
 
             // Map Regions
 
-            var templateId = pageTemplateIds.GetOrDefault(routing.PageRoute.PageId);
+            var templateId = pageTemplateIds.GetValueOrDefault(routing.PageRoute.PageId);
             page.Regions = allTemplateRegions
                 .Where(s => s.PageTemplateId == templateId)
                 .OrderBy(s => s.UpdateDate)

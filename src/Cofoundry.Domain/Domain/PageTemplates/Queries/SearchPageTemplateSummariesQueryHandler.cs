@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.QueryModels;
 
 namespace Cofoundry.Domain.Internal;
@@ -32,8 +32,8 @@ public class SearchPageTemplateSummariesQueryHandler
 
         foreach (var dbPagedResultItem in dbPagedResult.Items)
         {
-            dbPagedResultItem.NumPages = templatePageCounts.GetOrDefault(dbPagedResultItem.PageTemplate.PageTemplateId);
-            dbPagedResultItem.NumRegions = pageRegionCounts.GetOrDefault(dbPagedResultItem.PageTemplate.PageTemplateId);
+            dbPagedResultItem.NumPages = templatePageCounts.GetValueOrDefault(dbPagedResultItem.PageTemplate.PageTemplateId);
+            dbPagedResultItem.NumRegions = pageRegionCounts.GetValueOrDefault(dbPagedResultItem.PageTemplate.PageTemplateId);
         }
 
         var mappedResults = dbPagedResult

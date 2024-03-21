@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.DistributedLocks.Internal;
+namespace Cofoundry.Core.DistributedLocks.Internal;
 
 /// <summary>
 /// A thin repository that validates and exposes all
@@ -46,7 +46,7 @@ public class DistributedLockDefinitionRepository : IDistributedLockDefinitionRep
     public IDistributedLockDefinition? Get<TDefinition>()
         where TDefinition : IDistributedLockDefinition
     {
-        return _definitionLookup.GetOrDefault(typeof(TDefinition));
+        return _definitionLookup.GetValueOrDefault(typeof(TDefinition));
     }
 
     public IEnumerable<IDistributedLockDefinition> GetAll()

@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -113,13 +113,13 @@ public class UpdateAccessRuleSetCommandHelper : IUpdateAccessRuleSetCommandHelpe
 
             EntityNotFoundException.ThrowIfNull(dbRule, id);
 
-            var userAreaDefinition = userAreas.GetOrDefault(updateRuleCommand.UserAreaCode);
+            var userAreaDefinition = userAreas.GetValueOrDefault(updateRuleCommand.UserAreaCode);
             EntityNotFoundException.ThrowIfNull(userAreaDefinition, updateRuleCommand.RoleId);
             dbRule.UserAreaCode = userAreaDefinition.UserAreaCode;
 
             if (updateRuleCommand.RoleId.HasValue)
             {
-                var role = roles.GetOrDefault(updateRuleCommand.RoleId.Value);
+                var role = roles.GetValueOrDefault(updateRuleCommand.RoleId.Value);
                 EntityNotFoundException.ThrowIfNull(role, updateRuleCommand.RoleId);
                 ValidateRoleIsInUserArea(userAreaDefinition, role);
                 dbRule.Role = role;
@@ -144,13 +144,13 @@ public class UpdateAccessRuleSetCommandHelper : IUpdateAccessRuleSetCommandHelpe
         {
             var dbRule = new TAccessRule();
 
-            var userAreaDefinition = userAreas.GetOrDefault(addRuleCommand.UserAreaCode);
+            var userAreaDefinition = userAreas.GetValueOrDefault(addRuleCommand.UserAreaCode);
             EntityNotFoundException.ThrowIfNull(userAreaDefinition, addRuleCommand.RoleId);
             dbRule.UserAreaCode = userAreaDefinition.UserAreaCode;
 
             if (addRuleCommand.RoleId.HasValue)
             {
-                var role = roles.GetOrDefault(addRuleCommand.RoleId.Value);
+                var role = roles.GetValueOrDefault(addRuleCommand.RoleId.Value);
                 EntityNotFoundException.ThrowIfNull(role, addRuleCommand.RoleId);
                 ValidateRoleIsInUserArea(userAreaDefinition, role);
                 dbRule.Role = role;
@@ -178,7 +178,7 @@ public class UpdateAccessRuleSetCommandHelper : IUpdateAccessRuleSetCommandHelpe
         }
         else
         {
-            var userArea = userAreas.GetOrDefault(command.UserAreaCodeForSignInRedirect);
+            var userArea = userAreas.GetValueOrDefault(command.UserAreaCodeForSignInRedirect);
             EntityNotFoundException.ThrowIfNull(userArea, command.UserAreaCodeForSignInRedirect);
             entity.UserAreaCodeForSignInRedirect = userArea.UserAreaCode;
         }

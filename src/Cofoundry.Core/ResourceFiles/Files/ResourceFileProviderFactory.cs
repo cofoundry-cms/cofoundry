@@ -35,7 +35,7 @@ public class ResourceFileProviderFactory : IResourceFileProviderFactory
         return assemblyResourceRegistrations
             .Select(r => r.GetType().GetTypeInfo().Assembly)
             .Distinct()
-            .Select(a => embeddedFileProviderFactory.Create(a));
+            .Select(embeddedFileProviderFactory.Create);
     }
 
     public IFileProvider Create()

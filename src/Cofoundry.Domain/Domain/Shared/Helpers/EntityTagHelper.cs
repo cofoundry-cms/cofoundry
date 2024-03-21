@@ -107,7 +107,7 @@ public partial class EntityTagHelper
     /// <param name="tags">String tags to parse</param>
     public string ToDelimitedString(IEnumerable<string> tags)
     {
-        var output = string.Join(",", tags.Select(t => FormatTag(t)));
+        var output = string.Join(",", tags.Select(FormatTag));
         return output;
     }
 

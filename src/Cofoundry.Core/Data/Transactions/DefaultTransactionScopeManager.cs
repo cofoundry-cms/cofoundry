@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 using System.Transactions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Core.Data.Internal;
 
@@ -122,7 +122,7 @@ public class DefaultTransactionScopeManager : IDefaultTransactionScopeManager
 
         ITransactionScope scope;
         var connectionHash = dbConnection.GetHashCode();
-        var primaryScope = _primaryTransactionScopes.GetOrDefault(connectionHash);
+        var primaryScope = _primaryTransactionScopes.GetValueOrDefault(connectionHash);
 
         if (primaryScope == null)
         {
@@ -210,7 +210,7 @@ public class DefaultTransactionScopeManager : IDefaultTransactionScopeManager
     public void QueueCompletionTask(DbConnection dbConnection, Action actionToQueue)
     {
         var connectionHash = dbConnection.GetHashCode();
-        var scope = _primaryTransactionScopes.GetOrDefault(connectionHash);
+        var scope = _primaryTransactionScopes.GetValueOrDefault(connectionHash);
 
         // No scope, execute immediately
         if (scope == null)
@@ -252,7 +252,7 @@ public class DefaultTransactionScopeManager : IDefaultTransactionScopeManager
     public Task QueueCompletionTaskAsync(DbConnection dbConnection, Func<Task> actionToQueue)
     {
         var connectionHash = dbConnection.GetHashCode();
-        var scope = _primaryTransactionScopes.GetOrDefault(connectionHash);
+        var scope = _primaryTransactionScopes.GetValueOrDefault(connectionHash);
 
         // No scope, execute immediately
         if (scope == null)

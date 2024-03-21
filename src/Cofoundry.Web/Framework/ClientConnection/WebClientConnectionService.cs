@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace Cofoundry.Web.Internal;
 
@@ -28,7 +28,7 @@ public class WebClientConnectionService : IClientConnectionService
         var info = new ClientConnectionInfo()
         {
             IPAddress = context?.Connection?.RemoteIpAddress?.ToString() ?? IPAddressConstants.Default,
-            UserAgent = context?.Request?.Headers?.GetOrDefault("User-Agent")
+            UserAgent = context?.Request?.Headers?.UserAgent
         };
 
         return info;

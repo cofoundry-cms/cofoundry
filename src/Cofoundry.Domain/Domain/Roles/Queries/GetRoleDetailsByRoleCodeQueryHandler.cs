@@ -1,5 +1,5 @@
-﻿using Cofoundry.Domain.Data;
 using System.Collections.ObjectModel;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -37,7 +37,7 @@ public class GetRoleDetailsByRoleCodeQueryHandler
             return new ReadOnlyDictionary<string, int>(roleCodes);
         });
 
-        var id = roleCodeLookup.GetOrDefault(query.RoleCode);
+        var id = roleCodeLookup.GetValueOrDefault(query.RoleCode);
         if (id <= 0)
         {
             return null;
@@ -55,7 +55,7 @@ public class GetRoleDetailsByRoleCodeQueryHandler
             .ToDictionaryAsync(r => r.RoleCode!, r => r.RoleId);
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetRoleDetailsByRoleCodeQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetRoleDetailsByRoleCodeQuery query)
     {
         yield return new RoleReadPermission();
     }

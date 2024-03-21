@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Web.Internal;
+namespace Cofoundry.Web.Internal;
 
 /// <summary>
 /// A view helper for providing information about the currently logged in user
@@ -58,7 +58,7 @@ public class CurrentUserViewHelper : ICurrentUserViewHelper
             return _helperContext;
         }
 
-        var helperContext = _alternativeHelperContextCache.GetOrDefault(userAreaCode);
+        var helperContext = _alternativeHelperContextCache.GetValueOrDefault(userAreaCode);
 
         if (helperContext != null)
         {

@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <inheritdoc/>
 public class EntityDefinitionRepository : IEntityDefinitionRepository
@@ -15,7 +15,7 @@ public class EntityDefinitionRepository : IEntityDefinitionRepository
             .Select(c => new CustomEntityDynamicEntityDefinition(c));
 
         var allDefinitions = customEntityDefinitions
-            .Where(k => !(k is CustomEntityDynamicEntityDefinition))
+            .Where(k => k is not CustomEntityDynamicEntityDefinition)
             .Union(dynamicDefinitions);
 
         DetectInvalidDefinitions(allDefinitions);
@@ -30,7 +30,7 @@ public class EntityDefinitionRepository : IEntityDefinitionRepository
             return null;
         }
 
-        return _entityDefinitions.GetOrDefault(entityDefinitionCode);
+        return _entityDefinitions.GetValueOrDefault(entityDefinitionCode);
     }
 
     public IEntityDefinition GetRequiredByCode(string entityDefinitionCode)

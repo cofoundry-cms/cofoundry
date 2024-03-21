@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -23,17 +23,17 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
         _auditDataMapper = auditDataMapper;
     }
 
-    public async Task<IReadOnlyCollection<CustomEntitySummary>> MapAsync(IReadOnlyCollection<CustomEntityPublishStatusQuery> dbCustomEntities, IExecutionContext executionContext)
+    public async Task<IReadOnlyCollection<CustomEntitySummary>> MapAsync(IReadOnlyCollection<CustomEntityPublishStatusQuery> dbStatusQueries, IExecutionContext executionContext)
     {
-        var entities = new List<CustomEntitySummary>(dbCustomEntities.Count);
-        var routingsQuery = new GetPageRoutingInfoByCustomEntityIdRangeQuery(dbCustomEntities.Select(e => e.CustomEntityId));
+        var entities = new List<CustomEntitySummary>(dbStatusQueries.Count);
+        var routingsQuery = new GetPageRoutingInfoByCustomEntityIdRangeQuery(dbStatusQueries.Select(e => e.CustomEntityId));
         var routings = await _queryExecutor.ExecuteAsync(routingsQuery, executionContext);
 
         Dictionary<int, ActiveLocale>? allLocales = null;
         var customEntityDefinitions = new Dictionary<string, CustomEntityDefinitionSummary>();
         var hasCheckedQueryValid = false;
 
-        foreach (var dbCustomEntity in dbCustomEntities)
+        foreach (var dbCustomEntity in dbStatusQueries)
         {
             // Validate the input data
             if (!hasCheckedQueryValid)
@@ -69,12 +69,9 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
             else if (localeId.HasValue)
             {
                 // Lazy load locales, since they aren't always used
-                if (allLocales == null)
-                {
-                    allLocales = await GetLocalesAsync(executionContext);
-                }
+                allLocales ??= await GetLocalesAsync(executionContext);
 
-                entity.Locale = allLocales.GetOrDefault(localeId.Value);
+                entity.Locale = allLocales.GetValueOrDefault(localeId.Value);
                 EntityNotFoundException.ThrowIfNull(entity.Locale, localeId.Value);
             }
 
@@ -146,7 +143,7 @@ public class CustomEntitySummaryMapper : ICustomEntitySummaryMapper
 
             foreach (var publishedEntityId in publishedEntityIds)
             {
-                var entity = entitiesWithUnconfirmedPublishRecord.GetOrDefault(publishedEntityId);
+                var entity = entitiesWithUnconfirmedPublishRecord.GetValueOrDefault(publishedEntityId);
                 EntityNotFoundException.ThrowIfNull(entity, publishedEntityId);
                 entity.HasPublishedVersion = true;
             }

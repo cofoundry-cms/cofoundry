@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Validation.Internal;
+using Cofoundry.Core.Validation.Internal;
 
 namespace Cofoundry.Domain;
 
@@ -162,7 +162,12 @@ public static class UserValidationErrors
                     return null;
                 }
 
-                var mappedError = ErrorMap.GetOrDefault(result.Error.ErrorCode)?.Invoke();
+                if (result.Error.ErrorCode == null)
+                {
+                    return result.Error;
+                }
+
+                var mappedError = ErrorMap.GetValueOrDefault(result.Error.ErrorCode)?.Invoke();
                 if (mappedError != null)
                 {
                     return mappedError.Create();
@@ -182,7 +187,6 @@ public static class UserValidationErrors
             return AddNamespace("account-recovery-" + errorCode);
         }
     }
-
 
     /// <summary>
     /// Library of validation errors relating to account verification (AKA confirm account) 
@@ -284,7 +288,12 @@ public static class UserValidationErrors
                     return null;
                 }
 
-                var mappedError = ErrorMap.GetOrDefault(result.Error.ErrorCode)?.Invoke();
+                if (result.Error.ErrorCode == null)
+                {
+                    return result.Error;
+                }
+
+                var mappedError = ErrorMap.GetValueOrDefault(result.Error.ErrorCode)?.Invoke();
                 if (mappedError != null)
                 {
                     return mappedError.Create();

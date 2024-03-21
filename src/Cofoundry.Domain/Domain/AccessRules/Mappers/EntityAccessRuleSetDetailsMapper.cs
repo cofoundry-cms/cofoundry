@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal;
@@ -63,7 +63,7 @@ public class EntityAccessRuleSetDetailsMapper : IEntityAccessRuleSetDetailsMappe
             .WhereNotNull()
             .ToArray();
 
-        IDictionary<int, RoleMicroSummary>? roles = null;
+        IReadOnlyDictionary<int, RoleMicroSummary>? roles = null;
 
         if (roleIds.Length != 0)
         {
@@ -85,7 +85,7 @@ public class EntityAccessRuleSetDetailsMapper : IEntityAccessRuleSetDetailsMappe
 
             if (dbRule.RoleId.HasValue)
             {
-                rule.Role = roles?.GetOrDefault(dbRule.RoleId.Value);
+                rule.Role = roles?.GetValueOrDefault(dbRule.RoleId.Value);
                 EntityNotFoundException.ThrowIfNull(rule.Role, dbRule.RoleId.Value);
             }
 

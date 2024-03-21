@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -80,7 +80,7 @@ public class CustomEntityRenderSummaryMapper : ICustomEntityRenderSummaryMapper
 
             if (dbResult.CustomEntity.LocaleId.HasValue)
             {
-                entity.Locale = allLocales.GetOrDefault(dbResult.CustomEntity.LocaleId.Value);
+                entity.Locale = allLocales.GetValueOrDefault(dbResult.CustomEntity.LocaleId.Value);
                 EntityNotFoundException.ThrowIfNull(entity.Locale, dbResult.CustomEntity.LocaleId.Value);
             }
 

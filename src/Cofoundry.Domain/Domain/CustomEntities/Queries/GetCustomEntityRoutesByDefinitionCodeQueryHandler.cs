@@ -120,7 +120,7 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
         {
             foreach (var versionRoute in route.Versions)
             {
-                var dbCustomEntityVersion = dbVersionIndex.GetOrDefault(versionRoute.VersionId);
+                var dbCustomEntityVersion = dbVersionIndex.GetValueOrDefault(versionRoute.VersionId);
 
                 if (dbCustomEntityVersion == null)
                 {
@@ -175,7 +175,7 @@ public class GetCustomEntityRoutesByDefinitionCodeQueryHandler
 
         if (dbCustomEntity.LocaleId.HasValue)
         {
-            locale = allLocales.GetOrDefault(dbCustomEntity.LocaleId.Value);
+            locale = allLocales.GetValueOrDefault(dbCustomEntity.LocaleId.Value);
         }
 
         return _customEntityRouteMapper.Map(dbCustomEntity, locale);

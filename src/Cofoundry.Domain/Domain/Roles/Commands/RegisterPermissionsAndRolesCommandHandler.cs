@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -91,7 +91,7 @@ public class RegisterPermissionsAndRolesCommandHandler
 
         foreach (var roleDefinition in _roleDefinitionRepository.GetAll())
         {
-            var dbRole = dbRolesWithCodes.GetOrDefault(roleDefinition.RoleCode.ToUpperInvariant());
+            var dbRole = dbRolesWithCodes.GetValueOrDefault(roleDefinition.RoleCode.ToUpperInvariant());
 
             if (dbRole == null)
             {
@@ -243,7 +243,7 @@ public class RegisterPermissionsAndRolesCommandHandler
         foreach (var permissionToAdd in permissionsToAdd)
         {
             var uniquePermissionCode = permissionToAdd.GetUniqueIdentifier();
-            var dbPermission = dbPermissions.GetOrDefault(uniquePermissionCode);
+            var dbPermission = dbPermissions.GetValueOrDefault(uniquePermissionCode);
 
             if (dbPermission == null)
             {

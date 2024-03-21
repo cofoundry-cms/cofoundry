@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <inheritdoc/>
 public class UserAreaDefinitionRepository : IUserAreaDefinitionRepository
@@ -33,7 +33,7 @@ public class UserAreaDefinitionRepository : IUserAreaDefinitionRepository
             return null;
         }
 
-        var area = _userAreas.GetOrDefault(userAreaCode);
+        var area = _userAreas.GetValueOrDefault(userAreaCode);
 
         return area;
     }
@@ -79,7 +79,7 @@ public class UserAreaDefinitionRepository : IUserAreaDefinitionRepository
     {
         // Ensure exists
         var userArea = GetRequiredByCode(userAreaCode);
-        var options = _options.GetOrDefault(userAreaCode);
+        var options = _options.GetValueOrDefault(userAreaCode);
         if (options == null)
         {
             throw new EntityInvalidOperationException($"{nameof(UserAreaOptions)} instance expected but was not found.");

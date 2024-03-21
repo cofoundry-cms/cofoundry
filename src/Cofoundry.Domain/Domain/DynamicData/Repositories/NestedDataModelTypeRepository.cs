@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 ///  This repository is used for looking up INestedDataModel types. An instance
@@ -23,7 +23,7 @@ public class NestedDataModelTypeRepository : INestedDataModelTypeRepository
     private void DetectDuplicates(IEnumerable<INestedDataModel> allNestedDataModels)
     {
         var dulpicateCodes = allNestedDataModels
-            .GroupBy(m => GetDataModelName(m))
+            .GroupBy(GetDataModelName)
             .Where(g => g.Count() > 1);
 
         if (dulpicateCodes.Any())
@@ -56,7 +56,7 @@ public class NestedDataModelTypeRepository : INestedDataModelTypeRepository
         }
 
         var normalizedName = NormalizeName(name);
-        var model = _nestedDataModels.GetOrDefault(normalizedName);
+        var model = _nestedDataModels.GetValueOrDefault(normalizedName);
 
         return model?.GetType();
     }

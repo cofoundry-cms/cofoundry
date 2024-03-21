@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <inheritdoc/>
 public class RoleDefinitionRepository : IRoleDefinitionRepository
@@ -16,7 +16,7 @@ public class RoleDefinitionRepository : IRoleDefinitionRepository
     public IRoleDefinition? GetByCode(string userAreaCode, string roleCode)
     {
         var key = CreateLookupKey(userAreaCode, roleCode);
-        return _roleDefinitions.GetOrDefault(key);
+        return _roleDefinitions.GetValueOrDefault(key);
     }
 
     public IRoleDefinition GetRequiredByCode(string userAreaCode, string roleCode)

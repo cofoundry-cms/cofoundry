@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -35,11 +35,11 @@ public class GetPageRouteLookupQueryHandler
     {
         return await _pageCache.GetOrAddAsync(() =>
         {
-            return GetAllPageRoutesAsync(query, executionContext);
+            return GetAllPageRoutesAsync(executionContext);
         });
     }
 
-    private async Task<IReadOnlyDictionary<int, PageRoute>> GetAllPageRoutesAsync(GetPageRouteLookupQuery query, IExecutionContext executionContext)
+    private async Task<IReadOnlyDictionary<int, PageRoute>> GetAllPageRoutesAsync(IExecutionContext executionContext)
     {
         var dbPages = await GetPagesAsync();
         var dbPageVersionLookup = await GetPageVersionsAsync();
@@ -146,7 +146,7 @@ public class GetPageRouteLookupQueryHandler
                 PublishStatus = PublishStatusMapper.FromCode(dbPage.PublishStatusCode)
             };
 
-            var directory = pageDirectories.GetOrDefault(dbPage.PageDirectoryId);
+            var directory = pageDirectories.GetValueOrDefault(dbPage.PageDirectoryId);
             if (directory == null)
             {
                 // Page directory will be null if it is inactive or has an inactive parent.
@@ -161,7 +161,7 @@ public class GetPageRouteLookupQueryHandler
                 continue;
             }
 
-            var accessRules = accessRuleLookup.GetOrDefault(pageRoute.PageId);
+            var accessRules = accessRuleLookup.GetValueOrDefault(pageRoute.PageId);
             pageRoute.AccessRuleSet = _routeAccessRuleMapper.Map(dbPage);
 
             // Configure Locale
@@ -179,10 +179,7 @@ public class GetPageRouteLookupQueryHandler
                     .FirstOrDefault();
             }
 
-            if (directoryPath == null)
-            {
-                directoryPath = pageRoute.PageDirectory.FullUrlPath;
-            }
+            directoryPath ??= pageRoute.PageDirectory.FullUrlPath;
 
             // Set Full Path
             pageRoute.FullUrlPath = CreateFullPath(directoryPath, pageRoute.UrlPath, pageRoute.Locale);
@@ -199,7 +196,7 @@ public class GetPageRouteLookupQueryHandler
     {
         var hasLatestPublishVersion = false;
 
-        var orderedDbVersions = dbPageVersionLookup.GetOrDefault(pageRoute.PageId);
+        var orderedDbVersions = dbPageVersionLookup.GetValueOrDefault(pageRoute.PageId);
 
         var versions = new List<PageVersionRoute>();
         foreach (var dbVersion in EnumerableHelper.Enumerate(orderedDbVersions))
@@ -246,7 +243,7 @@ public class GetPageRouteLookupQueryHandler
             VersionId = version.PageVersionId
         };
 
-        var template = templates.GetOrDefault(version.PageTemplateId);
+        var template = templates.GetValueOrDefault(version.PageTemplateId);
         if (template != null)
         {
             versionRouting.PageTemplateId = version.PageTemplateId;
@@ -265,7 +262,7 @@ public class GetPageRouteLookupQueryHandler
         {
             fullPath = path1;
         }
-        else if (path1.EndsWith("/"))
+        else if (path1.EndsWith('/'))
         {
             fullPath = path1 + path2;
         }

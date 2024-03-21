@@ -1,73 +1,7 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 public static class IDictionaryExtensions
 {
-    /// <summary>
-    /// Gets a value if it exists in the dictionary, otherise returns the default value.
-    /// </summary>
-    /// <param name="source">The dictionary to act on</param>
-    /// <param name="key">Key of the dictionary item to get</param>
-    public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey? key)
-    {
-        if (key == null)
-        {
-            return default;
-        }
-
-        return source.TryGetValue(key, out var value) ? value : default;
-    }
-
-    /// <summary>
-    /// Gets a value if it exists in the dictionary, otherise returns the default value. When
-    /// using with nullable types, a null key always returns the default TValue.
-    /// </summary>
-    /// <param name="source">The dictionary to act on.</param>
-    /// <param name="key">Key of the dictionary item to get. If null, then a default TValue is returned without checking the dictionary.</param>
-    public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey? key)
-        where TKey : struct
-    {
-        if (!key.HasValue)
-        {
-            return default;
-        }
-
-        return source.TryGetValue(key.Value, out var value) ? value : default;
-    }
-
-    /// <summary>
-    /// Gets a value if it exists in the dictionary, otherise returns the specified default value.
-    /// </summary>
-    /// <param name="source">The dictionary to act on.</param>
-    /// <param name="key">Key of the dictionary item to get.</param>
-    /// <param name="def">Default value to return if it is missing.</param>
-    public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey? key, TValue def)
-    {
-        if (key == null)
-        {
-            return def;
-        }
-
-        return source.TryGetValue(key, out var value) ? value : def;
-    }
-
-    /// <summary>
-    /// Gets a value if it exists in the dictionary, otherise returns the specified default value. When
-    /// using with nullable types, a null key always returns the default value.
-    /// </summary>
-    /// <param name="source">The dictionary to act on.</param>
-    /// <param name="key">Key of the dictionary item to get. If null, then the default value is returned without checking the dictionary.</param>
-    /// <param name="def">Default value to return if it is missing.</param>
-    public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey? key, TValue def)
-        where TKey : struct
-    {
-        if (!key.HasValue)
-        {
-            return def;
-        }
-
-        return source.TryGetValue(key.Value, out var value) ? value : def;
-    }
-
     /// <summary>
     /// Returns items in the dictionary which has a key listed in the keysToFilter 
     /// collection. The method ensures no duplicates are returned even if they appear
@@ -111,7 +45,6 @@ public static class IDictionaryExtensions
             yield break;
         }
 
-
         foreach (var key in orderedKeys)
         {
             if (source.TryGetValue(key, out var value))
@@ -139,7 +72,6 @@ public static class IDictionaryExtensions
         {
             yield break;
         }
-
 
         foreach (var key in orderedKeys)
         {
