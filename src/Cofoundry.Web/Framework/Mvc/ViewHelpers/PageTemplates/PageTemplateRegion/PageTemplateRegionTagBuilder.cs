@@ -29,7 +29,7 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
         string regionName
         )
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(regionName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(regionName);
         ArgumentNullException.ThrowIfNull(pageViewModel);
 
         _blockRenderer = blockRenderer;
@@ -60,7 +60,7 @@ public class PageTemplateRegionTagBuilder : IPageTemplateRegionTagBuilder
     /// <inheritdoc/>
     public IPageTemplateRegionTagBuilder WrapWithTag(string tagName, object? htmlAttributes = null)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(tagName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(tagName);
 
         _wrappingTagName = tagName;
         _additonalHtmlAttributes = TemplateRegionTagBuilderHelper.ParseHtmlAttributesFromAnonymousObject(htmlAttributes);

@@ -62,7 +62,7 @@ public abstract class SiteUrlResolverBase : ISiteUrlResolver
 
     private static string CleanPath(string siteRoot)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(siteRoot);
+        ArgumentException.ThrowIfNullOrWhiteSpace(siteRoot);
 
         siteRoot = siteRoot.Trim();
         if (!siteRoot.EndsWith(PATH_DELIMITER))

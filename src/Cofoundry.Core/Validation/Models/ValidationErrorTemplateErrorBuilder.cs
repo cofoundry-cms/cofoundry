@@ -27,7 +27,7 @@ public class ValidationErrorTemplateErrorBuilder
     /// <param name="errorCodeSuffix">The text to add to the end of the existing error code.</param>
     public ValidationErrorTemplateErrorBuilder WithErrorCodeSuffix(string errorCodeSuffix)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(errorCodeSuffix);
+        ArgumentException.ThrowIfNullOrWhiteSpace(errorCodeSuffix);
 
         _validationError.ErrorCode = _validationError.ErrorCode + "-" + errorCodeSuffix.TrimStart('-');
         return this;
@@ -41,7 +41,7 @@ public class ValidationErrorTemplateErrorBuilder
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithMessage(string message)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(message);
+        ArgumentException.ThrowIfNullOrWhiteSpace(message);
 
         _validationError.Message = message;
         return this;
@@ -56,10 +56,7 @@ public class ValidationErrorTemplateErrorBuilder
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithMessageFormatParameters(params string[] messageFormatParameters)
     {
-        if (EnumerableHelper.IsNullOrEmpty(messageFormatParameters))
-        {
-            throw new ArgumentEmptyException(nameof(messageFormatParameters));
-        }
+        ArgumentEmptyException.ThrowIfNullOrEmpty(messageFormatParameters);
 
         var message = string.Format(CultureInfo.CurrentCulture, _validationError.Message, messageFormatParameters);
         return WithMessage(message);
@@ -74,10 +71,7 @@ public class ValidationErrorTemplateErrorBuilder
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithMessageFormatParameters(params int[] messageFormatParameters)
     {
-        if (EnumerableHelper.IsNullOrEmpty(messageFormatParameters))
-        {
-            throw new ArgumentEmptyException(nameof(messageFormatParameters));
-        }
+        ArgumentEmptyException.ThrowIfNullOrEmpty(messageFormatParameters);
 
         var parameters = messageFormatParameters.Select(p => p.ToString(CultureInfo.InvariantCulture)).ToArray();
         var message = string.Format(CultureInfo.CurrentCulture, _validationError.Message, parameters);
@@ -109,10 +103,8 @@ public class ValidationErrorTemplateErrorBuilder
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithProperties(params string?[] propertyNames)
     {
-        if (EnumerableHelper.IsNullOrEmpty(propertyNames))
-        {
-            throw new ArgumentEmptyException(nameof(propertyNames));
-        }
+        ArgumentEmptyException.ThrowIfNullOrEmpty(propertyNames);
+
         _validationError.Properties = propertyNames
             .WhereNotNullOrEmpty()
             .ToArray();

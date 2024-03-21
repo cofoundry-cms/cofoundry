@@ -100,7 +100,7 @@ public class PasswordCryptographyV2
 
     public static string CreateHash(string password)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(password);
+        ArgumentException.ThrowIfNullOrWhiteSpace(password);
 
         var salt = GenerateSalt();
 
@@ -112,8 +112,8 @@ public class PasswordCryptographyV2
 
     public static bool VerifyPassword(string password, string hash)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(password);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(hash);
+        ArgumentException.ThrowIfNullOrWhiteSpace(password);
+        ArgumentException.ThrowIfNullOrWhiteSpace(hash);
 
         if (hash.Length <= SALT_BASE64_LENGTH)
         {

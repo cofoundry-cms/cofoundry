@@ -37,7 +37,7 @@ public class PermissionIdentifierFormatter
     /// <returns>A string identifier that uniquely identifies this permission.</returns>
     public static string GetUniqueIdentifier(string permissionTypeCode, string? entityDefinitionCode = null)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(permissionTypeCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(permissionTypeCode);
 
         string code;
 

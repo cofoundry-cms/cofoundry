@@ -27,7 +27,7 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
         string regionName
         )
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(regionName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(regionName);
         ArgumentNullException.ThrowIfNull(customEntityViewModel);
 
         _blockRenderer = blockRenderer;
@@ -58,7 +58,7 @@ public class CustomEntityTemplateRegionTagBuilder<TModel> : ICustomEntityTemplat
     /// <inheritdoc/>
     public ICustomEntityTemplateRegionTagBuilder<TModel> WrapWithTag(string tagName, object? htmlAttributes = null)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(tagName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(tagName);
 
         _wrappingTagName = tagName;
         _additonalHtmlAttributes = TemplateRegionTagBuilderHelper.ParseHtmlAttributesFromAnonymousObject(htmlAttributes);

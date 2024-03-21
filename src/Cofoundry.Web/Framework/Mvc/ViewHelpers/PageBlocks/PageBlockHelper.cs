@@ -8,7 +8,7 @@ public class PageBlockHelper<TModel> : IPageBlockHelper<TModel>
     /// <inheritdoc/>
     public IPageBlockHelper<TModel> UseDisplayName(string name)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
         if (name.Length > 50)
         {

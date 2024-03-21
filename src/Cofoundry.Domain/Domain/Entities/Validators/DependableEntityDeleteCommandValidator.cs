@@ -17,7 +17,7 @@ public class DependableEntityDeleteCommandValidator : IDependableEntityDeleteCom
 
     public async Task ValidateAsync(string entityDefinitionCode, int entityId, IExecutionContext executionContext)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(entityDefinitionCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(entityDefinitionCode);
         ArgumentNullException.ThrowIfNull(executionContext);
         if (entityId < 1)
         {

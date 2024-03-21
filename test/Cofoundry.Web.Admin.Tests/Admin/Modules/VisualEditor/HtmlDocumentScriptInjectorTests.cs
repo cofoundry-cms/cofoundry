@@ -1,18 +1,12 @@
-﻿using Cofoundry.Web.Admin.Internal;
 using System.Text;
+using Cofoundry.Web.Admin.Internal;
 
 namespace Cofoundry.Web.Admin.Tests.VisualEditor;
 
 public class HtmlDocumentScriptInjectorTests
 {
-    private static readonly string _headScript;
-    private static readonly string _bodyScript;
-
-    static HtmlDocumentScriptInjectorTests()
-    {
-        _headScript = LoadFile("HeadScript");
-        _bodyScript = LoadFile("BodyScript");
-    }
+    private static readonly string _headScript = LoadFile("HeadScript");
+    private static readonly string _bodyScript = LoadFile("BodyScript");
 
     [Theory]
     [InlineData("EmptyHeadAndBody", null)]

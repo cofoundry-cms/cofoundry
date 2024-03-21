@@ -70,7 +70,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// </param>
     public AdminApiRouteBuilderContext<TController> MapGet(string path, string? actionName = null)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
         AddGetRoute(_basePath + "/" + path, actionName);
 
@@ -103,7 +103,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// </param>
     public AdminApiRouteBuilderContext<TController> MapPost(string path, string? actionName = null)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
         AddPostRoute(_basePath + "/" + path, actionName);
 
@@ -136,7 +136,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// </param>
     public AdminApiRouteBuilderContext<TController> MapPut(string path, string? actionName = null)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
         AddPutRoute(_basePath + "/" + path, actionName);
 
@@ -169,7 +169,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// </param>
     public AdminApiRouteBuilderContext<TController> MapPatch(string path, string? actionName = null)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
         AddPatchRoute(_basePath + "/" + path, actionName);
 
@@ -202,7 +202,7 @@ public class AdminApiRouteBuilderContext<TController>
     /// </param>
     public AdminApiRouteBuilderContext<TController> MapDelete(string path, string? actionName = null)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
 
         AddDeleteRoute(_basePath + "/" + path, actionName);
 

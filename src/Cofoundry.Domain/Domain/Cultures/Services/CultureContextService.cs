@@ -23,7 +23,7 @@ public class CultureContextService : ICultureContextService
     /// <inheritdoc/>
     public void SetCurrent(string ietfLanguageTag)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(ietfLanguageTag);
+        ArgumentException.ThrowIfNullOrWhiteSpace(ietfLanguageTag);
 
         var culture = _cultureFactory.Create(ietfLanguageTag);
 

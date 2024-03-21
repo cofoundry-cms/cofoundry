@@ -10,8 +10,8 @@ internal static class ViewPathFormatter
 {
     public static string View(string controllerName, string viewName)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(controllerName);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(viewName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(controllerName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(viewName);
 
         var viewPath = $"~{RouteConstants.InternalModuleResourcePathPrefix}{controllerName}/MVC/Views/{viewName}.cshtml";
         return viewPath;

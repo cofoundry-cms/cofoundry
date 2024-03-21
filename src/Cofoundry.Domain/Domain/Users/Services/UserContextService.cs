@@ -38,7 +38,7 @@ public class UserContextService : IUserContextService
     /// <inheritdoc/>
     public virtual async Task<IUserContext> GetCurrentContextByUserAreaAsync(string userAreaCode)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(userAreaCode);
 
         var userId = await _userSessionService.GetUserIdByUserAreaCodeAsync(userAreaCode);
         var userContext = await GetUserContextByIdAsync(userId);

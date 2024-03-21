@@ -18,7 +18,7 @@ public class NewPasswordValidationErrorCodes
     /// </param>
     public static string AddNamespace(string errorCode)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(errorCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(errorCode);
 
         return ValidationErrorCodes.AddNamespace(errorCode, "new-password");
     }

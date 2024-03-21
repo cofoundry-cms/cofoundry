@@ -7,7 +7,7 @@ public class CultureFactory : ICultureFactory
 {
     public CultureInfo Create(string languageTag)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(languageTag);
+        ArgumentException.ThrowIfNullOrWhiteSpace(languageTag);
 
         return new CultureInfo(languageTag);
     }

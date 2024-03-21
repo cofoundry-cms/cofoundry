@@ -174,7 +174,7 @@ public class WebUserSessionService : IUserSessionService
 
     public async Task SetAmbientUserAreaAsync(string userAreaCode)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(userAreaCode);
 
         // Ensure that if the user is logged into the area that it is in 
         // the cache before we make the switch. This is because in

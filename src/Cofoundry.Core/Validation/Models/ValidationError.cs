@@ -23,7 +23,7 @@ public class ValidationError
     [SetsRequiredMembers]
     public ValidationError(string message, string? property = null)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(message);
+        ArgumentException.ThrowIfNullOrWhiteSpace(message);
 
         Message = message;
         if (!string.IsNullOrWhiteSpace(property))

@@ -42,7 +42,7 @@ public class FilteredEmbeddedFileProvider : IFileProvider
         )
     {
         ArgumentNullException.ThrowIfNull(assemblyProvider);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(filterToPath);
+        ArgumentException.ThrowIfNullOrWhiteSpace(filterToPath);
 
         _restrictToPath = ValidatePath(filterToPath, nameof(filterToPath));
 

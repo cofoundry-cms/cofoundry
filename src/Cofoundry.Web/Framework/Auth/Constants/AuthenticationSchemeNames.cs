@@ -15,7 +15,7 @@ public static class AuthenticationSchemeNames
     /// <returns>Namespaced scheme name in the format 'Cofoundry_UserArea_Scheme_{userAreaCode}'.</returns>
     public static string UserArea(string userAreaCode)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(userAreaCode);
 
         return "Cofoundry_UserArea_Scheme_" + userAreaCode;
     }

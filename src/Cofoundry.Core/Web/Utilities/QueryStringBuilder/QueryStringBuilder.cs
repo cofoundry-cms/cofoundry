@@ -43,7 +43,7 @@ public class QueryStringBuilder
     /// <returns>QueryStringBuilder instance for method chaining.</returns>
     public QueryStringBuilder Add(string key, string? value)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(key);
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
 
         if (!string.IsNullOrWhiteSpace(value))
         {

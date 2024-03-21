@@ -37,8 +37,8 @@ public class EmbeddedResourceFileSource : IFileSource
         )
     {
         ArgumentNullException.ThrowIfNull(assembly);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(path);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(path);
+        ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
 
         Assembly = assembly;
         FileName = fileName;
@@ -60,8 +60,8 @@ public class EmbeddedResourceFileSource : IFileSource
         )
     {
         ArgumentNullException.ThrowIfNull(assembly);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
 
         Assembly = assembly;
         FileName = fileName;

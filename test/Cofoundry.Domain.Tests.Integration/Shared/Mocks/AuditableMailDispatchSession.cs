@@ -41,7 +41,7 @@ public class AuditableMailDispatchSession : IMailDispatchSession
     /// </param>
     public int CountDispatched(string toEmail, params string[] textPartsToMatch)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(toEmail);
+        ArgumentException.ThrowIfNullOrWhiteSpace(toEmail);
 
         return CountDispatched(m =>
             m.To.Address.Equals(toEmail, StringComparison.OrdinalIgnoreCase)

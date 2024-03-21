@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Cofoundry.Core;
 
@@ -13,28 +14,53 @@ public class ArgumentEmptyException : ArgumentException
     {
     }
 
-    public ArgumentEmptyException(string? argumentName)
-        : base($"Argument '{argumentName ?? "not specified"}' cannot be empty.", argumentName)
+    public ArgumentEmptyException(string? paramName)
+        : this(paramName, null)
+    {
+    }
+
+    public ArgumentEmptyException(string? paramName, string? message)
+        : base(paramName, message ?? $"Argument '{paramName ?? "not specified"}' cannot be empty.")
     {
     }
 
     /// <summary>
     /// Throws an <see cref="ArgumentEmptyException"/> if <paramref name="argument"/>
-    /// is empty or whitespace. Throws an <see cref="ArgumentNullException"/> if the
+    /// contains no elements. Throws an <see cref="ArgumentNullException"/> if the
     /// argument is <see langword="null"/>.
     /// </summary>
     /// <param name="argument">Argument to validate.</param>
     /// <param name="paramName">The name of the parameter with which argument corresponds.</param>
-    public static void ThrowIfNullOrWhitespace(string? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
+    public static void ThrowIfNullOrEmpty<T>([NotNull] IReadOnlyCollection<T>? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
     {
         if (argument == null)
         {
             throw new ArgumentNullException(paramName);
         }
 
-        if (string.IsNullOrWhiteSpace(argument))
+        if (argument.Count == 0)
         {
-            throw new ArgumentEmptyException(paramName);
+            throw new ArgumentEmptyException(null, paramName);
+        }
+    }
+
+    /// <summary>
+    /// Throws an <see cref="ArgumentEmptyException"/> if <paramref name="argument"/>
+    /// contains no elements. Throws an <see cref="ArgumentNullException"/> if the
+    /// argument is <see langword="null"/>.
+    /// </summary>
+    /// <param name="argument">Argument to validate.</param>
+    /// <param name="paramName">The name of the parameter with which argument corresponds.</param>
+    public static void ThrowIfNullOrEmpty<T>([NotNull] IEnumerable<T>? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
+    {
+        if (argument == null)
+        {
+            throw new ArgumentNullException(null, paramName);
+        }
+
+        if (!argument.Any())
+        {
+            throw new ArgumentEmptyException(null, paramName);
         }
     }
 
@@ -50,7 +76,7 @@ public class ArgumentEmptyException : ArgumentException
     {
         if (argument.Equals(default(T)))
         {
-            throw new ArgumentEmptyException(paramName);
+            throw new ArgumentEmptyException(null, paramName);
         }
     }
 }

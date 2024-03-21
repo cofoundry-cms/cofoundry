@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System.Collections;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -34,12 +34,7 @@ public static class MetaDataAttributePlacementValidator
     {
         ArgumentNullException.ThrowIfNull(attribute);
         ArgumentNullException.ThrowIfNull(context);
-        ArgumentNullException.ThrowIfNull(validParamTypes);
-
-        if (validParamTypes.Length == 0)
-        {
-            throw new ArgumentEmptyException(nameof(validParamTypes));
-        }
+        ArgumentEmptyException.ThrowIfNullOrEmpty(validParamTypes);
 
         var propertyModelType = context.Key.ModelType;
 
@@ -73,12 +68,7 @@ public static class MetaDataAttributePlacementValidator
     {
         ArgumentNullException.ThrowIfNull(attribute);
         ArgumentNullException.ThrowIfNull(context);
-        ArgumentNullException.ThrowIfNull(validParamTypes);
-
-        if (validParamTypes.Length == 0)
-        {
-            throw new ArgumentEmptyException(nameof(validParamTypes));
-        }
+        ArgumentEmptyException.ThrowIfNullOrEmpty(validParamTypes);
 
         var propertyModelType = context.Key.ModelType;
 

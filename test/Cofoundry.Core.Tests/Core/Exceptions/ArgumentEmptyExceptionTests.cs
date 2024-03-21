@@ -1,33 +1,32 @@
-﻿namespace Cofoundry.Core.Tests.Core.Exceptions;
+namespace Cofoundry.Core.Tests.Core.Exceptions;
 
 public class ArgumentEmptyExceptionTests
 {
     [Fact]
-    public void ThrowIfNullOrWhitespace_WhenNull_ThrowsArgumentNullException()
+    public void ThrowIfNullOrEmpty_WhenNull_ThrowsArgumentNullException()
     {
-        string? testValue = null;
+        string[]? testValue = null;
 
-        Action act = () => ArgumentEmptyException.ThrowIfNullOrWhitespace(testValue);
+        Action act = () => ArgumentEmptyException.ThrowIfNullOrEmpty(testValue);
 
         act.Should().Throw<ArgumentNullException>().WithMessage("*'testValue'*");
     }
 
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    public void ThrowIfNullOrWhitespace_WhenNull_ThrowsArgumentEmptyException(string testValue)
+    [Fact]
+    public void ThrowIfNullOrEmpty_WhenEmpty_ThrowsArgumentEmptyException()
     {
-        Action act = () => ArgumentEmptyException.ThrowIfNullOrWhitespace(testValue);
+        string[]? testValue = [];
+        Action act = () => ArgumentEmptyException.ThrowIfNullOrEmpty(testValue);
 
         act.Should().Throw<ArgumentEmptyException>().WithMessage("*'testValue'*");
     }
 
     [Fact]
-    public void ThrowIfNullOrWhitespace_WhenNotNullOrEmpty_DoesNotThrow()
+    public void ThrowIfNullOrEmpty_WhenNotNullOrEmpty_DoesNotThrow()
     {
-        var testValue = "inconceivable!";
+        string[]? testValue = ["inconceivable!"];
 
-        Action act = () => ArgumentEmptyException.ThrowIfNullOrWhitespace(testValue);
+        Action act = () => ArgumentEmptyException.ThrowIfNullOrEmpty(testValue);
 
         act.Should().NotThrow();
     }

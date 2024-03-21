@@ -117,7 +117,7 @@ public class InMemoryUserSessionService : IUserSessionService
 
     public Task SetAmbientUserAreaAsync(string userAreaCode)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(userAreaCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(userAreaCode);
 
         if (_ambientUserAreaCode == userAreaCode)
         {

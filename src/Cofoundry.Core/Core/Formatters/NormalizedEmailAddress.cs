@@ -10,7 +10,7 @@ public class NormalizedEmailAddress
 {
     public NormalizedEmailAddress(string local, EmailDomainName domain)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(local);
+        ArgumentException.ThrowIfNullOrWhiteSpace(local);
         ArgumentNullException.ThrowIfNull(domain);
 
         Local = local;

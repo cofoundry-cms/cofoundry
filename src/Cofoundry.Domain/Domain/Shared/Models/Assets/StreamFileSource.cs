@@ -65,7 +65,7 @@ public class StreamFileSource : IFileSource
     /// </param>
     public StreamFileSource(string fileName, string? mimeType, Func<Task<Stream>> streamFactory)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(fileName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
         ArgumentNullException.ThrowIfNull(streamFactory);
 
         FileName = fileName;

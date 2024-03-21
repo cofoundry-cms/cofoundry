@@ -21,7 +21,7 @@ public partial class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingR
     /// <inheritdoc/>
     public bool MatchesRule(string url, PageRoute pageRoute)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(url);
+        ArgumentException.ThrowIfNullOrWhiteSpace(url);
         ArgumentNullException.ThrowIfNull(pageRoute);
 
         var routingPart = GetRoutingPart(url, pageRoute);
@@ -45,7 +45,7 @@ public partial class IdAndUrlSlugCustomEntityRoutingRule : ICustomEntityRoutingR
     /// <inheritdoc/>
     public IQuery<CustomEntityRoute?> ExtractRoutingQuery(string url, PageRoute pageRoute)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(url);
+        ArgumentException.ThrowIfNullOrWhiteSpace(url);
         ArgumentNullException.ThrowIfNull(pageRoute);
         ArgumentNullException.ThrowIfNull(pageRoute.CustomEntityDefinitionCode);
 

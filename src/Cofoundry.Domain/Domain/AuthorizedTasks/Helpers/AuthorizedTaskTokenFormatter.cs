@@ -7,7 +7,7 @@ public class AuthorizedTaskTokenFormatter : IAuthorizedTaskTokenFormatter
     {
         ArgumentNullException.ThrowIfNull(parts);
         ArgumentEmptyException.ThrowIfDefault(parts.AuthorizedTaskId);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(parts.AuthorizationCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(parts.AuthorizationCode);
 
 
         return parts.AuthorizedTaskId.ToString("N") + "-" + parts.AuthorizationCode;

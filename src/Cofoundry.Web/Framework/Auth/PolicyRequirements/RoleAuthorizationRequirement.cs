@@ -23,7 +23,7 @@ public class RoleAuthorizationRequirement : IAuthorizationRequirement
     public RoleAuthorizationRequirement(string userAreaCode, string roleCode)
         : this(userAreaCode, [roleCode])
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(roleCode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(roleCode);
     }
 
     /// <summary>

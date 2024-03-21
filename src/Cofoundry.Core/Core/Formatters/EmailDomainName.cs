@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 /// <summary>
 /// The domain name part of an email address (the part after the @).
@@ -7,8 +7,8 @@ public class EmailDomainName
 {
     public EmailDomainName(string domain, string idnDomain)
     {
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(domain);
-        ArgumentEmptyException.ThrowIfNullOrWhitespace(idnDomain);
+        ArgumentException.ThrowIfNullOrWhiteSpace(domain);
+        ArgumentException.ThrowIfNullOrWhiteSpace(idnDomain);
 
         Name = domain;
         IdnName = idnDomain;
