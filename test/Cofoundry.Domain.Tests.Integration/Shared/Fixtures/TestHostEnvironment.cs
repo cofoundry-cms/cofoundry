@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 
 namespace Cofoundry.Domain.Tests.Integration;
@@ -8,7 +8,7 @@ public class TestHostEnvironment : IWebHostEnvironment
     public TestHostEnvironment()
     {
         ApplicationName = typeof(TestHostEnvironment).Namespace ?? "Unknown Namespace";
-        var rootPath = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+        var rootPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
         var directory = Path.GetDirectoryName(rootPath);
         if (directory == null)
         {
