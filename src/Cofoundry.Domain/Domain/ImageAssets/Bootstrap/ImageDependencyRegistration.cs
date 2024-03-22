@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Registration;
@@ -17,6 +17,7 @@ public class ImageDependencyRegistration : IDependencyRegistration
             .Register<IImageAssetRenderDetailsMapper, ImageAssetRenderDetailsMapper>()
             .Register<IImageAssetFileMapper, ImageAssetFileMapper>()
             .Register<IImageResizeSettingsValidator, ImageResizeSettingsValidator>()
+            .Register<ImageAssetFileCommandHelper>()
             ;
     }
 }

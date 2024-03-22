@@ -163,7 +163,6 @@ function (
 
     function save() {
         setLoadingOn(vm.saveLoadState);
-
         imageService
             .update(vm.command)
             .progress(vm.saveLoadState.setProgress)

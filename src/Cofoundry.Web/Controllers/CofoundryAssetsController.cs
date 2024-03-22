@@ -61,16 +61,28 @@ public class CofoundryAssetsController : Controller
             return RedirectPermanent(url);
         }
 
-        Stream? stream;
+        Stream? stream = null;
 
-        try
+        if (asset.FileExtension == ImageAssetConstants.SvgFileExtension)
         {
-            stream = await _resizedImageAssetFileService.GetAsync(asset, settings);
+            // SVGs will never support resizing so do a direct return
+            stream = await GetImageAssetFileAsync(asset.ImageAssetId);
         }
-        catch (FileNotFoundException ex)
+        else
         {
-            // If the file exists but the file has gone missing, log and return a 404
-            _logger.LogError(ex, "Image Asset exists, but has no file: {ImageAssetId}", imageAssetId);
+            try
+            {
+                stream = await _resizedImageAssetFileService.GetAsync(asset, settings);
+            }
+            catch (FileNotFoundException ex)
+            {
+                _logger.LogError(ex, "Image Asset exists, but has no file: {ImageAssetId}", imageAssetId);
+            }
+        }
+
+        if (stream == null)
+        {
+            // If the asset exists but the file has gone missing
             return FileAssetNotFound("File not found");
         }
 
@@ -98,7 +110,7 @@ public class CofoundryAssetsController : Controller
 
     public async Task<ActionResult> Document(int documentAssetId, long fileStamp, string verificationToken, string fileName, string extension)
     {
-        var file = await GetDocumentAssetFile(documentAssetId);
+        var file = await GetDocumentAssetFileAsync(documentAssetId);
 
         var validationAction = ValidateDocumentFileRequest(fileStamp, verificationToken, fileName, file, false);
         if (validationAction != null)
@@ -124,7 +136,7 @@ public class CofoundryAssetsController : Controller
 
     public async Task<ActionResult> DocumentDownload(int documentAssetId, long fileStamp, string verificationToken, string fileName, string extension)
     {
-        var file = await GetDocumentAssetFile(documentAssetId);
+        var file = await GetDocumentAssetFileAsync(documentAssetId);
 
         var validationAction = ValidateDocumentFileRequest(fileStamp, verificationToken, fileName, file, true);
         if (validationAction != null)
@@ -148,7 +160,7 @@ public class CofoundryAssetsController : Controller
     /// </summary>
     public async Task<ActionResult> File_OldPath(int assetId, string fileName, string extension)
     {
-        var file = await GetDocumentAssetFile(assetId);
+        var file = await GetDocumentAssetFileAsync(assetId);
 
         if (file == null)
         {
@@ -165,7 +177,7 @@ public class CofoundryAssetsController : Controller
     /// </summary>
     public async Task<ActionResult> FileDownload_OldPath(int assetId, string fileName, string extension)
     {
-        var file = await GetDocumentAssetFile(assetId);
+        var file = await GetDocumentAssetFileAsync(assetId);
 
         if (file == null)
         {
@@ -176,7 +188,7 @@ public class CofoundryAssetsController : Controller
         return RedirectPermanent(url);
     }
 
-    private async Task<DocumentAssetFile?> GetDocumentAssetFile(int assetId)
+    private async Task<DocumentAssetFile?> GetDocumentAssetFileAsync(int assetId)
     {
         DocumentAssetFile? file = null;
 
@@ -192,6 +204,19 @@ public class CofoundryAssetsController : Controller
         }
 
         return file;
+    }
+
+    private async Task<Stream?> GetImageAssetFileAsync(int imageAssetId)
+    {
+        var query = new GetImageAssetFileByIdQuery(imageAssetId);
+        var result = await _queryExecutor.ExecuteAsync(query);
+
+        if (result == null || result.ContentStream == null)
+        {
+            return null;
+        }
+
+        return result.ContentStream;
     }
 
     private ActionResult? ValidateDocumentFileRequest(

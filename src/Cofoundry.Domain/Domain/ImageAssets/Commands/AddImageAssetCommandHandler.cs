@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Web;
 using Cofoundry.Domain.Data;
 
@@ -14,34 +14,34 @@ public class AddImageAssetCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly EntityAuditHelper _entityAuditHelper;
     private readonly EntityTagHelper _entityTagHelper;
-    private readonly IImageAssetFileService _imageAssetFileService;
     private readonly ITransactionScopeManager _transactionScopeFactory;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IRandomStringGenerator _randomStringGenerator;
     private readonly IAssetFileTypeValidator _assetFileTypeValidator;
     private readonly IMimeTypeService _mimeTypeService;
+    private readonly ImageAssetFileCommandHelper _imageAssetFileCommandHelper;
 
     public AddImageAssetCommandHandler(
         CofoundryDbContext dbContext,
         EntityAuditHelper entityAuditHelper,
         EntityTagHelper entityTagHelper,
-        IImageAssetFileService imageAssetFileService,
         ITransactionScopeManager transactionScopeFactory,
         IMessageAggregator messageAggregator,
         IRandomStringGenerator randomStringGenerator,
         IAssetFileTypeValidator assetFileTypeValidator,
-        IMimeTypeService mimeTypeService
+        IMimeTypeService mimeTypeService,
+        ImageAssetFileCommandHelper imageAssetFileCommandHelper
         )
     {
         _dbContext = dbContext;
         _entityAuditHelper = entityAuditHelper;
         _entityTagHelper = entityTagHelper;
-        _imageAssetFileService = imageAssetFileService;
         _transactionScopeFactory = transactionScopeFactory;
         _messageAggregator = messageAggregator;
         _randomStringGenerator = randomStringGenerator;
         _assetFileTypeValidator = assetFileTypeValidator;
         _mimeTypeService = mimeTypeService;
+        _imageAssetFileCommandHelper = imageAssetFileCommandHelper;
     }
 
     public async Task ExecuteAsync(AddImageAssetCommand command, IExecutionContext executionContext)
@@ -74,7 +74,7 @@ public class AddImageAssetCommandHandler
             // Update the disk filename
             imageAsset.FileNameOnDisk = $"{imageAsset.ImageAssetId}-{fileStamp}";
 
-            await _imageAssetFileService.SaveAsync(command.File, imageAsset, nameof(command.File));
+            await _imageAssetFileCommandHelper.SaveFileAsync(command.File, imageAsset, nameof(command.File));
 
             command.OutputImageAssetId = imageAsset.ImageAssetId;
 

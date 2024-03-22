@@ -14,7 +14,7 @@ public class SimpleResizedImageAssetFileService : IResizedImageAssetFileService
         _queryExecutor = queryExecutor;
     }
 
-    public Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings settings)
+    public Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings resizeSettings)
     {
         // Resizing only supported via plugin
         return GetFileStreamAsync(asset.ImageAssetId);

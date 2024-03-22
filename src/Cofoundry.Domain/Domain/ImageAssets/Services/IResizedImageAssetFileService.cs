@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Service for retrieving image asset files and resizing them to specific 
@@ -12,8 +12,8 @@ public interface IResizedImageAssetFileService
     /// Resized an image asset using a set of settings like width, height and cropping type.
     /// </summary>
     /// <param name="asset">The image asset to resize.</param>
-    /// <param name="settings">The settings used to resize the image.</param>
-    Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings settings);
+    /// <param name="resizeSettings">The settings used to resize the image.</param>
+    Task<Stream> GetAsync(IImageAssetRenderable asset, IImageResizeSettings resizeSettings);
 
     /// <summary>
     /// Clears any cached resized images for a specific image asset.

@@ -32,7 +32,8 @@
             <cms-form-field-tags cms-title="CMS Tags"
                                  cms-model="vm.command.tags"></cms-form-field-tags>
 
-            <cms-form-field-image-anchor-location-selector cms-model="vm.command.defaultAnchorLocation"></cms-form-field-image-anchor-location-selector>
+            <cms-form-field-image-anchor-location-selector cms-model="vm.command.defaultAnchorLocation"
+                                                           ng-if="vm.command.file && vm.command.file.type !== 'image/svg+xml'"></cms-form-field-image-anchor-location-selector>
 
         </cms-form-section>
 

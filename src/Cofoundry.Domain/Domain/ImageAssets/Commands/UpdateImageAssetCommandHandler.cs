@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Web;
 using Cofoundry.Domain.Data;
 
@@ -16,14 +16,13 @@ public class UpdateImageAssetCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly EntityAuditHelper _entityAuditHelper;
     private readonly EntityTagHelper _entityTagHelper;
-    private readonly IImageAssetFileService _imageAssetFileService;
     private readonly IImageAssetCache _imageAssetCache;
-    private readonly IResizedImageAssetFileService _imageAssetFileCache;
     private readonly ITransactionScopeManager _transactionScopeFactory;
     private readonly IMessageAggregator _messageAggregator;
     private readonly ICommandExecutor _commandExecutor;
     private readonly IAssetFileTypeValidator _assetFileTypeValidator;
     private readonly IMimeTypeService _mimeTypeService;
+    private readonly ImageAssetFileCommandHelper _imageAssetFileCommandHelper;
 
     public UpdateImageAssetCommandHandler(
         CofoundryDbContext dbContext,
@@ -31,25 +30,24 @@ public class UpdateImageAssetCommandHandler
         EntityTagHelper entityTagHelper,
         IImageAssetFileService imageAssetFileService,
         IImageAssetCache imageAssetCache,
-        IResizedImageAssetFileService imageAssetFileCache,
         ITransactionScopeManager transactionScopeFactory,
         IMessageAggregator messageAggregator,
         ICommandExecutor commandExecutor,
         IAssetFileTypeValidator assetFileTypeValidator,
-        IMimeTypeService mimeTypeService
+        IMimeTypeService mimeTypeService,
+        ImageAssetFileCommandHelper imageAssetFileCommandHelper
         )
     {
         _dbContext = dbContext;
         _entityAuditHelper = entityAuditHelper;
         _entityTagHelper = entityTagHelper;
-        _imageAssetFileService = imageAssetFileService;
         _imageAssetCache = imageAssetCache;
-        _imageAssetFileCache = imageAssetFileCache;
         _transactionScopeFactory = transactionScopeFactory;
         _messageAggregator = messageAggregator;
         _commandExecutor = commandExecutor;
         _assetFileTypeValidator = assetFileTypeValidator;
         _mimeTypeService = mimeTypeService;
+        _imageAssetFileCommandHelper = imageAssetFileCommandHelper;
     }
 
     public async Task ExecuteAsync(UpdateImageAssetCommand command, IExecutionContext executionContext)
@@ -95,7 +93,8 @@ public class UpdateImageAssetCommandHandler
                 {
                     throw new InvalidOperationException("command.File should not be null");
                 }
-                await _imageAssetFileService.SaveAsync(command.File, imageAsset, nameof(command.File));
+
+                await _imageAssetFileCommandHelper.SaveFileAsync(command.File, imageAsset, nameof(command.File));
             }
 
             await _dbContext.SaveChangesAsync();
@@ -108,11 +107,6 @@ public class UpdateImageAssetCommandHandler
 
     private async Task OnTransactionComplete(bool hasNewFile, ImageAsset imageAsset)
     {
-        if (hasNewFile)
-        {
-            await _imageAssetFileCache.ClearAsync(imageAsset.FileNameOnDisk);
-        }
-
         _imageAssetCache.Clear(imageAsset.ImageAssetId);
 
         await _messageAggregator.PublishAsync(new ImageAssetUpdatedMessage()

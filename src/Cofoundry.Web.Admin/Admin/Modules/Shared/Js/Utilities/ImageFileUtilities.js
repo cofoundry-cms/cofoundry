@@ -30,6 +30,11 @@ function (
                 isResized: false
             };
 
+            if (file.type == 'image/svg+xml')
+            {
+                return result;
+            }
+
             if ((settings.maxUploadWidth && img.width > settings.maxUploadWidth)
                 || (settings.maxUploadHeight && img.height > settings.maxUploadHeight)) {
                 // Note: png is only supported file type in spec, but others are typically supported.

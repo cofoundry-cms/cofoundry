@@ -88,7 +88,11 @@ public class CleanUpAssetFilesCommandHandler
                 {
                     case ImageAssetEntityDefinition.DefinitionCode:
                         await _fileStoreService.DeleteAsync(ImageAssetConstants.FileContainerName, fileName);
-                        await _resizedImageAssetFileService.ClearAsync(item.FileNameOnDisk);
+                        if (item.FileExtension != ImageAssetConstants.SvgFileExtension)
+                        {
+                            // SVGs are not resized
+                            await _resizedImageAssetFileService.ClearAsync(item.FileNameOnDisk);
+                        }
                         await MarkCompleteAsync(item);
                         break;
                     case DocumentAssetEntityDefinition.DefinitionCode:

@@ -5,7 +5,7 @@
             <div class="image-asset">
                 <div ngf-drop
                      ngf-change="vm.fileChanged($files, $event)"
-                     ngf-accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif"
+                     ngf-accept="image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif,image/webp,image/svg+xml"
                      ngf-hide-on-drop-not-available="false"
                      ngf-drag-over-class="{accept:'dragover-accepted', reject:'dragover-rejected'}"
                      ng-show="vm.formScope.editMode && !vm.readonly"
@@ -19,7 +19,7 @@
                     <img ng-if="vm.model"
                          ngf-select
                          ngf-change="vm.fileChanged($files, $event)"
-                         ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif'"
+                         ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif,image/webp,image/svg+xml'"
                          ngf-reset-on-click="false"
                          ng-src="{{vm.previewUrl}}"
                          class="img-polaroid selectable"
@@ -34,7 +34,7 @@
                                 title="{{vm.buttonText}}"
                                 type="button"
                                 ngf-change="vm.fileChanged($files, $event)"
-                                ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif'"
+                                ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif,image/webp,image/svg+xml'"
                                 ngf-reset-on-click="false"
                                 ng-disabled="vm.loadState.isLoading">
                             <i class="fa fa-picture-o"></i>
@@ -45,7 +45,7 @@
                                 title="{{vm.buttonText}}"
                                 type="button"
                                 ngf-change="vm.fileChanged($files, $event)"
-                                ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif'"
+                                ngf-accept="'image/gif,image/jpeg,image/png,image/tiff,image/bmp,.tif,image/webp,image/svg+xml'"
                                 ngf-reset-on-click="false"
                                 ng-disabled="vm.loadState.isLoading">
                             <i class="fa fa-cog"></i>

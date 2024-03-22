@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// Route library for image assets
@@ -121,7 +121,7 @@ public class ImageAssetRouteLibrary : IImageAssetRouteLibrary
         var pathPart = asset.ImageAssetId + "-" + asset.FileStamp + "-" + asset.VerificationToken;
         var url = $"/assets/images/{pathPart}/{fileName}";
 
-        if (settings != null)
+        if (settings != null && asset.FileExtension != ImageAssetConstants.SvgFileExtension)
         {
             url += settings.ToQueryString();
         }
