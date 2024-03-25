@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// This applies multiple permissions in an 'OR' arrangement in that the
@@ -21,7 +21,7 @@ public class CompositePermissionApplication : IPermissionApplication
     /// The collection of permissions to check. A user would need only one
     /// of these permissions to pass the evaluation of this application.
     /// </summary>
-    public ICollection<IPermission> Permissions { get; set; }
+    public IReadOnlyCollection<IPermission> Permissions { get; set; }
 
     public override string? ToString()
     {

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing;
 
 namespace Cofoundry.Web;
 
@@ -13,7 +13,7 @@ public interface IRouteInitializer
     /// Orders and runs RegisterRoutes() on all instances of IRouteRegistration 
     /// registered in the dependency container.
     /// </summary>
-    /// <param name="routeBuilder">
+    /// <param name="routes">
     /// The MVC IEndpointRouteBuilder to add routes to.
     /// </param>
     void Initialize(IEndpointRouteBuilder routes);

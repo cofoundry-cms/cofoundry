@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Data.Common;
+using Microsoft.Data.SqlClient;
 
 namespace Cofoundry.Core.Data.SimpleDatabase.Internal;
 
@@ -8,7 +8,7 @@ namespace Cofoundry.Core.Data.SimpleDatabase.Internal;
 /// Simple MS SqlServer raw sql execution to avoid a dependency on any particular
 /// framework
 /// </summary>
-public class SqlDatabase : IDisposable, IDatabase
+public sealed class SqlDatabase : IDisposable, IDatabase
 {
     private readonly SqlConnection _sqlConnection;
 
@@ -65,7 +65,7 @@ public class SqlDatabase : IDisposable, IDatabase
     /// <param name="map">A mapping function to use to map each row.</param>
     /// <param name="sqlParams">Any parameters to add to the command.</param>
     /// <returns>Collection of mapped entities.</returns>
-    public async Task<ICollection<TEntity>> ReadAsync<TEntity>(
+    public async Task<IReadOnlyCollection<TEntity>> ReadAsync<TEntity>(
         string sql,
         Func<SqlDataReader, TEntity> mapper,
         params SqlParameter[]? sqlParams

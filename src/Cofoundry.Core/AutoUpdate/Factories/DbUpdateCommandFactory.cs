@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace Cofoundry.Core.AutoUpdate;
 
@@ -19,7 +19,7 @@ public class DbUpdateCommandFactory
     /// </param>
     /// <param name="scriptPath">The folder path of the script files which defaults to 'Install.Db.' (which equates to 'Install/Db/')</param>
     /// <returns>Collecton of IUpdateCommands that represents all the required db updates</returns>
-    public ICollection<IVersionedUpdateCommand> Create(
+    public IReadOnlyCollection<IVersionedUpdateCommand> Create(
         Assembly assembly,
         ModuleVersion? currentVersion,
         string scriptPath = "Install.Db."
@@ -107,13 +107,13 @@ public class DbUpdateCommandFactory
         return Path.GetFileNameWithoutExtension(fileName);
     }
 
-    private static ICollection<string> GetScripts(Assembly assembly, string scriptPath)
+    private static string[] GetScripts(Assembly assembly, string scriptPath)
     {
         var scripts = assembly
             .GetManifestResourceNames()
             .Where(f => f.Contains(scriptPath) && f.EndsWith(".sql"))
             .OrderBy(f => f)
-            .ToList();
+            .ToArray();
 
         return scripts;
     }

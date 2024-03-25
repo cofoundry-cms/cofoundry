@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Domain.Internal;
@@ -29,7 +29,7 @@ public class EntityVersionPageBlockMapper : IEntityVersionPageBlockMapper
 
     /// <inheritdoc/>
     public async Task MapRegionsAsync<TBlockRenderDetails>(
-        IEnumerable<IEntityVersionPageBlock> dbBlock,
+        IEnumerable<IEntityVersionPageBlock> dbBlocks,
         IEnumerable<IEntityRegionRenderDetails<TBlockRenderDetails>> regions,
         IReadOnlyCollection<PageBlockTypeSummary> allBlockTypes,
         PublishStatusQuery publishStatus,
@@ -37,7 +37,7 @@ public class EntityVersionPageBlockMapper : IEntityVersionPageBlockMapper
         )
         where TBlockRenderDetails : IEntityVersionPageBlockRenderDetails, new()
     {
-        var mappedBlocks = await ToBlockMappingDataAsync(dbBlock, allBlockTypes, publishStatus, executionContext);
+        var mappedBlocks = await ToBlockMappingDataAsync(dbBlocks, allBlockTypes, publishStatus, executionContext);
 
         // Map Regions
 

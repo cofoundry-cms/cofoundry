@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Configuration;
+using Cofoundry.Core.Configuration;
 
 namespace Cofoundry.Domain;
 
@@ -32,7 +32,7 @@ public class AssetFilesSettings : CofoundryConfigurationSettingsBase
     /// behavior to interpret it as a allowlist, or disabled this validation 
     /// entirely.
     /// </summary>
-    public ICollection<string>? FileExtensionValidationList { get; set; }
+    public IReadOnlyCollection<string>? FileExtensionValidationList { get; set; }
 
     /// <summary>
     /// The list of mime types to use when validating an uploaded
@@ -41,7 +41,7 @@ public class AssetFilesSettings : CofoundryConfigurationSettingsBase
     /// MimeTypeValidation setting can be used to change this behavior 
     /// to interpret it as an allowlist, or disable this validation entirely.
     /// </summary>
-    public ICollection<string>? MimeTypeValidationList { get; set; }
+    public IReadOnlyCollection<string>? MimeTypeValidationList { get; set; }
 
     /// <summary>
     /// Returns the FileExtensionValidationList collection if
@@ -54,7 +54,7 @@ public class AssetFilesSettings : CofoundryConfigurationSettingsBase
     /// initialized with a default value, instead it appends the 
     /// configuration from appsettings to it.
     /// </remarks>
-    public ICollection<string> GetFileExtensionValidationListOrDefault()
+    public IReadOnlyCollection<string> GetFileExtensionValidationListOrDefault()
     {
         return EnumerableHelper.IsNullOrEmpty(FileExtensionValidationList) ? DangerousFileConstants.DangerousFileExtensions : FileExtensionValidationList;
     }
@@ -70,7 +70,7 @@ public class AssetFilesSettings : CofoundryConfigurationSettingsBase
     /// initialized with a default value, instead it appends the 
     /// configuration from appsettings to it.
     /// </remarks>
-    public ICollection<string> GetMimeTypeValidationListOrDefault()
+    public IReadOnlyCollection<string> GetMimeTypeValidationListOrDefault()
     {
         return EnumerableHelper.IsNullOrEmpty(MimeTypeValidationList) ? DangerousFileConstants.DangerousMimeTypes : MimeTypeValidationList;
     }

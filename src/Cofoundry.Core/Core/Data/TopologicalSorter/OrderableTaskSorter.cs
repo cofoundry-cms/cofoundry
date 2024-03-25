@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Sorts tasks taking into account ordering via IOrderableTask and
@@ -26,7 +26,7 @@ public static class OrderableTaskSorter
     /// dependencies the type name is used to provide a determinaistic 
     /// secondary ordering.
     /// </param>
-    public static ICollection<TTask> Sort<TTask>(IEnumerable<TTask> tasks)
+    public static IReadOnlyCollection<TTask> Sort<TTask>(IEnumerable<TTask> tasks)
         where TTask : notnull
     {
         ArgumentNullException.ThrowIfNull(tasks);

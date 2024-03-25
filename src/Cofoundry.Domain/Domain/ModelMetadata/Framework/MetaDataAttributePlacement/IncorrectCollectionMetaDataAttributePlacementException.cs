@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -49,6 +49,6 @@ public class IncorrectCollectionMetaDataAttributePlacementException : IncorrectM
         var attributeName = attribute.GetType().Name;
         var firstParamType = validParamTypes.Select(t => t.Name).First();
 
-        return $"{attributeName} can only be placed on properties with a generic collection of {typeNameText} types, e.g. ICollection<{firstParamType}>. Property name is {propertyName} and the type is {context.Key.ModelType}.";
+        return $"{attributeName} can only be placed on properties with a generic collection of {typeNameText} types, e.g. IReadOnlyCollection<{firstParamType}>. Property name is {propertyName} and the type is {context.Key.ModelType}.";
     }
 }

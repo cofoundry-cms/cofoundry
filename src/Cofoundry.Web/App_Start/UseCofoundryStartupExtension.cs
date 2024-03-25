@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Web;
@@ -38,7 +38,7 @@ public static class UseCofoundryStartupExtension
         }
     }
 
-    private static ICollection<IStartupConfigurationTask> SortTasksByDependency(IEnumerable<IStartupConfigurationTask> startupTasks)
+    private static IReadOnlyCollection<IStartupConfigurationTask> SortTasksByDependency(IEnumerable<IStartupConfigurationTask> startupTasks)
     {
         try
         {

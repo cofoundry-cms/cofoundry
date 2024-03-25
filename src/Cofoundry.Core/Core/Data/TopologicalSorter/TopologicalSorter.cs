@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Performs a topological sort, ordering items based on their dependencies.
@@ -35,8 +35,8 @@ public static class TopologicalSorter
     /// Returns the sorted collection. For any ties or items without dependencies
     /// the initial ordering is used.
     /// </returns>
-    public static ICollection<TItem> Sort<TItem>(
-        ICollection<TItem> source,
+    public static List<TItem> Sort<TItem>(
+        IEnumerable<TItem> source,
         Func<TItem, IEnumerable<TItem>, IEnumerable<TItem>> dependencySelector,
         bool throwOnCyclicDependency
         )
@@ -59,15 +59,13 @@ public static class TopologicalSorter
         TItem item,
         HashSet<TItem> visited,
         List<TItem> sorted,
-        ICollection<TItem> source,
+        IEnumerable<TItem> source,
         Func<TItem, IEnumerable<TItem>, IEnumerable<TItem>> dependencySelector,
         bool throwOnCyclicDependency
         )
     {
-        if (!visited.Contains(item))
+        if (visited.Add(item))
         {
-            visited.Add(item);
-
             foreach (var dep in dependencySelector(item, source))
             {
                 Visit(dep, visited, sorted, source, dependencySelector, throwOnCyclicDependency);

@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data.SimpleDatabase;
+using Cofoundry.Core.Data.SimpleDatabase;
 using Microsoft.Data.SqlClient;
 
 namespace Cofoundry.Core.AutoUpdate.Internal;
@@ -15,7 +15,7 @@ public class AutoUpdateStore : IAutoUpdateStore
         _db = db;
     }
 
-    public async Task<ICollection<ModuleVersion>> GetVersionHistoryAsync()
+    public async Task<IReadOnlyCollection<ModuleVersion>> GetVersionHistoryAsync()
     {
         var query = @"
                 if (exists (select * 
@@ -31,9 +31,11 @@ public class AutoUpdateStore : IAutoUpdateStore
 
         var moduleVersions = await _db.ReadAsync(query, r =>
         {
-            var moduleVersion = new ModuleVersion();
-            moduleVersion.Module = (string)r["Module"];
-            moduleVersion.Version = (int)r["Version"];
+            var moduleVersion = new ModuleVersion
+            {
+                Module = (string)r["Module"],
+                Version = (int)r["Version"]
+            };
 
             return moduleVersion;
         });

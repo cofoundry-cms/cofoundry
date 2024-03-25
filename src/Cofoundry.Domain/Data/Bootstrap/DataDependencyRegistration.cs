@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.DependencyInjection;
+using Cofoundry.Core.DependencyInjection;
 using Cofoundry.Domain.Data.Internal;
 
 namespace Cofoundry.Domain.Data.Registration;
@@ -8,7 +8,7 @@ public class DataDependencyRegistration : IDependencyRegistration
     public void Register(IContainerRegister container)
     {
         container
-            .Register<CofoundryDbContext>(new Type[] { typeof(CofoundryDbContext), typeof(DbContext) }, RegistrationOptions.Scoped())
+            .Register<CofoundryDbContext>([typeof(CofoundryDbContext), typeof(DbContext)], RegistrationOptions.Scoped())
             .Register<IFileStoreService, FileSystemFileStoreService>()
             .Register<IDbUnstructuredDataSerializer, DbUnstructuredDataSerializer>()
             .Register<IEmptyDataModelFactory, EmptyDataModelFactory>()

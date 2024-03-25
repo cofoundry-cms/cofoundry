@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.AutoUpdate.Internal;
+namespace Cofoundry.Core.AutoUpdate.Internal;
 
 /// <summary>
 /// Database access for the auto update process, which may
@@ -11,7 +11,7 @@ public interface IAutoUpdateStore
     /// to the system. If the module update table does not exists then it
     /// is assumed that it's a fresh database and no updates have been made.
     /// </summary>
-    Task<ICollection<ModuleVersion>> GetVersionHistoryAsync();
+    Task<IReadOnlyCollection<ModuleVersion>> GetVersionHistoryAsync();
 
     /// <summary>
     /// Works out whether the database has been configured to be locked for schema 

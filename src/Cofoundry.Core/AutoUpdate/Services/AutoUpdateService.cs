@@ -1,6 +1,6 @@
-﻿using Cofoundry.Core.Reflection.Internal;
-using Microsoft.Extensions.Logging;
 using System.Reflection;
+using Cofoundry.Core.Reflection.Internal;
+using Microsoft.Extensions.Logging;
 
 namespace Cofoundry.Core.AutoUpdate.Internal;
 
@@ -99,13 +99,13 @@ public class AutoUpdateService : IAutoUpdateService
         return _autoUpdateStore.SetDatabaseLockedAsync(isLocked);
     }
 
-    private async Task<ICollection<UpdatePackage>> GetOrderedPackages()
+    private async Task<IReadOnlyCollection<UpdatePackage>> GetOrderedPackages()
     {
         var previouslyAppliedVersions = await _autoUpdateStore.GetVersionHistoryAsync();
 
         var filteredPackages = _updatePackageFactories
             .SelectMany(f => f.Create(previouslyAppliedVersions))
-            .ToList();
+            .ToArray();
 
         var packages = _updatePackageOrderer.Order(filteredPackages);
 
@@ -119,7 +119,7 @@ public class AutoUpdateService : IAutoUpdateService
         return cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested;
     }
 
-    private async Task RunUpdates(ICollection<UpdatePackage> packages, CancellationToken? cancellationToken)
+    private async Task RunUpdates(IReadOnlyCollection<UpdatePackage> packages, CancellationToken? cancellationToken)
     {
         // Lock the process to prevent concurrent updates
         var distributedLock = await _autoUpdateDistributedLockManager.LockAsync();
@@ -206,7 +206,7 @@ public class AutoUpdateService : IAutoUpdateService
     {
         var task = _runVersionedCommandMethod
             .MakeGenericMethod(command.GetType())
-            .Invoke(this, new object[] { command }) as Task;
+            .Invoke(this, [command]) as Task;
 
         if (task == null)
         {
@@ -220,7 +220,7 @@ public class AutoUpdateService : IAutoUpdateService
     {
         var task = _runAlwaysRunCommandMethod
             .MakeGenericMethod(command.GetType())
-            .Invoke(this, new object[] { command }) as Task;
+            .Invoke(this, [command]) as Task;
 
         if (task == null)
         {
@@ -234,9 +234,9 @@ public class AutoUpdateService : IAutoUpdateService
     {
         var runner = _commandHandlerFactory.CreateVersionedCommand<TCommand>();
 
-        if (runner is IAsyncVersionedUpdateCommandHandler<TCommand>)
+        if (runner is IAsyncVersionedUpdateCommandHandler<TCommand> asyncHandler)
         {
-            return ((IAsyncVersionedUpdateCommandHandler<TCommand>)runner).ExecuteAsync(command);
+            return asyncHandler.ExecuteAsync(command);
         }
         else
         {
@@ -249,9 +249,9 @@ public class AutoUpdateService : IAutoUpdateService
     {
         var runner = _commandHandlerFactory.CreateAlwaysRunCommand<TCommand>();
 
-        if (runner is IAsyncAlwaysRunUpdateCommandHandler<TCommand>)
+        if (runner is IAsyncAlwaysRunUpdateCommandHandler<TCommand> asyncHandler)
         {
-            return ((IAsyncAlwaysRunUpdateCommandHandler<TCommand>)runner).ExecuteAsync(command);
+            return asyncHandler.ExecuteAsync(command);
         }
         else
         {

@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.AutoUpdate;
+namespace Cofoundry.Core.AutoUpdate;
 
 /// <summary>
 /// Represents a set of updates for a particular module.
@@ -13,17 +13,17 @@ public class UpdatePackage
     /// <summary>
     /// Commands to run when updating the module to a specific version
     /// </summary>
-    public ICollection<IVersionedUpdateCommand> VersionedCommands { get; set; } = new List<IVersionedUpdateCommand>();
+    public IReadOnlyCollection<IVersionedUpdateCommand> VersionedCommands { get; set; } = Array.Empty<IVersionedUpdateCommand>();
 
     /// <summary>
     /// Commands to run after all versioned commands have been run
     /// </summary>
-    public ICollection<IAlwaysRunUpdateCommand> AlwaysUpdateCommands { get; set; } = new List<IAlwaysRunUpdateCommand>();
+    public IReadOnlyCollection<IAlwaysRunUpdateCommand> AlwaysUpdateCommands { get; set; } = Array.Empty<IAlwaysRunUpdateCommand>();
 
     /// <summary>
     /// A collection of module identifiers that this module is dependent on
     /// </summary>
-    public ICollection<string> DependentModules { get; set; } = new List<string>();
+    public IReadOnlyCollection<string> DependentModules { get; set; } = Array.Empty<string>();
 
     /// <summary>
     /// Indicates if this contains one-off versioned updates. This basically

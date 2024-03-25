@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing;
 
 namespace Cofoundry.Web;
 
@@ -17,9 +17,9 @@ public class RouteInitializer : IRouteInitializer
     }
 
     /// <inheritdoc/>
-    public void Initialize(IEndpointRouteBuilder routeBuilder)
+    public void Initialize(IEndpointRouteBuilder routes)
     {
-        ICollection<IRouteRegistration> sortedRoutes;
+        IReadOnlyCollection<IRouteRegistration> sortedRoutes;
 
         try
         {
@@ -33,7 +33,7 @@ public class RouteInitializer : IRouteInitializer
 
         foreach (var routeRegistration in sortedRoutes)
         {
-            routeRegistration.RegisterRoutes(routeBuilder);
+            routeRegistration.RegisterRoutes(routes);
         }
     }
 }

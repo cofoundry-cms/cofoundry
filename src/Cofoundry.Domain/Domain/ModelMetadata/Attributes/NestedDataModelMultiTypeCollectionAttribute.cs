@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -96,7 +96,7 @@ public class NestedDataModelMultiTypeCollectionAttribute : ValidateObjectAttribu
 
     /// <summary>
     /// Validates that the property type is an enumerable collection
-    /// of INestedDataModel types e.g. ICollection<INestedDataModel>.
+    /// of INestedDataModel types e.g. IReadOnlyCollection<INestedDataModel>.
     /// It's less likely but also possible that the type could be an 
     /// interface or base class that inherits from INestedDataModel e.g.
     /// you may want all your nested model types to implement a common 

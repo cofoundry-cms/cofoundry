@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -27,7 +27,7 @@ public class EntityDependencyCollectionAttribute : Attribute, IEntityRelationAtt
         ArgumentNullException.ThrowIfNull(model);
         ArgumentNullException.ThrowIfNull(propertyInfo);
 
-        var ids = propertyInfo.GetValue(model) as ICollection<int>;
+        var ids = propertyInfo.GetValue(model) as IEnumerable<int>;
 
         foreach (var id in EnumerableHelper.Enumerate(ids))
         {

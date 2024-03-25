@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -59,7 +59,7 @@ public class ReOrderCustomEntitiesCommandHandler
         await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command, affectedIds));
     }
 
-    private Task OnTransactionComplete(ReOrderCustomEntitiesCommand command, ICollection<int> affectedIds)
+    private Task OnTransactionComplete(ReOrderCustomEntitiesCommand command, IReadOnlyCollection<int> affectedIds)
     {
         foreach (var affectedId in affectedIds)
         {

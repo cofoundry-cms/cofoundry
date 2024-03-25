@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -54,7 +54,7 @@ public class PermissionSetBuilder : IExtendablePermissionSetBuilder
     public IServiceProvider ServiceProvider { get; }
 
     /// <inheritdoc/>
-    public ICollection<IPermission> Build()
+    public IReadOnlyCollection<IPermission> Build()
     {
         return _permissions.ToArray();
     }
@@ -172,9 +172,9 @@ public class PermissionSetBuilder : IExtendablePermissionSetBuilder
     }
 
     /// <inheritdoc/>
-    public virtual IPermissionSetBuilder IncludeAllWithPermissionType(string permissionCode, Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null)
+    public virtual IPermissionSetBuilder IncludeAllWithPermissionType(string permissionTypeCode, Func<IEnumerable<IPermission>, IEnumerable<IPermission>>? additionalFilter = null)
     {
-        return Include(permissions => permissions.Where(p => p.PermissionType.Code == permissionCode), additionalFilter);
+        return Include(permissions => permissions.Where(p => p.PermissionType.Code == permissionTypeCode), additionalFilter);
     }
 
     /// <inheritdoc/>
@@ -282,13 +282,13 @@ public class PermissionSetBuilder : IExtendablePermissionSetBuilder
     /// </summary>
     private class CircularDependencyGuard
     {
-        private readonly Type baseRoleType;
+        private readonly Type _baseRoleType;
         private HashSet<Type> _executingRoles { get; } = [];
 
         public CircularDependencyGuard(IRoleDefinition roleDefinition)
         {
-            baseRoleType = roleDefinition.GetType();
-            _executingRoles.Add(baseRoleType);
+            _baseRoleType = roleDefinition.GetType();
+            _executingRoles.Add(_baseRoleType);
         }
 
         public void AddRole<TRoleDefinition>()
@@ -297,7 +297,7 @@ public class PermissionSetBuilder : IExtendablePermissionSetBuilder
             var roleType = typeof(TRoleDefinition);
             if (_executingRoles.Contains(roleType))
             {
-                var msg = $"Circular reference detected when copying permissions to {baseRoleType.Name}. Encountered circular dependency when referencing {roleType.Name}";
+                var msg = $"Circular reference detected when copying permissions to {_baseRoleType.Name}. Encountered circular dependency when referencing {roleType.Name}";
                 throw new InvalidOperationException(msg);
             }
             _executingRoles.Add(roleType);

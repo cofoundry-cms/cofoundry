@@ -1,5 +1,5 @@
-﻿using Cofoundry.Domain.Data;
 using System.Text.RegularExpressions;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain;
 
@@ -120,7 +120,6 @@ public partial class EntityTagHelper
 
         return tag;
     }
-
 
     private List<string> CleanTags(IEnumerable<string?> tags)
     {

@@ -48,7 +48,7 @@ public static class MetaDataAttributePlacementValidator
     /// Used to validate that data model attributes are placed on properties of the
     /// correct type. This method is specifically for checking collection types where
     /// the type to check for is wrapped in some sort of enumerable e.g. ImageCollectionAttribute 
-    /// must be placed on a collection of integers which could be ICollection&lt;int&gt;, 
+    /// must be placed on a collection of integers which could be IReadOnlyCollection&lt;int&gt;, 
     /// IEnumerable&lt;int&gt; or int[]. Validation is designed to occur during the 
     /// IMetadataAttribute.Process method. If an invalid property type is found an 
     /// IncorrectCollectionMetaDataAttributePlacementException is thrown.

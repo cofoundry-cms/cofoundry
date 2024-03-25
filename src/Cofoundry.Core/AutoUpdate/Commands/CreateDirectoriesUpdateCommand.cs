@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.AutoUpdate;
+namespace Cofoundry.Core.AutoUpdate;
 
 /// <summary>
 /// A command that creates one or more directories in the file system.
@@ -14,7 +14,7 @@ public class CreateDirectoriesUpdateCommand : IVersionedUpdateCommand
     /// <summary>
     /// A collection of directory paths to create. Resolved using IPathResolver.
     /// </summary>
-    public required ICollection<string> Directories { get; set; }
+    public required IReadOnlyCollection<string> Directories { get; set; }
 
     /// <summary>
     /// Short description of the command being run, used for log record identification purposes.

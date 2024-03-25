@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.DependencyInjection;
+namespace Cofoundry.Core.DependencyInjection;
 
 /// <summary>
 /// Bare bones DI container registration abstraction to be 
@@ -40,7 +40,7 @@ public interface IContainerRegister
     /// <param name="types">Types to register as.</param>
     /// <param name="options">Optional options argument.</param>
     /// <returns>The IContainerRegister instance for method chaining.</returns>
-    IContainerRegister Register<TConcrete>(ICollection<Type> types, RegistrationOptions? options = null)
+    IContainerRegister Register<TConcrete>(IReadOnlyCollection<Type> types, RegistrationOptions? options = null)
         where TConcrete : notnull;
 
     /// <summary>

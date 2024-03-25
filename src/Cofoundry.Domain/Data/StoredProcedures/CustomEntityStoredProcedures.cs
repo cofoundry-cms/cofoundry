@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.EntityFramework;
+using Cofoundry.Core.EntityFramework;
 using Microsoft.Data.SqlClient;
 
 namespace Cofoundry.Domain.Data.Internal;
@@ -106,7 +106,7 @@ public class CustomEntityStoredProcedures : ICustomEntityStoredProcedures
     /// </param>
     /// <param name="localeId">Locale to set the ordering for. Ordering can only be applied for one locale at a time.</param>
     /// <returns>A collection of ids of custom entities that were updated i.e. some entities may not have needed their ordering changed.</returns>
-    public async Task<ICollection<int>> ReOrderAsync(
+    public async Task<IReadOnlyCollection<int>> ReOrderAsync(
        string customEntityDefinitionCode,
        IReadOnlyCollection<int> orderedCustomEntityIds,
        int? localeId

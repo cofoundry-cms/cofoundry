@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
 using System.Data.Common;
+using Microsoft.Data.SqlClient;
 
 namespace Cofoundry.Core.Data.SimpleDatabase.Internal;
 
@@ -10,7 +10,7 @@ namespace Cofoundry.Core.Data.SimpleDatabase.Internal;
 /// any particular framework. Does not support connection resiliency 
 /// or retry logic.
 /// </summary>
-public class CofoundrySqlDatabase : IDisposable, ICofoundryDatabase
+public sealed class CofoundrySqlDatabase : IDisposable, ICofoundryDatabase
 {
     private readonly SqlDatabase _sqlDatabase;
 
@@ -20,9 +20,9 @@ public class CofoundrySqlDatabase : IDisposable, ICofoundryDatabase
     {
         var dbConnection = _cofoundryDbConnectionFactory.GetShared();
 
-        if (dbConnection is SqlConnection)
+        if (dbConnection is SqlConnection sqlConnection)
         {
-            _sqlDatabase = new SqlDatabase((SqlConnection)dbConnection);
+            _sqlDatabase = new SqlDatabase(sqlConnection);
         }
         else
         {
@@ -58,7 +58,7 @@ public class CofoundrySqlDatabase : IDisposable, ICofoundryDatabase
     /// <param name="map">A mapping function to use to map each row.</param>
     /// <param name="sqlParams">Any parameters to add to the command.</param>
     /// <returns>Collection of mapped entities.</returns>
-    public Task<ICollection<TEntity>> ReadAsync<TEntity>(
+    public Task<IReadOnlyCollection<TEntity>> ReadAsync<TEntity>(
         string sql,
         Func<SqlDataReader, TEntity> mapper,
         params SqlParameter[] sqlParams
@@ -70,10 +70,6 @@ public class CofoundrySqlDatabase : IDisposable, ICofoundryDatabase
 
     public void Dispose()
     {
-        if (_sqlDatabase != null)
-        {
-            _sqlDatabase.Dispose();
-        }
+        _sqlDatabase?.Dispose();
     }
-
 }

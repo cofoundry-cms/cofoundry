@@ -1,5 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
 using System.Data.Common;
+using Microsoft.Data.SqlClient;
 
 namespace Cofoundry.Core.Data.SimpleDatabase;
 
@@ -29,8 +29,8 @@ public interface IDatabase
     /// </summary>
     /// <typeparam name="TEntity">Type of entity returned from the query.</typeparam>
     /// <param name="sql">The raw sql to execute against the database.</param>
-    /// <param name="map">A mapping function to use to map each row.</param>
+    /// <param name="mapper">A mapping function to use to map each row.</param>
     /// <param name="sqlParams">Any parameters to add to the command.</param>
     /// <returns>Collection of mapped entities.</returns>
-    Task<ICollection<TEntity>> ReadAsync<TEntity>(string sql, Func<SqlDataReader, TEntity> map, params SqlParameter[] sqlParams);
+    Task<IReadOnlyCollection<TEntity>> ReadAsync<TEntity>(string sql, Func<SqlDataReader, TEntity> mapper, params SqlParameter[] sqlParams);
 }

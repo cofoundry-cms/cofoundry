@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.AutoUpdate;
+namespace Cofoundry.Core.AutoUpdate;
 
 /// <summary>
 /// Order UpdatePackage instances into the correct execution order, making
@@ -12,5 +12,5 @@ public interface IUpdatePackageOrderer
     /// </summary>
     /// <param name="packages">Update packages to sort.</param>
     /// <returns>Collection of update packages, sorted into the correct order.</returns>
-    ICollection<UpdatePackage> Order(ICollection<UpdatePackage> packages);
+    IReadOnlyCollection<UpdatePackage> Order(IReadOnlyCollection<UpdatePackage> packages);
 }

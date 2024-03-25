@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -81,7 +81,7 @@ public class UpdateUnstructuredDataDependenciesCommandHandler
     {
         var commands = relations
             .Select(r => r.EntityDefinitionCode)
-            .Union(new string[] { command.RootEntityDefinitionCode })
+            .Union([command.RootEntityDefinitionCode])
             .Except(existingDependencies.Select(r => r.RelatedEntityDefinitionCode))
             .Distinct()
             .Select(c => new EnsureEntityDefinitionExistsCommand(c));

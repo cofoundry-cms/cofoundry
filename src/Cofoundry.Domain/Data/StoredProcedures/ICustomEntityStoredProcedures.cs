@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data.Internal;
+namespace Cofoundry.Domain.Data.Internal;
 
 /// <summary>
 /// Data access abstraction over custom entity stored procedures.
@@ -58,7 +58,7 @@ public interface ICustomEntityStoredProcedures
     /// </param>
     /// <param name="localeId">Locale to set the ordering for. Ordering can only be applied for one locale at a time.</param>
     /// <returns>A collection of ids of custom entities that were updated i.e. some entities may not have needed their ordering changed.</returns>
-    Task<ICollection<int>> ReOrderAsync(
+    Task<IReadOnlyCollection<int>> ReOrderAsync(
        string customEntityDefinitionCode,
        IReadOnlyCollection<int> orderedCustomEntityIds,
        int? localeId

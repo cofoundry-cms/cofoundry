@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 
 namespace Cofoundry.Core.AutoUpdate;
 
@@ -15,14 +15,14 @@ public abstract class BaseDbOnlyUpdatePackageFactory : IUpdatePackageFactory
     /// <summary>
     /// A collection of module identifiers that this module is dependent on.
     /// </summary>
-    public virtual ICollection<string> DependentModules { get { return Array.Empty<string>(); } }
+    public virtual IReadOnlyCollection<string> DependentModules => Array.Empty<string>();
 
     /// <summary>
     /// The folder path of the script files which defaults to 'Install.Db.' (which equates to 'Install/Db/')
     /// </summary>
     public virtual string ScriptPath { get { return "Install.Db."; } }
 
-    public virtual IEnumerable<UpdatePackage> Create(ICollection<ModuleVersion> versionHistory)
+    public virtual IEnumerable<UpdatePackage> Create(IReadOnlyCollection<ModuleVersion> versionHistory)
     {
         var moduleVersion = versionHistory.SingleOrDefault(m => m.Module == ModuleIdentifier);
 

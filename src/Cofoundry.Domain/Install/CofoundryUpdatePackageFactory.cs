@@ -1,5 +1,5 @@
-﻿using Cofoundry.Core.AutoUpdate;
 using System.Reflection;
+using Cofoundry.Core.AutoUpdate;
 
 namespace Cofoundry.Domain.Installation;
 
@@ -9,7 +9,7 @@ namespace Cofoundry.Domain.Installation;
 /// </summary>
 public class CofoundryUpdatePackageFactory : IUpdatePackageFactory
 {
-    public IEnumerable<UpdatePackage> Create(ICollection<ModuleVersion> versionHistory)
+    public IEnumerable<UpdatePackage> Create(IReadOnlyCollection<ModuleVersion> versionHistory)
     {
         var moduleVersion = versionHistory.SingleOrDefault(m => m.Module == CofoundryModuleInfo.ModuleIdentifier);
 

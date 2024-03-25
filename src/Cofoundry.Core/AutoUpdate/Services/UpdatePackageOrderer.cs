@@ -13,7 +13,7 @@ public class UpdatePackageOrderer : IUpdatePackageOrderer
     /// </summary>
     /// <param name="packages">update packages to sort.</param>
     /// <returns>Enumerable collection of update packages, sorted into the correct order.</returns>
-    public ICollection<UpdatePackage> Order(ICollection<UpdatePackage> packages)
+    public IReadOnlyCollection<UpdatePackage> Order(IReadOnlyCollection<UpdatePackage> packages)
     {
         // Build a collection of dependency instances to use in sorting
         var dependentModuleLookup = packages
@@ -28,7 +28,7 @@ public class UpdatePackageOrderer : IUpdatePackageOrderer
             .OrderByDescending(p => p.ModuleIdentifier == CofoundryModuleInfo.ModuleIdentifier)
             .ThenBy(p => p.ModuleIdentifier)
             .ThenBy(p => p.GetType().FullName)
-            .ToList();
+            .ToArray();
 
         // Sort based on dependencies
         var topologicallySortedPackages = TopologicalSorter.Sort(orderedPackages, (p, l) => FindDependencies(p, dependentModuleLookup), true);

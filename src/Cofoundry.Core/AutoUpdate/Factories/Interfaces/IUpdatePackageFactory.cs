@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.AutoUpdate;
+namespace Cofoundry.Core.AutoUpdate;
 
 /// <summary>
 /// Interface to describe a class that creates one or more
@@ -7,5 +7,5 @@
 /// </summary>
 public interface IUpdatePackageFactory
 {
-    IEnumerable<UpdatePackage> Create(ICollection<ModuleVersion> versionHistory);
+    IEnumerable<UpdatePackage> Create(IReadOnlyCollection<ModuleVersion> versionHistory);
 }

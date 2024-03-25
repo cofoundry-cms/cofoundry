@@ -1,7 +1,7 @@
-﻿using Cofoundry.Core.Reflection.Internal;
+using System.Reflection;
+using Cofoundry.Core.Reflection.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace Cofoundry.Core.DependencyInjection;
 
@@ -75,7 +75,7 @@ public class DefaultContainerRegister : IContainerRegister
         return this;
     }
 
-    public IContainerRegister Register<TConcrete>(ICollection<Type> types, RegistrationOptions? options = null)
+    public IContainerRegister Register<TConcrete>(IReadOnlyCollection<Type> types, RegistrationOptions? options = null)
         where TConcrete : notnull
     {
         var fn = new Action(() =>

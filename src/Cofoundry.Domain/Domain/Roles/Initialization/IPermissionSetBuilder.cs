@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Used to configure a set of permissions with a fluent style API. When <see cref="Build"/>
@@ -27,13 +27,13 @@ public interface IPermissionSetBuilder
     /// <summary>
     /// Adds a set of permissions to the builder configuration, filtered 
     /// from the <see cref="AvailablePermissions"/> using the specified
-    /// <paramref name="filter"/> function.
+    /// <paramref name="permissionFilter"/> function.
     /// </summary>
-    /// <param name="filter">
+    /// <param name="permissionFilter">
     /// A filter function to run on the <see cref="AvailablePermissions"/>
     /// collection before adding the result to the configuration.
     /// </param>
-    IPermissionSetBuilder Include(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> filter);
+    IPermissionSetBuilder Include(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> permissionFilter);
 
     /// <summary>
     /// Removes the specified <paramref name="permissions"/> from the builder
@@ -48,18 +48,18 @@ public interface IPermissionSetBuilder
     /// <summary>
     /// Removes a set of permissions to the builder configuration, filtered 
     /// from the <see cref="AvailablePermissions"/> using the specified
-    /// <paramref name="filter"/> function.
+    /// <paramref name="permissionFilter"/> function.
     /// </summary>
-    /// <param name="filter">
+    /// <param name="permissionFilter">
     /// A filter function to run on the <see cref="AvailablePermissions"/>
     /// collection before removing the result from the configuration.
     /// </param>
-    IPermissionSetBuilder Exclude(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> filter);
+    IPermissionSetBuilder Exclude(Func<IEnumerable<IPermission>, IEnumerable<IPermission>> permissionFilter);
 
     /// <summary>
     /// Compiles the configuration into a distinct set of permissions.
     /// </summary>
-    ICollection<IPermission> Build();
+    IReadOnlyCollection<IPermission> Build();
 
     /// <summary>
     /// Copies a permission set from an existing role configuration.
