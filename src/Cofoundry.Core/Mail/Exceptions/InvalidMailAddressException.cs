@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.Mail;
+namespace Cofoundry.Core.Mail;
 
 /// <summary>
 /// Thrown when an email address cannot be parsed.
@@ -12,13 +12,13 @@ public class InvalidMailAddressException : Exception
     {
     }
 
-    public InvalidMailAddressException(string email, Exception innerEx)
+    public InvalidMailAddressException(string? email, Exception innerEx)
         : base(FormatMessage(email, string.Empty), innerEx)
     {
         MailAddress = email;
     }
 
-    public InvalidMailAddressException(string email, string displayName, Exception innerEx)
+    public InvalidMailAddressException(string? email, string? displayName, Exception innerEx)
         : base(FormatMessage(email, string.Empty), innerEx)
     {
         MailAddress = email;
@@ -29,7 +29,7 @@ public class InvalidMailAddressException : Exception
 
     public string? DisplayName { get; private set; }
 
-    private static string FormatMessage(string email, string displayName)
+    private static string FormatMessage(string? email, string displayName)
     {
         return $"Invalid mail address: {email}, display name: {displayName}";
     }
