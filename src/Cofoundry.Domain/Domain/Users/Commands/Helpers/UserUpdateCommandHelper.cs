@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
 namespace Cofoundry.Domain.Internal;
@@ -43,7 +43,7 @@ public class UserUpdateCommandHelper : IUserUpdateCommandHelper
         ArgumentNullException.ThrowIfNull(user);
         ArgumentNullException.ThrowIfNull(executionContext);
 
-        var userAreaCode = user.UserArea?.UserAreaCode ?? user.UserAreaCode;
+        var userAreaCode = string.IsNullOrEmpty(user.UserAreaCode) ? user.UserArea?.UserAreaCode : user.UserAreaCode;
         if (userAreaCode == null)
         {
             throw new ArgumentException("user parameter must have a user area set.", nameof(user));

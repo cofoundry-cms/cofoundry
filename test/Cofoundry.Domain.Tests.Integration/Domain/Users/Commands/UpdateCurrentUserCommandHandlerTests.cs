@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Validation;
+using Cofoundry.Core.Validation;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared.SeedData;
 using Microsoft.EntityFrameworkCore;
@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
 [Collection(nameof(DbDependentFixtureCollection))]
-public class UpdateCurrentUserAccountCommandHandlerTests
+public class UpdateCurrentUserCommandHandlerTests
 {
-    private const string UNIQUE_PREFIX = "UpdCurUsrAccCHT-";
+    private const string UNIQUE_PREFIX = "UpdCurUsrCHT-";
     private const string PASSWORD = "neverbr3@kthechange";
     private const string EMAIL_DOMAIN = $"@{UNIQUE_PREFIX}.example.com";
     private readonly DbDependentTestApplicationFactory _appFactory;
 
-    public UpdateCurrentUserAccountCommandHandlerTests(
+    public UpdateCurrentUserCommandHandlerTests(
         DbDependentTestApplicationFactory appFactory
         )
     {
