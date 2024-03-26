@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.BasicTestSite;
 
@@ -32,21 +32,35 @@ namespace Cofoundry.BasicTestSite;
 //    }
 //}
 
+//public class TestOptionSource : IListOptionSource
+//{
+//    public IReadOnlyCollection<ListOption> Create()
+//    {
+//        var options = new List<ListOption>
+//        {
+//            new("Test1", 1),
+//            new("Test2", 2),
+//            new("Test3", 3)
+//        };
+
+//        return options;
+//    }
+//}
+
 //public class ExampleDataModel : ICustomEntityDataModel
 //{
 //    [RadioList(typeof(ExampleListOptionSource), DefaultItemText = "Not Specified")]
 //    public int? Feedback { get; set; }
 //}
 
-//public class PetsApiOptionSource : IListOptionApiSource
-//{
-//    public string Path => "/admin/api/test";
+public class PetsApiOptionSource : IListOptionApiSource
+{
+    public string Path => "/test-admin/api/pets";
 
-//    public string NameField => "Title";
+    public string NameField => "Title";
 
-//    public string ValueField => "Id";
-//}
-
+    public string ValueField => "Id";
+}
 
 //public class ExampleDataModel : ICustomEntityDataModel
 //{
@@ -108,15 +122,65 @@ public class ExampleDataModel : ICustomEntityDataModel
         )]
     public IReadOnlyCollection<NestedDataModelMultiTypeItem> TestCollection { get; set; } = Array.Empty<NestedDataModelMultiTypeItem>();
 
-    [Image]
-    public int? Image { get; set; }
+    //[Required]
+    //[CheckboxList(typeof(TestOptionSource), NoValueText = "None")]
+    //public IReadOnlyCollection<int> TestCheckboxList1 { get; set; } = Array.Empty<int>();
 
-    [DocumentCollection]
-    public IReadOnlyCollection<int> Documents { get; set; } = Array.Empty<int>();
+    //[CheckboxList(typeof(PublishStatus))]
+    //public IReadOnlyCollection<PublishStatus> TestCheckboxList2 { get; set; } = Array.Empty<PublishStatus>();
 
-    [Document]
-    public int? Document { get; set; }
+    //[CheckboxList(typeof(PetsApiOptionSource))]
+    //public IReadOnlyCollection<int> TestCheckboxList3 { get; set; } = Array.Empty<int>();
 
-    [ImageCollection]
-    public IReadOnlyCollection<int> Images { get; set; } = Array.Empty<int>();
+    //[RadioList(typeof(TestOptionSource), DefaultItemText = "OffNot")]
+    //public int TestRadioListOptionSource { get; set; }
+
+    //[RadioList(typeof(PublishStatus))]
+    //public PublishStatus TestRadioListEnumOption { get; set; }
+
+    //[RadioList(typeof(PetsApiOptionSource))]
+    //public int TestRadioListApiOption { get; set; }
+
+    //[RadioList(typeof(TestOptionSource), DefaultItemText = "Off")]
+    //public int? TestNullableOption1 { get; set; }
+
+    //[RadioList(typeof(PublishStatus))]
+    //public PublishStatus? TestNullableOption2 { get; set; }
+
+    //[RadioList(typeof(PetsApiOptionSource))]
+    //public int? TestNullableOption3 { get; set; }
+
+    //[SelectList(typeof(PublishStatus))]
+    //public PublishStatus? TestEnumSelectList { get; set; }
+
+    //[SelectList(typeof(TestOptionSource))]
+    //public int TestOptionSourceSelectList2 { get; set; }
+
+    [SelectList(typeof(PetsApiOptionSource))]
+    public int TestApiOptionSelectList { get; set; }
+
+    //[Required]
+    //[ImageCollection]
+    //[Display(Name = "Images")]
+    //public IReadOnlyCollection<int> ThumbnailImageAssets { get; set; } = Array.Empty<int>();
+
+    //[Display(Name = "Html")]
+    //[Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings, HtmlToolbarPreset.Media, HtmlToolbarPreset.Source)]
+    //public string? TestHtml { get; set; }
+
+    //[Document]
+    //[Display(Name = "Document")]
+    //public int TestDocumentId { get; set; }
+
+    //[Page]
+    //[Display(Name = "Page")]
+    //public int? PageId { get; set; }
+
+    //[PageDirectory]
+    //[Display(Name = "Page Directory")]
+    //public int PageDirectoryId { get; set; }
+
+    //[PageCollection]
+    //[Display(Name = "Page Collection Test")]
+    //public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
 }

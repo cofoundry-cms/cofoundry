@@ -8270,814 +8270,6 @@ function (
 
     return service;
 }]);
-angular.module('cms.shared').directive('cmsButton', [
-    'shared.internalModulePath',
-function (
-    modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/Button.html',
-        scope: {
-            text: '@cmsText'
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonIcon', [
-    'shared.internalModulePath',
-    function (modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: false,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonIcon.html',
-        scope: {
-            title: '@cmsTitle',
-            icon: '@cmsIcon',
-            href: '@cmsHref',
-            external: '@cmsExternal'
-        },
-        link: function (scope, el) {
-            if (scope.icon) {
-                scope.iconCls = 'fa-' + scope.icon;
-            }
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonLink', [
-    'shared.internalModulePath',
-    function (modulePath) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonLink.html',
-        scope: {
-            text: '@cmsText',
-            href: '@cmsHref'
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsButtonSubmit', [
-    'shared.internalModulePath',
-function (
-    modulePath
-) {
-
-    return {
-        restrict: 'E',
-        replace: true,
-        templateUrl: modulePath + 'UIComponents/Buttons/ButtonSubmit.html',
-        scope: {
-            text: '@cmsText'
-        }
-    };
-}]);
-angular.module('cms.shared').directive('cmsDocumentAsset', [
-    'shared.internalModulePath',
-    'shared.urlLibrary',
-function (
-    modulePath,
-    urlLibrary
-    ) {
-
-    return {
-        restrict: 'E',
-        scope: {
-            document: '=cmsDocument'
-        },
-        templateUrl: modulePath + 'UIComponents/DocumentAssets/DocumentAsset.html',
-        link: function (scope, el, attributes) {
-
-            scope.getDocumentUrl = urlLibrary.getDocumentUrl;
-        }
-    };
-}]);
-angular.module('cms.shared').controller('DocumentAssetPickerDialogController', [
-    '$scope',
-    'shared.LoadState',
-    'shared.documentService',
-    'shared.SearchQuery',
-    'shared.modalDialogService',
-    'shared.internalModulePath',
-    'shared.permissionValidationService',
-    'shared.urlLibrary',
-    'options',
-    'close',
-function (
-    $scope,
-    LoadState,
-    documentService,
-    SearchQuery,
-    modalDialogService,
-    modulePath,
-    permissionValidationService,
-    urlLibrary,
-    options,
-    close) {
-    
-    var vm = $scope;
-    init();
-    
-    /* INIT */
-    
-    function init() {
-        angular.extend($scope, options);
-
-        vm.onOk = onOk;
-        vm.onCancel = onCancel;
-        vm.onSelect = onSelect;
-        vm.onUpload = onUpload;
-        vm.selectedAsset = vm.currentAsset; // currentAsset is null in single mode
-        vm.onSelectAndClose = onSelectAndClose;
-        vm.close = onCancel;
-
-        vm.gridLoadState = new LoadState();
-        vm.query = new SearchQuery({
-            onChanged: onQueryChanged,
-            useHistory: false,
-            defaultParams: options.filter
-        });
-        vm.presetFilter = options.filter;
-
-        vm.filter = vm.query.getFilters();
-        vm.toggleFilter = toggleFilter;
-
-        vm.isSelected = isSelected;
-        vm.multiMode = vm.selectedIds ? true : false;
-        vm.okText = vm.multiMode ? 'Ok' : 'Select';
-
-        vm.canCreate = permissionValidationService.canCreate('COFDOC');
-
-        vm.getDocumentUrl = urlLibrary.getDocumentUrl;
-
-        toggleFilter(false);
-        loadGrid();
-    }
-
-    /* ACTIONS */
-
-    function toggleFilter(show) {
-        vm.isFilterVisible = _.isUndefined(show) ? !vm.isFilterVisible : show;
-    }
-
-    function onQueryChanged() {
-        toggleFilter(false);
-        loadGrid();
-    }
-
-    function loadGrid() {
-        vm.gridLoadState.on();
-
-        return documentService.getAll(vm.query.getParameters()).then(function (result) {
-            vm.result = result;
-            vm.gridLoadState.off();
-        });
-    }
-    
-    /* EVENTS */
-
-    function onCancel() {
-        if (!vm.multiMode) {
-            // in single-mode reset the currentAsset
-            vm.onSelected(vm.currentAsset);
-        }
-        close();
-    }
-
-    function onSelect(document) {
-        if (!vm.multiMode) {
-            vm.selectedAsset = document;
-            return;
-        }
-
-        addOrRemove(document);
-    }
-
-    function onSelectAndClose(document) {
-        if (!vm.multiMode) {
-            vm.selectedAsset = document;
-            onOk();
-            return;
-        }
-
-        addOrRemove(document);
-        onOk();
-    }
-
-    function onOk() {
-        if (!vm.multiMode) {
-            vm.onSelected(vm.selectedAsset);
-        } else {
-            vm.onSelected(vm.selectedIds);
-        }
-
-        close();
-    }
-
-    function onUpload() {
-        modalDialogService.show({
-            templateUrl: modulePath + 'UIComponents/DocumentAssets/UploadDocumentAssetDialog.html',
-            controller: 'UploadDocumentAssetDialogController',
-            options: {
-                filter: options.filter,
-                onUploadComplete: onUploadComplete
-            }
-        });
-
-        function onUploadComplete(documentAssetId) {
-            onSelectAndClose({ documentAssetId: documentAssetId });
-        }
-    }
-
-    /* PUBLIC HELPERS */
-
-    function isSelected(document) {
-        if (vm.selectedIds && document && vm.selectedIds.indexOf(document.documentAssetId) > -1) return true;
-
-        if (!document || !vm.selectedAsset) return false;
-
-        return document.documentAssetId === vm.selectedAsset.documentAssetId;
-    }
-
-    function addOrRemove(document) {
-        if (!isSelected(document)) {
-            vm.selectedIds.push(document.documentAssetId);
-        } else {
-            var index = vm.selectedIds.indexOf(document.documentAssetId);
-            vm.selectedIds.splice(index, 1);
-        }
-    }
-}]);
-
-/**
- * File upload control for documents/files. Uses https://github.com/danialfarid/angular-file-upload
- */
-angular.module('cms.shared').directive('cmsDocumentUpload', [
-            '_',
-            'shared.internalModulePath',
-            'shared.urlLibrary',
-        function (
-            _,
-            modulePath,
-            urlLibrary 
-        ) {
-
-    /* CONFIG */
-    
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/DocumentAssets/DocumentUpload.html',
-        scope: {
-            asset: '=cmsAsset',
-            loadState: '=cmsLoadState',
-            isEditMode: '=cmsIsEditMode',
-            modelName: '=cmsModelName',
-            ngModel: '=ngModel',
-            onChange: '&cmsOnChange'
-        },
-        require: 'ngModel',
-        controller: function () { },
-        controllerAs: 'vm',
-        bindToController: true,
-        link: link
-    };
-
-    /* LINK */
-
-    function link(scope, el, attributes, ngModelController) {
-        var vm = scope.vm,
-            isRequired = _.has(attributes, 'required');
-
-        init();
-
-        /* INIT */
-
-        function init() {
-            vm.remove = remove;
-            vm.fileChanged = onFileChanged;
-            vm.isRemovable = _.isObject(vm.ngModel) && !isRequired;
-            scope.$watch("vm.asset", setAsset);
-        }
-
-        /* EVENTS */
-
-        function remove() {
-            onFileChanged();
-        }
-
-        /**
-         * Initialise the state when the asset is changed
-         */
-        function setAsset() {
-            var asset = vm.asset;
-            if (asset) {
-                vm.previewUrl = urlLibrary.getDocumentUrl(asset);
-                vm.isRemovable = !isRequired;
-
-                ngModelController.$setViewValue({
-                    name: asset.fileName + '.' + asset.fileExtension,
-                    size: asset.fileSizeInBytes,
-                    isCurrentFile: true
-                });
-
-            } else {
-                vm.isRemovable = false;
-
-                if (ngModelController.$modelValue) {
-                    ngModelController.$setViewValue(undefined);
-                }
-            }
-
-            setButtonText();
-        }
-
-        function onFileChanged($files) {
-            if ($files && $files[0]) {
-                // set the file is one is selected
-                ngModelController.$setViewValue($files[0]);
-                vm.isRemovable = !isRequired;
-
-            } else if (!vm.ngModel || _.isUndefined($files)) {
-                // if we don't have a file loaded already, remove the file.
-                ngModelController.$setViewValue(undefined);
-                vm.previewUrl = null;
-                vm.isRemovable = false;
-                vm.asset = undefined;
-            }
-
-            setButtonText();
-
-            // base onChange event
-            if (vm.onChange) vm.onChange(vm.ngModel);
-        }
-
-        /* Helpers */
-
-        function setButtonText() {
-            vm.buttonText = ngModelController.$modelValue ? 'Change' : 'Upload';
-        }
-    }
-
-}]);
-/**
- * A form field control for an image asset that uses a search and pick dialog
- * to allow the user to change the selected file.
- */
-angular.module('cms.shared').directive('cmsFormFieldDocumentAsset', [
-    '_',
-    'shared.internalModulePath',
-    'shared.internalContentPath',
-    'shared.modalDialogService',
-    'shared.stringUtilities',
-    'shared.documentService',
-    'shared.urlLibrary',
-    'baseFormFieldFactory',
-function (
-    _,
-    modulePath,
-    contentPath,
-    modalDialogService,
-    stringUtilities,
-    documentService,
-    urlLibrary,
-    baseFormFieldFactory) {
-
-    /* CONFIG */
-
-    var config = {
-        templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentAsset.html',
-        scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
-            asset: '=cmsAsset',
-            loadState: '=cmsLoadState',
-            updateAsset: '@cmsUpdateAsset' // update the asset property if it changes
-        }),
-        passThroughAttributes: ['required'],
-        link: link
-    };
-
-    return baseFormFieldFactory.create(config);
-
-    /* LINK */
-
-    function link(scope, el, attributes, controllers) {
-        var vm = scope.vm,
-            isRequired = _.has(attributes, 'required'),
-            isAssetInitialized;
-
-        init();
-        return baseFormFieldFactory.defaultConfig.link(scope, el, attributes, controllers);
-
-        /* INIT */
-
-        function init() {
-
-            vm.urlLibrary = urlLibrary;
-            vm.showPicker = showPicker;
-            vm.remove = remove;
-            vm.isRemovable = _.isObject(vm.model) && !isRequired;
-
-            vm.filter = parseFilters(attributes);
-
-            scope.$watch("vm.asset", setAsset);
-            scope.$watch("vm.model", setAssetById);
-        }
-
-        /* EVENTS */
-
-        function remove() {
-            setAsset(null);
-        }
-
-        function showPicker() {
-
-            modalDialogService.show({
-                templateUrl: modulePath + 'UIComponents/DocumentAssets/DocumentAssetPickerDialog.html',
-                controller: 'DocumentAssetPickerDialogController',
-                options: {
-                    currentAsset: vm.previewAsset,
-                    filter: vm.filter,
-                    onSelected: onSelected
-                }
-            });
-
-            function onSelected(newAsset) {
-                if (!newAsset && vm.asset) {
-                    setAsset(null);
-                } else if (!vm.asset || (newAsset && vm.asset.documentAssetId !== newAsset.documentAssetId)) {
-                    setAsset(newAsset);
-                }
-            }
-        }
-
-        /** 
-         * When the model is set without a preview asset, we need to go get the full 
-         * asset details. This query can be bypassed by setting the cms-asset attribute
-         */
-        function setAssetById(assetId) {
-
-            // Remove the id if it is 0 or invalid to make sure required validation works
-            if (!assetId) {
-                vm.model = assetId = undefined;
-            }
-
-            if (assetId && (!vm.previewAsset || vm.previewAsset.documentAssetId != assetId)) {
-                documentService.getById(assetId).then(function (asset) {
-                    setAsset(asset);
-                });
-            }
-        }
-
-        /**
-         * Initialise the state when the asset is changed
-         */
-        function setAsset(asset) {
-
-            if (asset) {
-                vm.previewAsset = asset;
-                vm.isRemovable = !isRequired;
-                vm.model = asset.documentAssetId;
-
-                if (vm.updateAsset) {
-                    vm.asset = asset;
-                }
-
-            } else if (isAssetInitialized) {
-                // Ignore if we are running this first time to avoid overwriting the model with a null vlaue
-                vm.previewAsset = null;
-                vm.isRemovable = false;
-
-                if (vm.model) {
-                    vm.model = null;
-                }
-                if (vm.updateAsset) {
-                    vm.asset = null;
-                }
-            }
-
-            setButtonText();
-
-            isAssetInitialized = true;
-        }
-
-        /* Helpers */
-
-        function parseFilters(attributes) {
-            var filter = {},
-                attributePrefix = 'cms';
-
-            setAttribute('Tags');
-            setAttribute('FileExtension');
-            setAttribute('FileExtensions');
-
-            return filter;
-
-            function setAttribute(attributeName) {
-                var filterName = stringUtilities.lowerCaseFirstWord(attributeName);
-                filter[filterName] = attributes[attributePrefix + attributeName];
-            }
-        }
-
-        function setButtonText() {
-            vm.buttonText = vm.model ? 'Change' : 'Select';
-        }
-    }
-
-}]);
-angular.module('cms.shared').directive('cmsFormFieldDocumentAssetCollection', [
-    '_',
-    'shared.internalModulePath',
-    'shared.LoadState',
-    'shared.documentService',
-    'shared.modalDialogService',
-    'shared.arrayUtilities',
-    'shared.stringUtilities',
-    'shared.urlLibrary',
-    'baseFormFieldFactory',
-function (
-    _,
-    modulePath,
-    LoadState,
-    documentService,
-    modalDialogService,
-    arrayUtilities,
-    stringUtilities,
-    urlLibrary,
-    baseFormFieldFactory) {
-
-    /* VARS */
-
-    var DOCUMENT_ASSET_ID_PROP = 'documentAssetId',
-        baseConfig = baseFormFieldFactory.defaultConfig;
-
-    /* CONFIG */
-
-    var config = {
-        templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentAssetCollection.html',
-        passThroughAttributes: [
-            'required'
-        ],
-        link: link
-    };
-
-    return baseFormFieldFactory.create(config);
-
-    /* LINK */
-
-    function link(scope, el, attributes, controllers) {
-        var vm = scope.vm,
-            isRequired = _.has(attributes, 'required');
-
-        init();
-        return baseConfig.link(scope, el, attributes, controllers);
-
-        /* INIT */
-
-        function init() {
-
-            vm.urlLibrary = urlLibrary;
-            vm.gridLoadState = new LoadState();
-
-            vm.showPicker = showPicker;
-            vm.remove = remove;
-            vm.onDrop = onDrop;
-
-            scope.$watch("vm.model", setGridItems);
-        }
-
-        /* EVENTS */
-
-        function remove(document) {
-
-            removeItemFromArray(vm.gridData, document);
-            removeItemFromArray(vm.model, document[DOCUMENT_ASSET_ID_PROP]);
-
-            function removeItemFromArray(arr, item) {
-                var index = arr.indexOf(item);
-
-                if (index >= 0) {
-                    return arr.splice(index, 1);
-                }
-            }
-        }
-
-        function showPicker() {
-
-            modalDialogService.show({
-                templateUrl: modulePath + 'UIComponents/DocumentAssets/DocumentAssetPickerDialog.html',
-                controller: 'DocumentAssetPickerDialogController',
-                options: {
-                    selectedIds: vm.model || [],
-                    filter: getFilter(),
-                    onSelected: onSelected
-                }
-            });
-
-            function onSelected(newArr) {
-                vm.model = newArr;
-                setGridItems(newArr);
-            }
-        }
-
-        function onDrop($index, droppedEntity) {
-
-            arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, DOCUMENT_ASSET_ID_PROP);
-
-            // Update model with new orering
-            setModelFromGridData();
-        }
-
-        function setModelFromGridData() {
-            vm.model = _.pluck(vm.gridData, DOCUMENT_ASSET_ID_PROP);
-        }
-
-        /* HELPERS */
-
-        function getFilter() {
-            var filter = {},
-                attributePrefix = 'cms';
-
-            setAttribute('Tags');
-            setAttribute('FileExtension');
-            setAttribute('FileExtensions');
-
-            return filter;
-
-            function setAttribute(attributeName) {
-                var filterName = stringUtilities.lowerCaseFirstWord(attributeName);
-                filter[filterName] = attributes[attributePrefix + attributeName];
-            }
-        }
-
-        /** 
-         * Load the grid data if it is inconsistent with the Ids collection.
-         */
-        function setGridItems(ids) {
-
-            if (!ids || !ids.length) {
-                vm.gridData = [];
-            }
-            else if (!vm.gridData || _.pluck(vm.gridData, DOCUMENT_ASSET_ID_PROP).join() != ids.join()) {
-
-                vm.gridLoadState.on();
-                documentService.getByIdRange(ids).then(function (items) {
-                    vm.gridData = items;
-                    vm.gridLoadState.off();
-                });
-            }
-        }
-    }
-}]);
-angular.module('cms.shared').directive('cmsFormFieldDocumentTypeSelector', [
-    '_',
-    'shared.internalModulePath',
-    'shared.documentService',
-function (
-    _,
-    modulePath,
-    documentService) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentTypeSelector.html',
-        scope: {
-            model: '=cmsModel',
-            disabled: '=cmsDisabled',
-            readonly: '=cmsReadonly',
-            onLoaded: '&cmsOnLoaded'
-        },
-        controller: Controller,
-        controllerAs: 'vm',
-        bindToController: true
-    };
-
-    /* CONTROLLER */
-
-    function Controller() {
-        var vm = this;
-
-        documentService.getAllDocumentFileTypes().then(function (fileTypes) {
-
-            vm.fileTypes = fileTypes;
-
-            if (vm.onLoaded) vm.onLoaded();
-        });
-    }
-}]);
-/**
- * File upload control for images. Uses https://github.com/danialfarid/angular-file-upload
- */
-angular.module('cms.shared').directive('cmsFormFieldDocumentUpload', [
-    '_',
-    'shared.internalModulePath',
-    'baseFormFieldFactory',
-function (
-    _,
-    modulePath,
-    baseFormFieldFactory) {
-
-    /* CONFIG */
-
-    var config = {
-        templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentUpload.html',
-        scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
-            asset: '=cmsAsset',
-            loadState: '=cmsLoadState'
-        }),
-        passThroughAttributes: ['required', 'ngRequired'],
-        getInputEl: getInputEl
-    };
-
-    return baseFormFieldFactory.create(config);
-
-    function getInputEl(rootEl) {
-        return rootEl.find('cms-document-upload');
-    }
-}]);
-angular.module('cms.shared').controller('UploadDocumentAssetDialogController', [
-    '$scope',
-    'shared.LoadState',
-    'shared.documentService',
-    'shared.SearchQuery',
-    'shared.focusService',
-    'shared.stringUtilities',
-    'options',
-    'close',
-function (
-    $scope,
-    LoadState,
-    documentService,
-    SearchQuery,
-    focusService,
-    stringUtilities,
-    options,
-    close) {
-    
-    var vm = $scope;
-    init();
-    
-    /* INIT */
-    function init() {
-        angular.extend($scope, options);
-
-        initData();
-
-        vm.onUpload = onUpload;
-        vm.onCancel = onCancel;
-        vm.close = onCancel;
-        vm.filter = options.filter;
-        vm.onFileChanged = onFileChanged;
-        vm.hasFilterRestrictions = hasFilterRestrictions;
-
-        vm.saveLoadState = new LoadState();
-    }
-
-    /* EVENTS */
-    function onUpload() {
-        vm.saveLoadState.on();
-
-        documentService
-            .add(vm.command)
-            .progress(vm.saveLoadState.setProgress)
-            .then(uploadComplete);
-    }
-
-    function onFileChanged() {
-        var command = vm.command;
-
-        if (command.file && command.file.name) {
-            command.title = stringUtilities.capitaliseFirstLetter(stringUtilities.getFileNameWithoutExtension(command.file.name));
-            command.fileName = stringUtilities.slugify(command.title);
-            focusService.focusById('title');
-        }
-    }
-
-    function onCancel() {
-        close();
-    }
-
-    /* PUBLIC HELPERS */
-    function initData() {
-        vm.command = {};
-    }
-
-    function hasFilterRestrictions() {
-        return options.filter.fileExtension ||
-            options.filter.fileExtensions;
-    }
-
-    function cancel() {
-        close();
-    }
-
-    function uploadComplete(documentAssetId) {
-        options.onUploadComplete(documentAssetId);
-        close();
-    }
-
-}]);
-
 angular.module('cms.shared').controller('AddCustomEntityDialogController', [
     '$scope',
     '$location',
@@ -9979,6 +9171,70 @@ function (
     function Controller() {
     }
 }]);
+angular.module('cms.shared').directive('cmsButton', [
+    'shared.internalModulePath',
+function (
+    modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/Button.html',
+        scope: {
+            text: '@cmsText'
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonIcon', [
+    'shared.internalModulePath',
+    function (modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: false,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonIcon.html',
+        scope: {
+            title: '@cmsTitle',
+            icon: '@cmsIcon',
+            href: '@cmsHref',
+            external: '@cmsExternal'
+        },
+        link: function (scope, el) {
+            if (scope.icon) {
+                scope.iconCls = 'fa-' + scope.icon;
+            }
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonLink', [
+    'shared.internalModulePath',
+    function (modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonLink.html',
+        scope: {
+            text: '@cmsText',
+            href: '@cmsHref'
+        }
+    };
+}]);
+angular.module('cms.shared').directive('cmsButtonSubmit', [
+    'shared.internalModulePath',
+function (
+    modulePath
+) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: modulePath + 'UIComponents/Buttons/ButtonSubmit.html',
+        scope: {
+            text: '@cmsText'
+        }
+    };
+}]);
 angular.module('cms.shared').directive('cmsFormFieldDirectorySelector', [
     '_',
     'shared.directiveUtilities',
@@ -10035,94 +9291,6 @@ function (
             if (vm.onLoaded) vm.onLoaded();
         });
     }
-}]);
-angular.module('cms.shared').factory('shared.entityVersionModalDialogService', [
-    'shared.entityVersionService',
-    'shared.modalDialogService',
-function (
-    entityVersionService,
-    modalDialogService) {
-
-    var service = {},
-        pageEntityConfig = {
-            entityNameSingular: 'Page'
-        };
-
-    /* PUBLIC */
-
-    service.publish = function (entityId, onLoadingStart, customEntityConfig) {
-        var config = customEntityConfig || pageEntityConfig;
-
-        var options = {
-            title: 'Publish ' + config.entityNameSingular,
-            message: 'Are you sure you want to publish this ' + config.entityNameSingular.toLowerCase() + '?',
-            okButtonTitle: 'Yes, publish it',
-            onOk: onOk
-        };
-
-        return modalDialogService.confirm(options);
-
-        function onOk() {
-            onLoadingStart();
-            return entityVersionService.publish(config.isCustomEntity, entityId);
-        }
-    }
-
-    service.unpublish = function (entityId, onLoadingStart, customEntityConfig) {
-        var config = customEntityConfig || pageEntityConfig;
-
-        var options = {
-            title: 'Unpublish ' + config.entityNameSingular,
-            message: 'Unpublishing this ' + config.entityNameSingular.toLowerCase() + ' will remove it from the live site and put it into draft status. Are you sure you want to continue?',
-            okButtonTitle: 'Yes, unpublish it',
-            onOk: onOk
-        };
-
-        return modalDialogService.confirm(options);
-
-        function onOk() {
-            onLoadingStart();
-
-            return entityVersionService.unpublish(config.isCustomEntity, entityId);
-        }
-    }
-
-    service.copyToDraft = function (entityId, entityVersionId, hasDraft, onLoadingStart, customEntityConfig) {
-        var config = customEntityConfig || pageEntityConfig;
-
-        var options = {
-            title: 'Copy ' + config.entityNameSingular + ' Version',
-            message: 'A draft version of this ' + config.entityNameSingular.toLowerCase() + ' already exists. Copying this version will delete the current draft. Do you wish to continue?',
-            okButtonTitle: 'Yes, replace it',
-            onOk: onOk
-        };
-
-        if (hasDraft) {
-            // If there's a draft already, warn the user
-            return modalDialogService
-                .confirm(options);
-        } else {
-            // Run the command directly
-            onLoadingStart();
-            return runCommand();
-        }
-
-        /* helpers */
-
-        function onOk() {
-            onLoadingStart();
-
-            return entityVersionService
-                .removeDraft(config.isCustomEntity, entityId)
-                .then(runCommand);
-        }
-
-        function runCommand() {
-            return entityVersionService.duplicateDraft(config.isCustomEntity, entityId, entityVersionId);
-        }
-    }
-    
-    return service;
 }]);
 angular.module('cms.shared').controller('ImageAssetEditorDialogController', [
     '$scope',
@@ -10635,6 +9803,838 @@ function (
         if (loadState && _.isFunction(loadState.off)) loadState.off();
     }
 }]);
+angular.module('cms.shared').factory('shared.entityVersionModalDialogService', [
+    'shared.entityVersionService',
+    'shared.modalDialogService',
+function (
+    entityVersionService,
+    modalDialogService) {
+
+    var service = {},
+        pageEntityConfig = {
+            entityNameSingular: 'Page'
+        };
+
+    /* PUBLIC */
+
+    service.publish = function (entityId, onLoadingStart, customEntityConfig) {
+        var config = customEntityConfig || pageEntityConfig;
+
+        var options = {
+            title: 'Publish ' + config.entityNameSingular,
+            message: 'Are you sure you want to publish this ' + config.entityNameSingular.toLowerCase() + '?',
+            okButtonTitle: 'Yes, publish it',
+            onOk: onOk
+        };
+
+        return modalDialogService.confirm(options);
+
+        function onOk() {
+            onLoadingStart();
+            return entityVersionService.publish(config.isCustomEntity, entityId);
+        }
+    }
+
+    service.unpublish = function (entityId, onLoadingStart, customEntityConfig) {
+        var config = customEntityConfig || pageEntityConfig;
+
+        var options = {
+            title: 'Unpublish ' + config.entityNameSingular,
+            message: 'Unpublishing this ' + config.entityNameSingular.toLowerCase() + ' will remove it from the live site and put it into draft status. Are you sure you want to continue?',
+            okButtonTitle: 'Yes, unpublish it',
+            onOk: onOk
+        };
+
+        return modalDialogService.confirm(options);
+
+        function onOk() {
+            onLoadingStart();
+
+            return entityVersionService.unpublish(config.isCustomEntity, entityId);
+        }
+    }
+
+    service.copyToDraft = function (entityId, entityVersionId, hasDraft, onLoadingStart, customEntityConfig) {
+        var config = customEntityConfig || pageEntityConfig;
+
+        var options = {
+            title: 'Copy ' + config.entityNameSingular + ' Version',
+            message: 'A draft version of this ' + config.entityNameSingular.toLowerCase() + ' already exists. Copying this version will delete the current draft. Do you wish to continue?',
+            okButtonTitle: 'Yes, replace it',
+            onOk: onOk
+        };
+
+        if (hasDraft) {
+            // If there's a draft already, warn the user
+            return modalDialogService
+                .confirm(options);
+        } else {
+            // Run the command directly
+            onLoadingStart();
+            return runCommand();
+        }
+
+        /* helpers */
+
+        function onOk() {
+            onLoadingStart();
+
+            return entityVersionService
+                .removeDraft(config.isCustomEntity, entityId)
+                .then(runCommand);
+        }
+
+        function runCommand() {
+            return entityVersionService.duplicateDraft(config.isCustomEntity, entityId, entityVersionId);
+        }
+    }
+    
+    return service;
+}]);
+angular.module('cms.shared').directive('cmsDocumentAsset', [
+    'shared.internalModulePath',
+    'shared.urlLibrary',
+function (
+    modulePath,
+    urlLibrary
+    ) {
+
+    return {
+        restrict: 'E',
+        scope: {
+            document: '=cmsDocument'
+        },
+        templateUrl: modulePath + 'UIComponents/DocumentAssets/DocumentAsset.html',
+        link: function (scope, el, attributes) {
+
+            scope.getDocumentUrl = urlLibrary.getDocumentUrl;
+        }
+    };
+}]);
+angular.module('cms.shared').controller('DocumentAssetPickerDialogController', [
+    '$scope',
+    'shared.LoadState',
+    'shared.documentService',
+    'shared.SearchQuery',
+    'shared.modalDialogService',
+    'shared.internalModulePath',
+    'shared.permissionValidationService',
+    'shared.urlLibrary',
+    'options',
+    'close',
+function (
+    $scope,
+    LoadState,
+    documentService,
+    SearchQuery,
+    modalDialogService,
+    modulePath,
+    permissionValidationService,
+    urlLibrary,
+    options,
+    close) {
+    
+    var vm = $scope;
+    init();
+    
+    /* INIT */
+    
+    function init() {
+        angular.extend($scope, options);
+
+        vm.onOk = onOk;
+        vm.onCancel = onCancel;
+        vm.onSelect = onSelect;
+        vm.onUpload = onUpload;
+        vm.selectedAsset = vm.currentAsset; // currentAsset is null in single mode
+        vm.onSelectAndClose = onSelectAndClose;
+        vm.close = onCancel;
+
+        vm.gridLoadState = new LoadState();
+        vm.query = new SearchQuery({
+            onChanged: onQueryChanged,
+            useHistory: false,
+            defaultParams: options.filter
+        });
+        vm.presetFilter = options.filter;
+
+        vm.filter = vm.query.getFilters();
+        vm.toggleFilter = toggleFilter;
+
+        vm.isSelected = isSelected;
+        vm.multiMode = vm.selectedIds ? true : false;
+        vm.okText = vm.multiMode ? 'Ok' : 'Select';
+
+        vm.canCreate = permissionValidationService.canCreate('COFDOC');
+
+        vm.getDocumentUrl = urlLibrary.getDocumentUrl;
+
+        toggleFilter(false);
+        loadGrid();
+    }
+
+    /* ACTIONS */
+
+    function toggleFilter(show) {
+        vm.isFilterVisible = _.isUndefined(show) ? !vm.isFilterVisible : show;
+    }
+
+    function onQueryChanged() {
+        toggleFilter(false);
+        loadGrid();
+    }
+
+    function loadGrid() {
+        vm.gridLoadState.on();
+
+        return documentService.getAll(vm.query.getParameters()).then(function (result) {
+            vm.result = result;
+            vm.gridLoadState.off();
+        });
+    }
+    
+    /* EVENTS */
+
+    function onCancel() {
+        if (!vm.multiMode) {
+            // in single-mode reset the currentAsset
+            vm.onSelected(vm.currentAsset);
+        }
+        close();
+    }
+
+    function onSelect(document) {
+        if (!vm.multiMode) {
+            vm.selectedAsset = document;
+            return;
+        }
+
+        addOrRemove(document);
+    }
+
+    function onSelectAndClose(document) {
+        if (!vm.multiMode) {
+            vm.selectedAsset = document;
+            onOk();
+            return;
+        }
+
+        addOrRemove(document);
+        onOk();
+    }
+
+    function onOk() {
+        if (!vm.multiMode) {
+            vm.onSelected(vm.selectedAsset);
+        } else {
+            vm.onSelected(vm.selectedIds);
+        }
+
+        close();
+    }
+
+    function onUpload() {
+        modalDialogService.show({
+            templateUrl: modulePath + 'UIComponents/DocumentAssets/UploadDocumentAssetDialog.html',
+            controller: 'UploadDocumentAssetDialogController',
+            options: {
+                filter: options.filter,
+                onUploadComplete: onUploadComplete
+            }
+        });
+
+        function onUploadComplete(documentAssetId) {
+            onSelectAndClose({ documentAssetId: documentAssetId });
+        }
+    }
+
+    /* PUBLIC HELPERS */
+
+    function isSelected(document) {
+        if (vm.selectedIds && document && vm.selectedIds.indexOf(document.documentAssetId) > -1) return true;
+
+        if (!document || !vm.selectedAsset) return false;
+
+        return document.documentAssetId === vm.selectedAsset.documentAssetId;
+    }
+
+    function addOrRemove(document) {
+        if (!isSelected(document)) {
+            vm.selectedIds.push(document.documentAssetId);
+        } else {
+            var index = vm.selectedIds.indexOf(document.documentAssetId);
+            vm.selectedIds.splice(index, 1);
+        }
+    }
+}]);
+
+/**
+ * File upload control for documents/files. Uses https://github.com/danialfarid/angular-file-upload
+ */
+angular.module('cms.shared').directive('cmsDocumentUpload', [
+            '_',
+            'shared.internalModulePath',
+            'shared.urlLibrary',
+        function (
+            _,
+            modulePath,
+            urlLibrary 
+        ) {
+
+    /* CONFIG */
+    
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/DocumentAssets/DocumentUpload.html',
+        scope: {
+            asset: '=cmsAsset',
+            loadState: '=cmsLoadState',
+            isEditMode: '=cmsIsEditMode',
+            modelName: '=cmsModelName',
+            ngModel: '=ngModel',
+            onChange: '&cmsOnChange'
+        },
+        require: 'ngModel',
+        controller: function () { },
+        controllerAs: 'vm',
+        bindToController: true,
+        link: link
+    };
+
+    /* LINK */
+
+    function link(scope, el, attributes, ngModelController) {
+        var vm = scope.vm,
+            isRequired = _.has(attributes, 'required');
+
+        init();
+
+        /* INIT */
+
+        function init() {
+            vm.remove = remove;
+            vm.fileChanged = onFileChanged;
+            vm.isRemovable = _.isObject(vm.ngModel) && !isRequired;
+            scope.$watch("vm.asset", setAsset);
+        }
+
+        /* EVENTS */
+
+        function remove() {
+            onFileChanged();
+        }
+
+        /**
+         * Initialise the state when the asset is changed
+         */
+        function setAsset() {
+            var asset = vm.asset;
+            if (asset) {
+                vm.previewUrl = urlLibrary.getDocumentUrl(asset);
+                vm.isRemovable = !isRequired;
+
+                ngModelController.$setViewValue({
+                    name: asset.fileName + '.' + asset.fileExtension,
+                    size: asset.fileSizeInBytes,
+                    isCurrentFile: true
+                });
+
+            } else {
+                vm.isRemovable = false;
+
+                if (ngModelController.$modelValue) {
+                    ngModelController.$setViewValue(undefined);
+                }
+            }
+
+            setButtonText();
+        }
+
+        function onFileChanged($files) {
+            if ($files && $files[0]) {
+                // set the file is one is selected
+                ngModelController.$setViewValue($files[0]);
+                vm.isRemovable = !isRequired;
+
+            } else if (!vm.ngModel || _.isUndefined($files)) {
+                // if we don't have a file loaded already, remove the file.
+                ngModelController.$setViewValue(undefined);
+                vm.previewUrl = null;
+                vm.isRemovable = false;
+                vm.asset = undefined;
+            }
+
+            setButtonText();
+
+            // base onChange event
+            if (vm.onChange) vm.onChange(vm.ngModel);
+        }
+
+        /* Helpers */
+
+        function setButtonText() {
+            vm.buttonText = ngModelController.$modelValue ? 'Change' : 'Upload';
+        }
+    }
+
+}]);
+/**
+ * A form field control for an image asset that uses a search and pick dialog
+ * to allow the user to change the selected file.
+ */
+angular.module('cms.shared').directive('cmsFormFieldDocumentAsset', [
+    '_',
+    'shared.internalModulePath',
+    'shared.internalContentPath',
+    'shared.modalDialogService',
+    'shared.stringUtilities',
+    'shared.documentService',
+    'shared.urlLibrary',
+    'baseFormFieldFactory',
+function (
+    _,
+    modulePath,
+    contentPath,
+    modalDialogService,
+    stringUtilities,
+    documentService,
+    urlLibrary,
+    baseFormFieldFactory) {
+
+    /* CONFIG */
+
+    var config = {
+        templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentAsset.html',
+        scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
+            asset: '=cmsAsset',
+            loadState: '=cmsLoadState',
+            updateAsset: '@cmsUpdateAsset' // update the asset property if it changes
+        }),
+        passThroughAttributes: ['required'],
+        link: link
+    };
+
+    return baseFormFieldFactory.create(config);
+
+    /* LINK */
+
+    function link(scope, el, attributes, controllers) {
+        var vm = scope.vm,
+            isRequired = _.has(attributes, 'required'),
+            isAssetInitialized;
+
+        init();
+        return baseFormFieldFactory.defaultConfig.link(scope, el, attributes, controllers);
+
+        /* INIT */
+
+        function init() {
+
+            vm.urlLibrary = urlLibrary;
+            vm.showPicker = showPicker;
+            vm.remove = remove;
+            vm.isRemovable = _.isObject(vm.model) && !isRequired;
+
+            vm.filter = parseFilters(attributes);
+
+            scope.$watch("vm.asset", setAsset);
+            scope.$watch("vm.model", setAssetById);
+        }
+
+        /* EVENTS */
+
+        function remove() {
+            setAsset(null);
+        }
+
+        function showPicker() {
+
+            modalDialogService.show({
+                templateUrl: modulePath + 'UIComponents/DocumentAssets/DocumentAssetPickerDialog.html',
+                controller: 'DocumentAssetPickerDialogController',
+                options: {
+                    currentAsset: vm.previewAsset,
+                    filter: vm.filter,
+                    onSelected: onSelected
+                }
+            });
+
+            function onSelected(newAsset) {
+                if (!newAsset && vm.asset) {
+                    setAsset(null);
+                } else if (!vm.asset || (newAsset && vm.asset.documentAssetId !== newAsset.documentAssetId)) {
+                    setAsset(newAsset);
+                }
+            }
+        }
+
+        /** 
+         * When the model is set without a preview asset, we need to go get the full 
+         * asset details. This query can be bypassed by setting the cms-asset attribute
+         */
+        function setAssetById(assetId) {
+
+            // Remove the id if it is 0 or invalid to make sure required validation works
+            if (!assetId) {
+                vm.model = assetId = undefined;
+            }
+
+            if (assetId && (!vm.previewAsset || vm.previewAsset.documentAssetId != assetId)) {
+                documentService.getById(assetId).then(function (asset) {
+                    setAsset(asset);
+                });
+            }
+        }
+
+        /**
+         * Initialise the state when the asset is changed
+         */
+        function setAsset(asset) {
+
+            if (asset) {
+                vm.previewAsset = asset;
+                vm.isRemovable = !isRequired;
+                vm.model = asset.documentAssetId;
+
+                if (vm.updateAsset) {
+                    vm.asset = asset;
+                }
+
+            } else if (isAssetInitialized) {
+                // Ignore if we are running this first time to avoid overwriting the model with a null vlaue
+                vm.previewAsset = null;
+                vm.isRemovable = false;
+
+                if (vm.model) {
+                    vm.model = null;
+                }
+                if (vm.updateAsset) {
+                    vm.asset = null;
+                }
+            }
+
+            setButtonText();
+
+            isAssetInitialized = true;
+        }
+
+        /* Helpers */
+
+        function parseFilters(attributes) {
+            var filter = {},
+                attributePrefix = 'cms';
+
+            setAttribute('Tags');
+            setAttribute('FileExtension');
+            setAttribute('FileExtensions');
+
+            return filter;
+
+            function setAttribute(attributeName) {
+                var filterName = stringUtilities.lowerCaseFirstWord(attributeName);
+                filter[filterName] = attributes[attributePrefix + attributeName];
+            }
+        }
+
+        function setButtonText() {
+            vm.buttonText = vm.model ? 'Change' : 'Select';
+        }
+    }
+
+}]);
+angular.module('cms.shared').directive('cmsFormFieldDocumentAssetCollection', [
+    '_',
+    'shared.internalModulePath',
+    'shared.LoadState',
+    'shared.documentService',
+    'shared.modalDialogService',
+    'shared.arrayUtilities',
+    'shared.stringUtilities',
+    'shared.urlLibrary',
+    'baseFormFieldFactory',
+function (
+    _,
+    modulePath,
+    LoadState,
+    documentService,
+    modalDialogService,
+    arrayUtilities,
+    stringUtilities,
+    urlLibrary,
+    baseFormFieldFactory) {
+
+    /* VARS */
+
+    var DOCUMENT_ASSET_ID_PROP = 'documentAssetId',
+        baseConfig = baseFormFieldFactory.defaultConfig;
+
+    /* CONFIG */
+
+    var config = {
+        templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentAssetCollection.html',
+        passThroughAttributes: [
+            'required'
+        ],
+        link: link
+    };
+
+    return baseFormFieldFactory.create(config);
+
+    /* LINK */
+
+    function link(scope, el, attributes, controllers) {
+        var vm = scope.vm,
+            isRequired = _.has(attributes, 'required');
+
+        init();
+        return baseConfig.link(scope, el, attributes, controllers);
+
+        /* INIT */
+
+        function init() {
+
+            vm.urlLibrary = urlLibrary;
+            vm.gridLoadState = new LoadState();
+
+            vm.showPicker = showPicker;
+            vm.remove = remove;
+            vm.onDrop = onDrop;
+
+            scope.$watch("vm.model", setGridItems);
+        }
+
+        /* EVENTS */
+
+        function remove(document) {
+
+            removeItemFromArray(vm.gridData, document);
+            removeItemFromArray(vm.model, document[DOCUMENT_ASSET_ID_PROP]);
+
+            function removeItemFromArray(arr, item) {
+                var index = arr.indexOf(item);
+
+                if (index >= 0) {
+                    return arr.splice(index, 1);
+                }
+            }
+        }
+
+        function showPicker() {
+
+            modalDialogService.show({
+                templateUrl: modulePath + 'UIComponents/DocumentAssets/DocumentAssetPickerDialog.html',
+                controller: 'DocumentAssetPickerDialogController',
+                options: {
+                    selectedIds: vm.model || [],
+                    filter: getFilter(),
+                    onSelected: onSelected
+                }
+            });
+
+            function onSelected(newArr) {
+                vm.model = newArr;
+                setGridItems(newArr);
+            }
+        }
+
+        function onDrop($index, droppedEntity) {
+
+            arrayUtilities.moveObject(vm.gridData, droppedEntity, $index, DOCUMENT_ASSET_ID_PROP);
+
+            // Update model with new orering
+            setModelFromGridData();
+        }
+
+        function setModelFromGridData() {
+            vm.model = _.pluck(vm.gridData, DOCUMENT_ASSET_ID_PROP);
+        }
+
+        /* HELPERS */
+
+        function getFilter() {
+            var filter = {},
+                attributePrefix = 'cms';
+
+            setAttribute('Tags');
+            setAttribute('FileExtension');
+            setAttribute('FileExtensions');
+
+            return filter;
+
+            function setAttribute(attributeName) {
+                var filterName = stringUtilities.lowerCaseFirstWord(attributeName);
+                filter[filterName] = attributes[attributePrefix + attributeName];
+            }
+        }
+
+        /** 
+         * Load the grid data if it is inconsistent with the Ids collection.
+         */
+        function setGridItems(ids) {
+
+            if (!ids || !ids.length) {
+                vm.gridData = [];
+            }
+            else if (!vm.gridData || _.pluck(vm.gridData, DOCUMENT_ASSET_ID_PROP).join() != ids.join()) {
+
+                vm.gridLoadState.on();
+                documentService.getByIdRange(ids).then(function (items) {
+                    vm.gridData = items;
+                    vm.gridLoadState.off();
+                });
+            }
+        }
+    }
+}]);
+angular.module('cms.shared').directive('cmsFormFieldDocumentTypeSelector', [
+    '_',
+    'shared.internalModulePath',
+    'shared.documentService',
+function (
+    _,
+    modulePath,
+    documentService) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentTypeSelector.html',
+        scope: {
+            model: '=cmsModel',
+            disabled: '=cmsDisabled',
+            readonly: '=cmsReadonly',
+            onLoaded: '&cmsOnLoaded'
+        },
+        controller: Controller,
+        controllerAs: 'vm',
+        bindToController: true
+    };
+
+    /* CONTROLLER */
+
+    function Controller() {
+        var vm = this;
+
+        documentService.getAllDocumentFileTypes().then(function (fileTypes) {
+
+            vm.fileTypes = fileTypes;
+
+            if (vm.onLoaded) vm.onLoaded();
+        });
+    }
+}]);
+/**
+ * File upload control for images. Uses https://github.com/danialfarid/angular-file-upload
+ */
+angular.module('cms.shared').directive('cmsFormFieldDocumentUpload', [
+    '_',
+    'shared.internalModulePath',
+    'baseFormFieldFactory',
+function (
+    _,
+    modulePath,
+    baseFormFieldFactory) {
+
+    /* CONFIG */
+
+    var config = {
+        templateUrl: modulePath + 'UIComponents/DocumentAssets/FormFieldDocumentUpload.html',
+        scope: _.extend(baseFormFieldFactory.defaultConfig.scope, {
+            asset: '=cmsAsset',
+            loadState: '=cmsLoadState'
+        }),
+        passThroughAttributes: ['required', 'ngRequired'],
+        getInputEl: getInputEl
+    };
+
+    return baseFormFieldFactory.create(config);
+
+    function getInputEl(rootEl) {
+        return rootEl.find('cms-document-upload');
+    }
+}]);
+angular.module('cms.shared').controller('UploadDocumentAssetDialogController', [
+    '$scope',
+    'shared.LoadState',
+    'shared.documentService',
+    'shared.SearchQuery',
+    'shared.focusService',
+    'shared.stringUtilities',
+    'options',
+    'close',
+function (
+    $scope,
+    LoadState,
+    documentService,
+    SearchQuery,
+    focusService,
+    stringUtilities,
+    options,
+    close) {
+    
+    var vm = $scope;
+    init();
+    
+    /* INIT */
+    function init() {
+        angular.extend($scope, options);
+
+        initData();
+
+        vm.onUpload = onUpload;
+        vm.onCancel = onCancel;
+        vm.close = onCancel;
+        vm.filter = options.filter;
+        vm.onFileChanged = onFileChanged;
+        vm.hasFilterRestrictions = hasFilterRestrictions;
+
+        vm.saveLoadState = new LoadState();
+    }
+
+    /* EVENTS */
+    function onUpload() {
+        vm.saveLoadState.on();
+
+        documentService
+            .add(vm.command)
+            .progress(vm.saveLoadState.setProgress)
+            .then(uploadComplete);
+    }
+
+    function onFileChanged() {
+        var command = vm.command;
+
+        if (command.file && command.file.name) {
+            command.title = stringUtilities.capitaliseFirstLetter(stringUtilities.getFileNameWithoutExtension(command.file.name));
+            command.fileName = stringUtilities.slugify(command.title);
+            focusService.focusById('title');
+        }
+    }
+
+    function onCancel() {
+        close();
+    }
+
+    /* PUBLIC HELPERS */
+    function initData() {
+        vm.command = {};
+    }
+
+    function hasFilterRestrictions() {
+        return options.filter.fileExtension ||
+            options.filter.fileExtensions;
+    }
+
+    function cancel() {
+        close();
+    }
+
+    function uploadComplete(documentAssetId) {
+        options.onUploadComplete(documentAssetId);
+        close();
+    }
+
+}]);
+
 /**
  * A dynamically generated set of form elements based on model meta data and bound to 
  * a dynamic model.
@@ -10841,53 +10841,197 @@ function (
     }
 
 }]);
-/**
- * Validates that a field matches the value of another field. Set the came of the field 
- * in the attribute definition e.g. cms-match="vm.command.password"
- * Adapted from http://ericpanorel.net/2013/10/05/angularjs-password-match-form-validation/
- */
-angular.module('cms.shared').directive('cmsMatch', [
-    '$parse',
-    '$timeout',
+angular.module('cms.shared').directive('cmsForm', [
     'shared.internalModulePath',
-    'shared.directiveUtilities',
 function (
-    $parse,
-    $timeout,
-    modulePath,
-    directiveUtilities
-    ) {
-
-    var DIRECTIVE_ID = 'cmsMatch';
-    var DIRECTIVE_ATTRIBUTE = 'cms-match';
+    modulePath) {
 
     return {
-        link: link,
-        restrict: 'A',
-        require: ['^^cmsForm', '?ngModel'],
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Form/Form.html',
+        replace: true,
+        transclude: true,
+        scope: {
+            editMode: '=cmsEditMode',
+            name: '@cmsName'
+        },
+        compile: compile,
+        controller: ['$scope', FormController]
     };
-    
-    function link(scope, el, attrs, controllers) {
-        // NB: ngModel may be null on an outer form control before it has been copied to the inner input.
-        if (!attrs[DIRECTIVE_ID] || !controllers[1]) return;
 
-        var formController = controllers[0],
-            ngModelController = controllers[1],
-            form = formController.getFormScope().getForm(),
-            sourceField = directiveUtilities.parseModelName(attrs[DIRECTIVE_ID]);
+    /* CONTROLLER/COMPILE */
 
-        var validator = function (value, otherVal) {
-            var formField = form[sourceField];
-            if (!formField) return false;
-
-            var sourceFieldValue = formField.$viewValue;
-
-            return value === sourceFieldValue;
+    function FormController($scope) {
+        $scope.getForm = function () {
+            return $scope[$scope.name];
         }
 
-        ngModelController.$validators[DIRECTIVE_ID] = validator;
+        this.getFormScope = function () {
+
+            return $scope;
+        }
+    };
+
+    function compile(element, attrs) {
+        // Default edit mode to true if not specified
+        if (!angular.isDefined(attrs.cmsEditMode)) {
+            attrs.cmsEditMode = 'true';
+        }
+
+        return link;
+    }
+
+    function link (scope, el, attrs, controllers) {
+        // Do somethng similar to the behavior of NgForm and bind the form property a 
+        // parent scope except in our case the root scope.
+        var parentScope = findRootScopeModel(scope);
+        parentScope[scope.name] = scope.getForm();
+    }
+
+    /* HELPERS */
+
+    function findRootScopeModel(scope, vmScope) {
+        var parent = scope.$parent;
+
+        // We've reached the root, return a vm scope or the root scope
+        if (!parent) return vmScope || scope;
+
+        if (angular.isDefined(parent.vm)) {
+            // we've found a parent with a controller as 'vm' scope
+            vmScope = parent.vm;
+        }
+
+        // Keep searching up the tree recursively and return the last one found
+        return findRootScopeModel(parent, vmScope);
     }
 }]);
+angular.module('cms.shared').directive('cmsFormSection', ['shared.internalModulePath', '$timeout', function (modulePath, $timeout) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Form/FormSection.html',
+        scope: {
+            title: '@cmsTitle'
+        },
+        replace: true,
+        transclude: true,
+        link: link
+    };
+
+    function link(scope, elem, attrs) {
+        // Wait a moment until child components are rendered before searching the dom
+        $timeout(function () {
+            var helpers = angular.element(elem[0].querySelector('.help-inline'));
+            var btn = angular.element(elem[0].querySelector('.toggle-helpers'));
+
+            if (helpers.length) {
+                btn
+                    .addClass('show')
+                    .on('click', function () {
+                        btn.toggleClass('active');
+                        elem.toggleClass('show-helpers');
+                    });
+            }
+        }, 100);
+    }
+}]);
+angular.module('cms.shared').directive('cmsFormSectionActions', ['shared.internalModulePath', '$timeout', function (modulePath, $timeout) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Form/FormSectionActions.html',
+        scope: {
+        },
+        replace: true,
+        transclude: true,
+        link: link
+    };
+
+    function link(scope, elem, attrs) {
+    }
+}]);
+angular.module('cms.shared').directive('cmsFormSectionAuditData', ['shared.internalModulePath', function (modulePath) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Form/FormSectionAuditData.html',
+        scope: {
+            auditData: '=cmsAuditData'
+        }
+    };
+}]);
+/**
+ * A status message that can appear in a form to notify the user of any errors or other messages. A scope is
+ * attached to the parent form and can be accessed via [myFormName].formStatus
+ */
+angular.module('cms.shared').directive('cmsFormStatus', [
+    '_',
+    'shared.validationErrorService',
+    'shared.internalModulePath',
+function (
+    _,
+    validationErrorService,
+    modulePath) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Form/FormStatus.html',
+        require: ['^^cmsForm'],
+        replace: true,
+        scope: true,
+        link: { post: link }
+    };
+
+    function link(scope, el, attr, controllers) {
+
+        initScope(scope, controllers[0]);
+        bindValidationHandler(scope, el);
+    }
+
+    function initScope(scope, formController) {
+        var formScope = formController.getFormScope(),
+            form = formScope.getForm();
+
+        scope.success = success.bind(scope);
+        scope.error = error.bind(scope);
+        scope.errors = errors.bind(scope);
+        scope.clear = clear.bind(scope);
+        form.formStatus = scope;
+    }
+
+    function bindValidationHandler(scope, el) {
+
+        validationErrorService.addHandler('', scope.errors);
+        scope.$on('$destroy', function () {
+            validationErrorService.removeHandler(scope.errors);
+        });
+    }
+
+    function errors(errors, message) {
+
+        var processedErrors = _.uniq(errors, function (error) {
+            return error.message;
+        });
+
+        setScope(this, message, 'error', processedErrors);
+    }
+
+    function error(message) {
+        setScope(this, message, 'error');
+    }
+
+    function success(message) {
+        setScope(this, message, 'success');
+    }
+
+    function clear() {
+        setScope(this);
+    }
+
+    function setScope(scope, message, cls, errors) {
+        scope.message = message;
+        scope.errors = errors;
+        scope.cls = cls;
+    }
+}]);
+
 /**
  * Base class for form fields that uses default conventions and includes integration with 
  * server validation.
@@ -11594,11 +11738,13 @@ angular.module('cms.shared').directive('cmsFormFieldDropdown', [
     '_',
     '$http',
     'shared.internalModulePath',
+    'shared.optionSourceService',
     'baseFormFieldFactory',
 function (
     _,
     $http,
     modulePath,
+    optionSourceService,
     baseFormFieldFactory) {
 
     var config = {
@@ -11660,7 +11806,7 @@ function (
         /* Helpers */
 
         function getOptions(apiPath) {
-            return $http.get(apiPath).then(loadOptions);
+            return optionSourceService.getFromApi(apiPath).then(loadOptions);
 
             function loadOptions(options) {
                 vm.listOptions = options;
@@ -12191,11 +12337,13 @@ angular.module('cms.shared').directive('cmsFormFieldRadioList', [
     '_',
     '$http',
     'shared.internalModulePath',
+    'shared.optionSourceService',
     'baseFormFieldFactory',
 function (
     _,
     $http,
     modulePath,
+    optionSourceService,
     baseFormFieldFactory) {
 
     var config = {
@@ -12255,7 +12403,7 @@ function (
         /* Helpers */
 
         function getOptions(apiPath) {
-            return $http.get(apiPath).then(loadOptions);
+            return optionSourceService.getFromApi(apiPath).then(loadOptions);
 
             function loadOptions(options) {
                 vm.listOptions = options;
@@ -12494,312 +12642,53 @@ angular.module('cms.shared').directive('cmsHttpPrefix', function () {
         }
     };
 });
-angular.module('cms.shared').directive('cmsForm', [
-    'shared.internalModulePath',
-function (
-    modulePath) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Form/Form.html',
-        replace: true,
-        transclude: true,
-        scope: {
-            editMode: '=cmsEditMode',
-            name: '@cmsName'
-        },
-        compile: compile,
-        controller: ['$scope', FormController]
-    };
-
-    /* CONTROLLER/COMPILE */
-
-    function FormController($scope) {
-        $scope.getForm = function () {
-            return $scope[$scope.name];
-        }
-
-        this.getFormScope = function () {
-
-            return $scope;
-        }
-    };
-
-    function compile(element, attrs) {
-        // Default edit mode to true if not specified
-        if (!angular.isDefined(attrs.cmsEditMode)) {
-            attrs.cmsEditMode = 'true';
-        }
-
-        return link;
-    }
-
-    function link (scope, el, attrs, controllers) {
-        // Do somethng similar to the behavior of NgForm and bind the form property a 
-        // parent scope except in our case the root scope.
-        var parentScope = findRootScopeModel(scope);
-        parentScope[scope.name] = scope.getForm();
-    }
-
-    /* HELPERS */
-
-    function findRootScopeModel(scope, vmScope) {
-        var parent = scope.$parent;
-
-        // We've reached the root, return a vm scope or the root scope
-        if (!parent) return vmScope || scope;
-
-        if (angular.isDefined(parent.vm)) {
-            // we've found a parent with a controller as 'vm' scope
-            vmScope = parent.vm;
-        }
-
-        // Keep searching up the tree recursively and return the last one found
-        return findRootScopeModel(parent, vmScope);
-    }
-}]);
-angular.module('cms.shared').directive('cmsFormSection', ['shared.internalModulePath', '$timeout', function (modulePath, $timeout) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Form/FormSection.html',
-        scope: {
-            title: '@cmsTitle'
-        },
-        replace: true,
-        transclude: true,
-        link: link
-    };
-
-    function link(scope, elem, attrs) {
-        // Wait a moment until child components are rendered before searching the dom
-        $timeout(function () {
-            var helpers = angular.element(elem[0].querySelector('.help-inline'));
-            var btn = angular.element(elem[0].querySelector('.toggle-helpers'));
-
-            if (helpers.length) {
-                btn
-                    .addClass('show')
-                    .on('click', function () {
-                        btn.toggleClass('active');
-                        elem.toggleClass('show-helpers');
-                    });
-            }
-        }, 100);
-    }
-}]);
-angular.module('cms.shared').directive('cmsFormSectionActions', ['shared.internalModulePath', '$timeout', function (modulePath, $timeout) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Form/FormSectionActions.html',
-        scope: {
-        },
-        replace: true,
-        transclude: true,
-        link: link
-    };
-
-    function link(scope, elem, attrs) {
-    }
-}]);
-angular.module('cms.shared').directive('cmsFormSectionAuditData', ['shared.internalModulePath', function (modulePath) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Form/FormSectionAuditData.html',
-        scope: {
-            auditData: '=cmsAuditData'
-        }
-    };
-}]);
 /**
- * A status message that can appear in a form to notify the user of any errors or other messages. A scope is
- * attached to the parent form and can be accessed via [myFormName].formStatus
+ * Validates that a field matches the value of another field. Set the came of the field 
+ * in the attribute definition e.g. cms-match="vm.command.password"
+ * Adapted from http://ericpanorel.net/2013/10/05/angularjs-password-match-form-validation/
  */
-angular.module('cms.shared').directive('cmsFormStatus', [
-    '_',
-    'shared.validationErrorService',
-    'shared.internalModulePath',
-function (
-    _,
-    validationErrorService,
-    modulePath) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Form/FormStatus.html',
-        require: ['^^cmsForm'],
-        replace: true,
-        scope: true,
-        link: { post: link }
-    };
-
-    function link(scope, el, attr, controllers) {
-
-        initScope(scope, controllers[0]);
-        bindValidationHandler(scope, el);
-    }
-
-    function initScope(scope, formController) {
-        var formScope = formController.getFormScope(),
-            form = formScope.getForm();
-
-        scope.success = success.bind(scope);
-        scope.error = error.bind(scope);
-        scope.errors = errors.bind(scope);
-        scope.clear = clear.bind(scope);
-        form.formStatus = scope;
-    }
-
-    function bindValidationHandler(scope, el) {
-
-        validationErrorService.addHandler('', scope.errors);
-        scope.$on('$destroy', function () {
-            validationErrorService.removeHandler(scope.errors);
-        });
-    }
-
-    function errors(errors, message) {
-
-        var processedErrors = _.uniq(errors, function (error) {
-            return error.message;
-        });
-
-        setScope(this, message, 'error', processedErrors);
-    }
-
-    function error(message) {
-        setScope(this, message, 'error');
-    }
-
-    function success(message) {
-        setScope(this, message, 'success');
-    }
-
-    function clear() {
-        setScope(this);
-    }
-
-    function setScope(scope, message, cls, errors) {
-        scope.message = message;
-        scope.errors = errors;
-        scope.cls = cls;
-    }
-}]);
-
-angular.module('cms.shared').directive('cmsField', [
+angular.module('cms.shared').directive('cmsMatch', [
+    '$parse',
     '$timeout',
     'shared.internalModulePath',
-    function (
-        $timeout,
-        modulePath) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Layout/Field.html',
-        transclude: true,
-        replace: true,
-        require: '^^cmsForm'
-    }
-}]);
-(function ($) {
-
-    // Context
-    var $el = $(document.getElementsByClassName('main-nav'));
-
-    // Temp vars
-    var categories, currentCategory;
-
-    function init() {
-
-        categories = $(document.getElementsByClassName('category'));
-        currentCategory = $(document.getElementsByClassName('category selected'));
-
-        //Events
-        categories.on('mouseenter', function (e) {
-            var $src = $(e.srcElement);
-            
-            currentCategory.removeClass('selected');
-            //$src.addClass('selected');
-        });
-
-        categories.on('mouseleave', function (e) {
-            var $src = $(e.srcElement);
-
-            currentCategory.addClass('selected');
-            //$src.removeClass('selected');
-        });
-    }
-
-    init();
-
-})(angular.element);
-angular.module('cms.shared').directive('cmsPageActions', function () {
-    return {
-        restrict: 'E',
-        template: '<div class="page-actions" ng-transclude></div>',
-        replace: true,
-        transclude: true,
-    }
-});
-angular.module('cms.shared').directive('cmsPageBody', [
-    'shared.internalModulePath',
+    'shared.directiveUtilities',
 function (
-    modulePath
-) {
+    $parse,
+    $timeout,
+    modulePath,
+    directiveUtilities
+    ) {
+
+    var DIRECTIVE_ID = 'cmsMatch';
+    var DIRECTIVE_ATTRIBUTE = 'cms-match';
+
     return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Layout/PageBody.html',
-        scope: {
-            contentType: '@cmsContentType',
-            hasActions: '=cmsHasActions'
-        },
-        replace: true,
-        transclude: true,
-        controllerAs: 'vm',
-        bindToController: true,
-        controller: ['$scope', Controller]
+        link: link,
+        restrict: 'A',
+        require: ['^^cmsForm', '?ngModel'],
     };
+    
+    function link(scope, el, attrs, controllers) {
+        // NB: ngModel may be null on an outer form control before it has been copied to the inner input.
+        if (!attrs[DIRECTIVE_ID] || !controllers[1]) return;
 
-    /* CONTROLLER */
+        var formController = controllers[0],
+            ngModelController = controllers[1],
+            form = formController.getFormScope().getForm(),
+            sourceField = directiveUtilities.parseModelName(attrs[DIRECTIVE_ID]);
 
-    function Controller(scope) {
-    };
+        var validator = function (value, otherVal) {
+            var formField = form[sourceField];
+            if (!formField) return false;
+
+            var sourceFieldValue = formField.$viewValue;
+
+            return value === sourceFieldValue;
+        }
+
+        ngModelController.$validators[DIRECTIVE_ID] = validator;
+    }
 }]);
-angular.module('cms.shared').directive('cmsPageFilter', function () {
-    return {
-        restrict: 'E',
-        template: '<div class="page-filter" ng-transclude></div>',
-        replace: true,
-        transclude: true
-    }
-});
-angular.module('cms.shared').directive('cmsPageHeader', function () {
-    return {
-        restrict: 'E',
-        template: '<h1 class="page-header"><a ng-href="{{parentHref ? parentHref : \'#/\'}}" ng-if="parentTitle">{{parentTitle}}</a><span ng-if="parentTitle && title"> &gt; </span><ng-transclude>{{title}}</ng-transclude></h1>',
-        replace: true,
-        transclude: true,
-        scope: {
-            title: '@cmsTitle',
-            parentTitle: '@cmsParentTitle',
-            parentHref: '@cmsParentHref'
-        },
-    }
-});
-angular.module('cms.shared').directive('cmsPageHeaderButtons', function () {
-    return {
-        restrict: 'E',
-        template: '<div class="btn-group page-header-buttons" ng-transclude></div>',
-        replace: true,
-        transclude: true
-    }
-});
-angular.module('cms.shared').directive('cmsPageSubHeader', function () {
-    return {
-        restrict: 'E',
-        template: '<div class="page-sub-header" ng-transclude></div>',
-        replace: true,
-        transclude: true
-    }
-});
 angular.module('cms.shared').directive('cmsFormFieldImageAnchorLocationSelector', [
         '_',
         'shared.internalModulePath',
@@ -13698,6 +13587,121 @@ function (
 
 }]);
 
+angular.module('cms.shared').directive('cmsField', [
+    '$timeout',
+    'shared.internalModulePath',
+    function (
+        $timeout,
+        modulePath) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Layout/Field.html',
+        transclude: true,
+        replace: true,
+        require: '^^cmsForm'
+    }
+}]);
+(function ($) {
+
+    // Context
+    var $el = $(document.getElementsByClassName('main-nav'));
+
+    // Temp vars
+    var categories, currentCategory;
+
+    function init() {
+
+        categories = $(document.getElementsByClassName('category'));
+        currentCategory = $(document.getElementsByClassName('category selected'));
+
+        //Events
+        categories.on('mouseenter', function (e) {
+            var $src = $(e.srcElement);
+            
+            currentCategory.removeClass('selected');
+            //$src.addClass('selected');
+        });
+
+        categories.on('mouseleave', function (e) {
+            var $src = $(e.srcElement);
+
+            currentCategory.addClass('selected');
+            //$src.removeClass('selected');
+        });
+    }
+
+    init();
+
+})(angular.element);
+angular.module('cms.shared').directive('cmsPageActions', function () {
+    return {
+        restrict: 'E',
+        template: '<div class="page-actions" ng-transclude></div>',
+        replace: true,
+        transclude: true,
+    }
+});
+angular.module('cms.shared').directive('cmsPageBody', [
+    'shared.internalModulePath',
+function (
+    modulePath
+) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Layout/PageBody.html',
+        scope: {
+            contentType: '@cmsContentType',
+            hasActions: '=cmsHasActions'
+        },
+        replace: true,
+        transclude: true,
+        controllerAs: 'vm',
+        bindToController: true,
+        controller: ['$scope', Controller]
+    };
+
+    /* CONTROLLER */
+
+    function Controller(scope) {
+    };
+}]);
+angular.module('cms.shared').directive('cmsPageFilter', function () {
+    return {
+        restrict: 'E',
+        template: '<div class="page-filter" ng-transclude></div>',
+        replace: true,
+        transclude: true
+    }
+});
+angular.module('cms.shared').directive('cmsPageHeader', function () {
+    return {
+        restrict: 'E',
+        template: '<h1 class="page-header"><a ng-href="{{parentHref ? parentHref : \'#/\'}}" ng-if="parentTitle">{{parentTitle}}</a><span ng-if="parentTitle && title"> &gt; </span><ng-transclude>{{title}}</ng-transclude></h1>',
+        replace: true,
+        transclude: true,
+        scope: {
+            title: '@cmsTitle',
+            parentTitle: '@cmsParentTitle',
+            parentHref: '@cmsParentHref'
+        },
+    }
+});
+angular.module('cms.shared').directive('cmsPageHeaderButtons', function () {
+    return {
+        restrict: 'E',
+        template: '<div class="btn-group page-header-buttons" ng-transclude></div>',
+        replace: true,
+        transclude: true
+    }
+});
+angular.module('cms.shared').directive('cmsPageSubHeader', function () {
+    return {
+        restrict: 'E',
+        template: '<div class="page-sub-header" ng-transclude></div>',
+        replace: true,
+        transclude: true
+    }
+});
 angular.module('cms.shared').directive('cmsLoading', function () {
     return {
         restrict: 'A',
@@ -13850,234 +13854,6 @@ function (
             if (vm.onLoaded) vm.onLoaded();
         });
     }
-}]);
-angular.module('cms.shared').controller('AlertController', [
-    '$scope',
-    'options',
-    'close', function (
-        $scope,
-        options,
-        close) {
-
-    angular.extend($scope, options);
-    $scope.close = close;
-}]);
-angular.module('cms.shared').controller('ConfirmDialogController', ['$scope', 'options', 'close', function ($scope, options, close) {
-    angular.extend($scope, options);
-    $scope.close = resolve;
-
-    /* helpers */
-
-    function resolve(result) {
-        var resolver = result ? options.ok : options.cancel;
-
-        if (resolver) {
-            resolver()
-                .then(closeIfRequired)
-                .finally(options.onCancel);
-        }
-    }
-
-    function closeIfRequired() {
-        if (options.autoClose) {
-            close();
-        }
-    }
-
-}]);
-angular.module('cms.shared').controller('DeveloperExceptionController', [
-    '$scope',
-    '$sce',
-    'shared.internalContentPath',
-    'options',
-    'close',
-function (
-    $scope,
-    $sce,
-    internalContentPath,
-    options,
-    close) {
-
-    var html = options.response.data;
-
-    var iframe = document.createElement('iframe');
-    iframe.setAttribute('srcdoc', html);
-    iframe.setAttribute('src', internalContentPath + 'developer-exception-not-supported.html');
-    iframe.setAttribute('sandbox', 'allow-scripts');
-    $scope.messageHtml = $sce.trustAsHtml(iframe.outerHTML);
-
-    angular.extend($scope, options);
-    $scope.close = close;
-
-}]);
-angular.module('cms.shared').directive('cmsModalDialogActions', ['shared.internalModulePath', function (modulePath) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Modals/ModalDialogActions.html',
-        transclude: true
-    };
-}]);
-angular.module('cms.shared').directive('cmsModalDialogBody', ['shared.internalModulePath', function (modulePath) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Modals/ModalDialogBody.html',
-        transclude: true,
-    };
-}]);
-angular.module('cms.shared').directive('cmsModalDialogContainer', [
-    'shared.internalModulePath',
-    '$timeout',
-function (
-    modulePath,
-    $timeout) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Modals/ModalDialogContainer.html',
-        transclude: true,
-        link: link,
-        controller: angular.noop
-        };
-
-    function link(scope, el, attributes) {
-        var cls = attributes.cmsModalSize === 'large' ? 'modal-lg' : '';
-        cls += (scope.isRootModal ? ' is-root-modal' : ' is-child-modal');
-        if (attributes.cmsModalSize === 'large') {
-            scope.sizeCls = cls;
-        }
-        $timeout(function () {
-            scope.sizeCls = cls + ' modal--show';
-        }, 1);
-    }
-}]);
-angular.module('cms.shared').directive('cmsModalDialogHeader', ['shared.internalModulePath', function (modulePath) {
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/Modals/ModalDialogHeader.html',
-        transclude: true,
-    };
-}]);
-angular.module('cms.shared').factory('shared.modalDialogService', [
-    '$q',
-    '_',
-    'ModalService',
-    'shared.internalModulePath',
-    'shared.LoadState',
-function (
-    $q,
-    _,
-    ModalService,
-    modulePath,
-    LoadState) {
-
-    var service = {};
-
-    /* PUBLIC */
-
-    /**
-    * Displays a modal message with a button to dismiss the message.
-    */
-    service.alert = function (optionsOrMessage) {
-        var deferred = $q.defer(),
-            options = optionsOrMessage || {};
-
-        if (_.isString(optionsOrMessage)) {
-            options = {
-                message: optionsOrMessage
-            }
-        }
-
-        ModalService.showModal({
-            templateUrl: modulePath + "UIComponents/Modals/Alert.html",
-            controller: "AlertController",
-            inputs: {
-                options: options
-            }
-        }).then(function (modal) {
-
-            // Apres-creation stuff
-            modal.close.then(deferred.resolve);
-        });
-
-        return deferred.promise;
-    }
-
-    /**
-    * Displays a custom modal popup using a template at the specified url.
-    */
-    service.show = function (modalOptions) {
-        return ModalService.showModal({
-            templateUrl: modalOptions.templateUrl,
-            controller: modalOptions.controller,
-            inputs: {
-                options: modalOptions.options
-            }
-        });
-    }
-
-    /**
-    * Displays a modal message with a button options to ok/cancel an action.
-    */
-    service.confirm = function (optionsOrMessage) {
-        var returnDeferred = $q.defer(),
-            onOkLoadState = new LoadState(),
-            options = initOptions(optionsOrMessage);
-
-        ModalService.showModal({
-            templateUrl: modulePath + "UIComponents/Modals/ConfirmDialog.html",
-            controller: "ConfirmDialogController",
-            inputs: {
-                options: options
-            }
-        });
-
-        return returnDeferred.promise;
-
-        /* helpers */
-
-        function initOptions(optionsOrMessage) {
-            var options = optionsOrMessage || {},
-                defaults = {
-                    okButtonTitle: 'OK',
-                    cancelButtonTitle: 'Cancel',
-                    autoClose: true,
-                    // onCancel: fn or promise
-                    // onOk: fn or promise
-                },
-                internalScope = {
-                    ok: resolve.bind(null, true),
-                    cancel: resolve.bind(null, false),
-                    onOkLoadState: onOkLoadState
-                };
-
-            if (_.isString(optionsOrMessage)) {
-                options = {
-                    message: optionsOrMessage
-                }
-            }
-
-            return _.defaults(internalScope, options, defaults);
-        }
-
-        function resolve(isSuccess) {
-            var optionToExec = isSuccess ? options.onOk : options.onOk.onCancel,
-                deferredAction = isSuccess ? returnDeferred.resolve : returnDeferred.reject,
-                optionResult;
-
-            // run the action
-            if (_.isFunction(optionToExec)) {
-                onOkLoadState.on();
-                optionResult = optionToExec();
-            }
-
-            // Wait for the result to resolve if its a promise
-            // Then resolve/reject promise we returned to the callee
-            return $q.when(optionResult)
-                     .then(deferredAction);
-        }
-    }
-
-    return service;
 }]);
 /**
  * Helper used for working with collections of dynamic model data that
@@ -14349,20 +14125,233 @@ function (
 
     }
 }]);
-angular.module('cms.shared').directive('cmsMenu', [
-    'shared.internalModulePath',
+angular.module('cms.shared').controller('AlertController', [
+    '$scope',
+    'options',
+    'close', function (
+        $scope,
+        options,
+        close) {
+
+    angular.extend($scope, options);
+    $scope.close = close;
+}]);
+angular.module('cms.shared').controller('ConfirmDialogController', ['$scope', 'options', 'close', function ($scope, options, close) {
+    angular.extend($scope, options);
+    $scope.close = resolve;
+
+    /* helpers */
+
+    function resolve(result) {
+        var resolver = result ? options.ok : options.cancel;
+
+        if (resolver) {
+            resolver()
+                .then(closeIfRequired)
+                .finally(options.onCancel);
+        }
+    }
+
+    function closeIfRequired() {
+        if (options.autoClose) {
+            close();
+        }
+    }
+
+}]);
+angular.module('cms.shared').controller('DeveloperExceptionController', [
+    '$scope',
+    '$sce',
+    'shared.internalContentPath',
+    'options',
+    'close',
 function (
-    modulePath) {
+    $scope,
+    $sce,
+    internalContentPath,
+    options,
+    close) {
+
+    var html = options.response.data;
+
+    var iframe = document.createElement('iframe');
+    iframe.setAttribute('srcdoc', html);
+    iframe.setAttribute('src', internalContentPath + 'developer-exception-not-supported.html');
+    iframe.setAttribute('sandbox', 'allow-scripts');
+    $scope.messageHtml = $sce.trustAsHtml(iframe.outerHTML);
+
+    angular.extend($scope, options);
+    $scope.close = close;
+
+}]);
+angular.module('cms.shared').directive('cmsModalDialogActions', ['shared.internalModulePath', function (modulePath) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Modals/ModalDialogActions.html',
+        transclude: true
+    };
+}]);
+angular.module('cms.shared').directive('cmsModalDialogBody', ['shared.internalModulePath', function (modulePath) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Modals/ModalDialogBody.html',
+        transclude: true,
+    };
+}]);
+angular.module('cms.shared').directive('cmsModalDialogContainer', [
+    'shared.internalModulePath',
+    '$timeout',
+function (
+    modulePath,
+    $timeout) {
 
     return {
         restrict: 'E',
-        replace: true,
+        templateUrl: modulePath + 'UIComponents/Modals/ModalDialogContainer.html',
         transclude: true,
-        templateUrl: modulePath + 'UIComponents/Menus/Menu.html',
-        scope: {
-            icon: '@cmsIcon'
+        link: link,
+        controller: angular.noop
+        };
+
+    function link(scope, el, attributes) {
+        var cls = attributes.cmsModalSize === 'large' ? 'modal-lg' : '';
+        cls += (scope.isRootModal ? ' is-root-modal' : ' is-child-modal');
+        if (attributes.cmsModalSize === 'large') {
+            scope.sizeCls = cls;
         }
+        $timeout(function () {
+            scope.sizeCls = cls + ' modal--show';
+        }, 1);
+    }
+}]);
+angular.module('cms.shared').directive('cmsModalDialogHeader', ['shared.internalModulePath', function (modulePath) {
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/Modals/ModalDialogHeader.html',
+        transclude: true,
     };
+}]);
+angular.module('cms.shared').factory('shared.modalDialogService', [
+    '$q',
+    '_',
+    'ModalService',
+    'shared.internalModulePath',
+    'shared.LoadState',
+function (
+    $q,
+    _,
+    ModalService,
+    modulePath,
+    LoadState) {
+
+    var service = {};
+
+    /* PUBLIC */
+
+    /**
+    * Displays a modal message with a button to dismiss the message.
+    */
+    service.alert = function (optionsOrMessage) {
+        var deferred = $q.defer(),
+            options = optionsOrMessage || {};
+
+        if (_.isString(optionsOrMessage)) {
+            options = {
+                message: optionsOrMessage
+            }
+        }
+
+        ModalService.showModal({
+            templateUrl: modulePath + "UIComponents/Modals/Alert.html",
+            controller: "AlertController",
+            inputs: {
+                options: options
+            }
+        }).then(function (modal) {
+
+            // Apres-creation stuff
+            modal.close.then(deferred.resolve);
+        });
+
+        return deferred.promise;
+    }
+
+    /**
+    * Displays a custom modal popup using a template at the specified url.
+    */
+    service.show = function (modalOptions) {
+        return ModalService.showModal({
+            templateUrl: modalOptions.templateUrl,
+            controller: modalOptions.controller,
+            inputs: {
+                options: modalOptions.options
+            }
+        });
+    }
+
+    /**
+    * Displays a modal message with a button options to ok/cancel an action.
+    */
+    service.confirm = function (optionsOrMessage) {
+        var returnDeferred = $q.defer(),
+            onOkLoadState = new LoadState(),
+            options = initOptions(optionsOrMessage);
+
+        ModalService.showModal({
+            templateUrl: modulePath + "UIComponents/Modals/ConfirmDialog.html",
+            controller: "ConfirmDialogController",
+            inputs: {
+                options: options
+            }
+        });
+
+        return returnDeferred.promise;
+
+        /* helpers */
+
+        function initOptions(optionsOrMessage) {
+            var options = optionsOrMessage || {},
+                defaults = {
+                    okButtonTitle: 'OK',
+                    cancelButtonTitle: 'Cancel',
+                    autoClose: true,
+                    // onCancel: fn or promise
+                    // onOk: fn or promise
+                },
+                internalScope = {
+                    ok: resolve.bind(null, true),
+                    cancel: resolve.bind(null, false),
+                    onOkLoadState: onOkLoadState
+                };
+
+            if (_.isString(optionsOrMessage)) {
+                options = {
+                    message: optionsOrMessage
+                }
+            }
+
+            return _.defaults(internalScope, options, defaults);
+        }
+
+        function resolve(isSuccess) {
+            var optionToExec = isSuccess ? options.onOk : options.onOk.onCancel,
+                deferredAction = isSuccess ? returnDeferred.resolve : returnDeferred.reject,
+                optionResult;
+
+            // run the action
+            if (_.isFunction(optionToExec)) {
+                onOkLoadState.on();
+                optionResult = optionToExec();
+            }
+
+            // Wait for the result to resolve if its a promise
+            // Then resolve/reject promise we returned to the callee
+            return $q.when(optionResult)
+                     .then(deferredAction);
+        }
+    }
+
+    return service;
 }]);
 angular.module('cms.shared').controller('EditNestedDataModelDialogController', [
     '$scope',
@@ -14831,6 +14820,21 @@ angular.module('cms.shared').directive('cmsFormFieldNestedDataModelMultiTypeColl
 
         }
     }]);
+angular.module('cms.shared').directive('cmsMenu', [
+    'shared.internalModulePath',
+function (
+    modulePath) {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        transclude: true,
+        templateUrl: modulePath + 'UIComponents/Menus/Menu.html',
+        scope: {
+            icon: '@cmsIcon'
+        }
+    };
+}]);
 angular.module('cms.shared').directive('cmsFormFieldPageCollection', [
     '_',
     'shared.internalModulePath',
@@ -15264,40 +15268,6 @@ function (
     }
 }]);
 
-/**
- * A success status message, dislpayed in a green coloured box
- */
-angular.module('cms.shared').directive('cmsSuccessMessage', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/StatusMessages/SuccessMessage.html',
-        replace: true,
-        transclude: true
-    };
-}]);
-
-/**
- * A warning status message, dislpayed in a yellow coloured box
- */
-angular.module('cms.shared').directive('cmsWarningMessage', [
-    'shared.internalModulePath',
-function (
-    modulePath
-    ) {
-
-    return {
-        restrict: 'E',
-        templateUrl: modulePath + 'UIComponents/StatusMessages/WarningMessage.html',
-        replace: true,
-        transclude: true
-    };
-}]);
-
 angular.module('cms.shared').directive('cmsPager', [
     'shared.internalModulePath',
 function (
@@ -15497,6 +15467,40 @@ angular.module('cms.shared').factory('shared.SearchQuery', ['$location', '_', fu
         }
     }
 }]);
+/**
+ * A success status message, dislpayed in a green coloured box
+ */
+angular.module('cms.shared').directive('cmsSuccessMessage', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/StatusMessages/SuccessMessage.html',
+        replace: true,
+        transclude: true
+    };
+}]);
+
+/**
+ * A warning status message, dislpayed in a yellow coloured box
+ */
+angular.module('cms.shared').directive('cmsWarningMessage', [
+    'shared.internalModulePath',
+function (
+    modulePath
+    ) {
+
+    return {
+        restrict: 'E',
+        templateUrl: modulePath + 'UIComponents/StatusMessages/WarningMessage.html',
+        replace: true,
+        transclude: true
+    };
+}]);
+
 angular.module('cms.shared').directive('cmsTableActions', [
     'shared.internalModulePath',
 function (
@@ -15759,6 +15763,80 @@ function (
         }
     }
 }]);
+angular.module('cms.shared').directive('cmsTimeAgo', ['shared.internalModulePath', function (modulePath) {
+
+    return {
+        restrict: 'E',
+        scope: { time: '=cmsTime' },
+        templateUrl: modulePath + 'UIComponents/Time/TimeAgo.html',
+        controller: ['$scope', TimeAgoController],
+        controllerAs: 'vm'
+    };
+
+    function TimeAgoController($scope) {
+        var vm = this;
+
+        $scope.$watch('time', function () {
+            if ($scope.time) {
+                vm.date = new Date($scope.time);
+                vm.timeAgo = timeSince(vm.date);
+            } else {
+                vm.date = null;
+                vm.timeAgo = null;
+            }
+        });
+    }
+
+    function timeSince(time) {
+
+        switch (typeof time) {
+            case 'number': break;
+            case 'string': time = +new Date(time); break;
+            case 'object': if (time.constructor === Date) time = time.getTime(); break;
+            default: time = +new Date();
+        }
+
+        var time_formats = [
+            [60, 'seconds', 1], // 60
+            [120, '1 minute ago', '1 minute from now'], // 60*2
+            [3600, 'minutes', 60], // 60*60, 60
+            [7200, '1 hour ago', '1 hour from now'], // 60*60*2
+            [86400, 'hours', 3600], // 60*60*24, 60*60
+            [172800, 'Yesterday', 'Tomorrow'], // 60*60*24*2
+            [604800, 'days', 86400], // 60*60*24*7, 60*60*24
+            [1209600, 'Last week', 'Next week'], // 60*60*24*7*4*2
+            [2419200, 'weeks', 604800], // 60*60*24*7*4, 60*60*24*7
+            [4838400, 'Last month', 'Next month'], // 60*60*24*7*4*2
+            [29030400, 'months', 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
+            [58060800, 'Last year', 'Next year'], // 60*60*24*7*4*12*2
+            [2903040000, 'years', 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
+            [5806080000, 'Last century', 'Next century'], // 60*60*24*7*4*12*100*2
+            [58060800000, 'centuries', 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
+        ];
+        var seconds = (+new Date() - time) / 1000,
+            token = 'ago', list_choice = 1;
+
+        // browser time may not be in sync with server time so treat
+        // negative minutes as 'just now' to avoid outputting future times.
+        if ((seconds <= 0 && seconds > -3600) || Math.abs(seconds) == 0) {
+            return 'Just now'
+        }
+        if (seconds < 0) {
+            seconds = Math.abs(seconds);
+            token = 'from now';
+            list_choice = 2;
+        }
+        var i = 0, format;
+        while (format = time_formats[i++])
+            if (seconds < format[0]) {
+                if (typeof format[2] == 'string')
+                    return format[list_choice];
+                else
+                    return Math.floor(seconds / format[2]) + ' ' + format[1] + ' ' + token;
+            }
+        return time;
+    }
+}]);
 angular.module('cms.shared').directive('cmsUserLink', [
     'shared.internalModulePath',
     'shared.urlLibrary',
@@ -15838,80 +15916,6 @@ angular.module('cms.shared').directive('cmsModelAsDate', function () {
         });
     }
 });
-angular.module('cms.shared').directive('cmsTimeAgo', ['shared.internalModulePath', function (modulePath) {
-
-    return {
-        restrict: 'E',
-        scope: { time: '=cmsTime' },
-        templateUrl: modulePath + 'UIComponents/Time/TimeAgo.html',
-        controller: ['$scope', TimeAgoController],
-        controllerAs: 'vm'
-    };
-
-    function TimeAgoController($scope) {
-        var vm = this;
-
-        $scope.$watch('time', function () {
-            if ($scope.time) {
-                vm.date = new Date($scope.time);
-                vm.timeAgo = timeSince(vm.date);
-            } else {
-                vm.date = null;
-                vm.timeAgo = null;
-            }
-        });
-    }
-
-    function timeSince(time) {
-
-        switch (typeof time) {
-            case 'number': break;
-            case 'string': time = +new Date(time); break;
-            case 'object': if (time.constructor === Date) time = time.getTime(); break;
-            default: time = +new Date();
-        }
-
-        var time_formats = [
-            [60, 'seconds', 1], // 60
-            [120, '1 minute ago', '1 minute from now'], // 60*2
-            [3600, 'minutes', 60], // 60*60, 60
-            [7200, '1 hour ago', '1 hour from now'], // 60*60*2
-            [86400, 'hours', 3600], // 60*60*24, 60*60
-            [172800, 'Yesterday', 'Tomorrow'], // 60*60*24*2
-            [604800, 'days', 86400], // 60*60*24*7, 60*60*24
-            [1209600, 'Last week', 'Next week'], // 60*60*24*7*4*2
-            [2419200, 'weeks', 604800], // 60*60*24*7*4, 60*60*24*7
-            [4838400, 'Last month', 'Next month'], // 60*60*24*7*4*2
-            [29030400, 'months', 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
-            [58060800, 'Last year', 'Next year'], // 60*60*24*7*4*12*2
-            [2903040000, 'years', 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
-            [5806080000, 'Last century', 'Next century'], // 60*60*24*7*4*12*100*2
-            [58060800000, 'centuries', 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
-        ];
-        var seconds = (+new Date() - time) / 1000,
-            token = 'ago', list_choice = 1;
-
-        // browser time may not be in sync with server time so treat
-        // negative minutes as 'just now' to avoid outputting future times.
-        if ((seconds <= 0 && seconds > -3600) || Math.abs(seconds) == 0) {
-            return 'Just now'
-        }
-        if (seconds < 0) {
-            seconds = Math.abs(seconds);
-            token = 'from now';
-            list_choice = 2;
-        }
-        var i = 0, format;
-        while (format = time_formats[i++])
-            if (seconds < format[0]) {
-                if (typeof format[2] == 'string')
-                    return format[list_choice];
-                else
-                    return Math.floor(seconds / format[2]) + ' ' + format[1] + ' ' + token;
-            }
-        return time;
-    }
-}]);
 /**
   * Placeholder js file to solve issue with Azure and Bundle.IncludeDirectory, because
   * without this file the directory is empty.
