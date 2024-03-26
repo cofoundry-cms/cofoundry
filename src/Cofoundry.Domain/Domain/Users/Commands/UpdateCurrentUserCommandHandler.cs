@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -15,6 +15,7 @@ public class UpdateCurrentUserCommandHandler
     private readonly IPermissionValidationService _permissionValidationService;
     private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
     private readonly IUserSecurityStampUpdateHelper _userSecurityStampUpdateHelper;
+    private readonly IExecutionContextFactory _executionContextFactory;
 
     public UpdateCurrentUserCommandHandler(
         CofoundryDbContext dbContext,
@@ -22,7 +23,8 @@ public class UpdateCurrentUserCommandHandler
         IUserAreaDefinitionRepository userAreaDefinitionRepository,
         IPermissionValidationService permissionValidationService,
         IUserUpdateCommandHelper userUpdateCommandHelper,
-        IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper
+        IUserSecurityStampUpdateHelper userSecurityStampUpdateHelper,
+        IExecutionContextFactory executionContextFactory
         )
     {
         _dbContext = dbContext;
@@ -31,6 +33,7 @@ public class UpdateCurrentUserCommandHandler
         _permissionValidationService = permissionValidationService;
         _userUpdateCommandHelper = userUpdateCommandHelper;
         _userSecurityStampUpdateHelper = userSecurityStampUpdateHelper;
+        _executionContextFactory = executionContextFactory;
     }
 
     public async Task ExecuteAsync(UpdateCurrentUserCommand command, IExecutionContext executionContext)
@@ -47,7 +50,8 @@ public class UpdateCurrentUserCommandHandler
             .SingleOrDefaultAsync();
         EntityNotFoundException.ThrowIfNull(user, userId);
 
-        var updateResult = await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, executionContext);
+        var elevatedContext = await _executionContextFactory.CreateSystemUserExecutionContextAsync(executionContext);
+        var updateResult = await _userUpdateCommandHelper.UpdateEmailAndUsernameAsync(command.Email, command.Username, user, elevatedContext);
         UpdateName(command, user);
         user.FirstName = command.FirstName?.Trim();
         user.LastName = command.LastName?.Trim();
