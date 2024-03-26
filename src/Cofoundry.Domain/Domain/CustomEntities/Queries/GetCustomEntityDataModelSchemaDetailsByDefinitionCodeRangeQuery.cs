@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Query to extract and return meta data information about a custom 
@@ -12,6 +12,7 @@ public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery : I
     /// </summary>
     public GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery()
     {
+        CustomEntityDefinitionCodes = new List<string>();
     }
 
     /// <summary>
@@ -22,7 +23,7 @@ public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery : I
     public GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery(
         IEnumerable<string>? customEntityDefinitionCodes
         )
-        : this(customEntityDefinitionCodes?.ToArray() ?? Array.Empty<string>())
+        : this(customEntityDefinitionCodes?.ToArray() ?? [])
     {
     }
 
@@ -44,5 +45,5 @@ public class GetCustomEntityDataModelSchemaDetailsByDefinitionCodeRangeQuery : I
     /// Range of definition codes to query (the unique 6 letter code representing the entity).
     /// </summary>
     [Required]
-    public IReadOnlyCollection<string> CustomEntityDefinitionCodes { get; set; } = Array.Empty<string>();
+    public IReadOnlyCollection<string> CustomEntityDefinitionCodes { get; set; }
 }

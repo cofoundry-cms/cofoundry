@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Finds pages with the specified page ids and returns them as PageSummary 
@@ -7,7 +7,10 @@
 /// </summary>
 public class GetPageSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, PageSummary>>
 {
-    public GetPageSummariesByIdRangeQuery() { }
+    public GetPageSummariesByIdRangeQuery()
+    {
+        PageIds = new List<int>();
+    }
 
     /// <summary>
     /// Initializes the query with parameters
@@ -30,5 +33,5 @@ public class GetPageSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, Pa
     /// <summary>
     /// A collection of database ids of the pages to fetch.
     /// </summary>
-    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> PageIds { get; set; }
 }

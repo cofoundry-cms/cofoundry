@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Query to get a range of custom entities by a set of ids, projected as a 
@@ -18,6 +18,7 @@ public class GetCustomEntityRenderSummariesByIdRangeQuery : IQuery<IReadOnlyDict
     /// </summary>
     public GetCustomEntityRenderSummariesByIdRangeQuery()
     {
+        CustomEntityIds = new List<int>();
     }
 
     /// <summary>
@@ -61,7 +62,7 @@ public class GetCustomEntityRenderSummariesByIdRangeQuery : IQuery<IReadOnlyDict
     /// Database ids of the custom entities to get.
     /// </summary>
     [Required]
-    public IReadOnlyCollection<int> CustomEntityIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> CustomEntityIds { get; set; }
 
     /// <summary>
     /// Used to determine which version of the custom entities to include 

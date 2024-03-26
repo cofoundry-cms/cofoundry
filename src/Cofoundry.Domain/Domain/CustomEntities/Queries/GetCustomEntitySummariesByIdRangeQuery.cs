@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// An id range query for custom entities which returns basic
@@ -18,6 +18,7 @@ public class GetCustomEntitySummariesByIdRangeQuery : IQuery<IReadOnlyDictionary
     /// </summary>
     public GetCustomEntitySummariesByIdRangeQuery()
     {
+        CustomEntityIds = new List<int>();
     }
 
     /// <summary>
@@ -63,5 +64,5 @@ public class GetCustomEntitySummariesByIdRangeQuery : IQuery<IReadOnlyDictionary
     /// located will not be present in the result.
     /// </summary>
     [Required]
-    public IReadOnlyCollection<int> CustomEntityIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> CustomEntityIds { get; set; }
 }

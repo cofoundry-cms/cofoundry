@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Gets meta information about INestedDataModel types using the 
@@ -10,6 +10,7 @@ public class GetNestedDataModelSchemaByNameRangeQuery : IQuery<IReadOnlyDictiona
 {
     public GetNestedDataModelSchemaByNameRangeQuery()
     {
+        Names = new List<string>();
     }
 
     /// <summary>
@@ -20,7 +21,7 @@ public class GetNestedDataModelSchemaByNameRangeQuery : IQuery<IReadOnlyDictiona
     /// the lookup is case-insesnitive.
     /// </param>
     public GetNestedDataModelSchemaByNameRangeQuery(IEnumerable<string> names)
-        : this(names?.ToArray() ?? Array.Empty<string>())
+        : this(names?.ToArray() ?? [])
     {
     }
 
@@ -44,5 +45,5 @@ public class GetNestedDataModelSchemaByNameRangeQuery : IQuery<IReadOnlyDictiona
     /// The data model type names with or without the "DataModel" suffix.
     /// the lookup is case-insesnitive.
     /// </summary>
-    public IReadOnlyCollection<string> Names { get; set; } = Array.Empty<string>();
+    public IReadOnlyCollection<string> Names { get; set; }
 }

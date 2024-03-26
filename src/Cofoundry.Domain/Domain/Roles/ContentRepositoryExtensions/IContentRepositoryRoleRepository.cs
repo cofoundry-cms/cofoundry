@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// IContentRespository extension root for the Role entity.
@@ -27,5 +27,5 @@ public interface IContentRepositoryRoleRepository
     /// <see cref="RoleMicroSummary"/> projection.
     /// </summary>
     /// <param name="roleIds">Range of role ids of the pages to get.</param>
-    IContentRepositoryRoleByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> roleIds);
+    IContentRepositoryRoleByIdRangeQueryBuilder GetByIdRange(IReadOnlyCollection<int> roleIds);
 }

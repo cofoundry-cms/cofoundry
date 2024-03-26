@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
@@ -6,7 +6,10 @@
 /// </summary>
 public class GetPageRenderDetailsByIdRangeQuery : IQuery<IReadOnlyDictionary<int, PageRenderDetails>>
 {
-    public GetPageRenderDetailsByIdRangeQuery() { }
+    public GetPageRenderDetailsByIdRangeQuery()
+    {
+        PageIds = new List<int>();
+    }
 
     /// <summary>
     /// Gets a range of pages by their ids projected as PageRenderDetails models. A PageRenderDetails contains 
@@ -37,7 +40,7 @@ public class GetPageRenderDetailsByIdRangeQuery : IQuery<IReadOnlyDictionary<int
     /// <summary>
     /// Database ids of the pages to get.
     /// </summary>
-    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> PageIds { get; set; }
 
     /// <summary>
     /// Used to determine which version of the page to include data for. This 

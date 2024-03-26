@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Returns information about entities that have a dependency on the entity 
@@ -13,6 +13,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQuery : IQuery<IRea
     /// </summary>
     public GetEntityDependencySummaryByRelatedEntityIdRangeQuery()
     {
+        EntityIds = new List<int>();
     }
 
     /// <summary>
@@ -43,7 +44,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQuery : IQuery<IRea
     /// Collection of entity ids to check for required dependencies. Each entity 
     /// must be of the type specified by <see cref="EntityDefinitionCode"/>.
     /// </summary>
-    public IReadOnlyCollection<int> EntityIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> EntityIds { get; set; }
 
     /// <summary>
     /// If set to true, then deletable dependencies will be excluded

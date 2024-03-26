@@ -13,6 +13,7 @@ public class GetRoleMicroSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<in
 {
     public GetRoleMicroSummariesByIdRangeQuery()
     {
+        RoleIds = new List<int>();
     }
 
     /// <summary>
@@ -20,18 +21,17 @@ public class GetRoleMicroSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<in
     /// </summary>
     /// <param name="roleIds">Collection of database ids of the roles to get.</param>
     public GetRoleMicroSummariesByIdRangeQuery(
-        IEnumerable<int>? roleIds
+        IReadOnlyCollection<int> roleIds
         )
     {
-        if (!EnumerableHelper.IsNullOrEmpty(roleIds))
-        {
-            RoleIds = roleIds.ToArray();
-        }
+        ArgumentNullException.ThrowIfNull(roleIds);
+
+        RoleIds = roleIds;
     }
 
     /// <summary>
     /// Collection of database ids of the roles to get.
     /// </summary>
     [Required]
-    public IReadOnlyCollection<int> RoleIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> RoleIds { get; set; }
 }

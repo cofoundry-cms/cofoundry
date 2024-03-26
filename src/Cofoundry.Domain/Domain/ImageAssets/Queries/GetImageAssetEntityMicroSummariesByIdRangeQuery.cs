@@ -1,9 +1,10 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 public class GetImageAssetEntityMicroSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, RootEntityMicroSummary>>
 {
     public GetImageAssetEntityMicroSummariesByIdRangeQuery()
     {
+        ImageAssetIds = new List<int>();
     }
 
     public GetImageAssetEntityMicroSummariesByIdRangeQuery(
@@ -23,5 +24,5 @@ public class GetImageAssetEntityMicroSummariesByIdRangeQuery : IQuery<IReadOnlyD
     }
 
     [Required]
-    public IReadOnlyCollection<int> ImageAssetIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> ImageAssetIds { get; set; }
 }

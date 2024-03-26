@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{EAA517AB-9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{22FE4195-4C00-444A-9873-1435F4F11A81}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Core", "src\Cofoundry.Core\Cofoundry.Core.csproj", "{22E7BFD5-C829-4793-83C6-445944D605F4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Domain", "src\Cofoundry.Domain\Cofoundry.Domain.csproj", "{7F758F8D-D973-4DB5-84D6-B8A5C795A1CB}"

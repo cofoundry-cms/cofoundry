@@ -6,11 +6,11 @@ public class ContentRepositoryRoleByIdRangeQueryBuilder
     : IContentRepositoryRoleByIdRangeQueryBuilder
     , IExtendableContentRepositoryPart
 {
-    private readonly IEnumerable<int> _roleIds;
+    private readonly IReadOnlyCollection<int> _roleIds;
 
     public ContentRepositoryRoleByIdRangeQueryBuilder(
         IExtendableContentRepository contentRepository,
-        IEnumerable<int> roleIds
+        IReadOnlyCollection<int> roleIds
         )
     {
         ExtendableContentRepository = contentRepository;

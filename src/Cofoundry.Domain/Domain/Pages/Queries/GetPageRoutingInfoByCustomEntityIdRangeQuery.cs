@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Finds routing information for a set of custom entities by their ids. Although
@@ -14,7 +14,10 @@ public class GetPageRoutingInfoByCustomEntityIdRangeQuery : IQuery<IReadOnlyDict
     /// type, it is supported and so each custom entity id in the query returns a collection
     /// of routes.
     /// </summary>
-    public GetPageRoutingInfoByCustomEntityIdRangeQuery() { }
+    public GetPageRoutingInfoByCustomEntityIdRangeQuery()
+    {
+        CustomEntityIds = new List<int>();
+    }
 
     /// <summary>
     /// Finds routing information for a set of custom entities by their ids. Although
@@ -43,5 +46,5 @@ public class GetPageRoutingInfoByCustomEntityIdRangeQuery : IQuery<IReadOnlyDict
     /// <summary>
     /// Database ids of the custom entities to find routing data for.
     /// </summary>
-    public IReadOnlyCollection<int> CustomEntityIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> CustomEntityIds { get; set; }
 }

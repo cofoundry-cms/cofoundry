@@ -25,7 +25,7 @@ public class EmailDomain
     /// the domain when parsed by <see cref="System.Uri"/> to better support international 
     /// domain names.
     /// </summary>
-    public byte[] NameHash { get; set; } = Array.Empty<byte>();
+    public byte[] NameHash { get; set; } = [];
 
     /// <summary>
     /// Date and time at which the email domain record was added

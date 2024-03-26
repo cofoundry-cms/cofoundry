@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -26,7 +26,7 @@ public class ContentRepositoryRoleRepository
         return new ContentRepositoryRoleByCodeQueryBuilder(ExtendableContentRepository, roleCode);
     }
 
-    public IContentRepositoryRoleByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> roleIds)
+    public IContentRepositoryRoleByIdRangeQueryBuilder GetByIdRange(IReadOnlyCollection<int> roleIds)
     {
         return new ContentRepositoryRoleByIdRangeQueryBuilder(ExtendableContentRepository, roleIds);
     }

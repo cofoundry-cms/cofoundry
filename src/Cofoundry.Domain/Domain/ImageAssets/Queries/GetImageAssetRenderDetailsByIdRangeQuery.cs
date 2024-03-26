@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Gets a range of image assets by their ids projected as a set of
@@ -11,6 +11,7 @@ public class GetImageAssetRenderDetailsByIdRangeQuery : IQuery<IReadOnlyDictiona
 {
     public GetImageAssetRenderDetailsByIdRangeQuery()
     {
+        ImageAssetIds = new List<int>();
     }
 
     /// <summary>
@@ -41,5 +42,5 @@ public class GetImageAssetRenderDetailsByIdRangeQuery : IQuery<IReadOnlyDictiona
     /// Collection of database ids of the image assets to get.
     /// </summary>
     [Required]
-    public IReadOnlyCollection<int> ImageAssetIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> ImageAssetIds { get; set; }
 }

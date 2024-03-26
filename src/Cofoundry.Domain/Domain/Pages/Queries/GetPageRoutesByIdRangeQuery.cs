@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Returns page routing data for a set of pages by their database ids. The 
@@ -16,7 +16,10 @@ public class GetPageRoutesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, PageR
     /// default as it's core to routing and often incorporated in more detailed
     /// page projections.
     /// </summary>
-    public GetPageRoutesByIdRangeQuery() { }
+    public GetPageRoutesByIdRangeQuery()
+    {
+        PageIds = new List<int>();
+    }
 
     /// <summary>
     /// Returns page routing data for a set of pages by their database ids. The 
@@ -47,5 +50,5 @@ public class GetPageRoutesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, PageR
     /// <summary>
     /// Database id of the page to fetch routing data for.
     /// </summary>
-    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> PageIds { get; set; }
 }

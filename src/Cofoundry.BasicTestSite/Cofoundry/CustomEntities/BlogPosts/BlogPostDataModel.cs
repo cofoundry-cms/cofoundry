@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.BasicTestSite;
 
@@ -104,5 +104,4 @@ public class BlogPostDataModel : ICustomEntityDataModel
     [PageCollection]
     [Display(Name = "Page Collection Test")]
     public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
-
 }

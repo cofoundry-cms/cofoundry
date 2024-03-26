@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Gets a range of document assets by their ids projected as 
@@ -11,6 +11,7 @@ public class GetDocumentAssetRenderDetailsByIdRangeQuery : IQuery<IReadOnlyDicti
 {
     public GetDocumentAssetRenderDetailsByIdRangeQuery()
     {
+        DocumentAssetIds = new List<int>();
     }
 
     /// <summary>
@@ -41,5 +42,5 @@ public class GetDocumentAssetRenderDetailsByIdRangeQuery : IQuery<IReadOnlyDicti
     /// Collection of database ids of the document assets to get.
     /// </summary>
     [Required]
-    public IReadOnlyCollection<int> DocumentAssetIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> DocumentAssetIds { get; set; }
 }

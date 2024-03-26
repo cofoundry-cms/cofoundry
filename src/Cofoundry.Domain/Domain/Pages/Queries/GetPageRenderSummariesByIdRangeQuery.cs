@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Query to get a range of pages by a set of ids, projected as a PageRenderSummary, which is
@@ -16,7 +16,10 @@ public class GetPageRenderSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<i
     /// version-sensitive and defaults to returning published versions only, but
     /// this behavior can be controlled by the publishStatus query property.
     /// </summary>
-    public GetPageRenderSummariesByIdRangeQuery() { }
+    public GetPageRenderSummariesByIdRangeQuery()
+    {
+        PageIds = new List<int>();
+    }
 
     /// <summary>
     /// Query to get a range of pages by a set of ids, projected as a PageRenderSummary, which is
@@ -53,7 +56,7 @@ public class GetPageRenderSummariesByIdRangeQuery : IQuery<IReadOnlyDictionary<i
     /// <summary>
     /// Database ids of the pages to get.
     /// </summary>
-    public IReadOnlyCollection<int> PageIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyCollection<int> PageIds { get; set; }
 
     /// <summary>
     /// Used to determine which version of the page to include data for. This 
