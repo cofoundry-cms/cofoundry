@@ -1,12 +1,10 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 public static class IDomainRepositoryQueryMutatorExtensions
 {
     /// <summary>
     /// Maps the result of the query using the specified mapper function. The 
-    /// mapping takes place after the original query has been executed. If the query
-    /// result is <see langword="null"/> then mapping is skipped and the default value
-    /// of <typeparamref name="TOutput"/> is returned.
+    /// mapping takes place after the original query has been executed. 
     /// </summary>
     /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
     /// <typeparam name="TInput">The input type to map from.</typeparam>
@@ -16,6 +14,33 @@ public static class IDomainRepositoryQueryMutatorExtensions
     /// <returns>A new query mutator instance that allows for method chaining.</returns>
     public static IDomainRepositoryQueryMutator<TQueryResult, TOutput?> Map<TQueryResult, TInput, TOutput>(
         this IDomainRepositoryQueryMutator<TQueryResult, TInput> innerMutator,
+        Func<TInput, TOutput?> mapper
+        )
+    {
+        return new DomainRepositoryQueryMutator<TQueryResult, TOutput?>(
+            innerMutator.Query,
+            async () =>
+            {
+                var result = await innerMutator.ExecuteAsync();
+
+                return mapper(result);
+            });
+    }
+
+    /// <summary>
+    /// Maps the result of the query using the specified mapper function. The 
+    /// mapping takes place after the original query has been executed. If the query
+    /// result is <see langword="null"/> then mapping is skipped and <see langword="null"/>
+    /// is returned.
+    /// </summary>
+    /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
+    /// <typeparam name="TInput">The input type to map from.</typeparam>
+    /// <typeparam name="TOutput">The result type after the mutation has been applied.</typeparam>
+    /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
+    /// <param name="mapper">A mapper function to run on the query result.</param>
+    /// <returns>A new query mutator instance that allows for method chaining.</returns>
+    public static IDomainRepositoryQueryMutator<TQueryResult, TOutput?> MapWhenNotNull<TQueryResult, TInput, TOutput>(
+        this IDomainRepositoryQueryMutator<TQueryResult, TInput?> innerMutator,
         Func<TInput, TOutput?> mapper
         )
     {
@@ -35,6 +60,31 @@ public static class IDomainRepositoryQueryMutatorExtensions
 
     /// <summary>
     /// Maps the result of the query using the specified mapper function. The 
+    /// mapping takes place after the original query has been executed.
+    /// </summary>
+    /// <typeparam name="TQueryResult">The type of the original query result.</typeparam>
+    /// <typeparam name="TInput">The input type to map from.</typeparam>
+    /// <typeparam name="TOutput">The result type after the mutation has been applied.</typeparam>
+    /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
+    /// <param name="mapper">An async mapper function to run on the query result.</param>
+    /// <returns>A new query mutator instance that allows for method chaining.</returns>
+    public static IDomainRepositoryQueryMutator<TQueryResult, TOutput?> Map<TQueryResult, TInput, TOutput>(
+        this IDomainRepositoryQueryMutator<TQueryResult, TInput> innerMutator,
+        Func<TInput, Task<TOutput?>> mapper
+        )
+    {
+        return new DomainRepositoryQueryMutator<TQueryResult, TOutput?>(
+            innerMutator.Query,
+            async () =>
+            {
+                var result = await innerMutator.ExecuteAsync();
+
+                return await mapper(result);
+            });
+    }
+
+    /// <summary>
+    /// Maps the result of the query using the specified mapper function. The 
     /// mapping takes place after the original query has been executed. If the query
     /// result is <see langword="null"/> then mapping is skipped and the default value
     /// of <typeparamref name="TOutput"/> is returned.
@@ -45,8 +95,8 @@ public static class IDomainRepositoryQueryMutatorExtensions
     /// <param name="innerMutator">The chained query mutator to run before this instance is applied.</param>
     /// <param name="mapper">An async mapper function to run on the query result.</param>
     /// <returns>A new query mutator instance that allows for method chaining.</returns>
-    public static IDomainRepositoryQueryMutator<TQueryResult, TOutput?> Map<TQueryResult, TInput, TOutput>(
-        this IDomainRepositoryQueryMutator<TQueryResult, TInput> innerMutator,
+    public static IDomainRepositoryQueryMutator<TQueryResult, TOutput?> MapWhenNotNull<TQueryResult, TInput, TOutput>(
+        this IDomainRepositoryQueryMutator<TQueryResult, TInput?> innerMutator,
         Func<TInput, Task<TOutput?>> mapper
         )
     {
@@ -91,7 +141,7 @@ public static class IDomainRepositoryQueryMutatorExtensions
                 return EnumerableHelper
                     .Enumerate(result)
                     .Select(i => mapper(i))
-                    .ToList();
+                    .ToArray();
             });
     }
 
