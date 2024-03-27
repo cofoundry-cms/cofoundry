@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Web;
+using Cofoundry.Core.Web;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -90,6 +90,7 @@ public class ContentRouteLibrary : IContentRouteLibrary
 
     #endregion
 
+    [return: NotNullIfNotNull(nameof(url))]
     public string? ToAbsolute(string? url)
     {
         if (string.IsNullOrWhiteSpace(url))

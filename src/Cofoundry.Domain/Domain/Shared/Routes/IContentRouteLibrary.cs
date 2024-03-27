@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Route library for all the core Cofoundry routes.
@@ -105,5 +105,6 @@ public interface IContentRouteLibrary
     /// Maps a relative url to an absolute one.
     /// </summary>
     /// <param name="url">The relative url to map.</param>
+    [return: NotNullIfNotNull(nameof(url))]
     string? ToAbsolute(string? url);
 }
