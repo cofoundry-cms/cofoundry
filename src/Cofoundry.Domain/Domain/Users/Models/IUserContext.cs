@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Domain;
+using Cofoundry.Domain.Internal;
+
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// <para>
@@ -52,4 +54,70 @@ public interface IUserContext
     /// for that role. Otherwise this will be <see langword="null"/>.
     /// </summary>
     string? RoleCode { get; }
+
+    /// <summary>
+    /// Indicates if the user is signed in i.e. <see cref="UserId"/>
+    /// is not <see langword="null"/>.
+    /// </summary>
+    [MemberNotNullWhen(true, nameof(UserId))]
+    [MemberNotNullWhen(true, nameof(UserArea))]
+    [MemberNotNullWhen(true, nameof(RoleId))]
+    bool IsSignedIn()
+    {
+        return UserId.HasValue;
+    }
+
+    /// <summary>
+    /// <see langword="true"/> if the user is in the Cofoundry <see cref="SuperAdminRole"/>.
+    /// </summary>
+    [MemberNotNullWhen(true, nameof(UserId))]
+    [MemberNotNullWhen(true, nameof(UserArea))]
+    [MemberNotNullWhen(true, nameof(RoleId))]
+    bool IsSuperAdmin()
+    {
+        return IsSignedIn() && RoleCode == SuperAdminRole.Code && UserArea?.UserAreaCode == CofoundryAdminUserArea.Code;
+    }
+
+    /// <summary>
+    /// Returns true if the user belongs to the Cofoundry user area.
+    /// </summary>
+    [MemberNotNullWhen(true, nameof(UserId))]
+    [MemberNotNullWhen(true, nameof(UserArea))]
+    [MemberNotNullWhen(true, nameof(RoleId))]
+    bool IsCofoundryUser()
+    {
+        return IsSignedIn() && UserArea is CofoundryAdminUserArea;
+    }
+
+    /// <summary>
+    /// Maps the user context model to an <see cref="ISignedInUserContext"/> model
+    /// if the user is signed in. If the user is not signed in then
+    /// <see langword="null"/> is returned. The <see cref="ISignedInUserContext"/>
+    /// is useful because it does not contain nullable properties for fields that
+    /// are always present for signed in users.
+    /// </summary>
+    ISignedInUserContext? ToSignedInContext()
+    {
+        return SignedInUserContext.Map(this);
+    }
+
+    /// <summary>
+    /// Maps the user context model for a signed in user to an <see cref="ISignedInUserContext"/> 
+    /// model. If the user is not signed in then a <see cref="NotPermittedException"/> is 
+    /// thrown. Note that this method is intended to be a convenience when you know a user is signed
+    /// in and is not intended to replace <see cref="IPermissionValidationService"/>. The 
+    /// <see cref="ISignedInUserContext"/> is useful because it does not contain 
+    /// nullable properties for fields that are always present for signed in users.
+    /// </summary>
+    ISignedInUserContext ToRequiredSignedInContext()
+    {
+        var context = ToSignedInContext();
+
+        if (context == null)
+        {
+            throw new NotPermittedException("User was expected to be signed in, but is not.");
+        }
+
+        return context;
+    }
 }
