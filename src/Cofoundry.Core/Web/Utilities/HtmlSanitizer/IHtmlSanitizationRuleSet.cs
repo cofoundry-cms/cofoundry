@@ -1,4 +1,4 @@
-﻿using AngleSharp.Css.Dom;
+using AngleSharp.Css.Dom;
 
 namespace Cofoundry.Core.Web;
 
@@ -14,36 +14,36 @@ public interface IHtmlSanitizationRuleSet
     /// to errors. Property declarations in @font-face and @viewport are not 
     /// sanitized <see cref="https://github.com/mganss/HtmlSanitizer#css-at-rules-allowed-by-default"/>.
     /// </summary>
-    ISet<CssRuleType> PermittedAtRules { get; }
+    IReadOnlySet<CssRuleType> PermittedAtRules { get; }
 
     /// <summary>
     /// Collection of html tag permit to allow e.g. "title" and "alt".
     /// </summary>
-    ISet<string> PermittedAttributes { get; }
+    IReadOnlySet<string> PermittedAttributes { get; }
 
     /// <summary>
     /// Collection of css classes to allow. An empty set indicates that all
     /// classes should be allowed.
     /// </summary>
-    ISet<string> PermittedCssClasses { get; }
+    IReadOnlySet<string> PermittedCssClasses { get; }
 
     /// <summary>
     /// Collection of style properties to permit e.g. "font" and "margin".
     /// </summary>
-    ISet<string> PermittedCssProperties { get; }
+    IReadOnlySet<string> PermittedCssProperties { get; }
 
     /// <summary>
     /// Collection of http schemas to permit e.g. "http", "https" and "mailto".
     /// </summary>
-    ISet<string> PermittedSchemes { get; }
+    IReadOnlySet<string> PermittedSchemes { get; }
 
     /// <summary>
     /// Collection html tags to permit e.g. "a" and "div".
     /// </summary>
-    ISet<string> PermittedTags { get; }
+    IReadOnlySet<string> PermittedTags { get; }
 
     /// <summary>
     /// Collection html tags that are permitted to have uri properties e.g. "src", "href".
     /// </summary>
-    ISet<string> PermittedUriAttributes { get; }
+    IReadOnlySet<string> PermittedUriAttributes { get; }
 }

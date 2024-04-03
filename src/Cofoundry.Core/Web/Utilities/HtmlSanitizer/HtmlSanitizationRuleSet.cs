@@ -1,4 +1,4 @@
-﻿using AngleSharp.Css.Dom;
+using AngleSharp.Css.Dom;
 
 namespace Cofoundry.Core.Web;
 
@@ -9,17 +9,17 @@ namespace Cofoundry.Core.Web;
 /// <inheritdoc/>
 public class HtmlSanitizationRuleSet : IHtmlSanitizationRuleSet
 {
-    public ISet<CssRuleType> PermittedAtRules { get; set; } = new HashSet<CssRuleType>();
+    public IReadOnlySet<CssRuleType> PermittedAtRules { get; set; } = new HashSet<CssRuleType>();
 
-    public ISet<string> PermittedAttributes { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    public IReadOnlySet<string> PermittedAttributes { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-    public ISet<string> PermittedCssClasses { get; set; } = new HashSet<string>();
+    public IReadOnlySet<string> PermittedCssClasses { get; set; } = new HashSet<string>();
 
-    public ISet<string> PermittedCssProperties { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    public IReadOnlySet<string> PermittedCssProperties { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-    public ISet<string> PermittedSchemes { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    public IReadOnlySet<string> PermittedSchemes { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-    public ISet<string> PermittedTags { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    public IReadOnlySet<string> PermittedTags { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-    public ISet<string> PermittedUriAttributes { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    public IReadOnlySet<string> PermittedUriAttributes { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 }
