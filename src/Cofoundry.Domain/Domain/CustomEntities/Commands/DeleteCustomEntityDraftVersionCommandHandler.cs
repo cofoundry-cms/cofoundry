@@ -14,7 +14,6 @@ public class DeleteCustomEntityDraftVersionCommandHandler
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly ICustomEntityCache _customEntityCache;
-    private readonly ICommandExecutor _commandExecutor;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPermissionValidationService _permissionValidationService;
     private readonly ITransactionScopeManager _transactionScopeManager;
@@ -23,7 +22,6 @@ public class DeleteCustomEntityDraftVersionCommandHandler
     public DeleteCustomEntityDraftVersionCommandHandler(
         CofoundryDbContext dbContext,
         ICustomEntityCache customEntityCache,
-        ICommandExecutor commandExecutor,
         IMessageAggregator messageAggregator,
         IPermissionValidationService permissionValidationService,
         ITransactionScopeManager transactionScopeManager,
@@ -32,7 +30,6 @@ public class DeleteCustomEntityDraftVersionCommandHandler
     {
         _dbContext = dbContext;
         _customEntityCache = customEntityCache;
-        _commandExecutor = commandExecutor;
         _messageAggregator = messageAggregator;
         _permissionValidationService = permissionValidationService;
         _transactionScopeManager = transactionScopeManager;

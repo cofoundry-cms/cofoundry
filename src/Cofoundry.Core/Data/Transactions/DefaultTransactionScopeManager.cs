@@ -25,7 +25,7 @@ namespace Cofoundry.Core.Data.Internal;
 /// to manage transaction scopes. Prior to .NET Core 2.0 this used EF transactions
 /// because System.Transactions was not available.
 /// </remarks>
-public class DefaultTransactionScopeManager : IDefaultTransactionScopeManager
+public sealed class DefaultTransactionScopeManager : IDefaultTransactionScopeManager
 {
     private readonly Dictionary<int, PrimaryTransactionScope> _primaryTransactionScopes = [];
     private readonly ITransactionScopeFactory _transactionScopeFactory;

@@ -1,19 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.BasicTestSite;
 
 public class TestController : Controller
 {
     private readonly IAdvancedContentRepository _contentRepository;
-    private readonly IDomainRepository _domainRepository;
 
     public TestController(
-        IAdvancedContentRepository contentRepository,
-        IDomainRepository domainRepository
+        IAdvancedContentRepository contentRepository
         )
     {
         _contentRepository = contentRepository;
-        _domainRepository = domainRepository;
     }
 
     [Route("/test-admin/api/pets")]

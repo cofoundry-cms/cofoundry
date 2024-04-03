@@ -1,10 +1,10 @@
-﻿namespace Cofoundry.Core.Data.Internal;
+namespace Cofoundry.Core.Data.Internal;
 
 /// <summary>
 /// A 'primary' or 'outer' transaction scope that directly represents
 /// the underlying transaction that other child scopes are parented to.
 /// </summary>
-public class PrimaryTransactionScope : ITransactionScope, IDisposable
+public sealed class PrimaryTransactionScope : ITransactionScope, IDisposable
 {
     private readonly DefaultTransactionScopeManager _transactionScopeManager;
     private readonly Queue<Func<Task>> _runOnCompleteActions = new();

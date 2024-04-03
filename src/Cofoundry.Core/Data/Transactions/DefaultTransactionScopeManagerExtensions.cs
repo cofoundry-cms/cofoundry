@@ -1,6 +1,6 @@
-﻿using Cofoundry.Core.Data.Internal;
-using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using Cofoundry.Core.Data.Internal;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Core.Data.TransactionScopeManager.Default;
 
@@ -77,7 +77,6 @@ public static class DefaultTransactionScopeManagerExtensions
         return defaultTransactionScopeManager.Create(dbConnection, transactionScopeFactory);
     }
 
-
     /// <summary>
     /// Creates a new transaction scope associated with the specified connection, 
     /// using the specified transaction configuration options. 
@@ -151,7 +150,7 @@ public static class DefaultTransactionScopeManagerExtensions
 
     private static IDefaultTransactionScopeManager CastDefaultTransactionScopeManager(ITransactionScopeManager transactionScopeManager)
     {
-        if (!(transactionScopeManager is IDefaultTransactionScopeManager defaultTransactionScopeManager))
+        if (transactionScopeManager is not IDefaultTransactionScopeManager defaultTransactionScopeManager)
         {
             throw new ArgumentException($"{nameof(transactionScopeManager)} must of type {nameof(IDefaultTransactionScopeManager)} to be used with a method that includes transactionscope options.");
         }

@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
@@ -30,7 +30,7 @@ public class PasswordPolicy : IPasswordPolicy
     }
 
     public async Task<IReadOnlyCollection<ValidationError>> ValidateAsync(
-        INewPasswordValidationContext newPasswordValidatonContext
+        INewPasswordValidationContext context
         )
     {
         var errors = new List<ValidationError>(_validators.Count);
@@ -41,7 +41,7 @@ public class PasswordPolicy : IPasswordPolicy
 
             if (validator is INewPasswordValidator syncValidator)
             {
-                error = syncValidator.Validate(newPasswordValidatonContext);
+                error = syncValidator.Validate(context);
             }
             else if (validator is IAsyncNewPasswordValidator asyncValidator)
             {
@@ -51,7 +51,7 @@ public class PasswordPolicy : IPasswordPolicy
                     return errors;
                 }
 
-                error = await asyncValidator.ValidateAsync(newPasswordValidatonContext);
+                error = await asyncValidator.ValidateAsync(context);
             }
             else
             {

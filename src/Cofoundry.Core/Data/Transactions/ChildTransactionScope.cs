@@ -1,4 +1,4 @@
-﻿using System.Transactions;
+using System.Transactions;
 
 namespace Cofoundry.Core.Data.Internal;
 
@@ -8,7 +8,7 @@ namespace Cofoundry.Core.Data.Internal;
 /// completed, it is only when the parent scope is completed that the 
 /// underlying transaction is committed
 /// </summary>
-public class ChildTransactionScope : ITransactionScope, IDisposable
+public sealed class ChildTransactionScope : ITransactionScope, IDisposable
 {
     private readonly PrimaryTransactionScope _primaryTransactionScope;
     private readonly TransactionScope _innerScope;

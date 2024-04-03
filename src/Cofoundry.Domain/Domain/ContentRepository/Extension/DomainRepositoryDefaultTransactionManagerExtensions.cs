@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Data.Internal;
 using Cofoundry.Domain.Extendable;
 
@@ -42,7 +42,7 @@ public static class DomainRepositoryDefaultTransactionManagerExtensions
 
     private static IDefaultTransactionScopeManager CastDefaultTransactionScopeManager(ITransactionScopeManager transactionScopeManager)
     {
-        if (!(transactionScopeManager is IDefaultTransactionScopeManager defaultTransactionScopeManager))
+        if (transactionScopeManager is not IDefaultTransactionScopeManager defaultTransactionScopeManager)
         {
             throw new ArgumentException($"{nameof(transactionScopeManager)} must of type {nameof(IDefaultTransactionScopeManager)} to be used with a method that includes transactionscope options.");
         }
