@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -15,7 +15,7 @@ public class DeleteCustomEntityCommandHandler
     private readonly ICustomEntityCache _customEntityCache;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPermissionValidationService _permissionValidationService;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IDependableEntityDeleteCommandValidator _dependableEntityDeleteCommandValidator;
     private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
@@ -24,7 +24,7 @@ public class DeleteCustomEntityCommandHandler
         ICustomEntityCache customEntityCache,
         IMessageAggregator messageAggregator,
         IPermissionValidationService permissionValidationService,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IDependableEntityDeleteCommandValidator dependableEntityDeleteCommandValidator,
         ICustomEntityStoredProcedures customEntityStoredProcedures
         )
@@ -33,7 +33,7 @@ public class DeleteCustomEntityCommandHandler
         _customEntityCache = customEntityCache;
         _messageAggregator = messageAggregator;
         _permissionValidationService = permissionValidationService;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _dependableEntityDeleteCommandValidator = dependableEntityDeleteCommandValidator;
         _customEntityStoredProcedures = customEntityStoredProcedures;
     }
@@ -51,7 +51,7 @@ public class DeleteCustomEntityCommandHandler
 
             _dbContext.CustomEntities.Remove(customEntity);
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            using (var scope = _transactionScopeManager.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
                 await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.CustomEntityId);

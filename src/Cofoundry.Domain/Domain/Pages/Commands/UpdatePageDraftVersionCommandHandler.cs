@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -17,7 +17,7 @@ public class UpdatePageDraftVersionCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IPageStoredProcedures _pageStoredProcedures;
 
     public UpdatePageDraftVersionCommandHandler(
@@ -26,7 +26,7 @@ public class UpdatePageDraftVersionCommandHandler
         CofoundryDbContext dbContext,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IPageStoredProcedures pageStoredProcedures
         )
     {
@@ -34,7 +34,7 @@ public class UpdatePageDraftVersionCommandHandler
         _dbContext = dbContext;
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _pageStoredProcedures = pageStoredProcedures;
     }
 
@@ -44,7 +44,7 @@ public class UpdatePageDraftVersionCommandHandler
 
         var draft = await GetDraftVersionAsync(command.PageId);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             draft = await CreateDraftIfRequiredAsync(command.PageId, draft);
             UpdateDraft(command, draft);

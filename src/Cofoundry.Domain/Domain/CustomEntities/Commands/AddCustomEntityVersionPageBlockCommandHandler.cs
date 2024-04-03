@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -17,7 +17,7 @@ public class AddCustomEntityVersionPageBlockCommandHandler
     private readonly IPageBlockCommandHelper _pageBlockCommandHelper;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPermissionValidationService _permissionValidationService;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public AddCustomEntityVersionPageBlockCommandHandler(
         CofoundryDbContext dbContext,
@@ -27,7 +27,7 @@ public class AddCustomEntityVersionPageBlockCommandHandler
         IPageBlockCommandHelper pageBlockCommandHelper,
         IMessageAggregator messageAggregator,
         IPermissionValidationService permissionValidationService,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
@@ -37,7 +37,7 @@ public class AddCustomEntityVersionPageBlockCommandHandler
         _pageBlockCommandHelper = pageBlockCommandHelper;
         _messageAggregator = messageAggregator;
         _permissionValidationService = permissionValidationService;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(AddCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext)
@@ -99,7 +99,7 @@ public class AddCustomEntityVersionPageBlockCommandHandler
 
         _dbContext.CustomEntityVersionPageBlocks.Add(newBlock);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _dbContext.SaveChangesAsync();
 

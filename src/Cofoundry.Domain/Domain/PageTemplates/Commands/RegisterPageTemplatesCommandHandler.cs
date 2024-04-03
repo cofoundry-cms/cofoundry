@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -21,7 +21,7 @@ public class RegisterPageTemplatesCommandHandler
     private readonly ICommandExecutor _commandExecutor;
     private readonly IPageCache _pageCache;
     private readonly IPageTemplateViewFileLocator _pageTemplateViewFileLocator;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public RegisterPageTemplatesCommandHandler(
         CofoundryDbContext dbContext,
@@ -29,7 +29,7 @@ public class RegisterPageTemplatesCommandHandler
         ICommandExecutor commandExecutor,
         IPageCache pageCache,
         IPageTemplateViewFileLocator pageTemplateViewFileLocator,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
@@ -37,7 +37,7 @@ public class RegisterPageTemplatesCommandHandler
         _commandExecutor = commandExecutor;
         _pageCache = pageCache;
         _pageTemplateViewFileLocator = pageTemplateViewFileLocator;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(RegisterPageTemplatesCommand command, IExecutionContext executionContext)
@@ -60,7 +60,7 @@ public class RegisterPageTemplatesCommandHandler
 
         // Save changes
         await _dbContext.SaveChangesAsync();
-        _transactionScopeFactory.QueueCompletionTask(_dbContext, _pageCache.Clear);
+        _transactionScopeManager.QueueCompletionTask(_dbContext, _pageCache.Clear);
     }
 
     private async Task UpdateTemplates(

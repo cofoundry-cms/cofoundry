@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -14,7 +14,7 @@ public class AddPageVersionBlockCommandHandler
     private readonly IPageBlockCommandHelper _pageBlockCommandHelper;
     private readonly ICommandExecutor _commandExecutor;
     private readonly IMessageAggregator _messageAggregator;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public AddPageVersionBlockCommandHandler(
         CofoundryDbContext dbContext,
@@ -24,7 +24,7 @@ public class AddPageVersionBlockCommandHandler
         IPageBlockCommandHelper pageBlockCommandHelper,
         ICommandExecutor commandExecutor,
         IMessageAggregator messageAggregator,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
@@ -34,7 +34,7 @@ public class AddPageVersionBlockCommandHandler
         _pageBlockCommandHelper = pageBlockCommandHelper;
         _commandExecutor = commandExecutor;
         _messageAggregator = messageAggregator;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(AddPageVersionBlockCommand command, IExecutionContext executionContext)
@@ -84,7 +84,7 @@ public class AddPageVersionBlockCommandHandler
         _entityOrderableHelper.SetOrderingForInsert(pageVersionBlocks, newBlock, command.InsertMode, adjacentItem);
 
         _dbContext.PageVersionBlocks.Add(newBlock);
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _dbContext.SaveChangesAsync();
 

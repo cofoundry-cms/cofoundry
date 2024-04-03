@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -17,14 +17,14 @@ public class UnPublishPageCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IPageStoredProcedures _pageStoredProcedures;
 
     public UnPublishPageCommandHandler(
         CofoundryDbContext dbContext,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IPageStoredProcedures pageStoredProcedures
         )
     {
@@ -32,7 +32,7 @@ public class UnPublishPageCommandHandler
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
         _pageStoredProcedures = pageStoredProcedures;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(UnPublishPageCommand command, IExecutionContext executionContext)
@@ -63,7 +63,7 @@ public class UnPublishPageCommandHandler
         page.PublishStatusCode = PublishStatusCode.Unpublished;
         version.WorkFlowStatusId = (int)WorkFlowStatus.Draft;
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _dbContext.SaveChangesAsync();
             await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);

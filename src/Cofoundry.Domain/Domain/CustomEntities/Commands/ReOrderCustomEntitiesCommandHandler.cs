@@ -17,7 +17,7 @@ public class ReOrderCustomEntitiesCommandHandler
     private readonly ICustomEntityCache _customEntityCache;
     private readonly IMessageAggregator _messageAggregator;
     private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public ReOrderCustomEntitiesCommandHandler(
         CofoundryDbContext dbContext,
@@ -25,7 +25,7 @@ public class ReOrderCustomEntitiesCommandHandler
         ICustomEntityCache customEntityCache,
         IMessageAggregator messageAggregator,
         ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
@@ -33,7 +33,7 @@ public class ReOrderCustomEntitiesCommandHandler
         _customEntityCache = customEntityCache;
         _messageAggregator = messageAggregator;
         _customEntityDefinitionRepository = customEntityDefinitionRepository;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(ReOrderCustomEntitiesCommand command, IExecutionContext executionContext)
@@ -56,7 +56,7 @@ public class ReOrderCustomEntitiesCommandHandler
             command.LocaleId
             );
 
-        await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command, affectedIds));
+        await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command, affectedIds));
     }
 
     private Task OnTransactionComplete(ReOrderCustomEntitiesCommand command, IReadOnlyCollection<int> affectedIds)

@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -9,21 +9,21 @@ public class DeleteDocumentAssetCommandHandler
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly ICommandExecutor _commandExecutor;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IDependableEntityDeleteCommandValidator _dependableEntityDeleteCommandValidator;
 
     public DeleteDocumentAssetCommandHandler(
         CofoundryDbContext dbContext,
         ICommandExecutor commandExecutor,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IMessageAggregator messageAggregator,
         IDependableEntityDeleteCommandValidator dependableEntityDeleteCommandValidator
         )
     {
         _dbContext = dbContext;
         _commandExecutor = commandExecutor;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _messageAggregator = messageAggregator;
         _dependableEntityDeleteCommandValidator = dependableEntityDeleteCommandValidator;
     }
@@ -47,7 +47,7 @@ public class DeleteDocumentAssetCommandHandler
             };
             _dbContext.DocumentAssets.Remove(documentAsset);
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            using (var scope = _transactionScopeManager.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
                 await _commandExecutor.ExecuteAsync(deleteFileCommand, executionContext);

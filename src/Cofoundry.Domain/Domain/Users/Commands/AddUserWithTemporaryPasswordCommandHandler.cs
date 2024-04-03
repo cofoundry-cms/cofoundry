@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Mail;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.MailTemplates.Internal;
@@ -21,7 +21,7 @@ public class AddUserWithTemporaryPasswordCommandHandler
     private readonly IUserMailTemplateBuilderContextFactory _userMailTemplateBuilderContextFactory;
     private readonly IUserMailTemplateBuilderFactory _userMailTemplateBuilderFactory;
     private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IUserDataFormatter _userDataFormatter;
     private readonly IPasswordPolicyService _passwordPolicyService;
 
@@ -34,7 +34,7 @@ public class AddUserWithTemporaryPasswordCommandHandler
         IUserMailTemplateBuilderContextFactory userMailTemplateBuilderContextFactory,
         IUserMailTemplateBuilderFactory userMailTemplateBuilderFactory,
         IUserAreaDefinitionRepository userAreaDefinitionRepository,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IUserDataFormatter userDataFormatter,
         IPasswordPolicyService passwordPolicyService
         )
@@ -47,7 +47,7 @@ public class AddUserWithTemporaryPasswordCommandHandler
         _userMailTemplateBuilderContextFactory = userMailTemplateBuilderContextFactory;
         _userMailTemplateBuilderFactory = userMailTemplateBuilderFactory;
         _userAreaDefinitionRepository = userAreaDefinitionRepository;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _userDataFormatter = userDataFormatter;
         _passwordPolicyService = passwordPolicyService;
     }
@@ -57,7 +57,7 @@ public class AddUserWithTemporaryPasswordCommandHandler
         ValidateUserArea(command);
         Normalize(command);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             var newUserCommand = MapCommand(command);
             await _commandExecutor.ExecuteAsync(newUserCommand, executionContext);

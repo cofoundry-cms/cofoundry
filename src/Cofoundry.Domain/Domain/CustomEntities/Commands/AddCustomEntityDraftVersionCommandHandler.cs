@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -18,7 +18,7 @@ public class AddCustomEntityDraftVersionCommandHandler
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPermissionValidationService _permissionValidationService;
     private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public AddCustomEntityDraftVersionCommandHandler(
         CofoundryDbContext dbContext,
@@ -26,7 +26,7 @@ public class AddCustomEntityDraftVersionCommandHandler
         IMessageAggregator messageAggregator,
         IPermissionValidationService permissionValidationService,
         ICustomEntityStoredProcedures customEntityStoredProcedures,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
@@ -34,7 +34,7 @@ public class AddCustomEntityDraftVersionCommandHandler
         _messageAggregator = messageAggregator;
         _permissionValidationService = permissionValidationService;
         _customEntityStoredProcedures = customEntityStoredProcedures;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(AddCustomEntityDraftVersionCommand command, IExecutionContext executionContext)
@@ -54,7 +54,7 @@ public class AddCustomEntityDraftVersionCommandHandler
 
         command.OutputCustomEntityVersionId = newVersionId;
 
-        await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(
+        await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(
             command,
             definitionCode,
             newVersionId)

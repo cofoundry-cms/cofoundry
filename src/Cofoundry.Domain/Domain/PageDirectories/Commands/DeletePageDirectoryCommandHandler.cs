@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -12,7 +12,7 @@ public class DeletePageDirectoryCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly IQueryExecutor _queryExecutor;
     private readonly IPageDirectoryCache _cache;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IPermissionValidationService _permissionValidationService;
     private readonly IMessageAggregator _messageAggregator;
 
@@ -20,7 +20,7 @@ public class DeletePageDirectoryCommandHandler
         CofoundryDbContext dbContext,
         IQueryExecutor queryExecutor,
         IPageDirectoryCache cache,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IPermissionValidationService permissionValidationService,
         IMessageAggregator messageAggregator
         )
@@ -28,7 +28,7 @@ public class DeletePageDirectoryCommandHandler
         _dbContext = dbContext;
         _queryExecutor = queryExecutor;
         _cache = cache;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _permissionValidationService = permissionValidationService;
         _messageAggregator = messageAggregator;
     }
@@ -53,7 +53,7 @@ public class DeletePageDirectoryCommandHandler
 
         _dbContext.PageDirectories.Remove(pageDirectory);
         await _dbContext.SaveChangesAsync();
-        await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(directoriesToDelete.Values, pagesToDelete.Values));
+        await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(directoriesToDelete.Values, pagesToDelete.Values));
     }
 
     private async Task OnTransactionComplete(IReadOnlyCollection<PageDirectoryDeletedMessage> deletedDirectoryMessages, IReadOnlyCollection<PageDeletedMessage> deletedPageMessages)

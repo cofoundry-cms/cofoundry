@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Core.Web;
 using Cofoundry.Domain.Data;
 
@@ -10,21 +10,21 @@ public class DocumentAssetCommandHelper
 
     private readonly CofoundryDbContext _dbContext;
     private readonly IFileStoreService _fileStoreService;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IMimeTypeService _mimeTypeService;
     private readonly IAssetFileTypeValidator _assetFileTypeValidator;
 
     public DocumentAssetCommandHelper(
         CofoundryDbContext dbContext,
         IFileStoreService fileStoreService,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IMimeTypeService mimeTypeService,
         IAssetFileTypeValidator assetFileTypeValidator
         )
     {
         _dbContext = dbContext;
         _fileStoreService = fileStoreService;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _mimeTypeService = mimeTypeService;
         _assetFileTypeValidator = assetFileTypeValidator;
     }
@@ -44,7 +44,7 @@ public class DocumentAssetCommandHelper
 
         documentAsset.FileSizeInBytes = inputSteam.Length;
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             // Save at this point if it's a new file
             if (isNew)

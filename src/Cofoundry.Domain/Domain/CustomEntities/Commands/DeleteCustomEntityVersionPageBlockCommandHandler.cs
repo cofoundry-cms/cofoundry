@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -14,21 +14,21 @@ public class DeleteCustomEntityVersionPageBlockCommandHandler
     private readonly ICustomEntityCache _customEntityCache;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPermissionValidationService _permissionValidationService;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public DeleteCustomEntityVersionPageBlockCommandHandler(
         CofoundryDbContext dbContext,
         ICustomEntityCache customEntityCache,
         IMessageAggregator messageAggregator,
         IPermissionValidationService permissionValidationService,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
         _customEntityCache = customEntityCache;
         _messageAggregator = messageAggregator;
         _permissionValidationService = permissionValidationService;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(DeleteCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext)
@@ -58,7 +58,7 @@ public class DeleteCustomEntityVersionPageBlockCommandHandler
             _dbContext.CustomEntityVersionPageBlocks.Remove(dbResult.Block);
 
             await _dbContext.SaveChangesAsync();
-            _transactionScopeFactory.QueueCompletionTask(_dbContext, () => OnTransactionComplete(dbResult.CustomEntityDefinitionCode, dbResult.CustomEntityId, customEntityVersionBlockId));
+            _transactionScopeManager.QueueCompletionTask(_dbContext, () => OnTransactionComplete(dbResult.CustomEntityDefinitionCode, dbResult.CustomEntityId, customEntityVersionBlockId));
 
         }
     }

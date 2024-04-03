@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -13,17 +13,17 @@ public class UpdatePageDirectoryCommandHandler
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageDirectoryCache _cache;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public UpdatePageDirectoryCommandHandler(
         CofoundryDbContext dbContext,
         IPageDirectoryCache cache,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
         _cache = cache;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(UpdatePageDirectoryCommand command, IExecutionContext executionContext)
@@ -39,7 +39,7 @@ public class UpdatePageDirectoryCommandHandler
         pageDirectory.Name = command.Name;
 
         await _dbContext.SaveChangesAsync();
-        _transactionScopeFactory.QueueCompletionTask(_dbContext, _cache.Clear);
+        _transactionScopeManager.QueueCompletionTask(_dbContext, _cache.Clear);
     }
 
     private static void Normalize(UpdatePageDirectoryCommand command)

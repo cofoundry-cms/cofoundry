@@ -1,8 +1,8 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseLocalConfigFile();
 builder.Services
-    .AddControllersWithViews()
+    .AddMvc()
     .AddCofoundry(builder.Configuration);
 
 var app = builder.Build();

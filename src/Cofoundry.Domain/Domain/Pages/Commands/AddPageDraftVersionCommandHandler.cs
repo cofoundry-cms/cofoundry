@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -18,7 +18,7 @@ public class AddPageDraftVersionCommandHandler
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPageStoredProcedures _pageStoredProcedures;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public AddPageDraftVersionCommandHandler(
         CofoundryDbContext dbContext,
@@ -26,7 +26,7 @@ public class AddPageDraftVersionCommandHandler
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
         IPageStoredProcedures pageStoredProcedures,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
@@ -34,7 +34,7 @@ public class AddPageDraftVersionCommandHandler
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
         _pageStoredProcedures = pageStoredProcedures;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(AddPageDraftVersionCommand command, IExecutionContext executionContext)
@@ -57,7 +57,7 @@ public class AddPageDraftVersionCommandHandler
             throw ValidationErrorException.CreateWithProperties("A draft cannot be created because this page already has one.", nameof(command.PageId));
         }
 
-        await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command, newVersionId));
+        await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(command, newVersionId));
 
         command.OutputPageVersionId = newVersionId;
     }

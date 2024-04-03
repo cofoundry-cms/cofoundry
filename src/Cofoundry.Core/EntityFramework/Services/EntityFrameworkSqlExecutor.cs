@@ -15,15 +15,15 @@ namespace Cofoundry.Core.EntityFramework.Internal;
 public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
 {
     private readonly ISqlParameterFactory _sqlParameterFactory;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public EntityFrameworkSqlExecutor(
         ISqlParameterFactory sqlParameterFactory,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _sqlParameterFactory = sqlParameterFactory;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     /// <summary>
@@ -146,7 +146,7 @@ public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
 
             await dbContext.Database.CreateExecutionStrategy().Execute(async () =>
             {
-                using var scope = _transactionScopeFactory.Create(dbContext);
+                using var scope = _transactionScopeManager.Create(dbContext);
                 rowsAffected = await dbContext.Database.ExecuteSqlRawAsync(cmd, sqlParams);
                 await scope.CompleteAsync();
             });
@@ -157,7 +157,7 @@ public class EntityFrameworkSqlExecutor : IEntityFrameworkSqlExecutor
         {
             await dbContext.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
             {
-                using var scope = _transactionScopeFactory.Create(dbContext);
+                using var scope = _transactionScopeManager.Create(dbContext);
                 result = await dbContext.Database.ExecuteSqlRawAsync(spName);
                 await scope.CompleteAsync();
             });

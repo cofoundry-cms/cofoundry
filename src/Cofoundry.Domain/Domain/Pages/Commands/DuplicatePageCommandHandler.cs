@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -12,21 +12,21 @@ public class DuplicatePageCommandHandler
     private readonly IPermissionValidationService _permissionValidationService;
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageStoredProcedures _pageStoredProcedures;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public DuplicatePageCommandHandler(
         ICommandExecutor commandExecutor,
         IPermissionValidationService permissionValidationService,
         CofoundryDbContext dbContext,
         IPageStoredProcedures pageStoredProcedures,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _commandExecutor = commandExecutor;
         _permissionValidationService = permissionValidationService;
         _dbContext = dbContext;
         _pageStoredProcedures = pageStoredProcedures;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(DuplicatePageCommand command, IExecutionContext executionContext)
@@ -35,7 +35,7 @@ public class DuplicatePageCommandHandler
         var pageToDuplicate = await GetPageToDuplicateAsync(command);
         var addPageCommand = MapCommand(command, pageToDuplicate);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _commandExecutor.ExecuteAsync(addPageCommand, executionContext);
 

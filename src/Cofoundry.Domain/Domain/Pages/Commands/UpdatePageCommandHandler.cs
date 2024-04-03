@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -11,21 +11,21 @@ public class UpdatePageCommandHandler
     private readonly EntityTagHelper _entityTagHelper;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public UpdatePageCommandHandler(
         CofoundryDbContext dbContext,
         EntityTagHelper entityTagHelper,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
         _entityTagHelper = entityTagHelper;
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(UpdatePageCommand command, IExecutionContext executionContext)
@@ -34,7 +34,7 @@ public class UpdatePageCommandHandler
         MapPage(command, executionContext, page);
 
         await _dbContext.SaveChangesAsync();
-        await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(page));
+        await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(page));
     }
 
     private Task OnTransactionComplete(Page page)

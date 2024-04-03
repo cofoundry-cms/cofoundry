@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -19,7 +19,7 @@ public class UpdateCustomEntityDraftVersionCommandHandler
     private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
     private readonly IMessageAggregator _messageAggregator;
     private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public UpdateCustomEntityDraftVersionCommandHandler(
         IQueryExecutor queryExecutor,
@@ -29,7 +29,7 @@ public class UpdateCustomEntityDraftVersionCommandHandler
         IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
         IMessageAggregator messageAggregator,
         ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _queryExecutor = queryExecutor;
@@ -39,7 +39,7 @@ public class UpdateCustomEntityDraftVersionCommandHandler
         _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
         _messageAggregator = messageAggregator;
         _customEntityDefinitionRepository = customEntityDefinitionRepository;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(UpdateCustomEntityDraftVersionCommand command, IExecutionContext executionContext)
@@ -47,7 +47,7 @@ public class UpdateCustomEntityDraftVersionCommandHandler
         var definition = _customEntityDefinitionRepository.GetRequiredByCode(command.CustomEntityDefinitionCode);
         var draft = await GetDraftVersionAsync(command);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             draft = await CreateDraftIfRequiredAsync(command, draft, executionContext);
             await ValidateTitleAsync(command, draft, definition, executionContext);

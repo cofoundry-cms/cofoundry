@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -12,7 +12,7 @@ public class UpdateRoleCommandHandler
     private readonly IPermissionRepository _permissionRepository;
     private readonly IRoleCache _roleCache;
     private readonly ICommandExecutor _commandExecutor;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public UpdateRoleCommandHandler(
         CofoundryDbContext dbContext,
@@ -20,7 +20,7 @@ public class UpdateRoleCommandHandler
         IPermissionRepository permissionRepository,
         IRoleCache roleCache,
         ICommandExecutor commandExecutor,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
@@ -28,7 +28,7 @@ public class UpdateRoleCommandHandler
         _permissionRepository = permissionRepository;
         _roleCache = roleCache;
         _commandExecutor = commandExecutor;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(UpdateRoleCommand command, IExecutionContext executionContext)
@@ -45,7 +45,7 @@ public class UpdateRoleCommandHandler
         await MergePermissionsAsync(command, role, executionContext);
         await _dbContext.SaveChangesAsync();
 
-        _transactionScopeFactory.QueueCompletionTask(_dbContext, () => _roleCache.Clear(command.RoleId));
+        _transactionScopeManager.QueueCompletionTask(_dbContext, () => _roleCache.Clear(command.RoleId));
     }
 
     private static void MapRole(UpdateRoleCommand command, Role role)

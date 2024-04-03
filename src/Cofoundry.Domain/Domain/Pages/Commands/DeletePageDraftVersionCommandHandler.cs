@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -15,21 +15,21 @@ public class DeletePageDraftVersionCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IPageStoredProcedures _pageStoredProcedures;
 
     public DeletePageDraftVersionCommandHandler(
         CofoundryDbContext dbContext,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IPageStoredProcedures pageStoredProcedures
         )
     {
         _dbContext = dbContext;
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _pageStoredProcedures = pageStoredProcedures;
     }
 
@@ -46,7 +46,7 @@ public class DeletePageDraftVersionCommandHandler
 
             _dbContext.PageVersions.Remove(draft);
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            using (var scope = _transactionScopeManager.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
                 await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);

@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.AutoUpdate;
+using Cofoundry.Core.AutoUpdate;
 using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
@@ -12,21 +12,21 @@ public class UpdateGeneralSiteSettingsCommandHandler
     private readonly SettingCommandHelper _settingCommandHelper;
     private readonly ISettingCache _settingCache;
     private readonly IAutoUpdateService _autoUpdateService;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public UpdateGeneralSiteSettingsCommandHandler(
         CofoundryDbContext dbContext,
         SettingCommandHelper settingCommandHelper,
         ISettingCache settingCache,
         IAutoUpdateService autoUpdateService,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _settingCommandHelper = settingCommandHelper;
         _dbContext = dbContext;
         _settingCache = settingCache;
         _autoUpdateService = autoUpdateService;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(UpdateGeneralSiteSettingsCommand command, IExecutionContext executionContext)
@@ -37,7 +37,7 @@ public class UpdateGeneralSiteSettingsCommandHandler
 
         _settingCommandHelper.SetSettingProperty(command, c => c.ApplicationName, allSettings, executionContext);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _dbContext.SaveChangesAsync();
             await _autoUpdateService.SetLockedAsync(!command.AllowAutomaticUpdates);
@@ -45,7 +45,7 @@ public class UpdateGeneralSiteSettingsCommandHandler
             await scope.CompleteAsync();
         }
 
-        _transactionScopeFactory.QueueCompletionTask(_dbContext, _settingCache.Clear);
+        _transactionScopeManager.QueueCompletionTask(_dbContext, _settingCache.Clear);
     }
 
     public IEnumerable<IPermissionApplication> GetPermissions(UpdateGeneralSiteSettingsCommand command)

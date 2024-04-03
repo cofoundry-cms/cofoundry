@@ -19,7 +19,7 @@ public class AddCustomEntityCommandHandler
     private readonly IDbUnstructuredDataSerializer _dbUnstructuredDataSerializer;
     private readonly IMessageAggregator _messageAggregator;
     private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
     public AddCustomEntityCommandHandler(
@@ -31,7 +31,7 @@ public class AddCustomEntityCommandHandler
         IDbUnstructuredDataSerializer dbUnstructuredDataSerializer,
         IMessageAggregator messageAggregator,
         ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         ICustomEntityStoredProcedures customEntityStoredProcedures
         )
     {
@@ -43,7 +43,7 @@ public class AddCustomEntityCommandHandler
         _dbUnstructuredDataSerializer = dbUnstructuredDataSerializer;
         _messageAggregator = messageAggregator;
         _customEntityDefinitionRepository = customEntityDefinitionRepository;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _customEntityStoredProcedures = customEntityStoredProcedures;
     }
 
@@ -66,7 +66,7 @@ public class AddCustomEntityCommandHandler
 
         _dbContext.CustomEntities.Add(entity);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _dbContext.SaveChangesAsync();
 

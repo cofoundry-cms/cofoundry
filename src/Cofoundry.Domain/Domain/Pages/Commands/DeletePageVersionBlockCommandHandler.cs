@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -13,19 +13,19 @@ public class DeletePageVersionBlockCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public DeletePageVersionBlockCommandHandler(
         CofoundryDbContext dbContext,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(DeletePageVersionBlockCommand command, IExecutionContext executionContext)
@@ -53,7 +53,7 @@ public class DeletePageVersionBlockCommandHandler
 
             await _dbContext.SaveChangesAsync();
 
-            _transactionScopeFactory.QueueCompletionTask(_dbContext, () => OnTransactionComplete(dbResult.PageId, versionId));
+            _transactionScopeManager.QueueCompletionTask(_dbContext, () => OnTransactionComplete(dbResult.PageId, versionId));
         }
     }
 

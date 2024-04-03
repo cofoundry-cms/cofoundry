@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -19,7 +19,7 @@ public class UpdatePageDirectoryUrlCommandHandler
     private readonly IPageDirectoryStoredProcedures _pageDirectoryStoredProcedures;
     private readonly IPageDirectoryCache _cache;
     private readonly IMessageAggregator _messageAggregator;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IPermissionValidationService _permissionValidationService;
 
     public UpdatePageDirectoryUrlCommandHandler(
@@ -28,7 +28,7 @@ public class UpdatePageDirectoryUrlCommandHandler
         IPageDirectoryStoredProcedures pageDirectoryStoredProcedures,
         IPageDirectoryCache cache,
         IMessageAggregator messageAggregator,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IPermissionValidationService permissionValidationService
         )
     {
@@ -37,7 +37,7 @@ public class UpdatePageDirectoryUrlCommandHandler
         _pageDirectoryStoredProcedures = pageDirectoryStoredProcedures;
         _cache = cache;
         _messageAggregator = messageAggregator;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _permissionValidationService = permissionValidationService;
     }
 
@@ -66,7 +66,7 @@ public class UpdatePageDirectoryUrlCommandHandler
         pageDirectory.UrlPath = command.UrlPath;
         pageDirectory.ParentPageDirectoryId = command.ParentPageDirectoryId;
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _dbContext.SaveChangesAsync();
 

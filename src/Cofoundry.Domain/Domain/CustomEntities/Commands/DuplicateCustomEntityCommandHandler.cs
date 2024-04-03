@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -14,7 +14,7 @@ public class DuplicateCustomEntityCommandHandler
     private readonly ICommandExecutor _commandExecutor;
     private readonly CofoundryDbContext _dbContext;
     private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly ICustomEntityDataModelMapper _customEntityDataModelMapper;
     private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
 
@@ -22,7 +22,7 @@ public class DuplicateCustomEntityCommandHandler
         ICommandExecutor commandExecutor,
         CofoundryDbContext dbContext,
         ICustomEntityStoredProcedures customEntityStoredProcedures,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         ICustomEntityDataModelMapper customEntityDataModelMapper,
         ICustomEntityDefinitionRepository customEntityDefinitionRepository
         )
@@ -30,7 +30,7 @@ public class DuplicateCustomEntityCommandHandler
         _commandExecutor = commandExecutor;
         _dbContext = dbContext;
         _customEntityStoredProcedures = customEntityStoredProcedures;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _customEntityDataModelMapper = customEntityDataModelMapper;
         _customEntityDefinitionRepository = customEntityDefinitionRepository;
     }
@@ -41,7 +41,7 @@ public class DuplicateCustomEntityCommandHandler
         var definition = _customEntityDefinitionRepository.GetRequiredByCode(customEntityToDuplicate.CustomEntity.CustomEntityDefinitionCode);
         var addCustomEntityCommand = MapCommand(command, customEntityToDuplicate);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             // Note: the underlying AddCustomEntityCommand will enforce permissions
             await _commandExecutor.ExecuteAsync(addCustomEntityCommand, executionContext);

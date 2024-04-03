@@ -17,7 +17,7 @@ public class UpdateImageAssetCommandHandler
     private readonly EntityAuditHelper _entityAuditHelper;
     private readonly EntityTagHelper _entityTagHelper;
     private readonly IImageAssetCache _imageAssetCache;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IMessageAggregator _messageAggregator;
     private readonly ICommandExecutor _commandExecutor;
     private readonly IAssetFileTypeValidator _assetFileTypeValidator;
@@ -30,7 +30,7 @@ public class UpdateImageAssetCommandHandler
         EntityTagHelper entityTagHelper,
         IImageAssetFileService imageAssetFileService,
         IImageAssetCache imageAssetCache,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IMessageAggregator messageAggregator,
         ICommandExecutor commandExecutor,
         IAssetFileTypeValidator assetFileTypeValidator,
@@ -42,7 +42,7 @@ public class UpdateImageAssetCommandHandler
         _entityAuditHelper = entityAuditHelper;
         _entityTagHelper = entityTagHelper;
         _imageAssetCache = imageAssetCache;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _messageAggregator = messageAggregator;
         _commandExecutor = commandExecutor;
         _assetFileTypeValidator = assetFileTypeValidator;
@@ -73,7 +73,7 @@ public class UpdateImageAssetCommandHandler
         _entityTagHelper.UpdateTags(imageAsset.ImageAssetTags, command.Tags, executionContext);
         _entityAuditHelper.SetUpdated(imageAsset, executionContext);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             if (hasNewFile)
             {

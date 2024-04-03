@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -12,7 +12,7 @@ public class DeletePageCommandHandler
     private readonly IQueryExecutor _queryExecutor;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IPageStoredProcedures _pageStoredProcedures;
     private readonly IDependableEntityDeleteCommandValidator _dependableEntityDeleteCommandValidator;
 
@@ -21,7 +21,7 @@ public class DeletePageCommandHandler
         IQueryExecutor queryExecutor,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IPageStoredProcedures pageStoredProcedures,
         IDependableEntityDeleteCommandValidator dependableEntityDeleteCommandValidator
         )
@@ -30,7 +30,7 @@ public class DeletePageCommandHandler
         _queryExecutor = queryExecutor;
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _pageStoredProcedures = pageStoredProcedures;
         _dependableEntityDeleteCommandValidator = dependableEntityDeleteCommandValidator;
     }
@@ -54,7 +54,7 @@ public class DeletePageCommandHandler
 
         _dbContext.Pages.Remove(page);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _dbContext.SaveChangesAsync();
             await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.PageId);

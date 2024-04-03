@@ -20,7 +20,7 @@ public class RegisterPermissionsAndRolesCommandHandler
     private readonly IPermissionSetBuilderFactory _permissionSetBuilderFactory;
     private readonly IPermissionRepository _permissionRepository;
     private readonly IEntityDefinitionRepository _entityDefinitionRepository;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public RegisterPermissionsAndRolesCommandHandler(
         CofoundryDbContext dbContext,
@@ -32,7 +32,7 @@ public class RegisterPermissionsAndRolesCommandHandler
         IPermissionSetBuilderFactory permissionSetBuilderFactory,
         IPermissionRepository permissionRepository,
         IEntityDefinitionRepository entityDefinitionRepository,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
@@ -44,7 +44,7 @@ public class RegisterPermissionsAndRolesCommandHandler
         _permissionSetBuilderFactory = permissionSetBuilderFactory;
         _permissionRepository = permissionRepository;
         _entityDefinitionRepository = entityDefinitionRepository;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(RegisterPermissionsAndRolesCommand command, IExecutionContext executionContext)
@@ -113,7 +113,7 @@ public class RegisterPermissionsAndRolesCommandHandler
         }
 
         await _dbContext.SaveChangesAsync();
-        _transactionScopeFactory.QueueCompletionTask(_dbContext, _roleCache.Clear);
+        _transactionScopeManager.QueueCompletionTask(_dbContext, _roleCache.Clear);
     }
 
     private void AddNewPermissionsToDb(

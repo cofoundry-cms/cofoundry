@@ -19,7 +19,7 @@ public class PublishCustomEntityCommandHandler
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPermissionValidationService _permissionValidationService;
     private readonly ICustomEntityDefinitionRepository _customEntityDefinitionRepository;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
     public PublishCustomEntityCommandHandler(
@@ -30,7 +30,7 @@ public class PublishCustomEntityCommandHandler
         IMessageAggregator messageAggregator,
         IPermissionValidationService permissionValidationService,
         ICustomEntityDefinitionRepository customEntityDefinitionRepository,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         ICustomEntityStoredProcedures customEntityStoredProcedures
         )
     {
@@ -41,7 +41,7 @@ public class PublishCustomEntityCommandHandler
         _messageAggregator = messageAggregator;
         _permissionValidationService = permissionValidationService;
         _customEntityDefinitionRepository = customEntityDefinitionRepository;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _customEntityStoredProcedures = customEntityStoredProcedures;
     }
 
@@ -67,13 +67,13 @@ public class PublishCustomEntityCommandHandler
         {
             // only thing we can do with a published version is update the date
             await _dbContext.SaveChangesAsync();
-            await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(version));
+            await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(version));
         }
         else
         {
             await ValidateTitleAsync(version, definition, executionContext);
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            using (var scope = _transactionScopeManager.Create(_dbContext))
             {
                 await UpdateUrlSlugIfRequiredAsync(version, definition, executionContext);
                 version.WorkFlowStatusId = (int)WorkFlowStatus.Published;

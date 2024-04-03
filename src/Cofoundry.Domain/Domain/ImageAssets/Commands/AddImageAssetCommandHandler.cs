@@ -14,7 +14,7 @@ public class AddImageAssetCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly EntityAuditHelper _entityAuditHelper;
     private readonly EntityTagHelper _entityTagHelper;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IRandomStringGenerator _randomStringGenerator;
     private readonly IAssetFileTypeValidator _assetFileTypeValidator;
@@ -25,7 +25,7 @@ public class AddImageAssetCommandHandler
         CofoundryDbContext dbContext,
         EntityAuditHelper entityAuditHelper,
         EntityTagHelper entityTagHelper,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IMessageAggregator messageAggregator,
         IRandomStringGenerator randomStringGenerator,
         IAssetFileTypeValidator assetFileTypeValidator,
@@ -36,7 +36,7 @@ public class AddImageAssetCommandHandler
         _dbContext = dbContext;
         _entityAuditHelper = entityAuditHelper;
         _entityTagHelper = entityTagHelper;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _messageAggregator = messageAggregator;
         _randomStringGenerator = randomStringGenerator;
         _assetFileTypeValidator = assetFileTypeValidator;
@@ -66,7 +66,7 @@ public class AddImageAssetCommandHandler
 
         _dbContext.ImageAssets.Add(imageAsset);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             // Save first to get an Id
             await _dbContext.SaveChangesAsync();

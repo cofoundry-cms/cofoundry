@@ -17,7 +17,7 @@ public class AddUserCommandHandler
     private readonly IUserAreaDefinitionRepository _userAreaRepository;
     private readonly IUserUpdateCommandHelper _userUpdateCommandHelper;
     private readonly IPasswordPolicyService _newPasswordValidationService;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IMessageAggregator _messageAggregator;
     private readonly ISecurityStampGenerator _securityStampGenerator;
 
@@ -28,7 +28,7 @@ public class AddUserCommandHandler
         IUserAreaDefinitionRepository userAreaRepository,
         IUserUpdateCommandHelper userUpdateCommandHelper,
         IPasswordPolicyService newPasswordValidationService,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IMessageAggregator messageAggregator,
         ISecurityStampGenerator securityStampGenerator
         )
@@ -39,7 +39,7 @@ public class AddUserCommandHandler
         _userAreaRepository = userAreaRepository;
         _userUpdateCommandHelper = userUpdateCommandHelper;
         _newPasswordValidationService = newPasswordValidationService;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _messageAggregator = messageAggregator;
         _securityStampGenerator = securityStampGenerator;
     }
@@ -76,7 +76,7 @@ public class AddUserCommandHandler
 
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync();
-        await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(userArea, user));
+        await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(userArea, user));
 
         command.OutputUserId = user.UserId;
     }

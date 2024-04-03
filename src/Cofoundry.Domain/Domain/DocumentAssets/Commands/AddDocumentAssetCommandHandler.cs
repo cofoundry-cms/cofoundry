@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -11,7 +11,7 @@ public class AddDocumentAssetCommandHandler
     private readonly EntityAuditHelper _entityAuditHelper;
     private readonly EntityTagHelper _entityTagHelper;
     private readonly DocumentAssetCommandHelper _documentAssetCommandHelper;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IRandomStringGenerator _randomStringGenerator;
 
@@ -20,7 +20,7 @@ public class AddDocumentAssetCommandHandler
         EntityAuditHelper entityAuditHelper,
         EntityTagHelper entityTagHelper,
         DocumentAssetCommandHelper documentAssetCommandHelper,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IMessageAggregator messageAggregator,
         IRandomStringGenerator randomStringGenerator
         )
@@ -29,7 +29,7 @@ public class AddDocumentAssetCommandHandler
         _entityAuditHelper = entityAuditHelper;
         _entityTagHelper = entityTagHelper;
         _documentAssetCommandHelper = documentAssetCommandHelper;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _messageAggregator = messageAggregator;
         _randomStringGenerator = randomStringGenerator;
     }
@@ -52,7 +52,7 @@ public class AddDocumentAssetCommandHandler
         _entityAuditHelper.SetCreated(documentAsset, executionContext);
         documentAsset.FileUpdateDate = executionContext.ExecutionDate;
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             _dbContext.DocumentAssets.Add(documentAsset);
 

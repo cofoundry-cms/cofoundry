@@ -11,21 +11,21 @@ public class UpdatePageUrlCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public UpdatePageUrlCommandHandler(
         IQueryExecutor queryExecutor,
         CofoundryDbContext dbContext,
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _queryExecutor = queryExecutor;
         _dbContext = dbContext;
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(UpdatePageUrlCommand command, IExecutionContext executionContext)
@@ -51,7 +51,7 @@ public class UpdatePageUrlCommandHandler
         var isPublished = page.PublishStatusCode == PublishStatusCode.Published;
 
         await _dbContext.SaveChangesAsync();
-        await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(originalPageRoute, isPublished));
+        await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(originalPageRoute, isPublished));
     }
 
     private Task OnTransactionComplete(PageRoute oldPageRoute, bool isPublished)

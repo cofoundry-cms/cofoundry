@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -17,7 +17,7 @@ public class UpdateCustomEntityVersionPageBlockCommandHandler
     private readonly IPageBlockCommandHelper _pageBlockCommandHelper;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPermissionValidationService _permissionValidationService;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public UpdateCustomEntityVersionPageBlockCommandHandler(
         CofoundryDbContext dbContext,
@@ -26,7 +26,7 @@ public class UpdateCustomEntityVersionPageBlockCommandHandler
         IPageBlockCommandHelper pageBlockCommandHelper,
         IMessageAggregator messageAggregator,
         IPermissionValidationService permissionValidationService,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
@@ -35,7 +35,7 @@ public class UpdateCustomEntityVersionPageBlockCommandHandler
         _pageBlockCommandHelper = pageBlockCommandHelper;
         _messageAggregator = messageAggregator;
         _permissionValidationService = permissionValidationService;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(UpdateCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext)
@@ -56,7 +56,7 @@ public class UpdateCustomEntityVersionPageBlockCommandHandler
             throw new NotPermittedException("Page blocks cannot be updated unless the entity is in draft status");
         }
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _pageBlockCommandHelper.UpdateModelAsync(command, dbBlock);
             await _dbContext.SaveChangesAsync();

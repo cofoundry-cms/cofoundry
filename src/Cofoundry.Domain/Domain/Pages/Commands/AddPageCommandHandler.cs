@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -15,7 +15,7 @@ public class AddPageCommandHandler
     private readonly IPageCache _pageCache;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPageStoredProcedures _pageStoredProcedures;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public AddPageCommandHandler(
         CofoundryDbContext dbContext,
@@ -25,7 +25,7 @@ public class AddPageCommandHandler
         IPageCache pageCache,
         IMessageAggregator messageAggregator,
         IPageStoredProcedures pageStoredProcedures,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
@@ -35,7 +35,7 @@ public class AddPageCommandHandler
         _pageCache = pageCache;
         _messageAggregator = messageAggregator;
         _pageStoredProcedures = pageStoredProcedures;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(AddPageCommand command, IExecutionContext executionContext)
@@ -46,7 +46,7 @@ public class AddPageCommandHandler
         var page = await MapPage(command, executionContext);
         _dbContext.Pages.Add(page);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _dbContext.SaveChangesAsync();
             await _pageStoredProcedures.UpdatePublishStatusQueryLookupAsync(page.PageId);

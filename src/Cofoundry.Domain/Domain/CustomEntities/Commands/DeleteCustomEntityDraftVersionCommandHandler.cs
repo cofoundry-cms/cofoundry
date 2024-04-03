@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -17,7 +17,7 @@ public class DeleteCustomEntityDraftVersionCommandHandler
     private readonly ICommandExecutor _commandExecutor;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPermissionValidationService _permissionValidationService;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly ICustomEntityStoredProcedures _customEntityStoredProcedures;
 
     public DeleteCustomEntityDraftVersionCommandHandler(
@@ -26,7 +26,7 @@ public class DeleteCustomEntityDraftVersionCommandHandler
         ICommandExecutor commandExecutor,
         IMessageAggregator messageAggregator,
         IPermissionValidationService permissionValidationService,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         ICustomEntityStoredProcedures customEntityStoredProcedures
         )
     {
@@ -35,7 +35,7 @@ public class DeleteCustomEntityDraftVersionCommandHandler
         _commandExecutor = commandExecutor;
         _messageAggregator = messageAggregator;
         _permissionValidationService = permissionValidationService;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _customEntityStoredProcedures = customEntityStoredProcedures;
     }
 
@@ -57,7 +57,7 @@ public class DeleteCustomEntityDraftVersionCommandHandler
             var versionId = draft.CustomEntityVersionId;
             _dbContext.CustomEntityVersions.Remove(draft);
 
-            using (var scope = _transactionScopeFactory.Create(_dbContext))
+            using (var scope = _transactionScopeManager.Create(_dbContext))
             {
                 await _dbContext.SaveChangesAsync();
                 await _customEntityStoredProcedures.UpdatePublishStatusQueryLookupAsync(command.CustomEntityId);

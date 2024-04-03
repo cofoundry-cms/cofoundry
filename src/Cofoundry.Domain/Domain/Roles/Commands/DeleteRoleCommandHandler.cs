@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -13,18 +13,18 @@ public class DeleteRoleCommandHandler
 {
     private readonly CofoundryDbContext _dbContext;
     private readonly IRoleCache _roleCache;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public DeleteRoleCommandHandler(
         CofoundryDbContext dbContext,
         UserCommandPermissionsHelper userCommandPermissionsHelper,
         IRoleCache roleCache,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
         _roleCache = roleCache;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(DeleteRoleCommand command, IExecutionContext executionContext)
@@ -41,7 +41,7 @@ public class DeleteRoleCommandHandler
             _dbContext.Roles.Remove(role);
 
             await _dbContext.SaveChangesAsync();
-            _transactionScopeFactory.QueueCompletionTask(_dbContext, () => _roleCache.Clear(command.RoleId));
+            _transactionScopeManager.QueueCompletionTask(_dbContext, () => _roleCache.Clear(command.RoleId));
         }
     }
 

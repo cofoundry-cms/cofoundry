@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -12,19 +12,19 @@ public class MarkAsSetUpCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly ISettingCache _settingCache;
     private readonly IPermissionValidationService _permissionValidationService;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public MarkAsSetUpCommandHandler(
         CofoundryDbContext dbContext,
         ISettingCache settingCache,
         IPermissionValidationService permissionValidationService,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
         _settingCache = settingCache;
         _permissionValidationService = permissionValidationService;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(MarkAsSetUpCommand command, IExecutionContext executionContext)
@@ -49,6 +49,6 @@ public class MarkAsSetUpCommandHandler
         setting.SettingValue = "true";
 
         await _dbContext.SaveChangesAsync();
-        _transactionScopeFactory.QueueCompletionTask(_dbContext, _settingCache.Clear);
+        _transactionScopeManager.QueueCompletionTask(_dbContext, _settingCache.Clear);
     }
 }

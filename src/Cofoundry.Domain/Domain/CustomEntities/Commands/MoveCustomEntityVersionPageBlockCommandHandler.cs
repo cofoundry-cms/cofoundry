@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
@@ -15,21 +15,21 @@ public class MoveCustomEntityVersionPageBlockCommandHandler
     private readonly ICustomEntityCache _customEntityCache;
     private readonly IMessageAggregator _messageAggregator;
     private readonly IPermissionValidationService _permissionValidationService;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
 
     public MoveCustomEntityVersionPageBlockCommandHandler(
         CofoundryDbContext dbContext,
         ICustomEntityCache customEntityCache,
         IMessageAggregator messageAggregator,
         IPermissionValidationService permissionValidationService,
-        ITransactionScopeManager transactionScopeFactory
+        ITransactionScopeManager transactionScopeManager
         )
     {
         _dbContext = dbContext;
         _customEntityCache = customEntityCache;
         _messageAggregator = messageAggregator;
         _permissionValidationService = permissionValidationService;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
     }
 
     public async Task ExecuteAsync(MoveCustomEntityVersionPageBlockCommand command, IExecutionContext executionContext)
@@ -89,7 +89,7 @@ public class MoveCustomEntityVersionPageBlockCommandHandler
 
         await _dbContext.SaveChangesAsync();
 
-        await _transactionScopeFactory.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(
+        await _transactionScopeManager.QueueCompletionTaskAsync(_dbContext, () => OnTransactionComplete(
             dbResult.CustomEntityDefinitionCode,
             dbResult.CustomEntityId,
             dbResult.Block.CustomEntityVersionPageBlockId)

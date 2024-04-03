@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Data.Internal;
 
@@ -12,7 +12,7 @@ public class AddPageDirectoryCommandHandler
     private readonly CofoundryDbContext _dbContext;
     private readonly EntityAuditHelper _entityAuditHelper;
     private readonly IPageDirectoryCache _cache;
-    private readonly ITransactionScopeManager _transactionScopeFactory;
+    private readonly ITransactionScopeManager _transactionScopeManager;
     private readonly IPageDirectoryStoredProcedures _pageDirectoryStoredProcedures;
     private readonly IMessageAggregator _messageAggregator;
 
@@ -21,7 +21,7 @@ public class AddPageDirectoryCommandHandler
         CofoundryDbContext dbContext,
         EntityAuditHelper entityAuditHelper,
         IPageDirectoryCache cache,
-        ITransactionScopeManager transactionScopeFactory,
+        ITransactionScopeManager transactionScopeManager,
         IPageDirectoryStoredProcedures pageDirectoryStoredProcedures,
         IMessageAggregator messageAggregator
         )
@@ -30,7 +30,7 @@ public class AddPageDirectoryCommandHandler
         _entityAuditHelper = entityAuditHelper;
         _queryExecutor = queryExecutor;
         _cache = cache;
-        _transactionScopeFactory = transactionScopeFactory;
+        _transactionScopeManager = transactionScopeManager;
         _pageDirectoryStoredProcedures = pageDirectoryStoredProcedures;
         _messageAggregator = messageAggregator;
     }
@@ -51,7 +51,7 @@ public class AddPageDirectoryCommandHandler
 
         _dbContext.PageDirectories.Add(pageDirectory);
 
-        using (var scope = _transactionScopeFactory.Create(_dbContext))
+        using (var scope = _transactionScopeManager.Create(_dbContext))
         {
             await _dbContext.SaveChangesAsync();
             await _pageDirectoryStoredProcedures.UpdatePageDirectoryClosureAsync();
