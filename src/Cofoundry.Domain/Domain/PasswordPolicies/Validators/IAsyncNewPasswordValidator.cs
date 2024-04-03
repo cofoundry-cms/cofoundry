@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
@@ -25,5 +25,5 @@ public interface IAsyncNewPasswordValidator : INewPasswordValidatorBase
     /// A context object that contains the new password and other data about the request that may
     /// be useful for validating the password.
     /// </param>
-    Task<ValidationError> ValidateAsync(INewPasswordValidationContext context);
+    Task<ValidationError?> ValidateAsync(INewPasswordValidationContext context);
 }
