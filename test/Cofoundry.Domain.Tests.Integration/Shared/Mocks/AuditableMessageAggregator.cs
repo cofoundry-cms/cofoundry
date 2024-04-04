@@ -12,7 +12,6 @@ public class AuditableMessageAggregator : IMessageAggregator
     private readonly List<object> _messages = [];
     private readonly MessageAggregator _messageAggregator;
 
-
     public AuditableMessageAggregator(
         IMessageAggregatorState state,
         IServiceProvider serviceProvider

@@ -15,11 +15,11 @@ public class MinUniqueCharactersNewPasswordValidator
     /// </summary>
     public int MinUniqueCharacters { get; private set; }
 
-    public void Configure(int minUniqueCharacters)
+    public void Configure(int options)
     {
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(minUniqueCharacters, PasswordOptions.MAX_LENGTH_BOUNDARY);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(options, PasswordOptions.MAX_LENGTH_BOUNDARY);
 
-        MinUniqueCharacters = minUniqueCharacters;
+        MinUniqueCharacters = options;
     }
 
     public string Criteria => $"Must have at least {MinUniqueCharacters} unique characters.";

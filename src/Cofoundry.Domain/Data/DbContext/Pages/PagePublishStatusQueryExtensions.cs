@@ -1,10 +1,13 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 public static class PagePublishStatusQueryExtensions
 {
     /// <summary>
     /// Filters the results by the publish status query type.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="publishStatusQuery">Query status to filter by. If the value is PublishStatusQuery.Published then additional filtering by publish date will be applied.</param>
     /// <param name="executionDate">UTC execution date of the query. This is used to compare the publish date.</param>
     public static IQueryable<PagePublishStatusQuery> FilterByStatus(this IQueryable<PagePublishStatusQuery> source, PublishStatusQuery publishStatusQuery, DateTime executionDate)
@@ -34,6 +37,9 @@ public static class PagePublishStatusQueryExtensions
     /// Filters the collection to only include pages that are
     /// not deleted.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
     public static IQueryable<PagePublishStatusQuery> FilterActive(this IQueryable<PagePublishStatusQuery> source)
     {
         var filtered = source
@@ -45,6 +51,12 @@ public static class PagePublishStatusQueryExtensions
     /// <summary>
     /// Filters the collection to only include records with the specified page id.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
+    /// <param name="pageId">
+    /// Id of the page to filter by.
+    /// </param>
     public static IQueryable<PagePublishStatusQuery> FilterByPageId(this IQueryable<PagePublishStatusQuery> source, int pageId)
     {
         var filtered = source
@@ -56,6 +68,12 @@ public static class PagePublishStatusQueryExtensions
     /// <summary>
     /// Filters the collection to only include records with the specified locale id.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
+    /// <param name="localeId">
+    /// Id of the locale to filter by.
+    /// </param>
     public static IQueryable<PagePublishStatusQuery> FilterByLocaleId(this IQueryable<PagePublishStatusQuery> source, int localeId)
     {
         var filtered = source
@@ -67,6 +85,12 @@ public static class PagePublishStatusQueryExtensions
     /// <summary>
     /// Filters the collection to only include records with the specified page directory id.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
+    /// <param name="directoryId">
+    /// Id of the directory to filter by.
+    /// </param>
     public static IQueryable<PagePublishStatusQuery> FilterByDirectoryId(this IQueryable<PagePublishStatusQuery> source, int directoryId)
     {
         var filtered = source
@@ -75,10 +99,14 @@ public static class PagePublishStatusQueryExtensions
         return filtered;
     }
 
-
     /// <summary>
     /// Sorts the collection using the standard query sort parameters and rules.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to sort.
+    /// </param>
+    /// <param name="pageQuerySortType">Field to sort on.</param>
+    /// <param name="sortDirection">Direction to sort by.</param>
     public static IOrderedQueryable<PagePublishStatusQuery> SortBy(
         this IQueryable<PagePublishStatusQuery> source,
         PageQuerySortType pageQuerySortType,

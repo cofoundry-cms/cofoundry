@@ -35,7 +35,7 @@ public class IsRoleTitleUniqueQueryHandler
         return !exists;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(IsRoleTitleUniqueQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(IsRoleTitleUniqueQuery query)
     {
         yield return new RoleReadPermission();
     }

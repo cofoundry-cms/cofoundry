@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 
 namespace Cofoundry.Core;
 
@@ -9,8 +9,8 @@ public static class TypeHelper
 {
     /// <summary>
     /// Attempts to get the type argument for a generic collection type 
-    /// or array e.g. <see langword="string"/> in <see cref="IEnumerable&lt;string&gt;"/> 
-    /// or <see cref="string[]"/>. If the specified type isn't a singler collection 
+    /// or array e.g. <see langword="string"/> in <see cref="IEnumerable{string}"/> 
+    /// or string[]. If the specified type isn't a singler collection 
     /// type then <see langword="null"/> 
     /// is returned.
     /// </summary>

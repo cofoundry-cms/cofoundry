@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Core.Data;
 
@@ -29,8 +29,8 @@ public interface ITransactionScopeManager : IDisposable
     /// Creates a new transaction scope associated with the specified connection. 
     /// The scope can be nested inside another scope in which case the underlying 
     /// db transaction is only committed once both the outer and inner transaction(s) 
-    /// have been committed. The returned ITransactionScope implements IDisposable 
-    /// and should be wrapped in a using statement.
+    /// have been committed. The returned <see cref="ITransactionScope"/> implements
+    /// <see cref="IDisposable"/> and should be wrapped in a using statement.
     /// </summary>
     /// <param name="dbConnection">
     /// <para>
@@ -40,31 +40,31 @@ public interface ITransactionScopeManager : IDisposable
     /// same connection.
     /// </para>
     /// <para>
-    /// You can use the ICofoundryDbConnectionManager to get a reference to the shared 
+    /// You can use the <see cref="ICofoundryDbConnectionManager"/> to get a reference to the shared 
     /// connection directly.
     /// </para>
     /// </param>
-    /// <returns>ITransactionScope, which is IDisposable and must be disposed.</returns>
+    /// <returns>An <see cref="ITransactionScope"/> instance, which is <see cref="IDisposable"/> and must be disposed.</returns>
     ITransactionScope Create(DbConnection dbConnection);
 
     /// <summary>
     /// Creates a new transaction scope associated with the connection in use by the
     /// specified dbContext instance. The scope can be nested inside another scope in 
     /// which case the underlying db transaction is only committed once both the outer
-    /// and inner transaction(s) have been committed. The returned ITransactionScope 
-    /// implements IDisposable and should be wrapped in a using statement.
+    /// and inner transaction(s) have been committed. The returned <see cref="ITransactionScope"/> 
+    /// implements <see cref="IDisposable"/> and should be wrapped in a using statement.
     /// </summary>
     /// <param name="dbContext">
     /// <para>
-    /// The EF DbContext instance to manage transactions for. Transaction scopes
+    /// The EF <see cref="DbContext"/> instance to manage transactions for. Transaction scopes
     /// created by this instance only apply to a single DbConnection, so if you want 
     /// the scope to span multiple contexts then they must share the same connection.
     /// </para>
     /// <para>
     /// If you are using multiple EF DbContexts on the Cofoundry database you can make 
     /// them share the scoped Cofoundry connection by initializing the context with 
-    /// ICofoundryDbContextInitializer. Alternatively you can use 
-    /// ICofoundryDbConnectionManager to get a reference to the shared connection 
+    /// <see cref="EntityFramework.ICofoundryDbContextInitializer"/>. Alternatively you can use 
+    /// <see cref="ICofoundryDbConnectionManager"/> to get a reference to the shared connection 
     /// directly.
     /// </para>
     /// </param>

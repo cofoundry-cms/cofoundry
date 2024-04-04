@@ -19,7 +19,6 @@ public class CompareAttributeModelMetadataDecorator : IModelMetadataDecorator
             throw new ArgumentException("Attribute type is not CompareAttribute", nameof(attribute));
         }
 
-
         var otherProperty = compareAttribtue.OtherProperty;
         var valAttribute = compareAttribtue;
 

@@ -1,14 +1,13 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
-/// IAdvancedContentRespository extension root for the Role entity.
+/// <see cref="IAdvancedContentRepository"/> extension root for the Role entity.
 /// </summary>
 public interface IAdvancedContentRepositoryRoleRepository : IContentRepositoryRoleRepository
 {
     /// <summary>
     /// Seaches roles based on simple filter criteria.
     /// </summary>
-    /// <param name="query">Search query parameters.</param>
     IContentRepositoryRoleSearchQueryBuilder Search();
 
     /// <summary>

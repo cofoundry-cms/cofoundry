@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Options to control the formatting and validation of user email 
@@ -18,7 +18,7 @@ public class EmailAddressOptions
 
     /// <summary>
     /// Allows an email to contain any character classed as a unicode letter as 
-    /// determined by <see cref="char.IsLetter"/>. This setting is ignored when
+    /// determined by <see cref="char.IsLetter(char)"/>. This setting is ignored when
     /// <see cref="AllowAnyCharacter"/> is set to <see langword="true"/>, which is the 
     /// default behavior.
     /// </summary>
@@ -26,7 +26,7 @@ public class EmailAddressOptions
 
     /// <summary>
     /// Allows an email to contain any character classed as a decimal digit as 
-    /// determined by <see cref="char.IsDigit"/> i.e 0-9. This setting is ignored when
+    /// determined by <see cref="char.IsDigit(char)"/> i.e 0-9. This setting is ignored when
     /// <see cref="AllowAnyCharacter"/> is set to <see langword="true"/>, which is the 
     /// default behavior.
     /// </summary>
@@ -40,7 +40,7 @@ public class EmailAddressOptions
     /// <para>
     /// The default settings specifies the range of special characters permitted in unquoted
     /// email addresses, excluding comment parentheses "()", and the square brackets "[]" that are 
-    /// used to denote an IP address instead of a domain i.e "!#$%&'*+-/=?^_`{|}~.@". When enabling
+    /// used to denote an IP address instead of a domain i.e "!#$%&amp;&apos;*+-/=?^_`{|}~.". When enabling
     /// or altering these settings please be aware of the full extent of acceptable email formats,
     /// see https://en.wikipedia.org/wiki/Email_address#Syntax for an overview.
     /// </para>

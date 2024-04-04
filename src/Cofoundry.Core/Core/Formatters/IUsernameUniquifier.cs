@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Used to format usernames into a consistent format that can be
@@ -17,9 +17,9 @@ public interface IUsernameUniquifier
     /// <see langword="null"/> is returned.
     /// </para>
     /// <para>
-    /// As an example, if the user types their username as " L.Balfour" then under
+    /// As an example, if the user types their username as &quot; L.Balfour&quot; then under
     /// default rules the username would normalize via <see cref="IUsernameNormalizer"/> 
-    /// as "L.Balfour" and uniquify as "l.balfour". 
+    /// as &quot;L.Balfour&quot; and uniquify as &quot;l.balfour&quot;. 
     /// </para>
     /// </summary>
     /// <param name="username">

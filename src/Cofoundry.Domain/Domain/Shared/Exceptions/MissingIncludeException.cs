@@ -100,7 +100,8 @@ public class MissingIncludeException : Exception
     public static void ThrowIfNull<TEntity, TIncludedEntity, TIncludedEntityId>(
         TEntity entity,
         Expression<Func<TEntity, TIncludedEntity?>> includeEntitySelector,
-        Expression<Func<TEntity, TIncludedEntityId?>> includeEntityIdSelector)
+        Expression<Func<TEntity, TIncludedEntityId?>> includeEntityIdSelector
+        )
         where TEntity : class
         where TIncludedEntity : class
         where TIncludedEntityId : struct
@@ -123,7 +124,7 @@ public class MissingIncludeException : Exception
     /// <paramref name="includeEntitySelector"/> is <see langword="null"/>.
     /// </summary>
     /// <typeparam name="TEntity">Type of entity to check for an included related entity.</typeparam>
-    /// <typeparam name="TIncludeProperty">
+    /// <typeparam name="TIncludedEntity">
     /// The type of the property selected in the <paramref name="includeEntitySelector"/> expression.
     /// </typeparam>
     /// <typeparam name="TIncludedEntityId">
@@ -143,17 +144,18 @@ public class MissingIncludeException : Exception
     /// </param>
     public static void ThrowIfNull<TEntity, TIncludedEntity, TIncludedEntityId>(
         TEntity entity,
-        Expression<Func<TEntity, TIncludedEntity>> includeMemberSelector,
-        Expression<Func<TEntity, TIncludedEntityId>> includeMemberIdSelector)
+        Expression<Func<TEntity, TIncludedEntity>> includeEntitySelector,
+        Expression<Func<TEntity, TIncludedEntityId>> includeEntityIdSelector
+        )
         where TEntity : class
         where TIncludedEntity : class
         where TIncludedEntityId : IEquatable<TIncludedEntityId>
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        var includeMemberExpression = GetAsMemberExpression(includeMemberSelector, nameof(includeMemberSelector));
-        var includeValue = includeMemberSelector.Compile().Invoke(entity);
-        var idValue = includeMemberIdSelector.Compile().Invoke(entity);
+        var includeMemberExpression = GetAsMemberExpression(includeEntitySelector, nameof(includeEntitySelector));
+        var includeValue = includeEntitySelector.Compile().Invoke(entity);
+        var idValue = includeEntityIdSelector.Compile().Invoke(entity);
 
         if (includeValue == null && idValue.Equals(default))
         {

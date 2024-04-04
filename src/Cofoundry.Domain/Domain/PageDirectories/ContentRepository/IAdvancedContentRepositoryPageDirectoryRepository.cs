@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// IAdvancedContentRespository extension root for the PageDirectory entity.
@@ -69,7 +69,7 @@ public interface IAdvancedContentRepositoryPageDirectoryRepository
     /// <para>
     /// Access rules are used to restrict access to a website resource to users
     /// fulfilling certain criteria such as a specific user area or role. Page
-    /// directory access rules are used to define the rules at a <see cref="PageDirectory"/> 
+    /// directory access rules are used to define the rules at a page directory
     /// level. These rules are inherited by child directories and pages.
     /// </para>
     /// <para>

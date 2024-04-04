@@ -1,9 +1,8 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
-/// An instruction to either add or update an existing access rule
-/// attachd to an entity. Used in commands that inherit from 
-/// <see cref="UpdateAccessRulesCommandBase"/>.
+/// Base for commands that either add or update an existing access rule
+/// attached to an entity.
 /// </summary>
 public abstract class AddOrUpdateAccessRuleCommandBase : IValidatableObject
 {

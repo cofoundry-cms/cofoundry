@@ -55,9 +55,9 @@ public class AdvancedContentRepositoryPageRepository
         return new ContentRepositoryPageByCustomEntityIdRangeQueryBuilder(ExtendableContentRepository, customEntityIds);
     }
 
-    public IContentRepositoryPageByDirectoryIdQueryBuilder GetByDirectoryId(int customEntityId)
+    public IContentRepositoryPageByDirectoryIdQueryBuilder GetByDirectoryId(int directoryId)
     {
-        return new ContentRepositoryPageByDirectoryIdQueryBuilder(ExtendableContentRepository, customEntityId);
+        return new ContentRepositoryPageByDirectoryIdQueryBuilder(ExtendableContentRepository, directoryId);
     }
 
     public IAdvancedContentRepositoryPageNotFoundQueryBuilder NotFound()

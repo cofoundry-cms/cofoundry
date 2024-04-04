@@ -1,9 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Default implementation of <see cref="ICustomEntityPageViewModel<>"/>. This
+/// Default implementation of <see cref="ICustomEntityPageViewModel{}"/>. This
 /// implementation can be overridden by implementing a custom <see cref="IPageViewModelFactory"/>.
 /// </summary>
 public class CustomEntityPageViewModel<TDisplayModel> : ICustomEntityPageViewModel<TDisplayModel>

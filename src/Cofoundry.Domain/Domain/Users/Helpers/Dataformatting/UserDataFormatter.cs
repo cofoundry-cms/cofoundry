@@ -136,9 +136,9 @@ public class UserDataFormatter : IUserDataFormatter
         return result;
     }
 
-    public virtual string? NormalizeEmail(string userAreaDefinitionCode, string? emailAddress)
+    public virtual string? NormalizeEmail(string userAreaCode, string? emailAddress)
     {
-        var service = CreateServiceForUserArea<IEmailAddressNormalizer>(userAreaDefinitionCode, typeof(IEmailAddressNormalizer<>));
+        var service = CreateServiceForUserArea<IEmailAddressNormalizer>(userAreaCode, typeof(IEmailAddressNormalizer<>));
         return service.Normalize(emailAddress);
     }
 
@@ -154,9 +154,9 @@ public class UserDataFormatter : IUserDataFormatter
     //    return service.Uniquify(emailAddress);
     //}
 
-    public virtual string? UniquifyEmail(string userAreaDefinitionCode, string? emailAddress)
+    public virtual string? UniquifyEmail(string userAreaCode, string? emailAddress)
     {
-        var service = CreateServiceForUserArea<IEmailAddressUniquifier>(userAreaDefinitionCode, typeof(IEmailAddressUniquifier<>));
+        var service = CreateServiceForUserArea<IEmailAddressUniquifier>(userAreaCode, typeof(IEmailAddressUniquifier<>));
         return service.Uniquify(emailAddress);
     }
 

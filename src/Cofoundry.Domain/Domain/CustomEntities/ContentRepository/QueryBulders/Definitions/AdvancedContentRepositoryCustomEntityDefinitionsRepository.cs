@@ -20,9 +20,9 @@ public class AdvancedContentRepositoryCustomEntityDefinitionsRepository
         return new ContentRepositoryCustomEntityDefinitionGetAllQueryBuilder(ExtendableContentRepository);
     }
 
-    public IContentRepositoryCustomEntityDefinitionByCodeQueryBuilder GetByCode(string customEntityDefinitioncode)
+    public IContentRepositoryCustomEntityDefinitionByCodeQueryBuilder GetByCode(string customEntityDefinitionCode)
     {
-        return new ContentRepositoryCustomEntityDefinitionByCodeQueryBuilder(ExtendableContentRepository, customEntityDefinitioncode);
+        return new ContentRepositoryCustomEntityDefinitionByCodeQueryBuilder(ExtendableContentRepository, customEntityDefinitionCode);
     }
 
     public IAdvancedContentRepositoryCustomEntityDefinitionByDisplayModelTypeQueryBuilder GetByDisplayModelType(Type displayModelType)

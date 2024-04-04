@@ -42,7 +42,6 @@ public class SignInUserWithCredentialsCommandHandlerTests
                 Username = user.Username
             });
 
-
         var sessionUserId = await userSessionService.GetUserIdByUserAreaCodeAsync(user.UserAreaCode);
 
         using (new AssertionScope())
@@ -145,7 +144,6 @@ public class SignInUserWithCredentialsCommandHandlerTests
                 Password = PASSWORD,
                 Username = user.Username
             });
-
 
         var sessionUserId = await userSessionService.GetUserIdByUserAreaCodeAsync(user.UserAreaCode);
 

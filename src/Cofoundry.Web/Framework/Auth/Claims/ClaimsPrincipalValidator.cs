@@ -1,7 +1,7 @@
-﻿using Cofoundry.Core.Time;
+using System.Security.Claims;
+using Cofoundry.Core.Time;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
-using System.Security.Claims;
 
 namespace Cofoundry.Web.Internal;
 
@@ -81,7 +81,6 @@ public class ClaimsPrincipalValidator : IClaimsPrincipalValidator
         return options.Cookies.ClaimsValidationInterval;
     }
 
-
     /// <summary>
     /// Verifies the security stamp claim in the specified <paramref name="principal"/>. If the validation
     /// if successful then a <see cref="IClaimsPrincipalBuilderContext"/> instance is returned which can be 
@@ -129,7 +128,7 @@ public class ClaimsPrincipalValidator : IClaimsPrincipalValidator
     /// A context object representing the verified user. This can
     /// be used to build the refreshed claims principal.
     /// </param>
-    /// <param name="context">A context object representing the parameters of the cookie validation event.</param>
+    /// <param name="validationContext">A context object representing the parameters of the cookie validation event.</param>
     protected virtual async Task ClaimsPrincipalVerifiedAsync(IClaimsPrincipalBuilderContext claimsPrincipalBuilderContext, CookieValidatePrincipalContext validationContext)
     {
         var newPrincipal = await _claimsPrincipalFactory.CreateAsync(claimsPrincipalBuilderContext);

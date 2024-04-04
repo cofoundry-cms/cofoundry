@@ -98,7 +98,6 @@ public class UpdateUserAccountVerificationStatusCommandHandlerTests
         }
     }
 
-
     [Fact]
     public async Task IfNoChange_NoMessage()
     {

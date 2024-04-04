@@ -1,8 +1,8 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Used to format email address and username properties relating to 
-/// <see cref="Data.User"/> records, ensuring we use consistent formatting
+/// user records, ensuring we use consistent formatting
 /// rules whenever they are referenced in queries or updated in commands.
 /// This interface is an abstration over various built-in and custom formatters, 
 /// ensuring that the correct implementation is selected for a user area.
@@ -78,7 +78,7 @@ public interface IUserDataFormatter
     /// <summary>
     /// Formats an email address into the various formats required to update a User record.
     /// </summary>
-    /// <param name="userAreaDefinitionCode">
+    /// <param name="userAreaDefinition">
     /// The user area is required to determine if custom <see cref="IEmailAddressNormalizer{IUserAreaDefinition}"/>
     /// or <see cref="IEmailAddressUniquifier{IUserAreaDefinition}"/> implementations should be used.
     /// </param>
@@ -91,7 +91,7 @@ public interface IUserDataFormatter
     /// <summary>
     /// Formats a username into the various formats required to update a User record.
     /// </summary>
-    /// <param name="userAreaDefinitionCode">
+    /// <param name="userAreaDefinition">
     /// The user area is required to determine if custom <see cref="IUsernameNormalizer{IUserAreaDefinition}"/>
     /// or <see cref="IUsernameNormalizer{IUserAreaDefinition}"/> implementations should be used.
     /// </param>
@@ -105,7 +105,7 @@ public interface IUserDataFormatter
     /// <summary>
     /// Formats a username into the various formats required to update a User record.
     /// </summary>
-    /// <param name="userAreaDefinitionCode">
+    /// <param name="userAreaDefinition">
     /// The user area is required to determine if custom <see cref="IUsernameNormalizer{IUserAreaDefinition}"/>
     /// or <see cref="IUsernameNormalizer{IUserAreaDefinition}"/> implementations should be used.
     /// </param>

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 namespace Cofoundry.Domain;
 
 /// <summary>
-/// Use this to decorate a collection of NestedDataModelMultiTypeItem
+/// Use this to decorate a collection of <see cref="NestedDataModelMultiTypeItem"/>
 /// objects, indicating the property represents a set of nested data 
 /// models of mixed types. The types must be defined in the attribute 
 /// constructor by passing in a type reference for each nested data model 
@@ -17,7 +17,7 @@ public class NestedDataModelMultiTypeCollectionAttribute : ValidateObjectAttribu
     private readonly IEnumerable<Type> _types;
 
     /// <summary>
-    /// Use this to decorate a collection of NestedDataModelMultiTypeItem objects, allowing them 
+    /// Use this to decorate a collection of <see cref="NestedDataModelMultiTypeItem"/> objects, allowing them 
     /// to be edited in the admin UI. Optional parameters indicate whether the collection 
     /// is sortable.
     /// </summary>
@@ -96,9 +96,9 @@ public class NestedDataModelMultiTypeCollectionAttribute : ValidateObjectAttribu
 
     /// <summary>
     /// Validates that the property type is an enumerable collection
-    /// of INestedDataModel types e.g. IReadOnlyCollection<INestedDataModel>.
+    /// of <see cref="INestedDataModel"/> types e.g. <see cref="IReadOnlyCollection{INestedDataModel}"/>.
     /// It's less likely but also possible that the type could be an 
-    /// interface or base class that inherits from INestedDataModel e.g.
+    /// interface or base class that inherits from <see cref="INestedDataModel"/> e.g.
     /// you may want all your nested model types to implement a common 
     /// interface e.g. IContentBlockDataModel.
     /// </summary>
@@ -159,7 +159,7 @@ public class NestedDataModelMultiTypeCollectionAttribute : ValidateObjectAttribu
         return base.IsValid(value, validationContext);
     }
 
-    private ValidationResult CreateError(ValidationContext validationContext, string message)
+    private static ValidationResult CreateError(ValidationContext validationContext, string message)
     {
         string[]? memberNames = string.IsNullOrEmpty(validationContext.MemberName) ? null : [validationContext.MemberName];
         return new ValidationResult(validationContext.MemberName + message, memberNames);

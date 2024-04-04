@@ -1,11 +1,11 @@
-﻿using Cofoundry.Web.Framework.Mvc.ViewHelpers;
+using Cofoundry.Web.Framework.Mvc.ViewHelpers;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Default implementation of <see cref="ICofoundryHelper<>"/>.
+/// Default implementation of <see cref="ICofoundryHelper{TModel}"/>.
 /// </summary>
 public class CofoundryPageHelper<TModel> : ICofoundryHelper<TModel>, IViewContextAware
 {
@@ -30,7 +30,7 @@ public class CofoundryPageHelper<TModel> : ICofoundryHelper<TModel>, IViewContex
 
     private TModel? _model;
     /// <summary>
-    /// The view model associated with the page this helper is contained in
+    /// The view model associated with the page this helper is contained in.
     /// </summary>
     public TModel Model
     {

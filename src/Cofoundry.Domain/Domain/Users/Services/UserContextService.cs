@@ -25,7 +25,6 @@ public class UserContextService : IUserContextService
         _userContextCache = userContextCache;
     }
 
-
     /// <inheritdoc/>
     public virtual async Task<IUserContext> GetCurrentContextAsync()
     {

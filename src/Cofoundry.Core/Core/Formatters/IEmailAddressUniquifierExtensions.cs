@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 public static class IEmailAddressUniquifierExtensions
 {
@@ -18,6 +18,9 @@ public static class IEmailAddressUniquifierExtensions
     /// custom implementation. 
     /// </para>
     /// </summary>
+    /// <param name="uniquifier">
+    /// <see cref="IEmailAddressUniquifier"/> instance to extend.
+    /// </param>
     /// <param name="emailAddress">
     /// The email address to uniquify. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.
@@ -35,6 +38,9 @@ public static class IEmailAddressUniquifierExtensions
     /// the email, but this can be overriden to provide more strict uniqueness
     /// checks.
     /// </summary>
+    /// <param name="uniquifier">
+    /// <see cref="IEmailAddressUniquifier"/> instance to extend.
+    /// </param>
     /// <param name="emailAddressParts">
     /// The pre-normalized email address to uniquify. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.

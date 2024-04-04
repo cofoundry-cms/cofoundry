@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.MailTemplates;
+namespace Cofoundry.Domain.MailTemplates;
 
 /// <summary>
 /// Context model containg data that can be used to format 
@@ -13,7 +13,7 @@ public interface IAccountVerificationTemplateBuilderContext
 
     /// <summary>
     /// A token used to identify and authenticate when verifying the account. This
-    /// token has been used to create the <see cref="Verification"/> property,
+    /// token has been used to create the <see cref="VerificationUrlPath"/> property,
     /// but is provided separately here so you can rebuild your own URL if required.
     /// </summary>
     string Token { get; }

@@ -96,7 +96,6 @@ public class IsPagePathUniqueQueryHandlerTests
         var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
         var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
 
-
         var isUnique = await contentRepository
             .Pages()
             .IsPathUnique(new IsPagePathUniqueQuery()
@@ -120,7 +119,6 @@ public class IsPagePathUniqueQueryHandlerTests
 
         var directoryId = await app.TestData.PageDirectories().AddAsync(uniqueData);
         var pageId = await app.TestData.Pages().AddAsync(uniqueData, directoryId);
-
 
         var isUnique = await contentRepository
             .Pages()

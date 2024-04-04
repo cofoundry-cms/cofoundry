@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -20,9 +20,9 @@ public class ContentRepositoryCustomEntityByIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<CustomEntityRenderSummary?> AsRenderSummary(PublishStatusQuery publishStatus)
+    public IDomainRepositoryQueryContext<CustomEntityRenderSummary?> AsRenderSummary(PublishStatusQuery publishStatusQuery)
     {
-        var query = new GetCustomEntityRenderSummaryByIdQuery(_customEntityId, publishStatus);
+        var query = new GetCustomEntityRenderSummaryByIdQuery(_customEntityId, publishStatusQuery);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
@@ -34,7 +34,7 @@ public class ContentRepositoryCustomEntityByIdQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<CustomEntityRenderDetails?> AsRenderDetails(int pageId, PublishStatusQuery? publishStatus = null)
+    public IDomainRepositoryQueryContext<CustomEntityRenderDetails?> AsRenderDetails(int pageId, PublishStatusQuery? publishStatusQuery = null)
     {
         var query = new GetCustomEntityRenderDetailsByIdQuery()
         {
@@ -42,9 +42,9 @@ public class ContentRepositoryCustomEntityByIdQueryBuilder
             PageId = pageId
         };
 
-        if (publishStatus.HasValue)
+        if (publishStatusQuery.HasValue)
         {
-            query.PublishStatus = publishStatus.Value;
+            query.PublishStatus = publishStatusQuery.Value;
         }
 
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
@@ -58,8 +58,10 @@ public class ContentRepositoryCustomEntityByIdQueryBuilder
 
     public IDomainRepositoryQueryContext<CustomEntityRenderSummary?> AsRenderSummary(int customEntityVersionId)
     {
-        var query = new GetCustomEntityRenderSummaryByIdQuery(_customEntityId, PublishStatusQuery.SpecificVersion);
-        query.CustomEntityVersionId = customEntityVersionId;
+        var query = new GetCustomEntityRenderSummaryByIdQuery(_customEntityId, PublishStatusQuery.SpecificVersion)
+        {
+            CustomEntityVersionId = customEntityVersionId
+        };
 
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }

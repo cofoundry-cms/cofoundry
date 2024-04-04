@@ -16,7 +16,6 @@ public class RegisterPageTemplatesAndPageBlockTypesCommandHandler : IAsyncAlways
         _executionContextFactory = executionContextFactory;
     }
 
-
     public async Task ExecuteAsync(RegisterPageTemplatesAndPageBlockTypesCommand command)
     {
         var cx = await _executionContextFactory.CreateSystemUserExecutionContextAsync();

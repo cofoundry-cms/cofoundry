@@ -1,4 +1,6 @@
-﻿namespace Cofoundry.Web;
+using Cofoundry.Web.Extendable;
+
+namespace Cofoundry.Web;
 
 /// <summary>
 /// Options used to configure the authentication scheme(s) for a user 
@@ -26,7 +28,7 @@ public class UserAreaSchemeRegistrationOptions
 
     /// <summary>
     /// The default auth Scheme name used by Cofoundry to register the scheme.
-    /// This is constructed using <see cref="CofoundryAuthenticationConstants.FormatAuthenticationScheme"/>
+    /// This is constructed using <see cref="AuthenticationSchemeNames.UserArea(string)"/>
     /// and is the same scheme name use to authenticate users when manging user sessions.
     /// </summary>
     public string Scheme { get; private set; }

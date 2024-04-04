@@ -23,7 +23,7 @@ public class GetPageDirectoryNodeByIdQueryHandler
         return result;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryNodeByIdQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryNodeByIdQuery query)
     {
         yield return new PageDirectoryReadPermission();
     }

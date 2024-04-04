@@ -1,8 +1,8 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Message published when a page directory is deleted. When a directory
-/// is deleted, it's child directories are also deleted which will
+/// is deleted, its child directories are also deleted which will
 /// generate multiple messages in the same batch, one for each directory 
 /// deleted.
 /// </summary>
@@ -16,6 +16,6 @@ public class PageDirectoryDeletedMessage
     /// <summary>
     /// The full (relative) url of the deleted directory with the leading
     /// slash, but excluding the trailing slash e.g. "/parent-directory/child-directory".
-    /// </summary
+    /// </summary>
     public string FullUrlPath { get; set; } = string.Empty;
 }

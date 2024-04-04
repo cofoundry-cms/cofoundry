@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Full representation of a user, containing all properties. Users 
@@ -21,8 +21,8 @@ public class UserDetails : ICreateAudited
 
     /// <summary>
     /// Encapsulates a number of status' that a user account can be in.
-    /// This status can be used to determine if an account is <see cref="Deleted"/>
-    /// or <see cref="Deactivated"/> allowing you to render data or adjust functionality
+    /// This status can be used to determine if an account is deleted
+    /// or deactivated allowing you to render data or adjust functionality
     /// accordingly.
     /// </summary>
     public UserAccountStatus AccountStatus { get; set; }

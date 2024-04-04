@@ -356,7 +356,6 @@ public class UpdateUserCommandHandlerTests
         }
     }
 
-
     [Fact]
     public async Task CanVerifyAccount()
     {

@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Cofoundry.Web.Internal;
 
 /// <summary>
 /// <para>
 /// Used to validate the claims principal for a Cofoundry user during the 
-/// <see cref="CookieAuthenticationOptions.Events.OnValidatePrincipal"/> event.
+/// <see cref="CookieAuthenticationOptions"/> OnValidatePrincipal event.
 /// </para>
 /// <para>
 /// The default implementation is the Cofoundry equivalent of <see cref="Microsoft.AspNetCore.Identity.ISecurityStampValidator"/>

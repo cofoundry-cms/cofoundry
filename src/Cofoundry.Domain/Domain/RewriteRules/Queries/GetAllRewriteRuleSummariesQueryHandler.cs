@@ -49,7 +49,7 @@ public class GetAllRewriteRuleSummariesQueryHandler
             .OrderByDescending(r => r.CreateDate);
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetAllRewriteRuleSummariesQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetAllRewriteRuleSummariesQuery query)
     {
         yield return new RewriteRuleReadPermission();
     }

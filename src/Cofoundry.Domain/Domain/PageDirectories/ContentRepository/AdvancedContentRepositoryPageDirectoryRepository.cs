@@ -15,9 +15,9 @@ public class AdvancedContentRepositoryPageDirectoryRepository
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IAdvancedContentRepositoryPageDirectoryByIdQueryBuilder GetById(int imageAssetId)
+    public IAdvancedContentRepositoryPageDirectoryByIdQueryBuilder GetById(int pageDirectoryId)
     {
-        return new ContentRepositoryPageDirectoryByIdQueryBuilder(ExtendableContentRepository, imageAssetId);
+        return new ContentRepositoryPageDirectoryByIdQueryBuilder(ExtendableContentRepository, pageDirectoryId);
     }
 
     public IAdvancedContentRepositoryPageDirectoryGetAllQueryBuilder GetAll()
@@ -51,11 +51,11 @@ public class AdvancedContentRepositoryPageDirectoryRepository
         return ExtendableContentRepository.ExecuteCommandAsync(command);
     }
 
-    public Task DeleteAsync(int PageDirectoryId)
+    public Task DeleteAsync(int pageDirectoryId)
     {
         var command = new DeletePageDirectoryCommand()
         {
-            PageDirectoryId = PageDirectoryId
+            PageDirectoryId = pageDirectoryId
         };
 
         return ExtendableContentRepository.ExecuteCommandAsync(command);

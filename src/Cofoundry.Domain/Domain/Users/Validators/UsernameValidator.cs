@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Extendable;
 
@@ -73,7 +73,6 @@ public class UsernameValidator : IUsernameValidator
             .InvalidCharacters
             .Create(context.PropertyName);
     }
-
 
     /// <summary>
     /// Validates that the username is not shorter then the limit defined in the 
@@ -201,7 +200,7 @@ public class UsernameValidator : IUsernameValidator
             .Create(context.PropertyName);
     }
 
-    private IReadOnlyCollection<ValidationError> WrapError(ValidationError error)
+    private static IReadOnlyCollection<ValidationError> WrapError(ValidationError error)
     {
         return [error];
     }

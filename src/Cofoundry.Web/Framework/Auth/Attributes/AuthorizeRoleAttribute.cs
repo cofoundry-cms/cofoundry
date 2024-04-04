@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Cofoundry.Web;
 
@@ -14,7 +14,7 @@ public class AuthorizeRoleAttribute : AuthorizeAttribute
     /// Initializes a new instance of the <see cref="AuthorizeRoleAttribute"/> class.
     /// </summary>
     /// <param name="userAreaCode">The <see cref="IUserAreaDefinition.UserAreaCode"/> identifier of the user area that the role belongs to.</param>
-    /// <param name="roleCode">The <see cref="IRoleDefinition.Rolecode"/> identifier of the code-defined role to restrict access to.</param>
+    /// <param name="roleCode">The <see cref="IRoleDefinition.RoleCode"/> identifier of the code-defined role to restrict access to.</param>
     public AuthorizeRoleAttribute(string userAreaCode, string roleCode)
         : base()
     {

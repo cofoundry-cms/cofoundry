@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Configuration;
+using Cofoundry.Core.Configuration;
 
 namespace Cofoundry.Domain;
 
@@ -30,15 +30,15 @@ public class UserCleanupOptions : IFeatureEnableable
     public int? DefaultRetentionPeriodInDays { get; set; } = 30;
 
     /// <summary>
-    /// The amount of time to keep records in the <see cref="Data.UserAuthenticationLog"/> table, measured in days. 
-    /// If <see langword="null"/> then the value defaults to the <see cref="DefaultRetentionPeriod"/>. If set 
+    /// The amount of time to keep records in the UserAuthenticationLog table, measured in days. 
+    /// If <see langword="null"/> then the value defaults to the <see cref="DefaultRetentionPeriodInDays"/>. If set 
     /// to less than zero then task data is stored indefinitely.
     /// </summary>
     public int? AuthenticationLogRetentionPeriodInDays { get; set; }
 
     /// <summary>
-    /// The amount of time to keep records in the <see cref="Data.UserAuthenticationFailLog"/> table, measured in days. 
-    /// If <see langword="null"/> then the value defaults to the <see cref="DefaultRetentionPeriod"/>. If set 
+    /// The amount of time to keep records in the UserAuthenticationFailLog table, measured in days. 
+    /// If <see langword="null"/> then the value defaults to the <see cref="DefaultRetentionPeriodInDays"/>. If set 
     /// to less than zero then task data is stored indefinitely.
     /// </summary>
     public int? AuthenticationFailLogRetentionPeriodInDays { get; set; }

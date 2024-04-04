@@ -1,13 +1,13 @@
-﻿using Ganss.Xss;
 using System.Collections.Immutable;
+using Ganss.Xss;
 
 namespace Cofoundry.Core.Web;
 
 /// <summary>
 /// Factory to create the default ruleset for the sanitizer. This uses the 
-/// default settings from Ganss.XSS.HtmlSanitizer, but with the addition
+/// default settings from <see cref="HtmlSanitizerDefaults"/>, but with the addition
 /// of the class attribute and the mailto scheme. See 
-/// <see cref="https://github.com/mganss/HtmlSanitizer"/> for more info.
+/// <see href="https://github.com/mganss/HtmlSanitizer"/> for more info.
 /// </summary>
 public class DefaultHtmlSanitizationRuleSetFactory : IDefaultHtmlSanitizationRuleSetFactory
 {

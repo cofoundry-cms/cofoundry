@@ -23,7 +23,6 @@ public class ContentSectionDataModel : IPageBlockTypeDataModel
     [Html(HtmlToolbarPreset.BasicFormatting, HtmlToolbarPreset.Headings, HtmlToolbarPreset.Media)]
     public string HtmlText { get; set; } = string.Empty;
 
-
     [CustomEntityMultiTypeCollection(
         CategoryCustomEntityDefinition.DefinitionCode,
         BlogPostCustomEntityDefinition.DefinitionCode,

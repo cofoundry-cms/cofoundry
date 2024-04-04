@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -32,9 +32,9 @@ public class ContentRepositoryPageByIdQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageRenderSummary?> AsRenderSummary(PublishStatusQuery publishStatus)
+    public IDomainRepositoryQueryContext<PageRenderSummary?> AsRenderSummary(PublishStatusQuery publishStatusQuery)
     {
-        var query = new GetPageRenderSummaryByIdQuery(_pageId, publishStatus);
+        var query = new GetPageRenderSummaryByIdQuery(_pageId, publishStatusQuery);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
@@ -52,9 +52,9 @@ public class ContentRepositoryPageByIdQueryBuilder
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 
-    public IDomainRepositoryQueryContext<PageRenderDetails?> AsRenderDetails(PublishStatusQuery publishStatus)
+    public IDomainRepositoryQueryContext<PageRenderDetails?> AsRenderDetails(PublishStatusQuery publishStatusQuery)
     {
-        var query = new GetPageRenderDetailsByIdQuery(_pageId, publishStatus);
+        var query = new GetPageRenderDetailsByIdQuery(_pageId, publishStatusQuery);
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);
     }
 

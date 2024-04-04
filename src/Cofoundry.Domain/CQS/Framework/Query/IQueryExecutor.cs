@@ -1,7 +1,7 @@
-﻿namespace Cofoundry.Domain.CQS;
+namespace Cofoundry.Domain.CQS;
 
 /// <summary>
-/// Handles the execution of <see cref="IQuery"/> instances.
+/// Handles the execution of <see cref="IQueryHandler{TQuery, TResult}"/> instances.
 /// </summary>
 public interface IQueryExecutor
 {

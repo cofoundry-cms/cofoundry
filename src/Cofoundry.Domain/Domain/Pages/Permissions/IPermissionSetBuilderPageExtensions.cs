@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
@@ -7,6 +7,9 @@ public static class IPermissionSetBuilderPageExtensions
     /// <summary>
     /// Configure the builder to include all permissions for pages.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     public static IPermissionSetBuilder IncludePage(this IPermissionSetBuilder builder)
     {
         return Run(builder, null, true);
@@ -15,6 +18,9 @@ public static class IPermissionSetBuilderPageExtensions
     /// <summary>
     /// Configure the builder to include permissions for pages.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     /// <param name="configure">A configuration action to select which permissions to include.</param>
     public static IPermissionSetBuilder IncludePage(this IPermissionSetBuilder builder, Action<PagePermissionBuilder> configure)
     {
@@ -24,6 +30,9 @@ public static class IPermissionSetBuilderPageExtensions
     /// <summary>
     /// Configure the builder to exclude all permissions for pages.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     public static IPermissionSetBuilder ExcludePage(this IPermissionSetBuilder builder)
     {
         return Run(builder, null, false);
@@ -32,6 +41,9 @@ public static class IPermissionSetBuilderPageExtensions
     /// <summary>
     /// Configure the builder to exclude permissions for pages.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     /// <param name="configure">A configuration action to select which permissions to exclude.</param>
     public static IPermissionSetBuilder ExcludePage(this IPermissionSetBuilder builder, Action<PagePermissionBuilder> configure)
     {

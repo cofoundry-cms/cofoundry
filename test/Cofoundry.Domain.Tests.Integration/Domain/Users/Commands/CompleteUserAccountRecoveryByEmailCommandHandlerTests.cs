@@ -3,7 +3,6 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
 [Collection(nameof(DbDependentFixtureCollection))]

@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// Internal repository for fetching roles which bypasses CQS and permissions infrastructure
@@ -39,6 +39,7 @@ public interface IInternalRoleRepository
     /// <para>
     /// Finds a set of roles by their database ids as a lookup of <see cref="RoleDetails"/>
     /// projections.
+    /// </para>
     /// <para>
     /// Roles are cached, so repeat uses of this query is inexpensive.
     /// </para>

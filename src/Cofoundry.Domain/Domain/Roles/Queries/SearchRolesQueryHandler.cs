@@ -69,7 +69,7 @@ public class SearchRolesQueryHandler
         return dbQuery;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(SearchRolesQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(SearchRolesQuery query)
     {
         yield return new RoleReadPermission();
     }

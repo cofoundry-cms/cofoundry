@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain;
 
@@ -29,9 +29,10 @@ public interface IAuditDataMapper
     /// <param name="createModel">
     /// The <see cref="ICreateAuditable"/> EF database record containing the create audit data.
     /// </param>
-    /// <param name="updateModel">
+    /// <param name="versionModel">
     /// The <see cref="ICreateAuditable"/> EF database record to take update audit information 
-    /// from. As this is expected to be a versioned record The creator and create date fields will be used for
+    /// from. As this is expected to be a versioned record the creator and create date fields will
+    /// be interpretted as update audit data.
     /// </param>
     UpdateAuditData MapUpdateAuditDataFromVersion<TVersionModel>(ICreateAuditable createModel, TVersionModel versionModel)
         where TVersionModel : IEntityVersion, ICreateAuditable;

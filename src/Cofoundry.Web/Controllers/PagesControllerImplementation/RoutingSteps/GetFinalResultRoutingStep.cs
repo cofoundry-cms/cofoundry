@@ -71,7 +71,6 @@ public class GetFinalResultRoutingStep : IGetFinalResultRoutingStep
                 break;
         }
 
-
         // set cache
         await SetCacheAsync(vm, state);
 

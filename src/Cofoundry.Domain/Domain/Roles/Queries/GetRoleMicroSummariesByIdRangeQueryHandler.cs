@@ -42,7 +42,7 @@ public class GetRoleMicroSummariesByIdRangeQueryHandler
         return result;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetRoleMicroSummariesByIdRangeQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetRoleMicroSummariesByIdRangeQuery query)
     {
         yield return new RoleReadPermission();
     }

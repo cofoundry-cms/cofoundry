@@ -20,7 +20,6 @@ public interface IAdvancedContentRepositoryCustomEntityRepository
     /// <typeparam name="TDefinition">The definition type to fetch custom entities for.</typeparam>
     IContentRepositoryCustomEntityByDefinitionQueryBuilder GetByDefinition<TDefinition>() where TDefinition : ICustomEntityDefinition;
 
-
     /// <summary>
     /// Retrieve a custom entity by its unique database id.
     /// </summary>

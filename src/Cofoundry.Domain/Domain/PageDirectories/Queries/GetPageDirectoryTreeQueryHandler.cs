@@ -41,7 +41,7 @@ public class GetPageDirectoryTreeQueryHandler
         return result;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryTreeQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryTreeQuery query)
     {
         yield return new PageDirectoryReadPermission();
     }

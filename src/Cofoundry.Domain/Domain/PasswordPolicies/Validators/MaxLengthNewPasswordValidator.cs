@@ -18,12 +18,12 @@ public class MaxLengthNewPasswordValidator
 
     public string Criteria => $"Must be {MaxLength} characters or less.";
 
-    public void Configure(int maxLength)
+    public void Configure(int options)
     {
-        ArgumentOutOfRangeException.ThrowIfLessThan(maxLength, PasswordOptions.MIN_LENGTH_BOUNDARY);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(maxLength, PasswordOptions.MAX_LENGTH_BOUNDARY);
+        ArgumentOutOfRangeException.ThrowIfLessThan(options, PasswordOptions.MIN_LENGTH_BOUNDARY);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(options, PasswordOptions.MAX_LENGTH_BOUNDARY);
 
-        MaxLength = maxLength;
+        MaxLength = options;
     }
 
     public ValidationError? Validate(INewPasswordValidationContext context)

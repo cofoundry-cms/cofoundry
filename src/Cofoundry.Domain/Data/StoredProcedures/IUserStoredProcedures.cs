@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data.Internal;
+namespace Cofoundry.Domain.Data.Internal;
 
 /// <summary>
 /// Data access abstraction over stored procedures for user entities and associated records.
@@ -12,7 +12,8 @@ public interface IUserStoredProcedures
     /// <param name="name">
     /// The name of the domain, which should be in a valid lowercased
     /// format e.g. "example.com" or "müller.example.com".
-    /// Maps to <see cref="EmailDomain.Name"/></param>
+    /// Maps to <see cref="EmailDomain.Name"/>
+    /// </param>
     /// <param name="uniqueName">
     /// A unique name for the domain that is used for lookups. This is hashed 
     /// and mapped to <see cref="EmailDomain.NameHash"/>.
@@ -96,7 +97,6 @@ public interface IUserStoredProcedures
     /// The maximum number of failed authentication attempts allowed per IP address 
     /// during the rate limiting time window.
     /// </param>
-    /// </param>
     /// <param name="ipAddressRateLimitWindowInSeconds">
     /// The time window to measure authentication attempts when rate limiting by IP 
     /// address.
@@ -148,12 +148,12 @@ public interface IUserStoredProcedures
     /// </param>
     /// <param name="authenticationLogRetentionPeriodInSeconds">
     /// The amount of time to keep records in the <see cref="UserAuthenticationLog"/> tables. 
-    /// Defaults to the <see cref="DefaultRetentionPeriod"/>. If set to zero or less then data
-    /// is kept indefinitely.
+    /// Defaults to <see cref="UserCleanupOptions.DefaultRetentionPeriodInDays"/> configuration
+    /// setting. If set to zero or less then data is kept indefinitely.
     /// </param>
     /// <param name="authenticationFailedLogRetentionPeriodInSeconds">
     /// The amount of time to keep records in the <see cref="UserAuthenticationFailLog"/> tables. 
-    /// Defaults to the <see cref="DefaultRetentionPeriod"/>. If set to zero or less then data
+    /// Defaults to the <see cref="UserCleanupOptions.DefaultRetentionPeriodInDays"/>. If set to zero or less then data
     /// is kept indefinitely.
     /// </param>
     /// <param name="dateNow">The current date and time.</param>

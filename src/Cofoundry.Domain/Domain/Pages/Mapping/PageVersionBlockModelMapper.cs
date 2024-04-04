@@ -1,6 +1,6 @@
-﻿using Cofoundry.Core.Reflection.Internal;
-using Cofoundry.Domain.Data;
 using System.Reflection;
+using Cofoundry.Core.Reflection.Internal;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -86,19 +86,19 @@ public class PageVersionBlockModelMapper : IPageVersionBlockModelMapper
     /// <inheritdoc/>
     public virtual async Task<IPageBlockTypeDisplayModel?> MapDisplayModelAsync(
         string typeName,
-        IEntityVersionPageBlock pageBlock,
+        IEntityVersionPageBlock entityBlock,
         PublishStatusQuery publishStatus,
         IExecutionContext executionContext
         )
     {
         var mapped = await MapDisplayModelAsync(
             typeName,
-            new IEntityVersionPageBlock[] { pageBlock },
+            [entityBlock],
             publishStatus,
             executionContext
             );
 
-        var id = pageBlock.GetVersionBlockId();
+        var id = entityBlock.GetVersionBlockId();
         if (mapped.ContainsKey(id))
         {
             return mapped[id];

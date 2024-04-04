@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
@@ -9,6 +9,7 @@ namespace Cofoundry.Web.Internal;
 /// query and command execution with error handling code that pipes validation
 /// exceptions and validation query results into model state. Additionally if the
 /// model state is invalid prior to execution, then execution will be skipped.
+/// </summary>
 /// <inheritdoc/>
 public class DomainRepositoryExecutorWithModelState : IDomainRepositoryExecutor
 {

@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 public static class IEmailAddressNormalizerExtensions
 {
@@ -8,6 +8,9 @@ public static class IEmailAddressNormalizerExtensions
     /// domain part of the email. If the email is an invalid format then 
     /// <see langword="null"/> is returned.
     /// </summary>
+    /// <param name="normalizer">
+    /// <see cref="IEmailAddressNormalizer"/> instance to extend.
+    /// </param>
     /// <param name="emailAddress">
     /// The email address string to format. If the value is <see langword="null"/> 
     /// then <see langword="null"/> is returned.

@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
@@ -7,6 +7,9 @@ public static class IPermissionSetBuilderImageAssetExtensions
     /// <summary>
     /// Configure the builder to include all permissions for image assets.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     public static IPermissionSetBuilder IncludeImageAsset(this IPermissionSetBuilder builder)
     {
         return Run(builder, null, true);
@@ -15,6 +18,9 @@ public static class IPermissionSetBuilderImageAssetExtensions
     /// <summary>
     /// Configure the builder to include permissions for image assets.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     /// <param name="configure">A configuration action to select which permissions to include.</param>
     public static IPermissionSetBuilder IncludeImageAsset(this IPermissionSetBuilder builder, Action<ImageAssetPermissionBuilder> configure)
     {
@@ -24,6 +30,9 @@ public static class IPermissionSetBuilderImageAssetExtensions
     /// <summary>
     /// Configure the builder to exclude all permissions for image assets.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     public static IPermissionSetBuilder ExcludeImageAsset(this IPermissionSetBuilder builder)
     {
         return Run(builder, null, false);
@@ -32,6 +41,9 @@ public static class IPermissionSetBuilderImageAssetExtensions
     /// <summary>
     /// Configure the builder to exclude permissions for image assets.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     /// <param name="configure">A configuration action to select which permissions to exclude.</param>
     public static IPermissionSetBuilder ExcludeImageAsset(this IPermissionSetBuilder builder, Action<ImageAssetPermissionBuilder> configure)
     {

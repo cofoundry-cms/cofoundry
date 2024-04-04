@@ -4,7 +4,6 @@ using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Shared;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
 [Collection(nameof(DbDependentFixtureCollection))]
@@ -113,7 +112,6 @@ public class InitiateUserAccountRecoveryViaEmailCommandHandlerTests
             )
             .Should().Be(1);
     }
-
 
     [Fact]
     public async Task SendsMessage()

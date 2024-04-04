@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// This base class encapsulated functionality for updating access rules
@@ -16,7 +16,7 @@ public abstract class UpdateAccessRuleSetCommandBase<TAddOrUpdateAccessRuleComma
     public IReadOnlyCollection<TAddOrUpdateAccessRuleCommand> AccessRules { get; set; } = Array.Empty<TAddOrUpdateAccessRuleCommand>();
 
     /// <summary>
-    /// Unique 3 character code representing the <see cref="UserArea"/> with
+    /// Unique 3 character code representing the user area with
     /// the sign in page to redirect to when a user does not meet the criteria of 
     /// the access rules directly associated with this page.
     /// </summary>

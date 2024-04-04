@@ -30,34 +30,19 @@ public sealed class CofoundrySqlDatabase : IDisposable, ICofoundryDatabase
         }
     }
 
-    /// <summary>
-    /// Returns the database connection being used by this instance. Used
-    /// to enlist in transactions.
-    /// </summary>
+    /// <inheritdoc/>
     public DbConnection GetDbConnection()
     {
         return _sqlDatabase.GetDbConnection();
     }
 
-    /// <summary>
-    /// Executes a sql command with the specified parameters.
-    /// </summary>
-    /// <param name="sql">Raw SQL string to execute against the database.</param>
-    /// <param name="sqlParams">Any parameters to add to the command.</param>
+    /// <inheritdoc/>
     public Task ExecuteAsync(string sql, params SqlParameter[] sqlParams)
     {
         return _sqlDatabase.ExecuteAsync(sql, sqlParams);
     }
 
-    /// <summary>
-    /// Executes raw sql and uses a reader with a mapping function to return
-    /// typed results.
-    /// </summary>
-    /// <typeparam name="TEntity">Type of entity returned from the query.</typeparam>
-    /// <param name="sql">The raw sql to execute against the database.</param>
-    /// <param name="map">A mapping function to use to map each row.</param>
-    /// <param name="sqlParams">Any parameters to add to the command.</param>
-    /// <returns>Collection of mapped entities.</returns>
+    /// <inheritdoc/>
     public Task<IReadOnlyCollection<TEntity>> ReadAsync<TEntity>(
         string sql,
         Func<SqlDataReader, TEntity> mapper,

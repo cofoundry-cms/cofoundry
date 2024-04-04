@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Used to format an email address into a value that can be used for
@@ -16,10 +16,10 @@ public interface IEmailAddressUniquifier
     /// checks.
     /// </para>
     /// <para>
-    /// As an example, if the user types their email as " L.Balfour+cofoundry@Example.com" then by
+    /// As an example, if the user types their email as &quot; L.Balfour+cofoundry@Example.com&quot; then by
     /// default the email would normalize via <see cref="IEmailAddressNormalizer"/> 
-    /// as "L.Balfour+cofoundry@example.com" and uniquify as "l.balfour+cofoundry@example.com",
-    /// however if you wanted to exclude "plus addressing" from email uniqueness checks, you could 
+    /// as &quot;L.Balfour+cofoundry@example.com&quot; and uniquify as &quot;l.balfour+cofoundry@example.com&quot;,
+    /// however if you wanted to exclude &quot;plus addressing&quot; from email uniqueness checks, you could 
     /// override the default <see cref="IEmailAddressUniquifier"/> implementation with your own
     /// custom implementation. 
     /// </para>

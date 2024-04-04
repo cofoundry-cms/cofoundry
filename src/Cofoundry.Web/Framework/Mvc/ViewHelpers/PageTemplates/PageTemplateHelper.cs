@@ -1,4 +1,4 @@
-﻿using Cofoundry.Web.Framework.Mvc.ViewHelpers;
+using Cofoundry.Web.Framework.Mvc.ViewHelpers;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Default implementation of <see cref="IPageTemplateHelper<>"/>.
+/// Default implementation of <see cref="IPageTemplateHelper{}"/>.
 /// </summary>
 public class PageTemplateHelper<TModel>
     : IPageTemplateHelper<TModel>, IViewContextAware

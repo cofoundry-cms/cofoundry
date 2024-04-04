@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Queries for retrieving password policies for a specified user area.
@@ -7,8 +7,8 @@ public interface IContentRepositoryPasswordPolicyByCodeQueryBuilder
 {
     /// <summary>
     /// The <see cref="PasswordPolicyDescription"/> projection is used to describe 
-    /// a password policy including both a short <see cref="Description"/> 
-    /// and a more detailed list of <see cref="Requirements"/>.
+    /// a password policy including both a short description 
+    /// and a more detailed list of requirements.
     /// </summary>
     IDomainRepositoryQueryContext<PasswordPolicyDescription> AsDescription();
 }

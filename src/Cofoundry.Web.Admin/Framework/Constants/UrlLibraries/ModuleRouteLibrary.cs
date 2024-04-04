@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Web.Admin;
+namespace Cofoundry.Web.Admin;
 
 /// <summary>
 /// A base class for module url/content routing information.
@@ -12,6 +12,9 @@ public class ModuleRouteLibrary
     /// Constructor when you want to use the default resource path (i.e. your
     /// module is located in /cofoundry/admin/modules/{modulename}.
     /// </summary>
+    /// <param name="adminSettings">
+    /// Admin configuration settings typically resolved form the DI container.
+    /// </param>
     /// <param name="routePrefix">
     /// The unique entity/folder name of your route to use when building 
     /// urls e.g. products, users, honeybagders.
@@ -29,6 +32,9 @@ public class ModuleRouteLibrary
     /// when your module is located in a non-standard directory (or for all internal 
     /// modules where you pass RouteConstants.InternalModuleResourcePathPrefix).
     /// </summary>
+    /// <param name="adminSettings">
+    /// Admin configuration settings typically resolved form the DI container.
+    /// </param>
     /// <param name="routePrefix">
     /// The unique entity/folder name of your route to use when building 
     /// urls e.g. products, users, honeybagders.
@@ -112,7 +118,6 @@ public class ModuleRouteLibrary
     {
         return RelativePathHelper.Combine(_adminSettings.DirectoryName, StaticResourcePrefix);
     }
-
 
     public string AngularRoute(string? path = null)
     {

@@ -36,7 +36,7 @@ public class GetAllPermissionsQueryHandler
         return "ZZZ";
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetAllPermissionsQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetAllPermissionsQuery query)
     {
         yield return new RoleReadPermission();
     }

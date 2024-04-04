@@ -14,7 +14,6 @@ public class PageDirectoryTreeMapper : IPageDirectoryTreeMapper
         _auditDataMapper = auditDataMapper;
     }
 
-
     /// <inheritdoc/>
     public PageDirectoryNode Map(IReadOnlyCollection<PageDirectoryTreeNodeQueryModel> dbPageDirectories)
     {

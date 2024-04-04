@@ -1,11 +1,13 @@
-﻿using Cofoundry.Core.Mail;
+using Cofoundry.Core.Mail;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Internal;
 using Cofoundry.Domain.MailTemplates.Internal;
 
 namespace Cofoundry.Domain;
 
-/// <inheritdoc/>
+/// <summary>
+/// Default implementation of <see cref="IPasswordUpdateCommandHelper"/>.
+/// </summary>
 public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
 {
     private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
@@ -35,6 +37,7 @@ public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
         _userSummaryMapper = userSummaryMapper;
     }
 
+    /// <inheritdoc/>
     public void ValidateUserArea(IUserAreaDefinition userArea)
     {
         if (!userArea.AllowPasswordSignIn)
@@ -43,6 +46,7 @@ public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
         }
     }
 
+    /// <inheritdoc/>
     public void ValidatePermissions(IUserAreaDefinition userArea, IExecutionContext executionContext)
     {
         if (userArea is CofoundryAdminUserArea)
@@ -55,6 +59,7 @@ public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
         }
     }
 
+    /// <inheritdoc/>
     public void UpdatePassword(string newPassword, User user, IExecutionContext executionContext)
     {
         user.RequirePasswordChange = false;
@@ -63,13 +68,15 @@ public class PasswordUpdateCommandHelper : IPasswordUpdateCommandHelper
         UpdatePasswordHash(newPassword, user);
     }
 
-    public void UpdatePasswordHash(string newPassword, User user)
+    /// <inheritdoc/>
+    public void UpdatePasswordHash(string password, User user)
     {
-        var hashResult = _passwordCryptographyService.CreateHash(newPassword);
+        var hashResult = _passwordCryptographyService.CreateHash(password);
         user.Password = hashResult.Hash;
         user.PasswordHashVersion = hashResult.HashVersion;
     }
 
+    /// <inheritdoc/>
     public async Task SendPasswordChangedNotification(User user)
     {
         ArgumentNullException.ThrowIfNull(user);

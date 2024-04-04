@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.ExecutionDurationRandomizer;
+using Cofoundry.Core.ExecutionDurationRandomizer;
 using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,9 +9,12 @@ public static class IDomainRepositoryExtensions
 {
     /// <summary>
     /// Used to manage transactions for multiple domain commands.
-    /// This abstraction is an enhanced version of 
-    /// System.Transaction.TransactionScope and works in the same way.
+    /// This abstraction is an enhanced version of <see cref="System.Transactions.TransactionScope"/>
+    /// and works in the same way.
     /// </summary>
+    /// <param name="domainRepository">
+    /// Repository instance to extend.
+    /// </param>
     public static IDomainRepositoryTransactionManager Transactions(this IDomainRepository domainRepository)
     {
         var extendedContentRepositry = domainRepository.AsExtendableContentRepository();
@@ -24,6 +27,9 @@ public static class IDomainRepositoryExtensions
     /// instance. Typically used to impersonate a user, elevate permissions or 
     /// maintain context in nested query or command execution.
     /// </summary>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
     /// <param name="executionContext">
     /// The execution context instance to use.
     /// </param>
@@ -41,6 +47,9 @@ public static class IDomainRepositoryExtensions
     /// to run queries or commands under. Typically this is used to impersonate a user or 
     /// elevate permissions.
     /// </summary>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
     /// <param name="userContext">
     /// The <see cref="IUserContext"/> to build into a new <see cref="IExecutionContext"/>.
     /// </param>
@@ -66,6 +75,9 @@ public static class IDomainRepositoryExtensions
     /// The user area to use when determining the signed in user to execute
     /// tasks with.
     /// </typeparam>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
     public static IDomainRepository WithContext<TUserAreaDefinition>(this IDomainRepository repository)
         where TUserAreaDefinition : IUserAreaDefinition
     {
@@ -84,6 +96,9 @@ public static class IDomainRepositoryExtensions
     /// signed in user does not have permission for, e.g. signing up a new
     /// user prior to sign.
     /// </summary>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
     public static TRepository WithElevatedPermissions<TRepository>(this TRepository repository)
         where TRepository : IDomainRepository
     {
@@ -97,6 +112,9 @@ public static class IDomainRepositoryExtensions
     /// Allows you to chain mutator functions to run after execution of a query.
     /// </summary>
     /// <typeparam name="TResult">Query result type.</typeparam>
+    /// <param name="domainRepository">
+    /// Repository instance to extend.
+    /// </param>
     /// <param name="query">Query to mutate.</param>
     /// <returns>A query context that allows chaining of mutator functions.</returns>
     public static IDomainRepositoryQueryContext<TResult> WithQuery<TResult>(this IDomainRepository domainRepository, IQuery<TResult> query)
@@ -110,6 +128,9 @@ public static class IDomainRepositoryExtensions
     /// Patches a command to modify the current state and then executes it.
     /// </summary>
     /// <typeparam name="TCommand">Type of command to patch and execute.</typeparam>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
     /// <param name="commandPatcher">
     /// An action to configure or "patch" a command that's been initialized
     /// with existing data.
@@ -130,6 +151,9 @@ public static class IDomainRepositoryExtensions
     /// Patches a command to modify the current state and then executes it.
     /// </summary>
     /// <typeparam name="TCommand">Type of command to patch and execute.</typeparam>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
     /// <param name="id">
     /// The integer database identifier of the entity associated with
     /// patchable command.
@@ -157,6 +181,9 @@ public static class IDomainRepositoryExtensions
     /// the expected bounds of the completion time. For example, this could be used to mitigate harvesting 
     /// of valid usernames from login or forgot password pages by measuring the response times.
     /// </summary>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
     /// <param name="minDurationInMilliseconds">
     /// The minimum duration to extend the exection to. The execution will not complete quicker
     /// than this value.
@@ -181,11 +208,14 @@ public static class IDomainRepositoryExtensions
 
     /// <summary>
     /// Prevents execution completing before a random duration has elapsed by padding the
-    /// execution time using <see cref="Task.Delay"/>. This can help mitigate against time-based 
+    /// execution time using <see cref="Task.Delay(int)"/>. This can help mitigate against time-based 
     /// enumeration attacks by extending the exection duration beyond the expected bounds 
     /// of the query or command completion time. For example, this could be used to mitigate harvesting 
     /// of valid usernames from login or forgot password pages by measuring the response times.
     /// </summary>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
     /// <param name="duration">
     /// The parameters to use in extending the duration.
     /// </param>

@@ -52,7 +52,6 @@ public static class HttpResponseMessageAssertionsExtensions
                     errorMessageWildcardPattern, content);
         }
 
-
         return new AndConstraint<HttpResponseMessageAssertions>(messageAssertions);
     }
 

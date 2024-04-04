@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 public static class PageDirectoryAccessRuleQueryExtensions
 {
@@ -6,6 +6,9 @@ public static class PageDirectoryAccessRuleQueryExtensions
     /// Filters the collection to only include the access rule with the 
     /// specified PageDirectoryAccessRuleId primary key.
     /// </summary>
+    /// <param name="accessRules">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="pageDirectoryAccessRuleId">Primary key to filter on.</param>
     public static IQueryable<PageDirectoryAccessRule> FilterById(this IQueryable<PageDirectoryAccessRule> accessRules, int pageDirectoryAccessRuleId)
     {
@@ -18,6 +21,9 @@ public static class PageDirectoryAccessRuleQueryExtensions
     /// Filters the collection to only include access rules associated with
     /// a specific directory.
     /// </summary>
+    /// <param name="accessRules">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="pageDirectoryId">Id of the <see cref="PageDirectory"/> to filter on.</param>
     public static IQueryable<PageDirectoryAccessRule> FilterByPageDirectoryId(this IQueryable<PageDirectoryAccessRule> accessRules, int pageDirectoryId)
     {

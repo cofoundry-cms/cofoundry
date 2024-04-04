@@ -4,19 +4,19 @@ namespace Cofoundry.Domain.Data;
 /// A permission represents an type action a user can
 /// be permitted to perform. Typically this is associated
 /// with a specified entity type, but doesn't have to be e.g.
-/// "read pages", "access dashboard", "delete images". The 
-/// combination of EntityDefinitionCode and PermissionCode
+/// "read pages", "access dashboard", "delete images".
+/// The combination of EntityDefinitionCode and PermissionCode
 /// must be unique
 /// </summary>
 public class Permission
 {
     /// <summary>
-    /// Database id of the permission
+    /// Database id of the permission.
     /// </summary>
     public int PermissionId { get; set; }
 
     /// <summary>
-    /// Optional code of the entity this permission relates to
+    /// Optional code of the entity this permission relates to.
     /// </summary>
     public string? EntityDefinitionCode { get; set; }
 
@@ -29,8 +29,8 @@ public class Permission
     /// A three letter code representing the action that is being permitted. The 
     /// combination of EntityDefinitionCode and PermissionCode must be unique 
     /// so some common permission codes can be used to reprsent common actions 
-    /// like "read", "create" or "delete" when used in combination with a specific 
-    /// entity type.
+    /// such as "read", "create" or "delete" when used in
+    /// combination with a specific entity type.
     /// </summary>
     public string PermissionCode { get; set; } = string.Empty;
 

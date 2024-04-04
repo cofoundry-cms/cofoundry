@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 public static class ICreateableExtensions
 {
@@ -6,6 +6,9 @@ public static class ICreateableExtensions
     /// Filters the create date value by the specified parameters. Date 
     /// parameters can be null which indicates an unbounded query.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="startDate">Inclusive start date.</param>
     /// <param name="endDate">Exclusive end date to filter by.</param>
     public static IQueryable<TEntity> FilterByCreateDate<TEntity>(this IQueryable<TEntity> source, DateTime? startDate, DateTime? endDate)
@@ -28,6 +31,9 @@ public static class ICreateableExtensions
     /// Filters the create date value by the specified parameters. Date 
     /// parameters can be null which indicates an unbounded query.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="startDate">Inclusive start date.</param>
     /// <param name="endDate">Exclusive end date to filter by.</param>
     public static IQueryable<TEntity> FilterByCreateDate<TEntity>(this IQueryable<TEntity> source, DateTimeOffset? startDate, DateTimeOffset? endDate)

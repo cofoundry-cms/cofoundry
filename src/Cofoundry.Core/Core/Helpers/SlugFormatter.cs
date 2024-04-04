@@ -29,7 +29,6 @@ public static class SlugFormatter
         return str.Trim('-');
     }
 
-
     /// <summary>
     /// A simple method to convert a upper or lower camel case string 
     /// to a dash delimited token, e.g. MyPropertyName to "my-property-name".

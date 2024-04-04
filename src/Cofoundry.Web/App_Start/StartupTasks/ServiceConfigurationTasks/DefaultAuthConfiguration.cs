@@ -1,4 +1,4 @@
-﻿using Cofoundry.Web.Auth.Internal;
+using Cofoundry.Web.Auth.Internal;
 using Cofoundry.Web.Internal;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -66,8 +66,7 @@ public class DefaultAuthConfiguration : IAuthConfiguration
     }
 
     /// <summary>
-    /// Returns the authenitcation scheme name that should be set as the default
-    /// in a call to <see cref="AuthenticationServiceCollectionExtensions.AddAuthentication"/>.
+    /// Returns the authentication scheme name that should be set as the default.
     /// Override this if you want to change the default scheme.
     /// </summary>
     protected virtual string GetDefaultScheme()
@@ -127,7 +126,7 @@ public class DefaultAuthConfiguration : IAuthConfiguration
     }
 
     /// <summary>
-    /// This method should be applied to the <see cref="CookieAuthenticationOptions.Events.OnValidatePrincipal"/>
+    /// This method should be applied to the <see cref="CookieAuthenticationOptions"/> OnValidatePrincipal
     /// event, delegating the validation to the registered <see cref="IClaimsPrincipalValidator"/>.
     /// </summary>
     protected Task ValidateCookiePrincipal(CookieValidatePrincipalContext context)
@@ -151,7 +150,7 @@ public class DefaultAuthConfiguration : IAuthConfiguration
     /// </summary>
     /// <typeparam name="TOptions">
     /// The options type depends on the scheme type invoking the action, but for the default 
-    /// implementation this will be <see cref="Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationOptions"/>.
+    /// implementation this will be <see cref="CookieAuthenticationOptions"/>.
     /// </typeparam>
     /// <param name="redirectContext">The context of the redirect action.</param>
     protected virtual Task DefaultSignInRedirectAction<TOptions>(RedirectContext<TOptions> redirectContext)
@@ -173,7 +172,7 @@ public class DefaultAuthConfiguration : IAuthConfiguration
     /// </summary>
     /// <typeparam name="TOptions">
     /// The options type depends on the scheme type invoking the action, but for the default 
-    /// implementation this will be <see cref="Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationOptions"/>.
+    /// implementation this will be <see cref="CookieAuthenticationOptions"/>.
     /// </typeparam>
     /// <param name="redirectContext">The context of the redirect action.</param>
     protected virtual Task DefaultDenyAction<TOptions>(RedirectContext<TOptions> redirectContext)
@@ -185,7 +184,7 @@ public class DefaultAuthConfiguration : IAuthConfiguration
     }
 
     /// <summary>
-    /// Policy configuration delegate passed into <see cref="PolicyServiceCollectionExtensions.AddAuthorization"/>.
+    /// Policy configuration delegate passed into the AddAuthorization service registration extension.
     /// The default implementation adds a series of authorization policies for Cofoundry roles and permissions.
     /// </summary>
     /// <param name="options"></param>

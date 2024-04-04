@@ -64,7 +64,6 @@ public class MimeTypeServiceTests
         Assert.Equal(OCTET_STREAM_MIME_TYPE, result);
     }
 
-
     [Theory]
     [InlineData(null)]
     [InlineData(" ")]

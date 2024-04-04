@@ -16,7 +16,6 @@ public class ExamplePageViewModelBuilder : IPageViewModelBuilder
         _pageViewModelMapper = pageViewModelMapper;
     }
 
-
     public async Task<IPageViewModel> BuildPageViewModelAsync(PageViewModelBuilderParameters mappingParameters)
     {
         // Create the custom view model instance

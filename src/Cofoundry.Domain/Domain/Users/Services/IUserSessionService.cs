@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Service to abstract away the management of a users current session
@@ -42,7 +42,7 @@ public interface IUserSessionService
     /// <summary>
     /// Signs the user out of the specified user area.
     /// </summary>
-    /// <param name="userAreaCode">Unique code of the user area to sign the user out of (required).</param>
+    /// <param name="userAreaDefinitionCode">Unique code of the user area to sign the user out of (required).</param>
     Task SignOutAsync(string userAreaDefinitionCode);
 
     /// <summary>

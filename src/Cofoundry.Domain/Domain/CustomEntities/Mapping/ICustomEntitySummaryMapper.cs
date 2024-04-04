@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -13,7 +13,7 @@ public interface ICustomEntitySummaryMapper
     /// CustomEntity, CustomEntityVersion, CustomEntity.Creator and CustomEntityVersion.Creator 
     /// properties.
     /// </summary>
-    /// <param name="dbCustomEntities">Collection of CustomEntityPublishStatusQuery records to map.</param>
+    /// <param name="dbStatusQueries">Collection of CustomEntityPublishStatusQuery records to map.</param>
     /// <param name="executionContext">Execution context to pass down when executing child queries.</param>
     Task<IReadOnlyCollection<CustomEntitySummary>> MapAsync(IReadOnlyCollection<CustomEntityPublishStatusQuery> dbStatusQueries, IExecutionContext executionContext);
 }

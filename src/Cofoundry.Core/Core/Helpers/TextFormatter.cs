@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Cofoundry.Core;
@@ -80,101 +80,108 @@ public static partial class TextFormatter
     }
 
     /// <summary>
-    /// Substring with elipses but OK if shorter.
+    /// Truncates <paramref name="text"/> to the maximum allowed characters.
     /// </summary>
-    /// <param name="s">String instance to format.</param>
-    public static string Limit(string? s, int charCount)
+    /// <param name="text">Text to limit or truncate.</param>
+    /// <param name="maxLength">The maximum number of characters to allow before truncating <paramref name="text"/>.</param>
+    public static string Limit(string? text, int maxLength)
     {
-        if (s == null)
+        if (text == null)
         {
             return string.Empty;
         }
 
-        if (s.Length <= charCount)
+        if (text.Length <= maxLength)
         {
-            return s;
+            return text;
         }
         else
         {
-            return s.Substring(0, charCount).TrimEnd();
+            return text.Substring(0, maxLength).TrimEnd();
         }
     }
 
     /// <summary>
-    /// Substring with elipses but OK if shorter, will take 3 characters off character count if necessary
+    /// Truncates <paramref name="text"/> to the maximum allowed characters, using
+    /// an elipsis to mark the end of the text.
     /// </summary>
-    /// <param name="s">String instance to format.</param>
-    public static string LimitWithElipses(string? s, int characterCount)
+    /// <param name="text">Text to limit or truncate.</param>
+    /// <param name="maxLength">The maximum number of characters to return in the truncated text, including the elipsis.</param>
+    public static string LimitWithElipses(string? text, int maxLength)
     {
-        if (s == null)
+        if (text == null)
         {
             return string.Empty;
         }
 
-        if (characterCount < 3)
+        if (maxLength <= ELIPSIS.Length)
         {
-            return Limit(s, characterCount);       // Can’t do much with such a short limit
+            // Can’t do much with such a short limit
+            return Limit(text, maxLength);
         }
 
-        if (s.Length <= characterCount)
+        if (text.Length <= maxLength)
         {
-            return s;
+            return text;
         }
         else
         {
-            return s.Substring(0, characterCount - ELIPSIS.Length).TrimEnd() + ELIPSIS;
+            return text.Substring(0, maxLength - ELIPSIS.Length).TrimEnd() + ELIPSIS;
         }
     }
 
     /// <summary>
-    /// Substring with elipses but OK if shorter, will take 3 characters off character count if necessary
-    /// tries to land on a space.
+    /// Truncates <paramref name="text"/> to the maximum allowed characters, using
+    /// an elipsis to mark the end of the text. The algorithm avoids truncating a word
+    /// unless an appropriate split point cannot be found.
     /// </summary>
-    /// <param name="s">String instance to format.</param>
-    public static string LimitWithElipsesOnWordBoundary(string? s, int characterCount)
+    /// <param name="text">Text to limit or truncate.</param>
+    /// <param name="maxLength">The maximum number of characters to return in the truncated text, including the elipsis.</param>
+    public static string LimitWithElipsesOnWordBoundary(string? text, int maxLength)
     {
-        if (s == null)
+        if (text == null)
         {
             return string.Empty;
         }
 
-        if (characterCount < 3)
+        if (maxLength <= ELIPSIS.Length)
         {
-            return Limit(s, characterCount);       // Can’t do much with such a short limit
+            // Can’t do much with such a short limit
+            return Limit(text, maxLength);
         }
 
-        if (s.Length <= characterCount)
+        if (text.Length <= maxLength)
         {
-            return s;
+            return text;
         }
         else
         {
-            var lastspace = s.Substring(0, characterCount - (1 - ELIPSIS.Length)).LastIndexOf(' ');
-            if (lastspace > 0 && lastspace > characterCount - 10)
+            var lastspace = text.Substring(0, maxLength - (1 - ELIPSIS.Length)).LastIndexOf(' ');
+            if (lastspace > 0 && lastspace > maxLength - 10)
             {
-                return string.Concat(s.AsSpan(0, lastspace), ELIPSIS);
+                return string.Concat(text.AsSpan(0, lastspace), ELIPSIS);
             }
             else
             {
                 // No suitable space was found
-                return string.Concat(s.AsSpan(0, characterCount - ELIPSIS.Length), ELIPSIS);
+                return string.Concat(text.AsSpan(0, maxLength - ELIPSIS.Length), ELIPSIS);
             }
         }
     }
 
     /// <summary>
-    /// Converts the first letter in the string to upper case. If the string is null
-    /// then null is returned.
+    /// Converts the first letter in the string to upper case. If <paramref name="text"/>
+    /// is <see langword="null"/> then <see langword="null"/> is returned.
     /// </summary>
-    /// <param name="s">String instance to format.</param>
-    public static string FirstLetterToUpperCase(string? s)
+    /// <param name="text">Text to format.</param>
+    public static string FirstLetterToUpperCase(string? text)
     {
-        if (string.IsNullOrEmpty(s))
+        if (string.IsNullOrEmpty(text))
         {
             return string.Empty;
         }
 
-        var a = s.ToCharArray();
+        var a = text.ToCharArray();
         a[0] = char.ToUpper(a[0]);
 
         return new string(a);

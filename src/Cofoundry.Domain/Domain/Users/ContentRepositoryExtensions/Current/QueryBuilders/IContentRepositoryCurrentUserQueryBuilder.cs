@@ -18,7 +18,6 @@ public interface IContentRepositoryCurrentUserQueryBuilder
     /// </summary>
     IDomainRepositoryQueryContext<IUserContext> AsUserContext();
 
-
     /// <summary>
     /// <see cref="UserMicroSummary"/> is a minimal projection of user data 
     /// that is quick to load. If the user is not logged in then <see langword="null"/>

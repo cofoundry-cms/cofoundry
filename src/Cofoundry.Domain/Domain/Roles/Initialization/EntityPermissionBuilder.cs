@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Extendable;
+namespace Cofoundry.Domain.Extendable;
 
 /// <summary>
 /// A base class for to help with including or excluding sets
@@ -23,7 +23,7 @@ public abstract class EntityPermissionBuilder
     /// using either an include or exclude operation depending on the
     /// configuration of this instance.
     /// </summary>
-    /// <typeparam name="IPermission">Permission type to assign.</typeparam>
+    /// <typeparam name="TPermission">Permission type to assign.</typeparam>
     protected void Assign<TPermission>()
         where TPermission : IPermission
     {

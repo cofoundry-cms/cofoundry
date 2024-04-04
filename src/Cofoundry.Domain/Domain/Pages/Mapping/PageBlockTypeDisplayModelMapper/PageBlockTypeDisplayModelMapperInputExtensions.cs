@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// These extension methods help cut down on boilerplate code in model mappers.
@@ -34,6 +34,7 @@ public static class PageBlockTypeDisplayModelMapperInputExtensions
     /// the results.
     /// </summary>
     /// <typeparam name="TDataModel">DataModel type.</typeparam>
+    /// <typeparam name="TProperty">Selected property type.</typeparam>
     /// <param name="input">Mapper input to select data from.</param>
     /// <param name="selector">Selector for the property to extract values from.</param>
     /// <returns>IEnumerable containing the distinct (non duplicate) results of the selection.</returns>

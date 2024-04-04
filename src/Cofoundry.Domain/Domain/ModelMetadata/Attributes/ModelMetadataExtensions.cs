@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -10,6 +10,9 @@ public static class ModelMetadataExtensions
     /// <summary>
     /// Adds a value to the AdditionalValues collection if the specified condition is true.
     /// </summary>
+    /// <param name="modelMetaData">
+    /// Meta data to add to.
+    /// </param>
     /// <param name="condition">Result of a condition which will indicate whether to add the value or not</param>
     /// <param name="property">The name of the property (key) to add to the collection.</param>
     /// <param name="value">The value to add to the collection.</param>
@@ -27,6 +30,9 @@ public static class ModelMetadataExtensions
     /// <summary>
     /// Adds a value to the AdditionalValues collection if the value is not null
     /// </summary>
+    /// <param name="modelMetaData">
+    /// Meta data to add to.
+    /// </param>
     /// <param name="property">The name of the property (key) to add to the collection.</param>
     /// <param name="value">The value to add to the collection.</param>
     /// <returns>ModelMetadata instance for method chaining</returns>
@@ -43,12 +49,15 @@ public static class ModelMetadataExtensions
     /// <summary>
     /// Adds a value to the AdditionalValues collection if the value is not null or empty (default value)
     /// </summary>
+    /// <param name="modelMetaData">
+    /// Meta data to add to.
+    /// </param>
     /// <param name="property">The name of the property (key) to add to the collection.</param>
     /// <param name="value">The value to add to the collection.</param>
     /// <returns>ModelMetadata instance for method chaining</returns>
     public static DisplayMetadata AddAdditionalValueIfNotEmpty<T>(this DisplayMetadata modelMetaData, string property, T? value)
     {
-        if (value != null && !EqualityComparer<T>.Default.Equals(value, default(T)))
+        if (value != null && !EqualityComparer<T>.Default.Equals(value, default))
         {
             modelMetaData.AdditionalValues.Add(property, value);
         }
@@ -59,6 +68,9 @@ public static class ModelMetadataExtensions
     /// <summary>
     /// Adds a collection value to the AdditionalValues collection if the collection is not null or empty
     /// </summary>
+    /// <param name="modelMetaData">
+    /// Meta data to add to.
+    /// </param>
     /// <param name="property">The name of the property (key) to add to the collection.</param>
     /// <param name="value">The collection value to add to the collection.</param>
     /// <returns>ModelMetadata instance for method chaining</returns>
@@ -77,6 +89,9 @@ public static class ModelMetadataExtensions
     /// ValidationAttribute. Intended to be used as a shortcut for adding validation messages associated with 
     /// ValidationAttributes in an implementation of IMetadataAttribute
     /// </summary>
+    /// <param name="modelMetaData">
+    /// Meta data to add to.
+    /// </param>
     /// <param name="key">The name of the property (key) to add to the collection.</param>
     /// <param name="value">The value to add to the collection.</param>
     /// <param name="attribute">The attribute from which the validation message will be extracted.</param>

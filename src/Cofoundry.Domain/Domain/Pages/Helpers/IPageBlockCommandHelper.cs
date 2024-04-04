@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -7,5 +7,5 @@ namespace Cofoundry.Domain.Internal;
 /// </summary>
 public interface IPageBlockCommandHelper
 {
-    Task UpdateModelAsync(IPageVersionBlockDataModelCommand command, IEntityVersionPageBlock dbModule);
+    Task UpdateModelAsync(IPageVersionBlockDataModelCommand command, IEntityVersionPageBlock dbBlock);
 }

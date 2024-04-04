@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Represents the different ways we can apply sorting to custom entity search queries
@@ -37,8 +37,8 @@ public enum CustomEntityQuerySortType
     PublishDate,
 
     // Full -text query Not yet implemented
-    /// <summary>
-    /// Sort by relevance to the 
-    /// </summary>
+    ///// <summary>
+    ///// Sort by relevance to the 
+    ///// </summary>
     //Relevance
 }

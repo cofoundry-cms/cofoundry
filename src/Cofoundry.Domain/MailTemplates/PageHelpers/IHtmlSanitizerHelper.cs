@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Html;
 
 namespace Cofoundry.Domain;
 
@@ -13,15 +13,15 @@ public interface IHtmlSanitizerHelper
     /// Sanitizes the specified string using the default IHtmlSanitizer
     /// to remove potentially dangerous markup.
     /// </summary>
-    /// <param name="s">String content to sanitize</param>
-    IHtmlContent Sanitize(string? s);
+    /// <param name="source">String content to sanitize</param>
+    IHtmlContent Sanitize(string? source);
 
     /// <summary>
     /// Sanitizes the specified string using the default IHtmlSanitizer
     /// to remove potentially dangerous markup.
     /// </summary>
-    /// <param name="s">Html content to sanitize</param>
-    IHtmlContent Sanitize(IHtmlContent? s);
+    /// <param name="source">Html content to sanitize</param>
+    IHtmlContent Sanitize(IHtmlContent? source);
 
     /// <summary>
     /// Takes a string and removes all HTML tags

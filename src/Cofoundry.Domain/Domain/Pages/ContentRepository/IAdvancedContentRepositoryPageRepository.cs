@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// IAdvancedContentRespository extension root for the Page entity.
@@ -22,7 +22,7 @@ public interface IAdvancedContentRepositoryPageRepository
     /// ordering the results e.g. results.FilterAndOrderByKeys(ids).
     /// </summary>
     /// <param name="pageIds">Range of PageIds of the pages to get.</param>
-    IAdvancedContentRepositoryPageByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> imageAssetIds);
+    IAdvancedContentRepositoryPageByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> pageIds);
 
     /// <summary>
     /// Retrieve a page for a specific path.
@@ -63,7 +63,7 @@ public interface IAdvancedContentRepositoryPageRepository
     /// Retrieve page data nested immediately inside a specific directory.
     /// </summary>
     /// <param name="directoryId">DirectoryId to query for pages with.</param>
-    IContentRepositoryPageByDirectoryIdQueryBuilder GetByDirectoryId(int customEntityId);
+    IContentRepositoryPageByDirectoryIdQueryBuilder GetByDirectoryId(int directoryId);
 
     /// <summary>
     /// Determines if a page path already exists. Page paths are made

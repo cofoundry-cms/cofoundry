@@ -52,7 +52,6 @@ public class PageViewModel : IPageViewModel
         }
     }
 
-
     private PageRoutingHelper? _pageRoutingHelper;
     public PageRoutingHelper PageRoutingHelper
     {

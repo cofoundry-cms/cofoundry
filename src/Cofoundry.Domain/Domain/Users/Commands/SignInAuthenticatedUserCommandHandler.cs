@@ -33,7 +33,6 @@ public class SignInAuthenticatedUserCommandHandler
         _messageAggregator = messageAggregator;
     }
 
-
     public async Task ExecuteAsync(SignInAuthenticatedUserCommand command, IExecutionContext executionContext)
     {
         var user = await GetUserInfoAsync(command);

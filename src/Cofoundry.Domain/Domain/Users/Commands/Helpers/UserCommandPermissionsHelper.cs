@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -22,7 +22,6 @@ public class UserCommandPermissionsHelper
     /// </summary>
     /// <param name="user">User being managed.</param>
     /// <param name="executionContext">The execution context with information on the current user.</param>
-    /// <param name="message">The exception message to throw if invalid.</param>
     public async Task ThrowIfCannotManageSuperAdminAsync(
         User user,
         IExecutionContext executionContext

@@ -1,8 +1,8 @@
-﻿namespace Cofoundry.Domain.CQS;
+namespace Cofoundry.Domain.CQS;
 
 /// <summary>
 /// A command represents a single atomic business operation to
-/// be executed by an <see cref="ICommandHandler"/>.
+/// be executed by an <see cref="ICommandHandler{TCommand}"/>.
 /// </summary>
 /// <remarks>
 /// See http://www.cuttingedge.it/blogs/steven/pivot/entry.php?id=91

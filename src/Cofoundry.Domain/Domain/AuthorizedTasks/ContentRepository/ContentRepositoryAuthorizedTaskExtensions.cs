@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
@@ -15,7 +15,7 @@ public static class ContentRepositoryAuthorizedTaskExtensions
     /// <para>
     /// Tasks tend to be single-use and can be marked when completed, and can also be 
     /// invalidated explicitly. They can also be rate-limited by IPAddress and time-limited
-    /// by validating against the <see cref="CreateDate"/>.
+    /// by validating against the create date.
     /// </para>
     /// </summary>
     public static IAdvancedContentRepositoryAuthorizedTaskRepository AuthorizedTasks(this IAdvancedContentRepository contentRepository)

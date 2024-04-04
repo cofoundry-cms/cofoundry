@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data.Internal;
+namespace Cofoundry.Domain.Data.Internal;
 
 /// <summary>
 /// Data access abstraction over stored procedures for IP address logging.
@@ -12,6 +12,7 @@ public interface IIPAddressStoredProcedures
     /// <param name="address">
     /// The textual representation of the IP Address, or a hash if IP hashing
     /// is enabled. Must be 45 characters or less.
+    /// </param>
     /// <param name="dateNow">
     /// The current date and time, which is used as the create date if
     /// a new entity is created.

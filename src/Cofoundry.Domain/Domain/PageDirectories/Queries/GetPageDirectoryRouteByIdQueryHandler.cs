@@ -24,7 +24,7 @@ public class GetPageDirectoryRouteByIdQueryHandler
         return result;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryRouteByIdQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetPageDirectoryRouteByIdQuery query)
     {
         yield return new PageDirectoryReadPermission();
     }

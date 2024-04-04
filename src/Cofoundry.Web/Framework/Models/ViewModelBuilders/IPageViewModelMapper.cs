@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Web;
+namespace Cofoundry.Web;
 
 /// <summary>
 /// Maps raw data to the view models used by the Cofoundry dynamic page 
@@ -20,7 +20,9 @@ public interface IPageViewModelMapper
     /// <summary>
     /// Maps data to an empty view model for a custom entity details page.
     /// </summary>
-    /// <param name="displayModelType">The type information of the display model to apply to the generic view model.</param>
+    /// <typeparam name="TDisplayModel">
+    /// The type of custom entity display model to apply to the generic view model.
+    /// </typeparam>
     /// <param name="viewModel">The view model to map data to.</param>
     /// <param name="mappingParameters">The data passed through to map to the view model.</param>
     Task MapCustomEntityViewModelAsync<TDisplayModel>(

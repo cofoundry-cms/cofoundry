@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +9,9 @@ public static class IPermissionSetBuilderCustomEntityExtensions
     /// <summary>
     /// Configure the builder to include all permissions for a specific custom entity type.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     public static IPermissionSetBuilder IncludeCustomEntity<TCustomEntityDefinition>(this IPermissionSetBuilder builder)
         where TCustomEntityDefinition : ICustomEntityDefinition
     {
@@ -18,6 +21,9 @@ public static class IPermissionSetBuilderCustomEntityExtensions
     /// <summary>
     /// Configure the builder to include permissions for a custom entity type.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     /// <param name="configure">A configuration action to select which permissions to include.</param>
     public static IPermissionSetBuilder IncludeCustomEntity<TCustomEntityDefinition>(this IPermissionSetBuilder builder, Action<CustomEntityPermissionBuilder> configure)
         where TCustomEntityDefinition : ICustomEntityDefinition
@@ -28,6 +34,9 @@ public static class IPermissionSetBuilderCustomEntityExtensions
     /// <summary>
     /// Configure the builder to exclude all permissions for a specific custom entity type.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     public static IPermissionSetBuilder ExcludeCustomEntity<TCustomEntityDefinition>(this IPermissionSetBuilder builder)
         where TCustomEntityDefinition : ICustomEntityDefinition
     {
@@ -37,6 +46,9 @@ public static class IPermissionSetBuilderCustomEntityExtensions
     /// <summary>
     /// Configure the builder to exclude permissions for a custom entity type.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     /// <param name="configure">A configuration action to select which permissions to exclude.</param>
     public static IPermissionSetBuilder ExcludeCustomEntity<TCustomEntityDefinition>(this IPermissionSetBuilder builder, Action<CustomEntityPermissionBuilder> configure)
         where TCustomEntityDefinition : ICustomEntityDefinition

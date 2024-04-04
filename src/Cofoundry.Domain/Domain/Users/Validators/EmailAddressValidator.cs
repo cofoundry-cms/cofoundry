@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Extendable;
 
@@ -199,7 +199,7 @@ public class EmailAddressValidator : IEmailAddressValidator
             .Create(context.PropertyName);
     }
 
-    private IReadOnlyCollection<ValidationError> WrapError(ValidationError error)
+    private static IReadOnlyCollection<ValidationError> WrapError(ValidationError error)
     {
         return [error];
     }

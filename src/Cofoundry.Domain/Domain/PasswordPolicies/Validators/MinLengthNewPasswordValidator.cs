@@ -16,12 +16,12 @@ public class MinLengthNewPasswordValidator
     /// </summary>
     public int MinLength { get; private set; }
 
-    public void Configure(int minLength)
+    public void Configure(int options)
     {
-        ArgumentOutOfRangeException.ThrowIfLessThan(minLength, PasswordOptions.MIN_LENGTH_BOUNDARY);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(minLength, PasswordOptions.MAX_LENGTH_BOUNDARY);
+        ArgumentOutOfRangeException.ThrowIfLessThan(options, PasswordOptions.MIN_LENGTH_BOUNDARY);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(options, PasswordOptions.MAX_LENGTH_BOUNDARY);
 
-        MinLength = minLength;
+        MinLength = options;
     }
 
     public string Criteria => $"Must be at least {MinLength} characters.";

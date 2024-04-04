@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Message published when properties that affect the URL 
@@ -16,6 +16,6 @@ public class PageDirectoryUrlChangedMessage
     /// <summary>
     /// The full (relative) URL of the directory before the change, formatted with the leading
     /// slash but excluding the trailing slash e.g. "/parent-directory/child-directory".
-    /// </summary
+    /// </summary>
     public string OldFullUrlPath { get; set; } = string.Empty;
 }

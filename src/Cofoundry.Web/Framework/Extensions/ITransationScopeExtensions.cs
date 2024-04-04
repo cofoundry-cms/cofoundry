@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Data;
+using Cofoundry.Core.Data;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Cofoundry.Web;
@@ -9,6 +9,9 @@ public static class ITransationScopeExtensions
     /// Completes the transaction scope only if the <paramref name="modelState"/> is
     /// valid, indicating that no handled or unhandled errors occurred udring execution.
     /// </summary>
+    /// <param name="scope">
+    /// Scope instance to complete.
+    /// </param>
     /// <param name="modelState">
     /// The <see cref="ModelStateDictionary"/> to check for validity, usually accessed via
     /// controller.ModelState or similar.

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using System.Reflection;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace Cofoundry.Domain;
 
@@ -101,7 +101,7 @@ public class NestedDataModelCollectionAttribute : ValidateObjectAttribute, IMeta
         return base.IsValid(value, validationContext);
     }
 
-    private ValidationResult CreateError(ValidationContext validationContext, string message)
+    private static ValidationResult CreateError(ValidationContext validationContext, string message)
     {
         string[]? memberNames = string.IsNullOrEmpty(validationContext.MemberName) ? null : [validationContext.MemberName];
         return new ValidationResult(validationContext.MemberName + message, memberNames);

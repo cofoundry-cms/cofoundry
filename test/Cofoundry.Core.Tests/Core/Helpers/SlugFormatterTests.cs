@@ -69,7 +69,6 @@ public class SlugFormatterTests
         Assert.Equal(expected, result);
     }
 
-
     [Theory]
     [InlineData(" with a space at start", "with-a-space-at-start")]
     [InlineData("with a space at end ", "with-a-space-at-end")]

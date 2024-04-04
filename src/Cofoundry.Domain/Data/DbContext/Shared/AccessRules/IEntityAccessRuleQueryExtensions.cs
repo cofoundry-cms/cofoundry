@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 public static class IEntityAccessRuleQueryExtensions
 {
@@ -6,6 +6,9 @@ public static class IEntityAccessRuleQueryExtensions
     /// Filters the collection to only include the access rule with the 
     /// specified PageAccessRuleId primary key.
     /// </summary>
+    /// <param name="rules">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="id">Primary key to filter on.</param>
     public static IQueryable<TEntity> FilterById<TEntity>(this IQueryable<TEntity> rules, int id)
         where TEntity : IEntityAccessRule
@@ -19,6 +22,9 @@ public static class IEntityAccessRuleQueryExtensions
     /// Filters the collection to only include the access rule with the 
     /// specified PageAccessRuleId primary key.
     /// </summary>
+    /// <param name="rules">
+    /// Enumerable to filter.
+    /// </param>
     /// <param name="id">Primary key to filter on.</param>
     public static IEnumerable<TEntity> FilterById<TEntity>(this IEnumerable<TEntity> rules, int id)
         where TEntity : IEntityAccessRule
@@ -32,6 +38,9 @@ public static class IEntityAccessRuleQueryExtensions
     /// Orders the access rule collection using the default ordering
     /// i.e. by user area, then by role.
     /// </summary>
+    /// <param name="accessRules">
+    /// Queryable instance to sort.
+    /// </param>
     public static IOrderedQueryable<TEntity> OrderByDefault<TEntity>(this IQueryable<TEntity> accessRules)
         where TEntity : IEntityAccessRule
     {
@@ -46,6 +55,9 @@ public static class IEntityAccessRuleQueryExtensions
     /// Orders the access rule collection using the default ordering
     /// i.e. by user area, then by role.
     /// </summary>
+    /// <param name="rules">
+    /// Enumerable to sort.
+    /// </param>
     public static IOrderedEnumerable<TEntity> OrderByDefault<TEntity>(this IEnumerable<TEntity> accessRules)
         where TEntity : IEntityAccessRule
     {

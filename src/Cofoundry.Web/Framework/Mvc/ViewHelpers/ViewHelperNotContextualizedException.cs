@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Web.Framework.Mvc.ViewHelpers;
+namespace Cofoundry.Web.Framework.Mvc.ViewHelpers;
 
 public class ViewHelperNotContextualizedException : Exception
 {
@@ -11,13 +11,13 @@ public class ViewHelperNotContextualizedException : Exception
 
     /// <summary>
     /// Creates a new <see cref="ViewHelperNotContextualizedException"/> instance,
-    /// using the <typeparamref name="TViewHelper"/> type name and <paramref name="propertyName"/>
+    /// using the <typeparamref name="TViewHelper"/> type name and <paramref name="memberName"/>
     /// to construct the error message.
     /// </summary>
     /// <typeparam name="TViewHelper">
     /// View model type containing the property that is throwing the exception.
     /// </typeparam>
-    /// <param name="propertyName">The name of the view model property that is throwing the exception.</param>
+    /// <param name="memberName">The name of the view model property that is throwing the exception.</param>
     public static ViewHelperNotContextualizedException Create<TViewHelper>(string memberName)
         where TViewHelper : class
     {

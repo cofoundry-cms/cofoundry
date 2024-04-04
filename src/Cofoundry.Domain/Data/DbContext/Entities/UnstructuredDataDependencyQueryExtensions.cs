@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 public static class UnstructuredDataDependencyExtensions
 {
@@ -43,9 +43,9 @@ public static class UnstructuredDataDependencyExtensions
     /// 6 character identifier of the related entity type to filter to.
     /// </param>
     /// <param name="relatedEntityId">Database id of the related entity to filter on.</param>
-    public static IQueryable<UnstructuredDataDependency> FilterByRelatedEntity(this IQueryable<UnstructuredDataDependency> dependencies, string rootEntityEntityDefinitionCode, int relatedEntityId)
+    public static IQueryable<UnstructuredDataDependency> FilterByRelatedEntity(this IQueryable<UnstructuredDataDependency> dependencies, string relatedEntityEntityDefinitionCode, int relatedEntityId)
     {
-        var filtered = dependencies.Where(d => d.RelatedEntityDefinitionCode == rootEntityEntityDefinitionCode && d.RelatedEntityId == relatedEntityId);
+        var filtered = dependencies.Where(d => d.RelatedEntityDefinitionCode == relatedEntityEntityDefinitionCode && d.RelatedEntityId == relatedEntityId);
 
         return filtered;
     }
@@ -74,7 +74,7 @@ public static class UnstructuredDataDependencyExtensions
     /// <param name="relatedEntityEntityDefinitionCode">
     /// 6 character identifier of the related entity type to filter to.
     /// </param>
-    /// <param name="relatedEntityIsd">Database ids of the related entities to filter on.</param>
+    /// <param name="relatedEntityIds">Database ids of the related entities to filter on.</param>
     public static IQueryable<UnstructuredDataDependency> FilterByRelatedEntity(this IQueryable<UnstructuredDataDependency> dependencies, string relatedEntityEntityDefinitionCode, IEnumerable<int> relatedEntityIds)
     {
         var filtered = dependencies.Where(d => d.RelatedEntityDefinitionCode == relatedEntityEntityDefinitionCode && relatedEntityIds.Contains(d.RelatedEntityId));

@@ -20,12 +20,12 @@ public class ContentRepositoryCustomEntityByIdRangeQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-    public IDomainRepositoryQueryContext<IReadOnlyDictionary<int, CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatus = null)
+    public IDomainRepositoryQueryContext<IReadOnlyDictionary<int, CustomEntityRenderSummary>> AsRenderSummaries(PublishStatusQuery? publishStatusQuery = null)
     {
         var query = new GetCustomEntityRenderSummariesByIdRangeQuery(_customEntityIds);
-        if (publishStatus.HasValue)
+        if (publishStatusQuery.HasValue)
         {
-            query.PublishStatus = publishStatus.Value;
+            query.PublishStatus = publishStatusQuery.Value;
         }
 
         return DomainRepositoryQueryContextFactory.Create(query, ExtendableContentRepository);

@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Utility class for parsing booleans.
@@ -31,12 +31,13 @@ public static class BoolParser
     /// string could not be parsed.
     /// </summary>
     /// <param name="s">String to parse</param>
+    /// <param name="defaultValue">Optional default value.</param>
     /// <returns>Boolean value if the string could be parsed; otherwise null.</returns>
-    public static bool ParseOrDefault(string? s, bool def = false)
+    public static bool ParseOrDefault(string? s, bool defaultValue = false)
     {
         if (string.IsNullOrWhiteSpace(s))
         {
-            return def;
+            return defaultValue;
         }
 
         if (bool.TryParse(s, out var b))
@@ -44,6 +45,6 @@ public static class BoolParser
             return b;
         }
 
-        return def;
+        return defaultValue;
     }
 }

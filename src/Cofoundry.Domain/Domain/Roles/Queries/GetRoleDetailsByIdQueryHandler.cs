@@ -28,10 +28,10 @@ public class GetRoleDetailsByIdQueryHandler
         return _internalRoleRepository.GetByIdAsync(query.RoleId);
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetRoleDetailsByIdQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetRoleDetailsByIdQuery query)
     {
         // Ignore permission for anonymous role.
-        if (command.RoleId.HasValue)
+        if (query.RoleId.HasValue)
         {
             yield return new RoleReadPermission();
         }

@@ -1,10 +1,10 @@
-﻿using Cofoundry.Domain.Data.Internal;
+using Cofoundry.Domain.Data.Internal;
 
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// General task for cleaning up stale user data. Currently this only removes data 
-/// from the <see cref="UserAuthenticationLog"/> and  <see cref="UserAuthenticationFailLog"/> tables.
+/// from the <see cref="Data.UserAuthenticationLog"/> and <see cref="Data.UserAuthenticationFailLog"/> tables.
 /// </summary>
 public class CleanupUsersCommandHandler
     : ICommandHandler<CleanupUsersCommand>

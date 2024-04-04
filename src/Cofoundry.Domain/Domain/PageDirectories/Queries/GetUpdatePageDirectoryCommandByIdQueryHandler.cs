@@ -39,7 +39,7 @@ public class GetUpdatePageDirectoryCommandByIdQueryHandler
         return command;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand> command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdatePageDirectoryCommand> query)
     {
         yield return new PageDirectoryReadPermission();
     }

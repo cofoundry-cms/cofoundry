@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Cofoundry.Core;
 
@@ -14,6 +14,7 @@ public class SqlCharValidator
     /// characters, ensuring it is the equivalent of the SQLServer database type char. Space
     /// padding is allowed but the string cannot be all spaces.
     /// </summary>
+    /// <param name="stringToValidate">The string to validate.</param>
     /// <param name="length">The fixed length of the string to validate.</param>
     public static bool IsValid([NotNullWhen(true)] string? stringToValidate, int length)
     {

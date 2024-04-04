@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Custom entity routing rules respresent the dynamic routing 
@@ -42,7 +42,7 @@ public interface ICustomEntityRoutingRule
     /// </summary>
     /// <param name="url">The url to parse custom entity key data from</param>
     /// <param name="pageRoute">The page route matched to the url.</param>
-    /// <returns><see cref="IQuery"/> parameters that can used to query for the CustomEntityRoute.</returns>
+    /// <returns><see cref="Parameters that can used to query for the CustomEntityRoute.</returns>
     IQuery<CustomEntityRoute?> ExtractRoutingQuery(string url, PageRoute pageRoute);
 
     /// <summary>

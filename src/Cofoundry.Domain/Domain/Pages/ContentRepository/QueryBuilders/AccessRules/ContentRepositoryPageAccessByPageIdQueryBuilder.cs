@@ -20,7 +20,6 @@ public class ContentRepositoryPageAccessByPageIdQueryBuilder
 
     public IExtendableContentRepository ExtendableContentRepository { get; }
 
-
     public IDomainRepositoryQueryContext<PageAccessRuleSetDetails?> AsDetails()
     {
         var query = new GetPageAccessRuleSetDetailsByPageIdQuery(_pageId);

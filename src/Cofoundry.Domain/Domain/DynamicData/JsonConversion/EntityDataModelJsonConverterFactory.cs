@@ -14,11 +14,11 @@ public class EntityDataModelJsonConverterFactory : IEntityDataModelJsonConverter
         _dynamicDataModelJsonSerializerSettingsCache = dynamicDataModelJsonSerializerSettingsCache;
     }
 
-    public JsonConverter Create(Type concreteDataModelType)
+    public JsonConverter Create(Type dataModelType)
     {
         return new EntityDataModelJsonConverter(
             _dynamicDataModelJsonSerializerSettingsCache,
-            concreteDataModelType
+            dataModelType
             );
     }
 }

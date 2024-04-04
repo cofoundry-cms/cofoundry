@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Message published when a page is deleted. When a directory is
@@ -16,6 +16,6 @@ public class PageDeletedMessage
     /// <summary>
     /// The full (relative) url of the deleted page with the leading
     /// slash, but excluding the trailing slash e.g. "/my-directory/example-page".
-    /// </summary
+    /// </summary>
     public string FullUrlPath { get; set; } = string.Empty;
 }

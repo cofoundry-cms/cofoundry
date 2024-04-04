@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Tests.Users.Services;
 
@@ -204,7 +204,7 @@ public abstract class UserSessionServiceTests
         }
     }
 
-    protected abstract IUserSessionService CreateService(IUserAreaDefinitionRepository repository);
+    protected abstract IUserSessionService CreateService(IUserAreaDefinitionRepository userAreaDefinitionRepository);
 
     protected static IUserAreaDefinitionRepository CreateUserAreaRepository()
     {

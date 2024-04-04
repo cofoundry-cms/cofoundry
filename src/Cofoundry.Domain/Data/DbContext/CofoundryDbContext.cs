@@ -6,8 +6,7 @@ namespace Cofoundry.Domain.Data;
 /// The main Cofoundry entity framework DbContext representing all the main 
 /// entities in the Cofoundry database. Direct access to the <see cref="CofoundryDbContext"/>
 /// is discouraged, instead we advise you use the domain queries and commands
-/// available in the Cofoundry data repositories, see
-/// https://www.cofoundry.org/docs/framework/data-access
+/// available in the Cofoundry data repositories, see <see href="https://www.cofoundry.org/docs/framework/data-access"/>
 /// </summary>
 public partial class CofoundryDbContext : DbContext
 {

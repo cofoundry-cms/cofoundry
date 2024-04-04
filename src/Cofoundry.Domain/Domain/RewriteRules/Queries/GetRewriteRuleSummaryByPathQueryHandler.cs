@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// Gets a complete list of all rewrite rules set up in the system. This result
@@ -26,7 +26,7 @@ public class GetRewriteRuleSummaryByPathQueryHandler
         return FindRule(query, rules);
     }
 
-    private RewriteRuleSummary? FindRule(GetRewriteRuleSummaryByPathQuery query, IReadOnlyCollection<RewriteRuleSummary> rules)
+    private static RewriteRuleSummary? FindRule(GetRewriteRuleSummaryByPathQuery query, IReadOnlyCollection<RewriteRuleSummary> rules)
     {
         RewriteRuleSummary? rule = null;
         var path = query.Path;
@@ -35,7 +35,7 @@ public class GetRewriteRuleSummaryByPathQueryHandler
         string[] pathVariations;
         if (string.IsNullOrEmpty(Path.GetExtension(path)))
         {
-            var alternatePath = path.EndsWith("/") ? path.Substring(0, path.Length - 1) : path + "/";
+            var alternatePath = path.EndsWith('/') ? path.Substring(0, path.Length - 1) : path + "/";
             pathVariations = [path, alternatePath];
         }
         else
@@ -43,13 +43,12 @@ public class GetRewriteRuleSummaryByPathQueryHandler
             pathVariations = [path];
         }
 
-
         // Check for paths
         foreach (var pathVariation in pathVariations)
         {
             rule = rules
                 .FirstOrDefault(r => r.WriteFrom.Equals(pathVariation, StringComparison.OrdinalIgnoreCase)
-                || (r.WriteFrom.EndsWith("*") && pathVariation.StartsWith(r.WriteFrom.Substring(0, r.WriteFrom.Length - 1), StringComparison.OrdinalIgnoreCase)));
+                || (r.WriteFrom.EndsWith('*') && pathVariation.StartsWith(r.WriteFrom.Substring(0, r.WriteFrom.Length - 1), StringComparison.OrdinalIgnoreCase)));
 
             if (rule != null)
             {
@@ -74,7 +73,7 @@ public class GetRewriteRuleSummaryByPathQueryHandler
         return rule;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetRewriteRuleSummaryByPathQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetRewriteRuleSummaryByPathQuery query)
     {
         yield return new RewriteRuleReadPermission();
     }

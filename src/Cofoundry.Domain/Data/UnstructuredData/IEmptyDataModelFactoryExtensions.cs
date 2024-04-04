@@ -1,10 +1,10 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 public static class IEmptyDataModelFactoryExtensions
 {
     /// <summary>
     /// Create an empty instance of an entity data model of type
-    /// <paramref name="concreteType"/>. This is expected to be
+    /// <typeparamref name="TConcrete"/>. This is expected to be
     /// used in mapping when there is a problem deserializing an existing 
     /// data model so that we don't ever have to return <see langword="null"/>.
     /// </summary>

@@ -1,7 +1,7 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Used by <see cref="EmailAddressValidator"/> to validate the formatting
+/// Used by <see cref="Extendable.EmailAddressValidator"/> to validate the formatting
 /// of an email address.
 /// </summary>
 public static class EmailAddressCharacterValidator

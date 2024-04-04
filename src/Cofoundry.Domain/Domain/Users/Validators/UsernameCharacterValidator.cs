@@ -1,7 +1,7 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Used by <see cref="UsernameValidator"/> to validate the formatting
+/// Used by <see cref="Extendable.UsernameValidator"/> to validate the formatting
 /// of a username.
 /// </summary>
 public static class UsernameCharacterValidator

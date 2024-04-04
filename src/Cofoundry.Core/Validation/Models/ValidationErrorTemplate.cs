@@ -1,5 +1,5 @@
-﻿using Cofoundry.Core.Validation.Internal;
 using System.Diagnostics.CodeAnalysis;
+using Cofoundry.Core.Validation.Internal;
 
 namespace Cofoundry.Core.Validation;
 
@@ -16,7 +16,7 @@ public class ValidationErrorTemplate
     /// <param name="code">
     /// The code that uniquely identifies this class of error. Canot be <see langword="null"/> 
     /// or empty. Errors codes are typically lowercase and use a dash-separated namespacing convention 
-    /// e.g. "cf-my-entity-example-condition. Codes can be used in client-side code
+    /// e.g. &quot;cf-my-entity-example-condition&quot;. Codes can be used in client-side code
     /// for conditional UI flow
     /// </param>
     /// <param name="message">
@@ -37,11 +37,16 @@ public class ValidationErrorTemplate
     /// <param name="errorCode">
     /// The code that uniquely identifies this class of error. Canot be <see langword="null"/> 
     /// or empty. Errors codes are typically lowercase and use a dash-separated namespacing convention 
-    /// e.g. "cf-my-entity-example-condition. Codes can be used in client-side code
+    /// e.g. &quot;cf-my-entity-example-condition&quot;. Codes can be used in client-side code
     /// for conditional UI flow
     /// </param>
     /// <param name="message">
     /// Client-friendly text describing the error. Cannot be <see langword="null"/> or empty.
+    /// </param>
+    /// <param name="exceptionFactory">
+    /// A factory function to use when throwing the error, allowing you to specify a
+    /// more specific exception to throw when <see cref="Throw"/> is called. If <see langword="null"/>
+    /// then <see cref="Throw"/> will throw an <see cref="ValidationErrorException"/>.
     /// </param>
     public ValidationErrorTemplate(string errorCode, string message, Func<ValidationError, ValidationErrorException> exceptionFactory)
     {
@@ -56,7 +61,7 @@ public class ValidationErrorTemplate
     /// <summary>
     /// The code that uniquely identifies this class of error. Errors codes
     /// are typically lowercase and use a dash-separated namespacing convention 
-    /// e.g. "cf-my-entity-example-condition. Codes can be used in client-side code
+    /// e.g. &quot;cf-my-entity-example-condition&quot;. Codes can be used in client-side code
     /// for conditional UI flow
     /// </summary>
     public string ErrorCode { get; private set; }

@@ -1,11 +1,14 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 public static class IQueryableExtensions
 {
     /// <summary>
     /// Removes nullable entries from the sequence.
     /// </summary>
-    public static IQueryable<T> WhereNotNull<T>(this IQueryable<Nullable<T>> source)
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
+    public static IQueryable<T> WhereNotNull<T>(this IQueryable<T?> source)
         where T : struct
     {
         return source
@@ -16,6 +19,9 @@ public static class IQueryableExtensions
     /// <summary>
     /// Removes nullable entries from the sequence.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
     public static IQueryable<T> WhereNotNull<T>(this IQueryable<T?> source)
     {
         return source
@@ -26,6 +32,9 @@ public static class IQueryableExtensions
     /// <summary>
     /// Removes nullable null or empty strings from the sequence.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
     public static IQueryable<string> WhereNotNullOrEmpty(this IQueryable<string?> source)
     {
         return source
@@ -37,6 +46,9 @@ public static class IQueryableExtensions
     /// Removes nullable null, empty or strings that contain only whitespace 
     /// from the sequence.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
     public static IQueryable<string> WhereNotNullOrWhitespace(this IQueryable<string?> source)
     {
         return source

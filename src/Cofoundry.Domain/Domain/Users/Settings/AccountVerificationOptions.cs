@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.Web;
+using Cofoundry.Core.Web;
+using Cofoundry.Domain.MailTemplates;
 
 namespace Cofoundry.Domain;
 
@@ -42,7 +43,7 @@ public class AccountVerificationOptions : IValidatableObject
     /// </para>
     /// <para>
     /// This setting is required when using the account verification feature, unless you are building
-    /// the url yourself in a custom <see cref="MailTemplates.DefaultMailTemplates.IDefaultMailTemplateBuilder{T}"/> 
+    /// the url yourself in a custom <see cref="IUserMailTemplateBuilder{TUserAreaDefinition}"/> 
     /// implementation.
     /// </para>
     /// </summary>

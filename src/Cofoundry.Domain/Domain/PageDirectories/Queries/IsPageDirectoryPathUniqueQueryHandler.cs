@@ -33,7 +33,7 @@ public class IsPageDirectoryPathUniqueQueryHandler
         return !exists;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(IsPageDirectoryPathUniqueQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(IsPageDirectoryPathUniqueQuery query)
     {
         yield return new PageDirectoryReadPermission();
     }

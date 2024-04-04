@@ -121,7 +121,7 @@ public partial class EntityTagHelper
         return tag;
     }
 
-    private List<string> CleanTags(IEnumerable<string?> tags)
+    private static List<string> CleanTags(IEnumerable<string?> tags)
     {
         var cleanedTags = tags
             .WhereNotNullOrEmpty()

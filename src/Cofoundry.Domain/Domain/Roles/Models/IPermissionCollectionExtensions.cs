@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 public static class IPermissionCollectionExtensions
 {
@@ -14,10 +14,10 @@ public static class IPermissionCollectionExtensions
     };
 
     /// <summary>
-    /// Filters a collection of permissions to only include IEntityPermission types.
+    /// Filters a collection of permissions to only include <see cref="IEntityPermission"/> types.
     /// </summary>
     /// <param name="permissionsToFilter">The collection of permissions to filter</param>
-    /// <returns>Filtered collection cast to IEnumerable{IEntityPermission}/returns>
+    /// <returns>Filtered collection cast to <see cref="IEnumerable{IEntityPermission}"/></returns>
     public static IEnumerable<IEntityPermission> FilterToEntityPermissions(this IEnumerable<IPermission> permissionsToFilter)
     {
         return permissionsToFilter
@@ -29,8 +29,8 @@ public static class IPermissionCollectionExtensions
     /// Filters a collection of permissions to only include permissions for a specific entity type.
     /// </summary>
     /// <param name="permissionsToFilter">The collection of permissions to filter</param>
-    /// <param name="entityDefinitionCode">The definition code of the entity to filter on e.g. PageEntityDefinition.DefinitionCode</param>
-    /// <returns>Filtered collection cast to IEnumerable&lt;IEntityPermission&gt;</returns>
+    /// <param name="entityDefinitionCode">The definition code of the entity to filter on e.g. <see cref="PageEntityDefinition.DefinitionCode"/></param>
+    /// <returns>Filtered collection cast to <see cref="IEnumerable{IEntityPermission}"/></returns>
     public static IEnumerable<IEntityPermission> FilterToEntityPermissions(this IEnumerable<IPermission> permissionsToFilter, string entityDefinitionCode)
     {
         return permissionsToFilter
@@ -155,7 +155,7 @@ public static class IPermissionCollectionExtensions
     public static IEnumerable<IPermission> ExceptPermission<TPermission>(this IEnumerable<IPermission> permissionsToFilter)
     {
         return permissionsToFilter
-            .Where(p => !(p is TPermission));
+            .Where(p => p is not TPermission);
     }
 
     /// <summary>
@@ -238,7 +238,7 @@ public static class IPermissionCollectionExtensions
     public static IEnumerable<IPermission> ExceptEntityPermissions(this IEnumerable<IPermission> permissionsToFilter, string entityDefinitionCode)
     {
         return permissionsToFilter
-            .Where(p => !(p is IEntityPermission) || ((IEntityPermission)p).EntityDefinition?.EntityDefinitionCode != entityDefinitionCode);
+            .Where(p => p is not IEntityPermission || ((IEntityPermission)p).EntityDefinition?.EntityDefinitionCode != entityDefinitionCode);
     }
 
     /// <summary>

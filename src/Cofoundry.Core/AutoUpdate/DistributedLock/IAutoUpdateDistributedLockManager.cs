@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.DistributedLocks;
+using Cofoundry.Core.DistributedLocks;
 
 namespace Cofoundry.Core.AutoUpdate;
 
@@ -18,7 +18,7 @@ public interface IAutoUpdateDistributedLockManager
     /// Unlocks the auto-update process, indicating that the process
     /// has finished (or failed) and can be run again.
     /// </summary>
-    /// <param name="lockingId">
+    /// <param name="distributedLock">
     /// Unique identifier that represent the process that owns the lock.
     /// </param>
     Task UnlockAsync(DistributedLock distributedLock);

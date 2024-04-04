@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
@@ -7,6 +7,9 @@ public static class IPermissionSetBuilderPageTemplateExtensions
     /// <summary>
     /// Configure the builder to include all permissions for page templates.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     public static IPermissionSetBuilder IncludePageTemplate(this IPermissionSetBuilder builder)
     {
         return Run(builder, null, true);
@@ -15,6 +18,9 @@ public static class IPermissionSetBuilderPageTemplateExtensions
     /// <summary>
     /// Configure the builder to include permissions for page templates.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     /// <param name="configure">A configuration action to select which permissions to include.</param>
     public static IPermissionSetBuilder IncludePageTemplate(this IPermissionSetBuilder builder, Action<PageTemplatePermissionBuilder> configure)
     {
@@ -24,6 +30,9 @@ public static class IPermissionSetBuilderPageTemplateExtensions
     /// <summary>
     /// Configure the builder to exclude all permissions for page templates.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     public static IPermissionSetBuilder ExcludePageTemplate(this IPermissionSetBuilder builder)
     {
         return Run(builder, null, false);
@@ -32,6 +41,9 @@ public static class IPermissionSetBuilderPageTemplateExtensions
     /// <summary>
     /// Configure the builder to exclude permissions for page templates.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to filter on.
+    /// </param>
     /// <param name="configure">A configuration action to select which permissions to exclude.</param>
     public static IPermissionSetBuilder ExcludePageTemplate(this IPermissionSetBuilder builder, Action<PageTemplatePermissionBuilder> configure)
     {

@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 using Cofoundry.Web.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,6 +14,9 @@ public static class IDomainRepositoryExtensions
     /// If execution is skipped then the default result type value will be returned and 
     /// should be ignored.
     /// </summary>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
     /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
     public static TRepository WithModelState<TRepository>(this TRepository repository, ControllerBase controller)
         where TRepository : IDomainRepository
@@ -31,6 +34,9 @@ public static class IDomainRepositoryExtensions
     /// If execution is skipped then the default result type value will be returned and 
     /// should be ignored.
     /// </summary>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
     /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
     public static TRepository WithModelState<TRepository>(this TRepository repository, Controller controller)
         where TRepository : IDomainRepository
@@ -48,7 +54,10 @@ public static class IDomainRepositoryExtensions
     /// If execution is skipped then the default result type value will be returned and 
     /// should be ignored.
     /// </summary>
-    /// <param name="controller">The controller instance containing the model state to pipe error to.</param>
+    /// <param name="repository">
+    /// Repository instance to extend.
+    /// </param>
+    /// <param name="pageModel">The Razor Pages model instance containing the model state to pipe error to.</param>
     public static TRepository WithModelState<TRepository>(this TRepository repository, PageModel pageModel)
         where TRepository : IDomainRepository
     {

@@ -9,16 +9,16 @@ public class AuthorizedTaskTokenUrlHelper : IAuthorizedTaskTokenUrlHelper
     private const string TOKEN_PARAM_NAME = "t";
 
     public string MakeUrl(
-        string baseUri,
+        string baseUrl,
         string token
         )
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(baseUri);
+        ArgumentException.ThrowIfNullOrWhiteSpace(baseUrl);
         ArgumentException.ThrowIfNullOrWhiteSpace(token);
 
-        if (!Uri.IsWellFormedUriString(baseUri, UriKind.RelativeOrAbsolute))
+        if (!Uri.IsWellFormedUriString(baseUrl, UriKind.RelativeOrAbsolute))
         {
-            throw new ArgumentException("Url is not a well formatted url: " + baseUri, nameof(baseUri));
+            throw new ArgumentException("Url is not a well formatted url: " + baseUrl, nameof(baseUrl));
         }
 
         var queryParams = new Dictionary<string, string?>()
@@ -26,7 +26,7 @@ public class AuthorizedTaskTokenUrlHelper : IAuthorizedTaskTokenUrlHelper
             { TOKEN_PARAM_NAME, token }
         };
 
-        var formattedUri = baseUri.ToString().TrimEnd('/');
+        var formattedUri = baseUrl.ToString().TrimEnd('/');
 
         var url = QueryHelpers.AddQueryString(formattedUri, queryParams);
 

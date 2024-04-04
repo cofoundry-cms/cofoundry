@@ -23,7 +23,6 @@
 
 // Adapted from methods and source described at https://crackstation.net/hashing-security.htm
 
-
 using System.Security.Cryptography;
 
 namespace Defuse.Obsolete;
@@ -45,7 +44,6 @@ class CannotPerformOperationException : Exception
     public CannotPerformOperationException(string message, Exception inner)
         : base(message, inner) { }
 }
-
 
 [Obsolete("Provided for backwards compatibility only and will be removed in a later version.")]
 public class PasswordCryptographyV2

@@ -7,7 +7,6 @@ public class AssetFileCleanupBackgroundTaskRegistration : IBackgroundTaskRegistr
 {
     private readonly AssetFileCleanupSettings _assetFileCleanupSettings;
 
-
     public AssetFileCleanupBackgroundTaskRegistration(
         AssetFileCleanupSettings assetFileCleanupSettings
         )

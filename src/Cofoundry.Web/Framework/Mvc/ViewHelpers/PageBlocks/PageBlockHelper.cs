@@ -1,7 +1,7 @@
-﻿namespace Cofoundry.Web;
+namespace Cofoundry.Web;
 
 /// <summary>
-/// Default implementation of <see cref="IPageBlockHelper<>"/>.
+/// Default implementation of <see cref="IPageBlockHelper{}"/>.
 /// </summary>
 public class PageBlockHelper<TModel> : IPageBlockHelper<TModel>
 {

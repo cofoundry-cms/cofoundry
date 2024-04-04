@@ -18,6 +18,6 @@ public interface IResizedImageAssetFileService
     /// <summary>
     /// Clears any cached resized images for a specific image asset.
     /// </summary>
-    /// <param name="imageAssetId">The file name (without extension) of the image asset to clear the cache for.</param>
+    /// <param name="fileNameOnDisk">The file name (without extension) of the image asset to clear the cache for.</param>
     Task ClearAsync(string fileNameOnDisk);
 }

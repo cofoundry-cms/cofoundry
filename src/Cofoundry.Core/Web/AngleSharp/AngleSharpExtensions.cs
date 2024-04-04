@@ -30,7 +30,6 @@ public static class AngleSharpHelper
         parentElement.AppendChild(wrapperElement);
     }
 
-
     /// <summary>
     /// Merges existing attributes on a node with the specified attribute 
     /// collection, adding attributes that don't exist or replacing existing ones.

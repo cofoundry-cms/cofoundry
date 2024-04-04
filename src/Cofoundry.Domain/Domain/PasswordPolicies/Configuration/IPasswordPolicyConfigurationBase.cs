@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// Base interface for <see cref="IDefaultPasswordPolicyConfiguration"/> and
@@ -13,7 +13,7 @@ public interface IPasswordPolicyConfigurationBase
     /// </summary>
     /// <param name="builder">
     /// An empty <see cref="IPasswordPolicyBuilder"/> that can be used to configure
-    /// the password policy. Use <see cref="IPasswordPolicyBuilderExtensions.UseDefaults"/>
+    /// the password policy. Use <see cref="IPasswordPolicyBuilderExtensions.UseDefaults(IPasswordPolicyBuilder)"/>
     /// to use the Cofoundry defaults as a baseline.
     /// </param>
     void Configure(IPasswordPolicyBuilder builder);

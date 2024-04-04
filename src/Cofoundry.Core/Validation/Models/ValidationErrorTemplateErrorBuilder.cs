@@ -49,10 +49,10 @@ public class ValidationErrorTemplateErrorBuilder
 
     /// <summary>
     /// Formats the existing error message with the specified <paramref name="messageFormatParameters"/> via
-    /// <see cref="string.Format"/>.
+    /// string.Format.
     /// </summary>
     /// <param name="messageFormatParameters">
-    /// The parameters to pass into <see cref="string.Format"/> to format the error emssage.
+    /// The parameters to pass into string.Format to format the error emssage.
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithMessageFormatParameters(params string[] messageFormatParameters)
     {
@@ -64,10 +64,10 @@ public class ValidationErrorTemplateErrorBuilder
 
     /// <summary>
     /// Formats the existing error message with the specified <paramref name="messageFormatParameters"/> via
-    /// <see cref="string.Format"/>.
+    /// string.Format.
     /// </summary>
     /// <param name="messageFormatParameters">
-    /// The parameters to pass into <see cref="string.Format"/> to format the error emssage.
+    /// The parameters to pass into string.Format to format the error emssage.
     /// </param>
     public ValidationErrorTemplateErrorBuilder WithMessageFormatParameters(params int[] messageFormatParameters)
     {
@@ -132,9 +132,6 @@ public class ValidationErrorTemplateErrorBuilder
     /// Throws a <see cref="ValidationErrorException"/> using the template
     /// builder configuration.
     /// </summary>
-    /// <param name="properties">
-    /// Zero or more properties that the error message applies to.
-    /// </param>
     [DoesNotReturn]
     public void Throw()
     {

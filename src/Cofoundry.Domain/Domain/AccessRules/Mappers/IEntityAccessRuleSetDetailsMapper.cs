@@ -1,15 +1,15 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
 /// <summary>
-/// Used for mapping the shared parts of an <see cref="IEntityAccessRuleSetDetails"/>
+/// Used for mapping the shared parts of an <see cref="IEntityAccessRuleSetDetails{}"/>
 /// implementation for a specific entity.
 /// </summary>
 public interface IEntityAccessRuleSetDetailsMapper
 {
     /// <summary>
-    /// Maps the shared parts of an <see cref="IEntityAccessRuleSetDetails"/>
+    /// Maps the shared parts of an <see cref="IEntityAccessRuleSetDetails{}"/>
     /// implementation for a specific entity.
     /// </summary>
     /// <typeparam name="TAccessRule">
@@ -22,7 +22,7 @@ public interface IEntityAccessRuleSetDetailsMapper
     /// </typeparam>
     /// <param name="dbEntity">The entity to map from.</param>
     /// <param name="result">
-    /// The <see cref="IEntityAccessRuleSetDetails"/> projection to map to. Typically the mapper
+    /// The <see cref="IEntityAccessRuleSetDetails{}"/> projection to map to. Typically the mapper
     /// would create this instance, but passing it in means we don't need to specify all the
     /// generic parameters in the method call.
     /// </param>

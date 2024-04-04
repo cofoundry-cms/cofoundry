@@ -25,7 +25,6 @@ public class SignOutCurrentUserCommandHandler
         _messageAggregator = messageAggregator;
     }
 
-
     public async Task ExecuteAsync(SignOutCurrentUserCommand command, IExecutionContext executionContext)
     {
         var userAreaCode = command.UserAreaCode;

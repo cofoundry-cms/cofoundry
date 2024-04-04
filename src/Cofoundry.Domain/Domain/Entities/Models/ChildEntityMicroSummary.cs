@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Minimal information about an entity that is part of an aggregate relationship
@@ -12,8 +12,8 @@ public class ChildEntityMicroSummary : RootEntityMicroSummary
 {
     /// <summary>
     /// The database id of the child entity in the aggregate e.g. the id
-    /// for a "page version" or "custom entity page block", where the <see cref="RootEntityId"/>
-    /// refers to the root e.g. "page".
+    /// for a "page version" or "custom entity page block",
+    /// where the RootEntityId refers to the root e.g. "page".
     /// </summary>
     public int ChildEntityId { get; set; }
 }

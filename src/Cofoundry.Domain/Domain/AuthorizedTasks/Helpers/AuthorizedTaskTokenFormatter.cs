@@ -3,14 +3,13 @@
 /// <inheritdoc/>
 public class AuthorizedTaskTokenFormatter : IAuthorizedTaskTokenFormatter
 {
-    public string Format(AuthorizedTaskTokenParts parts)
+    public string Format(AuthorizedTaskTokenParts tokenParts)
     {
-        ArgumentNullException.ThrowIfNull(parts);
-        ArgumentEmptyException.ThrowIfDefault(parts.AuthorizedTaskId);
-        ArgumentException.ThrowIfNullOrWhiteSpace(parts.AuthorizationCode);
+        ArgumentNullException.ThrowIfNull(tokenParts);
+        ArgumentEmptyException.ThrowIfDefault(tokenParts.AuthorizedTaskId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(tokenParts.AuthorizationCode);
 
-
-        return parts.AuthorizedTaskId.ToString("N") + "-" + parts.AuthorizationCode;
+        return tokenParts.AuthorizedTaskId.ToString("N") + "-" + tokenParts.AuthorizationCode;
     }
 
     public AuthorizedTaskTokenParts? Parse(string? token)

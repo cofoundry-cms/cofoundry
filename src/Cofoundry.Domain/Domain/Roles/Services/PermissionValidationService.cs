@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Internal;
+namespace Cofoundry.Domain.Internal;
 
 /// <summary>
 /// Centralised service containging helper methods for handling permission checks. The 
@@ -174,16 +174,16 @@ public class PermissionValidationService : IPermissionValidationService
         return HasPermission(new TPermission(), userContext);
     }
 
-    public virtual async Task<bool> HasPermissionAsync(IPermissionApplication? permissionApplication)
+    public virtual async Task<bool> HasPermissionAsync(IPermissionApplication? permission)
     {
         var userContext = await _userContextService.GetCurrentContextAsync();
 
-        return HasPermission(permissionApplication, userContext);
+        return HasPermission(permission, userContext);
     }
 
-    public virtual bool HasPermission(IPermissionApplication? permissionApplication, IUserContext userContext)
+    public virtual bool HasPermission(IPermissionApplication? permission, IUserContext userContext)
     {
-        if (permissionApplication == null)
+        if (permission == null)
         {
             return true;
         }
@@ -196,15 +196,15 @@ public class PermissionValidationService : IPermissionValidationService
         var role = _internalRoleRepository.GetById(userContext.RoleId);
         EntityNotFoundException.ThrowIfNull(role, userContext.RoleId);
 
-        if (permissionApplication is IPermission)
+        if (permission is IPermission individualPermission)
         {
-            return role.HasPermission((IPermission)permissionApplication);
+            return role.HasPermission(individualPermission);
         }
-        else if (permissionApplication is CompositePermissionApplication)
+        else if (permission is CompositePermissionApplication compositePermission)
         {
-            foreach (var permission in ((CompositePermissionApplication)permissionApplication).Permissions)
+            foreach (var compositePermissionItem in compositePermission.Permissions)
             {
-                if (role.HasPermission(permission))
+                if (role.HasPermission(compositePermissionItem))
                 {
                     return true;
                 }

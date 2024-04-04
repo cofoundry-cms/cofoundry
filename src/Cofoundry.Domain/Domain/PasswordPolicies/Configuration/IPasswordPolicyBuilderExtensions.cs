@@ -9,6 +9,9 @@ public static class IPasswordPolicyBuilderExtensions
     /// defined in <see cref="PasswordOptions"/> through configuration sources 
     /// e.g. appsettings.json.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to set defaults on.
+    /// </param>
     public static IPasswordPolicyBuilder UseDefaults(this IPasswordPolicyBuilder builder)
     {
         return builder.UseDefaults(null);
@@ -19,6 +22,9 @@ public static class IPasswordPolicyBuilderExtensions
     /// options transformer to layer additional configuration on top of
     /// those defined in configuration sources e.g. appsettings.json.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to set defaults on.
+    /// </param>
     /// <param name="passwordOptionsConfig">
     /// Transformer to configure any additional settings on top of the
     /// default options.
@@ -56,6 +62,9 @@ public static class IPasswordPolicyBuilderExtensions
     /// <see cref="PasswordPolicyAttributes"/> constants can be used as keys for known
     /// attributes.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to add to.
+    /// </param>
     /// <param name="attribute">
     /// The attribute name e.g. "minlength". The  <see cref="PasswordPolicyAttributes"/> constants 
     /// can be used for known attribute keys.
@@ -71,6 +80,9 @@ public static class IPasswordPolicyBuilderExtensions
     /// https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#implement-proper-password-strength-controls
     /// for up to date information on best practice password lengths.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to add rules to.
+    /// </param>
     /// <param name="minLength">
     /// The inclusive minimum length that the password should be. Must be between 6 and 2048
     /// characters.
@@ -89,6 +101,9 @@ public static class IPasswordPolicyBuilderExtensions
     /// https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#implement-proper-password-strength-controls
     /// for up to date information on best practice password lengths.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to add rules to.
+    /// </param>
     /// <param name="maxLength">
     /// The inclusive maximum length that the password should be. Must be between 6 and 2048
     /// characters.
@@ -106,6 +121,9 @@ public static class IPasswordPolicyBuilderExtensions
     /// Prevents groups of repeated characters in a password by validating that a minimum number of 
     /// unique characters e.g. the password "YYZ-YYZ-YYZ" contains 3 unique characters.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to add rules to.
+    /// </param>
     /// <param name="minUniqueCharacters">
     /// The inclusive minimum number of unique characters to allow e.g. if the minimum was 4 then
     /// "abcabcabcabc" would be an invalid password.
@@ -121,6 +139,9 @@ public static class IPasswordPolicyBuilderExtensions
     /// Validates that a password does not match either their username
     /// or email address, based on a case-insenstivie equality comparison.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to add rules to.
+    /// </param>
     public static IPasswordPolicyBuilder ValidateNotPersonalData(this IPasswordPolicyBuilder builder)
     {
         builder.AddValidator<NotBePersonalDataNewPasswordValidator>();
@@ -134,6 +155,9 @@ public static class IPasswordPolicyBuilderExtensions
     /// is authenticated and changed in the same command and therefore is only
     /// validated in these conditions.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to add rules to.
+    /// </param>
     public static IPasswordPolicyBuilder ValidateNotCurrentPassword(this IPasswordPolicyBuilder builder)
     {
         builder.AddValidator<NotCurrentPasswordNewPasswordValidator>();
@@ -146,6 +170,9 @@ public static class IPasswordPolicyBuilderExtensions
     /// e.g. "abcdefghij" or "987654321". This is case-sensitive and is done simply
     /// by comparing character codes.
     /// </summary>
+    /// <param name="builder">
+    /// Builder to add rules to.
+    /// </param>
     public static IPasswordPolicyBuilder ValidateNotSequential(this IPasswordPolicyBuilder builder)
     {
         builder.AddValidator<NotSequentialNewPasswordValidator>();

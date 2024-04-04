@@ -4,7 +4,7 @@ namespace Cofoundry.Core.Web;
 
 /// <summary>
 /// A set of configuration rules for html sanitization used
-/// by the IHtmlSanitizer.
+/// by the <see cref="IHtmlSanitizer"/>.
 /// </summary>
 public interface IHtmlSanitizationRuleSet
 {
@@ -12,7 +12,7 @@ public interface IHtmlSanitizationRuleSet
     /// Collection of css "@" rules to permit e.g. "@media" or "@font-face".
     /// Disallowing @namespace while allowing other types of at-rules can lead 
     /// to errors. Property declarations in @font-face and @viewport are not 
-    /// sanitized <see cref="https://github.com/mganss/HtmlSanitizer#css-at-rules-allowed-by-default"/>.
+    /// sanitized <see href="https://github.com/mganss/HtmlSanitizer#css-at-rules-allowed-by-default"/>.
     /// </summary>
     IReadOnlySet<CssRuleType> PermittedAtRules { get; }
 

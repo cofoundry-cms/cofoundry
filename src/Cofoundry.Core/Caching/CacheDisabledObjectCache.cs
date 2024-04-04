@@ -11,7 +11,7 @@ public class CacheDisabledObjectCache : IObjectCache
 
     public T? Get<T>(string key)
     {
-        return default(T);
+        return default;
     }
 
     public T? GetOrAdd<T>(string key, Func<T> getter, DateTimeOffset? expiry = null)

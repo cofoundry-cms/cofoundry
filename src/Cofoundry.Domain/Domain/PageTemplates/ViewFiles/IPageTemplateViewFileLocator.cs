@@ -13,7 +13,6 @@ public interface IPageTemplateViewFileLocator
     /// <param name="searchText">Optional search string to filter results.</param>
     IEnumerable<PageTemplateFile> GetPageTemplateFiles(string? searchText = null);
 
-
     /// <summary>
     /// Gets the virtual path of a partial view referenced from inside a 
     /// page template, returning <see langword="null"/> if it does not exist.

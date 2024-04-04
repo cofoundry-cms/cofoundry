@@ -24,7 +24,6 @@ public interface IUserContextCache
     /// <param name="getter">Function to invoke if the system user context isn't in the cache.</param>
     Task<IUserContext> GetOrAddSystemContextAsync(Func<Task<IUserContext>> getter);
 
-
     /// <summary>
     /// Clears the cache entry for the specified user only.
     /// </summary>

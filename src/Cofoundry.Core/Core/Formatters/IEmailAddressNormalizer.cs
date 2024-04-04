@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core;
+namespace Cofoundry.Core;
 
 /// <summary>
 /// Used to normalize email address into a consistent format.
@@ -10,7 +10,7 @@ public interface IEmailAddressNormalizer
     /// <summary>
     /// Normalizes the specified email address into a consistent 
     /// format. The default implementation trims the input and lowercases the
-    /// domain part of the email e.g. "Test@Example.com" becomes "Test@example.com". 
+    /// domain part of the email e.g. &quot;Test@Example.com&quot; becomes &quot;Test@example.com&quot;. 
     /// If the email is an invalid format then <see langword="null"/> is returned.
     /// </summary>
     /// <param name="emailAddress">

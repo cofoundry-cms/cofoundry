@@ -44,7 +44,6 @@ public class EntityAccessRuleSetMapper : IEntityAccessRuleSetMapper
                 );
         }
 
-
         var result = new EntityAccessRuleSet()
         {
             ViolationAction = violationAction ?? AccessRuleViolationAction.Error

@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Core.Validation;
+namespace Cofoundry.Core.Validation;
 
 /// <summary>
 /// Service for validating models using DataAnnotation validation.
@@ -10,8 +10,8 @@ public interface IModelValidationService
     /// contains any invalid properties.
     /// </summary>
     /// <typeparam name="T">Type of the model to validate.</typeparam>
-    /// <param name="commandToValidate">The command to validate.</param>
-    void Validate<T>(T commandToValidate);
+    /// <param name="modelToValidate">The model to validate.</param>
+    void Validate<T>(T modelToValidate);
 
     /// <summary>
     /// Validates the specified model and returns a collection of any errors discovered in

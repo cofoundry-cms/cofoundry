@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 public static class CustomEntityVersionQueryExtensions
 {
@@ -6,6 +6,9 @@ public static class CustomEntityVersionQueryExtensions
     /// Filters the collection to only include records associated with
     /// the specified CustomEntityId.
     /// </summary>
+    /// <param name="customEntities">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="customEntityId">Database id of the entity to filter by.</param>
     public static IQueryable<CustomEntityVersion> FilterByCustomEntityId(this IQueryable<CustomEntityVersion> customEntities, int customEntityId)
     {
@@ -19,6 +22,9 @@ public static class CustomEntityVersionQueryExtensions
     /// Filters the collection to only include records associated with
     /// the specified custom entity UrlSlug.
     /// </summary>
+    /// <param name="customEntities">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="urlSlug">Url slug of the custom entity record to filter by.</param>
     public static IQueryable<CustomEntityVersion> FilterByCustomEntityUrlSlug(this IQueryable<CustomEntityVersion> customEntities, string urlSlug)
     {
@@ -31,6 +37,9 @@ public static class CustomEntityVersionQueryExtensions
     /// <summary>
     /// Filters the collection to only include the version with the specific Id
     /// </summary>
+    /// <param name="customEntities">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="customEntityVersionId">Database id of the version to filter by.</param>
     public static IQueryable<CustomEntityVersion> FilterByCustomEntityVersionId(this IQueryable<CustomEntityVersion> customEntities, int customEntityVersionId)
     {
@@ -43,6 +52,9 @@ public static class CustomEntityVersionQueryExtensions
     /// <summary>
     /// Fitlers the results to only include custom entities of a specific type.
     /// </summary>
+    /// <param name="customEntities">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="customEntityDefinitionCode">Unique definition code of the custom entity type to filter by.</param>
     public static IQueryable<CustomEntityVersion> FilterByCustomEntityDefinitionCode(this IQueryable<CustomEntityVersion> customEntities, string customEntityDefinitionCode)
     {
@@ -55,6 +67,9 @@ public static class CustomEntityVersionQueryExtensions
     /// <summary>
     /// Removes any custom entities from the query that are inactive (attached to an inactive locale).
     /// </summary>
+    /// <param name="customEntities">
+    /// Queryable instance to filter.
+    /// </param>
     public static IQueryable<CustomEntityVersion> FilterActive(this IQueryable<CustomEntityVersion> customEntities)
     {
         var result = customEntities

@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Collated information about the access rules for a page including both those
@@ -20,7 +20,7 @@ public class PageAccessRuleSetDetails : IEntityAccessRuleSetDetails<PageAccessRu
     /// <para>
     /// Access rules are used to restrict access to a website resource to users
     /// fulfilling certain criteria such as a specific user area or role. Page
-    /// access rules are used to define the rules at a <see cref="Page"/> level, 
+    /// access rules are used to define the rules at a page level, 
     /// however rules are also inherited from the directories the page is parented to.
     /// </para>
     /// <para>

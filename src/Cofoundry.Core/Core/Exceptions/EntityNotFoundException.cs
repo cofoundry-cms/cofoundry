@@ -105,7 +105,7 @@ public class EntityNotFoundException<TEntity> : EntityNotFoundException
     /// <param name="message">
     /// Message to use, or pass <see langword="null"/> to use the default. If using
     /// a custom message then you can use the {0} formatting token which will be
-    /// replaced with the <see cref="TEntity"/> type name.
+    /// replaced with the <typeparamref name="TEntity"/> type name.
     /// </param>
     public EntityNotFoundException(string? message)
         : base(FormatDefaultMessage(message))
@@ -119,7 +119,7 @@ public class EntityNotFoundException<TEntity> : EntityNotFoundException
     /// <param name="message">
     /// Message to use, or pass <see langword="null"/> to use the default. If using
     /// a custom message then you can use the {0} formatting token which will be
-    /// replaced with the <see cref="TEntity"/> type name.
+    /// replaced with the <typeparamref name="TEntity"/> type name.
     /// </param>
     /// <param name="innerException">
     /// The exception that is the cause of the current exception, or a 
@@ -138,7 +138,7 @@ public class EntityNotFoundException<TEntity> : EntityNotFoundException
     /// <param name="message">
     /// Message to use, or pass <see langword="null"/> to use the default. If using
     /// a custom message then there are two formatting tokens available: {0} for
-    /// the <see cref="TEntity"/> type name and {1} for the <paramref name="id"/>.
+    /// the <typeparamref name="TEntity"/> type name and {1} for the <paramref name="id"/>.
     /// </param>
     /// <param name="id">The id of the entity that could not be found.</param>
     public EntityNotFoundException(string? message, object? id)

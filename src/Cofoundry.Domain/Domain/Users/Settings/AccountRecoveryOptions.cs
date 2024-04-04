@@ -1,5 +1,6 @@
-﻿using Cofoundry.Core.ExecutionDurationRandomizer;
+using Cofoundry.Core.ExecutionDurationRandomizer;
 using Cofoundry.Core.Web;
+using Cofoundry.Domain.MailTemplates;
 
 namespace Cofoundry.Domain;
 
@@ -47,7 +48,7 @@ public class AccountRecoveryOptions : IValidatableObject
     /// </para>
     /// <para>
     /// This setting is required when using the account recovery feature, unless you are building
-    /// the url yourself in a custom <see cref="MailTemplates.DefaultMailTemplates.IDefaultMailTemplateBuilder{T}"/> 
+    /// the url yourself in a custom <see cref="IUserMailTemplateBuilder{TUserAreaDefinition}"/> 
     /// implementation. Changing this setting does not affect the Cofoundry Admin account recovery feature.
     /// </para>
     /// </summary>

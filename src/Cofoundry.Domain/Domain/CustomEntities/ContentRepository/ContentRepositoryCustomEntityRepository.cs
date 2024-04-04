@@ -41,9 +41,9 @@ public class ContentRepositoryCustomEntityRepository
         return new ContentRepositoryCustomEntityByIdQueryBuilder(ExtendableContentRepository, customEntityId);
     }
 
-    public IContentRepositoryCustomEntityByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> pageIds)
+    public IContentRepositoryCustomEntityByIdRangeQueryBuilder GetByIdRange(IEnumerable<int> customEntityIds)
     {
-        return new ContentRepositoryCustomEntityByIdRangeQueryBuilder(ExtendableContentRepository, pageIds);
+        return new ContentRepositoryCustomEntityByIdRangeQueryBuilder(ExtendableContentRepository, customEntityIds);
     }
 
     public IContentRepositoryCustomEntityByUrlSlugQueryBuilder GetByUrlSlug(string customEntityDefinitionCode, string urlSlug)

@@ -51,7 +51,6 @@ public class AddPageDraftVersionCommandHandlerTests
             .FilterByPageId(pageId)
             .ToListAsync();
 
-
         using (new AssertionScope())
         {
             versions.Should().HaveCount(2);
@@ -142,7 +141,6 @@ public class AddPageDraftVersionCommandHandlerTests
                 var draftVersion = versions.SingleOrDefault(v => v.PageVersionId == draftVersionId);
                 draftVersion.Should().NotBeNull();
                 draftVersion?.PageVersionBlocks.Should().HaveCount(publishedVersion.PageVersionBlocks.Count);
-
 
                 var publishedVersionTextBlock = publishedVersion
                     .PageVersionBlocks

@@ -34,10 +34,10 @@ public class GetRoleMicroSummaryByIdQueryHandler
         return result;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetRoleMicroSummaryByIdQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetRoleMicroSummaryByIdQuery query)
     {
         // Ignore permission for anonymous role.
-        if (command.RoleId.HasValue)
+        if (query.RoleId.HasValue)
         {
             yield return new RoleReadPermission();
         }

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Cofoundry.Core.ResourceFiles;
 
@@ -9,13 +9,13 @@ public static class EmbeddedResourcePathFormatter
 {
     /// <remarks>
     /// This list of characters to be replaced is taken from 
-    /// https://docs.microsoft.com/en-us/dotnet/api/system.resources.tools.stronglytypedresourcebuilder.verifyresourcename?redirectedfrom=MSDN&view=netframework-4.8#remarks
+    /// <see href="https://docs.microsoft.com/en-us/dotnet/api/system.resources.tools.stronglytypedresourcebuilder.verifyresourcename?redirectedfrom=MSDN&view=netframework-4.8#remarks"/>
     /// Further exclusions apply, including edge cases with reserved 
     /// words but until proven otherwise we'll assume that don't need 
     /// to be covered.
     /// </remarks>
-    private static readonly char[] INVALID_CHARS = new char[] { ' ', '\u00A0', ',', ';', '~', '@', '#', '%', '^', '&', '*', '+', '-', '/', '\\', '<', '>', '?', '[', ']', '(', ')', '{', '}', '"', '\'', ':', '!' };
-    private static readonly char[] PATH_DELIMITERS = new char[] { '/', '\\' };
+    private static readonly char[] INVALID_CHARS = [' ', '\u00A0', ',', ';', '~', '@', '#', '%', '^', '&', '*', '+', '-', '/', '\\', '<', '>', '?', '[', ']', '(', ')', '{', '}', '"', '\'', ':', '!'];
+    private static readonly char[] PATH_DELIMITERS = ['/', '\\'];
     const string VIRTUAL_PATH_PREFIX = "~/";
     const char EMBEDDED_DIRECTORY_DELIMITER = '.';
     const char INVALID_CHARACTER_REPLACEMENT = '_';

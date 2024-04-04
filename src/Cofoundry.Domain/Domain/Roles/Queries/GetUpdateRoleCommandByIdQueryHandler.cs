@@ -39,7 +39,7 @@ public class GetUpdateRoleCommandByIdQueryHandler
         return command;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdateRoleCommand> command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetPatchableCommandByIdQuery<UpdateRoleCommand> query)
     {
         yield return new RoleReadPermission();
     }

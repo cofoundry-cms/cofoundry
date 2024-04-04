@@ -19,14 +19,12 @@ public class ExecutionContextFactory : IExecutionContextFactory
         _dateTimeService = dateTimeService;
     }
 
-
     /// <inheritdoc />
     public async Task<IExecutionContext> CreateAsync()
     {
         var userContext = await _userContextService.GetCurrentContextAsync();
         return Create(userContext);
     }
-
 
     /// <inheritdoc />
     public IExecutionContext Create(IUserContext userContext, IExecutionContext? executionContextToCopy = null)

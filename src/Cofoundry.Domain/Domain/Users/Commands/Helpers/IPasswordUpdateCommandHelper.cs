@@ -1,4 +1,5 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
+using Cofoundry.Domain.MailTemplates;
 
 namespace Cofoundry.Domain;
 
@@ -46,8 +47,8 @@ public interface IPasswordUpdateCommandHelper
     /// <summary>
     /// Send a notification to the user to let them know their 
     /// password has been changed. The template is built using the
-    /// registered <see cref="UserMailTemplateBuilderFactory"/> for the users
-    /// user area.
+    /// registered <see cref="IUserMailTemplateBuilder{TUserAreaDefinition}"/>
+    /// for the users user area.
     /// </summary>
     /// <param name="user">
     /// The user to send the notification to. This should include

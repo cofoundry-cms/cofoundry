@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Returns information about entities that have a dependency on the entity 
@@ -22,7 +22,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdQuery : IQuery<IReadOnly
     /// <see cref="IEntityDefinition.EntityDefinitionCode"/> of the entity type
     /// to check.
     /// </param>
-    /// <param name="entityIds">
+    /// <param name="entityId">
     /// Database id of the entity to check for required dependencies. Each entity 
     /// must be of the type specified by <paramref name="entityDefinitionCode"/>.
     /// </param>

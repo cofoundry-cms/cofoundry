@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Cofoundry.Web;
 
@@ -102,6 +102,10 @@ public interface IApiResponseHelper
     /// is returned, handling any validation errors and permission errors.
     /// </summary>
     /// <typeparam name="TCommand">Type of the command to execute</typeparam>
+    /// <param name="id">
+    /// The integer database identifier of the entity associated with
+    /// patchable command.
+    /// </param>
     /// <param name="delta">The delta of the command to patch and execute</param>
     Task<JsonResult> RunCommandAsync<TCommand>(int id, IDelta<TCommand> delta)
         where TCommand : class, IPatchableByIdCommand;

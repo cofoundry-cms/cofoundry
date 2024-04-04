@@ -1,7 +1,7 @@
-﻿namespace Cofoundry.Domain.CQS;
+namespace Cofoundry.Domain.CQS;
 
 /// <summary>
-/// Handles the execution of a <see cref="TCommand"/> instance.
+/// Handles the execution of a <typeparamref name="TCommand"/> instance.
 /// </summary>
 /// <typeparam name="TCommand">Type of <see cref="ICommand"/> to handle.</typeparam>
 public interface ICommandHandler<TCommand>

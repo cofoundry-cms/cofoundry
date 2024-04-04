@@ -10,7 +10,6 @@ public class TestUserArea2RoleB : IRoleDefinition
 
     public string UserAreaCode => TestUserArea2.Code;
 
-
     public void ConfigurePermissions(IPermissionSetBuilder builder)
     {
         builder.ApplyAnonymousRoleConfiguration();

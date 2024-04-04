@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 
@@ -58,12 +58,15 @@ public class EntityInvalidOperationException : InvalidOperationException
     /// The type of entity that is in an invalid state. If the entity is <see langword="null"/> then an
     /// <see cref="EntityNotFoundException"/> is thrown instead.
     /// </typeparam>
+    /// <typeparam name="TMember">
+    /// The type of the member (property or field) to evaluate.
+    /// </typeparam>
     /// <param name="entity">The entity to check for a <see langword="null"/> reference.</param>
     /// <param name="value">The member (property or field) to check for <see langword="null"/>.</param>
     /// <param name="memberName">The name of the property with which value corresponds.</param>
-    public static void ThrowIfNull<TEntity, TProperty>(
+    public static void ThrowIfNull<TEntity, TMember>(
         [NotNull] TEntity? entity,
-        [NotNull] TProperty? value,
+        [NotNull] TMember? value,
         [CallerArgumentExpression(nameof(value))] string? memberName = null
         )
         where TEntity : class
@@ -87,9 +90,12 @@ public class EntityInvalidOperationException : InvalidOperationException
     /// The type of entity that is in an invalid state. If the entity is <see langword="null"/> then an
     /// <see cref="EntityNotFoundException"/> is thrown instead.
     /// </typeparam>
+    /// <typeparam name="TMember">
+    /// The type of the member (property or field) to evaluate.
+    /// </typeparam>
     /// <param name="entity">The entity to check for a <see langword="null"/> reference.</param>
     /// <param name="memberSelector">A selector that targets the member (property or field) to check for <see langword="null"/>.</param>
-    public static void ThrowIfNull<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> memberSelector) where TEntity : class
+    public static void ThrowIfNull<TEntity, TMember>(TEntity entity, Expression<Func<TEntity, TMember>> memberSelector) where TEntity : class
     {
         ArgumentNullException.ThrowIfNull(memberSelector);
         var memberExpression = memberSelector.Body as MemberExpression;

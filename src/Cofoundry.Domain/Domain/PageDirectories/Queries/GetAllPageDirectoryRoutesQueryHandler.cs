@@ -36,7 +36,7 @@ public class GetAllPageDirectoryRoutesQueryHandler
         return activeWebRoutes;
     }
 
-    public IEnumerable<IPermissionApplication> GetPermissions(GetAllPageDirectoryRoutesQuery command)
+    public IEnumerable<IPermissionApplication> GetPermissions(GetAllPageDirectoryRoutesQuery query)
     {
         yield return new PageDirectoryReadPermission();
     }
