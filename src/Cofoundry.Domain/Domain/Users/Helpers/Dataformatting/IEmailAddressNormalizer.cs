@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 /// <summary>
 /// Use this interface to create a custom <see cref="IEmailAddressNormalizer"/>
@@ -6,6 +6,7 @@
 /// email address normalization process without affecting other user areas.
 /// The DI system will automatically pick up your implementation during DI
 /// registration.
+/// </summary>
 public interface IEmailAddressNormalizer<TUserArea> : IEmailAddressNormalizer
     where TUserArea : IUserAreaDefinition
 {

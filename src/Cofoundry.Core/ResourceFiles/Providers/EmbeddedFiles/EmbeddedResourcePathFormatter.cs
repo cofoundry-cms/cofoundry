@@ -9,7 +9,7 @@ public static class EmbeddedResourcePathFormatter
 {
     /// <remarks>
     /// This list of characters to be replaced is taken from 
-    /// <see href="https://docs.microsoft.com/en-us/dotnet/api/system.resources.tools.stronglytypedresourcebuilder.verifyresourcename?redirectedfrom=MSDN&view=netframework-4.8#remarks"/>
+    /// <see href="https://docs.microsoft.com/en-us/dotnet/api/system.resources.tools.stronglytypedresourcebuilder.verifyresourcename?redirectedfrom=MSDN&amp;view=netframework-4.8#remarks"/>
     /// Further exclusions apply, including edge cases with reserved 
     /// words but until proven otherwise we'll assume that don't need 
     /// to be covered.

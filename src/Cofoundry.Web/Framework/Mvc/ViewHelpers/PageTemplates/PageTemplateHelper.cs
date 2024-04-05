@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Default implementation of <see cref="IPageTemplateHelper{}"/>.
+/// Default implementation of <see cref="IPageTemplateHelper{TModel}"/>.
 /// </summary>
 public class PageTemplateHelper<TModel>
     : IPageTemplateHelper<TModel>, IViewContextAware
