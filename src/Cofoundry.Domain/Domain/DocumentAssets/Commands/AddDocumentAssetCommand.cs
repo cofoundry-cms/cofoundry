@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain;
 
@@ -35,7 +35,7 @@ public class AddDocumentAssetCommand : ICommand, ILoggableCommand, IValidatableO
     /// <summary>
     /// Tags can be used to categorize an entity.
     /// </summary>
-    public IReadOnlyCollection<string> Tags { get; set; } = Array.Empty<string>();
+    public IReadOnlyCollection<string> Tags { get; set; } = new List<string>();
 
     /// <summary>
     /// The database id of the newly created document asset. This is set 

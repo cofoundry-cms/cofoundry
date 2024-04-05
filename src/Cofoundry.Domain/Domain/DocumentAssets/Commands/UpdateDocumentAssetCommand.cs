@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
 namespace Cofoundry.Domain;
 
@@ -46,7 +46,7 @@ public class UpdateDocumentAssetCommand : IPatchableByIdCommand, ILoggableComman
     /// <summary>
     /// Tags can be used to categorize an entity.
     /// </summary>
-    public IReadOnlyCollection<string> Tags { get; set; } = Array.Empty<string>();
+    public IReadOnlyCollection<string> Tags { get; set; } = new List<string>();
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

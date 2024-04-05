@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Cofoundry.Domain;
 
@@ -48,5 +48,5 @@ public class UpdateImageAssetCommand : IPatchableByIdCommand, ILoggableCommand
     /// <summary>
     /// Tags can be used to categorize an entity.
     /// </summary>
-    public IReadOnlyCollection<string> Tags { get; set; } = Array.Empty<string>();
+    public IReadOnlyCollection<string> Tags { get; set; } = new List<string>();
 }
