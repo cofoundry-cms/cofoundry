@@ -104,6 +104,7 @@ public interface IUserStoredProcedures
     /// <param name="usernameRateLimitQuantity">
     /// The maximum number of failed authentication attempts allowed per username 
     /// during the rate limiting time window.
+    /// </param>
     /// <param name="usernameRateLimitWindowInSeconds">
     /// The time window to measure authentication attempts when rate limiting by 
     /// username.

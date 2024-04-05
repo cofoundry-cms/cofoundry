@@ -55,7 +55,7 @@ public static class CustomEntityPublishStatusQueryExtensions
     /// Filters the collection to only include records associated with
     /// the specified CustomEntityId.
     /// </summary>
-    /// <param name="customEntities">
+    /// <param name="source">
     /// Queryable instance to extend.
     /// </param>
     /// <param name="customEntityId">Database id of the entity to filter by.</param>

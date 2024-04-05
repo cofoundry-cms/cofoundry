@@ -9,7 +9,7 @@ public interface IAdvancedContentRepositoryUserAccountVerificationByEmailReposit
     /// Determines if an email-based account verification request is valid. The result is returned as a 
     /// <see cref="AuthorizedTaskTokenValidationResult"/> which describes any errors that have occurred.
     /// </summary>
-    /// <param name="token">The token used to verify the request.</param>
+    /// <param name="query">Query parameters.</param>
     IDomainRepositoryQueryContext<AuthorizedTaskTokenValidationResult> Validate(ValidateUserAccountVerificationByEmailQuery query);
 
     /// <summary>

@@ -1,7 +1,7 @@
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Custom entity view model data used in a <see cref="ICustomEntityPageViewModel{}"/>
+/// Custom entity view model data used in a <see cref="ICustomEntityPageViewModel{TDisplayModel}"/>
 /// implementation. This is similar to <see cref="CustomEntityRenderDetails"/> from the
 /// domain, but adds a typed display model that is mapped from the raw custom entity data model.
 /// </summary>

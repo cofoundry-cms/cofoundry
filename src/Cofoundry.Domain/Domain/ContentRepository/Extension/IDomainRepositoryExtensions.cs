@@ -176,7 +176,7 @@ public static class IDomainRepositoryExtensions
 
     /// <summary>
     /// Prevents execution completing before a random duration has elapsed by padding the
-    /// execution time using <see cref="Task.Delay"/>. This can help mitigate against time-based 
+    /// execution time using <see cref="Task.Delay(int)"/>. This can help mitigate against time-based 
     /// enumeration attacks by extending the <paramref name="minDurationInMilliseconds"/>  beyond 
     /// the expected bounds of the completion time. For example, this could be used to mitigate harvesting 
     /// of valid usernames from login or forgot password pages by measuring the response times.

@@ -39,7 +39,7 @@ public static class AddCofoundryStartupExtension
     /// <summary>
     /// Ensure the correct component parts required to run Cofoundry have been added
     /// In ASP.NET 3.1, IMvcBuilder can be generated a number of different ways
-    /// <see href="https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-3.1&tabs=visual-studio#mvc-service-registration"/>
+    /// <see href="https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-3.1&amp;tabs=visual-studio#mvc-service-registration"/>
     /// </summary>
     private static IMvcBuilder EnsureCoreMVCServicesAdded(IMvcBuilder mvcBuilder)
     {

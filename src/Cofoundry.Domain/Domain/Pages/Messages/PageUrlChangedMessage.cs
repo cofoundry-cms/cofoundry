@@ -22,6 +22,6 @@ public class PageUrlChangedMessage : IPageContentUpdatedMessage
     /// The original full (relative) url of the page before the change was made.
     /// The url is formatted with the leading slash, but excluding the trailing 
     /// slash e.g. "/my-directory/example-page".
-    /// </summary
+    /// </summary>
     public string OldFullUrlPath { get; set; } = string.Empty;
 }

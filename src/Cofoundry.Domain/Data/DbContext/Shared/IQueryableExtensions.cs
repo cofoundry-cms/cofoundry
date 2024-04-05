@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Cofoundry.Domain.Data;
 
@@ -8,6 +8,9 @@ public static class IQueryableExtensions
     /// Filters the collection by a date value using the specified parameters. Date 
     /// parameters can be null which indicates an unbounded query.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="selector">Date field selector to filter on.</param>
     /// <param name="startDate">Inclusive start date.</param>
     /// <param name="endDate">Exclusive end date to filter by.</param>
@@ -25,6 +28,9 @@ public static class IQueryableExtensions
     /// Filters the collection by a date value using the specified parameters. Date 
     /// parameters can be null which indicates an unbounded query.
     /// </summary>
+    /// <param name="source">
+    /// Queryable instance to filter.
+    /// </param>
     /// <param name="selector">Date field selector to filter on.</param>
     /// <param name="startDate">Inclusive start date.</param>
     /// <param name="endDate">Exclusive end date to filter by.</param>

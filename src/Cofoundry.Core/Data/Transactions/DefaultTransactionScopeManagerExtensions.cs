@@ -75,6 +75,9 @@ public static class DefaultTransactionScopeManagerExtensions
     /// connection directly.
     /// </para>
     /// </param>
+    /// <param name="transactionScopeFactory">
+    /// Function to use to create and configure a new <see cref="System.Transactions.TransactionScope"/>.
+    /// </param>
     /// <returns>An <see cref="ITransactionScope"/> instance, which is <see cref="IDisposable"/> and must be disposed.</returns>
     public static ITransactionScope Create(
         this ITransactionScopeManager transactionScopeManager,
@@ -155,6 +158,9 @@ public static class DefaultTransactionScopeManagerExtensions
     /// <see cref="ICofoundryDbConnectionManager"/> to get a reference to the shared connection 
     /// directly.
     /// </para>
+    /// </param>
+    /// <param name="transactionScopeFactory">
+    /// Function to use to create and configure a new <see cref="System.Transactions.TransactionScope"/>.
     /// </param>
     /// <returns>An <see cref="ITransactionScope"/> instance, which is <see cref="IDisposable"/> and must be disposed.</returns>
     public static ITransactionScope Create(

@@ -42,7 +42,7 @@ public class Permission
     /// <summary>
     /// Creates a unique code that represents this permission by combining the
     /// entity definition code and the permission code. This logic is replicated for
-    /// IPermissions in <see cref="IPermissionExtensions.GetUniqueCode"/>.
+    /// IPermissions in <see cref="IPermissionExtensions.GetUniqueIdentifier"/>.
     /// </summary>
     /// <returns>A string code that uniquely identifies this permission</returns>
     public string? GetUniqueCode()
@@ -59,7 +59,7 @@ public class Permission
     /// <summary>
     /// Creates a unique code that represents this permission by combining the
     /// entity definition code and the permission code. This logic is replicated for
-    /// IPermissions in <see cref="IPermissionExtensions.GetUniqueCode"/>.
+    /// IPermissions in <see cref="IPermissionExtensions.GetUniqueIdentifier"/>.
     /// </summary>
     /// <returns>A string code that uniquely identifies this permission</returns>
     public string GetRequiredUniqueCode()

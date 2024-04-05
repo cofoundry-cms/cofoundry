@@ -222,7 +222,7 @@ public class MissingIncludeException<TEntity> : MissingIncludeException where TE
     /// <param name="message">
     /// Message to use, or pass <see langword="null"/> to use the default. If using
     /// a custom message then there are two formatting tokens available: {0} for
-    /// the <see cref="TEntity"/> type name and {1} for the <paramref name="memberName"/>.
+    /// the <typeparamref name="TEntity"/> type name and {1} for the <paramref name="memberName"/>.
     /// </param>
     /// <param name="memberName">The name of the property or member that is an include.</param>
     public MissingIncludeException(string? message, string? memberName)

@@ -1,12 +1,12 @@
 namespace Cofoundry.Web;
 
 /// <summary>
-/// Default implementation of <see cref="IPageBlockHelper{}"/>.
+/// Default implementation of <see cref="IPageBlockHelper{TViewModel}"/>.
 /// </summary>
-public class PageBlockHelper<TModel> : IPageBlockHelper<TModel>
+public class PageBlockHelper<TViewModel> : IPageBlockHelper<TViewModel>
 {
     /// <inheritdoc/>
-    public IPageBlockHelper<TModel> UseDisplayName(string name)
+    public IPageBlockHelper<TViewModel> UseDisplayName(string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
@@ -20,7 +20,7 @@ public class PageBlockHelper<TModel> : IPageBlockHelper<TModel>
     }
 
     /// <inheritdoc/>
-    public IPageBlockHelper<TModel> UseDescription(string description)
+    public IPageBlockHelper<TViewModel> UseDescription(string description)
     {
         ArgumentNullException.ThrowIfNull(description);
         // nothing is rendered here, this is just used as a convention for adding template meta data

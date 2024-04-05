@@ -42,7 +42,7 @@ public interface ICustomEntityRoutingRule
     /// </summary>
     /// <param name="url">The url to parse custom entity key data from</param>
     /// <param name="pageRoute">The page route matched to the url.</param>
-    /// <returns><see cref="Parameters that can used to query for the CustomEntityRoute.</returns>
+    /// <returns>Parameters that can used to query for the CustomEntityRoute.</returns>
     IQuery<CustomEntityRoute?> ExtractRoutingQuery(string url, PageRoute pageRoute);
 
     /// <summary>

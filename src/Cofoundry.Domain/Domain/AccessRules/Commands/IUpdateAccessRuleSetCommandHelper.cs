@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Data;
+using Cofoundry.Domain.Data;
 
 namespace Cofoundry.Domain.Internal;
 
@@ -19,7 +19,7 @@ public interface IUpdateAccessRuleSetCommandHelper
     /// </typeparam>
     /// <typeparam name="TAddOrUpdateAccessRuleCommand">
     /// The entity-specific type of the access rule command data e.g. 
-    /// <see cref="UpdatePageAccessRuleSetCommand.AddOrUpdateAccessRuleCommand"/>
+    /// <see cref="UpdatePageAccessRuleSetCommand.AddOrUpdatePageAccessRuleCommand"/>
     /// </typeparam>
     /// <param name="entity">The "tracked" EF entity to update properties on.</param>
     /// <param name="command">The command containing the updated data to apply to <paramref name="entity"/>.</param>

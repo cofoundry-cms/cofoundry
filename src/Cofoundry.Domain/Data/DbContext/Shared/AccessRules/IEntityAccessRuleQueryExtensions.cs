@@ -55,7 +55,7 @@ public static class IEntityAccessRuleQueryExtensions
     /// Orders the access rule collection using the default ordering
     /// i.e. by user area, then by role.
     /// </summary>
-    /// <param name="rules">
+    /// <param name="accessRules">
     /// Enumerable to sort.
     /// </param>
     public static IOrderedEnumerable<TEntity> OrderByDefault<TEntity>(this IEnumerable<TEntity> accessRules)
