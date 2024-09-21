@@ -634,7 +634,7 @@ Cofoundry.visualEditor = (function () {
         }
     }
 
-    window.onload = function () {
+    window.addEventListener('load', function () {
         // pageResponseData object is a serialized object inserted into the page
         _internal.model = Cofoundry.PageResponseData;
 
@@ -643,7 +643,7 @@ Cofoundry.visualEditor = (function () {
             _internal.bindGui();
             _internal.bindToolbar();
         }
-    }
+    });
 
     // Return public API
     return {
