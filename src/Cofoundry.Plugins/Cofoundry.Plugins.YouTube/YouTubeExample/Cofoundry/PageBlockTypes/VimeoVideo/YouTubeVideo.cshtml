@@ -1,0 +1,21 @@
+﻿@model YouTubeVideoDataModel
+@inject ICofoundryBlockTypeHelper<YouTubeVideoDataModel> Cofoundry
+
+@Cofoundry.BlockType.UseDescription("A simple embedded YouTube video")
+
+@if (Model.Video != null)
+{
+    var embedUrl = "https://www.youtube-nocookie.com/embed/" + Model.Video.Id + "?rel=0";
+
+    <h3>@Model.Video.Title</h3>
+    <iframe width="560" height="315" src="@embedUrl" frameborder="0" allow="encrypted-media" allowfullscreen></iframe>
+
+    <h4>Description</h4>
+    @Cofoundry.Sanitizer.Sanitize(Model.Video.Description)
+
+    <p>Thumb: @Model.Video.ThumbnailUrl</p>
+    <p>ThumbHeight: @Model.Video.ThumbnailWidth</p>
+    <p>ThumbWidth: @Model.Video.ThumbnailHeight</p>
+    <p>PubDate: @Model.Video.PublishDate</p>
+    <p>Thumb: @Model.Video.Id</p>
+}

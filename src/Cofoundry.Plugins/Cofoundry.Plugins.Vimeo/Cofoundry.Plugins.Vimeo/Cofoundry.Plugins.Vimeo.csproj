@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFramework>net8.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+    
+    <PackageId>Cofoundry.Plugins.Vimeo</PackageId>
+    <Description>
+      Cofoundry plugin that adds integration with the Vimeo video service.
+      This is a meta package that brings in all the Vimeo components.
+    </Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright © Cofoundry.org</Copyright>
+    <PackageTags>Cofoundry Vimeo</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
+    <ProjectReference Include="..\Cofoundry.Plugins.Vimeo.Admin\Cofoundry.Plugins.Vimeo.Admin.csproj" />
+    <ProjectReference Include="..\Cofoundry.Plugins.Vimeo.Domain\Cofoundry.Plugins.Vimeo.Domain.csproj" />
+  </ItemGroup>
+  
+  
+</Project>

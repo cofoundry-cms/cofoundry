@@ -1,0 +1,15 @@
+﻿@model VimeoVideoDataModel
+@inject ICofoundryBlockTypeHelper<VimeoVideoDataModel> Cofoundry
+
+@Cofoundry.BlockType.UseDescription("A simple embedded vimeo video")
+
+@if (Model.Video != null)
+{
+    <h3>@Model.Video.Title</h3>
+
+    <iframe src="@("https://player.vimeo.com/video/" + Model.Video.Id)" width="640" height="360" frameborder="0" title="@Model.Video.Title" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+}
+else
+{
+    <p>No video selected</p>
+}

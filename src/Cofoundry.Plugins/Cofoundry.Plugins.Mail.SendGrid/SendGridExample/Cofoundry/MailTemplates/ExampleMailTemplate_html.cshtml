@@ -1,0 +1,15 @@
+﻿@model SendGridExample.ExampleMailTemplate
+@*
+    You can define either an html or plain text template, or both.
+    The html template should have "_html" appended to the file name.
+*@
+@{
+    Layout = null;
+}
+<h1>@Model.Subject</h1>
+<p>
+   Message:
+</p>
+<p>
+    @Model.Message
+</p>

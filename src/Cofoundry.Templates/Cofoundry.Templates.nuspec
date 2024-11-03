@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Cofoundry.Templates</id>
+    <version>1.0.0</version>
+    <description>
+      Project starter templates for Cofoundry CMS.
+    </description>
+    <authors>Cofoundry</authors>
+    <iconUrl>https://www.cofoundry.org/Content/images/external/logo-nuget-64x64.png</iconUrl>
+    <licenseUrl>https://github.com/cofoundry-cms/cofoundry/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://www.cofoundry.org</projectUrl>
+    <repository type="git" url="https://github.com/cofoundry-cms/Cofoundry.Templates/"/>
+    <copyright>Copyright © Cofoundry Technologies Ltd</copyright>
+    <tags>Cofoundry Templates</tags>
+    <packageTypes>
+      <packageType name="Template" />
+    </packageTypes>
+  </metadata>
+  
+  <files>
+	<file src="..\src\Cofoundry.Templates.Web\**\*.*" exclude="**\bin\**\*;**\obj\**\*;**/*.user;**\App_Data\**\*" target="content\Cofoundry.Templates.Web" />
+</files>
+</package>

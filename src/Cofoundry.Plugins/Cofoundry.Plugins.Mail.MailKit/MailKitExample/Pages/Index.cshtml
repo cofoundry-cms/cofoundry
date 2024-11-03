@@ -1,0 +1,35 @@
+﻿@page
+@model IndexModel
+
+<div class="row justify-content-center">
+    <form method="post" class="col col-8">
+        <h1 class="mb-4">Send a message</h1>
+
+        @if (Model.Result != null)
+        { 
+            <div class="alert alert-success" role="alert">
+                @Model.Result
+            </div>
+        }
+
+        <div class="mb-3">
+            <label asp-for="EmailAddress" class="form-label"></label>
+            <input asp-for="EmailAddress" class="form-control">
+            <span asp-validation-for="EmailAddress" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="DisplayName" class="form-label"></label>
+            <input asp-for="DisplayName" class="form-control">
+            <span asp-validation-for="DisplayName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Message" class="form-label"></label>
+            <textarea asp-for="Message" class="form-control"></textarea>
+            <span asp-validation-for="EmailAddress" class="text-danger"></span>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="mb-3 text-danger"></div>
+
+        <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+</div>

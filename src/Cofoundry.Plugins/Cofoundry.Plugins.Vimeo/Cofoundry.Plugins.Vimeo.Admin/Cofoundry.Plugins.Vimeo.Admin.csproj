@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFramework>net8.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+    
+    <PackageId>Cofoundry.Plugins.Vimeo.Admin</PackageId>
+    <Description>
+      Adds Vimeo video components to the the Cofoundry admin panel.
+    </Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>Copyright © Cofoundry.org</Copyright>
+    <PackageTags>Cofoundry Vimeo Admin</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\net8.0\Cofoundry.Plugins.Vimeo.Admin.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
+    <ProjectReference Include="..\Cofoundry.Plugins.Vimeo.Domain\Cofoundry.Plugins.Vimeo.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Plugins\Admin\Modules\Shared\Content\**\*.*;" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Remove="**\node_modules\**" />
+    <EmbeddedResource Remove="**\node_modules\**" />
+    <None Remove="**\node_modules\**" />
+  </ItemGroup>
+</Project>

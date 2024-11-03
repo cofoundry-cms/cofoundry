@@ -1,0 +1,57 @@
+﻿<!--HEADER-->
+<cms-page-header cms-title="Errors"></cms-page-header>
+
+<!-- Default toolbar -->
+<cms-page-actions>
+
+    <cms-pager cms-result="vm.result"
+               cms-query="vm.query"></cms-pager>
+
+    <cms-button cms-text="Filter"
+                ng-click="vm.toggleFilter()"></cms-button>
+
+    <!--FILTER-->
+    <cms-search-filter cms-query="vm.query"
+                       cms-filter="vm.filter"
+                       ng-show="vm.isFilterVisible">
+
+        <cms-form-field-text cms-title="Text"
+                             cms-model="vm.filter.text"></cms-form-field-text>
+
+    </cms-search-filter>
+
+</cms-page-actions>
+
+<!-- Scrollable content area -->
+<cms-page-body cms-content-type="form">
+
+    <cms-table-container cms-loading="vm.gridLoadState.isLoading">
+        <table>
+            <thead>
+                <tr>
+                    <th>Error</th>
+                    <th>Url</th>
+                    <th>User Agent</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-if="!vm.result.items.length">
+                    <td colspan="100" class="empty">Hooray! No Errors!</td>
+                </tr>
+                <tr ng-repeat="error in vm.result.items">
+                    <td>
+                        <a href="#/{{::error.errorId}}" style="word-break:break-word">{{::error.exceptionType}}</a>
+                    </td>
+                    <td>
+                        <a href="{{::error.url}}">{{::error.url}}</a>
+                    </td>
+                    <td>{{::error.userAgent}}</td>
+                    <td>
+                        <cms-time-ago cms-time="::error.createDate"></cms-time-ago>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </cms-table-container>
+</cms-page-body>

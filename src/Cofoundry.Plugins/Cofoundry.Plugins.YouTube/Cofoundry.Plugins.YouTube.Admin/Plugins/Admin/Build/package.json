@@ -1,0 +1,22 @@
+{
+  "name": "cofoundry",
+  "version": "1.0.0",
+  "author": "cofoundry.org",
+  "license": "MIT",
+  "devDependencies": {
+    "cssnano": "^4.1.10",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-concat-util": "^0.5.5",
+    "gulp-postcss": "^9.0.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-sass-glob": "^1.1.0",
+    "gulp-uglify": "^3.0.2",
+    "node-sass": "^5.0.0",
+    "postcss": "^8.2.4"
+  },
+  "dependencies": {
+    "branch-pipe": "^1.0.1",
+    "gulp-if": "^3.0.0"
+  }
+}

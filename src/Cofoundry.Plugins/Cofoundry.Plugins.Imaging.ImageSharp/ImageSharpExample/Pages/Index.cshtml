@@ -1,0 +1,106 @@
+﻿@page
+@model ImageSharpExample.Pages.IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Cofoundry.Domain
+@using Cofoundry.Web
+@inject IContentRouteLibrary contentRouteLibrary
+
+<style>
+    img {
+        border: solid 1px red;
+        background-color: lime;
+    }
+</style>
+
+<div class="jumbotron">
+    <h1>Cofoundry.Plugins.Imaging.ImageSharp</h1>
+</div>
+
+<div class="card bg-light mb-4">
+    <div class="card-body">
+        <h2 class="card-title">Filter</h2>
+        <form method="get">
+
+            <div class="form-group">
+                <label asp-for="ImageAssetId">Image Asset Id</label>
+                <input class="form-control" asp-for="ImageAssetId">
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Width">Width</label>
+                <input class="form-control" asp-for="Width">
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Height">Height</label>
+                <input class="form-control" asp-for="Height">
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UseBackgroundColor">Use Solid Background Color</label>
+                <input class="form-control" asp-for="UseBackgroundColor">
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Scale">Scale Mode</label>
+
+                <select asp-for="Scale" asp-items="Html.GetEnumSelectList<ImageScaleMode>()">
+                    <option value="">Default (Downsize only)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AnchorLocation">Anchor Location</label>
+
+                <select asp-for="AnchorLocation">
+                    <option value="@ImageAnchorLocation.MiddleCenter">Default (center-middle)</option>
+                    <option value="@ImageAnchorLocation.BottomCenter">bottom-center</option>
+                    <option value="@ImageAnchorLocation.BottomLeft">bottom-left</option>
+                    <option value="@ImageAnchorLocation.BottomRight">bottom-right</option>
+                    <option value="@ImageAnchorLocation.MiddleCenter">middle-center</option>
+                    <option value="@ImageAnchorLocation.MiddleLeft">middle-left</option>
+                    <option value="@ImageAnchorLocation.MiddleRight">middle-right</option>
+                    <option value="@ImageAnchorLocation.TopCenter">top-center</option>
+                    <option value="@ImageAnchorLocation.TopLeft">top-left</option>
+                    <option value="@ImageAnchorLocation.TopRight">top-right</option>
+                </select>
+            </div>
+
+            <input class="btn btn-primary" type="submit" value="Go">
+        </form>
+    </div>
+</div>
+
+
+
+<div class="card mb-2">
+    <div class="card-body">
+        <h2 class="card-title">Crop</h2>
+
+        <div class="col-lg-10">
+            <img src="@contentRouteLibrary.ImageAsset(Model.ImageAsset, Model.CreateResizeSettings(ImageFitMode.Crop))" />
+        </div>
+
+    </div>
+</div>
+
+<div class="card mb-2">
+    <div class="card-body">
+        <h2 class="card-title">Max</h2>
+
+        <div class="col-lg-10">
+            <img src="@contentRouteLibrary.ImageAsset(Model.ImageAsset, Model.CreateResizeSettings(ImageFitMode.Max))"/>
+        </div>
+    </div>
+</div>
+
+
+<div class="card mb-2">
+    <div class="card-body">
+        <h2 class="card-title">Pad</h2>
+
+        <div class="col-lg-10">
+            <img src="@contentRouteLibrary.ImageAsset(Model.ImageAsset, Model.CreateResizeSettings(ImageFitMode.Pad))"/>
+        </div>
+    </div>
+</div>

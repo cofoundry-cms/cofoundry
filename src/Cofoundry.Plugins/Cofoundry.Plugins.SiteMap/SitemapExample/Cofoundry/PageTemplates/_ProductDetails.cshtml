@@ -1,0 +1,16 @@
+﻿@model ICustomEntityPageViewModel<ProductPageDisplayModel>
+@inject ICofoundryTemplateHelper<ICustomEntityPageViewModel<ProductPageDisplayModel>> Cofoundry
+
+@Cofoundry.Template.UseDescription("A template for products")
+
+<h1>@Model.PageTitle</h1>
+<p>
+    @Model.CustomEntity.Model.ShortDescription
+</p>
+<div>
+    @(await Cofoundry.Template.Region("Body")
+        .AllowMultipleBlocks()
+        .AllowBlockType<PlainTextDataModel>()
+        .EmptyContentMinHeight(500)
+        .InvokeAsync())
+</div>
