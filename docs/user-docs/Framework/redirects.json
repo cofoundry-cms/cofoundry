@@ -1,0 +1,5 @@
+{
+    "CQS": "data-access/cqs",
+    "Paged Queries": "data-access/paged-queries",
+    "Entity Framework & DbContext Tools": "data-access/entity-framework-and-dbcontext-tools"
+}

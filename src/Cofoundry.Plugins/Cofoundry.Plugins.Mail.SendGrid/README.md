@@ -1,6 +1,5 @@
 # Cofoundry.Plugins.Mail.SendGrid
 
-[![Build status](https://ci.appveyor.com/api/projects/status/wquf931go22ibjg6?svg=true)](https://ci.appveyor.com/project/Cofoundry/cofoundry-plugins-mail-sendgrid)
 [![NuGet](https://img.shields.io/nuget/v/Cofoundry.Plugins.Mail.SendGrid.svg)](https://www.nuget.org/packages/Cofoundry.Plugins.Mail.SendGrid/)
 
 

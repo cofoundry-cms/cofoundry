@@ -1,6 +1,5 @@
 # Cofoundry.Plugins.BackgroundTasks.Hangfire
 
-[![Build status](https://ci.appveyor.com/api/projects/status/7osl8bfowax1yysi?svg=true)](https://ci.appveyor.com/project/Cofoundry/cofoundry-plugins-backgroundtasks-hangfire)
 [![NuGet](https://img.shields.io/nuget/v/Cofoundry.Plugins.BackgroundTasks.Hangfire.svg)](https://www.nuget.org/packages/Cofoundry.Plugins.BackgroundTasks.Hangfire/)
 
 

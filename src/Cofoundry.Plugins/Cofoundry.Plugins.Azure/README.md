@@ -1,6 +1,5 @@
 # Cofoundry.Plugins.Azure
 
-[![Build status](https://ci.appveyor.com/api/projects/status/65bx24r2ugb1hoko?svg=true)](https://ci.appveyor.com/project/Cofoundry/cofoundry-plugins-azure)
 [![NuGet](https://img.shields.io/nuget/v/Cofoundry.Plugins.Azure.svg)](https://www.nuget.org/packages/Cofoundry.Plugins.Azure/)
 
 

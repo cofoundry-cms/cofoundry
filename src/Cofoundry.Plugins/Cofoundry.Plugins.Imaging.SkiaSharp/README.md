@@ -1,6 +1,5 @@
 # Cofoundry.Plugins.Imaging.SkiaSharp
 
-[![Build status](https://ci.appveyor.com/api/projects/status/usl4w7v90xorrd98?svg=true)](https://ci.appveyor.com/project/Cofoundry/cofoundry-plugins-imaging-skiasharp)
 [![NuGet](https://img.shields.io/nuget/v/Cofoundry.Plugins.Imaging.SkiaSharp.svg)](https://www.nuget.org/packages/Cofoundry.Plugins.Imaging.SkiaSharp/)
 
 This library is a plugin for [Cofoundry](https://www.cofoundry.org). For more information on getting started with Cofoundry check out the [Cofoundry repository](https://github.com/cofoundry-cms/cofoundry).
