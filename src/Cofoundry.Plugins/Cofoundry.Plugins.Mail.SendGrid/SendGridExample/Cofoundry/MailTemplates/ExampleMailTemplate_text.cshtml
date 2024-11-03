@@ -1,0 +1,17 @@
+﻿@model SendGridExample.ExampleMailTemplate
+@*
+    You can define either an html or plain text template, or both.
+    The plain text template should have "_text" appended to the file name.
+    If both templates are defined then a multi-part email is sent, where the
+    plain text template is displayed when HTML is not permitted.
+*@
+@{
+    Layout = null;
+}
+@Model.Subject
+
+Message:
+
+-------------------------------------------------
+@Model.Message
+--------------------------------------------------

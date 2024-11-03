@@ -1,0 +1,15 @@
+﻿<Project>
+  <PropertyGroup>
+    <Authors>Cofoundry</Authors>
+    <PackageIconUrl>https://www.cofoundry.org/Content/images/external/logo-nuget-64x64.png</PackageIconUrl>
+    <PackageLicenseUrl>https://github.com/cofoundry-cms/Cofoundry.Plugins.Azure/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://www.cofoundry.org</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/cofoundry-cms/Cofoundry.Plugins.Azure/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageVersion>$(NuGetVersion)</PackageVersion>
+    <Version>0.1.1-ci0002</Version>
+    <FileVersion>$(FileVersion)</FileVersion>
+    <InformationalVersion>$(InformationalVersion)</InformationalVersion>
+    <Copyright>$(Copyright)</Copyright>
+  </PropertyGroup>
+</Project>

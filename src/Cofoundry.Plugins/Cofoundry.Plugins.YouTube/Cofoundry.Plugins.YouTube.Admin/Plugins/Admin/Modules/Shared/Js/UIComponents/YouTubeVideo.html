@@ -1,0 +1,9 @@
+﻿<img ng-if="!model"
+     ng-src="{{::replacementUrl}}"
+     title="Not set" />
+<iframe ng-if="model"
+        ng-src="{{videoUrl}}"
+        width="480" height="270"
+        frameborder="0"
+        allow="encrypted-media" 
+        allowfullscreen></iframe>

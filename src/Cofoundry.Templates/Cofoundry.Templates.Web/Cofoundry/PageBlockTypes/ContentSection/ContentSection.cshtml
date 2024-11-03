@@ -1,0 +1,13 @@
+﻿@model ContentSectionDataModel
+@inject ICofoundryBlockTypeHelper<ContentSectionDataModel> Cofoundry
+
+@Cofoundry.BlockType.UseDescription("This is a content row with a heading")
+
+<div>
+    @if (!string.IsNullOrWhiteSpace(Model.Title))
+    {
+        <h1>@Model.Title</h1>
+    }
+
+    @Cofoundry.Sanitizer.Sanitize(Model.HtmlText)
+</div>

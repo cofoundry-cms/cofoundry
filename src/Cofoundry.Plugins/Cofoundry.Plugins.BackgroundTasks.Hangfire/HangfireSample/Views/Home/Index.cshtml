@@ -1,0 +1,11 @@
+﻿@model PagedQueryResult<CustomEntityRenderSummary>
+
+<h1>Hangfire Test Page</h1>
+
+<p>@Model.TotalItems Products added by the background task</p>
+<ul>
+    @foreach (var item in Model.Items)
+    {
+        <li>@item.Title</li>
+    }
+</ul>

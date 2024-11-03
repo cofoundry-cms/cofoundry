@@ -1,0 +1,13 @@
+﻿@model IPageViewModel
+@inject ICofoundryTemplateHelper<IPageViewModel> Cofoundry
+
+@Cofoundry.Template.UseDescription("A template for simple pages with flexible block content")
+
+
+<h1>@Model.PageTitle</h1>
+
+@(await Cofoundry.Template.Region("Body")
+    .AllowMultipleBlocks()
+    .AllowBlockType<VimeoVideoDataModel>()
+    .EmptyContentMinHeight(500)
+    .InvokeAsync())
