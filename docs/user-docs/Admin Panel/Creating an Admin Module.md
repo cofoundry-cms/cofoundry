@@ -1,0 +1,5 @@
+﻿The Cofoundry admin panel uses a modular system that let's you slot in your own sections into the UI. An admin module simply points to a route so technically you can use any front-end framework you like to implement your section, but in most cases you'll want to use the Cofoundry admin framework which is implemented in Angular.js.
+
+*This area is still in development and will likely change in a future update. In particular the admin framework will likely be migrated away from Angular.js 1.x to a more modern framework.*
+
+*Documentation and support will be provided once the admin module and plugin system has stabalized (likely post-1.0). If you want to go ahead anyway the best reference is the source code for [Cofoundry.Web.Admin](https://github.com/cofoundry-cms/cofoundry/tree/master/src/Cofoundry.Web.Admin/Admin/Modules) which uses the same modular system*

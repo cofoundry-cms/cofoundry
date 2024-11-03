@@ -1,6 +1,5 @@
 # Cofoundry.Plugins.ErrorLogging
 
-[![Build status](https://ci.appveyor.com/api/projects/status/r3j6maiudwv42r2d?svg=true)](https://ci.appveyor.com/project/Cofoundry/cofoundry-plugins-errorlogging)
 [![NuGet](https://img.shields.io/nuget/v/Cofoundry.Plugins.ErrorLogging.svg)](https://www.nuget.org/packages/Cofoundry.Plugins.ErrorLogging/)
 
 

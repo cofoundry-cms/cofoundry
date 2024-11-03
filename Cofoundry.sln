@@ -36,10 +36,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Azure", "src\Cofoundry.Plugins\Cofoundry.Plugins.Azure\Cofoundry.Plugins.Azure\Cofoundry.Plugins.Azure.csproj", "{883632A4-7D37-496E-9844-D0B2C118C51C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Azure", "Azure", "{F6F4FFFC-FB00-4604-A4DF-DBCDD648D531}"
+	ProjectSection(SolutionItems) = preProject
+		src\Cofoundry.Plugins\Cofoundry.Plugins.Azure\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.Azure\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.BackgroundTasks.Hangfire", "src\Cofoundry.Plugins\Cofoundry.Plugins.BackgroundTasks.Hangfire\Cofoundry.Plugins.BackgroundTasks.Hangfire\Cofoundry.Plugins.BackgroundTasks.Hangfire.csproj", "{898DCAC1-18AA-437A-BE24-B57FA47D174B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackgroundTasks.Hangfire", "BackgroundTasks.Hangfire", "{E3274C98-899C-4B60-B96E-61122794E8AE}"
+	ProjectSection(SolutionItems) = preProject
+		src\Cofoundry.Plugins\Cofoundry.Plugins.BackgroundTasks.Hangfire\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.BackgroundTasks.Hangfire\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HangfireSample", "src\Cofoundry.Plugins\Cofoundry.Plugins.BackgroundTasks.Hangfire\HangfireSample\HangfireSample.csproj", "{55D59EF8-FDF8-4ED4-B16D-26169B3FC02D}"
 EndProject
@@ -48,6 +54,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Azure.Tests", "test\Cofoundry.Plugins.Tests\Cofoundry.Plugins.Azure.Tests\Cofoundry.Plugins.Azure.Tests.csproj", "{0D5495C7-4934-4440-8673-19B7FB10E7F8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ErrorLogging", "ErrorLogging", "{F18C8FFD-CA34-4D99-9F55-EAF8D45FF083}"
+	ProjectSection(SolutionItems) = preProject
+		src\Cofoundry.Plugins\Cofoundry.Plugins.ErrorLogging\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.ErrorLogging\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.ErrorLogging", "src\Cofoundry.Plugins\Cofoundry.Plugins.ErrorLogging\Cofoundry.Plugins.ErrorLogging\Cofoundry.Plugins.ErrorLogging.csproj", "{44778E26-08C7-48AC-AFCF-BE44165CD5A1}"
 EndProject
@@ -56,12 +65,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ErrorLoggingExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.ErrorLogging\ErrorLoggingExample\ErrorLoggingExample.csproj", "{5F41DC01-64FB-41D4-A25B-CFE563F60CE3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imaging.ImageSharp", "Imaging.ImageSharp", "{7D2F0A5C-D5A7-4791-9E55-C382C52F933F}"
+	ProjectSection(SolutionItems) = preProject
+		src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.ImageSharp\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.ImageSharp\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Imaging.ImageSharp", "src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.ImageSharp\Cofoundry.Plugins.Imaging.ImageSharp\Cofoundry.Plugins.Imaging.ImageSharp.csproj", "{83112E76-5984-40F1-B5F9-1B92C78F9208}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageSharpExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.ImageSharp\ImageSharpExample\ImageSharpExample.csproj", "{38E1D540-5C5D-4F81-9A96-58F4DB33667F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imaging.SkiaSharp", "Imaging.SkiaSharp", "{3B2455A4-E53F-4E8F-83A2-21A9528ACD4F}"
+	ProjectSection(SolutionItems) = preProject
+		src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.SkiaSharp\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.SkiaSharp\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Imaging.SkiaSharp", "src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.SkiaSharp\Cofoundry.Plugins.Imaging.SkiaSharp\Cofoundry.Plugins.Imaging.SkiaSharp.csproj", "{6EB01163-020A-4F66-877A-9CD5F5D2078E}"
 EndProject
@@ -70,24 +85,36 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Imaging.SkiaSharp.Tests", "test\Cofoundry.Plugins.Tests\Cofoundry.Plugins.Imaging.SkiaSharp.Tests\Cofoundry.Plugins.Imaging.SkiaSharp.Tests.csproj", "{97F72C95-A3E6-4FE3-B921-5B4A2A3CBC09}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail.MailKit", "Mail.MailKit", "{EE903929-8E76-42D2-9397-D19BB429518C}"
+	ProjectSection(SolutionItems) = preProject
+		src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.MailKit\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.MailKit\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Mail.MailKit", "src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.MailKit\Cofoundry.Plugins.Mail.MailKit\Cofoundry.Plugins.Mail.MailKit.csproj", "{17673507-9B76-4F70-9A39-E5DBF36ACA8D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailKitExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.MailKit\MailKitExample\MailKitExample.csproj", "{DA8944AA-1D85-4382-9540-41DA70A03369}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail.SendGrid", "Mail.SendGrid", "{C08628A4-B7AA-4A06-A4CF-D4D769A5CD01}"
+	ProjectSection(SolutionItems) = preProject
+		src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.SendGrid\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.SendGrid\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Mail.SendGrid", "src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.SendGrid\Cofoundry.Plugins.Mail.SendGrid\Cofoundry.Plugins.Mail.SendGrid.csproj", "{5665C520-BE82-470A-96E7-9F0B515DB0E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendGridExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.SendGrid\SendGridExample\SendGridExample.csproj", "{15ACB756-6A61-4E2C-A2AE-C5867751EB8F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SiteMap", "SiteMap", "{E3D9BD2E-DCE8-4A7F-A19A-693083C7CFEB}"
+	ProjectSection(SolutionItems) = preProject
+		src\Cofoundry.Plugins\Cofoundry.Plugins.SiteMap\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.SiteMap\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.SiteMap", "src\Cofoundry.Plugins\Cofoundry.Plugins.SiteMap\Cofoundry.Plugins.SiteMap\Cofoundry.Plugins.SiteMap.csproj", "{0BDAAEEF-FF06-480E-A948-4D3F9A5F6C58}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SitemapExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.SiteMap\SitemapExample\SitemapExample.csproj", "{C5969778-88D5-441C-B0AF-420C5AC67304}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vimeo", "Vimeo", "{795B1930-28AC-404C-9328-EBF01713ACE8}"
+	ProjectSection(SolutionItems) = preProject
+		src\Cofoundry.Plugins\Cofoundry.Plugins.Vimeo\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.Vimeo\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Vimeo.Domain", "src\Cofoundry.Plugins\Cofoundry.Plugins.Vimeo\Cofoundry.Plugins.Vimeo.Domain\Cofoundry.Plugins.Vimeo.Domain.csproj", "{002632C2-D103-4B19-9759-81DF54CB0B1F}"
 EndProject
@@ -98,6 +125,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VimeoExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.Vimeo\VimeoExample\VimeoExample.csproj", "{071CEA93-19F6-4D7D-88B1-FBC25D786C1C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "YouTube", "YouTube", "{940AF760-EC11-48CD-A4E8-FFCB988A45E1}"
+	ProjectSection(SolutionItems) = preProject
+		src\Cofoundry.Plugins\Cofoundry.Plugins.YouTube\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.YouTube\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.YouTube.Domain", "src\Cofoundry.Plugins\Cofoundry.Plugins.YouTube\Cofoundry.Plugins.YouTube.Domain\Cofoundry.Plugins.YouTube.Domain.csproj", "{E8544A26-3918-44B6-A1E4-E2CF20C0291E}"
 EndProject

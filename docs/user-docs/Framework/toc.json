@@ -1,0 +1,17 @@
+[
+	"Website Startup",
+	"Data Access",
+	"Mail",
+	"Background Tasks",
+	"Dependency Injection",
+	"Startup Tasks",
+	"Auto Update",
+	"Roles & Permissions",
+	"Configuration Settings",
+	"Message Aggregator",
+	"Caching",
+	"Html Sanitizer",
+	"Static Files",
+	"JSON Configuration",
+	"Paged Queries"
+]

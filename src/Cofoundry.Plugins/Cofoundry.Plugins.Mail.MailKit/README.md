@@ -1,6 +1,5 @@
 # Cofoundry.Plugins.Mail.MailKit
 
-[![Build status](https://ci.appveyor.com/api/projects/status/2lfyem84399nrwfi?svg=true)](https://ci.appveyor.com/project/Cofoundry/cofoundry-plugins-mail-mailkit)
 [![NuGet](https://img.shields.io/nuget/v/Cofoundry.Plugins.Mail.MailKit.svg)](https://www.nuget.org/packages/Cofoundry.Plugins.Mail.MailKit/)
 
 
