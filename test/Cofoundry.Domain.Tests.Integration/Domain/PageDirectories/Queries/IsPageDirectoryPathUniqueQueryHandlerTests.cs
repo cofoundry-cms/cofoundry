@@ -1,14 +1,14 @@
 ﻿namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class IsPageDirectoryPathUniqueQueryHandlerTests
 {
     const string UNIQUE_PREFIX = "IsPageDirPathUnqQHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public IsPageDirectoryPathUniqueQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

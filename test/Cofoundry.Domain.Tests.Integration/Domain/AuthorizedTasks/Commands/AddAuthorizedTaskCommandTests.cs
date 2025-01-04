@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.AuthorizedTasks.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class AddAuthorizedTaskCommandTests
 {
     const string UNIQUE_PREFIX = "AddAuthTskTCHT-";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public AddAuthorizedTaskCommandTests(
-         DbDependentTestApplicationFactory appFactory
+         IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

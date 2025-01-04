@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.AuthorizedTasks.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class CleanupUsersCommandHandlerTests
 {
     const string UNIQUE_PREFIX = "CUpUsrCHT-";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public CleanupUsersCommandHandlerTests(
-         DbDependentTestApplicationFactory appFactory
+         IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

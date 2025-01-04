@@ -1,12 +1,12 @@
 ﻿namespace Cofoundry.Domain.Tests.Integration.UserAreas.Queries;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class GetUserAreaMicroSummaryByCodeQueryHandlerTests
 {
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public GetUserAreaMicroSummaryByCodeQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

@@ -4,17 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Queries;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class ValidateUserCredentialsQueryHandlerTests
 {
     const string TEST_DOMAIN = "@ValidateUserCredentialsQueryHandlerTests.example.com";
     const string VALID_USERNAME = "dade" + TEST_DOMAIN;
     const string VALID_PASSWORD = "-Z3r0c007-";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public ValidateUserCredentialsQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

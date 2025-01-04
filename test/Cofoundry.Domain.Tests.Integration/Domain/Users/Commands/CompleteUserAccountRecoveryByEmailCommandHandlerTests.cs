@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class CompleteUserAccountRecoveryByEmailCommandHandlerTests
 {
     const string UNIQUE_PREFIX = "CompAccRecCHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public CompleteUserAccountRecoveryByEmailCommandHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;
@@ -210,7 +210,7 @@ public class CompleteUserAccountRecoveryByEmailCommandHandlerTests
 
     private static async Task<AuthorizedTask> AddUserAndInitiateRequest(
         string uniqueData,
-        DbDependentTestApplication app,
+        IntegrationTestApplication app,
         Action<AddUserCommand>? configration = null
         )
     {
@@ -238,7 +238,7 @@ public class CompleteUserAccountRecoveryByEmailCommandHandlerTests
     }
 
     private static async Task<AuthorizedTask> GetResetRequest(
-        DbDependentTestApplication app,
+        IntegrationTestApplication app,
         int userId
         )
     {

@@ -1,12 +1,14 @@
-﻿using Cofoundry.Core.Caching;
+using Cofoundry.Core.Caching;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Testcontainers.MsSql;
 
 namespace Cofoundry.Web.Tests.Integration;
 
 /// <summary>
-/// Implementation of <see cref="WebApplicationFactory"/> designed to run in
+/// Implementation of <see cref="WebApplicationFactory{TEntryPoint}"/> designed to run in
 /// the Cofoundry.Web.Tests.Integration project.
 /// </summary>
 public class TestWebApplicationFactory : TestWebApplicationFactory<Startup>
@@ -26,7 +28,10 @@ public class TestWebApplicationFactory<TEntryPoint>
     , IAsyncLifetime
     where TEntryPoint : class
 {
+    const string ConnectionStringSetting = "Cofoundry:Database:ConnectionString";
+
     private SeededEntities? _seededEntities;
+    private MsSqlContainer? _msSqlContainer;
 
     protected override IHostBuilder CreateHostBuilder()
     {
@@ -46,11 +51,16 @@ public class TestWebApplicationFactory<TEntryPoint>
 
         // https://github.com/dotnet/aspnetcore/issues/17707#issuecomment-609061917
         builder.UseContentRoot(Directory.GetCurrentDirectory());
+        builder.ConfigureAppConfiguration(builder =>
+        {
+            TestApplicationConfigurationBuilder.AddConfiguration(builder, ConfigureDb);
+        });
         builder.UseStartup<TEntryPoint>();
         builder.ConfigureServices(services =>
         {
             services.AddSingleton(_seededEntities);
         });
+
         base.ConfigureWebHost(builder);
     }
 
@@ -69,20 +79,47 @@ public class TestWebApplicationFactory<TEntryPoint>
     /// Called by xUnit after the class has been created, this bootstraps
     /// the database at the start of the test session.
     /// </summary>
-    /// <returns></returns>
     public virtual async Task InitializeAsync()
     {
-        using var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
-        var dbInitializer = new TestDatabaseInitializer(serviceProvider);
+        await StartDbAsync();
 
+        using var serviceProvider = IntegrationTestApplicationServiceProviderFactory.CreateTestHostProvider(ConfigureDb);
+        var dbInitializer = new TestDatabaseInitializer(serviceProvider);
         await dbInitializer.InitializeCofoundry();
         await dbInitializer.DeleteTestData();
         _seededEntities = await dbInitializer.SeedGlobalEntities();
     }
 
-    public new Task DisposeAsync()
+    private async Task StartDbAsync()
+    {
+        var configuration = TestApplicationConfigurationBuilder.BuildConfiguration();
+        var connectionString = configuration.GetValue<string>(ConnectionStringSetting);
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            _msSqlContainer = new MsSqlBuilder().Build();
+            await _msSqlContainer.StartAsync();
+        }
+    }
+
+    private void ConfigureDb(IConfigurationBuilder configurationBuilder)
+    {
+        if (_msSqlContainer != null)
+        {
+            var connectionString = _msSqlContainer?.GetConnectionString();
+            configurationBuilder.AddInMemoryCollection(
+                [new(ConnectionStringSetting, connectionString)]
+                );
+        }
+    }
+
+    public new async Task DisposeAsync()
     {
         base.Dispose();
-        return Task.CompletedTask;
+
+        if (_msSqlContainer != null)
+        {
+            await _msSqlContainer.DisposeAsync();
+        }
     }
 }

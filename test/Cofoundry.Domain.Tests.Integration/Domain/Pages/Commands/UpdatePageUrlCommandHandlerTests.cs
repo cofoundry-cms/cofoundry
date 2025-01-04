@@ -5,15 +5,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Cofoundry.Domain.Tests.Integration.Pages.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class UpdatePageUrlCommandHandlerTests
 {
     const string UNIQUE_PREFIX = "UpdPageUrlCHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public UpdatePageUrlCommandHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

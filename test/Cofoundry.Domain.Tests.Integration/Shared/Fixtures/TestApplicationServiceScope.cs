@@ -1,10 +1,10 @@
-﻿namespace Cofoundry.Domain.Tests.Integration;
+namespace Cofoundry.Domain.Tests.Integration;
 
 /// <summary>
 /// A convenient wrapper around an <see cref="IServiceScope"/>
 /// to make it easier to reference services in tests.
 /// </summary>
-public class TestApplicationServiceScope : IServiceProvider, IDisposable
+public sealed class TestApplicationServiceScope : IServiceProvider, IDisposable
 {
     private readonly IServiceScope _baseServiceProviderScope;
 

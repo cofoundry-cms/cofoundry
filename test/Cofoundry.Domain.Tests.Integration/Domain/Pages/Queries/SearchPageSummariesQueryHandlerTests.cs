@@ -1,14 +1,14 @@
 ﻿namespace Cofoundry.Domain.Tests.Integration.Pages.Queries;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class SearchPageSummariesQueryHandlerTests
 {
     const string UNIQUE_PREFIX = "SearchPageDetailsSumQHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public SearchPageSummariesQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

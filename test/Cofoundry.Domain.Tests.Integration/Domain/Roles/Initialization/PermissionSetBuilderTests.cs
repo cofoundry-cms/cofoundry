@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Tests.Integration.Roles;
 
@@ -7,7 +7,7 @@ public class PermissionSetBuilderTests
     [Fact]
     public void Build_WhenNoMethodCalled_ReturnsEmpty()
     {
-        using var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
+        using var serviceProvider = CreateServiceProvider();
         var allPermissions = GetPermissions(serviceProvider);
         var builder = CreateBuilder(serviceProvider, allPermissions);
 
@@ -24,7 +24,7 @@ public class PermissionSetBuilderTests
     [Fact]
     public void IncludeAll_AddAll()
     {
-        using var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
+        using var serviceProvider = CreateServiceProvider();
         var allPermissions = GetPermissions(serviceProvider);
         var builder = CreateBuilder(serviceProvider, allPermissions);
 
@@ -38,7 +38,7 @@ public class PermissionSetBuilderTests
     [Fact]
     public void IncludeAll_WhenInvokedTwice_ReturnsNoDuplicates()
     {
-        using var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
+        using var serviceProvider = CreateServiceProvider();
         var allPermissions = GetPermissions(serviceProvider);
         var builder = CreateBuilder(serviceProvider, allPermissions);
 
@@ -61,7 +61,7 @@ public class PermissionSetBuilderTests
     [Fact]
     public void CanIncludeSinglePermission()
     {
-        using var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
+        using var serviceProvider = CreateServiceProvider();
         var allPermissions = GetPermissions(serviceProvider);
         var builder = CreateBuilder(serviceProvider, allPermissions);
         var numCreatePermissions = allPermissions.Count(p => p.PermissionType.Code == CommonPermissionTypes.CreatePermissionCode);
@@ -81,7 +81,7 @@ public class PermissionSetBuilderTests
     [Fact]
     public void CanExludeByPermissionType()
     {
-        using var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
+        using var serviceProvider = CreateServiceProvider();
         var allPermissions = GetPermissions(serviceProvider);
         var builder = CreateBuilder(serviceProvider, allPermissions);
         var numCreatePermissions = allPermissions.Count(p => p.PermissionType.Code == CommonPermissionTypes.CreatePermissionCode);
@@ -103,7 +103,7 @@ public class PermissionSetBuilderTests
     [Fact]
     public void CanApplyRoleConfiguration()
     {
-        using var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
+        using var serviceProvider = CreateServiceProvider();
         var allPermissions = GetPermissions(serviceProvider);
         var builder = CreateBuilder(serviceProvider, allPermissions);
         var anonymousRolePermissions = allPermissions.FilterToAnonymousRoleDefaults();
@@ -123,7 +123,7 @@ public class PermissionSetBuilderTests
     [Fact]
     public void CanUseEntityBuilders()
     {
-        using var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
+        using var serviceProvider = CreateServiceProvider();
         var allPermissions = GetPermissions(serviceProvider);
         var builder = CreateBuilder(serviceProvider, allPermissions);
 
@@ -150,7 +150,7 @@ public class PermissionSetBuilderTests
     [Fact]
     public void WhenNotInAvailablePermissions_DoesNotAdd()
     {
-        using var serviceProvider = DbDependentTestApplicationServiceProviderFactory.CreateTestHostProvider();
+        using var serviceProvider = CreateServiceProvider();
         var allPermissions = new IPermission[]
         {
             new PageDirectoryReadPermission(),
@@ -170,6 +170,11 @@ public class PermissionSetBuilderTests
             result.Should().Contain(p => p is PageDirectoryReadPermission);
             result.Should().Contain(p => p is PageDirectoryDeletePermission);
         }
+    }
+
+    private static ServiceProvider CreateServiceProvider()
+    {
+        return IntegrationTestApplicationServiceProviderFactory.CreateTestHostProvider();
     }
 
     private static IEnumerable<IPermission> GetPermissions(IServiceProvider serviceProvider)

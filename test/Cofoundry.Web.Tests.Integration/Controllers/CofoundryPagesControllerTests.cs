@@ -1,19 +1,16 @@
-﻿namespace Cofoundry.Web.Tests.Integration.Controllers;
+namespace Cofoundry.Web.Tests.Integration.Controllers;
 
-[Collection(nameof(DbDependentTestApplicationFactory))]
+[Collection(nameof(TestWebApplicationFactory))]
 public class CofoundryPagesControllerTests
 {
     const string UNIQUE_PREFIX = "CFPagesCtrl ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
     private readonly TestWebApplicationFactory _webApplicationFactory;
 
     public CofoundryPagesControllerTests(
-        DbDependentTestApplicationFactory appFactory,
         TestWebApplicationFactory webApplicationFactory
         )
     {
-        _appFactory = appFactory;
         _webApplicationFactory = webApplicationFactory;
     }
 

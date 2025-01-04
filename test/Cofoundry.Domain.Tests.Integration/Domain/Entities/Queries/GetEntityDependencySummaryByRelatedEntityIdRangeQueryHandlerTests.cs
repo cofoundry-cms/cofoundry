@@ -5,15 +5,15 @@
 /// query the tests in <see cref="GetEntityDependencySummaryByRelatedEntityIdQueryHandlerTests"/>
 /// should cover most of this.
 /// </remarks>
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandlerTests
 {
     const string UNIQUE_PREFIX = "GEntDepSumByRelIdRngQHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

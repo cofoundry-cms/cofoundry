@@ -175,7 +175,7 @@ public class CustomEntityDefinitionRepositoryTests
         public bool AutoPublish => throw new NotImplementedException();
     }
 
-    private List<ICustomEntityDefinition> GetBaseCustomEntityDefinitions()
+    private static List<ICustomEntityDefinition> GetBaseCustomEntityDefinitions()
     {
         return
         [

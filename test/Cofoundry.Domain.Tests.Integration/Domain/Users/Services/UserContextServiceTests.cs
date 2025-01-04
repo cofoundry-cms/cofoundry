@@ -2,15 +2,15 @@
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Services;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class UserContextServiceTests
 {
     const string UNIQUE_PREFIX = "UserContextSvc";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public UserContextServiceTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

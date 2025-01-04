@@ -187,7 +187,7 @@ public class RoleDefinitionRepositoryTests
         }
     }
 
-    private List<IRoleDefinition> GetBaseRoleDefinitions()
+    private static List<IRoleDefinition> GetBaseRoleDefinitions()
     {
         return
         [

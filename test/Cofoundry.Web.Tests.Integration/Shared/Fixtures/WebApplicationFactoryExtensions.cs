@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 
 namespace Cofoundry.Web.Tests.Integration;
@@ -52,7 +52,7 @@ public static class WebApplicationFactoryExtensions
 
     /// <summary>
     /// <para>
-    /// Creates a new <see cref="DbDependentTestApplication"/> instance
+    /// Creates a new <see cref="IntegrationTestApplication"/> instance
     /// which can be used to create and work with test entities directly
     /// through the domain layer with the same API used in the domain
     /// integration tests project.
@@ -65,21 +65,20 @@ public static class WebApplicationFactoryExtensions
     /// app will be reset when a new client is created.
     /// </para>
     /// <para>
-    /// The application should be disposed of
-    /// when you are done with it.
+    /// The application should be disposed of when you are done with it.
     /// </para>
     /// </summary>
-    public static DbDependentTestApplication CreateApp<TEntryPoint>(this WebApplicationFactory<TEntryPoint> factory)
+    public static IntegrationTestApplication CreateApp<TEntryPoint>(this WebApplicationFactory<TEntryPoint> factory)
         where TEntryPoint : class
     {
         var seededEntities = factory.Services.GetRequiredService<SeededEntities>();
 
         var factoryWithAppDependencies = factory.WithServices(services =>
         {
-            DbDependentTestApplicationServiceProviderFactory.ConfigureTestServices(services);
+            IntegrationTestApplicationServiceProviderFactory.ConfigureTestServices(services);
         });
 
-        var app = new DbDependentTestApplication(factoryWithAppDependencies.Services, seededEntities);
+        var app = new IntegrationTestApplication(factoryWithAppDependencies.Services, seededEntities);
 
         return app;
     }

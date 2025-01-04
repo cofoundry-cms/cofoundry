@@ -1,14 +1,14 @@
 ﻿namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class GetPageDirectoryTreeQueryHandlerTests
 {
     const string UNIQUE_PREFIX = "GAllPageDirTreeQHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public GetPageDirectoryTreeQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

@@ -2,13 +2,13 @@
 
 namespace Cofoundry.Domain.Tests.Integration.Users.BackgroundTasks;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class UserCleanupBackgroundTaskTests
 {
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public UserCleanupBackgroundTaskTests(
-         DbDependentTestApplicationFactory appFactory
+         IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

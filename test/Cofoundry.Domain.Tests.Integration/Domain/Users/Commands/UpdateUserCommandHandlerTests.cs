@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class UpdateUserCommandHandlerTests
 {
     private const string UNIQUE_PREFIX = "UpdUsrCHT-";
     private const string PASSWORD = "neverbr3@kthechange";
     private const string EMAIL_DOMAIN = $"@{UNIQUE_PREFIX}.example.com";
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public UpdateUserCommandHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;
@@ -716,7 +716,7 @@ public class UpdateUserCommandHandlerTests
         };
     }
 
-    private static async Task<User?> GetUserByIdAsync(DbDependentTestApplication app, int userId)
+    private static async Task<User?> GetUserByIdAsync(IntegrationTestApplication app, int userId)
     {
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 

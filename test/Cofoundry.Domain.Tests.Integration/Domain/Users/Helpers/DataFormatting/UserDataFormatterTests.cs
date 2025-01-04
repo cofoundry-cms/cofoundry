@@ -7,13 +7,13 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Helpers;
 /// This is mostly covered by command tests, so we only need to test
 /// custom implementation resolution here.
 /// </summary>
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class UserDataFormatterTests
 {
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public UserDataFormatterTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;
