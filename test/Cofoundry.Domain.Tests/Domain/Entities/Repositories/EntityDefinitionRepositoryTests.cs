@@ -180,7 +180,7 @@ public class EntityDefinitionRepositoryTests
         public bool AutoPublish => throw new NotImplementedException();
     }
 
-    private List<ICustomEntityDefinition> GetBaseCustomEntityDefinitions()
+    private static List<ICustomEntityDefinition> GetBaseCustomEntityDefinitions()
     {
         return
         [
@@ -202,7 +202,7 @@ public class EntityDefinitionRepositoryTests
         ];
     }
 
-    private List<IEntityDefinition> GetBaseEntityDefinitions()
+    private static List<IEntityDefinition> GetBaseEntityDefinitions()
     {
         return
         [

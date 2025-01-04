@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.Validation;
+using Cofoundry.Core.Validation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -13,14 +14,17 @@ public class ConfigurationSettingsFactory<TSettings> : IConfigurationSettingsFac
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IModelValidationService _modelValidationService;
+    private readonly IConfiguration _configuration;
 
     public ConfigurationSettingsFactory(
         IServiceProvider serviceProvider,
-        IModelValidationService modelValidationService
+        IModelValidationService modelValidationService,
+        IConfiguration configuration
         )
     {
         _serviceProvider = serviceProvider;
         _modelValidationService = modelValidationService;
+        _configuration = configuration;
     }
 
     /// <summary>

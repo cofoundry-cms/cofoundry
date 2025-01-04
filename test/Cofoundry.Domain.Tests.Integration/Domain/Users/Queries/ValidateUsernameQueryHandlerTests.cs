@@ -2,15 +2,15 @@
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Queries;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class ValidateUsernameQueryHandlerTests
 {
     const string UNIQUE_PREFIX = "ValUsernameQHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public ValidateUsernameQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

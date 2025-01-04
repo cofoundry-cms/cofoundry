@@ -7,15 +7,15 @@ namespace Cofoundry.Domain.Tests.Integration.Pages.Commands;
 /// Note that this handler calls AddPageCommandHandler internally
 /// so there is no need to repeat tests for Url uniqueness etc.
 /// </remarks>
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class DuplicatePageCommandHandlerTests
 {
     const string UNIQUE_PREFIX = "DuplicatePageCHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public DuplicatePageCommandHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

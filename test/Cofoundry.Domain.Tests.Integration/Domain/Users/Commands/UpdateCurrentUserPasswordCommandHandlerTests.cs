@@ -5,17 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class UpdateCurrentUserPasswordCommandHandlerTests
 {
     const string UNIQUE_PREFIX = "UpdCurUsrPwCHT";
     const string OLD_PASSWORD = "Gr!sh3nk0!";
     const string NEW_PASSWORD = "S3v3rn@ya!";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public UpdateCurrentUserPasswordCommandHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

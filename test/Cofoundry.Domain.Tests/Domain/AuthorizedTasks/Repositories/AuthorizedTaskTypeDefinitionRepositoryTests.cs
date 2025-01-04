@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Tests;
 
@@ -174,7 +174,7 @@ public class AuthorizedTaskTypeDefinitionRepositoryTests
         public required string Name { get; set; }
     }
 
-    private List<IAuthorizedTaskTypeDefinition> GetDefinitions()
+    private static List<IAuthorizedTaskTypeDefinition> GetDefinitions()
     {
         return
         [

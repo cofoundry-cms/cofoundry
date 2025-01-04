@@ -1,22 +1,19 @@
-﻿using Cofoundry.Core.Time;
+using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
 
 namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Claims;
 
-[Collection(nameof(DbDependentTestApplicationFactory))]
+[Collection(nameof(TestWebApplicationFactory))]
 public class ClaimsPrincipalValidatorTests
 {
     const string UNIQUE_PREFIX = "ClaimsPrincipalValT";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
     private readonly TestWebApplicationFactory _webApplicationFactory;
 
     public ClaimsPrincipalValidatorTests(
-        DbDependentTestApplicationFactory appFactory,
         TestWebApplicationFactory webApplicationFactory
         )
     {
-        _appFactory = appFactory;
         _webApplicationFactory = webApplicationFactory;
     }
 

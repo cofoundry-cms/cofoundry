@@ -1,54 +1,52 @@
-﻿using Cofoundry.Core.Mail;
+using System.ComponentModel.DataAnnotations;
+using Cofoundry.Core.Mail;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 
-namespace MailKitExample.Pages
+namespace MailKitExample.Pages;
+
+public class IndexModel : PageModel
 {
-    public class IndexModel : PageModel
+    private readonly IMailService _mailService;
+
+    public IndexModel(IMailService mailService)
     {
-        private readonly IMailService _mailService;
+        _mailService = mailService;
+    }
 
-        public IndexModel(IMailService mailService)
+    [BindProperty]
+    [Required]
+    [EmailAddress]
+    [DataType(DataType.EmailAddress)]
+    public string EmailAddress { get; set; } = string.Empty;
+
+    [BindProperty]
+    public string DisplayName { get; set; } = string.Empty;
+
+    [BindProperty]
+    [Required]
+    public string Message { get; set; } = string.Empty;
+
+    public string? Result { get; set; }
+
+    public void OnGet()
+    {
+    }
+
+    public async Task OnPost()
+    {
+        if (!ModelState.IsValid)
         {
-            _mailService = mailService;
+            return;
         }
 
-        [BindProperty]
-        [Required]
-        [EmailAddress]
-        [DataType(DataType.EmailAddress)]
-        public string EmailAddress { get; set; }
-
-        [BindProperty]
-        public string DisplayName { get; set; }
-
-        [BindProperty]
-        [Required]
-        public string Message { get; set; }
-
-        public string Result { get; set; }
-
-        public void OnGet()
+        var template = new ExampleMailTemplate()
         {
-        }
+            Message = Message
+        };
 
-        public async Task OnPost()
-        {
-            if (!ModelState.IsValid)
-            {
-                return;
-            }
+        await _mailService.SendAsync(EmailAddress, template);
 
-            var template = new ExampleMailTemplate()
-            {
-                Message = Message
-            };
-
-            await _mailService.SendAsync(EmailAddress, template);
-
-            Result = $"Message sent to {EmailAddress}";
-        }
+        Result = $"Message sent to {EmailAddress}";
     }
 }

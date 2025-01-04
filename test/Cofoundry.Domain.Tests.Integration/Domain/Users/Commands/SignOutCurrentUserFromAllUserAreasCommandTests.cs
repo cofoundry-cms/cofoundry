@@ -3,15 +3,15 @@ using Cofoundry.Domain.Tests.Shared;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class SignOutCurrentUserFromAllUserAreasCommand
 {
     const string UNIQUE_PREFIX = "SOCurUsrAllUACHT-";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public SignOutCurrentUserFromAllUserAreasCommand(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

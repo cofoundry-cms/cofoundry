@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.AuthorizedTasks.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class InvalidateAuthorizedTaskBatchCommandTests
 {
     const string UNIQUE_PREFIX = "InvAuthTaskBCHT-";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public InvalidateAuthorizedTaskBatchCommandTests(
-         DbDependentTestApplicationFactory appFactory
+         IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

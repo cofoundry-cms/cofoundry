@@ -4,17 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class SignInUserWithCredentialsCommandHandlerTests
 {
     const string UNIQUE_PREFIX = "SignInWCredCHT-";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     const string PASSWORD = "(>\")><(\"<)";
 
     public SignInUserWithCredentialsCommandHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;
@@ -150,7 +150,7 @@ public class SignInUserWithCredentialsCommandHandlerTests
         sessionUserId.Should().Be(sessionUserId);
     }
 
-    private static async Task<User> AddUser(DbDependentTestApplication app, string uniqueData, Action<AddUserCommand>? configureCommand = null)
+    private static async Task<User> AddUser(IntegrationTestApplication app, string uniqueData, Action<AddUserCommand>? configureCommand = null)
     {
         var dbContext = app.Services.GetRequiredService<CofoundryDbContext>();
 

@@ -1,4 +1,5 @@
-﻿using Cofoundry.Core.Mail;
+using System.Diagnostics;
+using Cofoundry.Core.Mail;
 using Cofoundry.Core.MessageAggregator;
 using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
@@ -8,13 +9,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 
 namespace Cofoundry.Domain.Tests.Integration;
 
 /// <summary>
 /// Creates a service provider specifically for the 
-/// <see cref="DbDependentTestApplicationFactory"/> that includes the
+/// <see cref="IntegrationTestApplicationFactory"/> that includes the
 /// Cofoundry DI bootstrapper and a handful of useful mock services
 /// to make testing easier.
 /// </summary>
@@ -24,20 +24,26 @@ namespace Cofoundry.Domain.Tests.Integration;
 /// It would be better  if we could improve this and do it without the web host
 /// or make it more extensible for other test projects e.g. plugins.
 /// </remarks>
-public static class DbDependentTestApplicationServiceProviderFactory
+public static class IntegrationTestApplicationServiceProviderFactory
 {
     /// <summary>
     /// Creates a service provider specifically for the 
-    /// <see cref="DbDependentTestApplicationFactory"/> that includes the
+    /// <see cref="IntegrationTestApplicationFactory"/> that includes the
     /// Cofoundry DI bootstrapper and a handful of useful mock services
     /// to make testing easier.
     /// </summary>
-    /// <param name="customServiceConfiguration">
+    /// <param name="additionalConfiguration">
+    /// Optional custom configuration initialization.
+    /// </param>
+    /// <param name="additionalServices">
     /// Optional service configuration to run after the tets services are added.
     /// </param>
-    public static ServiceProvider CreateTestHostProvider(Action<IServiceCollection>? customServiceConfiguration = null)
+    public static ServiceProvider CreateTestHostProvider(
+        Action<IConfigurationBuilder>? additionalConfiguration = null,
+        Action<IServiceCollection>? additionalServices = null
+        )
     {
-        var configuration = GetConfiguration();
+        var configuration = TestApplicationConfigurationBuilder.BuildConfiguration(additionalConfiguration);
         var services = new ServiceCollection();
         var hostEnvironment = new TestHostEnvironment();
         services.AddSingleton<IHostEnvironment>(hostEnvironment);
@@ -52,7 +58,7 @@ public static class DbDependentTestApplicationServiceProviderFactory
             .AddControllersWithViews()
             .AddCofoundry(configuration);
 
-        ConfigureTestServices(services, customServiceConfiguration);
+        ConfigureTestServices(services, additionalServices);
 
         var serviceProvider = services.BuildServiceProvider();
 
@@ -79,13 +85,5 @@ public static class DbDependentTestApplicationServiceProviderFactory
         services.AddTransient<IViewFileReader, TestViewFileReader>();
 
         customServiceConfiguration?.Invoke(services);
-    }
-
-    private static IConfiguration GetConfiguration()
-    {
-        return new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: true)
-            .AddEnvironmentVariables()
-            .Build();
     }
 }

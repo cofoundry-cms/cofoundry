@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.AutoUpdate;
+using Cofoundry.Core.AutoUpdate;
 using Cofoundry.Domain.Data;
 using Cofoundry.Domain.Tests.Integration.SeedData;
 using Microsoft.EntityFrameworkCore;
@@ -26,11 +26,10 @@ public class TestDatabaseInitializer
     /// </summary>
     public async Task InitializeCofoundry()
     {
-        using (var scope = _serviceProvider.CreateScope())
-        {
-            var autoUpdateService = scope.ServiceProvider.GetRequiredService<IAutoUpdateService>();
-            await autoUpdateService.UpdateAsync();
-        }
+        using var scope = _serviceProvider.CreateScope();
+        var autoUpdateService = scope.ServiceProvider.GetRequiredService<IAutoUpdateService>();
+
+        await autoUpdateService.UpdateAsync();
     }
 
     /// <summary>

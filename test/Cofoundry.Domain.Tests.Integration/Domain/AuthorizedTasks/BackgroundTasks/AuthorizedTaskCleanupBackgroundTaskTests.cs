@@ -2,13 +2,13 @@
 
 namespace Cofoundry.Domain.Tests.Integration.AuthorizedTasks.BackgroundTasks;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class AuthorizedTaskCleanupBackgroundTaskTests
 {
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public AuthorizedTaskCleanupBackgroundTaskTests(
-         DbDependentTestApplicationFactory appFactory
+         IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

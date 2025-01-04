@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.Domain.Users.Queries;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class ValidateUserAccountRecoveryByEmailQueryHandlerTests
 {
     const string UNIQUE_PREFIX = "ValAccRecQHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public ValidateUserAccountRecoveryByEmailQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;
@@ -200,7 +200,7 @@ public class ValidateUserAccountRecoveryByEmailQueryHandlerTests
 
     private static async Task<AuthorizedTask> AddUserAndInitiateRequest(
         string uniqueData,
-        DbDependentTestApplication app
+        IntegrationTestApplication app
         )
     {
         var contentRepository = app.Services.GetContentRepository();

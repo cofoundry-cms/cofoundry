@@ -2,15 +2,15 @@
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Queries;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class ValidateUserEmailAddressQueryHandlerTests
 {
     const string UNIQUE_DOMAIN = "@ValUserEmailQHT.com";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public ValidateUserEmailAddressQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

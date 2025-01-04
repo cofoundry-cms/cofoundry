@@ -2,15 +2,15 @@
 
 namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Queries;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class GetUpdatePageDirectoryCommandByIdQueryHandlerTests
 {
     const string UNIQUE_PREFIX = "GUpdPageDirCmdByIdQHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public GetUpdatePageDirectoryCommandByIdQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

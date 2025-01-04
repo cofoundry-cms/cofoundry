@@ -6,15 +6,15 @@ using NSubstitute;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class AddUserWithTemporaryPasswordCommandHandlerTests
 {
     const string UNIQUE_PREFIX = "AddUserWTempPWCHT-";
     const string EMAIL_DOMAIN = "@example.com";
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public AddUserWithTemporaryPasswordCommandHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class AddUserCommandHandlerTests
 {
     const string UNIQUE_PREFIX = "AddUserCHT-";
     const string PASSWORD = "keepitsecretKeepitsaf3";
     const string EMAIL_DOMAIN = "@example.com";
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public AddUserCommandHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

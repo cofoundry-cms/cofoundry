@@ -7,14 +7,14 @@ namespace Cofoundry.Domain.Tests.Integration.Users.Commands;
 /// <summary>
 /// Note: command defers most logic to DeleteUserCommandHandler.
 /// </summary>
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class DeleteCurrentUserCommandHandlerTests
 {
     const string UNIQUE_PREFIX = "DelCurUsrCHT-";
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public DeleteCurrentUserCommandHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

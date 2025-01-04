@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cofoundry.Domain.Tests.Integration.PageDirectories.Commands;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class UpdatePageDirectoryCommandHandlerTests
 {
     const string UNIQUE_PREFIX = "UpdPageDirectoryCHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public UpdatePageDirectoryCommandHandlerTests(
-         DbDependentTestApplicationFactory appFactory
+         IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

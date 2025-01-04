@@ -1,14 +1,14 @@
 ﻿namespace Cofoundry.Domain.Tests.Integration.Pages.Queries;
 
-[Collection(nameof(DbDependentFixtureCollection))]
+[Collection(nameof(IntegrationTestFixtureCollection))]
 public class GetPageDetailsByIdQueryHandlerTests
 {
     const string UNIQUE_PREFIX = "GPageDetailsByIdQHT ";
 
-    private readonly DbDependentTestApplicationFactory _appFactory;
+    private readonly IntegrationTestApplicationFactory _appFactory;
 
     public GetPageDetailsByIdQueryHandlerTests(
-        DbDependentTestApplicationFactory appFactory
+        IntegrationTestApplicationFactory appFactory
         )
     {
         _appFactory = appFactory;

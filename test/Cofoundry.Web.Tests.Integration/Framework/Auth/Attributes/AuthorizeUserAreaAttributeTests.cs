@@ -1,17 +1,14 @@
-﻿namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Attributes;
+namespace Cofoundry.Web.Tests.Integration.Framework.Auth.Attributes;
 
-[Collection(nameof(DbDependentTestApplicationFactory))]
+[Collection(nameof(TestWebApplicationFactory))]
 public class AuthorizeUserAreaAttributeTests
 {
-    private readonly DbDependentTestApplicationFactory _appFactory;
     private readonly TestWebApplicationFactory _webApplicationFactory;
 
     public AuthorizeUserAreaAttributeTests(
-        DbDependentTestApplicationFactory appFactory,
         TestWebApplicationFactory webApplicationFactory
         )
     {
-        _appFactory = appFactory;
         _webApplicationFactory = webApplicationFactory;
     }
 
