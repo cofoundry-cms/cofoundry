@@ -1,0 +1,23 @@
+name: cf-tests
+
+services:
+    domain-mssql:
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        ports:
+            - 57681:1433
+        environment:
+            SA_PASSWORD: Integrati0nTest$
+            ACCEPT_EULA: Y
+      
+    web-mssql:
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        ports:
+            - 57682:1433
+        environment:
+            SA_PASSWORD: Integrati0nTest$
+            ACCEPT_EULA: Y
+            
+    azure-azurite:
+        image: mcr.microsoft.com/azure-storage/azurite
+        ports:
+            - 57683:10000

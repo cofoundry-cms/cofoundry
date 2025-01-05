@@ -1,4 +1,5 @@
 using Cofoundry.Core.Caching;
+using Cofoundry.Domain.Tests.Shared;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
@@ -53,7 +54,7 @@ public class TestWebApplicationFactory<TEntryPoint>
         builder.UseContentRoot(Directory.GetCurrentDirectory());
         builder.ConfigureAppConfiguration(builder =>
         {
-            TestApplicationConfigurationBuilder.AddConfiguration(builder, ConfigureDb);
+            TestEnvironmentConfigurationBuilder.AddConfiguration(builder, ConfigureDb);
         });
         builder.UseStartup<TEntryPoint>();
         builder.ConfigureServices(services =>
@@ -92,7 +93,7 @@ public class TestWebApplicationFactory<TEntryPoint>
 
     private async Task StartDbAsync()
     {
-        var configuration = TestApplicationConfigurationBuilder.BuildConfiguration();
+        var configuration = TestEnvironmentConfigurationBuilder.BuildConfiguration();
         var connectionString = configuration.GetValue<string>(ConnectionStringSetting);
 
         if (string.IsNullOrEmpty(connectionString))

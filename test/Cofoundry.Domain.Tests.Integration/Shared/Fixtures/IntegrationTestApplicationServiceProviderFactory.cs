@@ -5,6 +5,7 @@ using Cofoundry.Core.Time;
 using Cofoundry.Core.Time.Mocks;
 using Cofoundry.Domain.Internal;
 using Cofoundry.Domain.Tests.Integration.Mocks;
+using Cofoundry.Domain.Tests.Shared;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -43,7 +44,7 @@ public static class IntegrationTestApplicationServiceProviderFactory
         Action<IServiceCollection>? additionalServices = null
         )
     {
-        var configuration = TestApplicationConfigurationBuilder.BuildConfiguration(additionalConfiguration);
+        var configuration = TestEnvironmentConfigurationBuilder.BuildConfiguration(additionalConfiguration);
         var services = new ServiceCollection();
         var hostEnvironment = new TestHostEnvironment();
         services.AddSingleton<IHostEnvironment>(hostEnvironment);
