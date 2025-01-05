@@ -50,6 +50,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HangfireSample", "src\Cofoundry.Plugins\Cofoundry.Plugins.BackgroundTasks.Hangfire\HangfireSample\HangfireSample.csproj", "{55D59EF8-FDF8-4ED4-B16D-26169B3FC02D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{ABEBED1D-E992-4418-BB01-7BD6335C3C03}"
+	ProjectSection(SolutionItems) = preProject
+		test\docker-compose.test.yml = test\docker-compose.test.yml
+		test\README.md = test\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Azure.Tests", "test\Cofoundry.Plugins.Tests\Cofoundry.Plugins.Azure.Tests\Cofoundry.Plugins.Azure.Tests.csproj", "{0D5495C7-4934-4440-8673-19B7FB10E7F8}"
 EndProject
