@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Configuration;
-namespace Cofoundry.Domain.Tests.Integration;
+namespace Cofoundry.Domain.Tests.Shared;
 
 /// <summary>
 /// Helper to build an <see cref="IConfiguration"/> instance
-/// for use in a test application.
+/// for use in a test environment.
 /// </summary>
-public static class TestApplicationConfigurationBuilder
+public static class TestEnvironmentConfigurationBuilder
 {
     /// <summary>
     /// Builds an <see cref="IConfiguration"/> instance for a test
@@ -22,6 +22,9 @@ public static class TestApplicationConfigurationBuilder
         )
     {
         var builder = new ConfigurationBuilder();
+        var currentDirectory = Directory.GetCurrentDirectory();
+        builder.SetBasePath(currentDirectory);
+
         AddConfiguration(builder);
 
         return builder.Build();

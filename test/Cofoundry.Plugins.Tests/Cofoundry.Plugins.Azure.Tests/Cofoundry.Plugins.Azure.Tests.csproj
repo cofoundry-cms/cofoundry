@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="Testcontainers.Azurite" Version="4.1.0" />
     <PackageReference Include="xunit" Version="2.7.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
       <PrivateAssets>all</PrivateAssets>
@@ -23,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Cofoundry.Plugins\Cofoundry.Plugins.Azure\Cofoundry.Plugins.Azure\Cofoundry.Plugins.Azure.csproj" />
+    <ProjectReference Include="..\..\Cofoundry.Domain.Tests.Shared\Cofoundry.Domain.Tests.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

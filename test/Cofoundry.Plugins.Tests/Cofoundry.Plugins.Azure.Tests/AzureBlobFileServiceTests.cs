@@ -2,42 +2,19 @@ using System.Globalization;
 using System.Text;
 using Cofoundry.Core;
 using Cofoundry.Plugins.Azure.Internal;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace Cofoundry.Plugins.Azure.Tests;
 
-public class AzureBlobFileServiceTests : IAsyncLifetime
+[Collection(nameof(IntegrationTestFixture))]
+public class AzureBlobFileServiceTests
 {
-    private readonly AzureSettings _azureSettings;
     private static readonly string TEST_RUN_ID = DateTime.UtcNow.Ticks.ToString(CultureInfo.InvariantCulture);
+    private readonly IntegrationTestFixture _integrationTestFixture;
 
-    public AzureBlobFileServiceTests()
+    public AzureBlobFileServiceTests(IntegrationTestFixture integrationTestFixture)
     {
-        // TODO: make this config neater
-        var configurationRoot = ConfigurationHelper.GetConfigurationRoot();
-        var section = configurationRoot.GetSection("Cofoundry:Plugins:Azure");
-        var settings = new AzureSettings();
-
-        section.Bind(settings);
-
-        _azureSettings = settings;
-    }
-
-    public async Task InitializeAsync()
-    {
-        var service = CreateFileStoreService();
-        var client = service.GetServiceClient();
-
-        await foreach (var container in client.GetBlobContainersAsync())
-        {
-            await client.DeleteBlobContainerAsync(container.Name);
-        }
-    }
-
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
+        _integrationTestFixture = integrationTestFixture;
     }
 
     [Fact]
@@ -49,7 +26,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var fileName = GetFileName(uniqueData);
         var numFiles = 5;
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
 
         // Setup files
         for (var i = 1; i < numFiles; i++)
@@ -88,7 +65,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var uniqueData = MakeContainerName(nameof(ClearContainer_IfEmpty_DoesNotThrowException));
         var containerName = uniqueData;
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         await service.ClearContainerAsync(containerName);
 
         Assert.True(true);
@@ -105,7 +82,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var fileName = GetFileName(uniqueData);
         var numFiles = 5;
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
 
         // Setup files
         for (var i = 1; i < numFiles; i++)
@@ -144,7 +121,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var uniqueData = MakeContainerName(nameof(CreateAsync_IfNotExists_DoesNotThrow));
         var fileName = GetFileName(uniqueData);
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
 
         using (var stream = GetFileStream(uniqueData))
         {
@@ -160,7 +137,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var uniqueData = MakeContainerName(nameof(CreateAsync_IfExists_Throws));
         var fileName = GetFileName(uniqueData);
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         using (var stream = GetFileStream(uniqueData))
         {
             await service.CreateAsync(uniqueData, fileName, stream);
@@ -182,7 +159,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var uniqueData = MakeContainerName(nameof(CreateIfNotExistsAsync_IfNotExists_Creates));
         var fileName = GetFileName(uniqueData);
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
 
         using (var stream = GetFileStream(uniqueData))
         {
@@ -199,7 +176,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var uniqueData = MakeContainerName(nameof(CreateIfNotExistsAsync_IfExists_DoesNotCreate));
         var fileName = GetFileName(uniqueData);
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         var file1Text = uniqueData + "file1";
         byte[] file1Bytes;
 
@@ -234,7 +211,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var uniqueData = MakeContainerName(nameof(CreateOrReplaceAsync_IfNotExists_Creates));
         var fileName = GetFileName(uniqueData);
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         using (var stream = GetFileStream(uniqueData))
         {
             await service.CreateOrReplaceAsync(uniqueData, fileName, stream);
@@ -250,7 +227,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var uniqueData = MakeContainerName(nameof(CreateOrReplaceAsync_IfExists_Replaces));
         var fileName = GetFileName(uniqueData);
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         var file1Text = uniqueData + "file1";
 
         using (var stream = GetFileStream(file1Text))
@@ -285,7 +262,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var uniqueData = MakeContainerName(nameof(DeleteAsync_IfNotExists_DoesNotThrow));
         var fileName = GetFileName(uniqueData);
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         await service.DeleteAsync(uniqueData, fileName);
 
         Assert.True(true);
@@ -297,7 +274,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var uniqueData = MakeContainerName(nameof(DeleteAsync_IfExists_Deletes));
         var fileName = GetFileName(uniqueData);
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         using (var stream = GetFileStream(uniqueData))
         {
             await service.CreateAsync(uniqueData, fileName, stream);
@@ -320,7 +297,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var fileName = GetFileName(uniqueData);
         var numFiles = 5;
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         // Setup files
         for (var i = 1; i < numFiles; i++)
         {
@@ -359,7 +336,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var fileName = GetFileName(uniqueData);
         bool exists;
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         exists = await service.ExistsAsync(uniqueData, fileName);
 
         Assert.False(exists);
@@ -372,7 +349,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var fileName = GetFileName(uniqueData);
         bool exists;
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         using (var stream = GetFileStream(uniqueData))
         {
             await service.CreateAsync(uniqueData, fileName, stream);
@@ -389,7 +366,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var fileName = GetFileName(uniqueData);
         byte[] fileBytes;
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         using (var stream = GetFileStream(uniqueData))
         {
             await service.CreateAsync(uniqueData, fileName, stream);
@@ -415,7 +392,7 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
         var uniqueData = MakeContainerName(nameof(GetAsync_IfNotExists_ReturnsNull));
         var fileName = GetFileName(uniqueData);
 
-        var service = CreateFileStoreService();
+        var service = _integrationTestFixture.CreateFileStoreService();
         using (var fileStream = await service.GetAsync(uniqueData, fileName))
         {
             Assert.Null(fileStream);
@@ -425,11 +402,6 @@ public class AzureBlobFileServiceTests : IAsyncLifetime
     private static string MakeContainerName(string uniqueData)
     {
         return SlugFormatter.ToSlug(uniqueData).Replace("-", "") + TEST_RUN_ID;
-    }
-
-    private AzureBlobFileService CreateFileStoreService()
-    {
-        return new AzureBlobFileService(_azureSettings);
     }
 
     private MemoryStream GetFileStream(string uniqueData)

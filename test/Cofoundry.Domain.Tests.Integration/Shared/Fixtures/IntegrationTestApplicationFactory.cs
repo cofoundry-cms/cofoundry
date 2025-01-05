@@ -1,3 +1,4 @@
+using Cofoundry.Domain.Tests.Shared;
 using Microsoft.Extensions.Configuration;
 using Testcontainers.MsSql;
 
@@ -67,7 +68,7 @@ public class IntegrationTestApplicationFactory : IAsyncLifetime
 
     private async Task StartDbAsync()
     {
-        var configuration = TestApplicationConfigurationBuilder.BuildConfiguration();
+        var configuration = TestEnvironmentConfigurationBuilder.BuildConfiguration();
         var connectionString = configuration.GetValue<string>(ConnectionStringSetting);
 
         if (string.IsNullOrEmpty(connectionString))
