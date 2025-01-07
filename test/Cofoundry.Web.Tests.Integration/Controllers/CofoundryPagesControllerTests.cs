@@ -25,7 +25,7 @@ public class CofoundryPagesControllerTests
             s.MockHandler<GetSettingsQuery<InternalSettings>, InternalSettings>(new InternalSettings() { IsSetup = false });
         });
 
-        var result = await client.GetAsync(path);
+        var result = await client.GetAsync(path, TestContext.Current.CancellationToken);
 
         await result.Should().BeDeveloperPageExceptionAsync("*Cofoundry * not * setup*");
     }
@@ -38,8 +38,8 @@ public class CofoundryPagesControllerTests
             s.MockHandler<GetSettingsQuery<InternalSettings>, InternalSettings>(new InternalSettings() { IsSetup = false });
         });
 
-        var result = await client.GetAsync("/not-a-page");
-        var content = await result.Content.ReadAsStringAsync();
+        var result = await client.GetAsync("/not-a-page", TestContext.Current.CancellationToken);
+        var content = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         content.Should().Match("*an error has occurred*");
@@ -50,8 +50,8 @@ public class CofoundryPagesControllerTests
     {
         using var client = _webApplicationFactory.CreateClient();
 
-        var result = await client.GetAsync("/not-a-page");
-        var content = await result.Content.ReadAsStringAsync();
+        var result = await client.GetAsync("/not-a-page", TestContext.Current.CancellationToken);
+        var content = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.NotFound);
         content.Should().Match("*Page not found*");
@@ -64,8 +64,8 @@ public class CofoundryPagesControllerTests
         using var app = _webApplicationFactory.CreateApp();
 
         var page = app.SeededEntities.TestDirectory.CustomEntityPage;
-        var result = await client.GetAsync(page.GetFullPath(int.MaxValue));
-        var content = await result.Content.ReadAsStringAsync();
+        var result = await client.GetAsync(page.GetFullPath(int.MaxValue), TestContext.Current.CancellationToken);
+        var content = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.NotFound);
         content.Should().Match("*Page not found*");
@@ -78,8 +78,8 @@ public class CofoundryPagesControllerTests
         using var app = _webApplicationFactory.CreateApp();
 
         var page = app.SeededEntities.TestDirectory.GenericPage;
-        var result = await client.GetAsync(page.FullUrlPath);
-        var content = await result.Content.ReadAsStringAsync();
+        var result = await client.GetAsync(page.FullUrlPath, TestContext.Current.CancellationToken);
+        var content = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
         content.Should().Match($"*<h1>{page.Title}</h1>*");
@@ -94,8 +94,8 @@ public class CofoundryPagesControllerTests
         var page = app.SeededEntities.TestDirectory.CustomEntityPage;
         var customEntity = app.SeededEntities.TestCustomEntity;
         var path = page.GetFullPath(customEntity.CustomEntityId);
-        var result = await client.GetAsync(path);
-        var content = await result.Content.ReadAsStringAsync();
+        var result = await client.GetAsync(path, TestContext.Current.CancellationToken);
+        var content = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
         content.Should().Match($"*<h1>{page.Title}</h1>*");
@@ -115,8 +115,8 @@ public class CofoundryPagesControllerTests
 
         using var client = _webApplicationFactory.CreateClient();
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleA.User);
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
-        var content = await result.Content.ReadAsStringAsync();
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
+        var content = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
         content.Should().Match($"*<h1>{uniqueData}</h1>*");
@@ -137,7 +137,7 @@ public class CofoundryPagesControllerTests
 
         using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
 
         await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction);
     }
@@ -155,8 +155,8 @@ public class CofoundryPagesControllerTests
 
         using var client = _webApplicationFactory.CreateClient();
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleA.User);
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
-        var content = await result.Content.ReadAsStringAsync();
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
+        var content = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
         content.Should().Match($"*<h1>{uniqueData}</h1>*");
@@ -182,7 +182,7 @@ public class CofoundryPagesControllerTests
 
         using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
 
         await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction);
     }
@@ -204,7 +204,7 @@ public class CofoundryPagesControllerTests
             );
 
         using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
         SignInRedirectAssertions.AssertSignInRedirect(result, app.SeededEntities.TestUserArea1);
     }
 
@@ -222,7 +222,7 @@ public class CofoundryPagesControllerTests
 
         using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
-        var result = await client.GetAsync($"/{sluggedUniqueData}1/{sluggedUniqueData}2/{sluggedUniqueData}");
+        var result = await client.GetAsync($"/{sluggedUniqueData}1/{sluggedUniqueData}2/{sluggedUniqueData}", TestContext.Current.CancellationToken);
 
         await AssertAccessRuleResponseAsync(result, AccessRuleViolationAction.Error);
     }
@@ -242,8 +242,8 @@ public class CofoundryPagesControllerTests
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleA.User);
         var clientCache = _webApplicationFactory.Services.GetRequiredService<IPageCache>();
 
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
-        var content = await result.Content.ReadAsStringAsync();
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
+        var content = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
         content.Should().Match($"*<h1>{uniqueData}</h1>*");
@@ -269,7 +269,7 @@ public class CofoundryPagesControllerTests
 
         using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
 
         await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction);
     }
@@ -288,8 +288,8 @@ public class CofoundryPagesControllerTests
         using var client = _webApplicationFactory.CreateClient();
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleA.User);
 
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
-        var content = await result.Content.ReadAsStringAsync();
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
+        var content = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
         content.Should().Match($"*<h1>{uniqueData}</h1>*");
@@ -316,7 +316,7 @@ public class CofoundryPagesControllerTests
         using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
 
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
 
         await AssertAccessRuleResponseAsync(result, routeAccessRuleViolationAction);
     }
@@ -338,7 +338,7 @@ public class CofoundryPagesControllerTests
             );
 
         using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
 
         SignInRedirectAssertions.AssertSignInRedirect(result, app.SeededEntities.TestUserArea1);
     }
@@ -356,7 +356,7 @@ public class CofoundryPagesControllerTests
         await app.TestData.PageDirectories().AddAccessRuleAsync(directory1Id, app.SeededEntities.TestUserArea1.UserAreaCode);
 
         using var client = _webApplicationFactory.CreateClientWithServices(s => s.TurnOnDeveloperExceptionPage());
-        var result = await client.GetAsync($"/{sluggedUniqueData}1/{sluggedUniqueData}2/{sluggedUniqueData}");
+        var result = await client.GetAsync($"/{sluggedUniqueData}1/{sluggedUniqueData}2/{sluggedUniqueData}", TestContext.Current.CancellationToken);
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
 
         await AssertAccessRuleResponseAsync(result, AccessRuleViolationAction.Error);
@@ -375,8 +375,8 @@ public class CofoundryPagesControllerTests
 
         using var client = _webApplicationFactory.CreateClient();
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
-        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}");
-        var content = await result.Content.ReadAsStringAsync();
+        var result = await client.GetAsync($"/{sluggedUniqueData}/{sluggedUniqueData}", TestContext.Current.CancellationToken);
+        var content = await result.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
         content.Should().Match($"*<h1>{uniqueData}</h1>*");

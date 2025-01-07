@@ -80,7 +80,7 @@ public class TestWebApplicationFactory<TEntryPoint>
     /// Called by xUnit after the class has been created, this bootstraps
     /// the database at the start of the test session.
     /// </summary>
-    public virtual async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await StartDbAsync();
 
@@ -114,9 +114,9 @@ public class TestWebApplicationFactory<TEntryPoint>
         }
     }
 
-    public new async Task DisposeAsync()
+    public override async ValueTask DisposeAsync()
     {
-        base.Dispose();
+        await base.DisposeAsync();
 
         if (_msSqlContainer != null)
         {

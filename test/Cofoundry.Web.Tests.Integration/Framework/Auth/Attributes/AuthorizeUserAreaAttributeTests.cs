@@ -19,7 +19,7 @@ public class AuthorizeUserAreaAttributeTests
         using var client = _webApplicationFactory.CreateClient();
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
-        var result = await client.GetAsync(GetRoute("user-area"));
+        var result = await client.GetAsync(GetRoute("user-area"), TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -31,7 +31,7 @@ public class AuthorizeUserAreaAttributeTests
         using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleA.User);
-        var result = await client.GetAsync(GetRoute("user-area"));
+        var result = await client.GetAsync(GetRoute("user-area"), TestContext.Current.CancellationToken);
 
         SignInRedirectAssertions.AssertSignInRedirect(result, app.SeededEntities.TestUserArea2);
     }

@@ -3,14 +3,13 @@ using Microsoft.Extensions.Configuration;
 using Testcontainers.MsSql;
 
 namespace Cofoundry.Domain.Tests.Integration;
-
 /// <summary>
 /// This application factory is used to create <see cref="IntegrationTestApplication"/>
 /// instances that should be scoped to your tests. The factory itself is
 /// scoped for the test session and will initialize, reset and seed the database
 /// before starting the test session.
 /// </summary>
-public class IntegrationTestApplicationFactory : IAsyncLifetime
+public sealed class IntegrationTestApplicationFactory : IAsyncLifetime
 {
     const string ConnectionStringSetting = "Cofoundry:Database:ConnectionString";
 
@@ -29,7 +28,7 @@ public class IntegrationTestApplicationFactory : IAsyncLifetime
     /// services.
     /// </param>
     /// <returns>The newly created application instance.</returns>
-    public virtual IntegrationTestApplication Create(Action<IServiceCollection>? serviceConfiguration = null)
+    public IntegrationTestApplication Create(Action<IServiceCollection>? serviceConfiguration = null)
     {
         if (_serviceProvider == null || _seededEntities == null)
         {
@@ -55,7 +54,7 @@ public class IntegrationTestApplicationFactory : IAsyncLifetime
     /// Called by xUnit after the class has been created, this bootstraps
     /// the database at the start of the test session.
     /// </summary>
-    public virtual async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await StartDbAsync();
 
@@ -89,7 +88,7 @@ public class IntegrationTestApplicationFactory : IAsyncLifetime
         }
     }
 
-    public virtual async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         if (_msSqlContainer != null)
         {

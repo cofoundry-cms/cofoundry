@@ -50,7 +50,7 @@ public class ClaimsPrincipalValidatorTests
         await client1.ImpersonateUserAsync(userId);
         await client2.ImpersonateUserAsync(userId);
 
-        var response = await client1.PutAsync($"/tests/users/password/{userId}", null);
+        var response = await client1.PutAsync($"/tests/users/password/{userId}", null, TestContext.Current.CancellationToken);
         response.EnsureSuccessStatusCode();
 
         dateTimeService.MockDateTime = seedDate.AddMinutes(35);

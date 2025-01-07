@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Tests.Integration.Entities.Queries;
+namespace Cofoundry.Domain.Tests.Integration.Entities.Queries;
 
 /// <remarks>
 /// Given <see cref="GetEntityDependencySummaryByRelatedEntityIdQuery"/> delegates to this 
@@ -42,7 +42,7 @@ public class GetEntityDependencySummaryByRelatedEntityIdRangeQueryHandlerTests
             RelatedEntityCascadeAction.Cascade
             );
 
-        var dependencies = await contentRepository.ExecuteQueryAsync(new GetEntityDependencySummaryByRelatedEntityIdRangeQuery(TestCustomEntityDefinition.Code, new int[] { customEntity1Id, customEntity2Id }));
+        var dependencies = await contentRepository.ExecuteQueryAsync(new GetEntityDependencySummaryByRelatedEntityIdRangeQuery(TestCustomEntityDefinition.Code, [customEntity1Id, customEntity2Id]));
 
         using (new AssertionScope())
         {
