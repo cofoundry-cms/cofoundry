@@ -18,7 +18,7 @@ public class AuthorizePermissionAttributeTests
         using var app = _webApplicationFactory.CreateApp();
         using var client = _webApplicationFactory.CreateClient();
 
-        var result = await client.GetAsync(GetRoute("permission-on-anonymous-role"));
+        var result = await client.GetAsync(GetRoute("permission-on-anonymous-role"), TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -30,7 +30,7 @@ public class AuthorizePermissionAttributeTests
         using var client = _webApplicationFactory.CreateClient();
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleA.User);
-        var result = await client.GetAsync(GetRoute("permission"));
+        var result = await client.GetAsync(GetRoute("permission"), TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -42,7 +42,7 @@ public class AuthorizePermissionAttributeTests
         using var client = _webApplicationFactory.CreateClient();
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleB.User);
-        var result = await client.GetAsync(GetRoute("permission"));
+        var result = await client.GetAsync(GetRoute("permission"), TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -53,7 +53,7 @@ public class AuthorizePermissionAttributeTests
         using var app = _webApplicationFactory.CreateApp();
         using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
 
-        var result = await client.GetAsync(GetRoute("permission"));
+        var result = await client.GetAsync(GetRoute("permission"), TestContext.Current.CancellationToken);
 
         SignInRedirectAssertions.AssertSignInRedirect(result, app.SeededEntities.TestUserArea1);
     }
@@ -65,7 +65,7 @@ public class AuthorizePermissionAttributeTests
         using var client = _webApplicationFactory.CreateClient();
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleA.User);
-        var result = await client.GetAsync(GetRoute("custom-entity-permission"));
+        var result = await client.GetAsync(GetRoute("custom-entity-permission"), TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -77,7 +77,7 @@ public class AuthorizePermissionAttributeTests
         using var client = _webApplicationFactory.CreateClient();
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleB.User);
-        var result = await client.GetAsync(GetRoute("custom-entity-permission"));
+        var result = await client.GetAsync(GetRoute("custom-entity-permission"), TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -89,7 +89,7 @@ public class AuthorizePermissionAttributeTests
         using var client = _webApplicationFactory.CreateClient();
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
-        var result = await client.GetAsync(GetRoute("permission-non-default-user-area"));
+        var result = await client.GetAsync(GetRoute("permission-non-default-user-area"), TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -101,7 +101,7 @@ public class AuthorizePermissionAttributeTests
         using var client = _webApplicationFactory.CreateClient();
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleB.User);
-        var result = await client.GetAsync(GetRoute("permission-non-default-user-area"));
+        var result = await client.GetAsync(GetRoute("permission-non-default-user-area"), TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }

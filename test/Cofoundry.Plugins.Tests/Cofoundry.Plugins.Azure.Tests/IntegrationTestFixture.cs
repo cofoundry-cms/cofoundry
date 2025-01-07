@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Cofoundry.Plugins.Azure.Tests;
 
-public class IntegrationTestFixture : IAsyncLifetime
+public sealed class IntegrationTestFixture : IAsyncLifetime
 {
     private readonly AzureSettings _azureSettings;
     private AzuriteContainer? _azuriteContainer;
@@ -22,7 +22,7 @@ public class IntegrationTestFixture : IAsyncLifetime
         _azureSettings = settings;
     }
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         await InitializeAzuriteContainer();
         await ClearAllFiles();
@@ -53,7 +53,7 @@ public class IntegrationTestFixture : IAsyncLifetime
         }
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         if (_azuriteContainer != null)
         {

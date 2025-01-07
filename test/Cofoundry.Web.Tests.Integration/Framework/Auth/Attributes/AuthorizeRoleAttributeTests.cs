@@ -19,7 +19,7 @@ public class AuthorizeRoleAttributeTests
         using var client = _webApplicationFactory.CreateClient();
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleA.User);
-        var result = await client.GetAsync(GetRoute("role"));
+        var result = await client.GetAsync(GetRoute("role"), TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -31,7 +31,7 @@ public class AuthorizeRoleAttributeTests
         using var client = _webApplicationFactory.CreateClient(o => o.AllowAutoRedirect = false);
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea1.RoleA.User);
-        var result = await client.GetAsync(GetRoute("role"));
+        var result = await client.GetAsync(GetRoute("role"), TestContext.Current.CancellationToken);
 
         SignInRedirectAssertions.AssertSignInRedirect(result, app.SeededEntities.TestUserArea2);
     }
@@ -43,7 +43,7 @@ public class AuthorizeRoleAttributeTests
         using var client = _webApplicationFactory.CreateClient();
 
         await client.ImpersonateUserAsync(app.SeededEntities.TestUserArea2.RoleB.User);
-        var result = await client.GetAsync(GetRoute("role"));
+        var result = await client.GetAsync(GetRoute("role"), TestContext.Current.CancellationToken);
 
         result.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
