@@ -14,7 +14,7 @@ docker compose -f docker-compose.test.yml up
 
 Once running you just need to configure the connection strings for each project to point to the docker resources. Do this by creating your own `appsettings.local.json` file in the following projects:
 
-**Cofoundry.Domain.Tests.Integration:**
+**Cofoundry.Domain.Tests:**
 
 ```json
 {
@@ -24,7 +24,7 @@ Once running you just need to configure the connection strings for each project 
 }
 ```
 
-**Cofoundry.Web.Tests.Integration:**
+**Cofoundry.Web.Tests:**
 
 ```json
 {

@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Tests;
 
@@ -156,24 +156,26 @@ public class CustomEntityDefinitionRepositoryTests
         }
     }
 
-    private class TestCustomEntityDefinition : ICustomEntityDefinition
+    private class TestCustomEntityDefinition : ICustomEntityDefinition<TestCustomEntityDataModel>
     {
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = "CE Repo Test Entity";
 
-        public string CustomEntityDefinitionCode { get; set; } = string.Empty;
+        public string CustomEntityDefinitionCode { get; set; } = "CERCUS";
 
-        public string NamePlural => throw new NotImplementedException();
+        public string NamePlural => "CE Repo Test Entities";
 
-        public string Description => throw new NotImplementedException();
+        public string Description => string.Empty;
 
-        public bool ForceUrlSlugUniqueness => throw new NotImplementedException();
+        public bool ForceUrlSlugUniqueness => false;
 
-        public bool HasLocale => throw new NotImplementedException();
+        public bool HasLocale => false;
 
-        public bool AutoGenerateUrlSlug => throw new NotImplementedException();
+        public bool AutoGenerateUrlSlug => false;
 
-        public bool AutoPublish => throw new NotImplementedException();
+        public bool AutoPublish => false;
     }
+
+    private class TestCustomEntityDataModel : ICustomEntityDataModel;
 
     private static List<ICustomEntityDefinition> GetBaseCustomEntityDefinitions()
     {

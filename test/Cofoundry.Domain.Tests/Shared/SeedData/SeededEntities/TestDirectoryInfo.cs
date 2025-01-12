@@ -1,0 +1,23 @@
+﻿namespace Cofoundry.Domain.Tests.SeedData;
+
+public class TestDirectoryInfo
+{
+    public int PageDirectoryId { get; set; }
+
+    public string UrlPath = "test-directory";
+
+    public string FullPath = "/test-directory";
+
+    /// <summary>
+    /// Page using the generic test template with the path 
+    /// "/test-directory/test-page".
+    /// </summary>
+    public TestGenericPageInfo GenericPage => new(this);
+
+    /// <summary>
+    /// Page using the test custom entity template with the path 
+    /// "/test-directory/{Id}".
+    /// </summary>
+    public TestCustomEntityPageInfo CustomEntityPage => new(this);
+
+}

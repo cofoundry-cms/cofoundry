@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 using NSubstitute;
 
 namespace Cofoundry.Domain.Tests;
@@ -156,29 +156,31 @@ public class EntityDefinitionRepositoryTests
 
     private class TestEntityDefinition : IEntityDefinition
     {
-        public string EntityDefinitionCode { get; set; } = string.Empty;
+        public string EntityDefinitionCode { get; set; } = "EDRENT";
 
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = "ED Repo Entity";
     }
 
-    private class TestCustomEntityDefinition : ICustomEntityDefinition
+    private class TestCustomEntityDefinition : ICustomEntityDefinition<TestCustomEntityDataModel>
     {
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = "ED Repo Test CE";
 
-        public string CustomEntityDefinitionCode { get; set; } = string.Empty;
+        public string CustomEntityDefinitionCode { get; set; } = "EDRCUS";
 
-        public string NamePlural => throw new NotImplementedException();
+        public string NamePlural => "ED Repo Test CEs";
 
-        public string Description => throw new NotImplementedException();
+        public string Description => string.Empty;
 
-        public bool ForceUrlSlugUniqueness => throw new NotImplementedException();
+        public bool ForceUrlSlugUniqueness => false;
 
-        public bool HasLocale => throw new NotImplementedException();
+        public bool HasLocale => false;
 
-        public bool AutoGenerateUrlSlug => throw new NotImplementedException();
+        public bool AutoGenerateUrlSlug => false;
 
-        public bool AutoPublish => throw new NotImplementedException();
+        public bool AutoPublish => false;
     }
+
+    private class TestCustomEntityDataModel : ICustomEntityDataModel;
 
     private static List<ICustomEntityDefinition> GetBaseCustomEntityDefinitions()
     {
@@ -224,7 +226,7 @@ public class EntityDefinitionRepositoryTests
         ];
     }
 
-    private ICustomEntityDefinitionRepository GetCustomEntityRepository()
+    private static ICustomEntityDefinitionRepository GetCustomEntityRepository()
     {
         var mock = Substitute.For<ICustomEntityDefinitionRepository>();
         var customEntityDefinitions = GetBaseCustomEntityDefinitions();
