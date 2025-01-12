@@ -169,9 +169,9 @@ public class AuthorizedTaskTypeDefinitionRepositoryTests
 
     private class TestAuthorizedTaskTypeDefinition : IAuthorizedTaskTypeDefinition
     {
-        public required string AuthorizedTaskTypeCode { get; set; }
+        public required string AuthorizedTaskTypeCode { get; set; } = "ATTDRT";
 
-        public required string Name { get; set; }
+        public required string Name { get; set; } = "ATT Report Test";
     }
 
     private static List<IAuthorizedTaskTypeDefinition> GetDefinitions()

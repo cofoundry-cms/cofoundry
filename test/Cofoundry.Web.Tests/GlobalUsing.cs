@@ -1,3 +1,11 @@
-﻿global using Cofoundry.Domain;
+global using System.Net;
+global using Cofoundry.Core;
+global using Cofoundry.Domain;
+global using Cofoundry.Domain.Tests;
+global using Cofoundry.Domain.Tests.Shared.Assertions;
+global using Cofoundry.Domain.Tests.Shared.Mocks;
+global using Cofoundry.Web.Tests.TestWebApp;
+global using FluentAssertions;
+global using FluentAssertions.Execution;
 global using Microsoft.Extensions.DependencyInjection;
 global using Xunit;

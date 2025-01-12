@@ -25,7 +25,7 @@ public static class TestEnvironmentConfigurationBuilder
         var currentDirectory = Directory.GetCurrentDirectory();
         builder.SetBasePath(currentDirectory);
 
-        AddConfiguration(builder);
+        AddConfiguration(builder, additionalConfiguration);
 
         return builder.Build();
     }

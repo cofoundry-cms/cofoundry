@@ -1,4 +1,4 @@
-﻿using Cofoundry.Domain.Internal;
+using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain.Tests;
 
@@ -175,11 +175,11 @@ public class RoleDefinitionRepositoryTests
 
     private class TestRoleDefinition : IRoleDefinition
     {
-        public string Title { get; set; } = string.Empty;
+        public string Title { get; set; } = "Dynamic Test Role";
 
-        public string RoleCode { get; set; } = string.Empty;
+        public string RoleCode { get; set; } = "DTR";
 
-        public string UserAreaCode { get; set; } = string.Empty;
+        public string UserAreaCode { get; set; } = CofoundryAdminUserArea.Code;
 
         public void ConfigurePermissions(IPermissionSetBuilder builder)
         {
