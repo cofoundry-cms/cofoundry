@@ -1,15 +1,31 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  
     <Authors>Cofoundry</Authors>
-    <PackageIconUrl>https://www.cofoundry.org/Content/images/external/logo-nuget-64x64.png</PackageIconUrl>
-    <PackageLicenseUrl>https://github.com/cofoundry-cms/cofoundry/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://www.cofoundry.org</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/cofoundry-cms/cofoundry/</RepositoryUrl>
+    <Copyright>Copyright © Cofoundry.org</Copyright>
+    <PackageIconUrl>https://www.cofoundry.org/Content/images/external/logo-nuget-64x64.png</PackageIconUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
     <RepositoryType>git</RepositoryType>
-    <PackageVersion>$(NuGetVersion)</PackageVersion>
-    <Version>0.2.0-beta0050</Version>
-    <FileVersion>$(FileVersion)</FileVersion>
-    <InformationalVersion>$(InformationalVersion)</InformationalVersion>
-    <Copyright>$(Copyright)</Copyright>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+    
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;1705;1591;NU5048</NoWarn>
   </PropertyGroup>
 </Project>

@@ -1,28 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	<TargetFramework>net8.0</TargetFramework>
-	<ImplicitUsings>enable</ImplicitUsings>
-	<Nullable>enable</Nullable>
-
     <PackageId>Cofoundry.Plugins.Mail.SendGrid</PackageId>
     <Description>Cofoundry mail service implemention for SendGrid.</Description>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright © Cofoundry.org</Copyright>
     <PackageTags>Cofoundry Core</PackageTags>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\net8.0\Cofoundry.Plugins.Mail.SendGrid.xml</DocumentationFile>
-    <NoWarn>1701;1702;1705;1591</NoWarn>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Sendgrid" Version="9.29.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Core\Cofoundry.Core.csproj" />
   </ItemGroup>
-
 </Project>

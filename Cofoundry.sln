@@ -4,8 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4996A61A-00E1-4363-9BC7-1F877E4AD933}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8FCDFF68-9BCF-499B-8E2D-7E08E824F40A}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Directory.Build.props = samples\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Core", "src\Cofoundry.Core\Cofoundry.Core.csproj", "{22E7BFD5-C829-4793-83C6-445944D605F4}"
 EndProject
@@ -15,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Web", "src\Cofoun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Web.Admin", "src\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj", "{C168F1B9-A30D-429A-B8A1-E77991167E0D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.BasicTestSite", "src\Cofoundry.BasicTestSite\Cofoundry.BasicTestSite.csproj", "{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.BasicTestSite", "samples\Cofoundry.BasicTestSite\Cofoundry.BasicTestSite.csproj", "{F18AD5CE-1929-47D8-9028-C1CE0B77E1B1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Core.Tests", "test\Cofoundry.Core.Tests\Cofoundry.Core.Tests.csproj", "{A1700147-1310-4DBA-80DA-B157F57F8A7C}"
 EndProject
@@ -43,11 +49,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackgroundTasks.Hangfire", 
 		src\Cofoundry.Plugins\Cofoundry.Plugins.BackgroundTasks.Hangfire\README.md = src\Cofoundry.Plugins\Cofoundry.Plugins.BackgroundTasks.Hangfire\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HangfireSample", "src\Cofoundry.Plugins\Cofoundry.Plugins.BackgroundTasks.Hangfire\HangfireSample\HangfireSample.csproj", "{55D59EF8-FDF8-4ED4-B16D-26169B3FC02D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{ABEBED1D-E992-4418-BB01-7BD6335C3C03}"
 	ProjectSection(SolutionItems) = preProject
 		test\dev.runsettings = test\dev.runsettings
+		test\Directory.Build.props = test\Directory.Build.props
 		test\docker-compose.test.yml = test\docker-compose.test.yml
 		test\README.md = test\README.md
 	EndProjectSection
@@ -63,7 +68,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.ErrorLogg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.ErrorLogging.Admin", "src\Cofoundry.Plugins\Cofoundry.Plugins.ErrorLogging\Cofoundry.Plugins.ErrorLogging.Admin\Cofoundry.Plugins.ErrorLogging.Admin.csproj", "{5C9B73EA-BB35-45AE-BE0C-22AA6ACE95DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ErrorLoggingExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.ErrorLogging\ErrorLoggingExample\ErrorLoggingExample.csproj", "{5F41DC01-64FB-41D4-A25B-CFE563F60CE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ErrorLoggingExample", "samples\Cofoundry.Plugins\ErrorLoggingExample\ErrorLoggingExample.csproj", "{5F41DC01-64FB-41D4-A25B-CFE563F60CE3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imaging.ImageSharp", "Imaging.ImageSharp", "{7D2F0A5C-D5A7-4791-9E55-C382C52F933F}"
 	ProjectSection(SolutionItems) = preProject
@@ -72,7 +77,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imaging.ImageSharp", "Imagi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Imaging.ImageSharp", "src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.ImageSharp\Cofoundry.Plugins.Imaging.ImageSharp\Cofoundry.Plugins.Imaging.ImageSharp.csproj", "{83112E76-5984-40F1-B5F9-1B92C78F9208}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageSharpExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.ImageSharp\ImageSharpExample\ImageSharpExample.csproj", "{38E1D540-5C5D-4F81-9A96-58F4DB33667F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageSharpExample", "samples\Cofoundry.Plugins\ImageSharpExample\ImageSharpExample.csproj", "{38E1D540-5C5D-4F81-9A96-58F4DB33667F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imaging.SkiaSharp", "Imaging.SkiaSharp", "{3B2455A4-E53F-4E8F-83A2-21A9528ACD4F}"
 	ProjectSection(SolutionItems) = preProject
@@ -81,7 +86,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imaging.SkiaSharp", "Imagin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Imaging.SkiaSharp", "src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.SkiaSharp\Cofoundry.Plugins.Imaging.SkiaSharp\Cofoundry.Plugins.Imaging.SkiaSharp.csproj", "{6EB01163-020A-4F66-877A-9CD5F5D2078E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkiaSharpExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.SkiaSharp\SkiaSharpExample\SkiaSharpExample.csproj", "{8513C7C7-5A36-4571-B7D6-B2610874D18C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkiaSharpExample", "samples\Cofoundry.Plugins\SkiaSharpExample\SkiaSharpExample.csproj", "{8513C7C7-5A36-4571-B7D6-B2610874D18C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Imaging.SkiaSharp.Tests", "test\Cofoundry.Plugins.Tests\Cofoundry.Plugins.Imaging.SkiaSharp.Tests\Cofoundry.Plugins.Imaging.SkiaSharp.Tests.csproj", "{97F72C95-A3E6-4FE3-B921-5B4A2A3CBC09}"
 EndProject
@@ -92,7 +97,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail.MailKit", "Mail.MailKi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Mail.MailKit", "src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.MailKit\Cofoundry.Plugins.Mail.MailKit\Cofoundry.Plugins.Mail.MailKit.csproj", "{17673507-9B76-4F70-9A39-E5DBF36ACA8D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailKitExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.MailKit\MailKitExample\MailKitExample.csproj", "{DA8944AA-1D85-4382-9540-41DA70A03369}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailKitExample", "samples\Cofoundry.Plugins\MailKitExample\MailKitExample.csproj", "{DA8944AA-1D85-4382-9540-41DA70A03369}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail.SendGrid", "Mail.SendGrid", "{C08628A4-B7AA-4A06-A4CF-D4D769A5CD01}"
 	ProjectSection(SolutionItems) = preProject
@@ -101,7 +106,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail.SendGrid", "Mail.SendG
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Mail.SendGrid", "src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.SendGrid\Cofoundry.Plugins.Mail.SendGrid\Cofoundry.Plugins.Mail.SendGrid.csproj", "{5665C520-BE82-470A-96E7-9F0B515DB0E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendGridExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.SendGrid\SendGridExample\SendGridExample.csproj", "{15ACB756-6A61-4E2C-A2AE-C5867751EB8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SendGridExample", "samples\Cofoundry.Plugins\SendGridExample\SendGridExample.csproj", "{15ACB756-6A61-4E2C-A2AE-C5867751EB8F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SiteMap", "SiteMap", "{E3D9BD2E-DCE8-4A7F-A19A-693083C7CFEB}"
 	ProjectSection(SolutionItems) = preProject
@@ -110,7 +115,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SiteMap", "SiteMap", "{E3D9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.SiteMap", "src\Cofoundry.Plugins\Cofoundry.Plugins.SiteMap\Cofoundry.Plugins.SiteMap\Cofoundry.Plugins.SiteMap.csproj", "{0BDAAEEF-FF06-480E-A948-4D3F9A5F6C58}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SitemapExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.SiteMap\SitemapExample\SitemapExample.csproj", "{C5969778-88D5-441C-B0AF-420C5AC67304}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SitemapExample", "samples\Cofoundry.Plugins\SitemapExample\SitemapExample.csproj", "{C5969778-88D5-441C-B0AF-420C5AC67304}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vimeo", "Vimeo", "{795B1930-28AC-404C-9328-EBF01713ACE8}"
 	ProjectSection(SolutionItems) = preProject
@@ -123,7 +128,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Vimeo.Adm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.Vimeo", "src\Cofoundry.Plugins\Cofoundry.Plugins.Vimeo\Cofoundry.Plugins.Vimeo\Cofoundry.Plugins.Vimeo.csproj", "{0EF8A66F-773E-4EC6-8521-ED76842CFBD7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VimeoExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.Vimeo\VimeoExample\VimeoExample.csproj", "{071CEA93-19F6-4D7D-88B1-FBC25D786C1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VimeoExample", "samples\Cofoundry.Plugins\VimeoExample\VimeoExample.csproj", "{071CEA93-19F6-4D7D-88B1-FBC25D786C1C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "YouTube", "YouTube", "{940AF760-EC11-48CD-A4E8-FFCB988A45E1}"
 	ProjectSection(SolutionItems) = preProject
@@ -136,7 +141,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.YouTube.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.YouTube", "src\Cofoundry.Plugins\Cofoundry.Plugins.YouTube\Cofoundry.Plugins.YouTube\Cofoundry.Plugins.YouTube.csproj", "{D98B6B5E-0E54-4F44-823F-B1B73A098955}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YouTubeExample", "src\Cofoundry.Plugins\Cofoundry.Plugins.YouTube\YouTubeExample\YouTubeExample.csproj", "{0AF931E3-FC46-498C-A3AA-93F10635D3E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YouTubeExample", "samples\Cofoundry.Plugins\YouTubeExample\YouTubeExample.csproj", "{0AF931E3-FC46-498C-A3AA-93F10635D3E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Build", "build\Cofoundry.Build\Cofoundry.Build.csproj", "{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Templates.Web", "src\Cofoundry.Templates\Cofoundry.Templates.Web\Cofoundry.Templates.Web.csproj", "{994287AE-4323-8B07-3343-67F41B12C800}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangfireSample", "samples\Cofoundry.Plugins\HangfireSample\HangfireSample.csproj", "{AD02F791-8824-3701-624F-09016EB5C5FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -192,10 +205,6 @@ Global
 		{898DCAC1-18AA-437A-BE24-B57FA47D174B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{898DCAC1-18AA-437A-BE24-B57FA47D174B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{898DCAC1-18AA-437A-BE24-B57FA47D174B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55D59EF8-FDF8-4ED4-B16D-26169B3FC02D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55D59EF8-FDF8-4ED4-B16D-26169B3FC02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55D59EF8-FDF8-4ED4-B16D-26169B3FC02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55D59EF8-FDF8-4ED4-B16D-26169B3FC02D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0D5495C7-4934-4440-8673-19B7FB10E7F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0D5495C7-4934-4440-8673-19B7FB10E7F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D5495C7-4934-4440-8673-19B7FB10E7F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -288,6 +297,18 @@ Global
 		{0AF931E3-FC46-498C-A3AA-93F10635D3E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AF931E3-FC46-498C-A3AA-93F10635D3E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AF931E3-FC46-498C-A3AA-93F10635D3E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{994287AE-4323-8B07-3343-67F41B12C800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{994287AE-4323-8B07-3343-67F41B12C800}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{994287AE-4323-8B07-3343-67F41B12C800}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{994287AE-4323-8B07-3343-67F41B12C800}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD02F791-8824-3701-624F-09016EB5C5FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD02F791-8824-3701-624F-09016EB5C5FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD02F791-8824-3701-624F-09016EB5C5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD02F791-8824-3701-624F-09016EB5C5FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -307,7 +328,6 @@ Global
 		{F6F4FFFC-FB00-4604-A4DF-DBCDD648D531} = {C5D55C03-F2AD-4DB7-A3B0-B7BB64029E4B}
 		{898DCAC1-18AA-437A-BE24-B57FA47D174B} = {E3274C98-899C-4B60-B96E-61122794E8AE}
 		{E3274C98-899C-4B60-B96E-61122794E8AE} = {C5D55C03-F2AD-4DB7-A3B0-B7BB64029E4B}
-		{55D59EF8-FDF8-4ED4-B16D-26169B3FC02D} = {E3274C98-899C-4B60-B96E-61122794E8AE}
 		{0D5495C7-4934-4440-8673-19B7FB10E7F8} = {F6F4FFFC-FB00-4604-A4DF-DBCDD648D531}
 		{F18C8FFD-CA34-4D99-9F55-EAF8D45FF083} = {C5D55C03-F2AD-4DB7-A3B0-B7BB64029E4B}
 		{44778E26-08C7-48AC-AFCF-BE44165CD5A1} = {F18C8FFD-CA34-4D99-9F55-EAF8D45FF083}
@@ -339,6 +359,9 @@ Global
 		{47C53D36-2F00-4374-B0B7-66302EB2C736} = {940AF760-EC11-48CD-A4E8-FFCB988A45E1}
 		{D98B6B5E-0E54-4F44-823F-B1B73A098955} = {940AF760-EC11-48CD-A4E8-FFCB988A45E1}
 		{0AF931E3-FC46-498C-A3AA-93F10635D3E2} = {940AF760-EC11-48CD-A4E8-FFCB988A45E1}
+		{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{994287AE-4323-8B07-3343-67F41B12C800} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
+		{AD02F791-8824-3701-624F-09016EB5C5FA} = {E3274C98-899C-4B60-B96E-61122794E8AE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {69E60B88-9077-484B-AD67-D85641B1F45A}
