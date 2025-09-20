@@ -1,69 +1,42 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-	<ImplicitUsings>enable</ImplicitUsings>
-	<Nullable>enable</Nullable>
-
     <PackageId>Cofoundry.Web.Admin</PackageId>
     <Description>
       Adds the Cofoundry admin panel to a website.
     </Description>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright © Cofoundry.org</Copyright>
     <PackageTags>Cofoundry Web Admin CMS</PackageTags>
-
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\net8.0\Cofoundry.Web.Admin.xml</DocumentationFile>
-    <NoWarn>1701;1702;1705;1591</NoWarn>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-
     <PackageReference Include="AngleSharp" Version="0.17.1" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.811" />
-    
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj" />
     <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
     <ProjectReference Include="..\Cofoundry.Web\Cofoundry.Web.csproj" />
   </ItemGroup>
-  
   <ItemGroup>
     <EmbeddedResource Include="Admin\Modules\*\MVC\Views\**\*.cshtml;Admin\Modules\*\MVC\Views\**\*.js;Admin\Modules\*\Content\**\*.*;" />
   </ItemGroup>
-  
   <ItemGroup>
     <Compile Remove="Build\node_modules\**" />
     <EmbeddedResource Remove="Build\node_modules\**" />
     <None Remove="Build\node_modules\**" />
   </ItemGroup>
-  
   <ItemGroup>
     <None Remove="Framework\Angular\StandardAngularModules\Routes\Index.cshtml" />
   </ItemGroup>
-  
   <ItemGroup>
     <EmbeddedResource Include="Framework\Angular\StandardAngularModules\Routes\Index.cshtml" />
   </ItemGroup>
-  
   <ItemGroup>
     <Folder Include="Admin\Modules\Auth\Content\js\" />
   </ItemGroup>
-  
 </Project>

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Cofoundry.Plugins\Cofoundry.Plugins.Mail.SendGrid\Cofoundry.Plugins.Mail.SendGrid\Cofoundry.Plugins.Mail.SendGrid.csproj" />
+    <ProjectReference Include="..\..\..\src\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
+  </ItemGroup>
+</Project>

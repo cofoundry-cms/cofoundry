@@ -1,51 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-	<ImplicitUsings>enable</ImplicitUsings>
-	<Nullable>enable</Nullable>
-
     <PackageId>Cofoundry.Web</PackageId>
     <Description>
       Adds Cofoundry features to a website, including access to content, pages and media, but excluding
       any content administration. To add content administration use the Cofoundry.Admin package.
     </Description>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright © Cofoundry.org</Copyright>
     <PackageTags>Cofoundry Web CMS</PackageTags>
-
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\net8.0\Cofoundry.Web.xml</DocumentationFile>
-    <NoWarn>1701;1702;1705;1591</NoWarn>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-
     <PackageReference Include="AngleSharp" Version="0.17.1" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.811" />
-    
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Cofoundry.Core\Cofoundry.Core.csproj" />
     <ProjectReference Include="..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
   </ItemGroup>
-  
   <ItemGroup>
     <EmbeddedResource Include="**\*.cshtml;**\*.html;**\*.png;**\*.jpg;**\*.svg;**\*.ico;**\*.swf;**\*.gif;**\*.css;**\*.js;**\*.woff;**\*.eot;**\*.ttf;" />
   </ItemGroup>
-  
 </Project>
