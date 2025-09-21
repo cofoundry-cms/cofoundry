@@ -1,6 +1,6 @@
 ![Cofoundry](https://www.cofoundry.org/content/images/external/logo_for_github_readme.png)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/q22kvqkckiswtv8i?svg=true)](https://ci.appveyor.com/project/Cofoundry/cofoundry)
+![Build status](https://github.com/cofoundry-cms/cofoundry/actions/workflows/build.yml/badge.svg)
 [![NuGet](https://img.shields.io/nuget/v/Cofoundry.Web.Admin.svg)](https://www.nuget.org/packages/Cofoundry.Web.Admin/)
 
 Cofoundry is an open source .NET CMS and application framework focusing on:

@@ -40,7 +40,7 @@ Target("build", dependsOn: ["patchAssemblyVersion"], async () =>
 
 Target("test", dependsOn: ["build"], async () =>
 {
-    await RunAsync("dotnet", "test --configuration Release --no-build --nologo --verbosity quiet");
+    await RunAsync("dotnet", "test --configuration Release --no-build --nologo --verbosity normal --logger trx");
 });
 
 Target("pack", dependsOn: ["build"], async () =>
@@ -96,7 +96,7 @@ Target("publish", dependsOn: ["pack", "test"], () =>
     }
 });
 
-Target("default", dependsOn: ["publish"]);
+Target("default", dependsOn: ["test"]);
 
 await RunTargetsAndExitAsync(args, messageOnly: ex => ex is SimpleExec.ExitCodeException);
 
