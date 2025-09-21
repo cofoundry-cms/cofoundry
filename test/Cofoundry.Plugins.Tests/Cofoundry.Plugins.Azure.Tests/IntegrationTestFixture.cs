@@ -32,7 +32,9 @@ public sealed class IntegrationTestFixture : IAsyncLifetime
     {
         if (string.IsNullOrEmpty(_azureSettings.BlobStorageConnectionString))
         {
-            _azuriteContainer = new AzuriteBuilder().Build();
+            _azuriteContainer = new AzuriteBuilder()
+                .WithCommand("--skipApiVersionCheck")
+                .Build();
             await _azuriteContainer.StartAsync();
             _azureSettings.BlobStorageConnectionString = _azuriteContainer.GetConnectionString();
         }
