@@ -1,18 +1,6 @@
 <Project>
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	  
-    <Authors>Cofoundry</Authors>
-    <PackageProjectUrl>https://www.cofoundry.org</PackageProjectUrl>
-    <Copyright>Copyright © Cofoundry.org</Copyright>
-    <PackageIconUrl>https://www.cofoundry.org/Content/images/external/logo-nuget-64x64.png</PackageIconUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
-    <RepositoryType>git</RepositoryType>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
@@ -25,7 +13,7 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;1705;1591;NU5048</NoWarn>
-  </PropertyGroup>
+  <Import Project="..\eng\Base.props" />
+  <Import Project="..\eng\NuGet.props" />
+
 </Project>

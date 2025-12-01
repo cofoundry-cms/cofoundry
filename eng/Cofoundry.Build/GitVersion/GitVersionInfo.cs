@@ -31,5 +31,5 @@ public class GitVersionInfo
     /// True if this is a pre-release version i.e. the commit is not tagged with
     /// a version number. 
     /// </summary>
-    public bool IsPrerelease => PreReleaseNumber.HasValue;
+    public bool IsPreRelease => PreReleaseNumber.HasValue;
 }

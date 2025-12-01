@@ -1,0 +1,19 @@
+<Project>
+
+  <PropertyGroup>
+    <Authors>Cofoundry</Authors>
+    <PackageProjectUrl>https://www.cofoundry.org</PackageProjectUrl>
+    <Copyright>Copyright © Cofoundry.org</Copyright>
+    <PackageIconUrl>https://www.cofoundry.org/Content/images/external/logo-nuget-64x64.png</PackageIconUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+</Project>
+  

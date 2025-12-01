@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <MvcRazorExcludeViewFilesFromPublish>false</MvcRazorExcludeViewFilesFromPublish>
+    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Cofoundry.Plugins\Cofoundry.Plugins.ErrorLogging\Cofoundry.Plugins.ErrorLogging.Admin\Cofoundry.Plugins.ErrorLogging.Admin.csproj" />
+    <ProjectReference Include="..\..\..\src\Cofoundry.Plugins\Cofoundry.Plugins.Imaging.SkiaSharp\Cofoundry.Plugins.Imaging.SkiaSharp\Cofoundry.Plugins.Imaging.SkiaSharp.csproj" />
+    <ProjectReference Include="..\..\..\src\Cofoundry.Plugins\Cofoundry.Plugins.SiteMap\Cofoundry.Plugins.SiteMap\Cofoundry.Plugins.SiteMap.csproj" />
+    <ProjectReference Include="..\..\..\src\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
+  </ItemGroup>
+</Project>

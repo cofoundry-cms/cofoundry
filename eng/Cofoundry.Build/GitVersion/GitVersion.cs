@@ -7,7 +7,7 @@ public static class GitVersion
 {
     public static async Task<GitVersionInfo> PatchAssemblyVersion()
     {
-        var (output, err) = await Command.ReadAsync("dotnet", "dotnet-gitversion -config build/Cofoundry.Build/GitVersion/GitVersion.yml -updateprojectfiles");
+        var (output, err) = await Command.ReadAsync("dotnet", "dotnet-gitversion -updateprojectfiles");
 
         var gitVersionInfo = JsonSerializer.Deserialize<GitVersionInfo>(output);
 

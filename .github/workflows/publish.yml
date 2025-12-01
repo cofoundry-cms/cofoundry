@@ -10,7 +10,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
@@ -24,7 +24,7 @@ jobs:
       env:
          NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
          MYGET_API_KEY: ${{secrets.MYGET_API_KEY}}
-      run: dotnet run --project build/Cofoundry.Build -- publish
+      run: dotnet run --project eng/Cofoundry.Build -- publish
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       if: (!cancelled())
