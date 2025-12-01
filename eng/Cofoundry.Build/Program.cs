@@ -1,7 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
+using Cofoundry.Build;
 using Cofoundry.Build.Utilities;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
+
+const string ArtifactDirectory = "artifacts";
 
 var _logger = Console.Out;
 GitVersionInfo? _versionInfo = null;
@@ -13,24 +16,15 @@ Target("init", () =>
 
 Target("clean", () =>
 {
-    var directory = new DirectoryInfo("artifacts");
-    directory.Create();
-    foreach (var file in directory.GetFiles())
-    {
-        file.Delete();
-    }
-
-    foreach (var dir in directory.GetDirectories())
-    {
-        dir.Delete(true);
-    }
+    FileHelper.EnsureDirectoryExists(ArtifactDirectory);
+    FileHelper.DeleteContents(ArtifactDirectory);
 });
 
 Target("patchAssemblyVersion", dependsOn: ["init", "clean"], async () =>
 {
     _versionInfo = await GitVersion.PatchAssemblyVersion();
 
-    _logger.WriteLine("Building Cofoundry version: {0}", _versionInfo.InformationalVersion);
+    _logger.WriteLine($"Building Cofoundry version: '{_versionInfo.InformationalVersion}', prerelease number {_versionInfo.PreReleaseNumber}");
 });
 
 Target("build", dependsOn: ["patchAssemblyVersion"], async () =>
@@ -47,7 +41,11 @@ Target("pack", dependsOn: ["build"], async () =>
 {
     ValidateVersionInfoRead(_versionInfo);
 
+    // pack solution projects
     await RunAsync("dotnet", $"pack -c Release -o artifacts --no-build");
+
+    // pack templates separately as they aren't included in the sollution
+    await RunAsync("dotnet", $"pack  ./templates/Cofoundry.Templates/Cofoundry.Templates.csproj -c Release -o artifacts --no-build");
 });
 
 Target("publish", dependsOn: ["pack", "test"], () =>
@@ -70,7 +68,7 @@ Target("publish", dependsOn: ["pack", "test"], () =>
     string? url;
     string? apiKey;
 
-    if (_versionInfo.IsPrerelease)
+    if (_versionInfo.IsPreRelease)
     {
         url = "https://www.myget.org/F/dh/api/v3/index.json";
         apiKey = Environment.GetEnvironmentVariable("MYGET_API_KEY");

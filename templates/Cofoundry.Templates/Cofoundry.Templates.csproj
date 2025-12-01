@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <PackageId>Cofoundry.Templates</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Title>Cofoundry.Templates</Title>
+    <Description>Project starter templates for Cofoundry CMS.</Description>
+    <PackageTags>Cofoundry Templates</PackageTags>
+    
+    <PackageType>Template</PackageType>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  
+  <Import Project="..\..\eng\Base.props" />
+  <Import Project="..\..\eng\NuGet.props" />
+  
+  <PropertyGroup>
+    <LocalizeTemplates>false</LocalizeTemplates>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.TemplateEngine.Tasks" Version="*" PrivateAssets="all" IsImplicitlyDefined="true" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="Cofoundry.Templates.Web\**\*.*" Exclude="**\bin\**\*;**\obj\**\*;**/*.user;**\App_Data\**\*" />
+    <Compile Remove="**\*" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+</Project>

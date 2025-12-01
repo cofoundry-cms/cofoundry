@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using System.Reflection;
 
@@ -21,8 +21,7 @@ public class CofoundryEmbeddedFileProvider : IFileProvider
     public CofoundryEmbeddedFileProvider(
         Assembly assembly,
         DebugSettings embeddedResourcesSetting,
-        IPathResolver pathResolver
-        )
+        IPathResolver pathResolver)
     {
         _embeddedFileProvider = new EmbeddedFileProvider(assembly);
 
@@ -38,7 +37,10 @@ public class CofoundryEmbeddedFileProvider : IFileProvider
             var assemblyName = assembly.GetName().Name ?? string.Empty;
             var path = Path.Combine(basePath, assemblyName);
 
-            _physicalFileProvider = new PhysicalFileProvider(path);
+            if (File.Exists(path))
+            {
+                _physicalFileProvider = new PhysicalFileProvider(path);
+            }
         }
     }
 

@@ -6,13 +6,13 @@ To run the build locally:
 
 ```bash
 # default target (tests)
-dotnet run --project build/Cofoundry.Build
+dotnet run --project eng/Cofoundry.Build
 
 # run target: tests
-dotnet run --project build/Cofoundry.Build -- test
+dotnet run --project eng/Cofoundry.Build -- test
 
 # run target: publish
-dotnet run --project build/Cofoundry.Build -- publish
+dotnet run --project eng/Cofoundry.Build -- publish
 ```
 
 To publish packages you will need to supply the relevant NuGet feed API keys:

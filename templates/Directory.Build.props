@@ -1,7 +1,7 @@
 <Project>
+
   <PropertyGroup>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
-  
-  <Import Project="..\eng\Base.props" />
+
 </Project>

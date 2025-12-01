@@ -1,4 +1,0 @@
-mode: ContinuousDeployment
-branches: {}
-ignore:
-  sha: []

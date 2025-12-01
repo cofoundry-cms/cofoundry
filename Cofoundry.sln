@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32210.238
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4996A61A-00E1-4363-9BC7-1F877E4AD933}"
 	ProjectSection(SolutionItems) = preProject
@@ -143,13 +143,24 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cofoundry.Plugins.YouTube",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YouTubeExample", "samples\Cofoundry.Plugins\YouTubeExample\YouTubeExample.csproj", "{0AF931E3-FC46-498C-A3AA-93F10635D3E2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		eng\Base.props = eng\Base.props
+		eng\NuGet.props = eng\NuGet.props
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Build", "build\Cofoundry.Build\Cofoundry.Build.csproj", "{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Templates.Web", "src\Cofoundry.Templates\Cofoundry.Templates.Web\Cofoundry.Templates.Web.csproj", "{994287AE-4323-8B07-3343-67F41B12C800}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Build", "eng\Cofoundry.Build\Cofoundry.Build.csproj", "{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangfireSample", "samples\Cofoundry.Plugins\HangfireSample\HangfireSample.csproj", "{AD02F791-8824-3701-624F-09016EB5C5FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{7FEC10FF-3766-4245-90A7-09CD2499BA08}"
+	ProjectSection(SolutionItems) = preProject
+		templates\Cofoundry.Templates\Cofoundry.Templates.csproj = templates\Cofoundry.Templates\Cofoundry.Templates.csproj
+		templates\Directory.Build.props = templates\Directory.Build.props
+		templates\Cofoundry.Templates\README.md = templates\Cofoundry.Templates\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Templates.Web", "templates\Cofoundry.Templates\Cofoundry.Templates.Web\Cofoundry.Templates.Web.csproj", "{5916546B-4C5F-63EF-08B0-4404109A3A68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -301,14 +312,14 @@ Global
 		{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{994287AE-4323-8B07-3343-67F41B12C800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{994287AE-4323-8B07-3343-67F41B12C800}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{994287AE-4323-8B07-3343-67F41B12C800}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{994287AE-4323-8B07-3343-67F41B12C800}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD02F791-8824-3701-624F-09016EB5C5FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AD02F791-8824-3701-624F-09016EB5C5FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD02F791-8824-3701-624F-09016EB5C5FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD02F791-8824-3701-624F-09016EB5C5FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5916546B-4C5F-63EF-08B0-4404109A3A68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5916546B-4C5F-63EF-08B0-4404109A3A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5916546B-4C5F-63EF-08B0-4404109A3A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5916546B-4C5F-63EF-08B0-4404109A3A68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -360,8 +371,8 @@ Global
 		{D98B6B5E-0E54-4F44-823F-B1B73A098955} = {940AF760-EC11-48CD-A4E8-FFCB988A45E1}
 		{0AF931E3-FC46-498C-A3AA-93F10635D3E2} = {940AF760-EC11-48CD-A4E8-FFCB988A45E1}
 		{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{994287AE-4323-8B07-3343-67F41B12C800} = {4996A61A-00E1-4363-9BC7-1F877E4AD933}
 		{AD02F791-8824-3701-624F-09016EB5C5FA} = {E3274C98-899C-4B60-B96E-61122794E8AE}
+		{5916546B-4C5F-63EF-08B0-4404109A3A68} = {7FEC10FF-3766-4245-90A7-09CD2499BA08}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {69E60B88-9077-484B-AD67-D85641B1F45A}
