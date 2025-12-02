@@ -2,7 +2,6 @@
   
   <PropertyGroup>
     <PackageId>Cofoundry.Templates</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
     <Title>Cofoundry.Templates</Title>
     <Description>Project starter templates for Cofoundry CMS.</Description>
     <PackageTags>Cofoundry Templates</PackageTags>
