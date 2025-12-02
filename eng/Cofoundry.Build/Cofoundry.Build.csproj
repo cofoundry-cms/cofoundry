@@ -1,14 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <AssemblyVersion>0.12.2.0</AssemblyVersion>
-    <FileVersion>0.12.2.0</FileVersion>
-    <InformationalVersion>0.12.2-spike-mono-repo.1+12.Branch.spike-mono-repo.Sha.3adfcc1602f52798e92a509f8e26256f743fb466</InformationalVersion>
-    <Version>0.12.2-spike-mono-repo.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Bullseye" Version="6.0.0" />

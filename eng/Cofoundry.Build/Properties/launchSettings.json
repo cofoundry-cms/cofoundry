@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Cofoundry.Build": {
+      "commandName": "Project",
+      "commandLineArgs": "pack",
+      "workingDirectory": "../../",
+      "hotReloadEnabled": false
+    }
+  }
+}

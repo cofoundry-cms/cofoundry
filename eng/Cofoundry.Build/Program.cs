@@ -1,11 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using Cofoundry.Build;
 using Cofoundry.Build.Utilities;
+using Microsoft.Extensions.FileSystemGlobbing;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
 
 const string ArtifactDirectory = "artifacts";
-const string TemplateProjectPath = "./templates/Cofoundry.Templates/Cofoundry.Templates.csproj";
+const string TemplateProjectDirectory = "./templates/Cofoundry.Templates";
+const string TemplateProjectPath = $"{TemplateProjectDirectory}/Cofoundry.Templates.csproj";
 
 var _logger = Console.Out;
 GitVersionInfo? _versionInfo = null;
@@ -48,7 +50,8 @@ Target("pack", dependsOn: ["build"], async () =>
     // pack solution projects
     await RunAsync("dotnet", $"pack -c Release -o artifacts --no-build");
 
-    // pack templates separately as they aren't included in the sollution
+    // pack templates separately as they aren't included in the solution
+    PatchTemplateProjects();
     await RunAsync("dotnet", $"pack {TemplateProjectPath} -c Release -o artifacts --no-build");
 });
 
@@ -102,10 +105,29 @@ Target("default", dependsOn: ["test"]);
 
 await RunTargetsAndExitAsync(args, messageOnly: ex => ex is SimpleExec.ExitCodeException);
 
-static void ValidateVersionInfoRead([NotNull] GitVersionInfo? _versionInfo)
+static void ValidateVersionInfoRead([NotNull] GitVersionInfo? versionInfo)
 {
-    if (_versionInfo == null)
+    if (versionInfo == null)
     {
         throw new InvalidOperationException("Version info has not yet been fetched.");
+    }
+}
+
+void PatchTemplateProjects()
+{
+    Matcher matcher = new();
+    matcher.AddIncludePatterns(["*/**/*.csproj"]);
+
+    var projectFilePaths = matcher.GetResultsInFullPath(TemplateProjectDirectory);
+
+    foreach (var projectFilePath in projectFilePaths)
+    {
+        _logger.WriteLine($"Patching template project: {projectFilePath}");
+
+        var projectFile = new ProjectFile(projectFilePath);
+
+        projectFile.ConvertProjectReferencesToNuGet(_versionInfo.SemVer, _logger);
+        projectFile.RemoveVersionProperties();
+        projectFile.Save();
     }
 }

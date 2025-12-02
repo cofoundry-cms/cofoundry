@@ -1,0 +1,6 @@
+# Override branch mode to ensure pre-release package versions increment
+branches: 
+  feature:
+    mode: ContinuousDelivery
+  unknown:
+    mode: ContinuousDelivery
