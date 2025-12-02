@@ -5,6 +5,7 @@ using static Bullseye.Targets;
 using static SimpleExec.Command;
 
 const string ArtifactDirectory = "artifacts";
+const string TemplateProjectPath = "./templates/Cofoundry.Templates/Cofoundry.Templates.csproj";
 
 var _logger = Console.Out;
 GitVersionInfo? _versionInfo = null;
@@ -29,7 +30,10 @@ Target("patchAssemblyVersion", dependsOn: ["init", "clean"], async () =>
 
 Target("build", dependsOn: ["patchAssemblyVersion"], async () =>
 {
+    // build solution projects
     await RunAsync("dotnet", "build --configuration Release --nologo --verbosity quiet");
+    // build templates separately as they aren't included in the solution
+    await RunAsync("dotnet", $"build {TemplateProjectPath} --configuration Release --nologo --verbosity quiet");
 });
 
 Target("test", dependsOn: ["build"], async () =>
@@ -45,7 +49,7 @@ Target("pack", dependsOn: ["build"], async () =>
     await RunAsync("dotnet", $"pack -c Release -o artifacts --no-build");
 
     // pack templates separately as they aren't included in the sollution
-    await RunAsync("dotnet", $"pack  ./templates/Cofoundry.Templates/Cofoundry.Templates.csproj -c Release -o artifacts --no-build");
+    await RunAsync("dotnet", $"pack {TemplateProjectPath} -c Release -o artifacts --no-build");
 });
 
 Target("publish", dependsOn: ["pack", "test"], () =>
