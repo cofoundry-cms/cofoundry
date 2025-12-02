@@ -97,8 +97,9 @@ Desktop.ini
 
 .vscode
 .vs
+.idea
 
-# Cake Build
+# Build
 /tools
 /artifacts
 

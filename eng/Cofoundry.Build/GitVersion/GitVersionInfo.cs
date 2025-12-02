@@ -22,6 +22,13 @@ public class GitVersionInfo
     public string FileVersion => MajorMinorPatch + ".0";
 
     /// <summary>
+    /// The semantical version number, including PreReleaseTagWithDash for pre-release version numbers.
+    /// This is the version assigned to the NuGet package e.g. "0.12.2" for release or
+    /// "0.12.2-bugfix-560-admin-not-loading.1" for prereleases.
+    /// </summary>
+    public string SemVer { get; set; } = string.Empty;
+
+    /// <summary>
     /// If this is a pre-release (commit is not tagged), this contains the
     /// number of that release (number of commits since last tag).
     /// </summary>
