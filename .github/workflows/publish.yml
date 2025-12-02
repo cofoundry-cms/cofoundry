@@ -2,7 +2,10 @@ name: publish
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - main
+      - 'feature/**'
+      - 'bugfix/**'
 
 permissions:
   contents: read
@@ -11,7 +14,7 @@ permissions:
 
 jobs:
   publish:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
       with: 
