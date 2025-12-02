@@ -52,7 +52,7 @@ Target("pack", dependsOn: ["build"], async () =>
     await RunAsync("dotnet", $"pack {TemplateProjectPath} -c Release -o artifacts --no-build");
 });
 
-Target("publish", dependsOn: ["pack", "test"], () =>
+Target("publish", dependsOn: ["test", "pack"], () =>
 {
     ValidateVersionInfoRead(_versionInfo);
 
