@@ -74,7 +74,7 @@ Target("publish", dependsOn: ["pack", "test"], () =>
 
     if (_versionInfo.IsPreRelease)
     {
-        url = "https://www.myget.org/F/dh/api/v3/index.json";
+        url = "https://www.myget.org/F/cofoundry/api/v2/package";
         apiKey = Environment.GetEnvironmentVariable("MYGET_API_KEY");
     }
     else

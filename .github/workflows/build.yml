@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Test
+    - name: Build
       run: dotnet run --project eng/Cofoundry.Build -- test
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2

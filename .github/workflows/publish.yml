@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Test
+    - name: Publish
       env:
          NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
          MYGET_API_KEY: ${{secrets.MYGET_API_KEY}}
