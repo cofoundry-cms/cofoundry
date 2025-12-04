@@ -6,6 +6,8 @@ on:
       - main
       - 'feature/**'
       - 'bugfix/**'
+    tags:        
+      - 'v*'
 
 permissions:
   contents: read
