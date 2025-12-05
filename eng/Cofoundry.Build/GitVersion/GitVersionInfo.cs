@@ -12,6 +12,16 @@ public class GitVersionInfo
     public string InformationalVersion { get; set; } = string.Empty;
 
     /// <summary>
+    /// The major version. Should be incremented on breaking changes.
+    /// </summary>
+    public int Major { get; set; }
+
+    /// <summary>
+    /// The minor version. Should be incremented on new features.
+    /// </summary>
+    public int Minor { get; set; }
+
+    /// <summary>
     /// Major, Minor and Patch joined together, separated by "." e.g. "1.2.3".
     /// </summary>
     public string MajorMinorPatch { get; set; } = string.Empty;

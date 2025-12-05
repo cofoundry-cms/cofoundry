@@ -1,0 +1,25 @@
+###################################################################################
+# Builds and publishes only the Cofoundry docs. This is designed to be run manually
+# to update docs between releases. Otherwise docs are automatically updated when
+# a non-prereleas release is made.
+###################################################################################
+name: publish-docs
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+      with: 
+        fetch-depth: 0
+    - name: Publish
+      env:
+         DOCS_STORAGE_CONNECTION_STRING: ${{secrets.DOCS_STORAGE_CONNECTION_STRING}}
+         DOCS_COMPLETION_WEBHOOK: ${{secrets.DOCS_COMPLETION_WEBHOOK}}
+         DOCS_FORCE_PUBLISH: true
+      run: dotnet run --project eng/Cofoundry.Build -- publish-docs
