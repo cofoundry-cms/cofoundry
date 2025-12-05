@@ -11,7 +11,10 @@ dotnet run --project eng/Cofoundry.Build
 # run target: tests
 dotnet run --project eng/Cofoundry.Build -- test
 
-# run target: publish
+# run target: docs-publish (no build)
+dotnet run --project eng/Cofoundry.Build -- docs-publish
+
+# run target: publish (packages and docs)
 dotnet run --project eng/Cofoundry.Build -- publish
 ```
 

@@ -1,5 +1,3 @@
-using Microsoft.Extensions.FileSystemGlobbing;
-
 namespace Cofoundry.Build;
 
 public static class FileHelper

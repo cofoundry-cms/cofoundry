@@ -1,3 +1,9 @@
+###################################################################################
+# Builds and publishes Cofoundry NuGet packages. If this is a prerelease then 
+# packages are published to MyGet; otherwise packages are published to NuGet and
+# the Cofoundry docs are published to cofoundry.org. To publish docs between 
+# releases you can manually trigger the 'publish-docs' workflow.
+###################################################################################
 name: publish
 
 on:
@@ -29,6 +35,8 @@ jobs:
       env:
          NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
          MYGET_API_KEY: ${{secrets.MYGET_API_KEY}}
+         DOCS_STORAGE_CONNECTION_STRING: ${{secrets.DOCS_STORAGE_CONNECTION_STRING}}
+         DOCS_COMPLETION_WEBHOOK: ${{secrets.DOCS_COMPLETION_WEBHOOK}}
       run: dotnet run --project eng/Cofoundry.Build -- publish
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2

@@ -1,6 +1,6 @@
 # Cofoundry User Docs
 
-Source for documentation on [cofoundry.org](https://cofoundry.org/docs). This is an evolution of the original GitHub wiki and still uses markdown files for documentation pages, but the publish process enables some additional features:
+Source for documentation on [cofoundry.org](https://cofoundry.org/docs) is in the [docs/user-docs](/docs/user-docs) folder. The user docs are a standard markdown wiki with some enhanced features:
 
 - Version support (based on tags) with canonical urls
 - Nested folder support
@@ -65,4 +65,4 @@ If documents get moved or renamed you should create a redirect. To do this first
 
 ## Building the docs
 
-The docs are published using the [Doc Generator tool](https://github.com/cofoundry-cms/Cofoundry.DocGenerator). Currently this is a manual process but we should be able to automate this at some point.
+The docs are published using the [Doc Generator tool](/eng/Cofoundry.DocGenerator/README.md) as part of the build process.

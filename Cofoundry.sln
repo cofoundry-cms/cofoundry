@@ -162,6 +162,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.Templates.Web", "templates\Cofoundry.Templates\Cofoundry.Templates.Web\Cofoundry.Templates.Web.csproj", "{5916546B-4C5F-63EF-08B0-4404109A3A68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cofoundry.DocGenerator", "eng\Cofoundry.DocGenerator\Cofoundry.DocGenerator.csproj", "{607C8226-45D3-40E1-B132-CCE8A62CCAB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -320,6 +322,10 @@ Global
 		{5916546B-4C5F-63EF-08B0-4404109A3A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5916546B-4C5F-63EF-08B0-4404109A3A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5916546B-4C5F-63EF-08B0-4404109A3A68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{607C8226-45D3-40E1-B132-CCE8A62CCAB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{607C8226-45D3-40E1-B132-CCE8A62CCAB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{607C8226-45D3-40E1-B132-CCE8A62CCAB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{607C8226-45D3-40E1-B132-CCE8A62CCAB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -373,6 +379,7 @@ Global
 		{E9601DA6-BC0E-4591-94C7-18D6AFD06EF9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{AD02F791-8824-3701-624F-09016EB5C5FA} = {E3274C98-899C-4B60-B96E-61122794E8AE}
 		{5916546B-4C5F-63EF-08B0-4404109A3A68} = {7FEC10FF-3766-4245-90A7-09CD2499BA08}
+		{607C8226-45D3-40E1-B132-CCE8A62CCAB3} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {69E60B88-9077-484B-AD67-D85641B1F45A}
