@@ -43,7 +43,7 @@ public class AzureBlobDestinationFileStoreService : IDestinationFileStoreService
 
         var directories = new List<BlobHierarchyItem>();
 
-        await foreach (var item in container.GetBlobsByHierarchyAsync(BlobTraits.None, BlobStates.None, path))
+        await foreach (var item in container.GetBlobsByHierarchyAsync(BlobTraits.None, BlobStates.None, "/", path))
         {
             if (item.IsPrefix)
             {
