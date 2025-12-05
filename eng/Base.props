@@ -1,4 +1,5 @@
 <Project>
+  
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -9,4 +10,9 @@
   <PropertyGroup Condition="'$(Configuration)'!='Debug'">
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <RepoRoot>$([System.IO.Path]::GetDirectoryName($([MSBuild]::GetPathOfFileAbove('Cofoundry.sln', '$(MSBuildThisFileDirectory)'))))</RepoRoot>
+  </PropertyGroup>
+  
 </Project>
