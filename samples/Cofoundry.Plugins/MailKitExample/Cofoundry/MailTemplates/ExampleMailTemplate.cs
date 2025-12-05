@@ -1,4 +1,4 @@
-﻿using Cofoundry.Core.Mail;
+using Cofoundry.Core.Mail;
 
 namespace MailKitExample;
 
@@ -28,5 +28,5 @@ public class ExampleMailTemplate : IMailTemplate
     /// <summary>
     /// This is a custom property to hold some data that we'd like to render in our view file.
     /// </summary>
-    public string Message { get; set; }
+    public string Message { get; set; } = string.Empty;
 }
