@@ -4,7 +4,7 @@ The account recovery feature allows a user to regain access to their account whe
 2. [Validation](#validating-an-account-recovery-request): The user follows the link in their email, which contains a unique single-use authorization token. The token should be validated with Cofoundry before a password reset form is displayed.
 3. [Completion](#completing-an-account-recovery-request): The user enters a new password, which is sent to Cofoundry with the authentication token to re-validate and complete the password reset.
 
-> The AuthenticationSample project in the [Cofoundry.Samples.UserAreas sample](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas) contains an example account recovery flow.
+> The AuthenticationSample project in the [user areas sample](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas) contains an example account recovery flow.
 
 The account recovery APIs can be found in the `IAdvancedContentRepository` in the `Users().AccountRecovery()` method chain.
 

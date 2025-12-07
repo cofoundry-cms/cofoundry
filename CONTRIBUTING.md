@@ -10,7 +10,7 @@ Your feedback is really important in helping us shape Cofoundry and focus on bui
 - Found an issue you think is important? Let us know by commenting or giving it a thumbs up.
 - We have a few issues tagged as [feedback wanted](https://github.com/cofoundry-cms/cofoundry/issues?q=is%3Aissue+is%3Aopen+label%3A%22feedback+wanted%22), which typically need opinion on a decision or design idea. 
 - Issues tagged as [enhancements](https://github.com/cofoundry-cms/cofoundry/labels/enhancement) will typically benefit from additional feedback, clarification or user-cases.
-- Had a good or bad experience building something with Cofoundry? [Let us know](https://github.com/cofoundry-cms/cofoundry/wiki/Feedback-&-Community) or drop in for a chat on [Gitter](https://gitter.im/cofoundry-cms/cofoundry).
+- Had a good or bad experience building something with Cofoundry? [Let us know](https://www.cofoundry.org/contact/).
 
 ## Code Contributions and PRs
 
@@ -24,7 +24,7 @@ We hope that in time as Cofoundry becomes more popular we will be able to invest
 
 Cofoundry is highly extensible and has a modular architecture that allows developers to build plugins that seamlessly integrate via a simple NuGet install. 
 
-We use this architecture to create our own plugins, but this area is not yet extensively documented. The current documentation is [here](https://github.com/cofoundry-cms/cofoundry/wiki/Creating-a-Plugin).
+We use this architecture to create our own plugins, but this area is not yet extensively documented. The current documentation is [here](https://www.cofoundry.org/docs/plugins/creating-a-plugin).
 
 If you are interested in creating your own plugin, please do get in touch with us and we'll be happy to assist.
 
@@ -32,4 +32,4 @@ If you are interested in creating your own plugin, please do get in touch with u
 
 If you've had a go with Cofoundry and like what we're doing, you can help us out by letting others know.
 
-If you're interested in writing a blog post or putting together samples and need some assistance we'd be happy to help so do [get in touch](https://github.com/cofoundry-cms/cofoundry/wiki/Feedback-&-Community).
+If you're interested in writing a blog post or putting together samples and need some assistance we'd be happy to help so do [get in touch](https://www.cofoundry.org/contact/).

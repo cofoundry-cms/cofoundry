@@ -1,6 +1,6 @@
 The account verification feature allows you flag a user account as verified or activated. This "verified" status is deliberately generic so the meaning will depends on your application, but as an example it could be that you simply run a manual check of a user and mark them as verified in the admin panel, or you could use an email-based flow to verify that the email address they registered with is a working email address.
 
-> The **RegistrationAndVerificationSample** project in the [Cofoundry.Samples.UserAreas sample](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas) contains an example of a registration and verification flow.
+> The **RegistrationAndVerificationSample** project in the [user areas sample](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas) contains an example of a registration and verification flow.
 
 ## Setting the verified status
 

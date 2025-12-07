@@ -2,7 +2,7 @@
 
 The complete sample sites are the best way to get a feel for how a Cofoundry site works and what the code looks like. 
 
-### [Cofoundry.Samples.SimpleSite](https://github.com/cofoundry-cms/Cofoundry.Samples.SimpleSite)
+### [SimpleSite](https://github.com/cofoundry-cms/Cofoundry.Samples/SimpleSite)
 
 A simple website implementing content management and some framework features including:
 
@@ -10,7 +10,7 @@ A simple website implementing content management and some framework features inc
 - Page templates
 - Custom page block types
 - Image content
-- Two custom entities - blog post and category
+- Two custom entities - blog post, category and author
 - Querying and display a list of blog posts
 - A blog post custom entity details page
 - A simple contact form
@@ -18,10 +18,10 @@ A simple website implementing content management and some framework features inc
 - Custom error pages
 - Configuration settings
 
-[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples.SimpleSite)
+[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples/SimpleSite)
 
 
-### [Cofoundry.Samples.SPASite](https://github.com/cofoundry-cms/Cofoundry.Samples.SPASite)
+### [SPASite](https://github.com/cofoundry-cms/Cofoundry.Samples/SPASite)
 
 An example demonstrating how to use Cofoundry to create a SPA (Single Page Application) with WebApi endpoints as well as demonstrating some advanced Cofoundry features.
 
@@ -39,13 +39,13 @@ The application is also separated into two projects demonstrating an example of 
 - Email notifications & email templating
 - Registering services with the DI container
 
-[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples.SPASite)
+[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples/SPASite)
 
 ## Individual Samples
 
 These samples focus on specific areas of functionality in Cofoundry.
 
-### [Cofoundry.Samples.Mail](https://github.com/cofoundry-cms/Cofoundry.Samples.Mail)
+### [Mail](https://github.com/cofoundry-cms/Cofoundry.Samples/Mail)
 
 This sample shows a couple of examples of how you can use the Cofoundry mail abstraction to send emails, including:
 
@@ -53,9 +53,9 @@ This sample shows a couple of examples of how you can use the Cofoundry mail abs
 - Sending mail with `IMailService`
 - Customizing email notifications for admin panel accounts
 
-[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples.Mail)
+[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples/Mail)
 
-### [Cofoundry.Samples.Menus](https://github.com/cofoundry-cms/Cofoundry.Samples.Menus)
+### [Menus](https://github.com/cofoundry-cms/Cofoundry.Samples/Menus)
 
 A bare website showing various examples of creating content editable menus:
 
@@ -63,9 +63,9 @@ A bare website showing various examples of creating content editable menus:
 - Nested Menu
 - Multi-level Menu
 
-[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples.Menus)
+[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples/Menus)
 
-### [Cofoundry.Samples.PageBlockTypes](https://github.com/cofoundry-cms/Cofoundry.Samples.PageBlockTypes)
+### [PageBlockTypes](https://github.com/cofoundry-cms/Cofoundry.Samples/PageBlockTypes)
 
 A bare website showing various examples of how to implement page block types including
 
@@ -73,9 +73,9 @@ A bare website showing various examples of how to implement page block types inc
 - Querying for data
 - Managing related entities and versions
 
-[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples.PageBlockTypes)
+[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples/PageBlockTypes)
 
-### [Cofoundry.Samples.UserAreas](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas)
+### [UserAreas](https://github.com/cofoundry-cms/Cofoundry.Samples/UserAreas)
 
 The user areas sample solution contains two projects:
 
@@ -108,4 +108,4 @@ This sample is written using ASP.NET MVC and implements the following features:
 - Sign in/sign out
 - Using `ICofoundryHelper` in views to query the current user
 
-[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas)
+[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples/UserAreas)

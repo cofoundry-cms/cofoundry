@@ -161,4 +161,4 @@ public class BlogLinkDataModel : INestedDataModel
 
 ## Further Examples
 
-You can find a full walk through of nested data models on [our blog](https://www.cofoundry.org/blog/14/introducing-nested-data-models), and more examples in our [Menus](https://github.com/cofoundry-cms/Cofoundry.Samples.Menus) and [Page Block Types](https://github.com/cofoundry-cms/Cofoundry.Samples.PageBlockTypes) samples projects.
+You can find a full walk through of nested data models on [our blog](https://www.cofoundry.org/blog/14/introducing-nested-data-models), and more examples in our [Menus](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/Menus) and [Page Block Types](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/PageBlockTypes) samples projects.

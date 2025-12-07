@@ -1,0 +1,48 @@
+﻿@model CarouselDisplayModel
+@inject ICofoundryBlockTypeHelper<CarouselDisplayModel> Cofoundry
+@{
+    Cofoundry.BlockType.UseDescription("A carousel of images with titles.");
+}
+
+<div id="carouselExample" class="carousel slide" data-ride="carousel">
+
+    @* Indicators *@
+
+    <ol class="carousel-indicators">
+        
+        @for (int i = 0; i < Model.Slides.Count; i++)
+        {
+        <li data-target="#carouselExample" data-slide-to="@i" @Cofoundry.Html.ClassIf(i == 0, "active")></li>
+        }
+    </ol>
+
+    <div class="carousel-inner">
+
+        @* Slides *@
+
+        @for (int i = 0; i < Model.Slides.Count; i++)
+        {
+            var item = Model.Slides.ElementAt(i);
+        <div class="carousel-item @Cofoundry.Html.TextIf(i == 0, "active")">
+            <img class="d-block w-100"
+                 src="@Cofoundry.Routing.ImageAsset(item.Image, 600, 300)"
+                 alt="@item.Image.Title">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>@item.Title</h5>
+                @Cofoundry.Sanitizer.Sanitize(item.Text)
+            </div>
+        </div>
+        }
+    </div>
+
+    @* Buttons *@
+
+    <a class="carousel-control-prev" href="#carouselExample" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExample" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>

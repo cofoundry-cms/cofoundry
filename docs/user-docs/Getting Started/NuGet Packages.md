@@ -32,15 +32,15 @@ For a typical website you'll want to install the [Cofoundry.Admin](https://www.n
 
 Some features of Cofoundry require additional plugins to be installed in order to use them, this includes [Images](/content-management/images), [Background Tasks](/framework/background-tasks) and [Mail](/framework/mail). Other plugins are available that add additional features to Cofoundry:
 
-- [Azure](https://github.com/cofoundry-cms/Cofoundry.Plugins.Azure)
-- [BackgroundTasks.Hangfire](https://github.com/cofoundry-cms/Cofoundry.Plugins.BackgroundTasks.Hangfire)
-- [ErrorLogging](https://github.com/cofoundry-cms/Cofoundry.Plugins.ErrorLogging)
-- [Imaging.SkiaSharp](https://github.com/cofoundry-cms/Cofoundry.Plugins.Imaging.SkiaSharp)
-- [Mail.MailKit](https://github.com/cofoundry-cms/Cofoundry.Plugins.Mail.MailKit)
-- [Mail.SendGrid](https://github.com/cofoundry-cms/Cofoundry.Plugins.Mail.SendGrid)
-- [SiteMap](https://github.com/cofoundry-cms/Cofoundry.Plugins.SiteMap)
-- [Vimeo](https://github.com/cofoundry-cms/Cofoundry.Plugins.Vimeo)
-- [YouTube](https://github.com/cofoundry-cms/Cofoundry.Plugins.YouTube)
+- [Azure](https://www.nuget.org/packages/Cofoundry.Plugins.Azure)
+- [BackgroundTasks.Hangfire](https://www.nuget.org/packages/Cofoundry.Plugins.BackgroundTasks.Hangfire)
+- [ErrorLogging](https://www.nuget.org/packages/Cofoundry.Plugins.ErrorLogging)
+- [Imaging.SkiaSharp](https://www.nuget.org/packages/Cofoundry.Plugins.Imaging.SkiaSharp)
+- [Mail.MailKit](https://www.nuget.org/packages/Cofoundry.Plugins.Mail.MailKit)
+- [Mail.SendGrid](https://www.nuget.org/packages/Cofoundry.Plugins.Mail.SendGrid)
+- [SiteMap](https://www.nuget.org/packages/Cofoundry.Plugins.SiteMap)
+- [Vimeo](https://www.nuget.org/packages/Cofoundry.Plugins.Vimeo)
+- [YouTube](https://www.nuget.org/packages/Cofoundry.Plugins.YouTube)
 
 These plugins are delivered as NuGet packages and are typically self-bootstrapping, making them easy to install and light-up new features.
 

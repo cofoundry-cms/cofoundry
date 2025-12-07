@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <MvcRazorExcludeViewFilesFromPublish>false</MvcRazorExcludeViewFilesFromPublish>
+    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Cofoundry.Plugins\Cofoundry.Plugins.YouTube\Cofoundry.Plugins.YouTube\Cofoundry.Plugins.YouTube.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,30 @@
+FROM mcr.microsoft.com/mssql/server:2019-latest
+
+# Switch to root user for access to apt-get install
+USER root
+
+# Install sqlpackage to allow restore of bacpacs
+# Apated from https://github.com/ormico/sqlpackage-docker
+# https://learn.microsoft.com/en-us/sql/tools/sqlpackage/sqlpackage-download
+RUN apt-get update \
+    && apt-get install unzip \
+    && wget -O sqlpackage.zip https://aka.ms/sqlpackage-linux \
+    && unzip sqlpackage.zip -d /opt/sqlpackage \
+    && chmod +x /opt/sqlpackage/sqlpackage \
+    && rm /sqlpackage.zip
+ENV PATH=$PATH:/opt/sqlpackage
+
+# Create a config directory
+RUN mkdir -p /usr/config
+WORKDIR /usr/config
+
+# Bundle config source
+COPY . /usr/config
+
+# Grant permissions for executable scripts
+RUN chmod +x /usr/config/configure-db.sh
+
+# Switch back to mssql user and run the entrypoint script
+USER mssql
+
+ENTRYPOINT ["./entrypoint.sh"]

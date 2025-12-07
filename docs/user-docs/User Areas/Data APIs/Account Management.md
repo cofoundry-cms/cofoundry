@@ -5,7 +5,7 @@ Cofoundry provides several APIs for managing the current user's account:
 - [Changing the password](#updating-the-current-users-password)
 - [Deleting](#deleting-an-account)
 
-> The **AuthenticationSample** project in the [Cofoundry.Samples.UserAreas sample](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas) contains an example of account management features.
+> The **AuthenticationSample** project in the [UserAreas sample](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas) contains an example of account management features.
 
 ## Updating the current user account
 

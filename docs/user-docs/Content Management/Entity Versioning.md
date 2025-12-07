@@ -18,7 +18,7 @@ There's a few other values to the `PublishStatusQuery` enum, but the common one 
 
 ### Querying related data from a page block mapper
 
-Firstly we'll look at page blocks, which could load in page or custom entity data. I'll use the *Page Snippet* block type from the [PageBlockTypes sample project](https://github.com/cofoundry-cms/Cofoundry.Samples.PageBlockTypes) as an example.
+Firstly we'll look at page blocks, which could load in page or custom entity data. I'll use the *Page Snippet* block type from the [PageBlockTypes sample project](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/PageBlockTypes) as an example.
 
 In the display model mapper we need to load in the page that has been selected by the user by running a `GetPageRenderDetailsByIdRangeQuery`. Cofoundry makes this really simple for us here because the correct `PublishStatusQuery` for loading related entities is passed into the `MapAsync` method and all we need to do is pass it into our query constructor. 
 

@@ -1,0 +1,14 @@
+﻿@model DirectoryListDisplayModel
+@inject ICofoundryBlockTypeHelper<DirectoryListDisplayModel> Cofoundry
+
+@Cofoundry.BlockType.UseDescription("A list of pages in a specific directory")
+
+@if (Model.Pages.Items.Any())
+{
+<ul>
+    @foreach (var pageItem in Model.Pages.Items)
+    {
+        <li><a href="@Cofoundry.Routing.Page(pageItem.PageRoute)">@pageItem.Title</a></li>
+    }
+</ul>
+}

@@ -1,0 +1,14 @@
+﻿@inject ICofoundryHelper Cofoundry
+<!DOCTYPE html>
+
+<html>
+<body style="background-color: #eee;font-family:sans-serif;">
+    <div style="text-align:center; margin: 1em;"><img src="@Cofoundry.StaticFiles.ToAbsoluteWithFileVersion("~/images/logo.png")" title="ExampleLogo" width="250" height="45" /></div>
+    <div style="margin: 0 auto; padding:1em; max-width:600px; background-color: #fff;border-radius:4px;">
+        @RenderBody()
+    </div>
+    <div style="text-align:center;font-size:80%;margin-top:1rem;">
+        This email was sent automatically by the Cofoundry Mail Sample site.
+    </div>
+</body>
+</html>

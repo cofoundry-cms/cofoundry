@@ -1,0 +1,20 @@
+﻿@model ContentSectionDisplayModel
+@inject ICofoundryBlockTypeHelper<ContentSectionDisplayModel> Cofoundry
+
+@*
+    Here we can use the Cofoundry helper to set the description that
+    gets displayed against the module in the administration interface.
+
+    This is optional and doesn't render anything into the template itself.
+*@
+@Cofoundry.BlockType.UseDescription("This is a content row with a heading")
+
+<div class="row content-block">
+    <div class="col-sm-12">
+        @if (!string.IsNullOrWhiteSpace(Model.Title))
+        {
+            <h1>@Model.Title</h1>
+        }
+        @Model.HtmlText
+    </div>
+</div>

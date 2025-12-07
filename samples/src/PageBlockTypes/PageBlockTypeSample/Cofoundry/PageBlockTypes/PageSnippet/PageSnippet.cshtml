@@ -1,0 +1,17 @@
+﻿@model PageSnippetDisplayModel
+@inject ICofoundryBlockTypeHelper<PageSnippetDisplayModel> Cofoundry
+
+@Cofoundry.BlockType.UseDescription("Displays summary information about a page.")
+
+@* 
+    We have to code defensively here and bear in mind that the related
+    entities may be in draft status and may not be available when viewing
+    the live site.
+*@
+@if (Model.Page != null)
+{
+    <h3><a href="@Cofoundry.Routing.Page(Model.Page.PageRoute)">@Model.Page.Title</a></h3>
+    <p>
+        @Model.Snippet
+    </p>
+}

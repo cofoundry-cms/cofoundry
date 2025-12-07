@@ -1,0 +1,13 @@
+﻿@model ICollection<CategorySummary>
+
+@{
+    Layout = null;
+}
+
+<h3>Categories</h3>
+<ul class="list-group--alt">
+    @foreach (var category in Model)
+    {
+        <li><a href="/blog?categoryId=@category.CategoryId" title="@category.ShortDescription">@category.Title</a></li>
+    }
+</ul>

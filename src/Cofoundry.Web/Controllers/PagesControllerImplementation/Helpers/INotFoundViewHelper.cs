@@ -6,7 +6,7 @@ namespace Cofoundry.Web;
 /// Helper to make it easier to return 404 (NotFound) responses using the
 /// built in 404 pages and rewrwite rule checking. 
 /// 
-/// See https://github.com/cofoundry-cms/cofoundry/wiki/Custom-Error-Pages for more information.
+/// See https://www.cofoundry.org/docs/content-management/custom-error-pages for more information.
 /// </summary>
 public interface INotFoundViewHelper
 {

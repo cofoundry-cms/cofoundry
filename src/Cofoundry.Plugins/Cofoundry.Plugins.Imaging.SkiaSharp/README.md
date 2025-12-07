@@ -6,7 +6,7 @@ This library is a plugin for [Cofoundry](https://www.cofoundry.org). For more in
 
 ## Overview
 
-Cofoundry does not have a default image resizing implementation and relies on plugins to add this functionality. For more info on image resizing in Cofoundry check out the [imaging documentation](https://github.com/cofoundry-cms/cofoundry/wiki/Images). 
+Cofoundry does not have a default image resizing implementation and relies on plugins to add this functionality. For more info on image resizing in Cofoundry check out the [imaging documentation](https://www.cofoundry.org/docs/content-management/images). 
 
 This plugin uses the [SkiaSharp](https://github.com/mono/SkiaSharp) wrapper library to resize images dynamically. [Skia](https://skia.org/) is an open source cross platform a 2D graphics library sponsored and managed by Google. It's licenced under the BSD Free Software License and is used in products such as Chrome, Android and FireFox. 
 
@@ -21,4 +21,4 @@ The services register themselves automatically so typically no other configurati
   - ResizeAsAlternative: Re-encoded all gifs to pngs when they are uploaded.
 - **Cofoundry:Plugins:SkiaSharp:DisableFileCache** Disables reading and writing of caching of resized image files. Useful for debugging, but note that cache headers are still set and files may be cached upstream.
 
-SkiaSharp doesn't offer much control over how images are saved, so if you need more control over configuration or better gif support you might want to consider the [Cofoundry.Plugins.Imaging.ImageSharp](https://github.com/cofoundry-cms/Cofoundry.Plugins.Imaging.ImageSharp) library.
+SkiaSharp doesn't offer much control over how images are saved, so if you need more control over configuration or better gif support you might want to consider the [Cofoundry.Plugins.Imaging.ImageSharp](https://www.nuget.org/packages/Cofoundry.Plugins.Imaging.ImageSharp) library.

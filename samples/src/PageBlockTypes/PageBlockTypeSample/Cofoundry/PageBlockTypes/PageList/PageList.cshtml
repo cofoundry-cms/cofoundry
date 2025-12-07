@@ -1,0 +1,14 @@
+﻿@model PageListDisplayModel
+@inject ICofoundryBlockTypeHelper<PageListDisplayModel> Cofoundry
+
+@Cofoundry.BlockType.UseDescription("An orderable list of links to pages")
+
+@if (!EnumerableHelper.IsNullOrEmpty(Model.Pages))
+{
+<ul>
+    @foreach (var pageItem in Model.Pages)
+    {
+        <li><a href="@Cofoundry.Routing.Page(pageItem)">@pageItem.Title</a></li>
+    }
+</ul>
+}

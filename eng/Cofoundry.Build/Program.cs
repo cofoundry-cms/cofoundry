@@ -157,7 +157,7 @@ Target("publish-docs", dependsOn: ["patchAssemblyVersion"], async () =>
         SourcePath = "docs/user-docs/",
         OutputPath = $"{ArtifactDirectory}/user-docs/",
         Version = $"{_versionInfo.Major}.{_versionInfo.Minor}.0"
-    });
+    }, _logger);
 
     await docGenerator.GenerateAsync();
 });

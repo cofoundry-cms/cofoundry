@@ -1,0 +1,10 @@
+name: cf-samples
+
+services:
+    mssql:
+        build: db/.
+        ports:
+            - 57315:1433
+        environment:
+            SA_PASSWORD: L0calDev$!
+            ACCEPT_EULA: Y

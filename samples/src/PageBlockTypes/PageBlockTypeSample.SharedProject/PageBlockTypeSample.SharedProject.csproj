@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Remove="Cofoundry\PageBlockTypes\ContentSection\ContentSection.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Cofoundry\PageBlockTypes\ContentSection\ContentSection.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
+  </ItemGroup>
+
+</Project>

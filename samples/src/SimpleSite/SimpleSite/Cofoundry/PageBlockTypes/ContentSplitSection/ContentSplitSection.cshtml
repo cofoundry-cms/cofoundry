@@ -1,0 +1,28 @@
+﻿@model ContentSplitSectionDisplayModel
+@inject ICofoundryBlockTypeHelper<ContentSplitSectionDisplayModel> Cofoundry
+
+@{
+    // As with the ContentSection module, we set the description that
+    // gets displayed against the module in the administration interface.
+
+    // Additionally we can set a custom value for the display name, but
+    // by default a humanized version of the template name is used.
+
+    Cofoundry.BlockType
+        .UseDisplayName("Split Section Content")
+        .UseDescription("This is a content row split in two halves with text in one half and an image in the other");
+}
+
+<div class="row content-block">
+    <div class="col-sm-6">
+        @if (!string.IsNullOrWhiteSpace(Model.Title))
+        {
+            <h2>@Model.Title</h2>
+        }
+        @Model.HtmlText
+    </div>
+
+    <div class="col-sm-6">
+        <img src="@Cofoundry.Routing.ImageAsset(Model.Image)" class="img-responsive img-thumbnail">
+    </div>
+</div>

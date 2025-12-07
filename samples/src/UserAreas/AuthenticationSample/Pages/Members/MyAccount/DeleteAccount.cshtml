@@ -1,0 +1,42 @@
+﻿@page
+@model AuthenticationSample.Pages.Members.MyAccount.DeleteAccountModel
+@{
+    ViewData["Title"] = "Delete Account";
+}
+
+<div class="row justify-content-center">
+    <div class="col col-8">
+
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" asp-page="Index">Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-page="UpdatePassword">Update Password</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" asp-page="DeleteAccount">Delete Account</a>
+            </li>
+        </ul>
+
+        <h1 class="mb-4">Delete Account</h1>
+
+        @if (Model.IsSuccess)
+        {
+            <p class="alert alert-success">Your account has been deleted.</p>
+            <p>
+                <a asp-page="/Index">Go to homepage</a>
+            </p>
+        }
+        else
+        {
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="mb-3 text-danger"></div>
+
+                <p>Are you sure you want to delete your account?</p>
+
+                <button type="submit" class="btn btn-primary">Yes, delete</button>
+            </form>
+        }
+    </div>
+</div>

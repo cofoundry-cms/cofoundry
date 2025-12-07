@@ -196,7 +196,7 @@ See the docs for the [Routing view helper](routing#routing-view-helper) for more
 
 ## SiteMap
 
-The [Cofoundry sitemap plugin](https://github.com/cofoundry-cms/Cofoundry.Plugins.SiteMap) is a quick, easy and extensible way to add a sitemap to your site.
+The [Cofoundry sitemap plugin](https://www.nuget.org/packages/Cofoundry.Plugins.SiteMap) is a quick, easy and extensible way to add a sitemap to your site.
 
 ## Rewrite rules
 

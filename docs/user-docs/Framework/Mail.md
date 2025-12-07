@@ -1,4 +1,4 @@
-> This feature is demonstrated in the [Cofoundry.Samples.Mail](https://github.com/cofoundry-cms/Cofoundry.Samples.Mail) sample project.
+> This feature is demonstrated in the [Mail sample project](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/Mail).
 
 Cofoundry includes a mail service abstraction that makes it easy to create and send email from anywhere in your application.
 
@@ -6,8 +6,8 @@ The default implementation simply writes out mail to text files to a directory f
 
 Currently Available Plugins:
 
-- **[Cofoundry.Plugins.Mail.MailKit](https://github.com/cofoundry-cms/Cofoundry.Plugins.Mail.MailKit):** Dispatch mail using MailKit, a cross platform alternative to `System.Net.Mail`.
-- **[Cofoundry.Plugins.Mail.SendGrid](https://github.com/cofoundry-cms/Cofoundry.Plugins.Mail.SendGrid):** Dispatch mail using the popular SendGrid service.
+- **[Cofoundry.Plugins.Mail.MailKit](https://www.nuget.org/packages/Cofoundry.Plugins.Mail.MailKit):** Dispatch mail using MailKit, a cross platform alternative to `System.Net.Mail`.
+- **[Cofoundry.Plugins.Mail.SendGrid](https://www.nuget.org/packages/Cofoundry.Plugins.Mail.SendGrid):** Dispatch mail using the popular SendGrid service.
 
 ## Mail Templates
 
@@ -101,9 +101,9 @@ Where you place your template files is up to you, but here's two suggested scena
 
 **Simple**
 
-Place your `IMailTemplate` code files with your models or domain and place your template files in your views directory. For an example of this see  [Cofoundry.Samples.SimpleSite](https://github.com/cofoundry-cms/Cofoundry.Samples.SimpleSite).
+Place your `IMailTemplate` code files with your models or domain and place your template files in your views directory. For an example of this see the [SimpleSite sample project](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/SimpleSite).
 
-Or if you preferred to keep your files together, you could place them next to each other, as shown in the [Cofoundry.Samples.Mail](https://github.com/cofoundry-cms/Cofoundry.Samples.Mail) sample.
+Or if you preferred to keep your files together, you could place them next to each other, as shown in the [Mail sample project](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/Mail) sample.
 
 **In a separate project**
 

@@ -1,0 +1,31 @@
+﻿@model PagedQueryResult<BlogPostSummary>
+@inject ICofoundryHelper Cofoundry
+
+@{
+    Layout = null;
+}
+
+@foreach (var blogPost in Model.Items)
+{
+    var postDateText = blogPost.PostDate.HasValue ? blogPost.PostDate.Value.ToString("dd MMM yyyy") : "Not published";
+
+    <article class="blog-teaser">
+        <div class="blog-teaser__image">
+            <a href="@blogPost.FullPath">
+                <img src="@Cofoundry.Routing.ImageAsset(blogPost.ThumbnailImageAsset, 800, 600)">
+            </a>
+        </div>
+        <div class="blog-teaser__text">
+            <h2>@blogPost.Title</h2>
+            <span>
+                <span class="glyphicon glyphicon-calendar"></span> @postDateText
+                @if (!string.IsNullOrWhiteSpace(blogPost.AuthorName))
+                {
+                    <text>by @blogPost.AuthorName</text>
+                }
+            </span>
+            <p>@blogPost.ShortDescription</p>
+            <a href="@blogPost.FullPath" class="btn btn-default">Read post</a>
+        </div>
+    </article>
+}

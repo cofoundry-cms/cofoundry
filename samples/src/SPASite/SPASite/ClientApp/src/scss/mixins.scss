@@ -1,0 +1,57 @@
+@mixin hide-text {
+    text-indent: -100%;
+    overflow:hidden;
+}
+
+// Adapted from http://jakearchibald.github.io/sass-ie/
+$mq-support: true !default;
+$mq-max-width: 1400px;
+@mixin respond-min($width) {
+
+    // Check for units on the width
+    @if unitless($width){
+        @warn "Assuming #{$width} to be in pixels, change to #{$width}px or another unit of measurement";
+        $width: $width * 1px;
+    }
+
+    @if $mq-support {
+        @media screen and (min-width: $width) {
+            @content;
+        }
+    } 
+    @else {
+        // Check media query applies
+        @if (em($width) <= em($mq-max-width)) {
+            @content;
+        }
+    }
+}
+
+@mixin respond-max($width) {
+
+    // Check for units on the width
+    @if unitless($width){
+        @warn "Assuming #{$width} to be in pixels, change to #{$width}px or another unit of measurement";
+        $width: $width * 1px;
+    }
+
+    // if this should apply like an element query, apply appropriate polyfill styles
+    // @if $element-query {
+    //     // we use a wrapper with data attribute set with JS.
+    //     .eq-wrapper[data-min-width="#{$width}"] & {
+    //         @content;
+    //     }
+    // }
+
+    @if $mq-support {
+        @media screen and (max-width: $width) {
+            @content;
+        }
+    } 
+    @else {
+        // Check media query applies
+        @if (em($width) >= em($mq-max-width)) {
+            @content;
+        }
+    }
+}

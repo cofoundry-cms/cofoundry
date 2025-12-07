@@ -1,0 +1,23 @@
+﻿@model IPageViewModel
+@inject ICofoundryTemplateHelper<IPageViewModel> Cofoundry
+
+@Cofoundry.Template.UseDescription("Template for the blog post listing page")
+
+<div class="container">
+    <div class="row content-block">
+        <div class="col-sm-9">
+
+            @*
+                Although this list page template is content-mangeable, Cofoundry doesn't
+                provide any helpers for outputting dynamic lists of items, so it's up to
+                implement this using MVC ViewComponents
+            *@
+            @await Component.InvokeAsync("BlogPostList")
+
+        </div>
+
+        <aside class="col-sm-3">
+            @await Component.InvokeAsync("SidebarCategories")
+        </aside>
+    </div>
+</div>

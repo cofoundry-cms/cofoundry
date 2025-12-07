@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SPASite.Domain", "SPASite.Domain\SPASite.Domain.csproj", "{21E17F9F-79A3-4AFE-A119-7EE71F150634}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SPASite", "SPASite\SPASite.csproj", "{7A3FB263-7844-4008-9F6B-488145C95CA3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21E17F9F-79A3-4AFE-A119-7EE71F150634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21E17F9F-79A3-4AFE-A119-7EE71F150634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21E17F9F-79A3-4AFE-A119-7EE71F150634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21E17F9F-79A3-4AFE-A119-7EE71F150634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A3FB263-7844-4008-9F6B-488145C95CA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A3FB263-7844-4008-9F6B-488145C95CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A3FB263-7844-4008-9F6B-488145C95CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A3FB263-7844-4008-9F6B-488145C95CA3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9D945901-0AAF-43C5-859D-4C3ED67601C7}
+	EndGlobalSection
+EndGlobal

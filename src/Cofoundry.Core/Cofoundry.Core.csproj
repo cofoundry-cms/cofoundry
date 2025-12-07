@@ -9,7 +9,6 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.20" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="AngleSharp" Version="0.17.1" />
     <PackageReference Include="HtmlSanitizer" Version="8.0.811" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

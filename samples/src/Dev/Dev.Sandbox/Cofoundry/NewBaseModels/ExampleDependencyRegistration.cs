@@ -1,0 +1,16 @@
+using Cofoundry.Core.DependencyInjection;
+
+namespace Dev.Sandbox.Cofoundry.Registration;
+
+public class ExampleDependencyRegistration : IDependencyRegistration
+{
+    public void Register(IContainerRegister container)
+    {
+        var overrideOptions = RegistrationOptions.Override();
+
+        container
+            .Register<IPageViewModelFactory, ExamplePageViewModelFactory>(overrideOptions)
+            .Register<IPageViewModelBuilder, ExamplePageViewModelBuilder>(overrideOptions)
+            ;
+    }
+}

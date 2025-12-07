@@ -4,7 +4,7 @@ When adding your own custom objects it is advised that you take advantage of thi
 
 ## A Simple Example
 
-Most of the time we use the auto-update framework for adding tables and other objects to a database. Since this is the most common and simplest scenario let's go through that first and use the [SPASite sample application](https://github.com/cofoundry-cms/Cofoundry.Samples.SPASite) for reference.
+Most of the time we use the auto-update framework for adding tables and other objects to a database. Since this is the most common and simplest scenario let's go through that first and use the [SPASite sample application](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/SPASite) for reference.
 
 The convention is to put all our installation code into an 'Install' directory:
 

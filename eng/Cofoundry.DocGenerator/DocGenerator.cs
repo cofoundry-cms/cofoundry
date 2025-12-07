@@ -16,13 +16,16 @@ public partial class DocGenerator
 
     private readonly IDestinationFileStoreService _fileWriterService;
     private readonly DocGeneratorSettings _docGeneratorSettings;
+    private readonly TextWriter _logger;
 
-    public DocGenerator(DocGeneratorSettings docGeneratorSettings)
+    public DocGenerator(DocGeneratorSettings docGeneratorSettings, TextWriter logger)
     {
         _docGeneratorSettings = docGeneratorSettings;
+        _logger = logger;
 
         if (docGeneratorSettings.UseAzure)
         {
+            _logger.WriteLine("Outputting docs to Azure blob storage");
             _fileWriterService = new AzureBlobDestinationFileStoreService(_docGeneratorSettings);
         }
         else
@@ -31,6 +34,7 @@ public partial class DocGenerator
             {
                 throw new InvalidConfigurationException($"Setting {nameof(_docGeneratorSettings.OutputPath)} should not be null when ${nameof(docGeneratorSettings.UseAzure)} is false.");
             }
+            _logger.WriteLine($"Outputting docs to '{_docGeneratorSettings.OutputPath}'");
             _fileWriterService = new FileSystemDestinationFileStoreService(_docGeneratorSettings.OutputPath);
         }
     }
@@ -40,6 +44,8 @@ public partial class DocGenerator
         var version = _docGeneratorSettings.Version;
         var sourcePath = _docGeneratorSettings.SourcePath;
 
+        _logger.WriteLine($"Generating docs version {_docGeneratorSettings.Version}");
+
         var staticFileFolder = RelativePathHelper.Combine(STATIC_FOLDER_NAME, version);
 
         await _fileWriterService.EnsureDirectoryExistsAsync(version);
@@ -47,6 +53,7 @@ public partial class DocGenerator
 
         if (_docGeneratorSettings.CleanDestination)
         {
+            _logger.WriteLine($"Clearing destination");
             await _fileWriterService.ClearDirectoryAsync(version);
             await _fileWriterService.ClearDirectoryAsync(staticFileFolder);
         }
@@ -59,13 +66,16 @@ public partial class DocGenerator
         };
 
         // Copy files/directories recursively
+        _logger.WriteLine("Processing docs files recursively");
         await ProcessDirectory(sourcePath, rootNode, rootNode);
 
         // Write the completed table of contents file
+        _logger.WriteLine("Writing table of contents file");
         var serialized = JsonConvert.SerializeObject(rootNode, GetJsonSetting());
         await _fileWriterService.WriteText(serialized, RelativePathHelper.Combine(rootNode.Url, "toc.json"));
 
         // update the version manifest file in the root
+        _logger.WriteLine("Updating version manifest file");
         await UpdateVersionsAsync();
 
         await PublishWebHook();
@@ -78,6 +88,7 @@ public partial class DocGenerator
             return;
         }
 
+        _logger.WriteLine($"Triggering completion webhook");
         await _httpClient.PostAsync(_docGeneratorSettings.OnCompleteWebHook, null);
     }
 

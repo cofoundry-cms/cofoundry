@@ -1,0 +1,29 @@
+﻿@model ResendVerificationViewModel
+@{
+    ViewData["Title"] = "Resend Verification";
+}
+
+<div class="row justify-content-center">
+    <form method="post" class="col col-8">
+
+        <h1 class="mb-4">Resend Verification</h1>
+        <p>
+            Can't find your verification email? Fill in your credentials below and we'll send you another.
+        </p>
+
+        <div class="mb-3">
+            <label asp-for="Username" class="form-label"></label>
+            <input asp-for="Username" class="form-control">
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="mb-3 text-danger"></div>
+
+        <button type="submit" class="btn btn-primary">Resend</button>
+    </form>
+</div>

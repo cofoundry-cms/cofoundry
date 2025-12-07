@@ -1,0 +1,16 @@
+﻿@model MultiLevelMenuViewModel
+
+@if (Model.Nodes == null)
+{
+    <p>Multi-level Menu with the identifier <strong>"@Model.MenuId"</strong> not defined.</p>
+}
+else
+{
+    <ul>
+        @foreach (var item in Model.Nodes)
+        {
+            @await Html.PartialAsync("Components/MultiLevelMenu/Partials/MultiLevelMenuNode", item)
+        }
+    </ul>
+}
+

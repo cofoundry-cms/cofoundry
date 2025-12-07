@@ -1,0 +1,17 @@
+﻿@model ContactRequestMailTemplate
+
+@{
+    Layout = null;
+}
+
+<h1>@Model.Subject</h1>
+<p>
+    This request came with the following information:
+</p>
+<p>
+    Name: @Model.Request.Name
+    <br />
+    Email: @Model.Request.EmailAddress
+    <br />
+    Message: @Model.Request.Message
+</p>

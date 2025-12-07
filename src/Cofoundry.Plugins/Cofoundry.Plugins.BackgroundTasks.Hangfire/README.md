@@ -12,10 +12,10 @@ Backed by persistent storage. Open and free for commercial use.
 >
 > &mdash; [hangfire.io](http://hangfire.io/)
 
-This [Hangfire](http://hangfire.io/) imlpementation of [Cofoundry.Core.BackgroundTasks](https://github.com/cofoundry-cms/cofoundry/wiki/Background-Tasks) includes:
+This [Hangfire](http://hangfire.io/) imlpementation of [Cofoundry.Core.BackgroundTasks](https://www.cofoundry.org/docs/framework/background-tasks) includes:
 
 - A HangFire implementation of `IBackgroundTaskScheduler`
-- Automatically initializes HangFire using a [Startup Task](https://github.com/cofoundry-cms/cofoundry/wiki/Startup-Tasks)
+- Automatically initializes HangFire using a [Startup Task](https://www.cofoundry.org/docs/framework/startup-tasks)
 - Sets up HangFire to use SqlServer storage using the Cofoundry connection string.
 - Optionally sets up to the HangFire dashboard for admin users at **/admin/hangfire**
 
@@ -28,7 +28,7 @@ Cofoundry does not include a background task runner by default so it is recommen
 
 ## Customizing the HangFire Initialization Process
 
-We use an automatic boostrapper to make HangFire integration simple for most scenarios, but if you want to customize the process you can override the default `IHangfireServerInitializer` implementation using the [Cofoundry DI system](https://github.com/cofoundry-cms/cofoundry/wiki/Dependency-Injection#overriding-registrations). 
+We use an automatic boostrapper to make HangFire integration simple for most scenarios, but if you want to customize the process you can override the default `IHangfireServerInitializer` implementation using the [Cofoundry DI system](https://www.cofoundry.org/docs/framework/dependency-injection#overriding-registrations). 
 
 This might be required if you want to configure a faster storage engine like [reddis](http://docs.hangfire.io/en/latest/configuration/using-redis.html) for scaling up your deployment.
 

@@ -1,0 +1,62 @@
+﻿@model ICustomEntityPageViewModel<BlogPostDisplayModel>
+@inject ICofoundryTemplateHelper<ICustomEntityPageViewModel<BlogPostDisplayModel>> Cofoundry
+
+@{
+    Cofoundry.Template.UseDescription("Template for the blog post details page");
+    var post = Model.CustomEntity.Model;
+}
+
+<div class="container">
+
+    <div class="row content-block">
+        <div class="col-sm-12">
+            <h1>@Model.PageTitle</h1>
+        </div>
+    </div>
+
+    <div class="col-sm-8">
+        @(await Cofoundry.Template.CustomEntityRegion("Body")
+            .AllowMultipleBlocks()
+            .AllowBlockType<ContentSectionDataModel>()
+            .AllowBlockType<ContentSplitSectionDataModel>()
+            .EmptyContentMinHeight(500)
+            .InvokeAsync())
+
+        @if (post.Author != null)
+        {
+        <div class="row content-block blog-article-author">
+            
+            @if (post.Author.ProfileImage != null)
+            {
+            <div class="blog-article-author-image">
+
+                    <img src="@Cofoundry.Routing.ImageAsset(post.Author.ProfileImage, 300, 300)" class="img-responsive" />
+            </div>
+            }
+
+
+            <div class="blog-article-author-content">
+                <h3 class="blog-article-author-title">Author: @post.Author.Name</h3>
+                @Cofoundry.Sanitizer.Sanitize(post.Author.Biography)
+            </div>
+        </div>
+
+        }
+    </div>
+
+    <div class="col-sm-4">
+        @if (!EnumerableHelper.IsNullOrEmpty(post.Categories))
+        {
+            <h3>Categories</h3>
+
+            <ul class="list-group--alt">
+                @foreach (var category in post.Categories)
+                {
+                    <li><a href="/blog?categoryId=@category.CategoryId" title="@category.ShortDescription">@category.Title</a></li>
+                }
+            </ul>
+        }
+
+    </div>
+
+</div>
