@@ -1,13 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.Mail.MailKit</PackageId>
     <Description>Cofoundry mail services that utilize the cross platform MailKit library.</Description>
     <PackageTags>Cofoundry Mail Plugins MailKit</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.13.0" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Core\Cofoundry.Core.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

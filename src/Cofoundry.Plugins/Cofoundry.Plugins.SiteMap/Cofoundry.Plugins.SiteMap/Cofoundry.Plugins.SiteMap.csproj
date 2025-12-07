@@ -1,16 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.SiteMap</PackageId>
     <Description>Adds dynamic sitemap functionality to a Cofoundry site.</Description>
     <PackageTags>Cofoundry Plugin SiteMap</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <None Remove="DefaultImplementation\sitemap.xsl" />
   </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="DefaultImplementation\sitemap.xsl" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
 </Project>

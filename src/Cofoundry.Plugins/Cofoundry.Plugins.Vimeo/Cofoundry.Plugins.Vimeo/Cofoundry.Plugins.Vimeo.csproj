@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.Vimeo</PackageId>
     <Description>
@@ -6,10 +7,17 @@
       This is a meta package that brings in all the Vimeo components.
     </Description>
     <PackageTags>Cofoundry Vimeo</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
     <ProjectReference Include="..\Cofoundry.Plugins.Vimeo.Admin\Cofoundry.Plugins.Vimeo.Admin.csproj" />
     <ProjectReference Include="..\Cofoundry.Plugins.Vimeo.Domain\Cofoundry.Plugins.Vimeo.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
 </Project>

@@ -1,19 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.ErrorLogging.Admin</PackageId>
     <Description>Adds simple database error logging to Cofoundry.</Description>
     <PackageTags>Cofoundry Plugin ErrorLogging Admin</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
     <ProjectReference Include="..\Cofoundry.Plugins.ErrorLogging\Cofoundry.Plugins.ErrorLogging.csproj" />
   </ItemGroup>
+  
   <ItemGroup>
     <Compile Remove="**\node_modules\**" />
     <EmbeddedResource Remove="**\node_modules\**" />
     <None Remove="**\node_modules\**" />
   </ItemGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="Plugins\Admin\Modules\*\Content\**\*.*;" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

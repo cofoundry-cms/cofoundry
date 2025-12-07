@@ -1,13 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.Mail.SendGrid</PackageId>
     <Description>Cofoundry mail service implemention for SendGrid.</Description>
     <PackageTags>Cofoundry Core</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Sendgrid" Version="9.29.3" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Core\Cofoundry.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
 </Project>

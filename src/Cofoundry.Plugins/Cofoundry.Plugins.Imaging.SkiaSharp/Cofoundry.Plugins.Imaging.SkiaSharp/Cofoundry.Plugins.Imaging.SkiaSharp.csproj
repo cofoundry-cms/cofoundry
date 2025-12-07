@@ -1,14 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.Imaging.SkiaSharp</PackageId>
     <Description>Handle image validation and resizing in Cofoundry using the SkiaSharp library.</Description>
     <PackageTags>Cofoundry Plugin Imaging SkiaSharp ImageResizing</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="2.88.7" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.7" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Web\Cofoundry.Web.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

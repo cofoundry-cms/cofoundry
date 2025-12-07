@@ -1,13 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.Azure</PackageId>
     <Description>Services, abstractions and helpers for running in an Azure environment.</Description>
     <PackageTags>Cofoundry Azure</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.25.0" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

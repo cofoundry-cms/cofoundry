@@ -1,10 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.Vimeo.Domain</PackageId>
     <Description>Cofoundry plugin that adds domain models for the Vimeo video service.</Description>
     <PackageTags>Cofoundry Vimeo Domain</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
 </Project>

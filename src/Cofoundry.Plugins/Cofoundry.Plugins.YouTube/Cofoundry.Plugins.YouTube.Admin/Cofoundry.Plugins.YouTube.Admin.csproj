@@ -1,21 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.YouTube.Admin</PackageId>
     <Description>
       Adds YouTube video components to the the Cofoundry admin panel.
     </Description>
     <PackageTags>Cofoundry YouTube Admin</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="Plugins\Admin\Modules\Shared\Content\**\*.*;" />
   </ItemGroup>
+  
   <ItemGroup>
     <Compile Remove="**\node_modules\**" />
     <EmbeddedResource Remove="**\node_modules\**" />
     <None Remove="**\node_modules\**" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Web.Admin\Cofoundry.Web.Admin.csproj" />
     <ProjectReference Include="..\Cofoundry.Plugins.YouTube.Domain\Cofoundry.Plugins.YouTube.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
 </Project>

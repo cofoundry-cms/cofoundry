@@ -1,13 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.BackgroundTasks.Hangfire</PackageId>
     <Description>Hangfire implementation of Cofoundry.Core.BackgroundTasks.</Description>
     <PackageTags>Cofoundry Hangfire Plugin BackgroundTasks</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Hangfire" Version="1.8.21" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Web\Cofoundry.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

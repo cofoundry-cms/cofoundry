@@ -1,10 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.YouTube.Domain</PackageId>
     <Description>Cofoundry plugin that adds domain models for the YouTube video service.</Description>
     <PackageTags>Cofoundry YouTube Domain</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Domain\Cofoundry.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
 </Project>

@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.YouTube</PackageId>
     <Description>
@@ -6,8 +7,15 @@
       This is a meta package that brings in all the YouTube components.
     </Description>
     <PackageTags>Cofoundry YouTube</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Cofoundry.Plugins.YouTube.Admin\Cofoundry.Plugins.YouTube.Admin.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+  
 </Project>

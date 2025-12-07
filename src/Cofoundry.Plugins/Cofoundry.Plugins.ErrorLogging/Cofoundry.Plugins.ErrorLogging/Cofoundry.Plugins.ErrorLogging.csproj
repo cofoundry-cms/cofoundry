@@ -1,13 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
     <PackageId>Cofoundry.Plugins.ErrorLogging</PackageId>
     <Description>Adds simple database error logging to Cofoundry.</Description>
     <PackageTags>Cofoundry Plugin ErrorLogging</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  
   <ItemGroup>
     <EmbeddedResource Include="Install\**\*.sql" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cofoundry.Web\Cofoundry.Web.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>
