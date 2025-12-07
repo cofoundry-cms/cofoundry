@@ -2,7 +2,8 @@ using Cofoundry.DocGenerator;
 using Microsoft.Extensions.Configuration;
 
 var settings = ParseConfigSettings();
-var docGenerator = new DocGenerator(settings);
+var logger = Console.Out;
+var docGenerator = new DocGenerator(settings, logger);
 
 try
 {

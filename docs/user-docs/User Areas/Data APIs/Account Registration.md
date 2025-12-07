@@ -1,6 +1,6 @@
 New users can be added to a user area in the Cofoundry admin panel, however more often a site requires a self-service user registration form that users can use to register their own accounts. In Cofoundry a self-service account registration flow can be achieved by combining several different Cofoundry APIs.
 
-> The **RegistrationAndVerificationSample** project in the [Cofoundry.Samples.UserAreas sample](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas) contains an example of self-service user account registration flow.
+> The **RegistrationAndVerificationSample** project in the [user areas sample](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas) contains an example of self-service user account registration flow.
 
 ## Programatically adding a new user
 
@@ -33,7 +33,7 @@ Sometimes all that is required is to create a new user, but more often there wil
 - Initiating a custom [authorized task flow](authorized-tasks)
 - Running some other custom data access
 
-Below is an example of an account registration and verification flow adapted from the [Cofoundry.Samples.UserAreas sample](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas):
+Below is an example of an account registration and verification flow adapted from the [user areas sample](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas):
 
 ```csharp
 public async Task Register(RegisterViewModel viewModel)

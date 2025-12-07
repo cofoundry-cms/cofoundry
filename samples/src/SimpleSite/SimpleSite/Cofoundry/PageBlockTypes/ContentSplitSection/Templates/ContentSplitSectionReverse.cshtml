@@ -1,0 +1,24 @@
+﻿@model ContentSplitSectionDisplayModel
+@inject ICofoundryBlockTypeHelper<ContentSplitSectionDisplayModel> Cofoundry
+
+@{
+    // Additional module templates can be defined which gives content editors
+    // a choice in how the module data is rendered
+    Cofoundry.BlockType
+        .UseDisplayName("Reverse")
+        .UseDescription("This is a reversed template with the image on the left and the text on the right");
+}
+
+<div class="row content-block">
+    <div class="col-sm-6">
+        <img src="@Cofoundry.Routing.ImageAsset(Model.Image)" class="img-responsive img-thumbnail">
+    </div>
+
+    <div class="col-sm-6">
+        @if (!string.IsNullOrWhiteSpace(Model.Title))
+        {
+            <h2>@Model.Title</h2>
+        }
+        @Model.HtmlText
+    </div>
+</div>

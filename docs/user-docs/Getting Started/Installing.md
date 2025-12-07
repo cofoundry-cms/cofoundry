@@ -1,7 +1,7 @@
 ## Requirements
 
 - .NET 8
-- SqlServer (Express) 2016 or later, or Azure SQL
+- SqlServer (Express) 2019 or later, or Azure SQL
 
 ## Creating a new project using the .NET CLI
 
@@ -109,7 +109,7 @@ Congratulations, you've installed Cofoundry!
 
 Some features of Cofoundry require plugins to be installed in order to use them, this includes:
 
-- **Images:** Image resizing isn't supported natively by .NET Core, and so a plugin is required if you want to use images. The `cofoundry-web` project template automatically installs the [Imaging.SkiaSharp](https://github.com/cofoundry-cms/Cofoundry.Plugins.Imaging.SkiaSharp) plugin for you. For more information see the [images documentation](/content-management/images). 
+- **Images:** Image resizing isn't supported natively by .NET Core, and so a plugin is required if you want to use images. The `cofoundry-web` project template automatically installs the [Imaging.SkiaSharp](https://www.nuget.org/packages/Cofoundry.Plugins.Imaging.SkiaSharp) plugin for you. For more information see the [images documentation](/content-management/images). 
 - **Background Tasks:** Cofoundry currently does not have a built-in background task runner, so you need to install a plugin if you want to use this feature. For more information see the [background tasks documentation](/framework/background-tasks).
 - **Email:** Notifications such as those from the admin panel require a mail host. You will need to install a plugin and configure your 3rd party mail host to send emails. See the [mail documentation](/framework/mail) for more information.
 

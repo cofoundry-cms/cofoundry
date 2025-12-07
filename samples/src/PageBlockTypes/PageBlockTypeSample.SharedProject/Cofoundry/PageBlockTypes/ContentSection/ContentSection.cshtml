@@ -1,0 +1,16 @@
+﻿@using Cofoundry.Web
+@using PageBlockTypeSample.SharedProject
+@model ContentSectionDataModel
+@inject ICofoundryBlockTypeHelper<ContentSectionDataModel> Cofoundry
+
+@Cofoundry.BlockType.UseDescription("This block is imported from the example shared project.")
+
+<div class="row content-block">
+    <div class="col-sm-12">
+        @if (!string.IsNullOrWhiteSpace(Model.Title))
+        {
+            <h1>@Model.Title</h1>
+        }
+        @Model.Text
+    </div>
+</div>

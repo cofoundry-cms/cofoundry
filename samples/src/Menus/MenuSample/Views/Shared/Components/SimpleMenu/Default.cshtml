@@ -1,0 +1,18 @@
+﻿@model SimpleMenuViewModel
+
+@if (Model.Pages == null)
+{
+    <p>Simple Menu with the identifier <strong>"@Model.MenuId"</strong> not defined.</p>
+}
+else
+{
+    <ul class="nav nav-pills">
+        @foreach (var item in Model.Pages)
+        {
+        <li class="nav-item">
+            <a class="nav-link" href="@item.FullUrlPath" th-active-link>@item.Title</a>
+        </li>
+        }
+    </ul>
+}
+

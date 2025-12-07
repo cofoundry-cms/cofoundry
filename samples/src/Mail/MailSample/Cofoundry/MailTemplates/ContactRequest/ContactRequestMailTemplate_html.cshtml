@@ -1,0 +1,19 @@
+﻿@model ContactRequestMailTemplate
+@*
+    You can define either an html or plain text template, or both.
+    The html template should have "_html" appended to the file name.
+*@
+@{
+    Layout = null;
+}
+<h1>@Model.Subject</h1>
+<p>
+    This request came with the following information:
+</p>
+<p>
+    Name: @Model.Request.Name
+    <br />
+    Email: @Model.Request.EmailAddress
+    <br />
+    Message: @Model.Request.Message
+</p>

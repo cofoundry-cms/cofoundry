@@ -1,0 +1,24 @@
+﻿@model IPageViewModel
+@inject ICofoundryTemplateHelper<IPageViewModel> Cofoundry
+
+@Cofoundry.Template.UseDescription("A template for simple pages with flexible module content")
+
+<div class="container">
+    <div class="row content-block">
+        <div class="col-sm-12">
+            <h1>@Model.PageTitle</h1>
+        </div>
+    </div>
+    @*
+        Note here that we can use AllowBlockTypes() to specify multiple
+        block types. Using the generic AllowBlockType<TModuleType>()
+        multiple times is preferable because it doesn't rely on magic
+        strings, but there may be situations where this is more advantageous.
+    *@
+    @(await Cofoundry.Template.Region("Body")
+        .AllowMultipleBlocks()
+        .AllowBlockTypes("ContentSection", "ContentSplitSection")
+        .EmptyContentMinHeight(500)
+        .InvokeAsync())
+
+</div>

@@ -1,6 +1,6 @@
 Cofoundry allows you to customize the email notifications sent out by the admin panel. This can be useful to add your own branding or to add your own messaging to the templates.
 
-This feature is demonstrated in the [Cofoundry.Samples.Mail](https://github.com/cofoundry-cms/Cofoundry.Samples.Mail) sample project.
+This feature is demonstrated in the [Mail sample project](https://github.com/cofoundry-cms/Cofoundry.Samples/tree/main/src/Mail).
 
 ## Creating an admin mail template builder
 
@@ -63,7 +63,7 @@ public class AdminMailTemplateBuilder : IUserMailTemplateBuilder<CofoundryAdminU
 
 ### Example Customization
 
-Full examples can be found in the [Cofoundry.Samples.Mail sample project](https://github.com/cofoundry-cms/Cofoundry.Samples.Mail).
+Full examples can be found in the [Mail sample project](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/Mail).
 
 #### Changing the layout
 

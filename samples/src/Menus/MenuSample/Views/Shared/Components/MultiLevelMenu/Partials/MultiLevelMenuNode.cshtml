@@ -1,0 +1,17 @@
+﻿@model MultiLevelMenuNodeViewModel
+@{
+    Layout = null;
+}
+<li>
+    <a href="@Model.PageRoute.FullUrlPath" th-active-link>@Model.Title</a>
+
+    @if (Model.ChildNodes.Any())
+    {
+    <ul>
+        @foreach (var childItem in Model.ChildNodes)
+        {
+            @await Html.PartialAsync("Components/MultiLevelMenu/Partials/MultiLevelMenuNode", childItem)
+        }
+    </ul>
+    }
+</li>

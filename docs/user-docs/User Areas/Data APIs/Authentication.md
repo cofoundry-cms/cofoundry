@@ -1,6 +1,6 @@
 Authentication APIs can be found in the `IAdvancedContentRepository` in the `Users().Authentication()` method chain.
 
-> The **AuthenticationSample** project in the [Cofoundry.Samples.UserAreas sample](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas) contains an example of authentication features.
+> The **AuthenticationSample** project in the [user areas sample](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas) contains an example of authentication features.
 
 ## Signing In
 

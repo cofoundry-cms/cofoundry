@@ -1,0 +1,33 @@
+﻿@model IPageViewModel
+@inject ICofoundryTemplateHelper<IPageViewModel> Cofoundry
+
+@Cofoundry.Template.UseDescription("A template that shows all the examples of content managed menus")
+
+<div class="jumbotron">
+    <h1 class="display-4">@Model.PageTitle</h1>
+    <p class="lead">This page shows examples of each of the content editable menu types.</p>
+</div>
+
+<div class="row mt-4 mb-5">
+    <div class="col">
+        <h2>Simple Menu</h2>
+
+        @await Component.InvokeAsync("SimpleMenu", "main")
+    </div>
+</div>
+
+<div class="row mt-4 mb-5">
+    <div class="col">
+        <h2>Nested Menu</h2>
+
+        @await Component.InvokeAsync("NestedMenu", "main")
+    </div>
+</div>
+
+<div class="row mt-4 mb-5">
+    <div class="col">
+        <h2>Multi-level Menu</h2>
+
+        @await Component.InvokeAsync("MultiLevelMenu", "main")
+    </div>
+</div>

@@ -38,7 +38,7 @@ If you want to dynamically generate a collection of links from a data source asy
 
 ## Customizing The Site Map XML File
 
-For more control over how the sitemap xml file is rendered you should override the default `ISiteMapBuilderFactory` implementation ([override via DI](https://github.com/cofoundry-cms/cofoundry/wiki/Dependency-Injection#overriding-registrations)) to return a custom `ISiteMapBuilder`, which will give you full control of the output.
+For more control over how the sitemap xml file is rendered you should override the default `ISiteMapBuilderFactory` implementation ([override via DI](https://www.cofoundry.org/docs/framework/dependency-injection#overriding-registrations)) to return a custom `ISiteMapBuilder`, which will give you full control of the output.
 
 
 

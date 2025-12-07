@@ -1,0 +1,48 @@
+﻿@page
+@model AuthenticationSample.Pages.Members.MyAccount.IndexModel
+@{
+    ViewData["Title"] = "My Account";
+}
+
+<div class="row justify-content-center">
+    <div class="col col-8">
+
+        <ul class="nav nav-tabs mb-3">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" asp-page="Index">Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-page="UpdatePassword">Update Password</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-page="DeleteAccount">Delete Account</a>
+            </li>
+        </ul>
+
+        <h1 class="mb-4">My Account</h1>
+
+        @if (Model.IsSuccess)
+        {
+            <p class="alert alert-success">Your account has been updated.</p>
+        }
+        <form method="post">
+
+            <div class="mb-3">
+                <label asp-for="DisplayName" class="form-label"></label>
+                <input asp-for="DisplayName" class="form-control">
+                <span asp-validation-for="DisplayName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div asp-validation-summary="ModelOnly" class="mb-3 text-danger"></div>
+
+            <button type="submit" class="btn btn-primary">Update</button>
+
+        </form>
+    </div>
+</div>

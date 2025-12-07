@@ -1,6 +1,6 @@
 Cofoundry uses a default set of mail templates for user account notifications. These default templates are basic and unbranded, so in most cases you'll want to customize them to the unique characteristics of your user area or brand.
 
-This feature is demonstrated in the [Cofoundry.Samples.UserAreas](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas) sample project.
+This feature is demonstrated in the [.UserAreas sample project](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas).
 
 ## Creating a mail template builder
 
@@ -64,7 +64,7 @@ public class MemberMailTemplateBuilder : IUserMailTemplateBuilder<MemberUserArea
 
 ### Example Customization
 
-Full examples can be found in the [Cofoundry.Samples.UserAreas sample project](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas).
+Full examples can be found in the [UserAreas sample project](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas).
 
 #### Changing the layout
 

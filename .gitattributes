@@ -1,0 +1,12 @@
+###############################################################################
+# Set default behavior to automatically normalize line endings.
+###############################################################################
+* text=auto
+
+###############################################################################
+# Make sh files under the build directory always have LF as line endings
+###############################################################################
+*.sh eol=lf
+
+# VerifyTests
+*.verified.txt text eol=lf working-tree-encoding=UTF-8

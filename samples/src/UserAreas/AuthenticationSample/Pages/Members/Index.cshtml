@@ -1,0 +1,14 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Members";
+}
+
+<div class="text-center">
+    <h1 class="mb-4">Members</h1>
+    <p>Welcome @Model.Member.DisplayName</p>
+    <p>You are now signed in and have access to the members area.</p>
+    <p>
+        <a asp-page="/Members/MyAccount/Index">Manage my account</a>
+    </p>
+</div>

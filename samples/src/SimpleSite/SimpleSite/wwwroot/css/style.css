@@ -1,0 +1,372 @@
+/* See https://gist.github.com/taupecat/4090271 */
+/* Cross browser Opacity */
+/* Non-inheriting cross browser opacity with white bg color */
+body {
+    padding-top: 60px;
+}
+
+a {
+    color: #DC3522;
+}
+
+.navbar {
+    background-color: #1E1E20;
+    border: 0;
+    height: 60px;
+}
+
+.navbar-toggle {
+    margin-top: 12px;
+}
+
+.navbar-default .navbar-collapse {
+    border: 0;
+    background-color: #374140;
+}
+
+@media screen and (min-width: 48em) {
+    .navbar-default .navbar-collapse {
+        background-color: transparent;
+    }
+}
+
+.navbar-header {
+    height: 60px;
+}
+
+.navbar__menu {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+    .navbar__menu li {
+        padding: 10px 0;
+    }
+
+    .navbar__menu a {
+        color: white;
+        display: block;
+    }
+
+@media screen and (min-width: 48em) {
+    .navbar__menu {
+        float: right;
+    }
+
+        .navbar__menu li {
+            display: inline-block;
+            line-height: 60px;
+            padding: 0;
+        }
+
+            .navbar__menu li:hover {
+                background-color: #2A2C2B;
+            }
+
+        .navbar__menu a {
+            padding: 0 15px;
+        }
+}
+
+.main {
+    padding-bottom: 30px;
+}
+
+@media screen and (min-width: 48em) {
+    .main {
+        padding-bottom: 80px;
+    }
+}
+
+.content-block img {
+    margin-top: 20px;
+}
+
+@media screen and (min-width: 48em) {
+    .content-block {
+        margin-top: 30px;
+    }
+}
+
+.hero-banner {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .hero-banner img {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: auto;
+        height: 100%;
+        transform: translate(-50%, -50%);
+    }
+
+@media screen and (min-width: 31.25em) {
+    .hero-banner img {
+        left: 0;
+        width: 100%;
+        height: auto;
+        transform: translateY(-50%);
+    }
+}
+
+@media screen and (min-width: 50em) {
+    .hero-banner {
+        height: 450px;
+    }
+}
+
+.hero-banner__overlay {
+    position: relative;
+    height: 100%;
+}
+
+.hero-banner__text {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    padding-left: 15px;
+}
+
+.blog-cards h2 {
+    margin-bottom: 20px;
+}
+
+@media screen and (min-width: 48em) {
+    .blog-cards {
+        margin-top: 30px;
+    }
+
+        .blog-cards h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+}
+
+.blog-cards__card {
+    background-color: #1E1E20;
+    color: white;
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+    .blog-cards__card h3 {
+        margin-top: 0;
+    }
+
+    .blog-cards__card p:last-of-type {
+        margin-bottom: 20px;
+    }
+
+@media screen and (min-width: 48em) {
+    .blog-cards__card {
+        margin-bottom: 0;
+    }
+}
+
+.blog-teaser {
+    margin-bottom: 30px;
+}
+
+.blog-teaser__image img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.blog-teaser__text {
+    background-color: #1E1E20;
+    padding: 30px;
+    color: white;
+}
+
+    .blog-teaser__text h2 {
+        margin-top: 0;
+    }
+
+.list-group, .list-group--alt {
+    list-style-type: none;
+    padding: 0;
+}
+
+    .list-group li, .list-group--alt li {
+        display: inline-block;
+        background-color: #DC3522;
+        padding: 5px 10px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+    }
+
+    .list-group a, .list-group--alt a {
+        color: #D9CB9E;
+    }
+
+    .list-group--alt li {
+        background-color: #2A2C2B;
+    }
+
+
+.blog-article-author {
+    background-color: #eee;
+    margin: 30px 0;
+    padding: 0 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 3px;
+}
+
+.blog-article-author-image {
+    width: 80px;
+    margin-right: 20px;
+    margin: 0 auto;
+    flex-shrink: 0;
+}
+
+.blog-article-author-content {
+}
+
+.blog-article-author-image img {
+    border-radius: 300px;
+}
+
+@media screen and (min-width: 48em) {
+
+    .blog-article-author {
+        flex-direction: row;
+        margin: 30px;
+    }
+
+    .blog-article-author-image {
+        margin-right: 20px;
+        width: 60px;
+    }
+
+}
+
+.product {
+    margin-bottom: 30px;
+}
+
+.product__image {
+    width: 100%;
+    padding-bottom: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+    .product__image img {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 100%;
+        transform: translate(-50%, -50%);
+    }
+
+.product__details {
+    margin-top: 10px;
+}
+
+    .product__details .name {
+        color: #374140;
+    }
+
+    .product__details .price {
+        color: #1E1E20;
+        float: right;
+    }
+
+.product-images {
+    position: relative;
+}
+
+    .product-images img {
+        display: block;
+        width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+.product-info {
+    position: relative;
+}
+
+    .product-info .price {
+        display: block;
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+.breadcrumb {
+    margin-top: 20px;
+}
+
+.newsletter-signup {
+    background-color: #374140;
+    padding: 30px 0;
+    text-align: center;
+}
+
+    .newsletter-signup .glyphicon {
+        color: white;
+        font-size: 35px;
+        line-height: 30px;
+        position: absolute;
+        left: 0;
+        top: -2px;
+    }
+
+    .newsletter-signup h2 {
+        color: white;
+        font-weight: 400;
+        font-size: 20px;
+        position: relative;
+        padding-left: 50px;
+        display: inline-block;
+    }
+
+    .newsletter-signup form {
+        margin-top: 30px;
+    }
+
+.footer {
+    background-color: #1E1E20;
+    color: white;
+    padding: 30px 0;
+}
+
+.footer__links {
+    list-style-type: none;
+    float: right;
+}
+
+    .footer__links li {
+        display: inline-block;
+        margin: 0 10px;
+    }
+
+    .footer__links a {
+        color: white;
+    }
+
+        .footer__links a:hover {
+            color: #DC3522;
+        }
+
+.logo {
+    color: white;
+    font-size: 20px;
+    margin-left: 10px;
+    margin-top: 15px;
+    display: inline-block;
+}
+
+    .logo:hover {
+        text-decoration: none;
+        color: white;
+    }

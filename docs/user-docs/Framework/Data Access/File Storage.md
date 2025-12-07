@@ -48,7 +48,7 @@ e.g.
 
 Support for cloud storage providers and other file systems is configured by installing [plugins](/plugins). Plugins include:
 
-- [Cofoundry.Plugins.Azure](https://github.com/cofoundry-cms/Cofoundry.Plugins.Azure): This plugin contains an IFileStoreService implementation for Azure Blob Storage.
+- [Cofoundry.Plugins.Azure](https://www.nuget.org/packages/Cofoundry.Plugins.Azure): This plugin contains an IFileStoreService implementation for Azure Blob Storage.
 
 ## Implementing a custom IFileStoreService
 

@@ -35,7 +35,7 @@ public class MySiteDbContext : DbContext
 }
 ```
 
-See the [SPASite Sample](https://github.com/cofoundry-cms/Cofoundry.Samples.SPASite) for an example of this.
+See the [SPASite Sample](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/SPASite) for an example of this.
 
 #### Constants
 

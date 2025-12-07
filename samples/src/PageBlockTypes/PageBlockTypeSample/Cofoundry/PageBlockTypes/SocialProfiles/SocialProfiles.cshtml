@@ -1,0 +1,23 @@
+﻿@model SocialProfilesDataModel
+@inject ICofoundryBlockTypeHelper<SocialProfilesDataModel> Cofoundry
+@{
+    Cofoundry.BlockType.UseDescription("A list of social media profile links.");
+}
+
+<div>
+
+    <ul>
+        @foreach (var socialProfile in Model
+            .SocialProfiles
+            .Select(m => m.Model)
+            .Cast<ISocialProfileDataModel>())
+        {
+            var url = socialProfile.GetUrl();
+            if (!string.IsNullOrEmpty(url))
+            {
+                <li><a href="@socialProfile.GetUrl()">@socialProfile.GetDescription()</a></li>
+            }
+        }
+    </ul>
+
+</div>

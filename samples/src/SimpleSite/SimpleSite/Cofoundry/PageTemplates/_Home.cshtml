@@ -1,0 +1,37 @@
+﻿@model IPageViewModel
+@inject ICofoundryTemplateHelper<IPageViewModel> Cofoundry
+
+@Cofoundry.Template.UseDescription("This template shoud only be used for the homepage")
+
+<div class="hero-banner">
+    <img src="/images/hero-banner-bg.jpg">
+    <div class="hero-banner__overlay"></div>
+</div>
+
+<div class="container">
+    <div class="row content-block">
+        <div class="col-sm-12">
+            <h1>
+                @(await Cofoundry
+                    .Template
+                    .Region("Introduction Title")
+                    .AllowBlockType<PlainTextDataModel>()
+                    .InvokeAsync())
+            </h1>
+            @(await Cofoundry
+                .Template
+                .Region("Introduction")
+                .AllowBlockType<RichTextWithMediaDataModel>()
+                .EmptyContentMinHeight(200)
+                .InvokeAsync())
+        </div>
+    </div>
+
+    <div class="row blog-cards">
+        <div class="col-sm-12 ">
+            <h2>From our blog</h2>
+        </div>
+
+        @await Component.InvokeAsync("HomepageBlogPosts")
+    </div>
+</div>

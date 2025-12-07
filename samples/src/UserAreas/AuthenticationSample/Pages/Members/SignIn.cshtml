@@ -1,0 +1,35 @@
+﻿@page
+@model SignInModel
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+
+<div class="row justify-content-center">
+    <form method="post" class="col col-8">
+        <h1 class="mb-4">Sign In</h1>
+
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control">
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control">
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3 form-check">
+            <input asp-for="RememberMe" class="form-check-input">
+            <label asp-for="RememberMe" class="form-check-label">remember me</label>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="mb-3 text-danger"></div>
+
+        <button type="submit" class="btn btn-primary">Sign in</button>
+
+        <p class="mt-3">
+            <a asp-page="ForgotPassword">Forgotten your password?</a>
+        </p>
+    </form>
+</div>

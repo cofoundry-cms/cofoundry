@@ -1,0 +1,17 @@
+﻿@model PagedQueryResult<BlogPostSummary>
+
+@{
+    Layout = null;
+}
+
+@foreach (var blogPost in Model.Items)
+{
+
+    <article class="col-sm-4">
+        <div class="blog-cards__card">
+            <h3>@blogPost.Title</h3>
+            <p>@blogPost.ShortDescription</p>
+            <a href="@blogPost.FullPath" class="btn btn-default">Read more</a>
+        </div>
+    </article>
+}

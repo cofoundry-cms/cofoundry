@@ -1,11 +1,11 @@
-## [Cofoundry.Samples.UserAreas](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas)
+## [User Areas Sample](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas)
 
 The user areas sample solution contains two projects:
 
 - [AuthenticationSample](#AuthenticationSample): A standard credential-based authentication flow with account recovery and account management features.
 - [RegistrationAndVerificationSample](#RegistrationAndVerificationSample): A self-service user registration and account verification flow.
 
-### AuthenticationSample
+### Authentication Sample
 
 This sample is written using ASP.NET Razor Pages and implements the following features:
 
@@ -19,9 +19,9 @@ This sample is written using ASP.NET Razor Pages and implements the following fe
 
 In this sample users are added via the admin panel.
 
-[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas)
+[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas)
 
-### RegistrationAndVerificationSample
+### Registration and Verification Sample
 
 This sample is written using ASP.NET MVC and implements the following features:
 
@@ -33,9 +33,9 @@ This sample is written using ASP.NET MVC and implements the following features:
 - Sign in/sign out
 - Using `ICofoundryHelper` in views to query the current user
 
-[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples.UserAreas)
+[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/UserAreas)
 
-## [Cofoundry.Samples.SPASite](https://github.com/cofoundry-cms/Cofoundry.Samples.SPASite)
+## [SPASite Sample](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/SPASite)
 
 As part of a larger sample application, this sample contains:
 
@@ -44,5 +44,5 @@ As part of a larger sample application, this sample contains:
 - A member registration form
 - A member sign in form
 
-[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples.SPASite)
+[View on GitHub](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/SPASite)
 

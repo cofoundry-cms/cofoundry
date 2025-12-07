@@ -8,8 +8,8 @@ Images assets are only supported by installing a plugin, this is because there i
 
 Currently there are two plugin options:
 
-- [Cofoundry.Plugins.Imaging.SkiaSharp](https://github.com/cofoundry-cms/Cofoundry.Plugins.Imaging.SkiaSharp): Uses the [SkiaSharp](https://github.com/mono/SkiaSharp)/[Skia](https://skia.org/) libraries which are MIT/BSD licensed. Does not support animated GIF resizing and has limited options for configuration. It is supported on a wide range of platforms but may not be supported in some Linux configurations without a custom build of the native libraries.
-- [Cofoundry.Plugins.Imaging.ImageSharp](https://github.com/cofoundry-cms/Cofoundry.Plugins.Imaging.ImageSharp): Uses the [ImageSharp](https://github.com/SixLabors/ImageSharp) library which is licensed under the [Six Labors Split License](https://github.com/SixLabors/ImageSharp/blob/main/LICENSE). It is fully cross-platform, supports a wide range of formats including animated GIFs and has a comprehensive range of configuration options.
+- [Cofoundry.Plugins.Imaging.SkiaSharp](https://www.nuget.org/packages/Cofoundry.Plugins.Imaging.SkiaSharp): Uses the [SkiaSharp](https://github.com/mono/SkiaSharp)/[Skia](https://skia.org/) libraries which are MIT/BSD licensed. Does not support animated GIF resizing and has limited options for configuration. It is supported on a wide range of platforms but may not be supported in some Linux configurations without a custom build of the native libraries.
+- [Cofoundry.Plugins.Imaging.ImageSharp](https://www.nuget.org/packages/Cofoundry.Plugins.Imaging.ImageSharp): Uses the [ImageSharp](https://github.com/SixLabors/ImageSharp) library which is licensed under the [Six Labors Split License](https://github.com/SixLabors/ImageSharp/blob/main/LICENSE). It is fully cross-platform, supports a wide range of formats including animated GIFs and has a comprehensive range of configuration options.
 
 ## Image File Location
 

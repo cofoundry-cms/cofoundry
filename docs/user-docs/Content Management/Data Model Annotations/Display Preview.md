@@ -12,7 +12,7 @@ In these scenarios we can use any of the following data annotations to describe 
 
 #### Example
 
-This example is taken from the Carousel example in the [PageBlockTypes sample](https://github.com/cofoundry-cms/Cofoundry.Samples.PageBlockTypes):
+This example is taken from the Carousel example in the [PageBlockTypes sample](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/PageBlockTypes):
 
 ```csharp
 public class CarouselSlideDataModel : INestedDataModel

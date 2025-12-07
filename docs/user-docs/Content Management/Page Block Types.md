@@ -14,7 +14,7 @@ A *Page Block Type* represents a type of content that can be inserted into a reg
 
 Creating a basic page block type is pretty simple, it just requires two files, a data model and a view file. Additional features allow you to customize the display model mapping process and have more control over the model that is sent to the view file.
 
-Cofoundry's built-in page block types are created using the same process, so as well as the examples listed here you can [view the code](https://github.com/cofoundry-cms/cofoundry/tree/master/src/Cofoundry.Web/PageBlockTypes) and use it as a reference, or we also have a [sample project](https://github.com/cofoundry-cms/Cofoundry.Samples.PageBlockTypes/) that is filled with page block type examples.
+Cofoundry's built-in page block types are created using the same process, so as well as the examples listed here you can [view the code](https://github.com/cofoundry-cms/cofoundry/tree/master/src/Cofoundry.Web/PageBlockTypes) and use it as a reference, or we also have a [sample project](https://github.com/cofoundry-cms/Cofoundry.Samples/blob/main/src/PageBlockTypes/) that is filled with page block type examples.
 
 ### Injecting ICofoundryBlockTypeHelper
 
