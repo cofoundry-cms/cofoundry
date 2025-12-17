@@ -4,7 +4,7 @@
 
 This library contains services, abstractions and helpers for running in an Azure environment.
 
-- NuGet package: [Cofoundry.Plugins.BackgroundTasks.Hangfire](https://www.nuget.org/packages/Cofoundry.Plugins.Azure)
+- NuGet package: [Cofoundry.Plugins.Azure](https://www.nuget.org/packages/Cofoundry.Plugins.Azure)
 - [Documentation](Azure)
 
 ### BackgroundTasks.Hangfire
