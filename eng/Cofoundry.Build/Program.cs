@@ -46,7 +46,7 @@ Target("test", dependsOn: ["build"], async () =>
     await RunAsync("dotnet", "test --configuration Release --no-build --nologo --verbosity normal --logger trx");
 });
 
-Target("patch-template-projects", dependsOn: ["build"], async () =>
+Target("patch-template-projects", dependsOn: ["build"], () =>
 {
     ValidateVersionInfoRead(_versionInfo);
 
