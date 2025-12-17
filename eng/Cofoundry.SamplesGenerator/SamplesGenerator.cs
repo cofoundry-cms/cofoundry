@@ -20,8 +20,8 @@ public class SamplesGenerator
     public async Task Run()
     {
         _logger.WriteLine("Clearing directories");
-        await CleanDestinationDirectory("src");
-        await CleanDestinationDirectory("docker");
+        CleanDestinationDirectory("src");
+        CleanDestinationDirectory("docker");
 
         string[] samples = [
             "Mail",
@@ -100,7 +100,7 @@ public class SamplesGenerator
         return !shouldIgnoreFile;
     }
 
-    private async Task CleanDestinationDirectory(string directory)
+    private void CleanDestinationDirectory(string directory)
     {
         var path = Path.Combine(_samplesGeneratorSettings.DestinationDirectory, directory);
 
