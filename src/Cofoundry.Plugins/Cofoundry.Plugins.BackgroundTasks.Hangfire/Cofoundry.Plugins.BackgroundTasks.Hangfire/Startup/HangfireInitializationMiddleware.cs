@@ -6,12 +6,10 @@ namespace Cofoundry.Plugins.BackgroundTasks.Hangfire;
 public class HangfireInitializationMiddleware
 {
     private static bool _isInitialized;
-    private static readonly object _isInitializedLock = new();
+    private static readonly Lock _isInitializedLock = new();
     private readonly RequestDelegate _next;
 
-    public HangfireInitializationMiddleware(
-        RequestDelegate next
-        )
+    public HangfireInitializationMiddleware(RequestDelegate next)
     {
         _next = next;
     }
