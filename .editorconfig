@@ -301,6 +301,9 @@ dotnet_diagnostic.IDE0060.severity = warning
 # IDE0062: Make local function static
 dotnet_diagnostic.IDE0062.severity = warning
 
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = none
+
 # IDE0161: Convert to file-scoped namespace
 dotnet_diagnostic.IDE0161.severity = warning
 

@@ -4,21 +4,22 @@ namespace Cofoundry.Domain.Internal;
 /// In-memory implementation of IUserSessionService for non-web
 /// scenarios.
 /// </summary>
-/// <inheritdoc/>
 public class InMemoryUserSessionService : IUserSessionService
 {
     private const string AMBIENT_USER_AREA_KEY = "AMBIENT_KEY";
     private readonly Dictionary<string, int?> _userIdCache = [];
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
     private string _ambientUserAreaCode;
 
     private readonly IUserAreaDefinitionRepository _userAreaDefinitionRepository;
     private readonly IUserContextCache _userContextCache;
 
+    /// <summary>
+    /// DI constructor.
+    /// </summary>
     public InMemoryUserSessionService(
         IUserAreaDefinitionRepository userAreaDefinitionRepository,
-        IUserContextCache userContextCache
-        )
+        IUserContextCache userContextCache)
     {
         _userAreaDefinitionRepository = userAreaDefinitionRepository;
         _userContextCache = userContextCache;
@@ -26,17 +27,20 @@ public class InMemoryUserSessionService : IUserSessionService
         ResetAmbientUserAreaToDefault();
     }
 
+    /// <inheritdoc/>
     public int? GetCurrentUserId()
     {
         return _userIdCache.GetValueOrDefault(AMBIENT_USER_AREA_KEY);
     }
 
+    /// <inheritdoc/>
     public Task<int?> GetUserIdByUserAreaCodeAsync(string userAreaCode)
     {
         var result = GetUserIdByUserAreaCode(userAreaCode);
         return Task.FromResult(result);
     }
 
+    /// <inheritdoc/>
     public int? GetUserIdByUserAreaCode(string userAreaCode)
     {
         ArgumentNullException.ThrowIfNull(userAreaCode);
@@ -44,6 +48,7 @@ public class InMemoryUserSessionService : IUserSessionService
         return _userIdCache.GetValueOrDefault(userAreaCode);
     }
 
+    /// <inheritdoc/>
     public Task SignInAsync(string userAreaDefinitionCode, int userId, bool rememberUser)
     {
         ArgumentNullException.ThrowIfNull(userAreaDefinitionCode);
@@ -66,6 +71,7 @@ public class InMemoryUserSessionService : IUserSessionService
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public Task SignOutAsync(string userAreaDefinitionCode)
     {
         ArgumentNullException.ThrowIfNull(userAreaDefinitionCode);
@@ -115,6 +121,7 @@ public class InMemoryUserSessionService : IUserSessionService
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public Task SetAmbientUserAreaAsync(string userAreaCode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(userAreaCode);
@@ -148,6 +155,7 @@ public class InMemoryUserSessionService : IUserSessionService
         return _ambientUserAreaCode == userArea.UserAreaCode;
     }
 
+    /// <inheritdoc/>
     public Task RefreshAsync(string userAreaCode, int userId)
     {
         // No-op: nothing to refresh

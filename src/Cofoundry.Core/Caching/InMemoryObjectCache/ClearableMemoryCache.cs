@@ -17,24 +17,30 @@ public class ClearableMemoryCache : IDisposable
 {
     private readonly MemoryCache _memoryCache;
     private readonly HashSet<string> _keys = [];
-    private readonly object _lock = new();
+    private readonly Lock _lock = new();
 
-    public ClearableMemoryCache(
-        IOptions<MemoryCacheOptions> optionsAccessor
-        )
+    /// <summary>
+    /// DI constructor.
+    /// </summary>
+    public ClearableMemoryCache(IOptions<MemoryCacheOptions> optionsAccessor)
     {
         _memoryCache = new MemoryCache(optionsAccessor);
     }
 
-    public T? Get<T>(string key)
+    /// <summary>
+    /// Gets the value associated with this key if present.
+    /// </summary>
+    /// <typeparam name="TItem">The type of the object to get.</typeparam>
+    /// <param name="key">The key of the value to get.</param>
+    public TItem? Get<TItem>(string key)
     {
-        var entry = _memoryCache.Get<T>(key);
+        var entry = _memoryCache.Get<TItem>(key);
         return entry;
     }
 
-    public T? GetOrAdd<T>(string key, Func<T> getter, DateTimeOffset? expiry = null)
+    public TItem? GetOrAdd<TItem>(string key, Func<TItem> getter, DateTimeOffset? expiry = null)
     {
-        if (_memoryCache.TryGetValue(key, out T? entry))
+        if (_memoryCache.TryGetValue(key, out TItem? entry))
         {
             return entry;
         }
@@ -57,15 +63,15 @@ public class ClearableMemoryCache : IDisposable
         }
     }
 
-    public Task<T?> GetOrAddAsync<T>(string key, Func<Task<T>> getter, DateTimeOffset? expiry = null)
+    public Task<TItem?> GetOrAddAsync<TItem>(string key, Func<Task<TItem>> getter, DateTimeOffset? expiry = null)
     {
-        if (_memoryCache.TryGetValue(key, out T? existingEntry))
+        if (_memoryCache.TryGetValue(key, out TItem? existingEntry))
         {
             return Task.FromResult(existingEntry);
         }
         else
         {
-            Task<T?> newEntry;
+            Task<TItem?> newEntry;
 
             lock (_lock)
             {
@@ -104,6 +110,10 @@ public class ClearableMemoryCache : IDisposable
         }
     }
 
+    /// <summary>
+    /// Removes the object from the the cache with the associated <paramref name="key"/>.
+    /// </summary>
+    /// <param name="key">The key of the object to remove.</param>
     public void ClearEntry(string key)
     {
         lock (_lock)
@@ -113,6 +123,7 @@ public class ClearableMemoryCache : IDisposable
         }
     }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
         _memoryCache?.Dispose();
