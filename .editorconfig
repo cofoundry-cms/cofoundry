@@ -248,6 +248,9 @@ dotnet_diagnostic.CA2246.severity = warning
 # CA2249: Use string.Contains instead of string.IndexOf to improve readability.
 dotnet_diagnostic.CA2249.severity = warning
 
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = suggestion
+
 # IDE0005: Remove unnecessary usings
 dotnet_diagnostic.IDE0005.severity = warning
 
