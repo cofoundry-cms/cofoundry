@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -19,7 +20,7 @@ public class RedirectUrlHelper
     /// <param name="url">Url to validate.</param>
     public static bool IsValid(ControllerBase controller, string url)
     {
-        return IsValidInternal(controller.Request, controller.Url, url);
+        return IsValidInternal(controller.Request, url);
     }
 
     /// <summary>
@@ -31,7 +32,7 @@ public class RedirectUrlHelper
     /// <param name="url">Url to validate.</param>
     public static bool IsValid(PageModel pageModel, string url)
     {
-        return IsValidInternal(pageModel.Request, pageModel.Url, url);
+        return IsValidInternal(pageModel.Request, url);
     }
 
     /// <summary>
@@ -41,7 +42,7 @@ public class RedirectUrlHelper
     /// <param name="controller">Currently executing controller instance to use in validation.</param>
     public static string? GetAndValidateReturnUrl(ControllerBase controller)
     {
-        return GetAndValidateReturnUrlInternal(controller.Request, controller.Url);
+        return GetAndValidateReturnUrlInternal(controller.Request);
     }
 
     /// <summary>
@@ -51,22 +52,22 @@ public class RedirectUrlHelper
     /// <param name="pageModel">Currently executing razor page instance to use in validation.</param>
     public static string? GetAndValidateReturnUrl(PageModel pageModel)
     {
-        return GetAndValidateReturnUrlInternal(pageModel.Request, pageModel.Url);
+        return GetAndValidateReturnUrlInternal(pageModel.Request);
     }
 
-    private static bool IsValidInternal(HttpRequest request, IUrlHelper urlHelper, string? url)
+    private static bool IsValidInternal(HttpRequest request, string? url)
     {
         var isValid = !string.IsNullOrEmpty(url)
-            && urlHelper.IsLocalUrl(url)
+            && RedirectHttpResult.IsLocalUrl(url)
             && !RelativePathHelper.IsWellFormattedAndEqual(request.Path, url);
 
         return isValid;
     }
 
-    private static string? GetAndValidateReturnUrlInternal(HttpRequest request, IUrlHelper urlHelper)
+    private static string? GetAndValidateReturnUrlInternal(HttpRequest request)
     {
         var returnUrl = request.Query["ReturnUrl"].FirstOrDefault();
 
-        return IsValidInternal(request, urlHelper, returnUrl) ? returnUrl : null;
+        return IsValidInternal(request, returnUrl) ? returnUrl : null;
     }
 }
