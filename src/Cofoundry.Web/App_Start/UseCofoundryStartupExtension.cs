@@ -3,38 +3,42 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Web;
 
+/// <summary>
+/// Extension methods for configuring Cofoundry middleware via <see cref="IApplicationBuilder"/>.
+/// </summary>
 public static class UseCofoundryStartupExtension
 {
-    /// <summary>
-    /// Registers Cofoundry into the application pipeline and runs all the registered
-    /// Cofoundry StartupTasks.
-    /// </summary>
-    /// <param name="application">Application configuration.</param>
-    /// <param name="configBuilder">Additional configuration options.</param>
-    public static void UseCofoundry(
-        this IApplicationBuilder application,
-        Action<UseCofoundryStartupConfiguration>? configBuilder = null
-        )
+    extension(IApplicationBuilder application)
     {
-        var configuration = new UseCofoundryStartupConfiguration();
-        configBuilder?.Invoke(configuration);
-
-        using var childContext = application.ApplicationServices.CreateScope();
-
-        var startupTasks = childContext
-            .ServiceProvider
-            .GetServices<IStartupConfigurationTask>();
-
-        startupTasks = SortTasksByDependency(startupTasks);
-
-        if (configuration.StartupTaskFilter != null)
+        /// <summary>
+        /// Registers Cofoundry into the application pipeline and runs all the registered
+        /// Cofoundry StartupTasks.
+        /// </summary>
+        /// <param name="configBuilder">Additional configuration options.</param>
+        public void UseCofoundry(
+            Action<UseCofoundryStartupConfiguration>? configBuilder = null
+            )
         {
-            startupTasks = configuration.StartupTaskFilter(startupTasks);
-        }
+            var configuration = new UseCofoundryStartupConfiguration();
+            configBuilder?.Invoke(configuration);
 
-        foreach (var startupTask in startupTasks)
-        {
-            startupTask.Configure(application);
+            using var childContext = application.ApplicationServices.CreateScope();
+
+            var startupTasks = childContext
+                .ServiceProvider
+                .GetServices<IStartupConfigurationTask>();
+
+            startupTasks = SortTasksByDependency(startupTasks);
+
+            if (configuration.StartupTaskFilter != null)
+            {
+                startupTasks = configuration.StartupTaskFilter(startupTasks);
+            }
+
+            foreach (var startupTask in startupTasks)
+            {
+                startupTask.Configure(application);
+            }
         }
     }
 

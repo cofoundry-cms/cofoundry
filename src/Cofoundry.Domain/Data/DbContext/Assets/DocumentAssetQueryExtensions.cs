@@ -1,20 +1,29 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
+/// <summary>
+/// Extension methods for <see cref="IQueryable{DocumentAsset}"/>.
+/// </summary>
 public static class DocumentAssetQueryExtensions
 {
-    public static IQueryable<DocumentAsset> FilterById(this IQueryable<DocumentAsset> documents, int id)
+    extension(IQueryable<DocumentAsset> documents)
     {
-        var result = documents
-            .Where(i => i.DocumentAssetId == id);
+        public IQueryable<DocumentAsset> FilterById(int id)
+        {
+            var result = documents
+                .Where(i => i.DocumentAssetId == id);
 
-        return result;
+            return result;
+        }
     }
 
-    public static IQueryable<DocumentAsset> FilterByIds(this IQueryable<DocumentAsset> document, IEnumerable<int> ids)
+    extension(IQueryable<DocumentAsset> document)
     {
-        var result = document
-            .Where(i => ids.Contains(i.DocumentAssetId));
+        public IQueryable<DocumentAsset> FilterByIds(IEnumerable<int> ids)
+        {
+            var result = document
+                .Where(i => ids.Contains(i.DocumentAssetId));
 
-        return result;
+            return result;
+        }
     }
 }

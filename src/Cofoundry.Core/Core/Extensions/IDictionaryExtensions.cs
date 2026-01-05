@@ -1,122 +1,126 @@
 namespace Cofoundry.Core;
 
+/// <summary>
+/// Extension methods for <see cref="IDictionary{TKey, TValue}"/> types.
+/// </summary>
 public static class IDictionaryExtensions
 {
-    /// <summary>
-    /// Returns items in the dictionary which has a key listed in the <paramref name="keysToFilter"/> 
-    /// collection. The method ensures no duplicates are returned even if they appear in the
-    /// <paramref name="keysToFilter"/> collection.
-    /// </summary>
-    /// <param name="source">The dictionary to filter</param>
-    /// <param name="keysToFilter">Keys to lookup values for</param>
-    public static IEnumerable<TValue> FilterByKeys<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<TKey> keysToFilter)
-        where TKey : notnull
+    extension<TKey, TValue>(Dictionary<TKey, TValue> source) where TKey : notnull
     {
-        return source.FilterAndOrderByKeys(keysToFilter.Distinct());
-    }
-
-    /// <summary>
-    /// Returns items in the dictionary which has a key listed in the <paramref name="keysToFilter"/> 
-    /// collection. The method ensures no duplicates are returned even if they appear in the
-    /// <paramref name="keysToFilter"/> collection.
-    /// </summary>
-    /// <param name="source">The dictionary to filter</param>
-    /// <param name="keysToFilter">Keys to lookup values for</param>
-    public static IEnumerable<TValue> FilterByKeys<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> keysToFilter)
-    {
-        return source.FilterAndOrderByKeys(keysToFilter.Distinct());
-    }
-
-    /// <summary>
-    /// Returns items in the dictionary which has a key listed in the <paramref name="keysToFilter"/> 
-    /// collection. The method ensures no duplicates are returned even if they appear in the
-    /// <paramref name="keysToFilter"/> collection.
-    /// </summary>
-    /// <param name="source">The dictionary to filter</param>
-    /// <param name="keysToFilter">Keys to lookup values for</param>
-    public static IEnumerable<TValue> FilterByKeys<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> source, IEnumerable<TKey> keysToFilter)
-    {
-        return source.FilterAndOrderByKeys(keysToFilter.Distinct());
-    }
-
-    /// <summary>
-    /// Returns items in the dictionary which has a key listed in the <paramref name="orderedKeys"/>
-    /// collection, in the order they appear in that collection. Duplicates may be returned if
-    /// the ordered keys collections contains them.
-    /// </summary>
-    /// <param name="source">The dictionary to filter</param>
-    /// <param name="orderedKeys">
-    /// A collection of dictionary keys in the order that you would like the results
-    /// return in. Duplicate items may be returned if the orderedKeys collection 
-    /// contains duplicates.
-    /// </param>
-    public static IEnumerable<TValue> FilterAndOrderByKeys<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<TKey> orderedKeys)
-        where TKey : notnull
-    {
-        if (orderedKeys == null)
+        /// <summary>
+        /// Returns items in the dictionary which has a key listed in the <paramref name="keysToFilter"/> 
+        /// collection. The method ensures no duplicates are returned even if they appear in the
+        /// <paramref name="keysToFilter"/> collection.
+        /// </summary>
+        /// <param name="keysToFilter">Keys to lookup values for</param>
+        public IEnumerable<TValue> FilterByKeys(IEnumerable<TKey> keysToFilter)
         {
-            yield break;
+            return source.FilterAndOrderByKeys(keysToFilter.Distinct());
         }
 
-        foreach (var key in orderedKeys)
+        /// <summary>
+        /// Returns items in the dictionary which has a key listed in the <paramref name="orderedKeys"/>
+        /// collection, in the order they appear in that collection. Duplicates may be returned if
+        /// the ordered keys collections contains them.
+        /// </summary>
+        /// <param name="orderedKeys">
+        /// A collection of dictionary keys in the order that you would like the results
+        /// return in. Duplicate items may be returned if the orderedKeys collection 
+        /// contains duplicates.
+        /// </param>
+        public IEnumerable<TValue> FilterAndOrderByKeys(IEnumerable<TKey> orderedKeys)
         {
-            if (source.TryGetValue(key, out var value))
+            if (orderedKeys == null)
             {
-                yield return value;
+                yield break;
+            }
+
+            foreach (var key in orderedKeys)
+            {
+                if (source.TryGetValue(key, out var value))
+                {
+                    yield return value;
+                }
             }
         }
     }
 
-    /// <summary>
-    /// Returns items in the dictionary which has a key listed in the <paramref name="orderedKeys"/>
-    /// collection, in the order they appear in that collection. Duplicates may be returned if
-    /// the ordered keys collections contains them.
-    /// </summary>
-    /// <param name="source">The dictionary to filter</param>
-    /// <param name="orderedKeys">
-    /// A collection of dictionary keys in the order that you would like the results
-    /// return in. Duplicate items may be returned if the orderedKeys collection 
-    /// contains duplicates.
-    /// </param>
-    public static IEnumerable<TValue> FilterAndOrderByKeys<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> orderedKeys)
+    extension<TKey, TValue>(IDictionary<TKey, TValue> source)
     {
-        if (orderedKeys == null)
+        /// <summary>
+        /// Returns items in the dictionary which has a key listed in the <paramref name="keysToFilter"/> 
+        /// collection. The method ensures no duplicates are returned even if they appear in the
+        /// <paramref name="keysToFilter"/> collection.
+        /// </summary>
+        /// <param name="keysToFilter">Keys to lookup values for</param>
+        public IEnumerable<TValue> FilterByKeys(IEnumerable<TKey> keysToFilter)
         {
-            yield break;
+            return source.FilterAndOrderByKeys(keysToFilter.Distinct());
         }
 
-        foreach (var key in orderedKeys)
+        /// <summary>
+        /// Returns items in the dictionary which has a key listed in the <paramref name="orderedKeys"/>
+        /// collection, in the order they appear in that collection. Duplicates may be returned if
+        /// the ordered keys collections contains them.
+        /// </summary>
+        /// <param name="orderedKeys">
+        /// A collection of dictionary keys in the order that you would like the results
+        /// return in. Duplicate items may be returned if the orderedKeys collection 
+        /// contains duplicates.
+        /// </param>
+        public IEnumerable<TValue> FilterAndOrderByKeys(IEnumerable<TKey> orderedKeys)
         {
-            if (source.TryGetValue(key, out var value))
+            if (orderedKeys == null)
             {
-                yield return value;
+                yield break;
+            }
+
+            foreach (var key in orderedKeys)
+            {
+                if (source.TryGetValue(key, out var value))
+                {
+                    yield return value;
+                }
             }
         }
     }
 
-    /// <summary>
-    /// Returns items in the dictionary which has a key listed in the <paramref name="orderedKeys"/>
-    /// collection, in the order they appear in that collection. Duplicates may be returned if
-    /// the ordered keys collections contains them.
-    /// </summary>
-    /// <param name="source">The dictionary to filter</param>
-    /// <param name="orderedKeys">
-    /// A collection of dictionary keys in the order that you would like the results
-    /// return in. Duplicate items may be returned if the orderedKeys collection 
-    /// contains duplicates.
-    /// </param>
-    public static IEnumerable<TValue> FilterAndOrderByKeys<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> source, IEnumerable<TKey> orderedKeys)
+    extension<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> source)
     {
-        if (orderedKeys == null)
+        /// <summary>
+        /// Returns items in the dictionary which has a key listed in the <paramref name="keysToFilter"/> 
+        /// collection. The method ensures no duplicates are returned even if they appear in the
+        /// <paramref name="keysToFilter"/> collection.
+        /// </summary>
+        /// <param name="keysToFilter">Keys to lookup values for</param>
+        public IEnumerable<TValue> FilterByKeys(IEnumerable<TKey> keysToFilter)
         {
-            yield break;
+            return source.FilterAndOrderByKeys(keysToFilter.Distinct());
         }
 
-        foreach (var key in orderedKeys)
+        /// <summary>
+        /// Returns items in the dictionary which has a key listed in the <paramref name="orderedKeys"/>
+        /// collection, in the order they appear in that collection. Duplicates may be returned if
+        /// the ordered keys collections contains them.
+        /// </summary>
+        /// <param name="orderedKeys">
+        /// A collection of dictionary keys in the order that you would like the results
+        /// return in. Duplicate items may be returned if the orderedKeys collection 
+        /// contains duplicates.
+        /// </param>
+        public IEnumerable<TValue> FilterAndOrderByKeys(IEnumerable<TKey> orderedKeys)
         {
-            if (source.TryGetValue(key, out var value))
+            if (orderedKeys == null)
             {
-                yield return value;
+                yield break;
+            }
+
+            foreach (var key in orderedKeys)
+            {
+                if (source.TryGetValue(key, out var value))
+                {
+                    yield return value;
+                }
             }
         }
     }

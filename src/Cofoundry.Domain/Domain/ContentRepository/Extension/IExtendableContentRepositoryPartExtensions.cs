@@ -1,11 +1,17 @@
-﻿namespace Cofoundry.Domain.Extendable;
+namespace Cofoundry.Domain.Extendable;
 
+/// <summary>
+/// Content repository part extension methods to allow casting to <see cref="IExtendableContentRepositoryPart"/>
+/// which allows for modular extension via Cofoundry or plugins.
+/// </summary>
 public static class IExtendableContentRepositoryPartExtensions
 {
-    public static IExtendableContentRepositoryPart AsExtendableContentRepositoryPart<TRepositoryPart>(this TRepositoryPart contentRepository)
-        where TRepositoryPart : IContentRepositoryPart
+    extension<TRepositoryPart>(TRepositoryPart contentRepository) where TRepositoryPart : IContentRepositoryPart
     {
-        return CastToExtendableContentRepositoryPart(contentRepository);
+        public IExtendableContentRepositoryPart AsExtendableContentRepositoryPart()
+        {
+            return CastToExtendableContentRepositoryPart(contentRepository);
+        }
     }
 
     private static IExtendableContentRepositoryPart CastToExtendableContentRepositoryPart<T>(T contentRepository)

@@ -1,22 +1,28 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
+/// <summary>
+/// Extensions for <see cref="IPermissionSetBuilder"/>.
+/// </summary>
 public static class IPermissionSetBuilderExtensions
 {
-    /// <summary>
-    /// Configure the builder to include the permissions configured for
-    /// the <see cref="AnonymousRole"/>, which usually is a good base
-    /// to start from before adding additional permissions.
-    /// </summary>
-    public static IPermissionSetBuilder ApplyAnonymousRoleConfiguration(this IPermissionSetBuilder builder)
+    extension(IPermissionSetBuilder builder)
     {
-        return builder.ApplyRoleConfiguration<AnonymousRole>();
-    }
+        /// <summary>
+        /// Configure the builder to include the permissions configured for
+        /// the <see cref="AnonymousRole"/>, which usually is a good base
+        /// to start from before adding additional permissions.
+        /// </summary>
+        public IPermissionSetBuilder ApplyAnonymousRoleConfiguration()
+        {
+            return builder.ApplyRoleConfiguration<AnonymousRole>();
+        }
 
-    /// <summary>
-    /// Configure the builder to include all permissions.
-    /// </summary>
-    public static IPermissionSetBuilder IncludeAll(this IPermissionSetBuilder builder)
-    {
-        return builder.Include(p => p);
+        /// <summary>
+        /// Configure the builder to include all permissions.
+        /// </summary>
+        public IPermissionSetBuilder IncludeAll()
+        {
+            return builder.Include(p => p);
+        }
     }
 }

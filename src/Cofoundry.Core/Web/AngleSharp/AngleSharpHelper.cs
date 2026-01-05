@@ -1,7 +1,10 @@
-﻿using AngleSharp.Dom;
+using AngleSharp.Dom;
 
 namespace Cofoundry.Core.Web;
 
+/// <summary>
+/// Helper methods for working with HTML documents via AngleSharp.
+/// </summary>
 public static class AngleSharpHelper
 {
     /// <summary>

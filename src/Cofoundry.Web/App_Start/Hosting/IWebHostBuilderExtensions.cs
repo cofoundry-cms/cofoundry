@@ -1,27 +1,33 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace Cofoundry.Web;
 
+/// <summary>
+/// Extension methods for <see cref="IWebHostBuilder"/>.
+/// </summary>
 public static class IWebHostBuilderExtensions
 {
-    /// <summary>
-    /// Uses an optional appsettings.local.json configuration file
-    /// for local developer configuration, only when in the development 
-    /// environment. This local configuration file should not be checked 
-    /// into version control.
-    /// </summary>
-    public static IWebHostBuilder UseLocalConfigFile(this IWebHostBuilder webHostBuilder)
+    extension(IWebHostBuilder webHostBuilder)
     {
-        webHostBuilder.ConfigureAppConfiguration((hostContext, config) =>
+        /// <summary>
+        /// Uses an optional appsettings.local.json configuration file
+        /// for local developer configuration, only when in the development 
+        /// environment. This local configuration file should not be checked 
+        /// into version control.
+        /// </summary>
+        public IWebHostBuilder UseLocalConfigFile()
         {
-            if (hostContext.HostingEnvironment.IsDevelopment())
+            webHostBuilder.ConfigureAppConfiguration((hostContext, config) =>
             {
-                config.AddJsonFile("appsettings.local.json", optional: true);
-            }
-        });
+                if (hostContext.HostingEnvironment.IsDevelopment())
+                {
+                    config.AddJsonFile("appsettings.local.json", optional: true);
+                }
+            });
 
-        return webHostBuilder;
+            return webHostBuilder;
+        }
     }
 }

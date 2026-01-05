@@ -1,13 +1,19 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
+/// <summary>
+/// Extension methods for collections of <see cref="AdminModule"/>.
+/// </summary>
 public static class AdminModuleCollectionExtensions
 {
-    public static IEnumerable<AdminModule> SetStandardOrdering(this IEnumerable<AdminModule> source)
+    extension(IEnumerable<AdminModule> source)
     {
-        return source
-            .OrderBy(r => r.MenuCategory)
-            .ThenBy(r => r.PrimaryOrdering)
-            .ThenByDescending(r => r.SecondaryOrdering)
-            .ThenBy(r => r.Title);
+        public IEnumerable<AdminModule> SetStandardOrdering()
+        {
+            return source
+                .OrderBy(r => r.MenuCategory)
+                .ThenBy(r => r.PrimaryOrdering)
+                .ThenByDescending(r => r.SecondaryOrdering)
+                .ThenBy(r => r.Title);
+        }
     }
 }

@@ -1,14 +1,27 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
+/// <summary>
+/// Extension methods for <see cref="IPagedQueryResult"/>.
+/// </summary>
 public static class IPagedQueryResultExtensions
 {
-    public static bool IsFirstPage(this IPagedQueryResult source)
+    extension(IPagedQueryResult source)
     {
-        return source.PageNumber <= 1;
-    }
+        /// <summary>
+        /// <see langword="true"/> if the result contains the first page of results. Page numbering
+        /// is 1-based, but the check counts anything less than 1 as the first page.
+        /// </summary>
+        public bool IsFirstPage()
+        {
+            return source.PageNumber <= 1;
+        }
 
-    public static bool IsLastPage(this IPagedQueryResult source)
-    {
-        return source.PageCount <= source.PageNumber;
+        /// <summary>
+        /// <see langword="true"/> if the result is the last page of the result set.
+        /// </summary>
+        public bool IsLastPage()
+        {
+            return source.PageCount <= source.PageNumber;
+        }
     }
 }

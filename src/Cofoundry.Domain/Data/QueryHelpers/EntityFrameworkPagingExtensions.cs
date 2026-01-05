@@ -1,20 +1,26 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
+/// <summary>
+/// Extension methods for paging data via <see cref="IQueryable{T}"/>.
+/// </summary>
 public static class EntityFrameworkPagingExtensions
 {
-    /// <summary>
-    /// Converts a query to an instance of PagedQueryResult, executing the query twice,
-    /// once to get the total count and again to get the results.
-    /// </summary>
-    public static async Task<PagedQueryResult<T>> ToPagedResultAsync<T>(this IQueryable<T> source, IPageableQuery query)
+    extension<T>(IQueryable<T> source)
     {
-        ArgumentNullException.ThrowIfNull(source);
+        /// <summary>
+        /// Converts a query to an instance of PagedQueryResult, executing the query twice,
+        /// once to get the total count and again to get the results.
+        /// </summary>
+        public async Task<PagedQueryResult<T>> ToPagedResultAsync(IPageableQuery query)
+        {
+            ArgumentNullException.ThrowIfNull(source);
 
-        var result = new PagedQueryResult<T>();
-        result.TotalItems = await source.CountAsync();
-        result.Items = await source.Page(query).ToArrayAsync();
-        PagingQueryExtensions.MapPagingData<T>(query, result);
+            var result = new PagedQueryResult<T>();
+            result.TotalItems = await source.CountAsync();
+            result.Items = await source.Page(query).ToArrayAsync();
+            PagingQueryExtensions.MapPagingData<T>(query, result);
 
-        return result;
+            return result;
+        }
     }
 }

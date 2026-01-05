@@ -4,56 +4,50 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Cofoundry.Domain;
 
+/// <summary>
+/// <see cref="IPermissionSetBuilder"/> extension methods for custom entities.
+/// </summary>
 public static class IPermissionSetBuilderCustomEntityExtensions
 {
-    /// <summary>
-    /// Configure the builder to include all permissions for a specific custom entity type.
-    /// </summary>
-    /// <param name="builder">
-    /// Builder to filter on.
-    /// </param>
-    public static IPermissionSetBuilder IncludeCustomEntity<TCustomEntityDefinition>(this IPermissionSetBuilder builder)
-        where TCustomEntityDefinition : ICustomEntityDefinition
+    extension(IPermissionSetBuilder builder)
     {
-        return Run<TCustomEntityDefinition>(builder, null, true);
-    }
+        /// <summary>
+        /// Configure the builder to include all permissions for a specific custom entity type.
+        /// </summary>
+        public IPermissionSetBuilder IncludeCustomEntity<TCustomEntityDefinition>()
+            where TCustomEntityDefinition : ICustomEntityDefinition
+        {
+            return Run<TCustomEntityDefinition>(builder, null, true);
+        }
 
-    /// <summary>
-    /// Configure the builder to include permissions for a custom entity type.
-    /// </summary>
-    /// <param name="builder">
-    /// Builder to filter on.
-    /// </param>
-    /// <param name="configure">A configuration action to select which permissions to include.</param>
-    public static IPermissionSetBuilder IncludeCustomEntity<TCustomEntityDefinition>(this IPermissionSetBuilder builder, Action<CustomEntityPermissionBuilder> configure)
-        where TCustomEntityDefinition : ICustomEntityDefinition
-    {
-        return Run<TCustomEntityDefinition>(builder, configure, true);
-    }
+        /// <summary>
+        /// Configure the builder to include permissions for a custom entity type.
+        /// </summary>
+        /// <param name="configure">A configuration action to select which permissions to include.</param>
+        public IPermissionSetBuilder IncludeCustomEntity<TCustomEntityDefinition>(Action<CustomEntityPermissionBuilder> configure)
+            where TCustomEntityDefinition : ICustomEntityDefinition
+        {
+            return Run<TCustomEntityDefinition>(builder, configure, true);
+        }
 
-    /// <summary>
-    /// Configure the builder to exclude all permissions for a specific custom entity type.
-    /// </summary>
-    /// <param name="builder">
-    /// Builder to filter on.
-    /// </param>
-    public static IPermissionSetBuilder ExcludeCustomEntity<TCustomEntityDefinition>(this IPermissionSetBuilder builder)
-        where TCustomEntityDefinition : ICustomEntityDefinition
-    {
-        return Run<TCustomEntityDefinition>(builder, null, false);
-    }
+        /// <summary>
+        /// Configure the builder to exclude all permissions for a specific custom entity type.
+        /// </summary>
+        public IPermissionSetBuilder ExcludeCustomEntity<TCustomEntityDefinition>()
+            where TCustomEntityDefinition : ICustomEntityDefinition
+        {
+            return Run<TCustomEntityDefinition>(builder, null, false);
+        }
 
-    /// <summary>
-    /// Configure the builder to exclude permissions for a custom entity type.
-    /// </summary>
-    /// <param name="builder">
-    /// Builder to filter on.
-    /// </param>
-    /// <param name="configure">A configuration action to select which permissions to exclude.</param>
-    public static IPermissionSetBuilder ExcludeCustomEntity<TCustomEntityDefinition>(this IPermissionSetBuilder builder, Action<CustomEntityPermissionBuilder> configure)
-        where TCustomEntityDefinition : ICustomEntityDefinition
-    {
-        return Run<TCustomEntityDefinition>(builder, configure, false);
+        /// <summary>
+        /// Configure the builder to exclude permissions for a custom entity type.
+        /// </summary>
+        /// <param name="configure">A configuration action to select which permissions to exclude.</param>
+        public IPermissionSetBuilder ExcludeCustomEntity<TCustomEntityDefinition>(Action<CustomEntityPermissionBuilder> configure)
+            where TCustomEntityDefinition : ICustomEntityDefinition
+        {
+            return Run<TCustomEntityDefinition>(builder, configure, false);
+        }
     }
 
     private static IPermissionSetBuilder Run<TCustomEntityDefinition>(IPermissionSetBuilder builder, Action<CustomEntityPermissionBuilder>? configure, bool isIncludeOperation)

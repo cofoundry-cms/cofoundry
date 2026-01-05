@@ -25,6 +25,6 @@ public static partial class YouTubeUrlParser
         return match.Groups[1].Value;
     }
 
-    [GeneratedRegex(@"youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)", RegexOptions.IgnoreCase | RegexOptions.Multiline, "en-GB")]
+    [GeneratedRegex(@"youtu(?:\.be|be\.com)/(?:.*v(?:/|=)|(?:.*/)?)([a-zA-Z0-9-_]+)", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.CultureInvariant)]
     private static partial Regex YouTubeRegex();
 }

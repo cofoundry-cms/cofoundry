@@ -2,52 +2,46 @@ using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
+/// <summary>
+/// <see cref="IPermissionSetBuilder"/> extension methods for settings.
+/// </summary>
 public static class IPermissionSetBuilderSettingsExtensions
 {
-    /// <summary>
-    /// Configure the builder to include all permissions for settings.
-    /// </summary>
-    /// <param name="builder">
-    /// Builder to filter on.
-    /// </param>
-    public static IPermissionSetBuilder IncludeSettings(this IPermissionSetBuilder builder)
+    extension(IPermissionSetBuilder builder)
     {
-        return Run(builder, null, true);
-    }
+        /// <summary>
+        /// Configure the builder to include all permissions for settings.
+        /// </summary>
+        public IPermissionSetBuilder IncludeSettings()
+        {
+            return Run(builder, null, true);
+        }
 
-    /// <summary>
-    /// Configure the builder to include permissions for settings.
-    /// </summary>
-    /// <param name="builder">
-    /// Builder to filter on.
-    /// </param>
-    /// <param name="configure">A configuration action to select which permissions to include.</param>
-    public static IPermissionSetBuilder IncludeSettings(this IPermissionSetBuilder builder, Action<SettingsPermissionBuilder> configure)
-    {
-        return Run(builder, configure, true);
-    }
+        /// <summary>
+        /// Configure the builder to include permissions for settings.
+        /// </summary>
+        /// <param name="configure">A configuration action to select which permissions to include.</param>
+        public IPermissionSetBuilder IncludeSettings(Action<SettingsPermissionBuilder> configure)
+        {
+            return Run(builder, configure, true);
+        }
 
-    /// <summary>
-    /// Configure the builder to exclude all permissions for settings.
-    /// </summary>
-    /// <param name="builder">
-    /// Builder to filter on.
-    /// </param>
-    public static IPermissionSetBuilder ExcludeSettings(this IPermissionSetBuilder builder)
-    {
-        return Run(builder, null, false);
-    }
+        /// <summary>
+        /// Configure the builder to exclude all permissions for settings.
+        /// </summary>
+        public IPermissionSetBuilder ExcludeSettings()
+        {
+            return Run(builder, null, false);
+        }
 
-    /// <summary>
-    /// Configure the builder to exclude permissions for settings.
-    /// </summary>
-    /// <param name="builder">
-    /// Builder to filter on.
-    /// </param>
-    /// <param name="configure">A configuration action to select which permissions to exclude.</param>
-    public static IPermissionSetBuilder ExcludeSettings(this IPermissionSetBuilder builder, Action<SettingsPermissionBuilder> configure)
-    {
-        return Run(builder, configure, false);
+        /// <summary>
+        /// Configure the builder to exclude permissions for settings.
+        /// </summary>
+        /// <param name="configure">A configuration action to select which permissions to exclude.</param>
+        public IPermissionSetBuilder ExcludeSettings(Action<SettingsPermissionBuilder> configure)
+        {
+            return Run(builder, configure, false);
+        }
     }
 
     private static IPermissionSetBuilder Run(IPermissionSetBuilder builder, Action<SettingsPermissionBuilder>? configure, bool isIncludeOperation)

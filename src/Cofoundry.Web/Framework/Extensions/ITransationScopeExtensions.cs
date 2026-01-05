@@ -3,24 +3,27 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Cofoundry.Web;
 
+/// <summary>
+/// Extension methods for <see cref="ITransactionScope"/>.
+/// </summary>
 public static class ITransationScopeExtensions
 {
-    /// <summary>
-    /// Completes the transaction scope only if the <paramref name="modelState"/> is
-    /// valid, indicating that no handled or unhandled errors occurred udring execution.
-    /// </summary>
-    /// <param name="scope">
-    /// Scope instance to complete.
-    /// </param>
-    /// <param name="modelState">
-    /// The <see cref="ModelStateDictionary"/> to check for validity, usually accessed via
-    /// controller.ModelState or similar.
-    /// </param>
-    public static async Task CompleteIfValidAsync(this ITransactionScope scope, ModelStateDictionary modelState)
+    extension(ITransactionScope scope)
     {
-        if (modelState.IsValid)
+        /// <summary>
+        /// Completes the transaction scope only if the <paramref name="modelState"/> is
+        /// valid, indicating that no handled or unhandled errors occurred udring execution.
+        /// </summary>
+        /// <param name="modelState">
+        /// The <see cref="ModelStateDictionary"/> to check for validity, usually accessed via
+        /// controller.ModelState or similar.
+        /// </param>
+        public async Task CompleteIfValidAsync(ModelStateDictionary modelState)
         {
-            await scope.CompleteAsync();
+            if (modelState.IsValid)
+            {
+                await scope.CompleteAsync();
+            }
         }
     }
 }

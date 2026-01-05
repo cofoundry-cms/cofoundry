@@ -1,23 +1,32 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
+/// <summary>
+/// Content repository extension methods for page directories.
+/// </summary>
 public static class ContentRepositoryPageDirectoryExtensions
 {
-    /// <summary>
-    /// PageDirectories represent a folder in the dynamic web page hierarchy.
-    /// </summary>
-    public static IContentRepositoryPageDirectoryRepository PageDirectories(this IContentRepository contentRepository)
+    extension(IContentRepository contentRepository)
     {
-        return new ContentRepositoryPageDirectoryRepository(contentRepository.AsExtendableContentRepository());
+        /// <summary>
+        /// PageDirectories represent a folder in the dynamic web page hierarchy.
+        /// </summary>
+        public IContentRepositoryPageDirectoryRepository PageDirectories()
+        {
+            return new ContentRepositoryPageDirectoryRepository(contentRepository.AsExtendableContentRepository());
+        }
     }
 
-    /// <summary>
-    /// PageDirectories represent a folder in the dynamic web page hierarchy.
-    /// </summary>
-    public static IAdvancedContentRepositoryPageDirectoryRepository PageDirectories(this IAdvancedContentRepository contentRepository)
+    extension(IAdvancedContentRepository contentRepository)
     {
-        return new AdvancedContentRepositoryPageDirectoryRepository(contentRepository.AsExtendableContentRepository());
+        /// <summary>
+        /// PageDirectories represent a folder in the dynamic web page hierarchy.
+        /// </summary>
+        public IAdvancedContentRepositoryPageDirectoryRepository PageDirectories()
+        {
+            return new AdvancedContentRepositoryPageDirectoryRepository(contentRepository.AsExtendableContentRepository());
+        }
     }
 }

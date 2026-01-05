@@ -1,27 +1,36 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
+/// <summary>
+/// Content repository extension methods for roles.
+/// </summary>
 public static class ContentRepositoryRoleExtensions
 {
-    /// <summary>
-    /// Queries and commands relating to roles from the Cofoundry identity
-    /// system. Roles are an assignable collection of permissions. Every user has to be assigned 
-    /// to one role.
-    /// </summary>
-    public static IContentRepositoryRoleRepository Roles(this IContentRepository contentRepository)
+    extension(IContentRepository contentRepository)
     {
-        return new ContentRepositoryRoleRepository(contentRepository.AsExtendableContentRepository());
+        /// <summary>
+        /// Queries and commands relating to roles from the Cofoundry identity
+        /// system. Roles are an assignable collection of permissions. Every user has to be assigned 
+        /// to one role.
+        /// </summary>
+        public IContentRepositoryRoleRepository Roles()
+        {
+            return new ContentRepositoryRoleRepository(contentRepository.AsExtendableContentRepository());
+        }
     }
 
-    /// <summary>
-    /// Queries and commands relating to roles from the Cofoundry identity
-    /// system. Roles are an assignable collection of permissions. Every user has to be assigned 
-    /// to one role.
-    /// </summary>
-    public static IAdvancedContentRepositoryRoleRepository Roles(this IAdvancedContentRepository contentRepository)
+    extension(IAdvancedContentRepository contentRepository)
     {
-        return new ContentRepositoryRoleRepository(contentRepository.AsExtendableContentRepository());
+        /// <summary>
+        /// Queries and commands relating to roles from the Cofoundry identity
+        /// system. Roles are an assignable collection of permissions. Every user has to be assigned 
+        /// to one role.
+        /// </summary>
+        public IAdvancedContentRepositoryRoleRepository Roles()
+        {
+            return new ContentRepositoryRoleRepository(contentRepository.AsExtendableContentRepository());
+        }
     }
 }
