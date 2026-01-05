@@ -11,9 +11,7 @@ public class BlogPostDisplayModelMapper
 {
     private readonly IContentRepository _contentRepository;
 
-    public BlogPostDisplayModelMapper(
-        IContentRepository contentRepository
-        )
+    public BlogPostDisplayModelMapper(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }
@@ -37,8 +35,7 @@ public class BlogPostDisplayModelMapper
     public async Task<BlogPostDisplayModel> MapDisplayModelAsync(
         CustomEntityRenderDetails renderDetails,
         BlogPostDataModel dataModel,
-        PublishStatusQuery publishStatusQuery
-        )
+        PublishStatusQuery publishStatusQuery)
     {
         var categories = await MapCategories(dataModel, publishStatusQuery);
         var author = await MapAuthor(dataModel, publishStatusQuery);
@@ -59,8 +56,7 @@ public class BlogPostDisplayModelMapper
 
     private async Task<IReadOnlyCollection<CategorySummary>> MapCategories(
         BlogPostDataModel dataModel,
-        PublishStatusQuery publishStatusQuery
-        )
+        PublishStatusQuery publishStatusQuery)
     {
         if (EnumerableHelper.IsNullOrEmpty(dataModel.CategoryIds))
         {
@@ -100,8 +96,7 @@ public class BlogPostDisplayModelMapper
 
     private async Task<AuthorDetails?> MapAuthor(
         BlogPostDataModel dataModel,
-        PublishStatusQuery publishStatusQuery
-        )
+        PublishStatusQuery publishStatusQuery)
     {
         if (dataModel.AuthorId < 1)
         {

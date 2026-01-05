@@ -1,6 +1,6 @@
 using Cofoundry.Core.EntityFramework;
-using SPASite.Data;
 using Microsoft.Data.SqlClient;
+using SPASite.Data;
 
 namespace SPASite.Domain;
 
@@ -23,8 +23,7 @@ public class SetCatLikedCommandHandler
 
     public SetCatLikedCommandHandler(
         IEntityFrameworkSqlExecutor entityFrameworkSqlExecutor,
-        SPASiteDbContext spaSiteDbContext
-        )
+        SPASiteDbContext spaSiteDbContext)
     {
         _entityFrameworkSqlExecutor = entityFrameworkSqlExecutor;
         _spaSiteDbContext = spaSiteDbContext;
@@ -37,14 +36,13 @@ public class SetCatLikedCommandHandler
         // you could also use EF directly, Dapper or mix in any other data access approach.
         // For more info see https://www.cofoundry.org/docs/framework/entity-framework-and-dbcontext-tools#executing-stored-procedures--raw-sql
 
-        return _entityFrameworkSqlExecutor
-            .ExecuteCommandAsync(_spaSiteDbContext,
-                "app.CatLike_SetLiked",
-                 new SqlParameter("@CatId", command.CatId),
-                 new SqlParameter("@UserId", executionContext.UserContext.UserId),
-                 new SqlParameter("@IsLiked", command.IsLiked),
-                 new SqlParameter("@CreateDate", executionContext.ExecutionDate)
-             );
+        return _entityFrameworkSqlExecutor.ExecuteCommandAsync(
+            _spaSiteDbContext,
+            "app.CatLike_SetLiked",
+            new SqlParameter("@CatId", command.CatId),
+            new SqlParameter("@UserId", executionContext.UserContext.UserId),
+            new SqlParameter("@IsLiked", command.IsLiked),
+            new SqlParameter("@CreateDate", executionContext.ExecutionDate));
     }
 }
 

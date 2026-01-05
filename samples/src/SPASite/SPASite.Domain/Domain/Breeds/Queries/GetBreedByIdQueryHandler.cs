@@ -6,9 +6,7 @@ public class GetBreedByIdQueryHandler
 {
     private readonly IContentRepository _contentRepository;
 
-    public GetBreedByIdQueryHandler(
-        IContentRepository contentRepository
-        )
+    public GetBreedByIdQueryHandler(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

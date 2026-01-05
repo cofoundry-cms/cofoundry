@@ -21,9 +21,7 @@ public class MessageAggregatorStartupConfigurationTask : IStartupConfigurationTa
 {
     private readonly IMessageSubscriptionInitializer _messageSubscriptionInitializer;
 
-    public MessageAggregatorStartupConfigurationTask(
-        IMessageSubscriptionInitializer messageSubscriptionInitializer
-        )
+    public MessageAggregatorStartupConfigurationTask(IMessageSubscriptionInitializer messageSubscriptionInitializer)
     {
         _messageSubscriptionInitializer = messageSubscriptionInitializer;
     }

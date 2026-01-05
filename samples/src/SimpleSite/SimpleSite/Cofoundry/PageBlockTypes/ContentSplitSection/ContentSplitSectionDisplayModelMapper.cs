@@ -15,9 +15,7 @@ public class ContentSplitSectionDisplayModelMapper : IPageBlockTypeDisplayModelM
 {
     private readonly IContentRepository _contentRepository;
 
-    public ContentSplitSectionDisplayModelMapper(
-        IContentRepository contentRepository
-        )
+    public ContentSplitSectionDisplayModelMapper(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

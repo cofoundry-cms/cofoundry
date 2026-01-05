@@ -13,9 +13,7 @@ public class SignMemberInCommandHandler
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public SignMemberInCommandHandler(
-        IAdvancedContentRepository contentRepository
-        )
+    public SignMemberInCommandHandler(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

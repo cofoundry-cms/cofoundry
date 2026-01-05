@@ -11,8 +11,7 @@ public class GetCatDetailsByIdQueryHandler
 
     public GetCatDetailsByIdQueryHandler(
         IContentRepository contentRepository,
-        SPASiteDbContext dbContext
-        )
+        SPASiteDbContext dbContext)
     {
         _contentRepository = contentRepository;
         _dbContext = dbContext;

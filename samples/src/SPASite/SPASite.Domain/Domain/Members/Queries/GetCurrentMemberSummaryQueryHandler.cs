@@ -11,9 +11,7 @@ public class GetCurrentMemberSummaryQueryHandler
 {
     private readonly IContentRepository _contentRepository;
 
-    public GetCurrentMemberSummaryQueryHandler(
-        IContentRepository contentRepository
-        )
+    public GetCurrentMemberSummaryQueryHandler(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

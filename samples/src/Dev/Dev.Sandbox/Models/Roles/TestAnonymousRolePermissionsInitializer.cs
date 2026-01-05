@@ -10,7 +10,6 @@ public class TestAnonymousRolePermissionsInitializer : IAnonymousRolePermissionC
 {
     public void ConfigurePermissions(IPermissionSetBuilder builder)
     {
-        builder
-            .IncludeAnonymousRoleDefaults();
+        builder.IncludeAnonymousRoleDefaults();
     }
 }

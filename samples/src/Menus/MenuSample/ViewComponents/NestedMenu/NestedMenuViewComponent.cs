@@ -11,9 +11,7 @@ public class NestedMenuViewComponent : ViewComponent
 {
     private readonly IContentRepository _contentRepository;
 
-    public NestedMenuViewComponent(
-        IContentRepository contentRepository
-        )
+    public NestedMenuViewComponent(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

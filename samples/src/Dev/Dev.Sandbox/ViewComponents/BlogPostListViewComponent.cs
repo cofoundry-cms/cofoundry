@@ -9,8 +9,7 @@ public class BlogPostListViewComponent : ViewComponent
 
     public BlogPostListViewComponent(
         IContentRepository contentRepository,
-        IVisualEditorStateService visualEditorStateService
-        )
+        IVisualEditorStateService visualEditorStateService)
     {
         _contentRepository = contentRepository;
         _visualEditorStateService = visualEditorStateService;

@@ -6,9 +6,7 @@ public class GetFeaturesByIdRangeQueryHandler
 {
     private readonly IContentRepository _contentRepository;
 
-    public GetFeaturesByIdRangeQueryHandler(
-        IContentRepository contentRepository
-        )
+    public GetFeaturesByIdRangeQueryHandler(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

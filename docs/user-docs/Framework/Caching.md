@@ -50,9 +50,7 @@ public class ImageAssetCache
     private const string IMAGE_ASSET_RENDER_DETAILS_CACHEKEY = "ImageAssetRenderDetails:";
     private readonly IObjectCache _cache;
 
-    public ImageAssetCache(
-        IObjectCacheFactory cacheFactory
-        )
+    public ImageAssetCache(IObjectCacheFactory cacheFactory)
     {
         _cache = cacheFactory.Get("COF_ImageAssets");
     }

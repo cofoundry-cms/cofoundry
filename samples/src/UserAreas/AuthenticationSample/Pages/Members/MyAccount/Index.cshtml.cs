@@ -9,9 +9,7 @@ public class IndexModel : PageModel
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public IndexModel(
-        IAdvancedContentRepository contentRepository
-        )
+    public IndexModel(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

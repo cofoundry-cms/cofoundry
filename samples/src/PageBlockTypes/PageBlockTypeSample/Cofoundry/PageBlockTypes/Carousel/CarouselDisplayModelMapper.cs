@@ -6,17 +6,14 @@ public class CarouselDisplayModelMapper : IPageBlockTypeDisplayModelMapper<Carou
 {
     private readonly IContentRepository _contentRepository;
 
-    public CarouselDisplayModelMapper(
-        IContentRepository contentRepository
-        )
+    public CarouselDisplayModelMapper(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }
 
     public async Task MapAsync(
         PageBlockTypeDisplayModelMapperContext<CarouselDataModel> context,
-        PageBlockTypeDisplayModelMapperResult<CarouselDataModel> result
-        )
+        PageBlockTypeDisplayModelMapperResult<CarouselDataModel> result)
     {
         // Find all the image ids to load
         var allImageAssetIds = context
@@ -52,7 +49,9 @@ public class CarouselDisplayModelMapper : IPageBlockTypeDisplayModelMapper<Carou
         }
     }
 
-    private static CarouselSlideDisplayModel? MapSlide(CarouselSlideDataModel dataModel, IReadOnlyDictionary<int, ImageAssetRenderDetails> allImages)
+    private static CarouselSlideDisplayModel? MapSlide(
+        CarouselSlideDataModel dataModel,
+        IReadOnlyDictionary<int, ImageAssetRenderDetails> allImages)
     {
         var image = allImages.GetValueOrDefault(dataModel.ImageId);
 

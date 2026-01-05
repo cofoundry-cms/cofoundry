@@ -6,17 +6,14 @@ public class PageListDisplayModelMapper : IPageBlockTypeDisplayModelMapper<PageL
 {
     private readonly IContentRepository _contentRepository;
 
-    public PageListDisplayModelMapper(
-        IContentRepository contentRepository
-        )
+    public PageListDisplayModelMapper(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }
 
     public async Task MapAsync(
         PageBlockTypeDisplayModelMapperContext<PageListDataModel> context,
-        PageBlockTypeDisplayModelMapperResult<PageListDataModel> result
-        )
+        PageBlockTypeDisplayModelMapperResult<PageListDataModel> result)
     {
         var allPageIds = context.Items.SelectManyDistinctModelValues(m => m.PageIds);
 

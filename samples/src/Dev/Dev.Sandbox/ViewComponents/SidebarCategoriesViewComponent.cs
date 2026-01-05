@@ -6,9 +6,7 @@ public class SidebarCategoriesViewComponent : ViewComponent
 {
     private readonly IContentRepository _contentRepository;
 
-    public SidebarCategoriesViewComponent(
-        IContentRepository contentRepository
-        )
+    public SidebarCategoriesViewComponent(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

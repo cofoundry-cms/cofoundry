@@ -113,8 +113,7 @@ public class SetCatFavoriteCommandHandler
                 new SqlParameter("@CatId", command.CatId),
                 new SqlParameter("@UserId", executionContext.UserContext.UserId),
                 new SqlParameter("@IsLiked", command.IsFavorite),
-                new SqlParameter("@CreateDate", executionContext.ExecutionDate)
-                );
+                new SqlParameter("@CreateDate", executionContext.ExecutionDate));
     }
 }
 ```

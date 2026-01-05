@@ -9,8 +9,7 @@ public class HomepageBlogPostsViewComponent : ViewComponent
 
     public HomepageBlogPostsViewComponent(
         IContentRepository contentRepository,
-        IVisualEditorStateService visualEditorStateService
-        )
+        IVisualEditorStateService visualEditorStateService)
     {
         _contentRepository = contentRepository;
         _visualEditorStateService = visualEditorStateService;
@@ -52,8 +51,7 @@ public class HomepageBlogPostsViewComponent : ViewComponent
     /// </summary>
     private async Task<PagedQueryResult<BlogPostSummary>> MapBlogPostsAsync(
         PagedQueryResult<CustomEntityRenderSummary> customEntityResult,
-        PublishStatusQuery ambientEntityPublishStatusQuery
-        )
+        PublishStatusQuery ambientEntityPublishStatusQuery)
     {
         var blogPosts = new List<BlogPostSummary>(customEntityResult.Items.Count);
 

@@ -17,5 +17,5 @@ public class SocialProfilesDataModel : IPageBlockTypeDataModel, IPageBlockTypeDi
         MaxItems = 10,
         TitleColumnHeader = "Profile"
         )]
-    public IReadOnlyCollection<NestedDataModelMultiTypeItem> SocialProfiles { get; set; } = Array.Empty<NestedDataModelMultiTypeItem>();
+    public IReadOnlyCollection<NestedDataModelMultiTypeItem> SocialProfiles { get; set; } = [];
 }

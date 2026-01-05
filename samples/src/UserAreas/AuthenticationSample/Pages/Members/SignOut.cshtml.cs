@@ -7,9 +7,7 @@ public class SignOutModel : PageModel
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public SignOutModel(
-        IAdvancedContentRepository contentRepository
-        )
+    public SignOutModel(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

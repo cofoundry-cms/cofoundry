@@ -10,9 +10,7 @@ public class GetAllBreedsQueryHandler
 {
     private readonly IContentRepository _contentRepository;
 
-    public GetAllBreedsQueryHandler(
-        IContentRepository contentRepository
-        )
+    public GetAllBreedsQueryHandler(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

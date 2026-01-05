@@ -11,8 +11,7 @@ public class GetCatSummariesByMemberLikedQueryHandler
 
     public GetCatSummariesByMemberLikedQueryHandler(
         IContentRepository contentRepository,
-        SPASiteDbContext dbContext
-        )
+        SPASiteDbContext dbContext)
     {
         _contentRepository = contentRepository;
         _dbContext = dbContext;
@@ -78,8 +77,7 @@ public class GetCatSummariesByMemberLikedQueryHandler
     private static List<CatSummary> MapCats(
         IReadOnlyCollection<CustomEntityRenderSummary> customEntities,
         IReadOnlyDictionary<int, ImageAssetRenderDetails> images,
-        IReadOnlyDictionary<int, int> allLikeCounts
-        )
+        IReadOnlyDictionary<int, int> allLikeCounts)
     {
         var cats = new List<CatSummary>(customEntities.Count);
 

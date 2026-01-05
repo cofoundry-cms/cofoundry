@@ -1,6 +1,6 @@
 ## Requirements
 
-- .NET 8
+- .NET 10
 - SqlServer (Express) 2019 or later, or Azure SQL
 
 ## Creating a new project using the .NET CLI
@@ -33,13 +33,13 @@ This is just an example of how you'd typically create a new site, but you can qu
 
 ### Creating the site
 
-1. Open Visual Studio 2022 and select **Create a new project**
+1. Open Visual Studio 2026 and select **Create a new project**
 
 2. Select the "ASP.NET Core Web App (Model-View-Controller)" template and press **Next**
 
 3. Fill in the project name, select a location and press **Next**
 
-4. Ensure ".NET 8.0 (Long-term support)" is selected as the framework and "None" is selected as the authentication type, then press *Create*
+4. Ensure ".NET 10.0 (Long-term support)" is selected as the framework and "None" is selected as the authentication type, then press *Create*
 
 5. Create an empty database in SQL Server.
 
@@ -89,11 +89,11 @@ app.Run();
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<MvcRazorExcludeViewFilesFromPublish>false</MvcRazorExcludeViewFilesFromPublish>
-	<MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
+	  <MvcRazorExcludeViewFilesFromPublish>false</MvcRazorExcludeViewFilesFromPublish>
+	  <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
   </PropertyGroup>
   
   <!-- other nodes removed for clarity -->

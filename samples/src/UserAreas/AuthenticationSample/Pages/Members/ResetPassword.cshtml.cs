@@ -8,9 +8,7 @@ public class ResetPasswordModel : PageModel
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public ResetPasswordModel(
-        IAdvancedContentRepository contentRepository
-        )
+    public ResetPasswordModel(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

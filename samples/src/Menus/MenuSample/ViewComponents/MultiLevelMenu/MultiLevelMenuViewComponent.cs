@@ -11,9 +11,7 @@ public class MultiLevelMenuViewComponent : ViewComponent
 {
     private readonly IContentRepository _contentRepository;
 
-    public MultiLevelMenuViewComponent(
-        IContentRepository contentRepository
-        )
+    public MultiLevelMenuViewComponent(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

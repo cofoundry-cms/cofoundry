@@ -91,8 +91,7 @@ public class MyAssemblyDiscoveryRule : IAssemblyDiscoveryRule
 {
     public bool CanInclude(
         RuntimeLibrary libraryToCheck, 
-        IAssemblyDiscoveryRuleContext context
-        )
+        IAssemblyDiscoveryRuleContext context)
     {
         return libraryToCheck.Name.StartsWith("MyNamespace.");
     }
@@ -106,8 +105,8 @@ public class MyAssemblyDiscoveryRule : IAssemblyDiscoveryRule
 builder
     .Services
     .AddMvc()
-    .AddCofoundry(builder.Configuration, c =>
+    .AddCofoundry(builder.Configuration, config =>
     {
-        c.AssemblyDiscoveryRules.Add(new MyAssemblyDiscoveryRule());
+        config.AssemblyDiscoveryRules.Add(new MyAssemblyDiscoveryRule());
     });
 ```

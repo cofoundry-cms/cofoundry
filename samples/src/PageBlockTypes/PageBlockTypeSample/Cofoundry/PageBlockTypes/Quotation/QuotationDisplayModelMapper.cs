@@ -7,8 +7,7 @@ public class QuotationDisplayModelMapper : IPageBlockTypeDisplayModelMapper<Quot
 {
     public Task MapAsync(
         PageBlockTypeDisplayModelMapperContext<QuotationDataModel> context,
-        PageBlockTypeDisplayModelMapperResult<QuotationDataModel> result
-        )
+        PageBlockTypeDisplayModelMapperResult<QuotationDataModel> result)
     {
         foreach (var item in context.Items)
         {

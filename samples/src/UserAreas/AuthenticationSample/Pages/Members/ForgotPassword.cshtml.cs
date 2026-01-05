@@ -8,9 +8,7 @@ public class ForgotPasswordModel : PageModel
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public ForgotPasswordModel(
-        IAdvancedContentRepository contentRepository
-        )
+    public ForgotPasswordModel(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

@@ -9,9 +9,7 @@ public class UpdatePasswordModel : PageModel
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public UpdatePasswordModel(
-        IAdvancedContentRepository contentRepository
-        )
+    public UpdatePasswordModel(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

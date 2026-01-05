@@ -154,8 +154,7 @@ public class MemberController : Controller
 
     public MemberController(
         IAdvancedContentRepository advancedContentRepository,
-        IAuthorizedTaskTokenUrlHelper authorizedTaskTokenUrlHelper
-        )
+        IAuthorizedTaskTokenUrlHelper authorizedTaskTokenUrlHelper)
     {
         _advancedContentRepository = advancedContentRepository;
         _authorizedTaskTokenUrlHelper = authorizedTaskTokenUrlHelper;

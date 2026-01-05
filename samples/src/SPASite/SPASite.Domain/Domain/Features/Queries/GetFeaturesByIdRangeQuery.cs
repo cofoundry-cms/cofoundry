@@ -4,7 +4,7 @@ public class GetFeaturesByIdRangeQuery : IQuery<IReadOnlyDictionary<int, Feature
 {
     public GetFeaturesByIdRangeQuery()
     {
-        FeatureIds = new List<int>();
+        FeatureIds = [];
     }
 
     public GetFeaturesByIdRangeQuery(IReadOnlyCollection<int> ids)

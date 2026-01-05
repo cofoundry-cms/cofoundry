@@ -25,11 +25,11 @@ This can be done in your `Program.cs` file by re-applying the `AddNewtonsoftJson
 builder.Services
     .AddMvc()
     .AddCofoundry(builder.Configuration)
-    .AddNewtonsoftJson(o =>
+    .AddNewtonsoftJson(options =>
     {
         // e.g. reset the contract resolver to use PascalCase.
-        o.SerializerSettings.ContractResolver = new DefaultContractResolver();
-        JsonConvert.DefaultSettings = () => o.SerializerSettings;
+        options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+        JsonConvert.DefaultSettings = () => options.SerializerSettings;
     });
 ```
 

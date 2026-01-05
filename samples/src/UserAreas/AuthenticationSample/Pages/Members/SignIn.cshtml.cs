@@ -8,9 +8,7 @@ public class SignInModel : PageModel
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public SignInModel(
-        IAdvancedContentRepository contentRepository
-        )
+    public SignInModel(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

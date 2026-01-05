@@ -89,8 +89,7 @@ public class AdminPasswordPolicyConfiguration : IPasswordPolicyConfiguration<Cof
             .ValidateMinUniqueCharacters(5)
             .ValidateNotCurrentPassword()
             .ValidateNotPersonalData()
-            .ValidateNotSequential()
-            ;
+            .ValidateNotSequential();
     }
 }
 ```

@@ -69,8 +69,7 @@ public class InviteMemberCommandHandler
     public InviteMemberCommandHandler(
         IAdvancedContentRepository contentRepository,
         IAuthorizedTaskTokenUrlHelper authorizedTaskTokenUrlHelper,
-        ISiteUrlResolver siteUrlResolver
-        )
+        ISiteUrlResolver siteUrlResolver)
     {
         _contentRepository = contentRepository;
         _authorizedTaskTokenUrlHelper = authorizedTaskTokenUrlHelper;
@@ -229,9 +228,7 @@ public class MembersApiController : ControllerBase
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public MembersApiController(
-        IAdvancedContentRepository contentRepository
-        )
+    public MembersApiController(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

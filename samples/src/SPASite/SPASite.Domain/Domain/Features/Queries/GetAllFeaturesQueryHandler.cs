@@ -6,9 +6,7 @@ public class GetAllFeaturesQueryHandler
 {
     private readonly IContentRepository _contentRepository;
 
-    public GetAllFeaturesQueryHandler(
-        IContentRepository contentRepository
-        )
+    public GetAllFeaturesQueryHandler(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

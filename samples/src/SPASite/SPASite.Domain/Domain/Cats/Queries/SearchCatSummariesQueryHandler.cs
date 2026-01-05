@@ -11,8 +11,7 @@ public class SearchCatSummariesQueryHandler
 
     public SearchCatSummariesQueryHandler(
         SPASiteDbContext dbContext,
-        IContentRepository contentRepository
-        )
+        IContentRepository contentRepository)
     {
         _dbContext = dbContext;
         _contentRepository = contentRepository;
@@ -75,8 +74,7 @@ public class SearchCatSummariesQueryHandler
     private static PagedQueryResult<CatSummary> MapCats(
         PagedQueryResult<CustomEntityRenderSummary> customEntityResult,
         IReadOnlyDictionary<int, ImageAssetRenderDetails> images,
-        IReadOnlyDictionary<int, int> allLikeCounts
-        )
+        IReadOnlyDictionary<int, int> allLikeCounts)
     {
         var cats = new List<CatSummary>(customEntityResult.Items.Count);
 

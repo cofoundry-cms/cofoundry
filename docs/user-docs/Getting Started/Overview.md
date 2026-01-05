@@ -1,4 +1,4 @@
-Cofoundry is an open source .NET application framework and content management platform. Whilst content management and website tools are a large part of Cofoundry, the functionality is entirely optional and our base framework is available to you to use in any application that references .NET 6.
+Cofoundry is an open source .NET application framework and content management platform. Whilst content management and website tools are a large part of Cofoundry, the functionality is entirely optional and our base framework is available to you to use in any .NET 10 application.
 
 We see the role of developing an application as very separate from managing content and so we don't squeeze everything into the same management GUI, instead we focus on modular and extensible code-first tools for building sites and a simple, clean interface for managing them.
 

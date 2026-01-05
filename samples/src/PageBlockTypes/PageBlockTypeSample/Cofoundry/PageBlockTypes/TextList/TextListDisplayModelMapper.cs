@@ -6,8 +6,7 @@ public class TextListDisplayModelMapper : IPageBlockTypeDisplayModelMapper<TextL
 
     public Task MapAsync(
         PageBlockTypeDisplayModelMapperContext<TextListDataModel> context,
-        PageBlockTypeDisplayModelMapperResult<TextListDataModel> result
-        )
+        PageBlockTypeDisplayModelMapperResult<TextListDataModel> result)
     {
         foreach (var item in context.Items)
         {

@@ -7,8 +7,7 @@ public class ExamplePageViewModelBuilder : IPageViewModelBuilder
 
     public ExamplePageViewModelBuilder(
         IPageViewModelFactory pageViewModelFactory,
-        IPageViewModelMapper pageViewModelMapper
-        )
+        IPageViewModelMapper pageViewModelMapper)
     {
         // Constructor injection is supported
         // Here we make use of the same helpers used in the base class

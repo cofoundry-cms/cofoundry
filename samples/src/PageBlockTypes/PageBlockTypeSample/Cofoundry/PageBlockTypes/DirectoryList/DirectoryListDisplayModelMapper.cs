@@ -4,9 +4,7 @@ public class DirectoryListDisplayModelMapper : IPageBlockTypeDisplayModelMapper<
 {
     private readonly IContentRepository _contentRepository;
 
-    public DirectoryListDisplayModelMapper(
-        IContentRepository contentRepository
-        )
+    public DirectoryListDisplayModelMapper(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

@@ -13,9 +13,7 @@ public class ImportDataBackgroundTask : IAsyncRecurringBackgroundTask
 {
     private readonly IDomainRepository _domainRepository;
 
-    public ImportDataBackgroundTask(
-        IDomainRepository domainRepository
-        )
+    public ImportDataBackgroundTask(IDomainRepository domainRepository)
     {
         _domainRepository = domainRepository;
     }
@@ -37,8 +35,7 @@ public class BackgroundTaskRegistration : IBackgroundTaskRegistration
 {
     public void Register(IBackgroundTaskScheduler scheduler)
     {
-        scheduler
-            .RegisterRecurringTask<ImportDataBackgroundTask>(1, 6, 5);
+        scheduler.RegisterRecurringTask<ImportDataBackgroundTask>(1, 6, 5);
     }
 }
 ```

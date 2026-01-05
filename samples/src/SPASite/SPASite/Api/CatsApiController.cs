@@ -6,9 +6,7 @@ public class CatsApiController : ControllerBase
 {
     private readonly IApiResponseHelper _apiResponseHelper;
 
-    public CatsApiController(
-        IApiResponseHelper apiResponseHelper
-        )
+    public CatsApiController(IApiResponseHelper apiResponseHelper)
     {
         _apiResponseHelper = apiResponseHelper;
     }
