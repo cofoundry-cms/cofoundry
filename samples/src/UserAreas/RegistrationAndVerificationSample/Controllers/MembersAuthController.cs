@@ -8,9 +8,7 @@ public class MembersAuthController : Controller
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public MembersAuthController(
-        IAdvancedContentRepository contentRepository
-        )
+    public MembersAuthController(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }
@@ -30,6 +28,7 @@ public class MembersAuthController : Controller
         }
 
         var viewModel = new SignInViewModel();
+
         return View(viewModel);
     }
 

@@ -15,9 +15,7 @@ public static class UseCofoundryStartupExtension
         /// Cofoundry StartupTasks.
         /// </summary>
         /// <param name="configBuilder">Additional configuration options.</param>
-        public void UseCofoundry(
-            Action<UseCofoundryStartupConfiguration>? configBuilder = null
-            )
+        public void UseCofoundry(Action<UseCofoundryStartupConfiguration>? configBuilder = null)
         {
             var configuration = new UseCofoundryStartupConfiguration();
             configBuilder?.Invoke(configuration);

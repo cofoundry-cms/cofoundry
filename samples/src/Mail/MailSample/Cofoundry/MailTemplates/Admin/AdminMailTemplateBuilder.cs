@@ -18,9 +18,7 @@ public class AdminMailTemplateBuilder : IUserMailTemplateBuilder<CofoundryAdminU
     const string LAYOUT_PATH = "~/Cofoundry/MailTemplates/Admin/Layouts/_MailLayout";
     private readonly ISiteUrlResolver _siteUrlResolver;
 
-    public AdminMailTemplateBuilder(
-        ISiteUrlResolver siteUrlResolver
-        )
+    public AdminMailTemplateBuilder(ISiteUrlResolver siteUrlResolver)
     {
         _siteUrlResolver = siteUrlResolver;
     }

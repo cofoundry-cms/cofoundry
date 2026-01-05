@@ -27,5 +27,5 @@ public class ContentSectionDataModel : IPageBlockTypeDataModel
         CategoryCustomEntityDefinition.DefinitionCode,
         BlogPostCustomEntityDefinition.DefinitionCode,
         IsOrderable = true)]
-    public IReadOnlyCollection<CustomEntityIdentity> Entities { get; set; } = Array.Empty<CustomEntityIdentity>();
+    public IReadOnlyCollection<CustomEntityIdentity> Entities { get; set; } = [];
 }

@@ -5,9 +5,7 @@ public class BreedsApiController : ControllerBase
 {
     private readonly IApiResponseHelper _apiResponseHelper;
 
-    public BreedsApiController(
-        IApiResponseHelper apiResponseHelper
-        )
+    public BreedsApiController(IApiResponseHelper apiResponseHelper)
     {
         _apiResponseHelper = apiResponseHelper;
     }

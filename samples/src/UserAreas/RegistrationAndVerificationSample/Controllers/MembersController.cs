@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RegistrationAndVerificationSample.Controllers;
 
@@ -8,9 +8,7 @@ public class MembersController : Controller
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public MembersController(
-        IAdvancedContentRepository contentRepository
-        )
+    public MembersController(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

@@ -10,8 +10,7 @@ public class ContactRequestFormViewComponent : ViewComponent
 
     public ContactRequestFormViewComponent(
         IMailService mailService,
-        SandboxSiteSettings simpleTestSiteSettings
-        )
+        SandboxSiteSettings simpleTestSiteSettings)
     {
         _mailService = mailService;
         _simpleTestSiteSettings = simpleTestSiteSettings;

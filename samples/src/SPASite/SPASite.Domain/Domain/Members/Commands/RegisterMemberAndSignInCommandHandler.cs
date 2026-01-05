@@ -16,8 +16,7 @@ public class RegisterMemberAndSignInCommandHandler
 
     public RegisterMemberAndSignInCommandHandler(
         IAdvancedContentRepository contentRepository,
-        IMailService mailService
-        )
+        IMailService mailService)
     {
         _contentRepository = contentRepository;
         _mailService = mailService;
@@ -79,6 +78,7 @@ public class RegisterMemberAndSignInCommandHandler
         {
             Name = command.DisplayName
         };
+
         await _mailService.SendAsync(command.Email, welcomeEmailTemplate);
     }
 }

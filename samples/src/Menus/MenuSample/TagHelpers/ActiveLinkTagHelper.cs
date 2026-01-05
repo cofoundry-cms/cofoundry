@@ -60,7 +60,7 @@ public class ActiveLinkTagHelper : TagHelper
         base.Process(context, output);
     }
 
-    private string? ParseHref(TagHelperOutput output)
+    private static string? ParseHref(TagHelperOutput output)
     {
         var href = output
             .Attributes

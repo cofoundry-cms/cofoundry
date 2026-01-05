@@ -47,9 +47,7 @@ public class ContactController : Controller
 {
     private readonly ContactFormSettings _simpleTestSiteSettings;
 
-    public ContactController(
-        ContactFormSettings simpleTestSiteSettings
-        )
+    public ContactController(ContactFormSettings simpleTestSiteSettings)
     {
         _simpleTestSiteSettings = simpleTestSiteSettings;
     }

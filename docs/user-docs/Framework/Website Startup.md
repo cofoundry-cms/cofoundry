@@ -70,11 +70,11 @@ As a last resort we also provide a configuration option that lets you filter the
 ```csharp
 // ..other app builder code ommited
 
-app.UseCofoundry(c =>
+app.UseCofoundry(config =>
 {
-    c.StartupTaskFilter = startupTasks =>
+    config.StartupTaskFilter = startupTasks =>
     {
-        return startupTasks.Where(t => t is not JsonConverterStartupConfigurationTask);
+        return startupTasks.Where(task => task is not JsonConverterStartupConfigurationTask);
     };
 });
 ```
@@ -111,8 +111,8 @@ public class ExampleAssemblyDiscoveryRule : IAssemblyDiscoveryRule
 
 builder.Services
     .AddMvc()
-    .AddCofoundry(builder.Configuration, c =>
+    .AddCofoundry(builder.Configuration, config =>
     {
-        c.AssemblyDiscoveryRules.Add(new ExampleAssemblyDiscoveryRule());
+        config.AssemblyDiscoveryRules.Add(new ExampleAssemblyDiscoveryRule());
     });
 ```

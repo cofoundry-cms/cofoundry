@@ -9,8 +9,7 @@ public class SidebarCategoriesViewComponent : ViewComponent
 
     public SidebarCategoriesViewComponent(
         IContentRepository contentRepository,
-        IVisualEditorStateService visualEditorStateService
-        )
+        IVisualEditorStateService visualEditorStateService)
     {
         _contentRepository = contentRepository;
         _visualEditorStateService = visualEditorStateService;

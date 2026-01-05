@@ -17,9 +17,7 @@ public class BlogPostDeletedMessageHandler : IMessageHandler<CustomEntityDeleted
 {
     private readonly IExampleSearchIndexRepository _exampleSearchIndexRepository;
 
-    public BlogPostDeletedMessageHandler(
-        IExampleSearchIndexRepository exampleSearchIndexRepository
-        )
+    public BlogPostDeletedMessageHandler(IExampleSearchIndexRepository exampleSearchIndexRepository)
     {
         _exampleSearchIndexRepository = exampleSearchIndexRepository;
     }
@@ -108,9 +106,7 @@ public class AddPageCommandHandler
 {
     private readonly IMessageAggregator _messageAggregator;
 
-    public AddPageCommandHandler(
-        IMessageAggregator messageAggregator
-        )
+    public AddPageCommandHandler(IMessageAggregator messageAggregator)
     {
         _messageAggregator = messageAggregator;
     }

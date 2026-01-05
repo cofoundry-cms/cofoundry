@@ -15,8 +15,7 @@ public class ContentSectionDisplayModelMapper : IPageBlockTypeDisplayModelMapper
     /// </summary>
     public Task MapAsync(
         PageBlockTypeDisplayModelMapperContext<ContentSectionDataModel> context,
-        PageBlockTypeDisplayModelMapperResult<ContentSectionDataModel> result
-        )
+        PageBlockTypeDisplayModelMapperResult<ContentSectionDataModel> result)
     {
         foreach (var input in context.Items)
         {

@@ -67,10 +67,7 @@ public class ExampleEmbeddedResourcetRouteRegistration : IEmbeddedResourceRouteR
 {
     public IEnumerable<EmbeddedResourcePath> GetEmbeddedResourcePaths()
     {
-        var path = new EmbeddedResourcePath(
-            GetType().Assembly,
-            "/MyAssemblyStaticFiles"
-            );
+        var path = new EmbeddedResourcePath(GetType().Assembly, "/MyAssemblyStaticFiles");
 
         yield return path;
     }

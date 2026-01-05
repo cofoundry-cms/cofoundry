@@ -9,8 +9,7 @@ public class CurrentMemberApiController : ControllerBase
 
     public CurrentMemberApiController(
         IContentRepository contentRepository,
-        IApiResponseHelper apiResponseHelper
-        )
+        IApiResponseHelper apiResponseHelper)
     {
         _contentRepository = contentRepository;
         _apiResponseHelper = apiResponseHelper;

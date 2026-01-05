@@ -10,7 +10,6 @@ public class ExampleDependencyRegistration : IDependencyRegistration
 
         container
             .Register<IPageViewModelFactory, ExamplePageViewModelFactory>(overrideOptions)
-            .Register<IPageViewModelBuilder, ExamplePageViewModelBuilder>(overrideOptions)
-            ;
+            .Register<IPageViewModelBuilder, ExamplePageViewModelBuilder>(overrideOptions);
     }
 }

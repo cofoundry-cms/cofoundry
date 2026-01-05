@@ -8,9 +8,7 @@ public class PasswordChangeRequiredModel : PageModel
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public PasswordChangeRequiredModel(
-        IAdvancedContentRepository contentRepository
-        )
+    public PasswordChangeRequiredModel(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

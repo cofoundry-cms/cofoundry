@@ -124,8 +124,7 @@ public class ExampleUsernameValidator : UsernameValidator
 {
     public ExampleUsernameValidator(
         IUserAreaDefinitionRepository userAreaDefinitionRepository,
-        IAdvancedContentRepository contentRepository
-        )
+        IAdvancedContentRepository contentRepository)
         : base(userAreaDefinitionRepository, contentRepository)
     {
     }

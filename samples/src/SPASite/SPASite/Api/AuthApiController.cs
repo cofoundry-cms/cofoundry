@@ -13,8 +13,7 @@ public class AuthApiController : ControllerBase
     public AuthApiController(
         IApiResponseHelper apiResponseHelper,
         IAntiforgery antiforgery,
-        IDomainRepository domainRepository
-        )
+        IDomainRepository domainRepository)
     {
         _apiResponseHelper = apiResponseHelper;
         _antiforgery = antiforgery;

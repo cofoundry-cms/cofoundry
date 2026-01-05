@@ -67,8 +67,7 @@ public class DeleteCustomEntityCommandHandler
 
     public DeleteCustomEntityCommandHandler(
         CofoundryDbContext dbContext,
-        IPermissionValidationService permissionValidationService
-        )
+        IPermissionValidationService permissionValidationService)
     {
         _dbContext = dbContext;
         _permissionValidationService = permissionValidationService;

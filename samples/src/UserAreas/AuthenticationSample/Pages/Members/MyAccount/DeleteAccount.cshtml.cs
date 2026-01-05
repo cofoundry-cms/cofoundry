@@ -7,9 +7,7 @@ public class DeleteAccountModel : PageModel
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public DeleteAccountModel(
-        IAdvancedContentRepository contentRepository
-        )
+    public DeleteAccountModel(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

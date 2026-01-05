@@ -11,9 +11,7 @@ public class SignMemberOutCommandHandler
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public SignMemberOutCommandHandler(
-        IAdvancedContentRepository contentRepository
-        )
+    public SignMemberOutCommandHandler(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

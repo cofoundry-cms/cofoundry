@@ -6,9 +6,7 @@ public class TestController : Controller
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public TestController(
-        IAdvancedContentRepository contentRepository
-        )
+    public TestController(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

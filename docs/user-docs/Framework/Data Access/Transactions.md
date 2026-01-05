@@ -15,8 +15,7 @@ public class AddProductHandler
     public AddProductHandler(
         MyDbContext myDbContext,
         ITransactionScopeManager transactionScopeManager,
-        ICommandExecutor commandExecutor
-        )
+        ICommandExecutor commandExecutor)
     {
         _myDbContext = myDbContext;
         _transactionScopeManager = transactionScopeManager;
@@ -57,9 +56,7 @@ public class TransactionExample
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public TransactionExample(
-        IAdvancedContentRepository contentRepository
-        )
+    public TransactionExample(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }
@@ -166,9 +163,7 @@ public class TransactionExample
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public TransactionExample(
-        IAdvancedContentRepository contentRepository
-        )
+    public TransactionExample(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

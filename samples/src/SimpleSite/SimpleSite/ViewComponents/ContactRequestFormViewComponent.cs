@@ -13,8 +13,7 @@ public class ContactRequestFormViewComponent : ViewComponent
     public ContactRequestFormViewComponent(
         IMailService mailService,
         IModelValidationService modelValidationService,
-        SimpleSiteSettings simpleTestSiteSettings
-        )
+        SimpleSiteSettings simpleTestSiteSettings)
     {
         _mailService = mailService;
         _modelValidationService = modelValidationService;

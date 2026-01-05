@@ -8,9 +8,7 @@ public class IndexModel : PageModel
 {
     private readonly IContentRepository _contentRepository;
 
-    public IndexModel(
-        IContentRepository contentRepository
-        )
+    public IndexModel(IContentRepository contentRepository)
     {
         ImageAssetId = 1;
         Width = 600;

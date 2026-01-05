@@ -6,17 +6,14 @@ public class ContentSplitSectionDisplayModelMapper : IPageBlockTypeDisplayModelM
 {
     private readonly IContentRepository _contentRepository;
 
-    public ContentSplitSectionDisplayModelMapper(
-        IContentRepository contentRepository
-        )
+    public ContentSplitSectionDisplayModelMapper(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }
 
     public async Task MapAsync(
         PageBlockTypeDisplayModelMapperContext<ContentSplitSectionDataModel> context,
-        PageBlockTypeDisplayModelMapperResult<ContentSplitSectionDataModel> result
-        )
+        PageBlockTypeDisplayModelMapperResult<ContentSplitSectionDataModel> result)
     {
         var imageAssetIds = context.Items.SelectDistinctModelValuesWithoutEmpty(i => i.ImageAssetId);
         var imageAssets = await _contentRepository

@@ -10,8 +10,7 @@ public class PageSnippetDisplayModelMapper : IPageBlockTypeDisplayModelMapper<Pa
 
     public PageSnippetDisplayModelMapper(
         IContentRepository contentRepository,
-        IHtmlSanitizer htmlSanitizer
-        )
+        IHtmlSanitizer htmlSanitizer)
     {
         _contentRepository = contentRepository;
         _htmlSanitizer = htmlSanitizer;
@@ -19,8 +18,7 @@ public class PageSnippetDisplayModelMapper : IPageBlockTypeDisplayModelMapper<Pa
 
     public async Task MapAsync(
         PageBlockTypeDisplayModelMapperContext<PageSnippetDataModel> context,
-        PageBlockTypeDisplayModelMapperResult<PageSnippetDataModel> result
-        )
+        PageBlockTypeDisplayModelMapperResult<PageSnippetDataModel> result)
     {
         var allPageIds = context.Items.SelectDistinctModelValuesWithoutEmpty(m => m.PageId);
 

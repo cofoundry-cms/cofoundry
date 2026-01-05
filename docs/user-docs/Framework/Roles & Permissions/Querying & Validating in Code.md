@@ -14,8 +14,7 @@ public class PermissionChecker
 
     public PermissionChecker(
         IPermissionValidationService permissionValidationService,
-        IUserContextService userContextService
-        )
+        IUserContextService userContextService)
     {
         _permissionValidationService = permissionValidationService;
         _userContextService = userContextService;

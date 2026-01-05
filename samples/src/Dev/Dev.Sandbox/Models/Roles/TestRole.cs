@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
 public class TestRole : IRoleDefinition
 {
@@ -21,7 +21,6 @@ public class TestRole : IRoleDefinition
             .IncludeAllAdminModule(p => p.ExceptEntityPermissions<PageEntityDefinition>())
             .Include<CofoundryUserCreatePermission>()
             .IncludeAllRead()
-            .ExcludeUserInAllUserAreas()
-            ;
+            .ExcludeUserInAllUserAreas();
     }
 }

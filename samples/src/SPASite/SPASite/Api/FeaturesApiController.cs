@@ -5,9 +5,7 @@ public class FeaturesApiController : ControllerBase
 {
     private readonly IApiResponseHelper _apiResponseHelper;
 
-    public FeaturesApiController(
-        IApiResponseHelper apiResponseHelper
-        )
+    public FeaturesApiController(IApiResponseHelper apiResponseHelper)
     {
         _apiResponseHelper = apiResponseHelper;
     }

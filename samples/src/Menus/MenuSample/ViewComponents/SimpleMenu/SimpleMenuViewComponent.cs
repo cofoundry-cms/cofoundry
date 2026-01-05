@@ -20,9 +20,7 @@ public class SimpleMenuViewComponent : ViewComponent
 {
     private readonly IContentRepository _contentRepository;
 
-    public SimpleMenuViewComponent(
-        IContentRepository contentRepository
-        )
+    public SimpleMenuViewComponent(IContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }

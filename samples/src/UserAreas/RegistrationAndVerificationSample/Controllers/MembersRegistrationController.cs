@@ -8,9 +8,7 @@ public class MembersRegistrationController : Controller
 {
     private readonly IAdvancedContentRepository _contentRepository;
 
-    public MembersRegistrationController(
-        IAdvancedContentRepository contentRepository
-        )
+    public MembersRegistrationController(IAdvancedContentRepository contentRepository)
     {
         _contentRepository = contentRepository;
     }
@@ -30,6 +28,7 @@ public class MembersRegistrationController : Controller
         }
 
         var viewModel = new RegisterViewModel();
+
         return View(viewModel);
     }
 
