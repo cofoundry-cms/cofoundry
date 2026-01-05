@@ -12,15 +12,14 @@ public class PageDirectoryPath
     /// </summary>
     public int PageDirectoryId { get; set; }
 
-    private PageDirectory? _pageDirectory;
     /// <summary>
     /// The parent <see cref="PageDirectory"/>. This can only be null for the 
     /// root directory.
     /// </summary>
     public PageDirectory PageDirectory
     {
-        get => _pageDirectory ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryPath>(nameof(PageDirectory));
-        set => _pageDirectory = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryPath>(nameof(PageDirectory));
+        set;
     }
 
     /// <summary>

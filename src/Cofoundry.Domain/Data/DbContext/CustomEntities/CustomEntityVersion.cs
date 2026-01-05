@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 /// <summary>
 /// <para>
@@ -59,7 +59,6 @@ public class CustomEntityVersion : ICreateAuditable, IEntityVersion
     /// </summary>
     public string SerializedData { get; set; } = string.Empty;
 
-    private CustomEntity? _customEntity;
     /// <summary>
     /// The custom entity this version is parented to.
     /// Custom entities can have many versions, but only one is
@@ -67,8 +66,8 @@ public class CustomEntityVersion : ICreateAuditable, IEntityVersion
     /// </summary>
     public CustomEntity CustomEntity
     {
-        get => _customEntity ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersion>(nameof(CustomEntity));
-        set => _customEntity = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersion>(nameof(CustomEntity));
+        set;
     }
 
     /// <inheritdoc/>
@@ -77,12 +76,11 @@ public class CustomEntityVersion : ICreateAuditable, IEntityVersion
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersion>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersion>(nameof(Creator));
+        set;
     }
 
     /// <summary>

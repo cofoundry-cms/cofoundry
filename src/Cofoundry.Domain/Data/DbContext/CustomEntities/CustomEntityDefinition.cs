@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 /// <summary>
 /// <para>
@@ -47,10 +47,9 @@ public class CustomEntityDefinition
     /// </summary>
     public bool HasLocale { get; set; }
 
-    private EntityDefinition? _entityDefinition;
     public EntityDefinition EntityDefinition
     {
-        get => _entityDefinition ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityDefinition>(nameof(EntityDefinition));
-        set => _entityDefinition = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityDefinition>(nameof(EntityDefinition));
+        set;
     }
 }

@@ -1,22 +1,20 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 public class RolePermission
 {
     public int RoleId { get; set; }
 
-    private Role? _role;
     public Role Role
     {
-        get => _role ?? throw NavigationPropertyNotInitializedException.Create<RolePermission>(nameof(Role));
-        set => _role = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<RolePermission>(nameof(Role));
+        set;
     }
 
     public int PermissionId { get; set; }
 
-    private Permission? _permission;
     public Permission Permission
     {
-        get => _permission ?? throw NavigationPropertyNotInitializedException.Create<RolePermission>(nameof(Permission));
-        set => _permission = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<RolePermission>(nameof(Permission));
+        set;
     }
 }

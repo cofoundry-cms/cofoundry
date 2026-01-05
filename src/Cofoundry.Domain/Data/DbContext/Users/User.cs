@@ -156,15 +156,14 @@ public class User
     /// </summary>
     public int RoleId { get; set; }
 
-    private Role? _role;
     /// <summary>
     /// The <see cref="Role"/> that this user is assigned to. The role is 
     /// required and determines the permissions available to the user
     /// </summary>
     public Role Role
     {
-        get => _role ?? throw NavigationPropertyNotInitializedException.Create<User>(nameof(Role));
-        set => _role = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<User>(nameof(Role));
+        set;
     }
 
     /// <summary>
@@ -174,15 +173,14 @@ public class User
     /// </summary>
     public string UserAreaCode { get; set; } = string.Empty;
 
-    private UserArea? _userArea;
     /// <summary>
     /// The Cofoundry user system can be partitioned into user areas. This enables
     /// reuse of user functionality to create custom sign in areas in your application.
     /// </summary>
     public UserArea UserArea
     {
-        get => _userArea ?? throw NavigationPropertyNotInitializedException.Create<User>(nameof(UserArea));
-        set => _userArea = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<User>(nameof(UserArea));
+        set;
     }
 
     /// <summary>

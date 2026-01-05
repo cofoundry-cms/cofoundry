@@ -15,14 +15,13 @@ public class UserAuthenticationLog
     /// </summary>
     public int UserId { get; set; }
 
-    private User? _user;
     /// <summary>
     /// The <see cref="Data.User"/> that successfully authenticated.
     /// </summary>
     public virtual User User
     {
-        get => _user ?? throw NavigationPropertyNotInitializedException.Create<UserAuthenticationLog>(nameof(User));
-        set => _user = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<UserAuthenticationLog>(nameof(User));
+        set;
     }
 
     /// <summary>
@@ -30,14 +29,13 @@ public class UserAuthenticationLog
     /// </summary>
     public long IPAddressId { get; set; }
 
-    private IPAddress? _ipAddress;
     /// <summary>
     /// IP Address of the connection that authenticated the user.
     /// </summary>
     public IPAddress IPAddress
     {
-        get => _ipAddress ?? throw NavigationPropertyNotInitializedException.Create<UserAuthenticationLog>(nameof(IPAddress));
-        set => _ipAddress = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<UserAuthenticationLog>(nameof(IPAddress));
+        set;
     }
 
     /// <summary>

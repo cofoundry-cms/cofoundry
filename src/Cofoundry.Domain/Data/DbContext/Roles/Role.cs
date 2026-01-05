@@ -30,14 +30,13 @@ public class Role
     /// </summary>
     public string UserAreaCode { get; set; } = string.Empty;
 
-    private UserArea? _userArea;
     /// <summary>
     /// A role must be assigned to a user area e.g. CofoundryAdminUserArea.
     /// </summary>
     public UserArea UserArea
     {
-        get => _userArea ?? throw NavigationPropertyNotInitializedException.Create<Role>(nameof(UserArea));
-        set => _userArea = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<Role>(nameof(UserArea));
+        set;
     }
 
     /// <summary>

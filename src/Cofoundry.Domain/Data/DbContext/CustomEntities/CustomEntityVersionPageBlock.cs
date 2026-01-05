@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 /// <summary>
 /// Page block data for a specific custom entity version on a custom entity
@@ -57,18 +57,16 @@ public class CustomEntityVersionPageBlock : IEntityOrderable, IEntityVersionPage
     /// </summary>
     public int Ordering { get; set; }
 
-    private CustomEntityVersion? _customEntityVersion;
     /// <summary>
     /// The custom entity version that this instance is
     /// parented to.
     /// </summary>
     public CustomEntityVersion CustomEntityVersion
     {
-        get => _customEntityVersion ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersionPageBlock>(nameof(CustomEntityVersion));
-        set => _customEntityVersion = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersionPageBlock>(nameof(CustomEntityVersion));
+        set;
     }
 
-    private Page? _page;
     /// <summary>
     /// It's unlikely but there can be multiple pages using the same
     /// template for a custom entity type, so a page reference is required 
@@ -76,21 +74,19 @@ public class CustomEntityVersionPageBlock : IEntityOrderable, IEntityVersionPage
     /// </summary>
     public Page Page
     {
-        get => _page ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersionPageBlock>(nameof(Page));
-        set => _page = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersionPageBlock>(nameof(Page));
+        set;
     }
 
-    private PageTemplateRegion? _pageTemplateRegion;
     /// <summary>
     /// The template region this block belongs to.
     /// </summary>
     public PageTemplateRegion PageTemplateRegion
     {
-        get => _pageTemplateRegion ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersionPageBlock>(nameof(PageTemplateRegion));
-        set => _pageTemplateRegion = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersionPageBlock>(nameof(PageTemplateRegion));
+        set;
     }
 
-    private PageBlockType? _pageBlockType;
     /// <summary>
     /// The block type which defines the data model and display
     /// templates available to render the block e.g. 'Image', 
@@ -98,8 +94,8 @@ public class CustomEntityVersionPageBlock : IEntityOrderable, IEntityVersionPage
     /// </summary>
     public PageBlockType PageBlockType
     {
-        get => _pageBlockType ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersionPageBlock>(nameof(PageBlockType));
-        set => _pageBlockType = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<CustomEntityVersionPageBlock>(nameof(PageBlockType));
+        set;
     }
 
     /// <summary>

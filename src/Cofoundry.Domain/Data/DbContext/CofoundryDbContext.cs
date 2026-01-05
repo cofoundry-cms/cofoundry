@@ -12,9 +12,7 @@ public partial class CofoundryDbContext : DbContext
 {
     private readonly ICofoundryDbContextInitializer _cofoundryDbContextInitializer;
 
-    public CofoundryDbContext(
-        ICofoundryDbContextInitializer cofoundryDbContextInitializer
-        )
+    public CofoundryDbContext(ICofoundryDbContextInitializer cofoundryDbContextInitializer)
     {
         _cofoundryDbContextInitializer = cofoundryDbContextInitializer;
     }
@@ -30,8 +28,7 @@ public partial class CofoundryDbContext : DbContext
             .HasDefaultSchema(DbConstants.CofoundrySchema)
             .MapCofoundryContent()
             .ApplyConfiguration(new SettingMap())
-            .ApplyConfiguration(new RewriteRuleMap())
-            ;
+            .ApplyConfiguration(new RewriteRuleMap());
     }
 
     /// <summary>

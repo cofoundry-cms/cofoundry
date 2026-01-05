@@ -17,12 +17,11 @@ public class PageGroup : ICreateAuditable
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageGroup>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageGroup>(nameof(Creator));
+        set;
     }
 
     public ICollection<PageGroupItem> PageGroupItems { get; set; } = new List<PageGroupItem>();

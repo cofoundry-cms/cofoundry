@@ -28,15 +28,14 @@ public class AuthorizedTask
     /// </summary>
     public int UserId { get; set; }
 
-    private User? _user;
     /// <summary>
     /// The user associated with the task e.g. for an acount recovery task this
     /// is the user account being recovered.
     /// </summary>
     public User User
     {
-        get => _user ?? throw NavigationPropertyNotInitializedException.Create<AuthorizedTask>(nameof(User));
-        set => _user = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<AuthorizedTask>(nameof(User));
+        set;
     }
 
     /// <summary>
