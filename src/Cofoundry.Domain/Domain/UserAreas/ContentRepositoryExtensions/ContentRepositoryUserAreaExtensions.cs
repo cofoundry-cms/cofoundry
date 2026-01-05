@@ -1,15 +1,21 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
+/// <summary>
+/// Content repository extension methods for user areas.
+/// </summary>
 public static class ContentRepositoryUserAreaExtensions
 {
-    /// <summary>
-    /// Queries and commands relating to user areas and their configuration.
-    /// </summary>
-    public static IAdvancedContentRepositoryUserAreaRepository UserAreas(this IAdvancedContentRepository contentRepository)
+    extension(IAdvancedContentRepository contentRepository)
     {
-        return new ContentRepositoryUserAreaRepository(contentRepository.AsExtendableContentRepository());
+        /// <summary>
+        /// Queries and commands relating to user areas and their configuration.
+        /// </summary>
+        public IAdvancedContentRepositoryUserAreaRepository UserAreas()
+        {
+            return new ContentRepositoryUserAreaRepository(contentRepository.AsExtendableContentRepository());
+        }
     }
 }

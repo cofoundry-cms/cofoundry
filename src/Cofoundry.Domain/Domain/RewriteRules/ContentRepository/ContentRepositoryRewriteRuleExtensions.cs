@@ -1,16 +1,22 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
+/// <summary>
+/// Content repository extension methods for rewrite rules.
+/// </summary>
 public static class ContentRepositoryRewriteRuleExtensions
 {
-    /// <summary>
-    /// Rewrite rules can be used to redirect users from one url to another.
-    /// This functionality is incomplete and subject to change.
-    /// </summary>
-    public static IAdvancedContentRepositoryRewriteRuleRepository RewriteRules(this IAdvancedContentRepository contentRepository)
+    extension(IAdvancedContentRepository contentRepository)
     {
-        return new ContentRepositoryRewriteRuleRepository(contentRepository.AsExtendableContentRepository());
+        /// <summary>
+        /// Rewrite rules can be used to redirect users from one url to another.
+        /// This functionality is incomplete and subject to change.
+        /// </summary>
+        public IAdvancedContentRepositoryRewriteRuleRepository RewriteRules()
+        {
+            return new ContentRepositoryRewriteRuleRepository(contentRepository.AsExtendableContentRepository());
+        }
     }
 }

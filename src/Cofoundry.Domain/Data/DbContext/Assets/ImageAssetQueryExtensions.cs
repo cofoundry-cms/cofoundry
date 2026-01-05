@@ -1,20 +1,26 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
+/// <summary>
+/// Extension methods for <see cref="IQueryable{ImageAsset}"/>.
+/// </summary>
 public static class ImageAssetQueryExtensions
 {
-    public static IQueryable<ImageAsset> FilterById(this IQueryable<ImageAsset> images, int id)
+    extension(IQueryable<ImageAsset> images)
     {
-        var result = images
-            .Where(i => i.ImageAssetId == id);
+        public IQueryable<ImageAsset> FilterById(int id)
+        {
+            var result = images
+                .Where(i => i.ImageAssetId == id);
 
-        return result;
-    }
+            return result;
+        }
 
-    public static IQueryable<ImageAsset> FilterByIds(this IQueryable<ImageAsset> images, IEnumerable<int> ids)
-    {
-        var result = images
-            .Where(i => ids.Contains(i.ImageAssetId));
+        public IQueryable<ImageAsset> FilterByIds(IEnumerable<int> ids)
+        {
+            var result = images
+                .Where(i => ids.Contains(i.ImageAssetId));
 
-        return result;
+            return result;
+        }
     }
 }

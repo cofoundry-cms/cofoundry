@@ -1,23 +1,32 @@
-﻿using Cofoundry.Domain.Extendable;
+using Cofoundry.Domain.Extendable;
 using Cofoundry.Domain.Internal;
 
 namespace Cofoundry.Domain;
 
+/// <summary>
+/// Content repository extension methods for document assets.
+/// </summary>
 public static class ContentRepositoryDocumentAssetExtensions
 {
-    /// <summary>
-    /// Queries and commands relating to document assets.
-    /// </summary>
-    public static IContentRepositoryDocumentAssetRepository DocumentAssets(this IContentRepository contentRepository)
+    extension(IContentRepository contentRepository)
     {
-        return new ContentRepositoryDocumentAssetRepository(contentRepository.AsExtendableContentRepository());
+        /// <summary>
+        /// Queries and commands relating to document assets.
+        /// </summary>
+        public IContentRepositoryDocumentAssetRepository DocumentAssets()
+        {
+            return new ContentRepositoryDocumentAssetRepository(contentRepository.AsExtendableContentRepository());
+        }
     }
 
-    /// <summary>
-    /// Queries and commands relating to document assets.
-    /// </summary>
-    public static IAdvancedContentRepositoryDocumentAssetRepository DocumentAssets(this IAdvancedContentRepository contentRepository)
+    extension(IAdvancedContentRepository contentRepository)
     {
-        return new AdvancedContentRepositoryDocumentAssetRepository(contentRepository.AsExtendableContentRepository());
+        /// <summary>
+        /// Queries and commands relating to document assets.
+        /// </summary>
+        public IAdvancedContentRepositoryDocumentAssetRepository DocumentAssets()
+        {
+            return new AdvancedContentRepositoryDocumentAssetRepository(contentRepository.AsExtendableContentRepository());
+        }
     }
 }

@@ -1,12 +1,18 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
+/// <summary>
+/// Extension methods for <see cref="IQueryable{CustomEntityDefinition}"/>.
+/// </summary>
 public static class CustomEntityDefinitionQueryExtensions
 {
-    public static IQueryable<CustomEntityDefinition> FilterByCode(this IQueryable<CustomEntityDefinition> customEntityDefinitions, string code)
+    extension(IQueryable<CustomEntityDefinition> customEntityDefinitions)
     {
-        var result = customEntityDefinitions
-            .Where(i => i.CustomEntityDefinitionCode == code);
+        public IQueryable<CustomEntityDefinition> FilterByCode(string code)
+        {
+            var result = customEntityDefinitions
+                .Where(i => i.CustomEntityDefinitionCode == code);
 
-        return result;
+            return result;
+        }
     }
 }

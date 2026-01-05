@@ -8,32 +8,37 @@ using Microsoft.Extensions.Hosting;
 
 namespace Cofoundry.Web;
 
+/// <summary>
+/// Extension methods for adding Cofoundry via <see cref="IMvcBuilder"/>.
+/// </summary>
 public static class AddCofoundryStartupExtension
 {
-    /// <summary>
-    /// Configures the dependency resolver for Cofoundry and
-    /// registers all the services, repositories and modules setup for auto-registration.
-    /// </summary>
-    public static IMvcBuilder AddCofoundry(
-        this IMvcBuilder mvcBuilder,
-        IConfiguration configuration,
-        Action<AddCofoundryStartupConfiguration>? configBuilder = null
-        )
+    extension(IMvcBuilder mvcBuilder)
     {
-        var cofoundryConfig = new AddCofoundryStartupConfiguration();
-        configBuilder?.Invoke(cofoundryConfig);
-        mvcBuilder = EnsureCoreMVCServicesAdded(mvcBuilder);
+        /// <summary>
+        /// Configures the dependency resolver for Cofoundry and
+        /// registers all the services, repositories and modules setup for auto-registration.
+        /// </summary>
+        public IMvcBuilder AddCofoundry(
+            IConfiguration configuration,
+            Action<AddCofoundryStartupConfiguration>? configBuilder = null
+            )
+        {
+            var cofoundryConfig = new AddCofoundryStartupConfiguration();
+            configBuilder?.Invoke(cofoundryConfig);
+            mvcBuilder = EnsureCoreMVCServicesAdded(mvcBuilder);
 
-        AddAdditionalTypes(mvcBuilder);
-        DiscoverAdditionalApplicationParts(mvcBuilder, cofoundryConfig);
+            AddAdditionalTypes(mvcBuilder);
+            DiscoverAdditionalApplicationParts(mvcBuilder, cofoundryConfig);
 
-        var typesProvider = new DiscoveredTypesProvider(mvcBuilder.PartManager);
-        var builder = new DefaultContainerBuilder(mvcBuilder.Services, typesProvider, configuration);
-        builder.Build();
+            var typesProvider = new DiscoveredTypesProvider(mvcBuilder.PartManager);
+            var builder = new DefaultContainerBuilder(mvcBuilder.Services, typesProvider, configuration);
+            builder.Build();
 
-        RunAdditionalConfiguration(mvcBuilder);
+            RunAdditionalConfiguration(mvcBuilder);
 
-        return mvcBuilder;
+            return mvcBuilder;
+        }
     }
 
     /// <summary>

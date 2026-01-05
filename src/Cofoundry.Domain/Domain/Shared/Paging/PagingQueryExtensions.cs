@@ -1,45 +1,50 @@
-﻿namespace Cofoundry.Domain;
+namespace Cofoundry.Domain;
 
+/// <summary>
+/// Extension methods for paging collections via <see cref="IPageableQuery"/>.
+/// </summary>
 public static class PagingQueryExtensions
 {
-    /// <summary>
-    /// Pages a query based on the parameters of the query. If the page size
-    /// is set to 0 or less then no paging is applied.
-    /// </summary>
-    /// <param name="source">Queryable source to apply paging to</param>
-    /// <param name="query">The paging settings to apply to the source data.</param>
-    public static IQueryable<T> Page<T>(this IQueryable<T> source, IPageableQuery query)
+    extension<T>(IQueryable<T> source)
     {
-        if (query == null || query.PageSize <= 0)
+        /// <summary>
+        /// Pages a query based on the parameters of the query. If the page size
+        /// is set to 0 or less then no paging is applied.
+        /// </summary>
+        /// <param name="query">The paging settings to apply to the source data.</param>
+        public IQueryable<T> Page(IPageableQuery query)
         {
-            return source;
+            if (query == null || query.PageSize <= 0)
+            {
+                return source;
+            }
+
+            var pageNumber = query.PageNumber < 1 ? 0 : query.PageNumber - 1;
+            var itemsToSkip = pageNumber * query.PageSize;
+
+            return source
+                .Skip(itemsToSkip)
+                .Take(query.PageSize);
         }
 
-        var pageNumber = query.PageNumber < 1 ? 0 : query.PageNumber - 1;
-        var itemsToSkip = pageNumber * query.PageSize;
-
-        return source
-            .Skip(itemsToSkip)
-            .Take(query.PageSize);
-    }
-
-    /// <summary>
-    /// Converts a query to an instance of PagedQueryResult, executing the query twice,
-    /// once to get the total count and again to get the results.
-    /// </summary>
-    public static PagedQueryResult<T> ToPagedResult<T>(this IQueryable<T> source, IPageableQuery query)
-    {
-        ArgumentNullException.ThrowIfNull(source);
-
-        var result = new PagedQueryResult<T>
+        /// <summary>
+        /// Converts a query to an instance of PagedQueryResult, executing the query twice,
+        /// once to get the total count and again to get the results.
+        /// </summary>
+        public PagedQueryResult<T> ToPagedResult(IPageableQuery query)
         {
-            TotalItems = source.Count(),
-            Items = source.Page(query).ToArray()
-        };
+            ArgumentNullException.ThrowIfNull(source);
 
-        MapPagingData<T>(query, result);
+            var result = new PagedQueryResult<T>
+            {
+                TotalItems = source.Count(),
+                Items = source.Page(query).ToArray()
+            };
 
-        return result;
+            MapPagingData<T>(query, result);
+
+            return result;
+        }
     }
 
     /// <remarks>

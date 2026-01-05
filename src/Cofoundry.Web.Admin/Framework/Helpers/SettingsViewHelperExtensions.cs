@@ -1,10 +1,16 @@
-﻿namespace Cofoundry.Web.Admin;
+namespace Cofoundry.Web.Admin;
 
+/// <summary>
+/// Extension methods for <see cref="ISettingsViewHelper"/>.
+/// </summary>
 public static class SettingsViewHelperExtensions
 {
-    public static async Task<string?> GetApplicationNameAsync(this ISettingsViewHelper helper)
+    extension(ISettingsViewHelper helper)
     {
-        var settings = await helper.GetAsync<GeneralSiteSettings>();
-        return settings.ApplicationName;
+        public async Task<string?> GetApplicationNameAsync()
+        {
+            var settings = await helper.GetAsync<GeneralSiteSettings>();
+            return settings.ApplicationName;
+        }
     }
 }

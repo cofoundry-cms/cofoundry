@@ -1,40 +1,43 @@
-﻿namespace Cofoundry.Domain.Data.Internal;
+namespace Cofoundry.Domain.Data.Internal;
 
+/// <summary>
+/// Extension methods for querying entities that implement <see cref="IEntityPublishable"/>.
+/// </summary>
 public static class IEntityPublishableExtensions
 {
-    /// <summary>
-    /// Updates the <see cref="IEntityPublishable.PublishStatusCode"/> and 
-    /// publish date properties to mark the entity as published.
-    /// </summary>
-    /// <typeparam name="TEntity">Type of entity to act on.</typeparam>
-    /// <param name="entity">Entity to act on.</param>
-    /// <param name="currentDate">The current date and time, typically passed from the execution context in the domain layer.</param>
-    /// <param name="publishDate">
-    /// Optional time that the entity should be published and made public. If
-    /// this is left <see langword="null"/> then the publish date is set to the current 
-    /// date and the page is made immediately available.
-    /// </param>
-    /// <returns>
-    /// Returns <see langword="true"/> if the entity status has changed. If the entity was already published and
-    /// no change needed to be made, then <see langword="false"/> is returned.
-    /// </returns>
-    public static bool SetPublished<TEntity>(this TEntity entity, DateTime currentDate, DateTime? publishDate = null)
-        where TEntity : IEntityPublishable
+    extension<TEntity>(TEntity entity) where TEntity : IEntityPublishable
     {
-        ArgumentNullException.ThrowIfNull(entity);
-        ArgumentEmptyException.ThrowIfDefault(currentDate);
-
-        var hasPublishStatusChanged = false;
-
-        if (entity.PublishStatusCode != PublishStatusCode.Published)
+        /// <summary>
+        /// Updates the <see cref="IEntityPublishable.PublishStatusCode"/> and 
+        /// publish date properties to mark the entity as published.
+        /// </summary>
+        /// <param name="currentDate">The current date and time, typically passed from the execution context in the domain layer.</param>
+        /// <param name="publishDate">
+        /// Optional time that the entity should be published and made public. If
+        /// this is left <see langword="null"/> then the publish date is set to the current 
+        /// date and the page is made immediately available.
+        /// </param>
+        /// <returns>
+        /// Returns <see langword="true"/> if the entity status has changed. If the entity was already published and
+        /// no change needed to be made, then <see langword="false"/> is returned.
+        /// </returns>
+        public bool SetPublished(DateTime currentDate, DateTime? publishDate = null)
         {
-            hasPublishStatusChanged = true;
-            entity.PublishStatusCode = PublishStatusCode.Published;
+            ArgumentNullException.ThrowIfNull(entity);
+            ArgumentEmptyException.ThrowIfDefault(currentDate);
+
+            var hasPublishStatusChanged = false;
+
+            if (entity.PublishStatusCode != PublishStatusCode.Published)
+            {
+                hasPublishStatusChanged = true;
+                entity.PublishStatusCode = PublishStatusCode.Published;
+            }
+
+            UpdatePublishDate(entity, currentDate, publishDate);
+
+            return hasPublishStatusChanged;
         }
-
-        UpdatePublishDate(entity, currentDate, publishDate);
-
-        return hasPublishStatusChanged;
     }
 
     private static void UpdatePublishDate<TEntity>(TEntity entity, DateTime currentDate, DateTime? publishDate = null)

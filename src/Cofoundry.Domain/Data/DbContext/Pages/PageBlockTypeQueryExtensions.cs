@@ -1,15 +1,21 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
+/// <summary>
+/// Extension methods for <see cref="IQueryable{PageBlockType}"/>.
+/// </summary>
 public static class PageBlockTypeQueryExtensions
 {
-    /// <summary>
-    /// Filters the collection to only include block types that
-    /// have not been archived.
-    /// </summary>
-    public static IQueryable<PageBlockType> FilterActive(this IQueryable<PageBlockType> pages)
+    extension(IQueryable<PageBlockType> pages)
     {
-        var filtered = pages.Where(p => !p.IsArchived);
+        /// <summary>
+        /// Filters the collection to only include block types that
+        /// have not been archived.
+        /// </summary>
+        public IQueryable<PageBlockType> FilterActive()
+        {
+            var filtered = pages.Where(p => !p.IsArchived);
 
-        return filtered;
+            return filtered;
+        }
     }
 }

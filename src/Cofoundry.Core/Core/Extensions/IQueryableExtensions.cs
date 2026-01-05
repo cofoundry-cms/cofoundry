@@ -1,58 +1,57 @@
 namespace Cofoundry.Core;
 
+/// <summary>
+/// Extension methods for <see cref="IQueryable{T}"/> types.
+/// </summary>
 public static class IQueryableExtensions
 {
-    /// <summary>
-    /// Removes nullable entries from the sequence.
-    /// </summary>
-    /// <param name="source">
-    /// Queryable instance to filter.
-    /// </param>
-    public static IQueryable<T> WhereNotNull<T>(this IQueryable<T?> source)
-        where T : struct
+    extension<T>(IQueryable<T?> source) where T : struct
     {
-        return source
-            .Where(s => s != null)
-            .Cast<T>();
+        /// <summary>
+        /// Removes nullable entries from the sequence.
+        /// </summary>
+        public IQueryable<T> WhereNotNull()
+        {
+            return source
+                .Where(s => s != null)
+                .Cast<T>();
+        }
     }
 
-    /// <summary>
-    /// Removes nullable entries from the sequence.
-    /// </summary>
-    /// <param name="source">
-    /// Queryable instance to filter.
-    /// </param>
-    public static IQueryable<T> WhereNotNull<T>(this IQueryable<T?> source)
+    extension<T>(IQueryable<T?> source)
     {
-        return source
-            .Where(s => s != null)
-            .Cast<T>();
+        /// <summary>
+        /// Removes nullable entries from the sequence.
+        /// </summary>
+        public IQueryable<T> WhereNotNull()
+        {
+            return source
+                .Where(s => s != null)
+                .Cast<T>();
+        }
     }
 
-    /// <summary>
-    /// Removes nullable null or empty strings from the sequence.
-    /// </summary>
-    /// <param name="source">
-    /// Queryable instance to filter.
-    /// </param>
-    public static IQueryable<string> WhereNotNullOrEmpty(this IQueryable<string?> source)
+    extension(IQueryable<string?> source)
     {
-        return source
-            .Where(s => !string.IsNullOrEmpty(s))
-            .Cast<string>();
-    }
+        /// <summary>
+        /// Removes nullable null or empty strings from the sequence.
+        /// </summary>
+        public IQueryable<string> WhereNotNullOrEmpty()
+        {
+            return source
+                .Where(s => !string.IsNullOrEmpty(s))
+                .Cast<string>();
+        }
 
-    /// <summary>
-    /// Removes nullable null, empty or strings that contain only whitespace 
-    /// from the sequence.
-    /// </summary>
-    /// <param name="source">
-    /// Queryable instance to filter.
-    /// </param>
-    public static IQueryable<string> WhereNotNullOrWhitespace(this IQueryable<string?> source)
-    {
-        return source
-            .Where(s => !string.IsNullOrWhiteSpace(s))
-            .Cast<string>();
+        /// <summary>
+        /// Removes nullable null, empty or strings that contain only whitespace 
+        /// from the sequence.
+        /// </summary>
+        public IQueryable<string> WhereNotNullOrWhitespace()
+        {
+            return source
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Cast<string>();
+        }
     }
 }

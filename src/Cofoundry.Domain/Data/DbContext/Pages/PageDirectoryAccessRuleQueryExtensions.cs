@@ -1,34 +1,34 @@
 namespace Cofoundry.Domain.Data;
 
+/// <summary>
+/// Extension methods for <see cref="IQueryable{PageDirectoryAccessRule}"/>.
+/// </summary>
 public static class PageDirectoryAccessRuleQueryExtensions
 {
-    /// <summary>
-    /// Filters the collection to only include the access rule with the 
-    /// specified PageDirectoryAccessRuleId primary key.
-    /// </summary>
-    /// <param name="accessRules">
-    /// Queryable instance to filter.
-    /// </param>
-    /// <param name="pageDirectoryAccessRuleId">Primary key to filter on.</param>
-    public static IQueryable<PageDirectoryAccessRule> FilterById(this IQueryable<PageDirectoryAccessRule> accessRules, int pageDirectoryAccessRuleId)
+    extension(IQueryable<PageDirectoryAccessRule> accessRules)
     {
-        var filtered = accessRules.Where(p => p.PageDirectoryAccessRuleId == pageDirectoryAccessRuleId);
+        /// <summary>
+        /// Filters the collection to only include the access rule with the 
+        /// specified PageDirectoryAccessRuleId primary key.
+        /// </summary>
+        /// <param name="pageDirectoryAccessRuleId">Primary key to filter on.</param>
+        public IQueryable<PageDirectoryAccessRule> FilterById(int pageDirectoryAccessRuleId)
+        {
+            var filtered = accessRules.Where(p => p.PageDirectoryAccessRuleId == pageDirectoryAccessRuleId);
 
-        return filtered;
-    }
+            return filtered;
+        }
 
-    /// <summary>
-    /// Filters the collection to only include access rules associated with
-    /// a specific directory.
-    /// </summary>
-    /// <param name="accessRules">
-    /// Queryable instance to filter.
-    /// </param>
-    /// <param name="pageDirectoryId">Id of the <see cref="PageDirectory"/> to filter on.</param>
-    public static IQueryable<PageDirectoryAccessRule> FilterByPageDirectoryId(this IQueryable<PageDirectoryAccessRule> accessRules, int pageDirectoryId)
-    {
-        var filtered = accessRules.Where(p => p.PageDirectoryId == pageDirectoryId);
+        /// <summary>
+        /// Filters the collection to only include access rules associated with
+        /// a specific directory.
+        /// </summary>
+        /// <param name="pageDirectoryId">Id of the <see cref="PageDirectory"/> to filter on.</param>
+        public IQueryable<PageDirectoryAccessRule> FilterByPageDirectoryId(int pageDirectoryId)
+        {
+            var filtered = accessRules.Where(p => p.PageDirectoryId == pageDirectoryId);
 
-        return filtered;
+            return filtered;
+        }
     }
 }
