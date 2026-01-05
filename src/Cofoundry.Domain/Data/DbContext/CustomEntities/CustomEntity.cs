@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 /// <summary>
 /// <para>
@@ -27,14 +27,13 @@ public class CustomEntity : ICreateAuditable, IEntityPublishable
     /// </summary>
     public string CustomEntityDefinitionCode { get; set; } = string.Empty;
 
-    private CustomEntityDefinition? _customEntityDefinition;
     /// <summary>
     /// Definition representing the type of custom entity.
     /// </summary>
     public CustomEntityDefinition CustomEntityDefinition
     {
-        get => _customEntityDefinition ?? throw NavigationPropertyNotInitializedException.Create<CustomEntity>(nameof(CustomEntityDefinition));
-        set => _customEntityDefinition = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<CustomEntity>(nameof(CustomEntityDefinition));
+        set;
     }
 
     /// <summary>
@@ -78,12 +77,11 @@ public class CustomEntity : ICreateAuditable, IEntityPublishable
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<CustomEntity>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<CustomEntity>(nameof(Creator));
+        set;
     }
 
     /// <summary>

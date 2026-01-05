@@ -74,12 +74,11 @@ public class DocumentAsset : IUpdateAuditable
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<DocumentAsset>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<DocumentAsset>(nameof(Creator));
+        set;
     }
 
     /// <inheritdoc/>
@@ -88,12 +87,11 @@ public class DocumentAsset : IUpdateAuditable
     /// <inheritdoc/>
     public int UpdaterId { get; set; }
 
-    private User? _updater;
     /// <inheritdoc/>
     public User Updater
     {
-        get => _updater ?? throw NavigationPropertyNotInitializedException.Create<DocumentAsset>(nameof(Creator));
-        set => _updater = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<DocumentAsset>(nameof(Creator));
+        set;
     }
 
     [Obsolete("The document asset grouping system will be revised in an upcomming release.")]

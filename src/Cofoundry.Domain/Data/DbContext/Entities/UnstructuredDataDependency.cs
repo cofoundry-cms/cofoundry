@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 /// <summary>
 /// Contains a record of a relation between one entitiy and another
@@ -14,7 +14,6 @@ public class UnstructuredDataDependency
     /// </summary>
     public string RootEntityDefinitionCode { get; set; } = string.Empty;
 
-    private EntityDefinition? _rootEntityDefinition;
     /// <summary>
     /// The entity definition for the root entity. The root entity is the main entity record 
     /// e.g. if an image is used in a custom entity data model, the image is the root entity 
@@ -22,8 +21,8 @@ public class UnstructuredDataDependency
     /// </summary>
     public EntityDefinition RootEntityDefinition
     {
-        get => _rootEntityDefinition ?? throw NavigationPropertyNotInitializedException.Create<UnstructuredDataDependency>(nameof(RootEntityDefinition));
-        set => _rootEntityDefinition = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<UnstructuredDataDependency>(nameof(RootEntityDefinition));
+        set;
     }
 
     /// <summary>
@@ -42,7 +41,6 @@ public class UnstructuredDataDependency
     /// </summary>
     public string RelatedEntityDefinitionCode { get; set; } = string.Empty;
 
-    private EntityDefinition? _relatedEntityDefinition;
     /// <summary>
     /// The entity definition the root is entity is related to. The related entity
     /// is the entity that contains a property that references the root entity e.g. if an image 
@@ -51,8 +49,8 @@ public class UnstructuredDataDependency
     /// </summary>
     public EntityDefinition RelatedEntityDefinition
     {
-        get => _relatedEntityDefinition ?? throw NavigationPropertyNotInitializedException.Create<UnstructuredDataDependency>(nameof(EntityDefinition));
-        set => _relatedEntityDefinition = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<UnstructuredDataDependency>(nameof(EntityDefinition));
+        set;
     }
 
     /// <summary>

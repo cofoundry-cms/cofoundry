@@ -17,12 +17,11 @@ public class ImageAssetGroup : ICreateAuditable
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<ImageAssetGroup>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<ImageAssetGroup>(nameof(Creator));
+        set;
     }
 
     public ICollection<ImageAssetGroupItem> ImageAssetGroupItems { get; set; } = new List<ImageAssetGroupItem>();

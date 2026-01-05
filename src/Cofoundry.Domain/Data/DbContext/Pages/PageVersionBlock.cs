@@ -18,37 +18,34 @@ public class PageVersionBlock : ICreateAuditable, IEntityVersionPageBlock
     /// </summary>
     public int PageVersionId { get; set; }
 
-    private PageVersion? _pageVersion;
     /// <summary>
     /// The page version that this instance is
     /// parented to.
     /// </summary>
     public PageVersion PageVersion
     {
-        get => _pageVersion ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(PageVersion));
-        set => _pageVersion = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(PageVersion));
+        set;
     }
 
     /// <inheritdoc/>
     public int PageTemplateRegionId { get; set; }
 
-    private PageTemplateRegion? _pageTemplateRegion;
     /// <inheritdoc/>
     public PageTemplateRegion PageTemplateRegion
     {
-        get => _pageTemplateRegion ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(PageTemplateRegion));
-        set => _pageTemplateRegion = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(PageTemplateRegion));
+        set;
     }
 
     /// <inheritdoc/>
     public int PageBlockTypeId { get; set; }
 
-    private PageBlockType? _pageBlockType;
     /// <inheritdoc/>
     public PageBlockType PageBlockType
     {
-        get => _pageBlockType ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(PageBlockType));
-        set => _pageBlockType = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(PageBlockType));
+        set;
     }
 
     /// <inheritdoc/>
@@ -72,12 +69,11 @@ public class PageVersionBlock : ICreateAuditable, IEntityVersionPageBlock
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageVersionBlock>(nameof(Creator));
+        set;
     }
 
     /// <summary>

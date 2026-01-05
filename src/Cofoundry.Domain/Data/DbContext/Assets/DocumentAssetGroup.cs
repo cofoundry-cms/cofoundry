@@ -21,11 +21,10 @@ public class DocumentAssetGroup : ICreateAuditable
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<DocumentAssetGroup>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<DocumentAssetGroup>(nameof(Creator));
+        set;
     }
 }

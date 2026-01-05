@@ -75,12 +75,11 @@ public class ImageAsset : IUpdateAuditable
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<ImageAsset>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<ImageAsset>(nameof(Creator));
+        set;
     }
 
     /// <inheritdoc/>
@@ -89,12 +88,11 @@ public class ImageAsset : IUpdateAuditable
     /// <inheritdoc/>
     public int UpdaterId { get; set; }
 
-    private User? _updater;
     /// <inheritdoc/>
     public User Updater
     {
-        get => _updater ?? throw NavigationPropertyNotInitializedException.Create<ImageAsset>(nameof(Creator));
-        set => _updater = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<ImageAsset>(nameof(Creator));
+        set;
     }
 
     [Obsolete("The image asset grouping system will be revised in an upcomming release.")]

@@ -19,14 +19,13 @@ public class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable,
     /// </summary>
     public int PageDirectoryId { get; set; }
 
-    private PageDirectory? _pageDirectory;
     /// <summary>
     /// The <see cref="Data.PageDirectory"/> this page is in.
     /// </summary>
     public PageDirectory PageDirectory
     {
-        get => _pageDirectory ?? throw NavigationPropertyNotInitializedException.Create<Page>(nameof(PageDirectory));
-        set => _pageDirectory = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<Page>(nameof(PageDirectory));
+        set;
     }
 
     /// <summary>
@@ -89,12 +88,11 @@ public class Page : IEntityAccessRestrictable<PageAccessRule>, ICreateAuditable,
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<Page>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<Page>(nameof(Creator));
+        set;
     }
 
     [Obsolete("The page grouping system will be revised in an upcomming release.")]

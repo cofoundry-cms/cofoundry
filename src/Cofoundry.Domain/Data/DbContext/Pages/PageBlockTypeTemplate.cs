@@ -18,15 +18,14 @@ public class PageBlockTypeTemplate
     /// </summary>
     public int PageBlockTypeId { get; set; }
 
-    private PageBlockType? _pageBlockType;
     /// <summary>
     /// The block type this template belongs to. One block type can
     /// 0 or more templates.
     /// </summary>
     public PageBlockType PageBlockType
     {
-        get => _pageBlockType ?? throw NavigationPropertyNotInitializedException.Create<PageBlockTypeTemplate>(nameof(PageBlockType));
-        set => _pageBlockType = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageBlockTypeTemplate>(nameof(PageBlockType));
+        set;
     }
 
     /// <summary>

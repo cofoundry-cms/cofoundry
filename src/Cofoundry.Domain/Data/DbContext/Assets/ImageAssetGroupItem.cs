@@ -5,20 +5,18 @@ public class ImageAssetGroupItem : ICreateAuditable
 {
     public int ImageAssetId { get; set; }
 
-    private ImageAsset? _imageAsset;
     public ImageAsset ImageAsset
     {
-        get => _imageAsset ?? throw NavigationPropertyNotInitializedException.Create<ImageAssetGroupItem>(nameof(ImageAsset));
-        set => _imageAsset = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<ImageAssetGroupItem>(nameof(ImageAsset));
+        set;
     }
 
     public int ImageAssetGroupId { get; set; }
 
-    private ImageAssetGroup? _imageAssetGroup;
     public ImageAssetGroup ImageAssetGroup
     {
-        get => _imageAssetGroup ?? throw NavigationPropertyNotInitializedException.Create<ImageAssetGroupItem>(nameof(ImageAssetGroup));
-        set => _imageAssetGroup = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<ImageAssetGroupItem>(nameof(ImageAssetGroup));
+        set;
     }
 
     public int Ordering { get; set; }
@@ -29,11 +27,10 @@ public class ImageAssetGroupItem : ICreateAuditable
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<ImageAssetGroupItem>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<ImageAssetGroupItem>(nameof(Creator));
+        set;
     }
 }

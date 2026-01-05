@@ -19,14 +19,13 @@ public class PageVersion : ICreateAuditable, IEntityVersion
     /// </summary>
     public int PageId { get; set; }
 
-    private Page? _page;
     /// <summary>
     /// The page this version is parented to.
     /// </summary>
     public Page Page
     {
-        get => _page ?? throw NavigationPropertyNotInitializedException.Create<PageVersion>(nameof(Page));
-        set => _page = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageVersion>(nameof(Page));
+        set;
     }
 
     /// <summary>
@@ -34,14 +33,13 @@ public class PageVersion : ICreateAuditable, IEntityVersion
     /// </summary>
     public int PageTemplateId { get; set; }
 
-    private PageTemplate? _pageTemplate;
     /// <summary>
     /// The template used to render this version.
     /// </summary>
     public PageTemplate PageTemplate
     {
-        get => _pageTemplate ?? throw NavigationPropertyNotInitializedException.Create<PageVersion>(nameof(PageTemplate));
-        set => _pageTemplate = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageVersion>(nameof(PageTemplate));
+        set;
     }
 
     /// <summary>
@@ -105,12 +103,11 @@ public class PageVersion : ICreateAuditable, IEntityVersion
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageVersion>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageVersion>(nameof(Creator));
+        set;
     }
 
     /// <summary>

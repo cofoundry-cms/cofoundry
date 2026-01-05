@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 /// <summary>
 /// <para>
@@ -26,26 +26,24 @@ public class PageDirectoryAccessRule : IEntityAccessRule
     /// </summary>
     public int PageDirectoryId { get; set; }
 
-    private PageDirectory? _pageDirectory;
     /// <summary>
     /// <see cref="Data.PageDirectory"/> that this rule controls access to,
     /// as well as any child directories or pages.
     /// </summary>
     public PageDirectory PageDirectory
     {
-        get => _pageDirectory ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryAccessRule>(nameof(PageDirectory));
-        set => _pageDirectory = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryAccessRule>(nameof(PageDirectory));
+        set;
     }
 
     /// <inheritdoc/>
     public string UserAreaCode { get; set; } = string.Empty;
 
-    private UserArea? _userArea;
     /// <inheritdoc/>
     public UserArea UserArea
     {
-        get => _userArea ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryAccessRule>(nameof(UserArea));
-        set => _userArea = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryAccessRule>(nameof(UserArea));
+        set;
     }
 
     /// <inheritdoc/>
@@ -60,12 +58,11 @@ public class PageDirectoryAccessRule : IEntityAccessRule
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryAccessRule>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryAccessRule>(nameof(Creator));
+        set;
     }
 
     /// <inheritdoc/>

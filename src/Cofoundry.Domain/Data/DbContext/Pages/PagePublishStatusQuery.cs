@@ -25,25 +25,23 @@ public class PagePublishStatusQuery
     /// </summary>
     public int PageVersionId { get; set; }
 
-    private Page? _page;
     /// <summary>
     /// Page that this record represents.
     /// </summary>
     public Page Page
     {
-        get => _page ?? throw NavigationPropertyNotInitializedException.Create<PagePublishStatusQuery>(nameof(Page));
-        set => _page = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PagePublishStatusQuery>(nameof(Page));
+        set;
     }
 
-    private PageVersion? _pageVersion;
     /// <summary>
     /// The version of the page that should be displayed
     /// for the corresponding PublishStatusQueryId.
     /// </summary>
     public PageVersion PageVersion
     {
-        get => _pageVersion ?? throw NavigationPropertyNotInitializedException.Create<PagePublishStatusQuery>(nameof(PageVersion));
-        set => _pageVersion = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PagePublishStatusQuery>(nameof(PageVersion));
+        set;
     }
 
 }

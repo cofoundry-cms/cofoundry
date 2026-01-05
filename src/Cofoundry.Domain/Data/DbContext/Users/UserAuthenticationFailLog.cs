@@ -16,15 +16,14 @@ public class UserAuthenticationFailLog
     /// </summary>
     public string UserAreaCode { get; set; } = string.Empty;
 
-    private UserArea? _userArea;
     /// <summary>
     /// The <see cref="Data.UserArea"/> that the client was attempting to
     /// authenticated against.
     /// </summary>
     public virtual UserArea UserArea
     {
-        get => _userArea ?? throw NavigationPropertyNotInitializedException.Create<UserAuthenticationFailLog>(nameof(UserArea));
-        set => _userArea = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<UserAuthenticationFailLog>(nameof(UserArea));
+        set;
     }
 
     /// <summary>
@@ -38,14 +37,13 @@ public class UserAuthenticationFailLog
     /// </summary>
     public long IPAddressId { get; set; }
 
-    private IPAddress? _ipAddress;
     /// <summary>
     /// IP Address of the connection requested authentication.
     /// </summary>
     public IPAddress IPAddress
     {
-        get => _ipAddress ?? throw NavigationPropertyNotInitializedException.Create<UserAuthenticationFailLog>(nameof(IPAddress));
-        set => _ipAddress = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<UserAuthenticationFailLog>(nameof(IPAddress));
+        set;
     }
 
     /// <summary>

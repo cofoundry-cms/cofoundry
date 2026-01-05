@@ -1,4 +1,4 @@
-﻿namespace Cofoundry.Domain.Data;
+namespace Cofoundry.Domain.Data;
 
 /// <summary>
 /// <para>
@@ -25,25 +25,23 @@ public class PageAccessRule : IEntityAccessRule
     /// </summary>
     public int PageId { get; set; }
 
-    private Page? _page;
     /// <summary>
     /// <see cref="Page"/> that this rule controls access to.
     /// </summary>
     public Page Page
     {
-        get => _page ?? throw NavigationPropertyNotInitializedException.Create<PageAccessRule>(nameof(Page));
-        set => _page = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageAccessRule>(nameof(Page));
+        set;
     }
 
     /// <inheritdoc/>
     public string UserAreaCode { get; set; } = string.Empty;
 
-    private UserArea? _userArea;
     /// <inheritdoc/>
     public UserArea UserArea
     {
-        get => _userArea ?? throw NavigationPropertyNotInitializedException.Create<PageAccessRule>(nameof(UserArea));
-        set => _userArea = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageAccessRule>(nameof(UserArea));
+        set;
     }
 
     /// <inheritdoc/>
@@ -58,12 +56,11 @@ public class PageAccessRule : IEntityAccessRule
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageAccessRule>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageAccessRule>(nameof(Creator));
+        set;
     }
 
     /// <inheritdoc/>

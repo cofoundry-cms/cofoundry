@@ -18,14 +18,13 @@ public class PageTemplateRegion
     /// </summary>
     public int PageTemplateId { get; set; }
 
-    private PageTemplate? _pageTemplate;
     /// <summary>
     /// The page tmeplate this region is parented to
     /// </summary>
     public PageTemplate PageTemplate
     {
-        get => _pageTemplate ?? throw NavigationPropertyNotInitializedException.Create<PageTemplateRegion>(nameof(PageTemplate));
-        set => _pageTemplate = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageTemplateRegion>(nameof(PageTemplate));
+        set;
     }
 
     /// <summary>

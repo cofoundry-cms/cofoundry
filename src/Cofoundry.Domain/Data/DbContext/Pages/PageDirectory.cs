@@ -49,12 +49,11 @@ public class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>,
     /// <inheritdoc/>
     public int CreatorId { get; set; }
 
-    private User? _creator;
     /// <inheritdoc/>
     public User Creator
     {
-        get => _creator ?? throw NavigationPropertyNotInitializedException.Create<PageDirectory>(nameof(Creator));
-        set => _creator = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageDirectory>(nameof(Creator));
+        set;
     }
 
     /// <summary>
@@ -103,7 +102,6 @@ public class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>,
     /// </summary>
     public ICollection<PageDirectoryClosure> DescendantPageDirectories { get; set; } = new List<PageDirectoryClosure>();
 
-    private PageDirectoryPath? _pageDirectoryPath;
     /// <summary>
     /// Information about the full directory path and it's position in the directory 
     /// heirachy. This table is automatically updated whenever changes are made to the page 
@@ -111,8 +109,8 @@ public class PageDirectory : IEntityAccessRestrictable<PageDirectoryAccessRule>,
     /// </summary>
     public PageDirectoryPath PageDirectoryPath
     {
-        get => _pageDirectoryPath ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryPath>(nameof(PageDirectoryPath));
-        set => _pageDirectoryPath = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryPath>(nameof(PageDirectoryPath));
+        set;
     }
 
     /// <inheritdoc/>

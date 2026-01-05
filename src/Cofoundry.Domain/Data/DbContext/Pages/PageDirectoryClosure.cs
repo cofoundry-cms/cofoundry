@@ -20,7 +20,6 @@ public class PageDirectoryClosure
     /// </summary>
     public int AncestorPageDirectoryId { get; set; }
 
-    private PageDirectory? _ancestorPageDirectory;
     /// <summary>
     /// The page directory that is an ancestor of <see cref="DescendantPageDirectory"/>. 
     /// The table includes a self-referencing node, so this can also be the same as 
@@ -28,8 +27,8 @@ public class PageDirectoryClosure
     /// </summary>
     public PageDirectory AncestorPageDirectory
     {
-        get => _ancestorPageDirectory ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryClosure>(nameof(AncestorPageDirectory));
-        set => _ancestorPageDirectory = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryClosure>(nameof(AncestorPageDirectory));
+        set;
     }
 
     /// <summary>
@@ -39,7 +38,6 @@ public class PageDirectoryClosure
     /// </summary>
     public int DescendantPageDirectoryId { get; set; }
 
-    private PageDirectory? _descendantPageDirectory;
     /// <summary>
     /// The page directory that is a descendant of <see cref="AncestorPageDirectory"/>. 
     /// The table includes a self-referencing node, so this can also be the same as 
@@ -47,8 +45,8 @@ public class PageDirectoryClosure
     /// </summary>
     public PageDirectory DescendantPageDirectory
     {
-        get => _descendantPageDirectory ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryClosure>(nameof(DescendantPageDirectory));
-        set => _descendantPageDirectory = value;
+        get => field ?? throw NavigationPropertyNotInitializedException.Create<PageDirectoryClosure>(nameof(DescendantPageDirectory));
+        set;
     }
 
     /// <summary>

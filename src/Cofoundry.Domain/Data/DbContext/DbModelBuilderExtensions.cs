@@ -75,8 +75,7 @@ public static class DbModelBuilderExtensions
                 .ApplyConfiguration(new UserAreaMap())
                 .ApplyConfiguration(new RoleMap())
                 .ApplyConfiguration(new PermissionMap())
-                .ApplyConfiguration(new RolePermissionMap())
-                ;
+                .ApplyConfiguration(new RolePermissionMap());
 
             return modelBuilder;
         }
@@ -142,8 +141,7 @@ public static class DbModelBuilderExtensions
                 .ApplyConfiguration(new CustomEntityDefinitionMap())
                 .ApplyConfiguration(new CustomEntityMap())
                 .ApplyConfiguration(new CustomEntityPublishStatusQueryMap())
-                .ApplyConfiguration(new CustomEntityVersionMap())
-                ;
+                .ApplyConfiguration(new CustomEntityVersionMap());
 
             return modelBuilder;
         }
