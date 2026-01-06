@@ -16,15 +16,13 @@ Find out more at [Cofoundry.org](https://www.cofoundry.org/) or head to the [doc
 
 ## Feedback & Community
 
-We're keen to hear feedback about Cofoundry. Whether you've been playing about with the samples, run into some issues or just browsed the docs and have an opinion on the concept we'd love to hear it.
-
 If you have a technical question or issue, please either:
 
 - [Submit an issue](https://github.com/cofoundry-cms/cofoundry/issues)
 
 To keep updated:
 
-- [Follow us on Twitter](https://twitter.com/cofoundrycms)
+- [Follow us on BlueSky](https://bsky.app/profile/cofoundry.org)
 - [Follow our blog](https://www.cofoundry.org/blog)
 
 To give informal feedback or talk more generally about the project:
